@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.utils
+package info.nightscout.core.utils
 
 import org.json.JSONException
 import org.json.JSONObject

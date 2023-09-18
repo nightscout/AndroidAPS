@@ -2,12 +2,12 @@ package info.nightscout.plugins.aps.loop
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.utils.JsonHelper.safeGetDouble
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
 import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

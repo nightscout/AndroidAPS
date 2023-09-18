@@ -9,10 +9,10 @@ import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.core.utils.JsonHelper
+import info.nightscout.core.utils.JsonHelper.safeGetString
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
-import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 

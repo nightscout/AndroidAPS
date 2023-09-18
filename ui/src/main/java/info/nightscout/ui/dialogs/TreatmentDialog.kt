@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
@@ -26,7 +27,6 @@ import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -157,8 +157,12 @@ class TreatmentDialog : DialogFragmentWithDate() {
                 )
         }
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, info.nightscout
-                .core.ui.R.attr.carbsColor))
+            actions.add(
+                rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraints).formatColor(
+                    context, rh, info.nightscout
+                        .core.ui.R.attr.carbsColor
+                )
+            )
             if (carbsAfterConstraints != carbs)
                 actions.add(rh.gs(R.string.carbs_constraint_applied).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
         }

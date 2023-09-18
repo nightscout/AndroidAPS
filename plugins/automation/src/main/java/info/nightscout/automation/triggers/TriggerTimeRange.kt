@@ -7,8 +7,8 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputTimeRange
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.core.utils.JsonHelper.safeGetInt
 import info.nightscout.core.utils.MidnightUtils
-import info.nightscout.interfaces.utils.JsonHelper.safeGetInt
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject

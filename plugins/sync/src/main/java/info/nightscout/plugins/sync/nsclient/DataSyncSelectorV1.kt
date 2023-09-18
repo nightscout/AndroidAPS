@@ -1,12 +1,12 @@
 package info.nightscout.plugins.sync.nsclient
 
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.waitMillis
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus

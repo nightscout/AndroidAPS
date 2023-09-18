@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action
@@ -35,7 +36,6 @@ import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -278,7 +278,12 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (duration > 0)
             actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + duration + rh.gs(info.nightscout.shared.R.string.shorthour))
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(context, info.nightscout.core.ui.R.attr.carbsColor) + "'>" + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraints) + "</font>")
+            actions.add(
+                rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(
+                    context,
+                    info.nightscout.core.ui.R.attr.carbsColor
+                ) + "'>" + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraints) + "</font>"
+            )
             if (carbsAfterConstraints != carbs)
                 actions.add("<font color='" + rh.gac(context, info.nightscout.core.ui.R.attr.warningColor) + "'>" + rh.gs(R.string.carbs_constraint_applied) + "</font>")
         }

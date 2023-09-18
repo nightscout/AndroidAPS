@@ -1,9 +1,9 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.nsclient.data.NSMbg
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T

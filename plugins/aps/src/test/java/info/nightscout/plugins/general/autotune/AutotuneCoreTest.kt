@@ -1,11 +1,11 @@
 package info.nightscout.plugins.general.autotune
 
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.utils.DateUtil

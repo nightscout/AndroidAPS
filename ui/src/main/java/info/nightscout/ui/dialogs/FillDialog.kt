@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.google.common.base.Joiner
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
@@ -24,7 +25,6 @@ import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -125,7 +125,9 @@ class FillDialog : DialogFragmentWithDate() {
                     .formatColor(context, rh, info.nightscout.core.ui.R.attr.insulinButtonColor)
             )
             if (abs(insulinAfterConstraints - insulin) > 0.01)
-                actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
+                actions.add(
+                    rh.gs(info.nightscout.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor)
+                )
         }
         val siteChange = binding.fillCatheterChange.isChecked
         if (siteChange)

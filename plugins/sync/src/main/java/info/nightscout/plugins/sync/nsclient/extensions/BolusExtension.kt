@@ -1,8 +1,8 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 

@@ -22,6 +22,7 @@ import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.wizard.BolusWizard
@@ -37,7 +38,6 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -515,9 +515,13 @@ class WizardDialog : DaggerDialogFragment() {
             }
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin).formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(context, rh, info.nightscout.core.ui.R.attr
-                    .carbsColor) else ""
+                val insulinText =
+                    if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
+                        .formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
+                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(
+                    context, rh, info.nightscout.core.ui.R.attr
+                        .carbsColor
+                ) else ""
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))
                 binding.okcancel.ok.visibility = View.VISIBLE
             } else {

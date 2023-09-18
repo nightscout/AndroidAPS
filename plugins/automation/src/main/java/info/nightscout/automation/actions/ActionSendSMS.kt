@@ -6,10 +6,10 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
-import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 import javax.inject.Inject
 

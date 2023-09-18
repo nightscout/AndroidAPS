@@ -12,6 +12,7 @@ import info.nightscout.configuration.databinding.MaintenanceFragmentBinding
 import info.nightscout.configuration.maintenance.activities.LogSettingActivity
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -26,7 +27,6 @@ import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFEREN
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange

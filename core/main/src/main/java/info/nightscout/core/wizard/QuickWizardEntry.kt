@@ -4,6 +4,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
+import info.nightscout.core.utils.JsonHelper.safeGetInt
+import info.nightscout.core.utils.JsonHelper.safeGetString
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.ValueWrapper
 import info.nightscout.interfaces.aps.Loop
@@ -14,8 +16,6 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.JsonHelper.safeGetInt
-import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil

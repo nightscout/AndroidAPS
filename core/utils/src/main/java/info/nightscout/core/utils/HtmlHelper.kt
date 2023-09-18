@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.utils
+package info.nightscout.core.utils
 
 import android.text.Html
 import android.text.SpannableStringBuilder

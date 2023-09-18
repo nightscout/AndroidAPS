@@ -7,6 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.elements.WeekDay
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Config
@@ -20,7 +21,6 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
@@ -153,7 +153,7 @@ class AutotunePlugin @Inject constructor(
         }
         autotuneFS.exportPumpProfile(pumpProfile)
 
-        if (calcDays==0) {
+        if (calcDays == 0) {
             result = rh.gs(info.nightscout.core.ui.R.string.autotune_error_more_days)
             log(result)
             calculationRunning = false
@@ -429,7 +429,7 @@ class AutotunePlugin @Inject constructor(
                 }
             }
             for (i in days.weekdays.indices)
-                days.weekdays[i] = JsonHelper.safeGetBoolean(json, WeekDay.DayOfWeek.values()[i].name,true)
+                days.weekdays[i] = JsonHelper.safeGetBoolean(json, WeekDay.DayOfWeek.values()[i].name, true)
             result = JsonHelper.safeGetString(json, "result", "")
             updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
             lastRunSuccess = true
@@ -438,17 +438,17 @@ class AutotunePlugin @Inject constructor(
         }
     }
 
-    fun calcDays(daysBack:Int): Int {
-            var endTime = MidnightTime.calc(dateUtil.now()) + autotuneStartHour * 60 * 60 * 1000L
-            if (endTime > dateUtil.now()) endTime -= T.days(1).msecs()      // Check if 4 AM is before now
-            val startTime = endTime - daysBack * T.days(1).msecs()
-            var result = 0
-            for (i in 0 until daysBack) {
-                if (days.isSet(startTime + i * T.days(1).msecs()))
-                    result++
-            }
-            return result
+    fun calcDays(daysBack: Int): Int {
+        var endTime = MidnightTime.calc(dateUtil.now()) + autotuneStartHour * 60 * 60 * 1000L
+        if (endTime > dateUtil.now()) endTime -= T.days(1).msecs()      // Check if 4 AM is before now
+        val startTime = endTime - daysBack * T.days(1).msecs()
+        var result = 0
+        for (i in 0 until daysBack) {
+            if (days.isSet(startTime + i * T.days(1).msecs()))
+                result++
         }
+        return result
+    }
 
     private fun log(message: String) {
         atLog("[Plugin] $message")

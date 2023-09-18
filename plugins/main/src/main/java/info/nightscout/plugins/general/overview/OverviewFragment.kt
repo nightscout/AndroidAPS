@@ -35,6 +35,7 @@ import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.SingleClickButton
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.database.entities.UserEntry.Action
@@ -66,7 +67,6 @@ import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.interfaces.source.XDripSource
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
@@ -843,7 +843,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         info.nightscout.core.ui.R.attr.ribbonWarningColor
                     else info.nightscout.core.ui.R.attr.ribbonDefaultColor
-                 } else info.nightscout.core.ui.R.attr.ribbonDefaultColor
+                } else info.nightscout.core.ui.R.attr.ribbonDefaultColor
             } ?: info.nightscout.core.ui.R.attr.ribbonCriticalColor
 
             val profileTextColor = profile?.let {
@@ -1095,7 +1095,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         binding.infoLayout.sensitivity.text =
-           lastAutosensData?.let {
+            lastAutosensData?.let {
                 String.format(Locale.ENGLISH, "%.0f%%", it.autosensResult.ratio * 100)
             } ?: ""
         // Show variable sensitivity

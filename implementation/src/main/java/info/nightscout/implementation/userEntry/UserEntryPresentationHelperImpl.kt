@@ -3,6 +3,7 @@ package info.nightscout.implementation.userEntry
 import android.text.Spanned
 import dagger.Reusable
 import info.nightscout.core.main.R
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.ColorGroup
@@ -13,7 +14,6 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.userEntry.UserEntryPresentationHelper
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil

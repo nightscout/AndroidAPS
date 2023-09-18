@@ -14,11 +14,11 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.pump.toHtml
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.databinding.LoopFragmentBinding
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui

@@ -12,6 +12,7 @@ import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.EffectiveProfileSwitch
@@ -58,7 +59,6 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissBolusProgressIfRunning

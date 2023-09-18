@@ -12,7 +12,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseOperationDialog
 import info.nightscout.core.ui.elements.VerticalTextView
-import info.nightscout.interfaces.utils.JsonHelper.safeGetString
+import info.nightscout.core.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONArray
