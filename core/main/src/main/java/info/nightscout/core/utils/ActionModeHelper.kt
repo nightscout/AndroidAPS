@@ -8,6 +8,7 @@ import android.view.MenuItem
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import info.nightscout.core.main.R
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?, val fragment: Fragment?) {

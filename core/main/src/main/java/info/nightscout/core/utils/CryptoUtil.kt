@@ -23,6 +23,7 @@ class CryptoUtil @Inject constructor(
 ) {
 
     companion object {
+
         private const val IV_LENGTH_BYTE = 12
         private const val TAG_LENGTH_BIT = 128
         private const val AES_KEY_SIZE_BIT = 256

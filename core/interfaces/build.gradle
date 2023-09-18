@@ -13,6 +13,9 @@ apply from: "${project.rootDir}/core/main/android_module_dependencies.gradle"
 android {
 
     namespace 'info.nightscout.interfaces'
+    defaultConfig {
+        minSdkVersion 25  // for wear
+    }
 }
 
 dependencies {
@@ -22,7 +25,7 @@ dependencies {
     // (ResourceHelper, AAPSLogger interface)
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
- //   implementation project(':core:ns-sdk')
+    //   implementation project(':core:ns-sdk')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
 
