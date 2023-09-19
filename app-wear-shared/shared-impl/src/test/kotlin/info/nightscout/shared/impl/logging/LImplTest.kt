@@ -1,8 +1,8 @@
 package info.nightscout.shared.impl.logging
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -26,13 +26,13 @@ class LImplTest {
 
     @Test
     fun findByName() {
-        Assertions.assertEquals(LTag.APS.name, sut.findByName("APS").name)
-        Assertions.assertEquals("NONEXISTENT", sut.findByName("APS2").name)
+        assertThat(sut.findByName("APS").name).isEqualTo(LTag.APS.name)
+        assertThat(sut.findByName("APS2").name).isEqualTo("NONEXISTENT")
     }
 
     @Test
     fun getLogElements() {
-        Assertions.assertTrue(sut.getLogElements().isNotEmpty())
+        assertThat(sut.getLogElements()).isNotEmpty()
     }
 
     @Test
@@ -40,6 +40,6 @@ class LImplTest {
         val element = sut.findByName("APS")
         element.enabled = false
         sut.resetToDefaults()
-        Assertions.assertTrue(element.enabled)
+        assertThat(element.enabled).isTrue()
     }
 }

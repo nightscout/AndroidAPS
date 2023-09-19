@@ -55,6 +55,7 @@
     <string name="pref_show_bgi">Rodyti GĮ</string>
     <string name="pref_show_direction_arrow">Rodyti krypties rodyklę</string>
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
+    <string name="pref_show_week_number">Rodyti savaitės numerį</string>
     <string name="default_custom_watchface_comment">Numatytasis ekranas. Paspaudus EKSPORTUOTI, bus sukurtas ruošinys</string>
     <string name="wear_default_watchface">Numatytasis ekranas</string>
     <string name="cwf_comment_background">Fono paveiksliukas</string>
@@ -81,6 +82,7 @@
     <string name="cwf_comment_timePeriod">AM ar PM</string>
     <string name="cwf_comment_day_name">Savaitės diena</string>
     <string name="cwf_comment_day">Diena (d.)</string>
+    <string name="cwf_comment_week_number">Savaitės numeris</string>
     <string name="cwf_comment_month">Mėnuo (sutrump.)</string>
     <string name="cwf_comment_loop">Ciklo būsena</string>
     <string name="cwf_comment_direction">Tendencijos rodyklė</string>

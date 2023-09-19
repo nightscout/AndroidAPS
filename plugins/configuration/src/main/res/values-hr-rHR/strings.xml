@@ -65,4 +65,5 @@
     <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Ponovno pokrenite telefon ili ponovno pokrenite AAPS iz postavki sustava \n u suprotnom Android APS neće imati zapisivanje (važno je pratiti i provjeriti rade li algoritmi ispravno)!</string>
+    <!-- Maintenance -->
 </resources>

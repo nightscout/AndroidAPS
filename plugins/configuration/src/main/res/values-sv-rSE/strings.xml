@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">Välj anpassad urtavla</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Vänligen starta om telefonen eller starta om AAPS från systeminställningar \nannars kommer Android APS inte att ha loggning aktiverat (viktigt för att spåra och kontrollera att algoritmerna fungerar korrekt)!</string>
+    <!-- Maintenance -->
 </resources>

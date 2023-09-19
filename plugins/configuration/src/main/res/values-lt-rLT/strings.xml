@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">Pasirinkite laikrodžio ekraną</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prašome perkrauti telefoną arba sistemos nustatymuose iš naujo paleisti AAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti, ar algoritmai veikia tinkamai)!</string>
+    <!-- Maintenance -->
 </resources>

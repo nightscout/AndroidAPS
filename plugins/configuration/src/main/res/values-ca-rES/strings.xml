@@ -133,4 +133,5 @@
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
     <!-- Custom Watchface -->
     <!-- Permissions -->
+    <!-- Maintenance -->
 </resources>

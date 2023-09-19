@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">사용자 지정 워치페이스 선택하기</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">폰을 다시시작하거나 시스템 설정에서 AAPS를 다시 시작하십시오 \n그렇지 않으면 Android APS에 로그 기록이 남지 않습니다 (알고리즘이 올바르게 작동하는지 확인하기 위해 로그가 중요합니다)!</string>
+    <!-- Maintenance -->
 </resources>

@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">Избор на персонализиран Watchface</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Моля рестартирайте телефона си или AAPS от Системни настройки, иначе AAPS няма да има логове (това е важно за да се проследява и верифицира, че алгоритъма работи правилно)!</string>
+    <!-- Maintenance -->
 </resources>

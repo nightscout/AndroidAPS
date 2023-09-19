@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">Dosya formatı</string>
-    <string name="metadata_label_created_at">Oluşturuldu</string>
-    <string name="metadata_label_aaps_version">AAPS Versiyonu</string>
-    <string name="metadata_label_aaps_flavour">Yapı Varyantı</string>
-    <string name="metadata_label_device_name">Cihaz hasta adını dışa aktarma</string>
-    <string name="metadata_label_device_model">Cihaz modelini dışa aktarma</string>
-    <string name="metadata_label_encryption">Dosya şifreleme</string>
-    <string name="metadata_format_new">Yeni şifrelenmiş format</string>
-    <string name="metadata_format_debug">Yeni hata ayıklama formatı (şifrelenmemiş)</string>
-    <string name="metadata_format_other">Bilinmeyen dışa aktarma formatı</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompa sürücüsü değişti.</string>
 </resources>

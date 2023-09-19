@@ -55,6 +55,7 @@
     <string name="pref_show_bgi">Pokaż BGI</string>
     <string name="pref_show_direction_arrow">Pokaż Strzałkę Trendu</string>
     <string name="pref_show_ago">Pokaż Aktualność</string>
+    <string name="pref_show_week_number">Pokaż numer tygodnia</string>
     <string name="default_custom_watchface_comment">Domyślna tarcza, możesz kliknąć na EXPORTUJ TARCZĘ aby wygenerować szablon</string>
     <string name="wear_default_watchface">Domyślna Tarcza</string>
     <string name="cwf_comment_background">Obraz w tle</string>
@@ -81,6 +82,7 @@
     <string name="cwf_comment_timePeriod">AM lub PM</string>
     <string name="cwf_comment_day_name">Nazwa dnia tygodnia</string>
     <string name="cwf_comment_day">Dzień (DD)</string>
+    <string name="cwf_comment_week_number">Numer tygodnia (ww)</string>
     <string name="cwf_comment_month">Nazwa miesiąca (krótka)</string>
     <string name="cwf_comment_loop">Status pętli i aktualność</string>
     <string name="cwf_comment_direction">Strzałka trendu</string>

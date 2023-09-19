@@ -156,4 +156,15 @@
     <string name="wear_import_custom_watchface_title">Vyberte vlastný ciferník</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Formát súboru</string>
+    <string name="metadata_label_created_at">Vytvorené</string>
+    <string name="metadata_label_aaps_version">Verzia AAPS</string>
+    <string name="metadata_label_aaps_flavour">Verzia zostavy</string>
+    <string name="metadata_label_device_name">Meno pacienta použité pri exporte</string>
+    <string name="metadata_label_device_model">Model zariadenia použitý pri exporte</string>
+    <string name="metadata_label_encryption">Šifrovanie súborov</string>
+    <string name="metadata_format_new">Nový šifrovaný formát</string>
+    <string name="metadata_format_debug">Nový formát pre ladenie (nešifrovaný)</string>
+    <string name="metadata_format_other">Neznámy formát exportu</string>
 </resources>

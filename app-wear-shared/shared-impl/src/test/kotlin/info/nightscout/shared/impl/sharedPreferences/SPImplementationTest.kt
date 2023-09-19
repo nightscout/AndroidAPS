@@ -1,8 +1,8 @@
 package info.nightscout.shared.impl.sharedPreferences
 
+import com.google.common.truth.Truth.assertThat
 import android.content.Context
 import info.nightscout.shared.impl.SharedPreferencesMock
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -34,153 +34,153 @@ class SPImplementationTest {
     @Test
     fun edit() {
         sut.edit { putBoolean("test", true) }
-        Assertions.assertTrue(sut.getBoolean("test", false))
+        assertThat(sut.getBoolean("test", false)).isTrue()
         sut.edit { remove("test") }
-        Assertions.assertFalse(sut.contains("test"))
+        assertThat(sut.contains("test")).isFalse()
         sut.edit { putBoolean(someResource, true) }
-        Assertions.assertTrue(sut.getBoolean(someResource, false))
+        assertThat(sut.getBoolean(someResource, false)).isTrue()
         sut.edit { remove(someResource) }
-        Assertions.assertFalse(sut.contains(someResource))
+        assertThat(sut.contains(someResource)).isFalse()
 
         sut.edit(commit = true) { putDouble("test", 1.0) }
-        Assertions.assertEquals(1.0, sut.getDouble("test", 2.0))
+        assertThat(sut.getDouble("test", 2.0)).isEqualTo(1.0)
         sut.edit { putDouble(someResource, 1.0) }
-        Assertions.assertEquals(1.0, sut.getDouble(someResource, 2.0))
+        assertThat(sut.getDouble(someResource, 2.0)).isEqualTo(1.0)
         sut.edit { clear() }
-        Assertions.assertFalse(sut.contains(someResource2))
+        assertThat(sut.contains(someResource2)).isFalse()
 
         sut.edit { putInt("test", 1) }
-        Assertions.assertEquals(1, sut.getInt("test", 2))
+        assertThat(sut.getInt("test", 2)).isEqualTo(1)
         sut.edit { putInt(someResource, 1) }
-        Assertions.assertEquals(1, sut.getInt(someResource, 2))
+        assertThat(sut.getInt(someResource, 2)).isEqualTo(1)
         sut.edit { clear() }
 
         sut.edit { putLong("test", 1L) }
-        Assertions.assertEquals(1L, sut.getLong("test", 2L))
+        assertThat(sut.getLong("test", 2L)).isEqualTo(1L)
         sut.edit { putLong(someResource, 1) }
-        Assertions.assertEquals(1L, sut.getLong(someResource, 2L))
+        assertThat(sut.getLong(someResource, 2L)).isEqualTo(1L)
         sut.edit { clear() }
 
         sut.edit { putString("test", "string") }
-        Assertions.assertEquals("string", sut.getString("test", "a"))
+        assertThat(sut.getString("test", "a")).isEqualTo("string")
         sut.edit { putString(someResource, "string") }
-        Assertions.assertEquals("string", sut.getString(someResource, "a"))
+        assertThat(sut.getString(someResource, "a")).isEqualTo("string")
         sut.edit { clear() }
     }
 
     @Test
     fun clear() {
         sut.putBoolean("test", true)
-        Assertions.assertTrue(sut.getAll().containsKey("test"))
+        assertThat(sut.getAll()).containsKey("test")
         sut.clear()
-        Assertions.assertFalse(sut.getAll().containsKey("test"))
+        assertThat(sut.getAll()).doesNotContainKey("test")
     }
 
     @Test
     fun contains() {
         sut.putBoolean("test", true)
-        Assertions.assertTrue(sut.contains("test"))
+        assertThat(sut.contains("test")).isTrue()
         sut.putBoolean(someResource, true)
-        Assertions.assertTrue(sut.contains(someResource))
+        assertThat(sut.contains(someResource)).isTrue()
     }
 
     @Test
     fun remove() {
         sut.putBoolean("test", true)
         sut.remove("test")
-        Assertions.assertFalse(sut.contains("test"))
+        assertThat(sut.contains("test")).isFalse()
         sut.putBoolean(someResource, true)
         sut.remove(someResource)
-        Assertions.assertFalse(sut.contains(someResource))
+        assertThat(sut.contains(someResource)).isFalse()
     }
 
     @Test
     fun getString() {
         sut.putString("test", "string")
-        Assertions.assertTrue(sut.getString("test", "") == "string")
-        Assertions.assertTrue(sut.getString("test1", "") == "")
+        assertThat(sut.getString("test", "")).isEqualTo("string")
+        assertThat(sut.getString("test1", "")).isEmpty()
         sut.putString(someResource, "string")
-        Assertions.assertTrue(sut.getString(someResource, "") == "string")
-        Assertions.assertTrue(sut.getString(someResource2, "") == "")
+        assertThat(sut.getString(someResource, "")).isEqualTo("string")
+        assertThat(sut.getString(someResource2, "")).isEmpty()
     }
 
     @Test
     fun getStringOrNull() {
         sut.putString("test", "string")
-        Assertions.assertTrue(sut.getStringOrNull("test", "") == "string")
-        Assertions.assertNull(sut.getStringOrNull("test1", null))
+        assertThat(sut.getStringOrNull("test", "")).isEqualTo("string")
+        assertThat(sut.getStringOrNull("test1", null)).isNull()
         sut.putString(someResource, "string")
-        Assertions.assertTrue(sut.getStringOrNull(someResource, null) == "string")
-        Assertions.assertNull(sut.getStringOrNull(someResource2, null))
+        assertThat(sut.getStringOrNull(someResource, null)).isEqualTo("string")
+        assertThat(sut.getStringOrNull(someResource2, null)).isNull()
     }
 
     @Test
     fun getBoolean() {
         sut.putBoolean("test", true)
-        Assertions.assertTrue(sut.getBoolean("test", false))
+        assertThat(sut.getBoolean("test", false)).isTrue()
         sut.putBoolean(someResource, true)
-        Assertions.assertTrue(sut.getBoolean(someResource, false))
+        assertThat(sut.getBoolean(someResource, false)).isTrue()
         sut.putString("string_key", "a")
-        Assertions.assertTrue(sut.getBoolean("string_key", true))
+        assertThat(sut.getBoolean("string_key", true)).isTrue()
         sut.putString(someResource, "a")
-        Assertions.assertTrue(sut.getBoolean(someResource, true))
+        assertThat(sut.getBoolean(someResource, true)).isTrue()
     }
 
     @Test
     fun getDouble() {
         sut.putDouble("test", 1.0)
-        Assertions.assertEquals(1.0, sut.getDouble("test", 2.0))
-        Assertions.assertEquals(2.0, sut.getDouble("test1", 2.0))
+        assertThat(sut.getDouble("test", 2.0)).isEqualTo(1.0)
+        assertThat(sut.getDouble("test1", 2.0)).isEqualTo(2.0)
         sut.putDouble(someResource, 1.0)
-        Assertions.assertEquals(1.0, sut.getDouble(someResource, 2.0))
-        Assertions.assertEquals(2.0, sut.getDouble(someResource2, 2.0))
+        assertThat(sut.getDouble(someResource, 2.0)).isEqualTo(1.0)
+        assertThat(sut.getDouble(someResource2, 2.0)).isEqualTo(2.0)
         sut.putString("string_key", "a")
-        Assertions.assertEquals(1.0, sut.getDouble("string_key", 1.0))
+        assertThat(sut.getDouble("string_key", 1.0)).isEqualTo(1.0)
         sut.putString(someResource, "a")
-        Assertions.assertEquals(1.0, sut.getDouble(someResource, 1.0))
+        assertThat(sut.getDouble(someResource, 1.0)).isEqualTo(1.0)
     }
 
     @Test
     fun getInt() {
         sut.putInt("test", 1)
-        Assertions.assertEquals(1, sut.getInt("test", 2))
-        Assertions.assertEquals(2, sut.getInt("test1", 2))
+        assertThat(sut.getInt("test", 2)).isEqualTo(1)
+        assertThat(sut.getInt("test1", 2)).isEqualTo(2)
         sut.putInt(someResource, 1)
-        Assertions.assertEquals(1, sut.getInt(someResource, 2))
-        Assertions.assertEquals(2, sut.getInt(someResource2, 2))
+        assertThat(sut.getInt(someResource, 2)).isEqualTo(1)
+        assertThat(sut.getInt(someResource2, 2)).isEqualTo(2)
         sut.putString("string_key", "a")
-        Assertions.assertEquals(1, sut.getInt("string_key", 1))
+        assertThat(sut.getInt("string_key", 1)).isEqualTo(1)
         sut.putString(someResource, "a")
-        Assertions.assertEquals(1, sut.getInt(someResource, 1))
+        assertThat(sut.getInt(someResource, 1)).isEqualTo(1)
     }
 
     @Test
     fun getLong() {
         sut.putLong("test", 1L)
-        Assertions.assertEquals(1L, sut.getLong("test", 2L))
-        Assertions.assertEquals(2L, sut.getLong("test1", 2L))
+        assertThat(sut.getLong("test", 2L)).isEqualTo(1L)
+        assertThat(sut.getLong("test1", 2L)).isEqualTo(2L)
         sut.putLong(someResource, 1L)
-        Assertions.assertEquals(1L, sut.getLong(someResource, 2L))
-        Assertions.assertEquals(2L, sut.getLong(someResource2, 2L))
+        assertThat(sut.getLong(someResource, 2L)).isEqualTo(1L)
+        assertThat(sut.getLong(someResource2, 2L)).isEqualTo(2L)
         sut.putString("string_key", "a")
-        Assertions.assertEquals(1L, sut.getLong("string_key", 1L))
+        assertThat(sut.getLong("string_key", 1L)).isEqualTo(1L)
         sut.putString(someResource, "a")
-        Assertions.assertEquals(1L, sut.getLong(someResource, 1L))
+        assertThat(sut.getLong(someResource, 1L)).isEqualTo(1L)
     }
 
     @Test
     fun incLong() {
         sut.incLong(someResource)
-        Assertions.assertEquals(1L, sut.getLong(someResource, 3L))
+        assertThat(sut.getLong(someResource, 3L)).isEqualTo(1L)
         sut.incLong(someResource)
-        Assertions.assertEquals(2L, sut.getLong(someResource, 3L))
+        assertThat(sut.getLong(someResource, 3L)).isEqualTo(2L)
     }
 
     @Test
     fun incInt() {
         sut.incInt(someResource)
-        Assertions.assertEquals(1, sut.getInt(someResource, 3))
+        assertThat(sut.getInt(someResource, 3)).isEqualTo(1)
         sut.incInt(someResource)
-        Assertions.assertEquals(2, sut.getInt(someResource, 3))
+        assertThat(sut.getInt(someResource, 3)).isEqualTo(2)
     }
 }

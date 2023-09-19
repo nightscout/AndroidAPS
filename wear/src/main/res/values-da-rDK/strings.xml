@@ -206,5 +206,6 @@
     <string name="hour_minute_second">%1$s %2$s %3$s</string>
     <string name="old">gammel</string>
     <string name="old_warning">!gammel!</string>
+    <string name="error">!fejl!</string>
     <string name="pref_heartRateSampling">Puls</string>
 </resources>
