@@ -20,6 +20,7 @@ dependencies {
     implementation project(':core:utils')
 
     testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':app-wear-shared:shared-impl')
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 

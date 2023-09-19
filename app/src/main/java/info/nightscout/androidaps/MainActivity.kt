@@ -52,7 +52,7 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -96,7 +96,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var iconsProvider: IconsProvider
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction

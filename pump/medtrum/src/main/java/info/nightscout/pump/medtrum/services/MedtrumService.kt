@@ -9,7 +9,7 @@ import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
@@ -86,7 +86,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var medtrumPlugin: MedtrumPlugin
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -432,7 +432,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     connectionRetryCounter++
                 } else {
                     communicationLost = true
-                    aapsLogger.warn(LTag.PUMPCOMM, "Retry connection faled, communication stopped")
+                    aapsLogger.warn(LTag.PUMPCOMM, "Retry connection failed, communication stopped")
                     disconnect("Communication stopped")
                 }
             } else {

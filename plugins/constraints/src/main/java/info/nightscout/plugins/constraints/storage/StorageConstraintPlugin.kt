@@ -6,7 +6,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -34,13 +34,13 @@ class StorageConstraintPlugin @Inject constructor(
         .showInList(false)
         .pluginName(R.string.storage),
     aapsLogger, rh, injector
-), Constraints {
+), PluginConstraints {
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val diskFree = availableInternalMemorySize()
         if (diskFree < Constants.MINIMUM_FREE_SPACE) {
             aapsLogger.debug(LTag.CONSTRAINTS, "Closed loop disabled. Internal storage free (Mb):$diskFree")
-            value.set(aapsLogger, false, rh.gs(R.string.disk_full, Constants.MINIMUM_FREE_SPACE), this)
+            value.set(false, rh.gs(R.string.disk_full, Constants.MINIMUM_FREE_SPACE), this)
             activeNames.addNotification(Notification.DISK_FULL, rh.gs(R.string.disk_full, Constants.MINIMUM_FREE_SPACE), Notification.NORMAL)
         }
         return value

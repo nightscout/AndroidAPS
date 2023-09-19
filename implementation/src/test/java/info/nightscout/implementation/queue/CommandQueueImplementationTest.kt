@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
@@ -16,8 +17,7 @@ import info.nightscout.implementation.queue.commands.CommandLoadHistory
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -50,7 +50,7 @@ import java.util.Calendar
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var uiInteraction: UiInteraction
@@ -63,7 +63,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         rxBus: RxBus,
         aapsSchedulers: AapsSchedulers,
         rh: ResourceHelper,
-        constraintChecker: Constraints,
+        constraintChecker: ConstraintsChecker,
         profileFunction: ProfileFunction,
         activePlugin: ActivePlugin,
         context: Context,
@@ -88,6 +88,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
+            if (it is ConstraintObject<*>) {
+                it.aapsLogger = aapsLogger
+            }
             if (it is Command) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
@@ -140,14 +143,14 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         )
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
 
-        val bolusConstraint = Constraint(0.0)
+        val bolusConstraint = ConstraintObject(0.0, injector)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(bolusConstraint)
         `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(bolusConstraint)
-        val carbsConstraint = Constraint(0)
+        val carbsConstraint = ConstraintObject(0, injector)
         `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(carbsConstraint)
-        val rateConstraint = Constraint(0.0)
+        val rateConstraint = ConstraintObject(0.0, injector)
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
-        val percentageConstraint = Constraint(0)
+        val percentageConstraint = ConstraintObject(0, injector)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
         `when`(rh.gs(info.nightscout.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
         `when`(rh.gs(info.nightscout.core.ui.R.string.format_insulin_units)).thenReturn("%1\$.2f U")

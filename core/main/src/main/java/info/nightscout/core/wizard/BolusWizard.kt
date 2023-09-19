@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.highValueToUnitsToString
 import info.nightscout.core.extensions.lowValueToUnitsToString
 import info.nightscout.core.iob.round
@@ -19,8 +20,7 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.automation.Automation
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatus
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
@@ -63,7 +63,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var loop: Loop
@@ -273,7 +273,7 @@ class BolusWizard @Inject constructor(
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
 
-        insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(calculatedTotalInsulin)).value()
+        insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(calculatedTotalInsulin, injector)).value()
 
         aapsLogger.debug(this.toString())
         return this

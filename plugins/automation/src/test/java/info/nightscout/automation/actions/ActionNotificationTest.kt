@@ -26,7 +26,7 @@ class ActionNotificationTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var context: Context
-    @Mock lateinit var rxBus: RxBus
+    @Mock lateinit var rxBusMocked: RxBus
     @Mock lateinit var repository: AppRepository
 
     private lateinit var sut: ActionNotification
@@ -34,7 +34,7 @@ class ActionNotificationTest : TestBase() {
         AndroidInjector {
             if (it is ActionNotification) {
                 it.rh = rh
-                it.rxBus = rxBus
+                it.rxBus = rxBusMocked
                 it.repository = repository
             }
             if (it is PumpEnactResult) {
@@ -78,7 +78,7 @@ class ActionNotificationTest : TestBase() {
                 Assertions.assertTrue(result.success)
             }
         })
-        Mockito.verify(rxBus, Mockito.times(2)).send(anyObject())
+        Mockito.verify(rxBusMocked, Mockito.times(2)).send(anyObject())
         //Mockito.verify(repository, Mockito.times(1)).runTransaction(any(Transaction::class.java))
     }
 

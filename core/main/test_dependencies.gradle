@@ -12,6 +12,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_junit_version"
     androidTestImplementation "androidx.test:rules:$androidx_rules_version"
+    androidTestImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
 
     androidTestImplementation 'androidx.test.uiautomator:uiautomator:2.2.0'
 }

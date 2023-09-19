@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -54,7 +54,7 @@ class SignatureVerifierPlugin @Inject constructor(
         .showInList(false)
         .pluginName(R.string.signature_verifier),
     aapsLogger, rh, injector
-), Constraints {
+), PluginConstraints {
 
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
@@ -88,7 +88,7 @@ class SignatureVerifierPlugin @Inject constructor(
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         if (hasIllegalSignature()) {
             showNotification()
-            value.set(aapsLogger, false)
+            value.set(false)
         }
         if (shouldDownloadCerts()) {
             handler.post {

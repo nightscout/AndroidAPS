@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
@@ -23,8 +25,7 @@ import info.nightscout.interfaces.Constants.INSULIN_PLUS2_DEFAULT
 import info.nightscout.interfaces.Constants.INSULIN_PLUS3_DEFAULT
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.automation.Automation
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -56,7 +57,7 @@ import kotlin.math.max
 
 class InsulinDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
@@ -72,6 +73,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var injector: HasAndroidInjector
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -189,7 +191,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         if (_binding == null) return false
         val pumpDescription = activePlugin.activePump.pumpDescription
         val insulin = SafeParse.stringToDouble(binding.amount.text)
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, injector)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)

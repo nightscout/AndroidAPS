@@ -3,6 +3,7 @@ package info.nightscout.plugins.general.wear.wearintegration
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.toStringShort
 import info.nightscout.core.extensions.valueToUnits
@@ -33,8 +34,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
@@ -104,7 +104,7 @@ class DataHandlerMobile @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val trendCalculator: TrendCalculator,
     private val dateUtil: DateUtil,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
@@ -269,7 +269,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionFillConfirmed received $it from ${it.sourceNodeId}")
-                           if (constraintChecker.applyBolusConstraints(Constraint(it.insulin)).value() - it.insulin != 0.0) {
+                           if (constraintChecker.applyBolusConstraints(ConstraintObject(it.insulin, injector)).value() - it.insulin != 0.0) {
                                ToastUtils.showToastInUiThread(context, "aborting: previously applied constraint changed")
                                sendError("aborting: previously applied constraint changed")
                            } else
@@ -383,7 +383,7 @@ class DataHandlerMobile @Inject constructor(
             return
         }
         val carbsBeforeConstraints = command.carbs
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbsBeforeConstraints)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbsBeforeConstraints, injector)).value()
         if (carbsAfterConstraints - carbsBeforeConstraints != 0) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_carbs_constraint))
             return
@@ -480,7 +480,7 @@ class DataHandlerMobile @Inject constructor(
 
         val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
 
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), injector)).value()
         if (carbsAfterConstraints != quickWizardEntry.carbs()) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_carbs_constraint))
             return
@@ -506,8 +506,8 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleBolusPreCheck(command: EventData.ActionBolusPreCheck) {
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(command.carbs)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(command.insulin, injector)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, injector)).value()
         val pump = activePlugin.activePump
         if (insulinAfterConstraints > 0 && (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected)) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_pump_not_available))
@@ -530,7 +530,7 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {
         val startTimeStamp = System.currentTimeMillis() + T.mins(command.carbsTimeShift.toLong()).msecs()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(command.carbs)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, injector)).value()
         var message = rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short) +
             "\n" + rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
             "\n" + rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + command.duration + rh.gs(R.string.hour_short)
@@ -558,7 +558,7 @@ class DataHandlerMobile @Inject constructor(
             3    -> sp.getDouble("fill_button3", 0.0)
             else -> return
         }
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(amount, injector)).value()
         var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
         if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
         rxBus.send(
@@ -572,7 +572,7 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(command.insulin, injector)).value()
         var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
         if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
         rxBus.send(

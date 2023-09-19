@@ -34,7 +34,7 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.interfaces.Constants;
-import info.nightscout.interfaces.constraints.Constraints;
+import info.nightscout.interfaces.constraints.ConstraintsChecker;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.profile.ProfileFunction;
@@ -62,7 +62,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject AAPSLogger aapsLogger;
     @Inject RxBus rxBus;
     @Inject ResourceHelper rh;
-    @Inject Constraints constraintChecker;
+    @Inject ConstraintsChecker constraintChecker;
     @Inject DanaPump danaPump;
     @Inject DanaRPlugin danaRPlugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
@@ -81,12 +81,6 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     public void onCreate() {
         super.onCreate();
         mBinder = new LocalBinder();
-    }
-
-    public class LocalBinder extends Binder {
-        public DanaRKoreanExecutionService getServiceInstance() {
-            return DanaRKoreanExecutionService.this;
-        }
     }
 
     @SuppressLint("MissingPermission") public void connect() {
@@ -328,6 +322,12 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Override
     public PumpEnactResult setUserOptions() {
         return null;
+    }
+
+    public class LocalBinder extends Binder {
+        public DanaRKoreanExecutionService getServiceInstance() {
+            return DanaRKoreanExecutionService.this;
+        }
     }
 
 }

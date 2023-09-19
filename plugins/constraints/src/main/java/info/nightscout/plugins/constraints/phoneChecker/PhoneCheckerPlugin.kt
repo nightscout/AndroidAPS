@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import com.scottyab.rootbeer.RootBeer
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -22,13 +22,13 @@ class PhoneCheckerPlugin @Inject constructor(
     private val context: Context
 ) : PluginBase(
     PluginDescription()
-    .mainType(PluginType.CONSTRAINTS)
-    .neverVisible(true)
-    .alwaysEnabled(true)
-    .showInList(false)
-    .pluginName(R.string.phone_checker),
+        .mainType(PluginType.CONSTRAINTS)
+        .neverVisible(true)
+        .alwaysEnabled(true)
+        .showInList(false)
+        .pluginName(R.string.phone_checker),
     aapsLogger, rh, injector
-), Constraints {
+), PluginConstraints {
 
     var phoneRooted: Boolean = false
     var devMode: Boolean = false
@@ -36,8 +36,10 @@ class PhoneCheckerPlugin @Inject constructor(
     val manufacturer: String = Build.MANUFACTURER
 
     private fun isDevModeEnabled(): Boolean {
-        return android.provider.Settings.Secure.getInt(context.contentResolver,
-            android.provider.Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) != 0
+        return android.provider.Settings.Secure.getInt(
+            context.contentResolver,
+            android.provider.Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0
+        ) != 0
     }
 
     override fun onStart() {

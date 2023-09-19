@@ -19,10 +19,10 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.shared.impl.rx.bus.RxBusImpl
 import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.DateUtilImpl
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -45,11 +45,10 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
 
-    lateinit var dateUtil: DateUtilImpl
+    lateinit var dateUtil: DateUtil
     lateinit var profileUtil: ProfileUtil
     lateinit var decimalFormatter: DecimalFormatter
     lateinit var hardLimits: HardLimits
-    val rxBus = RxBusImpl(aapsSchedulers, aapsLogger)
 
     val profileInjector = HasAndroidInjector {
         AndroidInjector {

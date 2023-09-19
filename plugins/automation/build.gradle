@@ -26,6 +26,7 @@ dependencies {
     implementation project(':database:impl')
 
     testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':app-wear-shared:shared-impl')
     testImplementation project(':implementation')
     testImplementation project(':plugins:main')
 

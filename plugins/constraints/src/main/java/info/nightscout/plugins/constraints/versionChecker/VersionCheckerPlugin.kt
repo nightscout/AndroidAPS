@@ -3,7 +3,7 @@ package info.nightscout.plugins.constraints.versionChecker
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -40,7 +40,7 @@ class VersionCheckerPlugin @Inject constructor(
         .showInList(false)
         .pluginName(R.string.version_checker),
     aapsLogger, rh, injector
-), Constraints {
+), PluginConstraints {
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {
         RELEASE(30, 60, 90),
@@ -64,16 +64,16 @@ class VersionCheckerPlugin @Inject constructor(
         checkWarning()
         versionCheckerUtils.triggerCheckVersion()
         if (lastCheckOlderThan(gracePeriod.veryOld.daysToMillis()))
-            value.set(aapsLogger, false, rh.gs(R.string.very_old_version), this)
+            value.set(false, rh.gs(R.string.very_old_version), this)
         val endDate = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_app_expiration) + "_" + config.VERSION_NAME, 0)
         if (endDate != 0L && dateUtil.now() > endDate)
-            value.set(aapsLogger, false, rh.gs(R.string.application_expired), this)
+            value.set(false, rh.gs(R.string.application_expired), this)
         return value
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (lastCheckOlderThan(gracePeriod.old.daysToMillis()))
-            maxIob.set(aapsLogger, 0.0, rh.gs(R.string.old_version), this)
+            maxIob.set(0.0, rh.gs(R.string.old_version), this)
         else
             maxIob
 

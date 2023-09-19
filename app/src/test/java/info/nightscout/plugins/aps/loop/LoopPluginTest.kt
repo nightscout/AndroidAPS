@@ -8,8 +8,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Config
-import info.nightscout.sdk.interfaces.RunningConfiguration
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -20,7 +19,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.rx.bus.RxBus
+import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -34,8 +33,7 @@ import org.mockito.Mockito.`when`
 class LoopPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
-    private val rxBus: RxBus = RxBus(aapsSchedulers, aapsLogger)
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var context: Context

@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.directionToIcon
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
@@ -49,8 +50,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.VariableSensitivityResult
 import info.nightscout.interfaces.automation.Automation
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
@@ -121,7 +121,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
@@ -516,7 +516,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
-                val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
+                val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), injector)).value()
                 activity?.let {
                     if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
                         OKDialog.show(it, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))

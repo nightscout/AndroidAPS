@@ -2,6 +2,8 @@ package info.nightscout.sharedtests
 
 import android.annotation.SuppressLint
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.impl.rx.bus.RxBusImpl
 import info.nightscout.sharedtests.rx.TestAapsSchedulers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
@@ -19,11 +21,13 @@ open class TestBase {
 
     val aapsLogger = AAPSLoggerTest()
     val aapsSchedulers: AapsSchedulers = TestAapsSchedulers()
+    lateinit var rxBus: RxBus
 
     @BeforeEach
     fun setupLocale() {
         Locale.setDefault(Locale.ENGLISH)
         System.setProperty("disableFirebase", "true")
+        rxBus = RxBusImpl(aapsSchedulers, aapsLogger)
     }
 
     @SuppressLint("CheckResult")
