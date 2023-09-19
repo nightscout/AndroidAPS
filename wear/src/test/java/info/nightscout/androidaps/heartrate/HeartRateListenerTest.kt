@@ -3,14 +3,13 @@ package info.nightscout.androidaps.heartrate
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.weardata.EventData.ActionHeartRate
 import info.nightscout.sharedtests.AAPSLoggerTest
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -80,14 +79,13 @@ internal class HeartRateListenerTest {
         val d2 = 20_000L
         val listener = create(start)
 
-        assertNull(listener.currentHeartRateBpm)
+        assertThat(listener.currentHeartRateBpm).isNull()
         sendSensorEvent(listener, start + d1, 80)
-        assertEquals(0, heartRates.size)
-        assertEquals(80, listener.currentHeartRateBpm)
+        assertThat(heartRates).isEmpty()
+        assertThat(listener.currentHeartRateBpm).isEqualTo(80)
 
         listener.send(start + d2)
-        assertEquals(1, heartRates.size)
-        assertEquals(ActionHeartRate(d2, start + d2, 80.0, device), heartRates.first())
+        assertThat(heartRates).containsExactly(ActionHeartRate(d2, start + d2, 80.0, device))
         listener.dispose()
     }
 
@@ -99,16 +97,15 @@ internal class HeartRateListenerTest {
         val listener = create(start)
 
         sendSensorEvent(listener, start, 80)
-        assertEquals(0, heartRates.size)
-        assertEquals(80, listener.currentHeartRateBpm)
+        assertThat(heartRates).isEmpty()
+        assertThat(listener.currentHeartRateBpm).isEqualTo(80)
         sendSensorEvent(listener, start + d1, 100)
-        assertEquals(0, heartRates.size)
-        assertEquals(100, listener.currentHeartRateBpm)
+        assertThat(heartRates).isEmpty()
+        assertThat(listener.currentHeartRateBpm).isEqualTo(100)
 
 
         listener.send(start + d2)
-        assertEquals(1, heartRates.size)
-        assertEquals(ActionHeartRate(d2, start + d2, 95.0, device), heartRates.first())
+        assertThat(heartRates).containsExactly(ActionHeartRate(d2, start + d2, 95.0, device))
         listener.dispose()
     }
 
@@ -121,15 +118,15 @@ internal class HeartRateListenerTest {
 
         sendSensorEvent(listener, start, 80)
         listener.send(start + d1)
-        assertEquals(1, heartRates.size)
+        assertThat(heartRates).hasSize(1)
 
         sendSensorEvent(listener, start + d1, 100)
-        assertEquals(1, heartRates.size)
+        assertThat(heartRates).hasSize(1)
         listener.send(start + d2)
-        assertEquals(2, heartRates.size)
-
-        assertEquals(ActionHeartRate(d1, start + d1, 80.0, device), heartRates[0])
-        assertEquals(ActionHeartRate(d2 - d1, start + d2, 100.0, device), heartRates[1])
+        assertThat(heartRates).containsExactly(
+            ActionHeartRate(d1, start + d1, 80.0, device),
+            ActionHeartRate(d2 - d1, start + d2, 100.0, device),
+        ).inOrder()
         listener.dispose()
     }
 
@@ -142,11 +139,10 @@ internal class HeartRateListenerTest {
 
         sendSensorEvent(listener, start, 80)
         sendSensorEvent(listener, start + d1, 100, accuracy = SensorManager.SENSOR_STATUS_NO_CONTACT)
-        assertNull(listener.currentHeartRateBpm)
+        assertThat(listener.currentHeartRateBpm).isNull()
         listener.send(start + d2)
 
-        assertEquals(1, heartRates.size)
-        assertEquals(ActionHeartRate(d2, start + d2, 80.0, device), heartRates.first())
+        assertThat(heartRates).containsExactly(ActionHeartRate(d2, start + d2, 80.0, device))
         listener.dispose()
     }
 
@@ -163,8 +159,7 @@ internal class HeartRateListenerTest {
         sendSensorEvent(listener, start + d2, 100)
         listener.send(start + d3)
 
-        assertEquals(1, heartRates.size)
-        assertEquals(ActionHeartRate(d3, start + d3, 95.0, device), heartRates.first())
+        assertThat(heartRates).containsExactly(ActionHeartRate(d3, start + d3, 95.0, device))
         listener.dispose()
     }
 }
