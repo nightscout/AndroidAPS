@@ -9,4 +9,5 @@
     <string name="virtual_pump_label">VIRTUELE POMP</string>
     <string name="virtualpump_settings">Virtuele pomp instellingen</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* Alleen absolute waardes (geen van-tot bereik) worden ondersteund voor basaal / bolus in virtuele pomp.</string>
 </resources>
