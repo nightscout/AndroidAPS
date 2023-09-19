@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">Seleziona watchface personalizzata</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
+    <!-- Maintenance -->
 </resources>

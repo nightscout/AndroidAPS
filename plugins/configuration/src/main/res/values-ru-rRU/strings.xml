@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">Выберите пользовательский циферблат</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AAPS из системных настроек \n иначе AAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
+    <!-- Maintenance -->
 </resources>

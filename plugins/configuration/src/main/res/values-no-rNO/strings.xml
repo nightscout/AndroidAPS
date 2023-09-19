@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">Velg tilpasset klokkebakgrunn</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AAPS fra Innstillinger \nellers vil ikke AAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig)!</string>
+    <!-- Maintenance -->
 </resources>

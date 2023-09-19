@@ -9,4 +9,5 @@
     <string name="virtual_pump_label">POMPA WIRTUALNA</string>
     <string name="virtualpump_settings">Ustawienia pompy wirtualnej</string>
     <!--    PumpType-->
+    <string name="def_extended_note">*Tylko wartości dyskretne, a nie zakresy są wspierane jako dawki bazowe/bolusy w pompie wirtualnej.</string>
 </resources>

@@ -23,6 +23,11 @@
     <string name="smscommunicator_otp_step3_test_header">3. Test Engangsadgangskode</string>
     <string name="smscommunicator_otp_reset_header">Nulstil Autentificering</string>
     <string name="smscommunicator_otp_install_info">På hver follower telefon installeres Authenticator app, der understøtter RFC 6238 TOTP tokens. Populære gratis apps er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Ved at nulstille autentificeringen gør du alle allerede tilvejebragte authenticatorer ugyldige. Du vil bliver nødt til at opsætte dem igen!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">FORKERT STØRRELSE!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">FORKERT PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">FORKERT OTP</string>
     <string name="sms_wrong_code">Forkert kode. Kommandoen annulleret.</string>
     <string name="sms_timeout_while_waiting">Timeout mens du venter på afslutning af tidligere pumpe kommunikation</string>
     <string name="smscommunicator_allowednumbers">Tilladte telefonnumre</string>
@@ -87,6 +92,9 @@
     <string name="smscommunicator_message_body">Ugyldigt beskedindhold</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Send sms, hvis der udløses en utilgængelig pumpebegivenhed</string>
     <string name="smscommunicator_pump_unreachable">Rapportér pumpe utilgængeligt</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">For at skifte Loop-tilstand til LGS (Low Glucose Suspend), svar med kode %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">For at skifte Loop-tilstand til Lukket loop, svar med kode %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Nuværende loop-tilstand: %1$s</string>
     <string name="wrong_format">Forkert Format</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Sidste BG:</string>
@@ -133,6 +141,7 @@
     <string name="error_in_basal_values">Fejl i basal rate værdier</string>
     <string name="error_in_target_values">Fejl i målværdier</string>
     <string name="error_in_isf_values">Fejl i ISF-værdier</string>
+    <string name="profile_name_contains_dot">Nogle af profilnavnene indeholder punktummer.\nDette understøttes ikke af NS.\nProfiler vil ikke blive uploadet til NS.</string>
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s blev ikke accepteret fra NS</string>
     <string name="view">Vis</string>
     <string name="errors">Fejl</string>
@@ -165,6 +174,8 @@
     <string name="patch_pump">Patch pumpe</string>
     <!-- Overview -->
     <string name="show_statuslights">Vis statuslys på startskærm</string>
+    <string name="statuslights_cage_warning">Grænseværdi for advarsel på cannula-alder [t]</string>
+    <string name="statuslights_cage_critical">Grænseværdi for kritisk cannula-alder [t]</string>
     <string name="statuslights_iage_warning">Grænseværdi for insulin-alder [h]</string>
     <string name="statuslights_iage_critical">Grænseværdi for kritisk insulin-alder [h]</string>
     <string name="statuslights_sage_warning">Grænseværdi advarsel for sensoralder [h]</string>
@@ -232,6 +243,7 @@
     <string name="short_tabtitles">Forkort titel</string>
     <string name="overview_show_notes_field_in_dialogs_title">Vis notefelt i behandlingsdialoger</string>
     <string name="deliverpartofboluswizard">Bolus guiden udfører beregning, men kun denne del af beregnet insulin leveres. Nyttig med SMB algoritme.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Levér fuld bolus (100%), hvis glycæmi er ældre end</string>
     <string name="enable_bolus_advisor">Aktiver bolus rådgiver</string>
     <string name="enable_bolus_advisor_summary">Brug påmindelse om at begynde at spise senere i stedet for guiden under høj glykæmi (\"pre-bolus\")</string>
     <string name="enablesuperbolus">Aktiver superbolus i guiden</string>
@@ -243,6 +255,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Forudsigelser</string>
     <string name="overview_show_treatments">Behandlinger</string>
+    <string name="overview_show_heartRate">Puls</string>
     <string name="overview_show_deviation_slope">Afvigelses hældning</string>
     <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_bgi">Blodsukker virkning</string>
@@ -260,6 +273,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">AFVHÆL</string>
     <string name="treatments_shortname">BEHANDL</string>
+    <string name="heartRate_shortname">HR</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
@@ -269,12 +283,14 @@
     <string name="buttonson_description">Knapper vises altid nederst på skærmen</string>
     <string name="largedisplay_description">Stort display</string>
     <string name="skin">Udseende</string>
+    <string name="cannula_usage">brug:</string>
     <!--    Iob-->
     <string name="send_logfiles">Send dagens logfiler til udviklere sammen med denne tid. Uventet situation.</string>
     <!--    Wear-->
     <string name="wear_shortname">UR</string>
     <string name="description_wear">Overvåg og kontrollér AndroidAPS ved hjælp af dit WearOS-ur.</string>
     <string name="no_watch_connected">(Intet ur forbundet)</string>
+    <string name="pump_status">Pumpestatus</string>
     <string name="loop_status">Loop status</string>
     <string name="wizard_result">Guide:\nInsulin: %1$.2fE\nKH: %2$dg</string>
     <string name="quick_wizard_not_available">Valgt guide er ikke længere tilgængeligt. Opdater venligst din widget</string>
@@ -296,9 +312,46 @@
     <string name="wear_general_settings">Generelle indstillinger</string>
     <string name="wear_notifysmb_title">Giv besked ved SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på uret som en standard bolus.</string>
+    <string name="wear_custom_watchface_settings">Brugerdefinerede Urskiveindstillinger</string>
+    <string name="wear_custom_watchface_authorization_title">Brugerdefineret Urskivegodkendelse</string>
+    <string name="wear_custom_watchface_authorization_summary">Godkend indlæste brugerdefinerede urskive til at ændre og låse nogle overvågningsindstillinger der passer til urskivens design</string>
+    <string name="wear_custom_watchface">Brugerdefineret Urskive: %1$s</string>
+    <string name="wear_load_watchface">Indlæs Urskive</string>
+    <string name="wear_infos_watchface">Infos Urskiver</string>
+    <string name="wear_export_watchface">Eksporter skabelon</string>
+    <string name="wear_new_custom_watchface_exported">Brugerdefineret urskiveskabelon eksporteret</string>
     <string name="resend_all_data">Send alle data igen</string>
     <string name="open_settings_on_wear">Åbn indstillinger på ur</string>
+    <string name="cwf_infos_pref_locked">Liste over præferencer låst af urskiven</string>
+    <string name="cwf_infos_pref_required">Liste over præferencer påkrævet af urskiven</string>
+    <string name="cwf_infos_view_title">Liste over felter inkluderet i Urskiven</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en løbende notifikation med en kort oversigt over, hvad dit loop gør</string>
     <string name="old_data">GAMLE DATA</string>
+    <string name="pump_fetching_data">forsøger at hente data fra pumpen.</string>
+    <string name="pump_old_data">TDD: Stadig gammel data! Kan ikke indlæse fra pumpen.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">t</string>
+    <string name="no_active_profile">Ingen aktiv profilskift!</string>
+    <string name="profile_message">Profil:\n\nTidsskift: %1$d\nProcent: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fIE %1$.0f%%</string>
+    <string name="no_profile">Ingen profil indlæst</string>
+    <string name="aps_only">Gælder kun i APS-tilstand!</string>
+    <string name="last_aps_result_na">Sidste resultat ikke tilgængeligt!</string>
+    <string name="loop_status_closed">LUKKET LOOP</string>
+    <string name="loop_status_open">ÅBEN LOOP</string>
+    <string name="loop_status_disabled">LOOP DEAKTIVERET</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Sidste brug</string>
+    <string name="last_enact">Sidste Aktivering</string>
+    <string name="today">I dag</string>
+    <string name="weighted">vægtet</string>
+    <string name="target_only_aps_mode">Mål gælder kun i APS-tilstand!</string>
+    <string name="no_history">Ingen historisk data!</string>
+    <string name="units_short">IE</string>
+    <string name="temp_target">Midlertidigt mål</string>
+    <string name="until">indtil</string>
+    <string name="default_range">Standardmål</string>
+    <string name="target">mål</string>
+    <string name="rate_duration">Rate: %1$.2fIE/t (%2$.2f%%) \nVarighed %3$d min</string>
 </resources>
