@@ -162,4 +162,10 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="metadata_label_created_at">Créé le</string>
     <string name="metadata_label_aaps_version">Version d\'AAPS</string>
     <string name="metadata_label_aaps_flavour">Version de construction</string>
+    <string name="metadata_label_device_name">Export du nom du patient de l\'appareil</string>
+    <string name="metadata_label_device_model">Export du modèle de l\'appareil</string>
+    <string name="metadata_label_encryption">Cryptage du fichier</string>
+    <string name="metadata_format_new">Nouveau format chiffré</string>
+    <string name="metadata_format_debug">Nouveau format de débogage (non crypté)</string>
+    <string name="metadata_format_other">Format d\'export inconnu</string>
 </resources>
