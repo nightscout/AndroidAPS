@@ -6,8 +6,10 @@ import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.utils.JsonHelper.safeGetDouble
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.aps.APSResult
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -20,9 +22,15 @@ class APSResultTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintsChecker: ConstraintsChecker
 
-    private val injector = HasAndroidInjector { AndroidInjector { } }
+    private val injector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is ConstraintObject<*>) {
+                it.aapsLogger = aapsLogger
+            }
+        }
+    }
 
-    private var closedLoopEnabled = ConstraintObject(false, injector)
+    private lateinit var closedLoopEnabled: Constraint<Boolean>
 
     private fun APSResult.percent(percent: Int): APSResult {
         this.percent = percent
@@ -52,7 +60,7 @@ class APSResultTest : TestBaseWithProfile() {
     @Test
     fun changeRequestedTest() {
 
-        val apsResult = info.nightscout.plugins.aps.APSResultObject { AndroidInjector { } }
+        val apsResult = APSResultObject { AndroidInjector { } }
             .also {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintsChecker
@@ -293,7 +301,7 @@ class APSResultTest : TestBaseWithProfile() {
     }
 
     @Test fun cloneTest() {
-        val apsResult = info.nightscout.plugins.aps.APSResultObject { AndroidInjector { } }
+        val apsResult = APSResultObject(injector)
             .also {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintsChecker
@@ -310,7 +318,7 @@ class APSResultTest : TestBaseWithProfile() {
 
     @Test fun jsonTest() {
         closedLoopEnabled.set(true)
-        val apsResult = info.nightscout.plugins.aps.APSResultObject { AndroidInjector { } }
+        val apsResult = APSResultObject(injector)
             .also {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintsChecker
@@ -328,7 +336,8 @@ class APSResultTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        `when`(constraintsChecker.isClosedLoopAllowed(anyObject())).thenReturn(closedLoopEnabled)
+        closedLoopEnabled = ConstraintObject(false, injector)
+        `when`(constraintsChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled)
         `when`(sp.getDouble(ArgumentMatchers.anyInt(), ArgumentMatchers.anyDouble())).thenReturn(30.0)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
     }
