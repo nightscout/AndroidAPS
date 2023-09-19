@@ -48,6 +48,7 @@ import info.nightscout.rx.weardata.ResData
 import info.nightscout.rx.weardata.ResFormat
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.JsonKeyValues
+import info.nightscout.rx.weardata.JsonKeys
 import info.nightscout.rx.weardata.JsonKeys.*
 import info.nightscout.rx.weardata.ViewKeys
 import info.nightscout.rx.weardata.ZipWatchfaceFormat
@@ -603,7 +604,7 @@ class CustomWatchface : BaseWatchFace() {
             view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
             if (viewJson.has(TEXTVALUE.key))
                 view.text = viewJson.optString(TEXTVALUE.key)
-            view.background = resDataMap[viewJson.optString(BACKGROUND.key)]?.toDrawable(resources, view.width, view.height)
+            view.background = resDataMap[viewJson.optString(JsonKeys.BACKGROUND.key)]?.toDrawable(resources, view.width, view.height)
         }
 
         fun customizeImageView(
