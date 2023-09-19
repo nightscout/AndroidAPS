@@ -9,7 +9,7 @@ import info.nightscout.interfaces.profile.Profile
  * Every function has a param from previous chained call
  * Function can limit the value even more and add another reason of restriction
  *
- * see [info.nightscout.implementation.constraints.ConstraintsImpl]
+ * see [info.nightscout.plugins.constraints.ConstraintsImpl]
  * which iterates over all registered plugins with [Constraints] implemented
  *
  * @return updated parameter

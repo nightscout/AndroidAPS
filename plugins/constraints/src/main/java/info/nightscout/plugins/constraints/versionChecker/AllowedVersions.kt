@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.constraints.versionChecker
+package info.nightscout.plugins.constraints.versionChecker
 
 import org.joda.time.LocalDate
 import org.json.JSONArray
