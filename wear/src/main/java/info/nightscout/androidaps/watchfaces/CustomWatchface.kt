@@ -53,7 +53,7 @@ import org.joda.time.TimeOfDay
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
-
+@SuppressLint("UseCompatLoadingForDrawables")
 class CustomWatchface : BaseWatchFace() {
 
     @Inject lateinit var context: Context
@@ -88,7 +88,6 @@ class CustomWatchface : BaseWatchFace() {
             .build()
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     override fun setDataFields() {
         super.setDataFields()
         binding.direction2.setImageDrawable(TrendArrowMap.drawable(singleBg.slopeArrow, resources, resDataMap))
@@ -141,7 +140,6 @@ class CustomWatchface : BaseWatchFace() {
         binding.secondHand.visibility = (binding.secondHand.visibility == View.VISIBLE && showSecond).toVisibility()
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     private fun setWatchfaceStyle() {
         val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
         customWatchface?.let {
@@ -185,39 +183,15 @@ class CustomWatchface : BaseWatchFace() {
                             view.visibility = setVisibility(viewJson.optString(VISIBILITY.key, JsonKeyValues.GONE.key), id.visibility(sp))
                             when (view) {
                                 is TextView  -> {
-                                    view.rotation = viewJson.optInt(ROTATION.key).toFloat()
-                                    view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * zoomFactor).toFloat())
-                                    view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
-                                    view.setTypeface(
-                                        FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
-                                        StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
-                                    )
-                                    view.setTextColor(getColor(viewJson.optString(FONTCOLOR.key)))
-                                    view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
-                                    if (viewJson.has(TEXTVALUE.key))
-                                        view.text = viewJson.optString(TEXTVALUE.key)
-                                    view.background = resDataMap[viewJson.optString(BACKGROUND.key)]?.toDrawable(resources, width, height)
+                                    id.customizeTextView(view, viewJson, resDataMap, zoomFactor, resources, ::getColor)
                                 }
 
                                 is ImageView -> {
-                                    view.clearColorFilter()
-                                    id.drawable(resources, resDataMap, singleBg.sgvLevel)?.let {
-                                        if (viewJson.has(COLOR.key))        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
-                                            it.colorFilter = changeDrawableColor(getColor(viewJson.optString(COLOR.key)))
-                                        else
-                                            it.clearColorFilter()
-                                        view.setImageDrawable(it)
-                                    } ?: apply {
-                                        view.setImageDrawable(id.defaultDrawable?.let {resources.getDrawable(it)})
-                                        if (viewJson.has(COLOR.key))
-                                            view.setColorFilter(getColor(viewJson.optString(COLOR.key)))
-                                        else
-                                            view.clearColorFilter()
-                                    }
+                                    id.customizeImageView(view, viewJson, resDataMap, singleBg, resources, ::getColor, ::changeDrawableColor)
                                 }
 
                             }
-                        } ?:apply {
+                        } ?: apply {
                             view.visibility = View.GONE
                             if (view is TextView) {
                                 view.text = ""
@@ -394,7 +368,7 @@ class CustomWatchface : BaseWatchFace() {
         @StringRes val pref: Int?,
         @IdRes val defaultDrawable: Int?,
         val customDrawable: ResFileMap?,
-        val customHigh:ResFileMap?,
+        val customHigh: ResFileMap?,
         val customLow: ResFileMap?
     ) {
 
@@ -491,113 +465,154 @@ class CustomWatchface : BaseWatchFace() {
 
         fun drawable(resources: Resources, drawableDataMap: CwfResDataMap, sgvLevel: Long): Drawable? = customDrawable?.let { cd ->
             when (sgvLevel) {
-                1L   -> { customHigh?.let {drawableDataMap[customHigh.fileName]}?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
+                1L   -> { customHigh?.let { drawableDataMap[customHigh.fileName] }?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
                 0L   -> { drawableDataMap[cd.fileName]?.toDrawable(resources) }
-                -1L  -> { customLow?.let {drawableDataMap[customLow.fileName]}?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
+                -1L  -> { customLow?.let {drawableDataMap[customLow.fileName] }?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
                 else -> drawableDataMap[cd.fileName]?.toDrawable(resources)
             }
         }
-    }
-}
 
-private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int,val customDrawable: ResFileMap?) {
-    NONE("??", R.drawable.ic_invalid, ResFileMap.ARROW_NONE),
-    TRIPLE_UP("X", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
-    DOUBLE_UP("\u21c8", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
-    SINGLE_UP("\u2191", R.drawable.ic_singleup, ResFileMap.ARROW_SINGLE_UP),
-    FORTY_FIVE_UP("\u2197", R.drawable.ic_fortyfiveup, ResFileMap.ARROW_FORTY_FIVE_UP),
-    FLAT("\u2192", R.drawable.ic_flat, ResFileMap.ARROW_FLAT),
-    FORTY_FIVE_DOWN("\u2198", R.drawable.ic_fortyfivedown, ResFileMap.ARROW_FORTY_FIVE_DOWN),
-    SINGLE_DOWN("\u2193", R.drawable.ic_singledown, ResFileMap.ARROW_SINGLE_DOWN),
-    DOUBLE_DOWN("\u21ca", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN),
-    TRIPLE_DOWN("X", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN);
-
-    companion object {
-
-        fun drawable(direction: String?, resources: Resources, drawableDataMap: CwfResDataMap): Drawable {
-            val arrow = values().firstOrNull { it.symbol == direction } ?:NONE
-            return arrow.customDrawable?. let {drawableDataMap[arrow.customDrawable.fileName]}?.toDrawable(resources)  ?:resources.getDrawable(arrow.icon)
+        fun customizeTextView(view: TextView, viewJson: JSONObject, resDataMap: CwfResDataMap, zoomFactor: Double, resources: Resources, getColor: (String) -> Int) {
+            view.rotation = viewJson.optInt(ROTATION.key).toFloat()
+            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * zoomFactor).toFloat())
+            view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
+            view.setTypeface(
+                FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
+                StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
+            )
+            view.setTextColor(getColor(viewJson.optString(FONTCOLOR.key)))
+            view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
+            if (viewJson.has(TEXTVALUE.key))
+                view.text = viewJson.optString(TEXTVALUE.key)
+            view.background = resDataMap[viewJson.optString(BACKGROUND.key)]?.toDrawable(resources, view.width, view.height)
         }
 
-    }
-}
-
-private enum class GravityMap(val key: String, val gravity: Int) {
-    CENTER(JsonKeyValues.CENTER.key, Gravity.CENTER),
-    LEFT(JsonKeyValues.LEFT.key, Gravity.LEFT),
-    RIGHT(JsonKeyValues.RIGHT.key, Gravity.RIGHT);
-
-    companion object {
-
-        fun gravity(key: String?) = values().firstOrNull { it.key == key }?.gravity ?: CENTER.gravity
-        fun key(gravity: Int) = values().firstOrNull { it.gravity == gravity }?.key ?: CENTER.key
-    }
-}
-
-private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
-    SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null),
-    DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null),
-    DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null),
-    MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null),
-    SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null),
-    ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold),
-    ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light),
-    ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular),
-    ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light);
-
-    companion object {
-
-        private val customFonts = mutableMapOf<String, Typeface>()
-        fun init(context: Context, resDataMap: CwfResDataMap) {
-            customFonts.clear()
-            values().forEach { fontMap ->
-                customFonts[fontMap.key.lowercase()] = fontMap.fontRessources?.let { fontResource ->
-                    ResourcesCompat.getFont(context, fontResource)
-                } ?: fontMap.font
-            }
-            resDataMap.filter { (_, resData) ->
-                resData.format == ResFormat.TTF || resData.format == ResFormat.OTF
-            }.forEach { (key, resData) ->
-                customFonts[key.lowercase()] = resData.toTypeface() ?:Typeface.DEFAULT
+        fun customizeImageView(
+            view: ImageView,
+            viewJson: JSONObject,
+            resDataMap: CwfResDataMap,
+            singleBg: EventData.SingleBg,
+            resources: Resources,
+            getColor: (String) -> Int,
+            changeDrawableColor: (Int) -> ColorFilter
+        ) {
+            view.clearColorFilter()
+            drawable(resources, resDataMap, singleBg.sgvLevel)?.let {
+                if (viewJson.has(COLOR.key))        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                    it.colorFilter = changeDrawableColor(getColor(viewJson.optString(COLOR.key)))
+                else
+                    it.clearColorFilter()
+                view.setImageDrawable(it)
+            } ?: apply {
+                view.setImageDrawable(defaultDrawable?.let { resources.getDrawable(it) })
+                if (viewJson.has(COLOR.key))
+                    view.setColorFilter(getColor(viewJson.optString(COLOR.key)))
+                else
+                    view.clearColorFilter()
             }
         }
-
-        fun font(key: String) = customFonts[key.lowercase()] ?: DEFAULT.font
-        fun key() = DEFAULT.key
     }
-}
 
-private enum class StyleMap(val key: String, val style: Int) {
-    NORMAL(JsonKeyValues.NORMAL.key, Typeface.NORMAL),
-    BOLD(JsonKeyValues.BOLD.key, Typeface.BOLD),
-    BOLD_ITALIC(JsonKeyValues.BOLD_ITALIC.key, Typeface.BOLD_ITALIC),
-    ITALIC(JsonKeyValues.ITALIC.key, Typeface.ITALIC);
+    private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int, val customDrawable: ResFileMap?) {
+        NONE("??", R.drawable.ic_invalid, ResFileMap.ARROW_NONE),
+        TRIPLE_UP("X", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
+        DOUBLE_UP("\u21c8", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
+        SINGLE_UP("\u2191", R.drawable.ic_singleup, ResFileMap.ARROW_SINGLE_UP),
+        FORTY_FIVE_UP("\u2197", R.drawable.ic_fortyfiveup, ResFileMap.ARROW_FORTY_FIVE_UP),
+        FLAT("\u2192", R.drawable.ic_flat, ResFileMap.ARROW_FLAT),
+        FORTY_FIVE_DOWN("\u2198", R.drawable.ic_fortyfivedown, ResFileMap.ARROW_FORTY_FIVE_DOWN),
+        SINGLE_DOWN("\u2193", R.drawable.ic_singledown, ResFileMap.ARROW_SINGLE_DOWN),
+        DOUBLE_DOWN("\u21ca", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN),
+        TRIPLE_DOWN("X", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN);
 
-    companion object {
+        companion object {
 
-        fun style(key: String?) = values().firstOrNull { it.key == key }?.style ?: NORMAL.style
-        fun key(style: Int) = values().firstOrNull { it.style == style }?.key ?: NORMAL.key
+            fun drawable(direction: String?, resources: Resources, drawableDataMap: CwfResDataMap): Drawable {
+                val arrow = values().firstOrNull { it.symbol == direction } ?: NONE
+                return arrow.customDrawable?.let { drawableDataMap[arrow.customDrawable.fileName] }?.toDrawable(resources) ?: resources.getDrawable(arrow.icon)
+            }
+
+        }
     }
-}
 
-// This class containt mapping between keys used within json of Custom Watchface and preferences
-private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
+    @SuppressLint("RtlHardcoded")
+    private enum class GravityMap(val key: String, val gravity: Int) {
+        CENTER(JsonKeyValues.CENTER.key, Gravity.CENTER),
+        LEFT(JsonKeyValues.LEFT.key, Gravity.LEFT),
+        RIGHT(JsonKeyValues.RIGHT.key, Gravity.RIGHT);
 
-    SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
-    SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
-    SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
-    SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
-    SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
-    SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta),
-    SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
-    SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
-    SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
-    SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
-    SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
-    SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
-    SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
-    SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status),
-    SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number)
+        companion object {
+
+            fun gravity(key: String?) = values().firstOrNull { it.key == key }?.gravity ?: CENTER.gravity
+            fun key(gravity: Int) = values().firstOrNull { it.gravity == gravity }?.key ?: CENTER.key
+        }
+    }
+
+    private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
+        SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null),
+        DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null),
+        DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null),
+        MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null),
+        SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null),
+        ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold),
+        ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light),
+        ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular),
+        ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light);
+
+        companion object {
+
+            private val customFonts = mutableMapOf<String, Typeface>()
+            fun init(context: Context, resDataMap: CwfResDataMap) {
+                customFonts.clear()
+                values().forEach { fontMap ->
+                    customFonts[fontMap.key.lowercase()] = fontMap.fontRessources?.let { fontResource ->
+                        ResourcesCompat.getFont(context, fontResource)
+                    } ?: fontMap.font
+                }
+                resDataMap.filter { (_, resData) ->
+                    resData.format == ResFormat.TTF || resData.format == ResFormat.OTF
+                }.forEach { (key, resData) ->
+                    customFonts[key.lowercase()] = resData.toTypeface() ?: Typeface.DEFAULT
+                }
+            }
+
+            fun font(key: String) = customFonts[key.lowercase()] ?: DEFAULT.font
+            fun key() = DEFAULT.key
+        }
+    }
+
+    private enum class StyleMap(val key: String, val style: Int) {
+        NORMAL(JsonKeyValues.NORMAL.key, Typeface.NORMAL),
+        BOLD(JsonKeyValues.BOLD.key, Typeface.BOLD),
+        BOLD_ITALIC(JsonKeyValues.BOLD_ITALIC.key, Typeface.BOLD_ITALIC),
+        ITALIC(JsonKeyValues.ITALIC.key, Typeface.ITALIC);
+
+        companion object {
+
+            fun style(key: String?) = values().firstOrNull { it.key == key }?.style ?: NORMAL.style
+            fun key(style: Int) = values().firstOrNull { it.style == style }?.key ?: NORMAL.key
+        }
+    }
+
+    // This class containt mapping between keys used within json of Custom Watchface and preferences
+    private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
+
+        SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
+        SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
+        SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
+        SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
+        SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
+        SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta),
+        SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
+        SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
+        SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
+        SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
+        SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
+        SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
+        SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
+        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status),
+        SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number)
+    }
 }
 
 
