@@ -28,6 +28,7 @@
     <string name="pump_settings_error_wrong_max_bolus_set">Hibás a pumpán beállított Max. Bólus (%1$.2f kell legyen).</string>
     <string name="pump_settings_error_wrong_max_basal_set">Hibás a pumpán beállított Max. Bázis (%1$.2f kell legyen).</string>
     <!-- Pump History -->
+    <!-- PumpDeviceState -->
     <plurals name="duration_days">
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>

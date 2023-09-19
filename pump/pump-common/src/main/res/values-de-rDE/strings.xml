@@ -64,6 +64,7 @@
     <string name="pump_settings_error_wrong_max_basal_set">Falsche Max-Basal auf Pumpe eingestellt (muss %1$.2f sein).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Typ:</string>
+    <!-- PumpDeviceState -->
     <plurals name="duration_days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

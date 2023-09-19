@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">Selectare aspect ceas personalizat</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AAPS din System Settings \naltfel AAPS nu va putea înregistra loguri (importante pentru verificarea corectitudinii funcționării algoritmilor)!</string>
+    <!-- Maintenance -->
 </resources>

@@ -44,6 +44,7 @@
     <string name="profile_set_ok">Profil sat OK</string>
     <string name="suspend_delivery_is_unconfirmed">Pausér insulintilførsel er ubekræftet! Genstart venligst manuelt Pod-statussen fra Omnipod-fanen og start tilførsel igen hvis nødvendigt.</string>
     <string name="insulin_delivery_suspended">Insulintilførsel pauseret</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Tidszone på pod er forskellig fra tidszone på telefon. Basalrate er forkert. Skift profil for at rette</string>
     <string name="failed_to_set_the_new_basal_profile">Kunne ikke indstille den nye basalprofil. Levering pauseret</string>
     <string name="setting_basal_profile_might_have_failed">Indstilling af basalprofil mislykkedes måske. Insulintilførsel kan være pauseret! Opdatér venligst Pod-status manuelt fra Omnipod-fanen og genoptag tilførslen hvis nødvendigt.</string>
     <string name="bolus_delivery_status_uncertain">Bolustilførselsstatus usikker. Opdatér pod-status for at bekræfte eller afvise.</string>
@@ -51,4 +52,6 @@
     <string name="checking_delivery_status">Kontrollerer leveringsstatus</string>
     <string name="setting_temp_basal_might_have_basal_failed">Indstilling af midlertidig basal mislykkedes måske. Hvis en midlertidig basal tidligere var kørt, er den blevet annulleret. Opdatér venligst Pod-status manuelt fra Omnipod-fanen.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Annullér midlertidig basal-resultat er usikkert</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ikke-bekræftet genoptagtilførselskommando. Opdatér pod-status</string>
+    <string name="cancelling_temp_basal_might_have_failed">Aflysning af midlertidig basal mislykkedes. Hvis en midlertidig basal tidligere var kørt, kan den være blevet annulleret. Opdater venligst Pod-status manuelt fra Omnipod-fanen.</string>
 </resources>

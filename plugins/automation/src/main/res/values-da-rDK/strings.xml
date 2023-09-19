@@ -85,6 +85,8 @@
     <string name="lastboluscompared">Sidste bolus tid %1$s %2$s min siden</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Puls</string>
+    <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="iob_u">IOB [IE]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Tilbagevendende tid</string>
@@ -111,5 +113,7 @@
     <string name="add_automation">Tilføj regel</string>
     <string name="stop_processing">Stop afvikling</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Tid til at spise!\nBrug Bolusguiden og beregn igen.</string>
     <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
+    <string name="error_setting_reminder">Fejl under indstilling af fremtidig alarm</string>
 </resources>
