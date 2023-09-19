@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.permissions
+package info.nightscout.configuration.activities
 
 import android.content.Context
 import android.content.Intent

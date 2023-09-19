@@ -1038,7 +1038,7 @@ class DataHandlerMobile @Inject constructor(
         get() {
             var ret = ""
             // decide if enabled/disabled closed/open; what Plugin as APS?
-            if ((loop as PluginBase).isEnabled()) {
+            if (loop.isEnabled()) {
                 ret += if (constraintChecker.isClosedLoopAllowed().value()) {
                     rh.gs(R.string.loop_status_closed) + "\n"
                 } else {
@@ -1137,7 +1137,7 @@ class DataHandlerMobile @Inject constructor(
     private fun generateStatusString(profile: Profile?): String {
         var status = ""
         profile ?: return rh.gs(info.nightscout.core.ui.R.string.noprofile)
-        if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
+        if (!loop.isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
         return status
     }
 

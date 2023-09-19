@@ -27,7 +27,6 @@ import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
@@ -455,7 +454,7 @@ class BolusWizard @Inject constructor(
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
                     uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
-                    if ((loop as PluginBase).isEnabled()) {
+                    if (loop.isEnabled()) {
                         loop.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
                         rxBus.send(EventRefreshOverview("WizardDialog"))
                     }

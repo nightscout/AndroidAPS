@@ -1,6 +1,6 @@
 package info.nightscout.interfaces.notifications
 
-class NotificationUserMessage  (text :String): Notification() {
+class NotificationUserMessage(text: String) : Notification() {
 
     init {
         var hash = text.hashCode()

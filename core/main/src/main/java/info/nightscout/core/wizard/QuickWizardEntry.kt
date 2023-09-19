@@ -13,7 +13,6 @@ import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.logging.AAPSLogger
@@ -141,7 +140,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         if (useSuperBolus() == YES && sp.getBoolean(info.nightscout.core.utils.R.string.key_usesuperbolus, false)) {
             superBolus = true
         }
-        if ((loop as PluginBase).isEnabled() && loop.isSuperBolus) superBolus = false
+        if (loop.isEnabled() && loop.isSuperBolus) superBolus = false
         // Trend
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         var trend = false
