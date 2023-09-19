@@ -163,13 +163,7 @@ class CustomWatchface : BaseWatchFace() {
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
         when (tapType) {
             TAP_TYPE_TAP -> {
-                // Vérifiez si l'utilisateur a tapé sur une complication
-                val complication = ComplicationMap.getComplication(x, y)
-                if (complication != null) {
-                    complication.drawable?.onTap(x, y)
-                } else {
-                    super.onTapCommand(tapType, x, y, eventTime)
-                }
+                ComplicationMap.getComplication(x, y)?.also { it.drawable?.onTap(x, y) } ?: apply { super.onTapCommand(tapType, x, y, eventTime) }
             }
 
             else         -> super.onTapCommand(tapType, x, y, eventTime)
@@ -304,19 +298,8 @@ class CustomWatchface : BaseWatchFace() {
                     }
 
                     is ImageView,
+                    is FrameLayout,
                     is lecho.lib.hellocharts.view.LineChartView -> {
-                        json.put(
-                            it.key,
-                            JSONObject()
-                                .put(WIDTH.key, (params.width / zoomFactor).toInt())
-                                .put(HEIGHT.key, (params.height / zoomFactor).toInt())
-                                .put(TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                                .put(LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                                .put(VISIBILITY.key, getVisibility(view.visibility))
-                        )
-                    }
-
-                    is FrameLayout                              -> {
                         json.put(
                             it.key,
                             JSONObject()
