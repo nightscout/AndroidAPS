@@ -32,7 +32,7 @@ abstract class PumpStatus(var pumpType: PumpType) {
     // TDD
     var dailyTotalUnits: Double? = null
     var maxDailyTotalUnits: String? = null
-    var units: String? = null // Constants.MGDL or Constants.MMOL
+    var units: String? = null // GlucoseUnit.MGDL.asText or GlucoseUnit.MMOL.asText
     var pumpRunningState = PumpRunningState.Running
     var basalsByHour: DoubleArray? = null
     var tempBasalStart: Long? = null

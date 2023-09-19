@@ -52,7 +52,7 @@ class RealPumpTest {
             configBuilderPlugin.performPluginSwitch(randomBgPlugin,true, PluginType.BGSOURCE)
             // Profile
             configBuilderPlugin.performPluginSwitch(localProfilePlugin, true, PluginType.PROFILE)
-            val profile = Profile(JSONObject(validProfile), Constants.MGDL)
+            val profile = Profile(JSONObject(validProfile), GlucoseUnit.MGDL.asText)
             Assert.assertTrue(profile.isValid("Test"))
             localProfilePlugin.profiles.clear()
             localProfilePlugin.numOfProfiles = 0

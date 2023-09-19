@@ -163,7 +163,7 @@ class ProfilePlugin @Inject constructor(
             profile.put("basal", basal)
             profile.put("target_low", targetLow)
             profile.put("target_high", targetHigh)
-            profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
+            profile.put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
             profile.put("timezone", TimeZone.getDefault().id)
         }
         val defaultUnits = JsonHelper.safeGetStringAllowNull(profile, "units", null)
@@ -400,7 +400,7 @@ class ProfilePlugin @Inject constructor(
                     profile.put("basal", basal)
                     profile.put("target_low", targetLow)
                     profile.put("target_high", targetHigh)
-                    profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
+                    profile.put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
                     profile.put("timezone", TimeZone.getDefault().id)
                     store.put(name, profile)
                 }

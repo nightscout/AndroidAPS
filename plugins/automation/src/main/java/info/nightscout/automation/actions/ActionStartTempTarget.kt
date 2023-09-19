@@ -101,7 +101,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        value.units = GlucoseUnit.fromText(JsonHelper.safeGetString(o, "units", Constants.MGDL))
+        value.units = GlucoseUnit.fromText(JsonHelper.safeGetString(o, "units", GlucoseUnit.MGDL.asText))
         value.value = safeGetDouble(o, "value")
         duration.setMinutes(JsonHelper.safeGetInt(o, "durationInMinutes"))
         return this

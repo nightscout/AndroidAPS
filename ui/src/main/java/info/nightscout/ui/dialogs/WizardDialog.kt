@@ -364,7 +364,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun valueToUnitsToString(value: Double, units: String): String =
-        if (units == Constants.MGDL) decimalFormatter.to0Decimal(value)
+        if (units == GlucoseUnit.MGDL.asText) decimalFormatter.to0Decimal(value)
         else decimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
     private fun initDialog() {

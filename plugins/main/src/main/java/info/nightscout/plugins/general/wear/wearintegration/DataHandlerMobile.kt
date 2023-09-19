@@ -884,7 +884,7 @@ class DataHandlerMobile @Inject constructor(
                     predictions.add(
                         EventData.SingleBg(
                             timeStamp = bg.data.timestamp,
-                            glucoseUnits = Constants.MGDL,
+                            glucoseUnits = GlucoseUnit.MGDL.asText,
                             sgv = bg.data.value,
                             high = 0.0,
                             low = 0.0,

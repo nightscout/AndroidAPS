@@ -154,7 +154,7 @@ class SetupWizardActivityTest {
             onView(withId(R.id.finish_button)).waitAndPerform(click())
 
             // Verify settings
-            Assert.assertEquals(Constants.MMOL, ProfileFunctions.getSystemUnits())
+            Assert.assertEquals(GlucoseUnit.MMOL.asText, ProfileFunctions.getSystemUnits())
             Assert.assertEquals(17.0, HardLimits.maxBolus(), 0.0001) // Adult
             Assert.assertTrue(RandomBgPlugin.isEnabled(PluginType.BGSOURCE))
             Assert.assertTrue(LocalProfilePlugin.isEnabled(PluginType.PROFILE))
