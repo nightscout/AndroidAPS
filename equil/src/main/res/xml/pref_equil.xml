@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:title="@string/equil_pump"
+        app:initialExpandedChildrenCount="1">
+        <!--        <Preference-->
+        <!--            android:key="@string/equil_key_equil_name"-->
+        <!--            android:summary=""-->
+        <!--            android:title="@string/equil_selectpump">-->
+        <!--            <intent android:action="com.microtechmd.equil.ui.EquilBLEConfigActivity" />-->
+        <!--        </Preference>-->
+
+        <Preference
+            android:summary=""
+            android:title="@string/equil_ble_config_confirmation_title">
+            <intent android:action="com.microtechmd.equil.ui.pair.EquilPairActivity" />
+        </Preference>
+
+    </PreferenceCategory>
+</androidx.preference.PreferenceScreen>

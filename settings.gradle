@@ -18,3 +18,4 @@ include ':diaconn'
 
 include ':openhumans'
 include ':shared'
+include ':equil'

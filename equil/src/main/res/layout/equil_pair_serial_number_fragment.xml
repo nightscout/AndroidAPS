@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_hint2"
+        style="@style/pairTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/equil_devices_number" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/devicesName"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:digits="0123456789ABCDEF"
+                android:gravity="center"
+                android:hint="@string/equil_devices_number_hint"
+                android:imeOptions="actionDone"
+                android:inputType="textCapCharacters"
+                android:maxLength="6"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:text=""
+                android:textSize="40sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_pair"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/omnipod_wizard_vertical_spacing"
+        android:layout_marginBottom="@dimen/omnipod_wizard_vertical_spacing"
+        android:indeterminate="true"
+        android:visibility="invisible" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_pair"
+        style="@style/GrayButton"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/equil_pair" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/text_tips"
+        style="@style/pairTextError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:text="@string/equil_pair_error"
+        android:visibility="invisible" />
+</LinearLayout>

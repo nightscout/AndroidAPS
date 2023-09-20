@@ -1,0 +1,209 @@
+<resources>
+    <string name="app_name">equil</string>
+    <string name="equil_name" translatable="false">微泰</string>
+    <string name="key_equil_mac_address" translatable="false">pref_equil_mac_address</string>
+    <string name="key_equil_name" translatable="false">pref_equil_name</string>
+    <string name="key_equil_setting" translatable="false">pref_equil_setting</string>
+    <!--    <string name="key_equil_devices" translatable="false">key_equil_devices</string>-->
+    <!--    <string name="key_equil_password" translatable="false">key_equil_password</string>-->
+
+    <string name="key_equil_devices" translatable="false">tzm</string>
+    <string name="key_equil_password" translatable="false">pwd</string>
+    <string name="key_equil_alarm_battery_10" translatable="false">key_equil_alarm_battery_10</string>
+    <string name="key_equil_alarm_insulin_10" translatable="false">key_equil_alarm_insulin_10</string>
+    <string name="key_equil_alarm_insulin_5" translatable="false">key_equil_alarm_insulin_5</string>
+    <string name="key_equil_basal_set" translatable="false">key_equil_basal_set</string>
+    <string name="key_equil_state" translatable="false">key_equil_state</string>
+    <string name="equil_key_device_address">equil_device_address</string>
+    <string name="equil_key_device_name">equil_device_name</string>
+    <string name="equil_key_device_password">equil_device_password</string>
+    <string name="equil_key_equil_authentication">equil_authentication</string>
+    <string name="equil_key_equil_name">equil</string>
+    <string name="equil_key_pump_settings">equil_pump_settings</string>
+
+    <string name="equil_configuration">微泰泵配置</string>
+    <string name="equil_ble_config_remove_riley_link_confirmation_title">删除 微泰泵配置</string>
+    <string name="equil_ble_config_remove_riley_link_confirmation">您确定要删除微泰泵吗？</string>
+    <string name="equil_ble_config_no_riley_link_selected">没有选定 微泰泵</string>
+    <string name="equil_ble_config_scan_currently_selected">当前选定的微泰泵</string>
+    <string name="equil_ble_config_scan_title">微泰泵 扫描</string>
+    <string name="equil_ble_config_button_scan_start">扫描</string>
+    <string name="equil_ble_config_scan_stop">停止</string>
+    <string name="equil_ble_config_scan_selected">已选择</string>
+    <string name="equil_ble_config_scan_scanning">扫描中</string>
+    <string name="equil_ble_config_scan_finished">扫描完成</string>
+    <string name="equil_alarm_text_startup">非正常输注停止！</string>
+    <string name="equil_alert_text_auto_off">泵15分钟后自动关机！</string>
+    <string name="equil_authentication_unbind">清空密码</string>
+    <string name="equil_basal_speed">基础率速率</string>
+    <string name="equil_bluetooth_connecting">蓝牙</string>
+    <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U 已经注射</string>
+    <string name="equil_bolus_speed">大剂量速率</string>
+    <string name="equil_btn_cancel">取消</string>
+    <string name="equil_btn_iknow">知道了</string>
+    <string name="equil_btn_need">需要</string>
+    <string name="equil_btn_ok">确定</string>
+    <string name="equil_btn_request_authentication">授权执行</string>
+    <string name="equil_btn_skip">跳过</string>
+    <string name="equil_btn_sync">同步</string>
+    <string name="equil_cancel">取消</string>
+    <string name="equil_connection_connected">已连接</string>
+    <string name="equil_connection_connecting">连接中</string>
+    <string name="equil_connection_unconnected">未连接</string>
+    <string name="equil_date_device">上次连接</string>
+    <string name="equil_date_last_get_data">获取数据时间</string>
+    <string name="equil_date_last_monitor">监控时间</string>
+    <string name="equil_dressing">换药</string>
+    <string name="equil_dressing_auto">自动向上推杆</string>
+    <string name="equil_dressing_auto_push">自动推杆定位</string>
+    <string name="equil_dressing_hint1">组装泵</string>
+    <string name="equil_dressing_hint2">更换储药器及电池。组装泵后，进行“手动推杆定位”，直到储药器针头有液体挤出。</string>
+    <string name="equil_dressing_onekey_to_top">已经触碰到储药器活塞底部，请使用“手动推杆定位”排出气体后，点击完成。</string>
+    <string name="equil_dressing_onkey_msg">正在自动将推杆移动到储药器活塞底部，当推杆触碰到储药器活塞底部会自动停止。如果中途需要停止操作，点击“停止”按钮即可。</string>
+    <string name="equil_dressing_push">手动推杆定位</string>
+    <string name="equil_error_select_device">请选择设备</string>
+    <string name="equil_finish">完成</string>
+    <string name="equil_next">下一步</string>
+    <string name="equil_hint1">请将泵安装到底板上后，\n选择是否需要排除留置针内的空气？</string>
+    <string name="equil_hint2">排除留置针内空气</string>
+    <string name="equil_hint3">⚠ 该功能需要授权才能使用，请联系相关工作人员。</string>
+    <string name="equil_hint4">请输入授权码</string>
+    <string name="equil_hint_1">需要排出留置针里的空气吗？</string>
+    <string name="equil_hint_alter_speed_bolus">·当前大剂量注射速率：%1$sU</string>
+    <string name="equil_hint_dressing">这个操作将会停止胰岛素输注，\n并且让泵的推杆回退至底部！</string>
+    <string name="equil_hint_dressing2">请把泵与底板分离</string>
+    <string name="equil_history">历史</string>
+    <string name="equil_insulin_reservoir">剩余胰岛素量</string>
+
+    <string name="equil_limit_basal_amount">基础率阈值</string>
+    <string name="equil_limit_basal_rate">基础率阀值</string>
+    <string name="equil_limit_bolus_amount">大剂量阈值</string>
+    <string name="equil_limit_low_reservoir">低药量报警</string>
+    <string name="equil_mode">状态</string>
+    <string name="equil_mode_deliver">推注</string>
+    <string name="equil_mode_stop">停止</string>
+    <string name="equil_mode_suspend">暂停</string>
+    <string name="equil_monitor_state">监控状态</string>
+    <string name="equil_nodeviceavailable">没有可用的设备</string>
+    <string name="equil_notification_text_priming">推杆定位(充盈)</string>
+    <string name="equil_notification_text_quick_bolus">快速大剂量</string>
+    <string name="equil_notification_text_rewinding">推杆回退</string>
+    <string name="equil_notification_text_suspend">暂停</string>
+    <string name="equil_pump">微泰贴泵(科研版)</string>
+    <string name="equil_pump_description">集成微泰贴泵科研版。</string>
+    <string name="equil_pump_shortname">微泰贴泵</string>
+    <string name="equil_rule_authentication">^\\d{6}</string>
+    <string name="equil_selectpump">选择泵</string>
+    <string name="equil_serialnumber">序列号</string>
+    <string name="equil_settings">设置</string>
+    <string name="equil_speed_bolus">大剂量注射速率</string>
+    <string name="equil_speed_bolus_1">0.3U/H</string>
+    <string name="equil_speed_bolus_2">0.15U/H</string>
+    <string name="equil_stop">停止</string>
+    <string name="equil_success">成功</string>
+    <string name="equil_table_column_battery">剩余电量\n(%)</string>
+    <string name="equil_table_column_device_time">设备时间</string>
+    <string name="equil_table_column_id">ID</string>
+    <string name="equil_table_column_index">索引</string>
+    <string name="equil_table_column_reservoir">剩余药量\n(U)</string>
+    <string name="equil_table_column_speed_basal">基础率速率\n(U/H)</string>
+    <string name="equil_table_column_speed_bolus">大剂量速率\n(U/H)</string>
+    <string name="equil_tips_default">参数不予修改。</string>
+    <string name="equil_tips_limit_basal">允许泵的最大基础率设置，当前泵允许的最大基础率是%1$s。</string>
+    <string name="equil_tips_limit_bolus">允许泵单次大剂量最大注射量，当前泵允许的单次注射最大量是%1$s。</string>
+    <string name="equil_tips_low_reservoir">储药器低于%1$s时，泵会报警。</string>
+    <string name="equil_tips_speed_bolus">速率对疼痛感有影响，当前泵在注射大剂量时，速率是%1$s。</string>
+    <string name="equil_tips_tone">泵的提示反馈，当前泵的提示反馈是%1$s。</string>
+    <string name="equil_title_authentication">密码</string>
+    <string name="equil_title_ble_scan">蓝牙扫描</string>
+    <string name="equil_title_bolus_chooice">选择注射速率</string>
+    <string name="equil_title_chooice">选择</string>
+    <string name="equil_title_chooice_basal_limit">选择基础率阈值</string>
+    <string name="equil_title_chooice_bolus_limit">选择大剂量阈值</string>
+    <string name="equil_title_chooice_low_reservoir">选择低药量报警</string>
+    <string name="equil_title_dressing">换药和换电池</string>
+    <string name="equil_title_function_authentication">功能授权</string>
+    <string name="equil_title_history_events">泵的历史记录</string>
+    <string name="equil_title_settings">选项</string>
+    <string name="equil_title_tips">提示</string>
+    <string name="equil_title_tone_chooice">选择提示音</string>
+    <string name="equil_title_warning">警告</string>
+    <string name="equil_tone">提示音</string>
+    <string name="equil_tone_mode_mute">静音</string>
+    <string name="equil_tone_mode_shake">仅震动</string>
+    <string name="equil_tone_mode_tone">仅提示音</string>
+    <string name="equil_tone_mode_tone_and_shake">提示音加震动</string>
+    <string name="equil_unit_u">%1$s U</string>
+    <string name="equil_unit_u_hours">%1$s U/H</string>
+    <string name="equil_unit_u_minute">%1$s U/M</string>
+    <string name="equil_unit_u_second">%1$s U/S</string>
+    <string name="equil_unknown">未知</string>
+    <string name="equil_unkown">未知</string>
+    <string name="equil_unbind">解除绑定</string>
+    <string name="equil_unbind_content">这个操作将会停止胰岛素输注，\n并且让泵的推杆回退至底部！\n切删除绑定状态！</string>
+
+    <string name="equil_error_no_devices">当前没有绑定的微泰泵</string>
+
+    <string name="equil_ble_config_confirmation_title">绑定微泰泵</string>
+    <string name="equil_ble_config_confirmation">您确定要绑定微泰泵吗？</string>
+
+    <string name="equil_assemble">请将注满的储药器及充满电的电池与泵组装好</string>
+    <string name="equil_innsert">请进行推杆定位直到储药器针头有液体挤出。</string>
+    <string name="equil_innsert2">推杆定位完成前，请不要将泵安装到底板上。</string>
+    <string name="equil_innsert_orientation">推杆定位</string>
+    <string name="equil_install">请将泵安装到底板上</string>
+    <string name="equil_error">连接失败</string>
+
+    <string name="equil_change">更换胰岛素泵</string>
+    <string name="equil_change_content">请把泵与底板分离</string>
+    <string name="equil_unpair">是否取消对%1$s控制权</string>
+    <string name="equil_unpair_alert">是否确认取消对%1$s控制权</string>
+    <string name="equil_devices_number">输入新泵的序列号</string>
+    <string name="equil_devices_number_hint">序列号</string>
+    <string name="equil_record_basal">基础率 %1$s U/H</string>
+    <string name="equil_record_basal_temp">临时基础率 %1$s U/H</string>
+    <string name="equil_record_bolus">大剂量 %1$s U</string>
+    <string name="equil_error_set_temp_basal_failed_validation">临时基础率TBR 持续时间必须大于零，且是 %1$s 分钟的倍数。</string>
+    <string name="equil_not_enough_insulin">储药器中的胰岛素不足</string>
+    <string name="equil_lowbattery">电池电量低:</string>
+    <string name="equil_low_insulin">储药器药量低:</string>
+    <string name="equil_pump_not_run">胰岛素泵没在运行:</string>
+    <string name="equil_pair">配对</string>
+    <string name="equil_pair_error">连接失败</string>
+    <string name="equil_retry">重试</string>
+    <string name="equil_fill_title">Fill 充盈</string>
+    <string name="equil_fill">充盈</string>
+    <string name="equil_air">排空气</string>
+    <string name="equil_temp_basal_rate">临时基础率</string>
+    <string name="equil_total_delivered">输注总量</string>
+    <string name="equil_last_bolus">上次大剂量</string>
+    <string name="equil_firmware_version">固件版本</string>
+    <string name="equil_battery_useup">电池已耗尽</string>
+    <string name="equil_occlusion">输注堵塞</string>
+    <string name="equil_motor_reverse">电机反转</string>
+    <string name="equil_motor_fault">电机故障</string>
+    <string name="equil_insert_error">非正常输注停止</string>
+    <string name="equil_shutdown_be">Equil即将自动关机</string>
+    <string name="equil_shutdown">Equil自动关机</string>
+
+    <string name="equil_common_history_tbr_value">速率： %1$.2f U/H，持续时间： %2$d 分钟</string>
+    <string name="equil_common_history_bolus_value">%1$.2f U</string>
+    <string name="equil_history_type">类型：</string>
+
+    <!-- equil - Commands -->
+    <string name="equil_common_cmd_set_bolus">设置大剂量</string>
+    <string name="equil_common_cmd_cancel_bolus">取消大剂量</string>
+    <string name="equil_common_cmd_set_tbr">设置临时基础率</string>
+    <string name="equil_common_cmd_cancel_tbr">取消临时基础率</string>
+    <string name="equil_common_cmd_set_basal_schedule">设置基础率</string>
+    <string name="equil_common_cmd_get_status">读取Pod状态</string>
+    <string name="equil_common_cmd_get_info">读取Pod信息</string>
+    <string name="equil_common_cmd_set_time">设定时间</string>
+    <string name="equil_common_cmd_suspend_delivery">暂停输注</string>
+    <string name="equil_common_cmd_resume_delivery">恢复输注</string>
+    <string name="equil_common_cmd_pair">绑定Equil</string>
+    <string name="equil_common_cmd_insert_cannula">植入输注导管</string>
+    <string name="equil_common_cmd_unpair">解绑Equil</string>
+    <string name="equil_common_cmd_alarm">Equil警报</string>
+
+</resources>

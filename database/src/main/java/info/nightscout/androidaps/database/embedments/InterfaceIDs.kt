@@ -43,7 +43,8 @@ data class InterfaceIDs(
         MDI,
         DIACONN_G8,
         USER,
-        CACHE;
+        CACHE,
+        EQUIL;
 
         companion object {
 

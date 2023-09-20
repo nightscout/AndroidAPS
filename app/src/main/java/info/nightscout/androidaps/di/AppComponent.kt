@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.di
 
+import com.microtechmd.equil.di.EquilModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -65,7 +66,8 @@ import javax.inject.Singleton
         WorkersModule::class,
         DiaconnG8Module::class,
         OpenHumansModule::class,
-        SharedModule::class
+        SharedModule::class,
+        EquilModule::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

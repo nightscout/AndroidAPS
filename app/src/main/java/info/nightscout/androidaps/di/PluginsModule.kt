@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.di
 
+import com.microtechmd.equil.EquilPumpPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -190,6 +191,11 @@ abstract class PluginsModule {
     @IntKey(170)
     abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
 
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(180)
+    abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
     @Binds
     @APS
     @IntoMap

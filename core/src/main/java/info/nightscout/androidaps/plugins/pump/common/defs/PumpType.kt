@@ -372,6 +372,24 @@ enum class PumpType {
         pumpCapability = PumpCapability.DiaconnCapabilities,
         source = Sources.DiaconnG8,
         useHardwareLink = true
+    ),
+    EQUIL(
+        description = "Equil",
+        manufacturer = ManufacturerType.Equil,
+        model = "Equil",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 5 * 60, 0.05),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 24 * 60, 0.0, 35.0),
+        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 3.0,
+        baseBasalStep = 0.01,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.DiaconnCapabilities,
+        source = Sources.EQuil,
+        useHardwareLink = true,
     );
 
     val description: String
@@ -461,6 +479,8 @@ enum class PumpType {
                 InterfaceIDs.PumpType.USER                        -> USER
                 InterfaceIDs.PumpType.DIACONN_G8                  -> DIACONN_G8
                 InterfaceIDs.PumpType.CACHE                       -> TODO()
+                InterfaceIDs.PumpType.EQUIL                       -> EQUIL
+
             }
     }
 
@@ -592,5 +612,7 @@ enum class PumpType {
             USER                      -> InterfaceIDs.PumpType.USER
             DIACONN_G8                -> InterfaceIDs.PumpType.DIACONN_G8
             CACHE                     -> InterfaceIDs.PumpType.CACHE
+            EQUIL                     -> InterfaceIDs.PumpType.EQUIL
+
         }
 }

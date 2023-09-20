@@ -104,6 +104,7 @@ class UserEntryPresentationHelper @Inject constructor(
         Sources.ConfigBuilder       -> R.drawable.ic_cogs
         Sources.Overview            -> R.drawable.ic_home
         Sources.Aaps                -> R.drawable.ic_aaps
+        Sources.EQuil               -> R.drawable.ic_generic_icon
         Sources.Unknown             -> R.drawable.ic_generic_icon
     }
 

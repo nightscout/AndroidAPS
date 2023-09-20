@@ -180,6 +180,7 @@ data class UserEntry(
         Overview,           //From OverViewPlugin
         Stats,               //From Stat Activity
         Aaps,               // MainApp
+        EQuil,
         Unknown             //if necessary
         ;
 
