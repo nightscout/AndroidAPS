@@ -7,11 +7,10 @@ import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.rx.TestAapsSchedulers
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.DateUtilImpl
 import info.nightscout.sharedtests.HardLimitsMock
 import info.nightscout.sharedtests.TestBase
 import info.nightscout.sharedtests.TestPumpPlugin
@@ -37,7 +36,6 @@ class ProfileTest : TestBase() {
     @Mock lateinit var sp: SP
 
     private lateinit var hardLimits: HardLimits
-    private lateinit var rxBus: RxBus
     private lateinit var dateUtil: DateUtil
     private lateinit var testPumpPlugin: TestPumpPlugin
 
@@ -59,8 +57,7 @@ class ProfileTest : TestBase() {
     @BeforeEach
     fun prepare() {
         testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
-        dateUtil = DateUtil(context)
-        rxBus = RxBus(TestAapsSchedulers(), aapsLogger)
+        dateUtil = DateUtilImpl(context)
         hardLimits = HardLimitsMock(sp, rh)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(rh.gs(info.nightscout.core.ui.R.string.profile_per_unit)).thenReturn("/U")

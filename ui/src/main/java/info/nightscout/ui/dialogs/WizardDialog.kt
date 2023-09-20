@@ -18,6 +18,7 @@ import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.ProfileSealed
@@ -30,8 +31,7 @@ import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
@@ -65,7 +65,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
@@ -364,7 +364,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun valueToUnitsToString(value: Double, units: String): String =
-        if (units == Constants.MGDL) decimalFormatter.to0Decimal(value)
+        if (units == GlucoseUnit.MGDL.asText) decimalFormatter.to0Decimal(value)
         else decimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
     private fun initDialog() {
@@ -444,7 +444,7 @@ class WizardDialog : DaggerDialogFragment() {
                 SafeParse.stringToDouble(binding.correctionInput.text)
         } else
             sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
-        val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
+        val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, injector)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
             ToastUtils.warnToast(ctx, R.string.carbs_constraint_applied)

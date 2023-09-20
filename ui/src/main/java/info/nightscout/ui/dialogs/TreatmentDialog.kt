@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
@@ -16,8 +18,7 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -32,7 +33,6 @@ import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogTreatmentBinding
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -40,7 +40,7 @@ import kotlin.math.abs
 
 class TreatmentDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
@@ -52,9 +52,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var injector: HasAndroidInjector
 
     private var queryingProtection = false
-    private val disposable = CompositeDisposable()
     private var _binding: DialogTreatmentBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
@@ -138,8 +138,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbs = SafeParse.stringToInt(binding.carbs.text)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val actions: LinkedList<String?> = LinkedList()
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(insulin)).value()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, injector)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, injector)).value()
 
         if (insulinAfterConstraints > 0) {
             actions.add(

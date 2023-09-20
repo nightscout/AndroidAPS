@@ -177,7 +177,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         if (medtrumPump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection
             val agoMinutes = agoMilliseconds / 1000 / 60
-            _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.shared.R.string.minago, agoMinutes))
+            _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.interfaces.R.string.minago, agoMinutes))
         }
         if (medtrumPump.lastBolusTime != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastBolusTime

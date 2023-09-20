@@ -11,6 +11,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -63,7 +64,7 @@ class PoctechPlugin @Inject constructor(
                     val json = jsonArray.getJSONObject(i)
                     glucoseValues += TransactionGlucoseValue(
                         timestamp = json.getLong("date"),
-                        value = if (safeGetString(json, "units", Constants.MGDL) == "mmol/L") json.getDouble("current") * Constants.MMOLL_TO_MGDL
+                        value = if (safeGetString(json, "units", GlucoseUnit.MGDL.asText) == "mmol/L") json.getDouble("current") * Constants.MMOLL_TO_MGDL
                         else json.getDouble("current"),
                         raw = json.getDouble("raw"),
                         noise = null,

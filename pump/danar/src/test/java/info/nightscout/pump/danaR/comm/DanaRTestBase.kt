@@ -6,8 +6,9 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
@@ -15,7 +16,6 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryRecordDao
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
@@ -32,7 +32,7 @@ open class DanaRTestBase : TestBaseWithProfile() {
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Mock lateinit var instantiator: Instantiator
@@ -50,6 +50,9 @@ open class DanaRTestBase : TestBaseWithProfile() {
 
     val injector = HasAndroidInjector {
         AndroidInjector {
+            if (it is ConstraintObject<*>) {
+                it.aapsLogger = aapsLogger
+            }
             if (it is MessageBase) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil
@@ -57,7 +60,7 @@ open class DanaRTestBase : TestBaseWithProfile() {
                 it.danaRPlugin = danaRPlugin
                 it.danaRKoreanPlugin = danaRKoreanPlugin
                 it.danaRv2Plugin = danaRv2Plugin
-                it.rxBus = RxBus(aapsSchedulers, aapsLogger)
+                it.rxBus = rxBus
                 it.rh = rh
                 it.activePlugin = activePlugin
                 it.configBuilder = configBuilder

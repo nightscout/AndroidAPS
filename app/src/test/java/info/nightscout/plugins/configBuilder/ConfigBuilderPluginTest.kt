@@ -8,7 +8,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.sharedtests.TestBase
@@ -37,6 +36,6 @@ class ConfigBuilderPluginTest : TestBase() {
 
     @BeforeEach
     fun prepareMock() {
-        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, rh, sp, RxBus(aapsSchedulers, aapsLogger), activePlugin, uel, pumpSync, protectionCheck, uiInteraction)
+        configBuilderPlugin = ConfigBuilderPlugin(injector, aapsLogger, rh, sp, rxBus, activePlugin, uel, pumpSync, protectionCheck, uiInteraction)
     }
 }

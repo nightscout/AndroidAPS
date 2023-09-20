@@ -156,7 +156,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
         }
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(info.nightscout.core.utils.R.menu.menu_actions, menu)
+                menuInflater.inflate(info.nightscout.core.main.R.menu.menu_actions, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =

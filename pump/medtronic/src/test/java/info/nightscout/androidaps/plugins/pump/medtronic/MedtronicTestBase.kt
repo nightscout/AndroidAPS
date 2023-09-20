@@ -11,8 +11,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.common.sync.PumpSyncStorage
 import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.rx.TestAapsSchedulers
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.sharedtests.TestBase
@@ -21,7 +19,6 @@ import org.mockito.Mock
 
 open class MedtronicTestBase : TestBase() {
 
-    var rxBus: RxBus = RxBus(TestAapsSchedulers(), aapsLogger)
     var byteUtil = ByteUtil()
     var rileyLinkUtil = RileyLinkUtil()
 

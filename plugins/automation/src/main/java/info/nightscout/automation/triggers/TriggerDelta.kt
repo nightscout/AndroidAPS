@@ -94,7 +94,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        units = GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", Constants.MGDL))
+        units = GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText))
         val type = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""))
         val value = JsonHelper.safeGetDouble(d, "value")
         delta =

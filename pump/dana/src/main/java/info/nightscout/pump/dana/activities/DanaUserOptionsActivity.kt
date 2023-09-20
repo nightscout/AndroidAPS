@@ -5,6 +5,7 @@ import android.os.Bundle
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
@@ -127,7 +128,7 @@ class DanaUserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         binding.beep.isChecked = danaPump.beepAndAlarm > 4
         binding.screenTimeout.value = danaPump.lcdOnTimeSec.toDouble()
         binding.backlight.value = danaPump.backlightOnTimeSec.toDouble()
-        binding.units.isChecked = danaPump.getUnits() == Constants.MMOL
+        binding.units.isChecked = danaPump.getUnits() == GlucoseUnit.MMOL.asText
         binding.shutdown.value = danaPump.shutdownHour.toDouble()
         binding.lowReservoir.value = danaPump.lowReservoirRate.toDouble()
     }

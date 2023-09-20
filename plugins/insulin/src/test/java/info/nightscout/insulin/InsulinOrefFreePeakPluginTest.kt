@@ -7,7 +7,6 @@ import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.sharedtests.TestBase
@@ -29,7 +28,6 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
     @Mock lateinit var hardLimits: HardLimits

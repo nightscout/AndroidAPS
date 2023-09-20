@@ -6,8 +6,6 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.WearApp
-import info.nightscout.rx.di.RxModule
-import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
 import kotlinx.datetime.Clock
 
@@ -16,8 +14,6 @@ import kotlinx.datetime.Clock
     includes = [
         WearModule.AppBindings::class,
         WearActivitiesModule::class,
-        RxModule::class,
-        SharedModule::class,
         SharedImplModule::class
     ]
 )

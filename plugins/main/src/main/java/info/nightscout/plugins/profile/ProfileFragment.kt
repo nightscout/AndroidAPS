@@ -131,7 +131,7 @@ class ProfileFragment : DaggerFragment() {
         val pumpDescription = activePlugin.activePump.pumpDescription
         if (profilePlugin.numOfProfiles == 0) profilePlugin.addNewProfile()
         val currentProfile = profilePlugin.currentProfile() ?: return
-        val units = if (currentProfile.mgdl) Constants.MGDL else Constants.MMOL
+        val units = if (currentProfile.mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText
 
         binding.name.removeTextChangedListener(textWatch)
         binding.name.setText(currentProfile.name)
@@ -173,7 +173,7 @@ class ProfileFragment : DaggerFragment() {
                 DecimalFormat("0.00"),
                 save
             )
-        if (units == Constants.MGDL) {
+        if (units == GlucoseUnit.MGDL.asText) {
             val isfRange = doubleArrayOf(HardLimits.MIN_ISF, HardLimits.MAX_ISF)
             TimeListEdit(
                 requireContext(),

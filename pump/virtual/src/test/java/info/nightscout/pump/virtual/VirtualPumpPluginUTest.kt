@@ -9,7 +9,6 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -22,7 +21,6 @@ import org.mockito.Mockito.`when`
 
 class VirtualPumpPluginUTest : TestBase() {
 
-    private val rxBus = RxBus(aapsSchedulers, aapsLogger)
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP

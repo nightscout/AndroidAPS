@@ -14,15 +14,16 @@ apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 android {
     namespace 'info.nightscout.sharedtests'
- }
+}
 
 dependencies {
     implementation project(':database:entities')
-    implementation project(':app-wear-shared:shared')
+    implementation project(':app-wear-shared:shared-impl')
     implementation project(':core:interfaces')
     implementation project(':core:main')
     implementation project(':core:utils')
     implementation project(':implementation')
+
 
     api "org.mockito:mockito-junit-jupiter:$mockito_version"
     api "org.mockito.kotlin:mockito-kotlin:5.1.0"

@@ -5,8 +5,8 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLoggerTest
 import info.nightscout.rx.weardata.EventData.ActionHeartRate
+import info.nightscout.sharedtests.AAPSLoggerTest
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
 import org.junit.jupiter.api.AfterEach

@@ -164,7 +164,7 @@ class TddCalculatorImpl @Inject constructor(
             }
             todayTdd?.let {
                 layout.addView(TextView(context).apply {
-                    text = rh.gs(info.nightscout.shared.R.string.today)
+                    text = rh.gs(info.nightscout.interfaces.R.string.today)
                     setTypeface(typeface, Typeface.BOLD)
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)

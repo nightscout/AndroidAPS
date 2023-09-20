@@ -14,6 +14,7 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.annotations.OpenForTesting
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.convertedToPercent
@@ -36,7 +37,7 @@ import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.Loop.LastRun
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
@@ -91,7 +92,7 @@ class LoopPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val sp: SP,
     private val config: Config,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val context: Context,
@@ -230,7 +231,7 @@ class LoopPlugin @Inject constructor(
             if (!loopEnabled.value()) {
                 val message = """
                     ${rh.gs(info.nightscout.core.ui.R.string.loop_disabled)}
-                    ${loopEnabled.getReasons(aapsLogger)}
+                    ${loopEnabled.getReasons()}
                     """.trimIndent()
                 aapsLogger.debug(LTag.APS, message)
                 rxBus.send(EventLoopSetLastRunGui(message))
@@ -274,11 +275,11 @@ class LoopPlugin @Inject constructor(
 
             // check rate for constraints
             val resultAfterConstraints = apsResult.newAndClone(injector)
-            resultAfterConstraints.rateConstraint = Constraint(resultAfterConstraints.rate)
+            resultAfterConstraints.rateConstraint = ConstraintObject(resultAfterConstraints.rate, injector)
             resultAfterConstraints.rate = constraintChecker.applyBasalConstraints(resultAfterConstraints.rateConstraint!!, profile).value()
-            resultAfterConstraints.percentConstraint = Constraint(resultAfterConstraints.percent)
+            resultAfterConstraints.percentConstraint = ConstraintObject(resultAfterConstraints.percent, injector)
             resultAfterConstraints.percent = constraintChecker.applyBasalPercentConstraints(resultAfterConstraints.percentConstraint!!, profile).value()
-            resultAfterConstraints.smbConstraint = Constraint(resultAfterConstraints.smb)
+            resultAfterConstraints.smbConstraint = ConstraintObject(resultAfterConstraints.smb, injector)
             resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint!!).value()
 
             // safety check for multiple SMBs

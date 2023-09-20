@@ -1,7 +1,7 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.plugins.constraints.R
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.shared.utils.T
@@ -17,7 +17,7 @@ class Objective5(injector: HasAndroidInjector) : Objective(injector, "maxiobzero
         tasks.add(
             object : Task(this, R.string.closedmodeenabled) {
                 override fun isCompleted(): Boolean {
-                    val closedLoopEnabled = Constraint(true)
+                    val closedLoopEnabled = ConstraintObject(true, injector)
                     safetyPlugin.isClosedLoopAllowed(closedLoopEnabled)
                     return closedLoopEnabled.value()
                 }

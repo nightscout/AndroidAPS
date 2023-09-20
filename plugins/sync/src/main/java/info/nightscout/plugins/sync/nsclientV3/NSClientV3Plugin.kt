@@ -158,12 +158,12 @@ class NSClientV3Plugin @Inject constructor(
             when {
                 sp.getBoolean(R.string.key_ns_paused, false)                                           -> rh.gs(info.nightscout.core.ui.R.string.paused)
                 isAllowed.not()                                                                        -> blockingReason
-                sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && wsConnected  -> "WS: " + rh.gs(info.nightscout.shared.R.string.connected)
+                sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && wsConnected  -> "WS: " + rh.gs(info.nightscout.interfaces.R.string.connected)
                 sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && !wsConnected -> "WS: " + rh.gs(R.string.not_connected)
                 lastOperationError != null                                                             -> rh.gs(info.nightscout.core.ui.R.string.error)
                 nsAndroidClient?.lastStatus == null                                                    -> rh.gs(R.string.not_connected)
                 workIsRunning()                                                                        -> rh.gs(R.string.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                          -> rh.gs(info.nightscout.shared.R.string.connected)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                          -> rh.gs(info.nightscout.interfaces.R.string.connected)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                          -> rh.gs(R.string.read_only)
                 else                                                                                   -> rh.gs(info.nightscout.core.ui.R.string.unknown)
             }

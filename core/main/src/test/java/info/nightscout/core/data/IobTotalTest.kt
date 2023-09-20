@@ -9,6 +9,7 @@ import info.nightscout.core.iob.plus
 import info.nightscout.core.iob.round
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.DateUtilImpl
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -25,7 +26,7 @@ class IobTotalTest : TestBase() {
 
     @BeforeEach
     fun prepare() {
-        dateUtil = DateUtil(context)
+        dateUtil = DateUtilImpl(context)
         now = dateUtil.now()
     }
 

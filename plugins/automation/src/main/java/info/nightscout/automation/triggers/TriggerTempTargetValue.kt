@@ -68,7 +68,7 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        ttValue.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", Constants.MGDL)))
+        ttValue.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText)))
         ttValue.value = JsonHelper.safeGetDouble(d, "tt")
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this
