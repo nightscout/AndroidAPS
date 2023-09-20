@@ -4,7 +4,6 @@ package info.nightscout.androidaps.watchfaces
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorFilter
@@ -89,7 +88,7 @@ class CustomWatchface : BaseWatchFace() {
         zoomFactor = (displaySize.x).toDouble() / TEMPLATE_RESOLUTION.toDouble()
         FontMap.init(this)
         ViewMap.init(this)
-        ComplicationMap.init(applicationContext)
+        ComplicationMap.init(this)
         return binding
     }
 
@@ -199,7 +198,7 @@ class CustomWatchface : BaseWatchFace() {
                     .takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
                 monthFormat = json.optString(MONTHFORMAT.key, "MMM")
                     .takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
-                binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update daynName and month according to format on cwf loading
+                binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update dayName and month according to format on cwf loading
                 binding.month.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
 
                 binding.mainLayout.forEach { view ->
@@ -217,7 +216,7 @@ class CustomWatchface : BaseWatchFace() {
                                 }
 
                                 is FrameLayout -> {
-                                    ComplicationMap.fromId(view.id)?.also { it.customizeComplication(view, viewJson, sp, ::getColor) }
+                                    ComplicationMap.fromId(view.id)?.also { it.customizeComplication(view, viewJson) }
                                 }
                             }
                         } ?: apply {
@@ -408,9 +407,10 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun init(context: Context) {
+            fun init(cwf: CustomWatchface) {
                 values().forEach {
-                    it.drawable = ComplicationDrawable(context)
+                    it.cwf = cwf
+                    it.drawable = ComplicationDrawable(cwf.context)
                 }
             }
 
@@ -432,21 +432,23 @@ class CustomWatchface : BaseWatchFace() {
 
         }
 
-        fun customizeComplication(view: View, viewJson: JSONObject, sp: SP, getColor: (String) -> Int) {
+        lateinit var cwf: CustomWatchface
+
+        fun customizeComplication(view: View, viewJson: JSONObject) {
             if (view.isVisible)
                 drawable?.also {
                     Rect(view.left, view.top, view.right, view.bottom).also { rect ->
                         it.bounds = rect
                     }
-                    complicationId = sp.getInt(pref, -1)
+                    complicationId = cwf.sp.getInt(pref, -1)
                     it.setTextTypefaceActive(FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)))
                     it.setTitleTypefaceActive(FontMap.font(viewJson.optString(FONTTITLE.key, FontMap.DEFAULT.key)))
                     if (viewJson.has(FONTCOLOR.key))
-                        it.setTextColorActive(getColor(viewJson.optString(FONTCOLOR.key)))
+                        it.setTextColorActive(cwf.getColor(viewJson.optString(FONTCOLOR.key)))
                     if (viewJson.has(FONTTITLECOLOR.key))
-                        it.setTitleColorActive(getColor(viewJson.optString(FONTTITLECOLOR.key)))
+                        it.setTitleColorActive(cwf.getColor(viewJson.optString(FONTTITLECOLOR.key)))
                     if (viewJson.has(COLOR.key))
-                        it.setIconColorActive(getColor(viewJson.optString(COLOR.key)))
+                        it.setIconColorActive(cwf.getColor(viewJson.optString(COLOR.key)))
                 }
             else
                 complicationId = null
