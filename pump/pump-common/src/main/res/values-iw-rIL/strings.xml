@@ -65,6 +65,8 @@
     <!-- Pump History -->
     <string name="pump_history_type">סוג:</string>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
+    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
     <plurals name="duration_days">
         <item quantity="one">יום %1$d</item>
         <item quantity="two">יומיים</item>
