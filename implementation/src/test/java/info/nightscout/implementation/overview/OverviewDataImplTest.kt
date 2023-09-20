@@ -1,5 +1,6 @@
 package info.nightscout.implementation.overview
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
@@ -10,7 +11,6 @@ import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.shared.utils.T
 import info.nightscout.sharedtests.TestBaseWithProfile
 import io.reactivex.rxjava3.core.Single
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -43,23 +43,23 @@ class OverviewDataImplTest : TestBaseWithProfile() {
         // no data
         Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
         Mockito.`when`(repository.getLastGlucoseValueWrapped()).thenReturn(Single.just(ValueWrapper.Absent()))
-        Assertions.assertNull(sut.lastBg(autosensDataStore))
-        Assertions.assertFalse(sut.isLow(autosensDataStore))
-        Assertions.assertFalse(sut.isHigh(autosensDataStore))
+        assertThat(sut.lastBg(autosensDataStore)).isNull()
+        assertThat(sut.isLow(autosensDataStore)).isFalse()
+        assertThat(sut.isHigh(autosensDataStore)).isFalse()
 
         // no bucketed but in db
         Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
         Mockito.`when`(repository.getLastGlucoseValueWrapped()).thenReturn(Single.just(ValueWrapper.Existing(glucoseValue)))
-        Assertions.assertEquals(200.0, sut.lastBg(autosensDataStore)?.value)
-        Assertions.assertFalse(sut.isLow(autosensDataStore))
-        Assertions.assertTrue(sut.isHigh(autosensDataStore))
+        assertThat(sut.lastBg(autosensDataStore)?.value).isEqualTo(200.0)
+        assertThat(sut.isLow(autosensDataStore)).isFalse()
+        assertThat(sut.isHigh(autosensDataStore)).isTrue()
 
         // in bucketed
         Mockito.`when`(autosensDataStore.bucketedData).thenReturn(bucketedData)
         Mockito.`when`(repository.getLastGlucoseValueWrapped()).thenReturn(Single.just(ValueWrapper.Existing(glucoseValue)))
-        Assertions.assertEquals(70.0, sut.lastBg(autosensDataStore)?.value)
-        Assertions.assertTrue(sut.isLow(autosensDataStore))
-        Assertions.assertFalse(sut.isHigh(autosensDataStore))
+        assertThat(sut.lastBg(autosensDataStore)?.value).isEqualTo(70.0)
+        assertThat(sut.isLow(autosensDataStore)).isTrue()
+        assertThat(sut.isHigh(autosensDataStore)).isFalse()
     }
 
     @Test
@@ -68,13 +68,13 @@ class OverviewDataImplTest : TestBaseWithProfile() {
         Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
         Mockito.`when`(repository.getLastGlucoseValueWrapped()).thenReturn(Single.just(ValueWrapper.Existing(glucoseValue)))
         Mockito.`when`(dateUtil.now()).thenReturn(time + T.mins(1).msecs())
-        Assertions.assertTrue(sut.isActualBg(autosensDataStore))
+        assertThat(sut.isActualBg(autosensDataStore)).isTrue()
         Mockito.`when`(dateUtil.now()).thenReturn(time + T.mins(9).msecs() + 1)
-        Assertions.assertFalse(sut.isActualBg(autosensDataStore))
+        assertThat(sut.isActualBg(autosensDataStore)).isFalse()
 
         // no data
         Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
         Mockito.`when`(repository.getLastGlucoseValueWrapped()).thenReturn(Single.just(ValueWrapper.Absent()))
-        Assertions.assertFalse(sut.isActualBg(autosensDataStore))
+        assertThat(sut.isActualBg(autosensDataStore)).isFalse()
     }
 }
