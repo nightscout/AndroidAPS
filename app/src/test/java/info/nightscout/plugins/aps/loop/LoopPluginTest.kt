@@ -2,6 +2,7 @@ package info.nightscout.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -24,7 +25,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.sharedtests.TestBase
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -72,28 +72,28 @@ class LoopPluginTest : TestBase() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        Assertions.assertEquals(LoopFragment::class.java.name, loopPlugin.pluginDescription.fragmentClass)
-        Assertions.assertEquals(PluginType.LOOP, loopPlugin.getType())
-        Assertions.assertEquals("Loop", loopPlugin.name)
-        Assertions.assertEquals("LOOP", loopPlugin.nameShort)
-        Assertions.assertEquals(true, loopPlugin.hasFragment())
-        Assertions.assertEquals(true, loopPlugin.showInList(PluginType.LOOP))
-        Assertions.assertEquals(info.nightscout.plugins.aps.R.xml.pref_loop.toLong(), loopPlugin.preferencesId.toLong())
+        assertThat(loopPlugin.pluginDescription.fragmentClass).isEqualTo(LoopFragment::class.java.name)
+        assertThat(loopPlugin.getType()).isEqualTo(PluginType.LOOP)
+        assertThat(loopPlugin.name).isEqualTo("Loop")
+        assertThat(loopPlugin.nameShort).isEqualTo("LOOP")
+        assertThat(loopPlugin.hasFragment()).isTrue()
+        assertThat(loopPlugin.showInList(PluginType.LOOP)).isTrue()
+        assertThat(loopPlugin.preferencesId.toLong()).isEqualTo(info.nightscout.plugins.aps.R.xml.pref_loop.toLong())
 
         // Plugin is disabled by default
-        Assertions.assertEquals(false, loopPlugin.isEnabled())
+        assertThat(loopPlugin.isEnabled()).isFalse()
         loopPlugin.setPluginEnabled(PluginType.LOOP, true)
-        Assertions.assertEquals(true, loopPlugin.isEnabled())
+        assertThat(loopPlugin.isEnabled()).isTrue()
 
         // No temp basal capable pump should disable plugin
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = false
-        Assertions.assertEquals(false, loopPlugin.isEnabled())
+        assertThat(loopPlugin.isEnabled()).isFalse()
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = true
 
         // Fragment is hidden by default
-        Assertions.assertEquals(false, loopPlugin.isFragmentVisible())
+        assertThat(loopPlugin.isFragmentVisible()).isFalse()
         loopPlugin.setFragmentVisible(PluginType.LOOP, true)
-        Assertions.assertEquals(true, loopPlugin.isFragmentVisible())
+        assertThat(loopPlugin.isFragmentVisible()).isTrue()
     }
 
     /* ***********  not working
@@ -116,7 +116,7 @@ class LoopPluginTest : TestBase() {
         MockedLoopPlugin mockedLoopPlugin = new MockedLoopPlugin();
         Treatment t = new Treatment();
         bus.post(new EventTreatmentChange(t));
-        Assertions.assertEquals(true, mockedLoopPlugin.invokeCalled);
+        assertThat(mockedLoopPlugin.invokeCalled).isTrue();
     }
 */
 }
