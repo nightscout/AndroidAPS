@@ -48,9 +48,9 @@
     <string name="pref_show_detailed_delta">Mostrar delta detallado</string>
     <string name="pref_show_avgdelta">Mostrar delta promedio</string>
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
-    <string name="pref_show_rig_battery">Mostrar batería global del lazo</string>
+    <string name="pref_show_rig_battery">Mostrar batería global del bucle</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
-    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
+    <string name="pref_show_loop_status">Mostrar estado del bucle</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
@@ -72,7 +72,7 @@
     <string name="cwf_comment_delta">Delta corto de glucosa</string>
     <string name="cwf_comment_avg_delta">Delta promedio de glucosa (15min)</string>
     <string name="cwf_comment_uploader_battery">Batería del teléfono (%)</string>
-    <string name="cwf_comment_rig_battery">Batería global de lazo (%)</string>
+    <string name="cwf_comment_rig_battery">Batería global de bucle(%)</string>
     <string name="cwf_comment_basalRate">Tasa Basal</string>
     <string name="cwf_comment_bgi">Valor BGI</string>
     <string name="cwf_comment_time">Tiempo (HH:MM o HH:MM:SS)</string>
