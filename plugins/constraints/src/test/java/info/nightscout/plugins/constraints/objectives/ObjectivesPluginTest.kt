@@ -35,9 +35,6 @@ class ObjectivesPluginTest : TestBase() {
                 it.rh = rh
                 it.dateUtil = dateUtil
             }
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
         }
     }
 
@@ -52,7 +49,7 @@ class ObjectivesPluginTest : TestBase() {
 
     @Test fun notStartedObjectivesShouldLimitLoopInvocation() {
         objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].startedOn = 0
-        val c = objectivesPlugin.isLoopInvocationAllowed(ConstraintObject(true, injector))
+        val c = objectivesPlugin.isLoopInvocationAllowed(ConstraintObject(true, aapsLogger))
         Assertions.assertEquals("Objectives: Objective 1 not started", c.getReasons())
         Assertions.assertEquals(false, c.value())
         objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].startedOn = dateUtil.now()
@@ -60,21 +57,21 @@ class ObjectivesPluginTest : TestBase() {
 
     @Test fun notStartedObjective6ShouldLimitClosedLoop() {
         objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
-        val c = objectivesPlugin.isClosedLoopAllowed(ConstraintObject(true, injector))
+        val c = objectivesPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         Assertions.assertEquals(true, c.getReasons().contains("Objective 6 not started"))
         Assertions.assertEquals(false, c.value())
     }
 
     @Test fun notStartedObjective8ShouldLimitAutosensMode() {
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
-        val c = objectivesPlugin.isAutosensModeEnabled(ConstraintObject(true, injector))
+        val c = objectivesPlugin.isAutosensModeEnabled(ConstraintObject(true, aapsLogger))
         Assertions.assertEquals(true, c.getReasons().contains("Objective 8 not started"))
         Assertions.assertEquals(false, c.value())
     }
 
     @Test fun notStartedObjective10ShouldLimitSMBMode() {
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
-        val c = objectivesPlugin.isSMBModeEnabled(ConstraintObject(true, injector))
+        val c = objectivesPlugin.isSMBModeEnabled(ConstraintObject(true, aapsLogger))
         Assertions.assertEquals(true, c.getReasons().contains("Objective 9 not started"))
         Assertions.assertEquals(false, c.value())
     }

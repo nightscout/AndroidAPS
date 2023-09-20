@@ -62,9 +62,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
             if (it is PumpEnactResult) {
                 it.context = context
             }
@@ -873,7 +870,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 1 20")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
-        `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(1.0, injector))
+        `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
 
         //BASAL 1 30
         smsCommunicatorPlugin.messages = ArrayList()
@@ -921,7 +918,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED a%")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, injector))
+        `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
 
         //EXTENDED 1 0
         smsCommunicatorPlugin.messages = ArrayList()
@@ -958,7 +955,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, injector))
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
         `when`(dateUtilMocked.now()).thenReturn(1000L)
         `when`(sp.getLong(R.string.key_smscommunicator_remote_bolus_min_distance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L)
         //BOLUS 1
@@ -967,7 +964,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote bolus not available. Try again later.")
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, injector))
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
         `when`(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
 
         //BOLUS 0
@@ -983,8 +980,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS a")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, injector))
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, injector))
+        `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
 
         //BOLUS 1
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1081,7 +1078,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(ConstraintObject(0, injector))
+        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(ConstraintObject(0, aapsLogger))
 
         //CARBS 0
         smsCommunicatorPlugin.messages = ArrayList()
@@ -1089,7 +1086,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 0")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
-        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(ConstraintObject(1, injector))
+        `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(ConstraintObject(1, aapsLogger))
 
         //CARBS 1
         smsCommunicatorPlugin.messages = ArrayList()

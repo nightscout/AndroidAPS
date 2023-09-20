@@ -9,7 +9,6 @@ import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.ApsMode
@@ -95,9 +94,6 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
             if (it is PumpEnactResult) {
                 it.context = context
             }
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
         }
     }
 
@@ -138,7 +134,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(sp.getString(R.string.key_danar_bt_name, "")).thenReturn("")
 
         //SafetyPlugin
-        constraintChecker = ConstraintsCheckerImpl(activePlugin, injector)
+        constraintChecker = ConstraintsCheckerImpl(activePlugin, aapsLogger)
 
         val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter)
 

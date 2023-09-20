@@ -1,7 +1,5 @@
 package info.nightscout.core.data
 
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
@@ -13,10 +11,8 @@ import org.junit.jupiter.api.Test
  */
 class ConstraintTest : TestBase() {
 
-    private val injector = HasAndroidInjector { AndroidInjector { } }
-
     @Test fun doTests() {
-        val b = ConstraintObject(false, aapsLogger)
+        val b = ConstraintObject(true, aapsLogger)
         Assertions.assertEquals(true, b.value())
         Assertions.assertEquals("", b.getReasons())
         Assertions.assertEquals("", b.getMostLimitedReasons())

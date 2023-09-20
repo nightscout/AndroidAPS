@@ -6,7 +6,6 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.profile.Instantiator
@@ -50,9 +49,6 @@ open class DanaRTestBase : TestBaseWithProfile() {
 
     val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
             if (it is MessageBase) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil

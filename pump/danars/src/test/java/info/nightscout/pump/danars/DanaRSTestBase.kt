@@ -2,7 +2,6 @@ package info.nightscout.pump.danars
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
@@ -22,9 +21,6 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
         }
     }
 
