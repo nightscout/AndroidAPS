@@ -121,12 +121,12 @@ class CalculationWorkflowImpl @Inject constructor(
     }
 
     override fun stopCalculation(job: String, from: String) {
-        aapsLogger.debug(LTag.AUTOSENS, "Stopping calculation thread: $from")
+        aapsLogger.debug(LTag.WORKER, "Stopping calculation thread: $from")
         WorkManager.getInstance(context).cancelUniqueWork(job)
         val workStatus = WorkManager.getInstance(context).getWorkInfosForUniqueWork(job).get()
         while (workStatus.size >= 1 && workStatus[0].state == WorkInfo.State.RUNNING)
             SystemClock.sleep(100)
-        aapsLogger.debug(LTag.AUTOSENS, "Calculation thread stopped: $from")
+        aapsLogger.debug(LTag.WORKER, "Calculation thread stopped: $from")
     }
 
     override fun runCalculation(
@@ -138,7 +138,7 @@ class CalculationWorkflowImpl @Inject constructor(
         bgDataReload: Boolean,
         cause: Event?
     ) {
-        aapsLogger.debug(LTag.AUTOSENS, "Starting calculation worker: $reason to ${dateUtil.dateAndTimeAndSecondsString(end)}")
+        aapsLogger.debug(LTag.WORKER, "Starting calculation worker: $reason to ${dateUtil.dateAndTimeAndSecondsString(end)}")
 
         WorkManager.getInstance(context)
             .beginUniqueWork(

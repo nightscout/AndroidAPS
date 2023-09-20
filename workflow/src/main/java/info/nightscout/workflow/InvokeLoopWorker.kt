@@ -29,7 +29,7 @@ class InvokeLoopWorker(
      This method is triggered once autosens calculation has completed, so the LoopPlugin
      has current data to work with. However, autosens calculation can be triggered by multiple
      sources and currently only a new BG should trigger a loop run. Hence we return early if
-     the event causing the calculation is not EventNewBg.
+     the event causing the calculation is not EventNewBG.
      <p>
     */
     override suspend fun doWorkAndLog(): Result {
