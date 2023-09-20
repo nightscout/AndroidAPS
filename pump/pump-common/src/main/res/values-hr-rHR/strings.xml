@@ -55,6 +55,7 @@
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
     <!-- PumpDeviceState -->
+    <string name="pump_status_pump_unreachable">Pumpa nedostupna</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dan</item>
         <item quantity="few">%1$d dana</item>
