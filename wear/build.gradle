@@ -93,8 +93,8 @@ allprojects {
 
 
 dependencies {
-    implementation project(':app-wear-shared:shared')
     implementation project(':app-wear-shared:shared-impl')
+    implementation project(':core:interfaces')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -118,6 +118,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
     // for old fashioned support-app version

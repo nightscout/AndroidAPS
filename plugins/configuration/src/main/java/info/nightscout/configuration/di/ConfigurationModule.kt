@@ -17,7 +17,7 @@ import info.nightscout.configuration.maintenance.activities.PrefImportListActivi
 import info.nightscout.configuration.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
+import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 

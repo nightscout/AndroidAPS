@@ -8,7 +8,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
@@ -31,7 +30,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
         AndroidInjector {
             if (it is Trigger) {
                 it.aapsLogger = aapsLogger
-                it.rxBus = RxBus(aapsSchedulers, aapsLogger)
+                it.rxBus = rxBus
                 it.rh = rh
                 it.profileFunction = profileFunction
                 it.sp = sp

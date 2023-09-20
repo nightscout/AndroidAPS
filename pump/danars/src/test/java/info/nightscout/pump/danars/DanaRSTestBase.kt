@@ -1,5 +1,7 @@
 package info.nightscout.pump.danars
 
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
@@ -16,6 +18,11 @@ open class DanaRSTestBase : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
 
     lateinit var danaPump: DanaPump
+
+    val injector = HasAndroidInjector {
+        AndroidInjector {
+        }
+    }
 
     @BeforeEach
     fun prepare() {

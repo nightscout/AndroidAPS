@@ -9,16 +9,15 @@ import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.BolusProgressData
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
-import info.nightscout.interfaces.pump.BolusProgressData
 import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
@@ -28,7 +27,27 @@ import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.AlarmState
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
-import info.nightscout.pump.medtrum.comm.packets.*
+import info.nightscout.pump.medtrum.comm.packets.ActivatePacket
+import info.nightscout.pump.medtrum.comm.packets.AuthorizePacket
+import info.nightscout.pump.medtrum.comm.packets.CancelBolusPacket
+import info.nightscout.pump.medtrum.comm.packets.CancelTempBasalPacket
+import info.nightscout.pump.medtrum.comm.packets.ClearPumpAlarmPacket
+import info.nightscout.pump.medtrum.comm.packets.GetDeviceTypePacket
+import info.nightscout.pump.medtrum.comm.packets.GetRecordPacket
+import info.nightscout.pump.medtrum.comm.packets.GetTimePacket
+import info.nightscout.pump.medtrum.comm.packets.MedtrumPacket
+import info.nightscout.pump.medtrum.comm.packets.NotificationPacket
+import info.nightscout.pump.medtrum.comm.packets.PrimePacket
+import info.nightscout.pump.medtrum.comm.packets.ResumePumpPacket
+import info.nightscout.pump.medtrum.comm.packets.SetBasalProfilePacket
+import info.nightscout.pump.medtrum.comm.packets.SetBolusPacket
+import info.nightscout.pump.medtrum.comm.packets.SetPatchPacket
+import info.nightscout.pump.medtrum.comm.packets.SetTempBasalPacket
+import info.nightscout.pump.medtrum.comm.packets.SetTimePacket
+import info.nightscout.pump.medtrum.comm.packets.SetTimeZonePacket
+import info.nightscout.pump.medtrum.comm.packets.StopPatchPacket
+import info.nightscout.pump.medtrum.comm.packets.SubscribePacket
+import info.nightscout.pump.medtrum.comm.packets.SynchronizePacket
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -67,7 +86,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var medtrumPlugin: MedtrumPlugin
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -145,8 +164,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 handleConnectionStateChange(connectionState)
             }
         }
-
-        medtrumPump.loadUserSettingsFromSP()
     }
 
     override fun onDestroy() {
@@ -283,13 +300,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun clearAlarms(): Boolean {
-        var result = true
-        if (medtrumPump.pumpState in listOf(
-                MedtrumPumpState.PAUSED,
-                MedtrumPumpState.HOURLY_MAX_SUSPENDED,
-                MedtrumPumpState.DAILY_MAX_SUSPENDED
-            )
-        ) {
+        var result = loadEvents() // Make sure we have all events before clearing alarms
+        if (result && medtrumPump.pumpState.isSuspendedByPump()) {
             when (medtrumPump.pumpState) {
                 MedtrumPumpState.HOURLY_MAX_SUSPENDED -> {
                     result = sendPacketAndGetResponse(ClearPumpAlarmPacket(injector, ALARM_HOURLY_MAX_CLEAR_CODE))
@@ -420,7 +432,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     connectionRetryCounter++
                 } else {
                     communicationLost = true
-                    aapsLogger.warn(LTag.PUMPCOMM, "Retry connection faled, communication stopped")
+                    aapsLogger.warn(LTag.PUMPCOMM, "Retry connection failed, communication stopped")
                     disconnect("Communication stopped")
                 }
             } else {

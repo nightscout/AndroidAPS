@@ -63,13 +63,6 @@
     <string name="time_range">Tidsinterval</string>
     <string name="timerange_value">Tid er mellem%1$s og %2$s</string>
     <string name="between">Mellem </string>
-    <string name="weekday_sunday_short">Søn</string>
-    <string name="weekday_saturday_short">Lør</string>
-    <string name="weekday_friday_short">Fre</string>
-    <string name="weekday_thursday_short">Tor</string>
-    <string name="weekday_wednesday_short">Ons</string>
-    <string name="weekday_tuesday_short">Tir</string>
-    <string name="weekday_monday_short">Man</string>
     <string name="delete_short">SLET</string>
     <string name="add_short">TILFØJ</string>
     <string name="copy_short">KOPIER</string>
@@ -92,6 +85,8 @@
     <string name="lastboluscompared">Sidste bolus tid %1$s %2$s min siden</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Puls</string>
+    <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="iob_u">IOB [IE]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Tilbagevendende tid</string>
@@ -117,14 +112,8 @@
     <string name="run_automations">Kør automatisering</string>
     <string name="add_automation">Tilføj regel</string>
     <string name="stop_processing">Stop afvikling</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Ma</string>
-    <string name="tuesday_short">Ti</string>
-    <string name="wednesday_short">On</string>
-    <string name="thursday_short">To</string>
-    <string name="friday_short">Fr</string>
-    <string name="saturday_short">Lø</string>
-    <string name="sunday_short">Sø</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Tid til at spise!\nBrug Bolusguiden og beregn igen.</string>
     <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
+    <string name="error_setting_reminder">Fejl under indstilling af fremtidig alarm</string>
 </resources>

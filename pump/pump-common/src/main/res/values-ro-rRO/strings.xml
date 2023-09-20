@@ -63,6 +63,7 @@
     <string name="pump_settings_error_wrong_max_basal_set">Bazala maximă setată incorect în pompă (trebuie să fie %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
+    <!-- PumpDeviceState -->
     <plurals name="duration_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

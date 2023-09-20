@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import info.nightscout.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
-class InputInsulin() : Element() {
+class InputInsulin() : Element {
 
     var value = 0.0
 

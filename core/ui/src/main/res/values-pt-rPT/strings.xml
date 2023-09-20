@@ -406,6 +406,7 @@
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="quickwizard">Assistente Rápido</string>
     <!--    Preferences-->
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
@@ -476,6 +477,7 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Falta de permissão SMS</string>
     <!-- About -->
+    <string name="fabric_upload_disabled">Envio de registos de erro desativado!</string>
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
@@ -489,4 +491,22 @@
         <item quantity="other">%1$d minutos</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <string name="weekday_saturday_short">Sáb</string>
+    <string name="weekday_friday_short">Sex</string>
+    <string name="weekday_thursday_short">Qui</string>
+    <string name="weekday_wednesday_short">Qua</string>
+    <string name="weekday_tuesday_short">Ter</string>
+    <string name="weekday_monday_short">Seg</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">S</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">Qa</string>
+    <string name="thursday_short">Qi</string>
+    <string name="friday_short">Se</string>
+    <string name="saturday_short">Sa</string>
+    <string name="sunday_short">D</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

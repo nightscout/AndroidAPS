@@ -586,4 +586,23 @@
     <string name="cleanup_db_confirm">Ar tikrai norite išvalyti duombazę?\nIstoriniai duomenys ir pakeitimai, senesni nei 3 mėn., bus ištrinti.</string>
     <string name="cleanup_db_confirm_sync">Ar norite išvalyti duombazę?\nIstoriniai duomenys ir pakeitimai, senesni nei 3 mėn., bus ištrinti.\nSinchronizacija reikšmingai pagreitės.</string>
     <string name="cleared_entries">Ištrinti įrašai</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">S</string>
+    <string name="weekday_saturday_short">Š</string>
+    <string name="weekday_friday_short">Pn</string>
+    <string name="weekday_thursday_short">K</string>
+    <string name="weekday_wednesday_short">T</string>
+    <string name="weekday_tuesday_short">A</string>
+    <string name="weekday_monday_short">P</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">mėn.</string>
+    <string name="tuesday_short">A</string>
+    <string name="wednesday_short">T</string>
+    <string name="thursday_short">K</string>
+    <string name="friday_short">Pn</string>
+    <string name="saturday_short">Š</string>
+    <string name="sunday_short">S</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f V</string>
+    <string name="format_insulin_units">%1$.2f V</string>
 </resources>

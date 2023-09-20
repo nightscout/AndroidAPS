@@ -3,8 +3,8 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.core.constraints.ConstraintObject
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.junit.jupiter.api.Assertions
@@ -14,7 +14,7 @@ import org.mockito.Mockito.`when`
 
 class DanaRsMessageHashTableTest : DanaRSTestBase() {
 
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -36,7 +36,7 @@ class DanaRsMessageHashTableTest : DanaRSTestBase() {
 
     @Test
     fun runTest() {
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
 
         val danaRSMessageHashTable = DanaRSMessageHashTable(packetInjector)
         val forTesting: DanaRSPacket = DanaRSPacketAPSSetEventHistory(packetInjector, DanaPump.HistoryEntry.CARBS.value, 0, 0, 0)

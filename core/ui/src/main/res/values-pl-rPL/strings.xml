@@ -586,4 +586,23 @@
     <string name="cleanup_db_confirm">Czy chcesz wyczyścić bazę danych?\nTa operacja usunie odnotowane zmiany i dane historyczne starsze niż 3 miesiące.</string>
     <string name="cleanup_db_confirm_sync">Czy chcesz wyczyścić bazę danych?\nTa operacja usunie odnotowane zmiany i dane historyczne starsze niż 3 miesiące.\nWyczyszczenie bazy dramatycznie przyśpieszy pełną synchronizację.</string>
     <string name="cleared_entries">Usunięte wpisy</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Nie</string>
+    <string name="weekday_saturday_short">Sob</string>
+    <string name="weekday_friday_short">Pią</string>
+    <string name="weekday_thursday_short">Czw</string>
+    <string name="weekday_wednesday_short">Śr</string>
+    <string name="weekday_tuesday_short">Wt</string>
+    <string name="weekday_monday_short">Pon</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">P</string>
+    <string name="tuesday_short">W</string>
+    <string name="wednesday_short">Ś</string>
+    <string name="thursday_short">C</string>
+    <string name="friday_short">P</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">N</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

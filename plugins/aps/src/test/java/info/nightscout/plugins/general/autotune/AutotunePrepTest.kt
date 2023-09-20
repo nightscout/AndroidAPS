@@ -2,6 +2,7 @@ package info.nightscout.plugins.general.autotune
 
 import info.nightscout.core.extensions.shiftBlock
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.GlucoseValue
@@ -12,7 +13,6 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP

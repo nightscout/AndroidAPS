@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.directionToIcon
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
@@ -35,6 +36,7 @@ import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.SingleClickButton
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.database.entities.UserEntry.Action
@@ -48,8 +50,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.VariableSensitivityResult
 import info.nightscout.interfaces.automation.Automation
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
@@ -66,7 +67,6 @@ import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.interfaces.source.XDripSource
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
@@ -121,7 +121,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Inject lateinit var nsSettingsStatus: NSSettingsStatus
@@ -190,7 +190,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         smallHeight = screenHeight <= Constants.SMALL_HEIGHT
         val landscape = screenHeight < screenWidth
 
-        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(binding, landscape, rh.gb(info.nightscout.shared.R.bool.isTablet), smallHeight)
+        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(binding, landscape, rh.gb(info.nightscout.core.ui.R.bool.isTablet), smallHeight)
         binding.nsclientCard.visibility = config.NSCLIENT.toVisibility()
 
         binding.notifications.setHasFixedSize(false)
@@ -311,7 +311,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         disposable += rxBus
             .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ updateProfile() }, fabricPrivacy::logException)
+            .subscribe({ scheduleUpdateGUI() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTempTargetChange::class.java)
             .observeOn(aapsSchedulers.io)
@@ -516,7 +516,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
-                val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
+                val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
                 activity?.let {
                     if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
                         OKDialog.show(it, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
@@ -544,7 +544,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
                 val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG)
                 binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(info.nightscout.core.main.R.string.format_carbs, quickWizardEntry.carbs()) +
-                    " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
+                    " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                 if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
             } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
         }
@@ -843,7 +843,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         info.nightscout.core.ui.R.attr.ribbonWarningColor
                     else info.nightscout.core.ui.R.attr.ribbonDefaultColor
-                 } else info.nightscout.core.ui.R.attr.ribbonDefaultColor
+                } else info.nightscout.core.ui.R.attr.ribbonDefaultColor
             } ?: info.nightscout.core.ui.R.attr.ribbonCriticalColor
 
             val profileTextColor = profile?.let {
@@ -1095,7 +1095,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
 
         binding.infoLayout.sensitivity.text =
-           lastAutosensData?.let {
+            lastAutosensData?.let {
                 String.format(Locale.ENGLISH, "%.0f%%", it.autosensResult.ratio * 100)
             } ?: ""
         // Show variable sensitivity

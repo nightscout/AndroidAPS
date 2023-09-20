@@ -8,7 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.profile.Profile
@@ -63,7 +63,7 @@ abstract class PumpPluginAbstract protected constructor(
     var pumpSync: PumpSync,
     var pumpSyncStorage: PumpSyncStorage,
     var decimalFormatter: DecimalFormatter
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, Constraints, PumpSyncEntriesCreator {
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, PluginConstraints, PumpSyncEntriesCreator {
 
     protected val disposable = CompositeDisposable()
 

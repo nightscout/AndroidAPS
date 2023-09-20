@@ -10,9 +10,9 @@ import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionServi
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
 import info.nightscout.annotations.OpenForTesting
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
@@ -51,7 +51,7 @@ class DanaRKoreanPlugin @Inject constructor(
     rxBus: RxBus,
     private val context: Context,
     rh: ResourceHelper,
-    constraintChecker: Constraints,
+    constraintChecker: ConstraintsChecker,
     activePlugin: ActivePlugin,
     sp: SP,
     commandQueue: CommandQueue,
@@ -147,7 +147,7 @@ class DanaRKoreanPlugin @Inject constructor(
     }
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         require(detailedBolusInfo.carbs > 0)
         return if (detailedBolusInfo.insulin > 0) {
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
@@ -192,7 +192,7 @@ class DanaRKoreanPlugin @Inject constructor(
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: TemporaryBasalType): PumpEnactResult {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
-        val absoluteRateAfterConstraint = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
+        val absoluteRateAfterConstraint = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         var doTempOff = baseBasalRate - absoluteRateAfterConstraint == 0.0 && absoluteRateAfterConstraint >= 0.10
         val doLowTemp = absoluteRateAfterConstraint < baseBasalRate || absoluteRateAfterConstraint < 0.10
         val doHighTemp = absoluteRateAfterConstraint > baseBasalRate && !useExtendedBoluses
@@ -266,7 +266,7 @@ class DanaRKoreanPlugin @Inject constructor(
             val durationInHalfHours = max(durationInMinutes / 30, 1)
             // We keep current basal running so need to sub current basal
             var extendedRateToSet: Double = absoluteRateAfterConstraint - baseBasalRate
-            extendedRateToSet = constraintChecker.applyBasalConstraints(Constraint(extendedRateToSet), profile).value()
+            extendedRateToSet = constraintChecker.applyBasalConstraints(ConstraintObject(extendedRateToSet, aapsLogger), profile).value()
             // needs to be rounded to 0.1
             extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2) // *2 because of half hours
 

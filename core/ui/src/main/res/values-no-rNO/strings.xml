@@ -580,4 +580,23 @@
     <string name="cleanup_db_confirm">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.</string>
     <string name="cleanup_db_confirm_sync">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.\nÅ gjøre dette vil øke hastigheten på synkronisering betydelig.</string>
     <string name="cleared_entries">Fjernet oppføringer</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Søn</string>
+    <string name="weekday_saturday_short">Lør</string>
+    <string name="weekday_friday_short">Fre</string>
+    <string name="weekday_thursday_short">Tor</string>
+    <string name="weekday_wednesday_short">Ons</string>
+    <string name="weekday_tuesday_short">Tir</string>
+    <string name="weekday_monday_short">Man</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">Ti</string>
+    <string name="wednesday_short">O</string>
+    <string name="thursday_short">To</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">L</string>
+    <string name="sunday_short">S</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f E</string>
+    <string name="format_insulin_units">%1$.2f E</string>
 </resources>

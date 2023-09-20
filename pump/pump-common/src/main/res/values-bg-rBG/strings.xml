@@ -64,6 +64,15 @@
     <string name="pump_settings_error_wrong_max_basal_set">Грешен макс мазал в помпата (трябва да е %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Тип:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Никога не е свързвана</string>
+    <string name="pump_status_sleeping">Спинка си</string>
+    <string name="pump_status_waking_up">Събуждане</string>
+    <string name="pump_status_active">Активна</string>
+    <string name="pump_status_error_comm">Грешка в комуникацията</string>
+    <string name="pump_status_timeout_comm">Изтече времето за връзка</string>
+    <string name="pump_status_pump_unreachable">Помпата е недостъпна</string>
+    <string name="pump_status_invalid_config">Грешна конфигурация</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d ден</item>
         <item quantity="other">%1$d дни</item>

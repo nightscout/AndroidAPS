@@ -11,7 +11,7 @@ class LabelWithElement(
     var textPre: String = "",
     var textPost: String = "",
     var element: Element? = null,
-) : Element() {
+) : Element {
 
     override fun addToLayout(root: LinearLayout) { // container layout
         // text view pre element

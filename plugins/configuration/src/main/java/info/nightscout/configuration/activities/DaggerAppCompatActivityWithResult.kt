@@ -13,7 +13,6 @@ import info.nightscout.configuration.maintenance.PrefsFileContract
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
-import info.nightscout.interfaces.permissions.OptimizationPermissionContract
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventThemeSwitch
 import info.nightscout.rx.logging.AAPSLogger

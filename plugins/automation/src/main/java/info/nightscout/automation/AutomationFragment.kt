@@ -32,14 +32,14 @@ import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.ActionModeHelper
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter
-import info.nightscout.interfaces.dragHelpers.OnStartDragListener
-import info.nightscout.interfaces.dragHelpers.SimpleItemTouchHelperCallback
+import info.nightscout.core.ui.dragHelpers.ItemTouchHelperAdapter
+import info.nightscout.core.ui.dragHelpers.OnStartDragListener
+import info.nightscout.core.ui.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility
@@ -104,17 +104,17 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
     override fun onMenuItemSelected(item: MenuItem): Boolean =
         if (actionHelper.onOptionsItemSelected(item)) true
         else when (item.itemId) {
-            ID_MENU_RUN       -> {
+            ID_MENU_RUN -> {
                 Thread { automationPlugin.processActions() }.start()
                 true
             }
 
-            ID_MENU_ADD       -> {
+            ID_MENU_ADD -> {
                 add()
                 true
             }
 
-            else              -> super.onContextItemSelected(item)
+            else        -> super.onContextItemSelected(item)
         }
 
     @SuppressLint("NotifyDataSetChanged")

@@ -1,6 +1,7 @@
 package info.nightscout.plugins.general.maintenance
 
 import android.content.Context
+import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.interfaces.Config
@@ -10,7 +11,6 @@ import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.sharedtests.TestBase
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -40,11 +40,12 @@ class MaintenancePluginTest : TestBase() {
 
     @Test fun logFilesTest() {
         var logs = sut.getLogFiles(2)
-        Assertions.assertEquals(2, logs.size)
-        Assertions.assertEquals("AndroidAPS.log", logs[0].name)
-        Assertions.assertEquals("AndroidAPS.2018-01-03_01-01-00.1.zip", logs[1].name)
+        assertThat(logs.map { it.name }).containsExactly(
+            "AndroidAPS.log",
+            "AndroidAPS.2018-01-03_01-01-00.1.zip",
+        ).inOrder()
         logs = sut.getLogFiles(10)
-        Assertions.assertEquals(4, logs.size)
+        assertThat(logs).hasSize(4)
     }
 
     @Test
@@ -53,7 +54,7 @@ class MaintenancePluginTest : TestBase() {
         val name = "AndroidAPS.log.zip"
         var zipFile = File("build/$name")
         zipFile = sut.zipLogs(zipFile, logs)
-        Assertions.assertTrue(zipFile.exists())
-        Assertions.assertTrue(zipFile.isFile)
+        assertThat(zipFile.exists()).isTrue()
+        assertThat(zipFile.isFile).isTrue()
     }
 }

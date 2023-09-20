@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaR.comm
 
 import info.nightscout.androidaps.danar.comm.MsgBolusStart
-import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.core.constraints.ConstraintObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -9,7 +9,7 @@ import org.mockito.Mockito.`when`
 class MsgBolusStartTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
         val packet = MsgBolusStart(injector, 1.0)
 
         // test message decoding

@@ -279,7 +279,16 @@ class MedtrumPump @Inject constructor(
     var desiredHourlyMaxInsulin: Int = 40
     var desiredDailyMaxInsulin: Int = 180
 
-    init {
+    fun pumpType(): PumpType = pumpType(deviceType)
+
+    fun pumpType(type: Int): PumpType =
+        when (type) {
+            MedtrumSnUtil.MD_0201, MedtrumSnUtil.MD_8201 -> PumpType.MEDTRUM_NANO
+            MedtrumSnUtil.MD_8301                        -> PumpType.MEDTRUM_300U
+            else                                         -> PumpType.MEDTRUM_UNTESTED
+        }
+
+    fun loadVarsFromSP() {
         // Load stuff from SP
         _patchSessionToken = sp.getLong(R.string.key_session_token, 0L)
         _lastConnection = sp.getLong(R.string.key_last_connection, 0L)
@@ -304,16 +313,9 @@ class MedtrumPump @Inject constructor(
         } catch (e: Exception) {
             aapsLogger.warn(LTag.PUMP, "Error decoding basal profile from SP: $encodedString")
         }
+
+        loadUserSettingsFromSP()
     }
-
-    fun pumpType(): PumpType = pumpType(deviceType)
-
-    fun pumpType(type: Int): PumpType =
-        when (type) {
-            MedtrumSnUtil.MD_0201, MedtrumSnUtil.MD_8201 -> PumpType.MEDTRUM_NANO
-            MedtrumSnUtil.MD_8301                        -> PumpType.MEDTRUM_300U
-            else                                         -> PumpType.MEDTRUM_UNTESTED
-        }
 
     fun loadUserSettingsFromSP() {
         desiredPatchExpiration = sp.getBoolean(R.string.key_patch_expiration, false)
@@ -419,7 +421,7 @@ class MedtrumPump @Inject constructor(
                 )
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration} temporaryBasalInfo: $temporaryBasalInfo, expectedTemporaryBasal: $expectedTemporaryBasal"
+                    "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration} temporaryBasalInfo: $temporaryBasalInfo, expectedTemporaryBasal: $expectedTemporaryBasal"
                 )
             }
 
@@ -436,7 +438,7 @@ class MedtrumPump @Inject constructor(
                 )
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) expectedTemporaryBasal: $expectedTemporaryBasal"
+                    "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) expectedTemporaryBasal: $expectedTemporaryBasal"
                 )
             }
 
@@ -505,7 +507,7 @@ class MedtrumPump @Inject constructor(
         )
         aapsLogger.debug(
             LTag.PUMPCOMM,
-            "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START (FAKE)"
+            "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START (FAKE)"
         )
     }
 
@@ -594,5 +596,9 @@ class MedtrumPump @Inject constructor(
                 .mapNotNull { AlarmState.values().find { alarm -> alarm.name == it } }
                 .let { EnumSet.copyOf(it) }
         }
+    }
+
+    private fun newRecordInfo(newRecord: Boolean): String {
+        return "${if (newRecord) "**NEW** " else ""}"
     }
 }

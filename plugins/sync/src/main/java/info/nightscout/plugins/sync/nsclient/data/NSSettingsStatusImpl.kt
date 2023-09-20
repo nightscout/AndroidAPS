@@ -5,6 +5,7 @@ package info.nightscout.plugins.sync.nsclient.data
 import android.content.Context
 import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.interfaces.Config
@@ -13,7 +14,6 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification

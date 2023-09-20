@@ -63,13 +63,6 @@
     <string name="time_range">Laiko intervalas</string>
     <string name="timerange_value">Laikas yra tarp %1$s ir %2$s</string>
     <string name="between">Tarp </string>
-    <string name="weekday_sunday_short">Sek</string>
-    <string name="weekday_saturday_short">Šeš</string>
-    <string name="weekday_friday_short">Pen</string>
-    <string name="weekday_thursday_short">Ket</string>
-    <string name="weekday_wednesday_short">Tre</string>
-    <string name="weekday_tuesday_short">An</string>
-    <string name="weekday_monday_short">Pir</string>
     <string name="delete_short">IŠTRINTI</string>
     <string name="add_short">PRIDĖTI</string>
     <string name="copy_short">KOPIJUOTI</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Paleisti automatizacijas</string>
     <string name="add_automation">Pridėti taisyklę</string>
     <string name="stop_processing">Stabdyti apdorojimą</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">P</string>
-    <string name="tuesday_short">A</string>
-    <string name="wednesday_short">T</string>
-    <string name="thursday_short">K</string>
-    <string name="friday_short">Pn</string>
-    <string name="saturday_short">Š</string>
-    <string name="sunday_short">S</string>
     <!--    Reminders-->
     <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>

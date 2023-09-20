@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.rx.logging.LTag
-
 
 class MsgSetExtendedBolusStart(
     injector: HasAndroidInjector,
     private var amount: Double,
-    private var halfhours: Byte
+    private var halfHours: Byte
 
 ) : MessageBase(injector) {
 
@@ -16,12 +15,12 @@ class MsgSetExtendedBolusStart(
         setCommand(0x0407)
         aapsLogger.debug(LTag.PUMPBTCOMM, "New message")
         // HARDCODED LIMITS
-        if (halfhours < 1) halfhours = 1
-        if (halfhours > 16) halfhours = 16
-        amount = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
+        if (halfHours < 1) halfHours = 1
+        if (halfHours > 16) halfHours = 16
+        amount = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
         addParamInt((amount * 100).toInt())
-        addParamByte(halfhours)
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus start: " + (amount * 100).toInt() / 100.0 + "U halfhours: " + halfhours.toInt())
+        addParamByte(halfHours)
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Set extended bolus start: " + (amount * 100).toInt() / 100.0 + "U halfHours: " + halfHours.toInt())
     }
 
     override fun handleMessage(bytes: ByteArray) {

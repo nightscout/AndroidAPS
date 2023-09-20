@@ -64,6 +64,9 @@
     <string name="pump_settings_error_wrong_max_basal_set">המינון הבזאלי המרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">סוג:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
+    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
     <plurals name="duration_days">
         <item quantity="one">יום %1$d</item>
         <item quantity="two">יומיים</item>

@@ -1,6 +1,5 @@
 package info.nightscout.core.utils
 
-import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

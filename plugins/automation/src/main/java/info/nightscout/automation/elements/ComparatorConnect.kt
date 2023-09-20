@@ -10,7 +10,7 @@ import androidx.annotation.StringRes
 import info.nightscout.automation.R
 import info.nightscout.shared.interfaces.ResourceHelper
 
-class ComparatorConnect(private val rh: ResourceHelper) : Element() {
+class ComparatorConnect(private val rh: ResourceHelper) : Element {
 
     enum class Compare {
         ON_CONNECT, ON_DISCONNECT;

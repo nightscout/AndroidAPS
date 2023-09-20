@@ -107,10 +107,10 @@ class TranslatorImpl @Inject internal constructor(
 
     override fun translate(units: ValueWithUnit?): String = when (units) {
         is ValueWithUnit.Gram        -> rh.gs(info.nightscout.core.ui.R.string.shortgram)
-        is ValueWithUnit.Hour        -> rh.gs(info.nightscout.shared.R.string.shorthour)
+        is ValueWithUnit.Hour        -> rh.gs(info.nightscout.interfaces.R.string.shorthour)
         is ValueWithUnit.Insulin     -> rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
         is ValueWithUnit.Mgdl        -> rh.gs(info.nightscout.core.ui.R.string.mgdl)
-        is ValueWithUnit.Minute      -> rh.gs(info.nightscout.shared.R.string.shortminute)
+        is ValueWithUnit.Minute      -> rh.gs(info.nightscout.interfaces.R.string.shortminute)
         is ValueWithUnit.Mmoll       -> rh.gs(info.nightscout.core.ui.R.string.mmol)
         is ValueWithUnit.Percent     -> rh.gs(info.nightscout.core.ui.R.string.shortpercent)
         is ValueWithUnit.UnitPerHour -> rh.gs(info.nightscout.core.ui.R.string.profile_ins_units_per_hour)

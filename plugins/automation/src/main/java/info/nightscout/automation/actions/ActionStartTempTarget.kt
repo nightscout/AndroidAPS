@@ -11,6 +11,8 @@ import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerTempTarget
 import info.nightscout.core.extensions.friendlyDescription
+import info.nightscout.core.utils.JsonHelper
+import info.nightscout.core.utils.JsonHelper.safeGetDouble
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
@@ -24,8 +26,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.utils.DateUtil
@@ -101,7 +101,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        value.units = GlucoseUnit.fromText(JsonHelper.safeGetString(o, "units", Constants.MGDL))
+        value.units = GlucoseUnit.fromText(JsonHelper.safeGetString(o, "units", GlucoseUnit.MGDL.asText))
         value.value = safeGetDouble(o, "value")
         duration.setMinutes(JsonHelper.safeGetInt(o, "durationInMinutes"))
         return this

@@ -16,9 +16,9 @@ import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
 import info.nightscout.annotations.OpenForTesting;
+import info.nightscout.core.constraints.ConstraintObject;
 import info.nightscout.core.utils.fabric.FabricPrivacy;
-import info.nightscout.interfaces.constraints.Constraint;
-import info.nightscout.interfaces.constraints.Constraints;
+import info.nightscout.interfaces.constraints.ConstraintsChecker;
 import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
@@ -53,6 +53,19 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private final DetailedBolusInfoStorage detailedBolusInfoStorage;
     private final TemporaryBasalStorage temporaryBasalStorage;
     private final FabricPrivacy fabricPrivacy;
+    private final ServiceConnection mConnection = new ServiceConnection() {
+
+        public void onServiceDisconnected(ComponentName name) {
+            aapsLogger.debug(LTag.PUMP, "Service is disconnected");
+            sExecutionService = null;
+        }
+
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            aapsLogger.debug(LTag.PUMP, "Service is connected");
+            DanaRv2ExecutionService.LocalBinder mLocalBinder = (DanaRv2ExecutionService.LocalBinder) service;
+            sExecutionService = mLocalBinder.getServiceInstance();
+        }
+    };
 
     @Inject
     public DanaRv2Plugin(
@@ -62,7 +75,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             RxBus rxBus,
             Context context,
             ResourceHelper rh,
-            Constraints constraintChecker,
+            ConstraintsChecker constraintChecker,
             ActivePlugin activePlugin,
             SP sp,
             CommandQueue commandQueue,
@@ -111,20 +124,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         super.onStop();
     }
 
-    private final ServiceConnection mConnection = new ServiceConnection() {
-
-        public void onServiceDisconnected(ComponentName name) {
-            aapsLogger.debug(LTag.PUMP, "Service is disconnected");
-            sExecutionService = null;
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            aapsLogger.debug(LTag.PUMP, "Service is connected");
-            DanaRv2ExecutionService.LocalBinder mLocalBinder = (DanaRv2ExecutionService.LocalBinder) service;
-            sExecutionService = mLocalBinder.getServiceInstance();
-        }
-    };
-
     // Plugin base interface
     @NonNull
     @Override
@@ -160,7 +159,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     // Pump interface
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             // v2 stores end time for bolus, we need to adjust time
             // default delivery speed is 12 sec/U
@@ -225,7 +224,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
         PumpEnactResult result = new PumpEnactResult(getInjector());
 
-        absoluteRate = constraintChecker.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
+        absoluteRate = constraintChecker.applyBasalConstraints(new ConstraintObject<>(absoluteRate, getAapsLogger()), profile).value();
 
         boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d && absoluteRate >= 0.10d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate() || absoluteRate < 0.10d;
@@ -291,7 +290,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
+        percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getAapsLogger()), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(info.nightscout.core.ui.R.string.invalid_input);
             aapsLogger.error("setTempBasalPercent: Invalid input");
@@ -352,7 +351,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         DanaPump pump = danaPump;
-        insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
+        insulin = constraintChecker.applyExtendedBolusConstraints(new ConstraintObject<>(insulin, getAapsLogger())).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());

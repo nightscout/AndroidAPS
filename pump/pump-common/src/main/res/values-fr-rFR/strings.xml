@@ -64,6 +64,15 @@
     <string name="pump_settings_error_wrong_max_basal_set">Mauvais paramètre Max Basal sur la pompe (doit être %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type :</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Jamais contacté</string>
+    <string name="pump_status_sleeping">En veille</string>
+    <string name="pump_status_waking_up">Réveil en cours</string>
+    <string name="pump_status_active">Actif</string>
+    <string name="pump_status_error_comm">Erreur de communication</string>
+    <string name="pump_status_timeout_comm">Délai de communication dépassé</string>
+    <string name="pump_status_pump_unreachable">Pompe hors de portée</string>
+    <string name="pump_status_invalid_config">Configuration invalide</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

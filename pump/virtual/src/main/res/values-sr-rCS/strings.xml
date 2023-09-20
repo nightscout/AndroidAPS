@@ -2,4 +2,5 @@
 <resources>
     <!-- VirtualPump -->
     <string name="description_pump_virtual">Integracija pumpe za pumpe koje još uvek nemaju upravljački program (Open Loop)</string>
+    <!--    PumpType-->
 </resources>

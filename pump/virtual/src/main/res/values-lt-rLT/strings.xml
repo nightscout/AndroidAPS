@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
     <string name="virtual_pump_label">VIRTUALI POMPA</string>
     <string name="virtualpump_settings">Virtualios pompos nustatymai</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Virtualioje pompoje palaikomos tik atskiros vertės, o ne diapazonas detalumui užtikrinti.</string>
 </resources>

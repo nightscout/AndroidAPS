@@ -9,7 +9,6 @@ import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.sharedtests.TestBase
@@ -23,7 +22,6 @@ import org.mockito.Mockito.`when`
 class ActionAlarmTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var context: Context
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config

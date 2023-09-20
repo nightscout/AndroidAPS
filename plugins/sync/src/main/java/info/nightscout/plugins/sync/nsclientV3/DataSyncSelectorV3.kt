@@ -1,6 +1,7 @@
 package info.nightscout.plugins.sync.nsclientV3
 
 import info.nightscout.annotations.OpenForTesting
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.StoreDataForDb
@@ -8,7 +9,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus

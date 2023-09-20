@@ -64,6 +64,15 @@
     <string name="pump_settings_error_wrong_max_basal_set">La basale massima impostata sul micro è errata (deve essere %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipo:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Mai contattato</string>
+    <string name="pump_status_sleeping">In sospensione</string>
+    <string name="pump_status_waking_up">Risveglio</string>
+    <string name="pump_status_active">Attivo</string>
+    <string name="pump_status_error_comm">Errore nella comunicazione</string>
+    <string name="pump_status_timeout_comm">Timeout della comunicazione</string>
+    <string name="pump_status_pump_unreachable">Micro irraggiungibile</string>
+    <string name="pump_status_invalid_config">Configurazione non valida</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

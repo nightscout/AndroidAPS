@@ -207,7 +207,7 @@ class DanaFragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.shared.R.string.minago, agoMin) + ")"
+            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.interfaces.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastConnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
@@ -215,7 +215,7 @@ class DanaFragment : DaggerFragment() {
             val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastBolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, pump.lastBolusAmount)
+                binding.lastBolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, pump.lastBolusAmount)
             else
                 binding.lastBolus.text = ""
         }

@@ -63,13 +63,6 @@
     <string name="time_range">טווח זמן</string>
     <string name="timerange_value">הזמן בין %1$s ו- %2$s</string>
     <string name="between">בין </string>
-    <string name="weekday_sunday_short">א׳</string>
-    <string name="weekday_saturday_short">ש\'</string>
-    <string name="weekday_friday_short">ו׳</string>
-    <string name="weekday_thursday_short">ה\'</string>
-    <string name="weekday_wednesday_short">ד\'</string>
-    <string name="weekday_tuesday_short">ג\'</string>
-    <string name="weekday_monday_short">ב\'</string>
     <string name="delete_short">מחק</string>
     <string name="add_short">הוספה</string>
     <string name="copy_short">העתקה</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">הפעל אוטומציות</string>
     <string name="add_automation">הוספת כלל</string>
     <string name="stop_processing">עצור עיבוד</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">ב\'</string>
-    <string name="tuesday_short">ג\'</string>
-    <string name="wednesday_short">ד\'</string>
-    <string name="thursday_short">ה\'</string>
-    <string name="friday_short">ו\'</string>
-    <string name="saturday_short">ש\'</string>
-    <string name="sunday_short">א\'</string>
     <!--    Reminders-->
     <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>

@@ -12,12 +12,12 @@ import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.validators.ValidatingEditTextPreference
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -67,7 +67,7 @@ import kotlin.math.abs
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
@@ -95,6 +95,7 @@ import kotlin.math.abs
     override fun onStart() {
         super.onStart()
         aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStart()")
+        medtrumPump.loadVarsFromSP()
         val intent = Intent(context, MedtrumService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         disposable += rxBus
@@ -254,7 +255,11 @@ import kotlin.math.abs
 
     override fun isConnected(): Boolean {
         // This is a workaround to prevent AAPS to trigger connects when we have no patch activated
-        return if (!isInitialized()) true else medtrumService?.isConnected ?: false
+        return if (!isInitialized()) {
+            true
+        } else {
+            medtrumService?.isConnected ?: false
+        }
     }
 
     override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
@@ -343,7 +348,7 @@ import kotlin.math.abs
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: " + detailedBolusInfo.insulin + "U")
         if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         return if (detailedBolusInfo.insulin > 0 && detailedBolusInfo.carbs == 0.0) {
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
@@ -383,7 +388,7 @@ import kotlin.math.abs
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         // round rate to pump rate
-        val pumpRate = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
+        val pumpRate = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
         val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
         return if (connectionOK
@@ -543,31 +548,19 @@ import kotlin.math.abs
 
     // Medtrum interface
     override fun loadEvents(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.loadEvents() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.setUserSettings() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 
     override fun clearAlarms(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.clearAlarms() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
@@ -578,11 +571,7 @@ import kotlin.math.abs
     }
 
     override fun updateTime(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.updateTimeIfNeeded() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }

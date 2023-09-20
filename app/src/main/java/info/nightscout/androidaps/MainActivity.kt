@@ -52,11 +52,10 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
@@ -96,7 +95,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var iconsProvider: IconsProvider
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction
@@ -283,7 +282,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private fun start() {
         binding.splash.visibility = View.GONE
         //Check here if loop plugin is disabled. Else check via constraints
-        if (!(loop as PluginBase).isEnabled()) versionCheckerUtils.triggerCheckVersion()
+        if (!loop.isEnabled()) versionCheckerUtils.triggerCheckVersion()
         setUserStats()
         setupViews()
 

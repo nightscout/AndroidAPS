@@ -5,16 +5,9 @@ package info.nightscout.interfaces
  */
 object Constants {
 
-    const val MGDL = "mg/dl" // This is Nightscout's representation
-    const val MMOL = "mmol"
     const val MMOLL_TO_MGDL = 18.0 // 18.0182;
     const val MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL
     const val defaultDIA = 5.0
-    const val REALLYHIGHBASALRATE = 1111111.0
-    const val REALLYHIGHPERCENTBASALRATE = 1111111
-    const val REALLYHIGHBOLUS = 1111111.0
-    const val REALLYHIGHCARBS = 1111111
-    const val REALLYHIGHIOB = 1111111.0
     const val notificationID = 556677
 
     // SMS COMMUNICATOR

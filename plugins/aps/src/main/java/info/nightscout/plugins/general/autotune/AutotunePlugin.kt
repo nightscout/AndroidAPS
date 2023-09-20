@@ -1,10 +1,13 @@
+@file:Suppress("SpellCheckingInspection")
+
 package info.nightscout.plugins.general.autotune
 
 import android.view.View
 import dagger.android.HasAndroidInjector
-import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.ui.elements.WeekDay
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Config
@@ -18,7 +21,6 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
@@ -38,7 +40,6 @@ import org.json.JSONObject
 import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.ArrayList
 
 /*
  * adaptation from oref0 autotune developed by philoul on 2022 (complete refactoring of AutotunePlugin initialised by Rumen Georgiev on 1/29/2018.)
@@ -87,7 +88,7 @@ class AutotunePlugin @Inject constructor(
     @Volatile var tunedProfile: ATProfile? = null
     private var preppedGlucose: PreppedGlucose? = null
     private lateinit var profile: Profile
-    val days = InputWeekDay()
+    val days = WeekDay()
     val autotuneStartHour: Int = 4
 
     override fun aapsAutotune(daysBack: Int, autoSwitch: Boolean, profileToTune: String, weekDays: BooleanArray?) {
@@ -104,10 +105,9 @@ class AutotunePlugin @Inject constructor(
         val calcDays = calcDays(daysBack)
         val sb = StringBuilder()
         sb.append("Selected days: ")
-        var counter = 0
-        for (i in days.getSelectedDays()) {
-            if (counter++ > 0) sb.append(",")
-            sb.append(InputWeekDay.DayOfWeek.fromCalendarInt(i))
+        for ((counter, i) in days.getSelectedDays().withIndex()) {
+            if (counter > 0) sb.append(",")
+            sb.append(WeekDay.DayOfWeek.fromCalendarInt(i))
         }
         log(sb.toString())
         tunedProfile = null
@@ -143,8 +143,8 @@ class AutotunePlugin @Inject constructor(
         // Today at 4 AM
         var endTime = MidnightTime.calc(lastRun) + autotuneStartHour * 60 * 60 * 1000L
         if (endTime > lastRun) endTime -= 24 * 60 * 60 * 1000L      // Check if 4 AM is before now
-        val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
-        autotuneFS.exportSettings(settings(lastRun, daysBack, starttime, endTime))
+        val startTime = endTime - daysBack * 24 * 60 * 60 * 1000L
+        autotuneFS.exportSettings(settings(lastRun, daysBack, startTime, endTime))
         tunedProfile = ATProfile(profile, localInsulin, injector).also {
             it.profileName = rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name)
         }
@@ -153,7 +153,7 @@ class AutotunePlugin @Inject constructor(
         }
         autotuneFS.exportPumpProfile(pumpProfile)
 
-        if (calcDays==0) {
+        if (calcDays == 0) {
             result = rh.gs(info.nightscout.core.ui.R.string.autotune_error_more_days)
             log(result)
             calculationRunning = false
@@ -165,7 +165,7 @@ class AutotunePlugin @Inject constructor(
         }
         var currentCalcDay = 0
         for (i in 0 until daysBack) {
-            val from = starttime + i * 24 * 60 * 60 * 1000L         // get 24 hours BG values from 4 AM to 4 AM next day
+            val from = startTime + i * 24 * 60 * 60 * 1000L         // get 24 hours BG values from 4 AM to 4 AM next day
             val to = from + 24 * 60 * 60 * 1000L
             if (days.isSet(from)) {
                 currentCalcDay++
@@ -234,9 +234,9 @@ class AutotunePlugin @Inject constructor(
                     ValueWithUnit.SimpleString(tunedP.profileName)
                 )
                 updateButtonVisibility = View.GONE
-                tunedP.profileStore(circadian)?.let { profilestore ->
+                tunedP.profileStore(circadian)?.let { profileStore ->
                     if (profileFunction.createProfileSwitch(
-                            profilestore,
+                            profileStore,
                             profileName = tunedP.profileName,
                             durationInMinutes = 0,
                             percentage = 100,
@@ -301,13 +301,13 @@ class AutotunePlugin @Inject constructor(
         return strResult
     }
 
-    private fun settings(runDate: Long, nbDays: Int, firstloopstart: Long, lastloopend: Long): String {
+    private fun settings(runDate: Long, nbDays: Int, firstLoopStart: Long, lastLoopEnd: Long): String {
         var jsonString = ""
         val jsonSettings = JSONObject()
         val insulinInterface = activePlugin.activeInsulin
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
-        val startDateString = dateUtil.toISOString(firstloopstart).substring(0, 10)
-        val endDateString = dateUtil.toISOString(lastloopend - 24 * 60 * 60 * 1000L).substring(0, 10)
+        val startDateString = dateUtil.toISOString(firstLoopStart).substring(0, 10)
+        val endDateString = dateUtil.toISOString(lastLoopEnd - 24 * 60 * 60 * 1000L).substring(0, 10)
         val nsUrl = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
         val optCategorizeUam = if (sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)) "-c=true" else ""
         val optInsulinCurve = if (sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)) "-i=true" else ""
@@ -330,7 +330,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
 
-            val peaktime: Int = insulinInterface.peak
+            val peakTime: Int = insulinInterface.peak
             if (insulinInterface.id === Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING)
                 jsonSettings.put("curve", "ultra-rapid")
             else if (insulinInterface.id === Insulin.InsulinType.OREF_RAPID_ACTING)
@@ -338,11 +338,11 @@ class AutotunePlugin @Inject constructor(
             else if (insulinInterface.id === Insulin.InsulinType.OREF_LYUMJEV) {
                 jsonSettings.put("curve", "ultra-rapid")
                 jsonSettings.put("useCustomPeakTime", true)
-                jsonSettings.put("insulinPeakTime", peaktime)
+                jsonSettings.put("insulinPeakTime", peakTime)
             } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
-                jsonSettings.put("curve", if (peaktime > 55) "rapid-acting" else "ultra-rapid")
+                jsonSettings.put("curve", if (peakTime > 55) "rapid-acting" else "ultra-rapid")
                 jsonSettings.put("useCustomPeakTime", true)
-                jsonSettings.put("insulinPeakTime", peaktime)
+                jsonSettings.put("insulinPeakTime", peakTime)
             }
             jsonString = jsonSettings.toString(4).replace("\\/", "/")
         } catch (e: JSONException) {
@@ -392,7 +392,7 @@ class AutotunePlugin @Inject constructor(
             }
         }
         for (i in days.weekdays.indices) {
-            json.put(InputWeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+            json.put(WeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
         }
         json.put("result", result)
         json.put("updateButtonVisibility", updateButtonVisibility)
@@ -429,7 +429,7 @@ class AutotunePlugin @Inject constructor(
                 }
             }
             for (i in days.weekdays.indices)
-                days.weekdays[i] = JsonHelper.safeGetBoolean(json, InputWeekDay.DayOfWeek.values()[i].name,true)
+                days.weekdays[i] = JsonHelper.safeGetBoolean(json, WeekDay.DayOfWeek.values()[i].name, true)
             result = JsonHelper.safeGetString(json, "result", "")
             updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
             lastRunSuccess = true
@@ -438,17 +438,17 @@ class AutotunePlugin @Inject constructor(
         }
     }
 
-    fun calcDays(daysBack:Int): Int {
-            var endTime = MidnightTime.calc(dateUtil.now()) + autotuneStartHour * 60 * 60 * 1000L
-            if (endTime > dateUtil.now()) endTime -= T.days(1).msecs()      // Check if 4 AM is before now
-            val starttime = endTime - daysBack * T.days(1).msecs()
-            var result = 0
-            for (i in 0 until daysBack) {
-                if (days.isSet(starttime + i * T.days(1).msecs()))
-                    result++
-            }
-            return result
+    fun calcDays(daysBack: Int): Int {
+        var endTime = MidnightTime.calc(dateUtil.now()) + autotuneStartHour * 60 * 60 * 1000L
+        if (endTime > dateUtil.now()) endTime -= T.days(1).msecs()      // Check if 4 AM is before now
+        val startTime = endTime - daysBack * T.days(1).msecs()
+        var result = 0
+        for (i in 0 until daysBack) {
+            if (days.isSet(startTime + i * T.days(1).msecs()))
+                result++
         }
+        return result
+    }
 
     private fun log(message: String) {
         atLog("[Plugin] $message")

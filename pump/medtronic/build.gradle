@@ -16,13 +16,12 @@ android {
 
 dependencies {
     implementation project(':core:libraries')
-    implementation project(':app-wear-shared:shared')
     implementation project(':core:interfaces')
+    implementation project(':core:main')
     implementation project(':core:ui')
     implementation project(':core:utils')
     implementation project(':core:validators')
     implementation project(':pump:pump-common')
-    implementation project(':pump:pump-core')
     implementation project(':pump:rileylink')
 
     testImplementation project(':app-wear-shared:shared-tests')

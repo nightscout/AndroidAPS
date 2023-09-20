@@ -19,7 +19,6 @@ import info.nightscout.pump.combo.ruffyscripter.PumpState
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -62,7 +61,7 @@ class ComboFragment : DaggerFragment() {
             binding.comboRefreshButton.isEnabled = false
             commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.user_request), object : Callback() {
                 override fun run() {
-                    runOnUiThread { binding.comboRefreshButton.isEnabled = true }
+                    activity?.runOnUiThread { binding.comboRefreshButton.isEnabled = true }
                 }
             })
         }
@@ -153,14 +152,17 @@ class ComboFragment : DaggerFragment() {
                     binding.comboInsulinstate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                     binding.comboInsulinstate.setTypeface(null, Typeface.NORMAL)
                 }
+
                 PumpState.LOW     -> {
                     binding.comboInsulinstate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.omniYellowColor))
                     binding.comboInsulinstate.setTypeface(null, Typeface.BOLD)
                 }
+
                 PumpState.EMPTY   -> {
                     binding.comboInsulinstate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
                     binding.comboInsulinstate.setTypeface(null, Typeface.BOLD)
                 }
+
                 else              -> {
                     binding.comboInsulinstate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                     binding.comboInsulinstate.setTypeface(null, Typeface.NORMAL)
@@ -175,10 +177,12 @@ class ComboFragment : DaggerFragment() {
                     binding.comboLastconnection.setText(R.string.combo_pump_connected_now)
                     binding.comboLastconnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 }
+
                 comboPlugin.pump.lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis() -> {
                     binding.comboLastconnection.text = rh.gs(R.string.combo_no_pump_connection, min)
                     binding.comboLastconnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
                 }
+
                 else                                                                                 -> {
                     binding.comboLastconnection.text = minAgo
                     binding.comboLastconnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))

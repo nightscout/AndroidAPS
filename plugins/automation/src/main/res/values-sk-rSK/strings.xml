@@ -63,13 +63,6 @@
     <string name="time_range">Časový rozsah</string>
     <string name="timerange_value">Čas je medzi %1$s a %2$s</string>
     <string name="between">Medzi</string>
-    <string name="weekday_sunday_short">Ned</string>
-    <string name="weekday_saturday_short">Sob</string>
-    <string name="weekday_friday_short">Pia</string>
-    <string name="weekday_thursday_short">Štv</string>
-    <string name="weekday_wednesday_short">Str</string>
-    <string name="weekday_tuesday_short">Uto</string>
-    <string name="weekday_monday_short">Pon</string>
     <string name="delete_short">VYMAZAŤ</string>
     <string name="add_short">PRIDAŤ</string>
     <string name="copy_short">KOPÍROVAŤ</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Spustiť automatizácie</string>
     <string name="add_automation">Pridať pravidlo</string>
     <string name="stop_processing">Zastaviť spracovanie</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Po</string>
-    <string name="tuesday_short">Ut</string>
-    <string name="wednesday_short">St</string>
-    <string name="thursday_short">Št</string>
-    <string name="friday_short">Pi</string>
-    <string name="saturday_short">So</string>
-    <string name="sunday_short">Ne</string>
     <!--    Reminders-->
     <string name="time_to_eat">Čas na jedlo!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="time_to_bolus">Čas na bolus!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>

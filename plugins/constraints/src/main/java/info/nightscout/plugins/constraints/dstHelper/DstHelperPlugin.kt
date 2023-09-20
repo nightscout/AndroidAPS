@@ -3,7 +3,7 @@ package info.nightscout.plugins.constraints.dstHelper
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -35,7 +35,7 @@ class DstHelperPlugin @Inject constructor(
         .showInList(false)
         .pluginName(R.string.dst_plugin_name),
     aapsLogger, rh, injector
-), Constraints {
+), PluginConstraints {
 
     companion object {
 
@@ -74,7 +74,7 @@ class DstHelperPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.CONSTRAINTS, "Loop already suspended")
             }
-            value.set(aapsLogger, false, "DST in last 3 hours.", this)
+            value.set(false, "DST in last 3 hours.", this)
         }
         return value
     }

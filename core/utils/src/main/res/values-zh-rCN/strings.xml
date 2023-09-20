@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="count_selected">已选中 %1$d 项</string>
-    <string name="remove_items">删除项目</string>
-    <string name="sort_items">项目排序</string>
-    <string name="remove_selected_items">删除选中项</string>
-    <string name="sort_label">排序</string>
-</resources>

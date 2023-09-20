@@ -1,5 +1,6 @@
 package info.nightscout.implementation.iob
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.iob.asRounded
 import info.nightscout.core.iob.log
 import info.nightscout.database.entities.GlucoseValue
@@ -9,7 +10,6 @@ import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.shared.utils.T
 import info.nightscout.sharedtests.TestBaseWithProfile
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -30,106 +30,106 @@ class GlucoseStatusTest : TestBaseWithProfile() {
 
     @Test fun toStringShouldBeOverloaded() {
         val glucoseStatus = GlucoseStatus(glucose = 0.0, noise = 0.0, delta = 0.0, shortAvgDelta = 0.0, longAvgDelta = 0.0, date = 0)
-        Assertions.assertEquals(true, glucoseStatus.log(decimalFormatter).contains("Delta"))
+        assertThat(glucoseStatus.log(decimalFormatter)).contains("Delta")
     }
 
     @Test fun roundTest() {
         val glucoseStatus = GlucoseStatus(glucose = 100.11111, noise = 0.0, delta = 0.0, shortAvgDelta = 0.0, longAvgDelta = 0.0, date = 0)
-        Assertions.assertEquals(100.1, glucoseStatus.asRounded().glucose, 0.0001)
+        assertThat(glucoseStatus.asRounded().glucose).isWithin(0.0001).of(100.1)
     }
 
     @Test fun calculateValidGlucoseStatus() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateValidBgData())
         val glucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).glucoseStatusData!!
-        Assertions.assertEquals(214.0, glucoseStatus.glucose, 0.001)
-        Assertions.assertEquals(-2.0, glucoseStatus.delta, 0.001)
-        Assertions.assertEquals(-2.5, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
-        Assertions.assertEquals(-2.0, glucoseStatus.longAvgDelta, 0.001) // -2 -2 -2 -2
-        Assertions.assertEquals(1514766900000L, glucoseStatus.date) // latest date
+        assertThat(glucoseStatus.glucose).isWithin(0.001).of(214.0)
+        assertThat(glucoseStatus.delta).isWithin(0.001).of(-2.0)
+        assertThat(glucoseStatus.shortAvgDelta).isWithin(0.001).of(-2.5) // -2 -2.5 -3 deltas are relative to current value
+        assertThat(glucoseStatus.longAvgDelta).isWithin(0.001).of(-2.0) // -2 -2 -2 -2
+        assertThat(glucoseStatus.date).isEqualTo(1514766900000L) // latest date
     }
-/*
-    Not testing anymore, not valid for bucketed data
+    /*
+        Not testing anymore, not valid for bucketed data
 
-    @Test fun calculateMostRecentGlucoseStatus() {
-        Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateMostRecentBgData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
-        Assertions.assertEquals(215.0, glucoseStatus.glucose, 0.001) // (214+216) / 2
-        Assertions.assertEquals(-1.0, glucoseStatus.delta, 0.001)
-        Assertions.assertEquals(-1.0, glucoseStatus.shortAvgDelta, 0.001)
-        Assertions.assertEquals(0.0, glucoseStatus.longAvgDelta, 0.001)
-        Assertions.assertEquals(1514766900000L, glucoseStatus.date) // latest date, even when averaging
-    }
+        @Test fun calculateMostRecentGlucoseStatus() {
+            Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateMostRecentBgData())
+            val glucoseStatus: GlucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
+            assertThat(glucoseStatus.glucose).isWithin(0.001).of(215.0) // (214+216) / 2
+            assertThat(glucoseStatus.delta).isWithin(0.001).of(-1.0)
+            assertThat(glucoseStatus.shortAvgDelta).isWithin(0.001).of(-1.0)
+            assertThat( glucoseStatus.longAvgDelta).isWithin(0.001).of(0.0)
+            assertThat(glucoseStatus.date).isEqualTo(1514766900000L) // latest date, even when averaging
+        }
 
-    private fun generateMostRecentBgData(): MutableList<InMemoryGlucoseValue> {
-        val list: MutableList<InMemoryGlucoseValue> = ArrayList()
-        list.add(InMemoryGlucoseValue(value = 214.0, timestamp = 1514766900000, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        list.add(InMemoryGlucoseValue(value = 216.0, timestamp = 1514766800000, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        list.add(InMemoryGlucoseValue(value = 216.0, timestamp = 1514766600000, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        return list
-    }
-*/
+        private fun generateMostRecentBgData(): MutableList<InMemoryGlucoseValue> {
+            val list: MutableList<InMemoryGlucoseValue> = ArrayList()
+            list.add(InMemoryGlucoseValue(value = 214.0, timestamp = 1514766900000, trendArrow = GlucoseValue.TrendArrow.FLAT))
+            list.add(InMemoryGlucoseValue(value = 216.0, timestamp = 1514766800000, trendArrow = GlucoseValue.TrendArrow.FLAT))
+            list.add(InMemoryGlucoseValue(value = 216.0, timestamp = 1514766600000, trendArrow = GlucoseValue.TrendArrow.FLAT))
+            return list
+        }
+    */
 
     @Test fun oneRecordShouldProduceZeroDeltas() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateOneCurrentRecordBgData())
         val glucoseStatus: GlucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).glucoseStatusData!!
-        Assertions.assertEquals(214.0, glucoseStatus.glucose, 0.001)
-        Assertions.assertEquals(0.0, glucoseStatus.delta, 0.001)
-        Assertions.assertEquals(0.0, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
-        Assertions.assertEquals(0.0, glucoseStatus.longAvgDelta, 0.001) // -2 -2 -2 -2
-        Assertions.assertEquals(1514766900000L, glucoseStatus.date) // latest date
+        assertThat(glucoseStatus.glucose).isWithin(0.001).of(214.0)
+        assertThat(glucoseStatus.delta).isWithin(0.001).of(0.0)
+        assertThat(glucoseStatus.shortAvgDelta).isWithin(0.001).of(0.0) // -2 -2.5 -3 deltas are relative to current value
+        assertThat(glucoseStatus.longAvgDelta).isWithin(0.001).of(0.0) // -2 -2 -2 -2
+        assertThat(glucoseStatus.date).isEqualTo(1514766900000L) // latest date
     }
 
     @Test fun insufficientDataShouldReturnNull() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateInsufficientBgData())
         val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).glucoseStatusData
-        Assertions.assertEquals(null, glucoseStatus)
+        assertThat(glucoseStatus).isNull()
     }
 
     @Test fun oldDataShouldReturnNull() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateOldBgData())
         val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).glucoseStatusData
-        Assertions.assertEquals(null, glucoseStatus)
+        assertThat(glucoseStatus).isNull()
     }
 
     @Test fun returnOldDataIfAllowed() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateOldBgData())
         val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).getGlucoseStatusData(true)
-        Assertions.assertNotEquals(null, glucoseStatus)
+        assertThat(glucoseStatus).isNotNull()
     }
 
     @Test fun averageShouldNotFailOnEmptyArray() {
-        Assertions.assertEquals(0.0, GlucoseStatusProviderImpl.average(ArrayList()), 0.001)
+        assertThat(GlucoseStatusProviderImpl.average(ArrayList())).isWithin(0.001).of(0.0)
     }
 
-/*
-    Not testing anymore, not valid for bucketed data
+    /*
+        Not testing anymore, not valid for bucketed data
 
-    @Test fun calculateGlucoseStatusForLibreTestBgData() {
-        Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateLibreTestData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
-        Assertions.assertEquals(100.0, glucoseStatus.glucose, 0.001) //
-        Assertions.assertEquals(-10.0, glucoseStatus.delta, 0.001)
-        Assertions.assertEquals(-10.0, glucoseStatus.shortAvgDelta, 0.001)
-        Assertions.assertEquals(-10.0, glucoseStatus.longAvgDelta, 0.001)
-        Assertions.assertEquals(1514766900000L, glucoseStatus.date) // latest date
-    }
+        @Test fun calculateGlucoseStatusForLibreTestBgData() {
+            Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateLibreTestData())
+            val glucoseStatus: GlucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
+            assertThat(glucoseStatus.glucose).isWithin(0.001).of(100.0)
+            assertThat(glucoseStatus.delta).isWithin(0.001).of(-10.0)
+            assertThat(glucoseStatus.shortAvgDelta).isWithin(0.001).of(-10.0)
+            assertThat(glucoseStatus.longAvgDelta).isWithin(0.001).of(-10.0)
+            assertThat(glucoseStatus.date).isEqualTo(1514766900000L) // latest date
+        }
 
-    private fun generateLibreTestData(): MutableList<InMemoryGlucoseValue> {
-        val list: MutableList<InMemoryGlucoseValue> = ArrayList()
-        val endTime = 1514766900000L
-        val latestReading = 100.0
-        // Now
-        list.add(InMemoryGlucoseValue(value = latestReading, timestamp = endTime, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        // One minute ago
-        list.add(InMemoryGlucoseValue(value = latestReading, timestamp = endTime - 1000 * 60 * 1, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        // Two minutes ago
-        list.add(InMemoryGlucoseValue(value = latestReading, timestamp = endTime - 1000 * 60 * 2, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        // Three minutes and beyond at constant rate
-        for (i in 3..49)
-            list.add(InMemoryGlucoseValue(value = latestReading + i * 2, timestamp = endTime - 1000 * 60 * i, trendArrow = GlucoseValue.TrendArrow.FLAT))
-        return list
-    }
-*/
+        private fun generateLibreTestData(): MutableList<InMemoryGlucoseValue> {
+            val list: MutableList<InMemoryGlucoseValue> = ArrayList()
+            val endTime = 1514766900000L
+            val latestReading = 100.0
+            // Now
+            list.add(InMemoryGlucoseValue(value = latestReading, timestamp = endTime, trendArrow = GlucoseValue.TrendArrow.FLAT))
+            // One minute ago
+            list.add(InMemoryGlucoseValue(value = latestReading, timestamp = endTime - 1000 * 60 * 1, trendArrow = GlucoseValue.TrendArrow.FLAT))
+            // Two minutes ago
+            list.add(InMemoryGlucoseValue(value = latestReading, timestamp = endTime - 1000 * 60 * 2, trendArrow = GlucoseValue.TrendArrow.FLAT))
+            // Three minutes and beyond at constant rate
+            for (i in 3..49)
+                list.add(InMemoryGlucoseValue(value = latestReading + i * 2, timestamp = endTime - 1000 * 60 * i, trendArrow = GlucoseValue.TrendArrow.FLAT))
+            return list
+        }
+    */
 
     @BeforeEach
     fun initMocking() {

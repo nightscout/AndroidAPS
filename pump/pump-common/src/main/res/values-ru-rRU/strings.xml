@@ -64,6 +64,15 @@
     <string name="pump_settings_error_wrong_max_basal_set">На помпе задан неверный макс базал (должен быть %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Тип:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Никогда не подключалась</string>
+    <string name="pump_status_sleeping">Спящий режим</string>
+    <string name="pump_status_waking_up">Пробуждение</string>
+    <string name="pump_status_active">Работает</string>
+    <string name="pump_status_error_comm">Ошибка связи</string>
+    <string name="pump_status_timeout_comm">Таймаут связи</string>
+    <string name="pump_status_pump_unreachable">Помпа недоступна</string>
+    <string name="pump_status_invalid_config">Недопустимая конфигурация</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>

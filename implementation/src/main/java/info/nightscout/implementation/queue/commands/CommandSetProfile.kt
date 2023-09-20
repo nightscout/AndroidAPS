@@ -5,7 +5,6 @@ import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
@@ -42,7 +41,7 @@ class CommandSetProfile constructor(
         // Send SMS notification if ProfileSwitch is coming from NS
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
         if (profileSwitch is ValueWrapper.Existing && r.enacted && hasNsId && !config.NSCLIENT) {
-            if ((smsCommunicator as PluginBase).isEnabled())
+            if (smsCommunicator.isEnabled())
                 smsCommunicator.sendNotificationToAllNumbers(rh.gs(info.nightscout.core.ui.R.string.profile_set_ok))
         }
     }

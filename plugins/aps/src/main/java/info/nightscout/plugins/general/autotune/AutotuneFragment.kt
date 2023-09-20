@@ -19,9 +19,9 @@ import android.widget.TableRow
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.elements.WeekDay
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
@@ -112,7 +112,7 @@ class AutotuneFragment : DaggerFragment() {
             if (autotunePlugin.calculationRunning)
                 days.view?.setSelectedDays(days.getSelectedDays())
             else {
-                days.set(InputWeekDay.DayOfWeek.fromCalendarInt(i), selected)
+                days.set(WeekDay.DayOfWeek.fromCalendarInt(i), selected)
                 resetParam(false)
                 updateGui()
             }

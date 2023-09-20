@@ -58,7 +58,7 @@ class CompatDBHelper @Inject constructor(
              */
             var newestGlucoseValue: GlucoseValue? = null
             it.filterIsInstance<GlucoseValue>().maxByOrNull { gv -> gv.timestamp }?.let { gv ->
-                aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg $gv")
+                aapsLogger.debug(LTag.DATABASE, "Firing EventNewBG $gv")
                 rxBus.send(EventNewBG(gv.timestamp))
                 newestGlucoseValue = gv
             }

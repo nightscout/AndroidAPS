@@ -240,7 +240,7 @@ class ComboV2Fragment : DaggerFragment() {
             }
 
             in 60..(30 * 60) -> {
-                binding.combov2LastConnection.text = rh.gs(info.nightscout.shared.R.string.minago, secondsPassed / 60)
+                binding.combov2LastConnection.text = rh.gs(info.nightscout.interfaces.R.string.minago, secondsPassed / 60)
                 binding.combov2LastConnection.setTextColor(Color.WHITE)
             }
 
@@ -267,7 +267,7 @@ class ComboV2Fragment : DaggerFragment() {
                 rh.gs(R.string.combov2_less_than_one_minute_ago)
 
             else ->
-                rh.gs(info.nightscout.shared.R.string.minago, secondsPassed / 60)
+                rh.gs(info.nightscout.interfaces.R.string.minago, secondsPassed / 60)
         }
 
         binding.combov2LastBolus.text =

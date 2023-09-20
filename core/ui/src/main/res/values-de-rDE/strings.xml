@@ -580,4 +580,21 @@
     <string name="cleanup_db_confirm">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.</string>
     <string name="cleanup_db_confirm_sync">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.\nDies beschleunigt die vollständige Synchronisierung dramatisch.</string>
     <string name="cleared_entries">Gelöschte Einträge</string>
+    <!--    Weekday-->
+    <string name="weekday_saturday_short">Sa</string>
+    <string name="weekday_friday_short">Fr</string>
+    <string name="weekday_thursday_short">Do</string>
+    <string name="weekday_wednesday_short">Mi</string>
+    <string name="weekday_tuesday_short">Di</string>
+    <string name="weekday_monday_short">Mo</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Mo</string>
+    <string name="tuesday_short">Di</string>
+    <string name="wednesday_short">Mi</string>
+    <string name="thursday_short">Do</string>
+    <string name="friday_short">Fr</string>
+    <string name="saturday_short">Sa</string>
+    <string name="sunday_short">So</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units">%1$.2f IE</string>
 </resources>

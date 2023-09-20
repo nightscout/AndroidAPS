@@ -7,8 +7,10 @@ import org.json.JSONObject;
 
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
+import info.nightscout.core.constraints.ConstraintObject;
 import info.nightscout.interfaces.constraints.Constraint;
-import info.nightscout.interfaces.constraints.Constraints;
+import info.nightscout.interfaces.constraints.ConstraintsChecker;
+import info.nightscout.interfaces.constraints.PluginConstraints;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.plugin.OwnDatabasePlugin;
@@ -46,7 +48,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
  * Created by mike on 28.01.2018.
  */
 
-public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump, Dana, Constraints, OwnDatabasePlugin {
+public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump, Dana, PluginConstraints, OwnDatabasePlugin {
     protected AbstractDanaRExecutionService sExecutionService;
 
     protected CompositeDisposable disposable = new CompositeDisposable();
@@ -55,7 +57,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     protected PumpDescription pumpDescription = new PumpDescription();
     protected DanaPump danaPump;
-    protected Constraints constraintChecker;
+    protected ConstraintsChecker constraintChecker;
     protected RxBus rxBus;
     protected ActivePlugin activePlugin;
     protected SP sp;
@@ -65,11 +67,12 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected UiInteraction uiInteraction;
     protected DanaHistoryDatabase danaHistoryDatabase;
     protected DecimalFormatter decimalFormatter;
+
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
             DanaPump danaPump,
             ResourceHelper rh,
-            Constraints constraintChecker,
+            ConstraintsChecker constraintChecker,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
             CommandQueue commandQueue,
@@ -223,7 +226,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
+        percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getAapsLogger()), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(info.nightscout.core.ui.R.string.invalid_input);
             getAapsLogger().error("setTempBasalPercent: Invalid input");
@@ -270,7 +273,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
-        insulin = constraintChecker.applyExtendedBolusConstraints(new Constraint<>(insulin)).value();
+        insulin = constraintChecker.applyExtendedBolusConstraints(new ConstraintObject<>(insulin, getAapsLogger())).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
@@ -462,21 +465,21 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, @NonNull Profile profile) {
-        absoluteRate.setIfSmaller(getAapsLogger(), danaPump.getMaxBasal(), getRh().gs(info.nightscout.core.ui.R.string.limitingbasalratio, danaPump.getMaxBasal(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
+        absoluteRate.setIfSmaller(danaPump.getMaxBasal(), getRh().gs(info.nightscout.core.ui.R.string.limitingbasalratio, danaPump.getMaxBasal(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
         return absoluteRate;
     }
 
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(getAapsLogger(), 0, getRh().gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, getRh().gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getAapsLogger(), getPumpDescription().getMaxTempPercent(), getRh().gs(info.nightscout.core.ui.R.string.limitingpercentrate, getPumpDescription().getMaxTempPercent(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
+        percentRate.setIfGreater(0, getRh().gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, getRh().gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getPumpDescription().getMaxTempPercent(), getRh().gs(info.nightscout.core.ui.R.string.limitingpercentrate, getPumpDescription().getMaxTempPercent(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
 
         return percentRate;
     }
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfSmaller(getAapsLogger(), danaPump.getMaxBolus(), getRh().gs(info.nightscout.core.ui.R.string.limitingbolus, danaPump.getMaxBolus(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
+        insulin.setIfSmaller(danaPump.getMaxBolus(), getRh().gs(info.nightscout.core.ui.R.string.limitingbolus, danaPump.getMaxBolus(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
         return insulin;
     }
 

@@ -8,12 +8,11 @@ import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -24,7 +23,7 @@ class BolusWizardTest : TestBaseWithProfile() {
 
     private val pumpBolusStep = 0.1
 
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: Loop
     @Mock lateinit var autosensDataStore: AutosensDataStore
@@ -34,7 +33,7 @@ class BolusWizardTest : TestBaseWithProfile() {
             if (it is BolusWizard) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
-                it.rxBus = RxBus(aapsSchedulers, aapsLogger)
+                it.rxBus = rxBus
                 it.profileFunction = profileFunction
                 it.constraintChecker = constraintChecker
                 it.activePlugin = activePlugin
@@ -113,7 +112,7 @@ class BolusWizardTest : TestBaseWithProfile() {
                 useAlarm = false
             )
         val bolusForBg54 = bw.calculatedTotalInsulin
-        assertThat(bolusForBg54).isWithin( 0.01).of(bolusForBg42)
+        assertThat(bolusForBg54).isWithin(0.01).of(bolusForBg42)
     }
 
     @Test

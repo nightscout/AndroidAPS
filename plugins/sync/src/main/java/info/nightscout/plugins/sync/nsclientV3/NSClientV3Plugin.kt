@@ -35,6 +35,7 @@ import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.sync.R
+import info.nightscout.plugins.sync.nsShared.NSAlarmObject
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
@@ -157,12 +158,12 @@ class NSClientV3Plugin @Inject constructor(
             when {
                 sp.getBoolean(R.string.key_ns_paused, false)                                           -> rh.gs(info.nightscout.core.ui.R.string.paused)
                 isAllowed.not()                                                                        -> blockingReason
-                sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && wsConnected  -> "WS: " + rh.gs(info.nightscout.shared.R.string.connected)
+                sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && wsConnected  -> "WS: " + rh.gs(info.nightscout.interfaces.R.string.connected)
                 sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && !wsConnected -> "WS: " + rh.gs(R.string.not_connected)
                 lastOperationError != null                                                             -> rh.gs(info.nightscout.core.ui.R.string.error)
                 nsAndroidClient?.lastStatus == null                                                    -> rh.gs(R.string.not_connected)
                 workIsRunning()                                                                        -> rh.gs(R.string.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                          -> rh.gs(info.nightscout.shared.R.string.connected)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                          -> rh.gs(info.nightscout.interfaces.R.string.connected)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                          -> rh.gs(R.string.read_only)
                 else                                                                                   -> rh.gs(info.nightscout.core.ui.R.string.unknown)
             }
@@ -525,7 +526,7 @@ class NSClientV3Plugin @Inject constructor(
         rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, config.NSCLIENT))
-            uiInteraction.addNotificationWithAction(injector, NSAlarm(data))
+            uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
     }
     private val onAlarm = Emitter.Listener { args ->
 
@@ -548,7 +549,7 @@ class NSClientV3Plugin @Inject constructor(
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
             val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                uiInteraction.addNotificationWithAction(injector, NSAlarm(data))
+                uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
         }
     }
 
@@ -559,7 +560,7 @@ class NSClientV3Plugin @Inject constructor(
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
             val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                uiInteraction.addNotificationWithAction(injector, NSAlarm(data))
+                uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
         }
     }
 

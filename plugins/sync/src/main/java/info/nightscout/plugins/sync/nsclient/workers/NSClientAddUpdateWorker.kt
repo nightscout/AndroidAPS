@@ -3,6 +3,7 @@ package info.nightscout.plugins.sync.nsclient.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.Bolus
@@ -20,7 +21,6 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.VirtualPump
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.extensions.extendedBolusFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.fromJson

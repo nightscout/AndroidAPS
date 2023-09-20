@@ -1,5 +1,6 @@
 package info.nightscout.pump
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.pump.toHtml
@@ -8,7 +9,6 @@ import info.nightscout.plugins.aps.loop.extensions.json
 import info.nightscout.pump.virtual.extensions.toText
 import info.nightscout.sharedtests.TestBaseWithProfile
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -42,132 +42,132 @@ class PumpEnactResultTest : TestBaseWithProfile() {
         val per = PumpEnactResult(injector)
 
         per.success(true)
-        Assertions.assertEquals(true, per.success)
+        assertThat(per.success).isTrue()
     }
 
     @Test fun enactedTest() {
         val per = PumpEnactResult(injector)
 
         per.enacted(true)
-        Assertions.assertEquals(true, per.enacted)
+        assertThat(per.enacted).isTrue()
     }
 
     @Test fun commentTest() {
         val per = PumpEnactResult(injector)
 
         per.comment("SomeComment")
-        Assertions.assertEquals("SomeComment", per.comment)
+        assertThat(per.comment).isEqualTo("SomeComment")
     }
 
     @Test fun durationTest() {
         val per = PumpEnactResult(injector)
 
         per.duration(10)
-        Assertions.assertEquals(10, per.duration.toLong())
+        assertThat(per.duration.toLong()).isEqualTo(10L)
     }
 
     @Test fun absoluteTest() {
         val per = PumpEnactResult(injector)
 
         per.absolute(11.0)
-        Assertions.assertEquals(11.0, per.absolute, 0.01)
+        assertThat(per.absolute).isWithin(0.01).of(11.0)
     }
 
     @Test fun percentTest() {
         val per = PumpEnactResult(injector)
 
         per.percent(10)
-        Assertions.assertEquals(10, per.percent)
+        assertThat(per.percent).isEqualTo(10)
     }
 
     @Test fun isPercentTest() {
         val per = PumpEnactResult(injector)
 
         per.isPercent(true)
-        Assertions.assertEquals(true, per.isPercent)
+        assertThat(per.isPercent).isTrue()
     }
 
     @Test fun isTempCancelTest() {
         val per = PumpEnactResult(injector)
 
         per.isTempCancel(true)
-        Assertions.assertEquals(true, per.isTempCancel)
+        assertThat(per.isTempCancel).isTrue()
     }
 
     @Test fun bolusDeliveredTest() {
         val per = PumpEnactResult(injector)
 
         per.bolusDelivered(11.0)
-        Assertions.assertEquals(11.0, per.bolusDelivered, 0.01)
+        assertThat(per.bolusDelivered).isWithin(0.01).of(11.0)
     }
 
     @Test fun queuedTest() {
         val per = PumpEnactResult(injector)
 
         per.queued(true)
-        Assertions.assertEquals(true, per.queued)
+        assertThat(per.queued).isTrue()
     }
 
     @Test fun toStringTest() {
         var per = PumpEnactResult(injector).enacted(true).bolusDelivered(10.0).comment("AAA")
-        Assertions.assertEquals(
+        assertThat(per.toText(rh)).isEqualTo(
             """
     Success: false
     Enacted: true
     Comment: AAA
     Insulin: 10.0 U
-    """.trimIndent(), per.toText(rh)
+    """.trimIndent()
         )
         per = PumpEnactResult(injector).enacted(true).isTempCancel(true).comment("AAA")
-        Assertions.assertEquals(
+        assertThat(per.toText(rh)).isEqualTo(
             """
     Success: false
     Enacted: true
     Comment: AAA
     Cancel temp basal
-    """.trimIndent(), per.toText(rh)
+    """.trimIndent()
         )
         per = PumpEnactResult(injector).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
-        Assertions.assertEquals(
+        assertThat(per.toText(rh)).isEqualTo(
             """
     Success: false
     Enacted: true
     Comment: AAA
     Duration: 20 min
     Percent: 90%
-    """.trimIndent(), per.toText(rh)
+    """.trimIndent()
         )
         per = PumpEnactResult(injector).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
-        Assertions.assertEquals(
+        assertThat(per.toText(rh)).isEqualTo(
             """
     Success: false
     Enacted: true
     Comment: AAA
     Duration: 30 min
     Absolute: 1.0 U/h
-    """.trimIndent(), per.toText(rh)
+    """.trimIndent()
         )
         per = PumpEnactResult(injector).enacted(false).comment("AAA")
-        Assertions.assertEquals(
+        assertThat(per.toText(rh)).isEqualTo(
             """
     Success: false
     Comment: AAA
-    """.trimIndent(), per.toText(rh)
+    """.trimIndent()
         )
     }
 
     @Test fun toHtmlTest() {
 
         var per: PumpEnactResult = PumpEnactResult(injector).enacted(true).bolusDelivered(10.0).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>SMB</b>: 10.0 U", per.toHtml(rh, decimalFormatter))
+        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>SMB</b>: 10.0 U")
         per = PumpEnactResult(injector).enacted(true).isTempCancel(true).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br>Cancel temp basal", per.toHtml(rh, decimalFormatter))
+        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br>Cancel temp basal")
         per = PumpEnactResult(injector).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 20 min<br><b>Percent</b>: 90%", per.toHtml(rh, decimalFormatter))
+        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 20 min<br><b>Percent</b>: 90%")
         per = PumpEnactResult(injector).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 30 min<br><b>Absolute</b>: 1.00 U/h", per.toHtml(rh, decimalFormatter))
+        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 30 min<br><b>Absolute</b>: 1.00 U/h")
         per = PumpEnactResult(injector).enacted(false).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Comment</b>: AAA", per.toHtml(rh, decimalFormatter))
+        assertThat(per.toHtml(rh, decimalFormatter)).isEqualTo("<b>Success</b>: false<br><b>Comment</b>: AAA")
     }
 
     @Test fun jsonTest() {
@@ -175,15 +175,15 @@ class PumpEnactResultTest : TestBaseWithProfile() {
 
         var per: PumpEnactResult = PumpEnactResult(injector).enacted(true).bolusDelivered(10.0).comment("AAA")
         o = per.json(validProfile.getBasal())
-        JSONAssert.assertEquals("{\"smb\":10}", o, false)
+        JSONAssert.assertEquals("""{"smb":10}""", o, false)
         per = PumpEnactResult(injector).enacted(true).isTempCancel(true).comment("AAA")
         o = per.json(validProfile.getBasal())
-        JSONAssert.assertEquals("{\"rate\":0,\"duration\":0}", o, false)
+        JSONAssert.assertEquals("""{"rate":0,"duration":0}""", o, false)
         per = PumpEnactResult(injector).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
         o = per.json(validProfile.getBasal())
-        JSONAssert.assertEquals("{\"rate\":0.9,\"duration\":20}", o, false)
+        JSONAssert.assertEquals("""{"rate":0.9,"duration":20}""", o, false)
         per = PumpEnactResult(injector).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
         o = per.json(validProfile.getBasal())
-        JSONAssert.assertEquals("{\"rate\":1,\"duration\":30}", o, false)
+        JSONAssert.assertEquals("""{"rate":1,"duration":30}""", o, false)
     }
 }

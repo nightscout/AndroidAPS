@@ -34,16 +34,16 @@ import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CwfData
-import info.nightscout.rx.weardata.ResFileMap
-import info.nightscout.rx.weardata.CwfResDataMap
 import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.CwfMetadataMap
-import info.nightscout.rx.weardata.ResData
-import info.nightscout.rx.weardata.ResFormat
+import info.nightscout.rx.weardata.CwfResDataMap
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.JsonKeyValues
 import info.nightscout.rx.weardata.JsonKeys
 import info.nightscout.rx.weardata.JsonKeys.*
+import info.nightscout.rx.weardata.ResData
+import info.nightscout.rx.weardata.ResFileMap
+import info.nightscout.rx.weardata.ResFormat
 import info.nightscout.rx.weardata.ViewKeys
 import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.extensions.toVisibility
@@ -51,6 +51,7 @@ import org.joda.time.TimeOfDay
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
+
 @SuppressLint("UseCompatLoadingForDrawables")
 class CustomWatchface : BaseWatchFace() {
 
@@ -214,13 +215,13 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
         val metadata = JSONObject()
-            .put(CwfMetadataKey.CWF_NAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
-            .put(CwfMetadataKey.CWF_FILENAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_NAME.key, getString(info.nightscout.interfaces.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_FILENAME.key, getString(info.nightscout.interfaces.R.string.wear_default_watchface))
             .put(CwfMetadataKey.CWF_AUTHOR.key, "Philoul")
             .put(CwfMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
             .put(CwfMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
             .put(CwfMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
-            .put(CwfMetadataKey.CWF_COMMENT.key, getString(info.nightscout.shared.R.string.default_custom_watchface_comment))
+            .put(CwfMetadataKey.CWF_COMMENT.key, getString(info.nightscout.interfaces.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put(METADATA.key, metadata)
             .put(HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
@@ -269,7 +270,7 @@ class CustomWatchface : BaseWatchFace() {
         }
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
         val drawableDataMap: CwfResDataMap = mutableMapOf()
-        getResourceByteArray(info.nightscout.shared.R.drawable.watchface_custom)?.let {
+        getResourceByteArray(info.nightscout.shared.impl.R.drawable.watchface_custom)?.let {
             drawableDataMap[ResFileMap.CUSTOM_WATCHFACE.fileName] = ResData(it, ResFormat.PNG)
         }
         return EventData.ActionSetCustomWatchface(CwfData(json.toString(4), metadataMap, drawableDataMap))
@@ -365,7 +366,7 @@ class CustomWatchface : BaseWatchFace() {
         BACKGROUND(
             key = ViewKeys.BACKGROUND.key,
             id = R.id.background,
-            defaultDrawable = info.nightscout.shared.R.drawable.background,
+            defaultDrawable = info.nightscout.shared.impl.R.drawable.background,
             customDrawable = ResFileMap.BACKGROUND,
             customHigh = ResFileMap.BACKGROUND_HIGH,
             customLow = ResFileMap.BACKGROUND_LOW
@@ -408,7 +409,7 @@ class CustomWatchface : BaseWatchFace() {
         COVER_PLATE(
             key = ViewKeys.COVER_PLATE.key,
             id = R.id.cover_plate,
-            defaultDrawable = info.nightscout.shared.R.drawable.simplified_dial,
+            defaultDrawable = info.nightscout.shared.impl.R.drawable.simplified_dial,
             customDrawable = ResFileMap.COVER_PLATE,
             customHigh = ResFileMap.COVER_PLATE_HIGH,
             customLow = ResFileMap.COVER_PLATE_LOW
@@ -416,7 +417,7 @@ class CustomWatchface : BaseWatchFace() {
         HOUR_HAND(
             key = ViewKeys.HOUR_HAND.key,
             id = R.id.hour_hand,
-            defaultDrawable = info.nightscout.shared.R.drawable.hour_hand,
+            defaultDrawable = info.nightscout.shared.impl.R.drawable.hour_hand,
             customDrawable = ResFileMap.HOUR_HAND,
             customHigh = ResFileMap.HOUR_HAND_HIGH,
             customLow = ResFileMap.HOUR_HAND_LOW
@@ -424,7 +425,7 @@ class CustomWatchface : BaseWatchFace() {
         MINUTE_HAND(
             key = ViewKeys.MINUTE_HAND.key,
             id = R.id.minute_hand,
-            defaultDrawable = info.nightscout.shared.R.drawable.minute_hand,
+            defaultDrawable = info.nightscout.shared.impl.R.drawable.minute_hand,
             customDrawable = ResFileMap.MINUTE_HAND,
             customHigh = ResFileMap.MINUTE_HAND_HIGH,
             customLow = ResFileMap.MINUTE_HAND_LOW
@@ -433,7 +434,7 @@ class CustomWatchface : BaseWatchFace() {
             key = ViewKeys.SECOND_HAND.key,
             id = R.id.second_hand,
             pref = R.string.key_show_seconds,
-            defaultDrawable = info.nightscout.shared.R.drawable.second_hand,
+            defaultDrawable = info.nightscout.shared.impl.R.drawable.second_hand,
             customDrawable = ResFileMap.SECOND_HAND,
             customHigh = ResFileMap.SECOND_HAND_HIGH,
             customLow = ResFileMap.SECOND_HAND_LOW
@@ -451,9 +452,15 @@ class CustomWatchface : BaseWatchFace() {
 
         fun drawable(): Drawable? = customDrawable?.let { cd ->
             when (cwf.singleBg.sgvLevel) {
-                1L   -> { customHigh?.let { resFileMap -> cwf.resDataMap[resFileMap.fileName] }?.toDrawable(cwf.resources) ?: cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources) }
-                0L   -> { cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources) }
-                -1L  -> { customLow?.let { resFileMap -> cwf.resDataMap[resFileMap.fileName] }?.toDrawable(cwf.resources) ?: cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources) }
+                1L   -> {
+                    customHigh?.let { resFileMap -> cwf.resDataMap[resFileMap.fileName] }?.toDrawable(cwf.resources) ?: cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
+                }
+
+                0L   -> {
+                    cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
+                }-1L  -> { customLow?.let { resFileMap -> cwf.resDataMap[resFileMap.fileName] }?.toDrawable(cwf.resources) ?: cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
+                }
+
                 else -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
             }
         }
@@ -525,6 +532,7 @@ class CustomWatchface : BaseWatchFace() {
 
     @SuppressLint("RtlHardcoded")
     private enum class GravityMap(val key: String, val gravity: Int) {
+
         CENTER(JsonKeyValues.CENTER.key, Gravity.CENTER),
         LEFT(JsonKeyValues.LEFT.key, Gravity.LEFT),
         RIGHT(JsonKeyValues.RIGHT.key, Gravity.RIGHT);

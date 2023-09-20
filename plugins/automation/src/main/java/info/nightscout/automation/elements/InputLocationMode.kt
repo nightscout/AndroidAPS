@@ -10,7 +10,7 @@ import androidx.annotation.StringRes
 import info.nightscout.automation.R
 import info.nightscout.shared.interfaces.ResourceHelper
 
-class InputLocationMode(private val rh: ResourceHelper) : Element() {
+class InputLocationMode(private val rh: ResourceHelper) : Element {
 
     enum class Mode {
         INSIDE, OUTSIDE, GOING_IN, GOING_OUT;

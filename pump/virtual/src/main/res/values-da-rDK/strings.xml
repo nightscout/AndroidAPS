@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Virtuel Pumpetype</string>
+    <string name="virtual_pump_definition">Pumpe Definition</string>
+    <string name="virtual_pump_pump_def">Bolus: Trin=%1$s\nForlænget Bolus: [Trin=%2$s, Varighed=%3$smin-%4$sh]\nBasal: Trin=%5$s\nTBR: %6$s (by %7$s), Varighed=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUMPE</string>
     <string name="description_pump_virtual">Pumpeintegration til pumper, som endnu ikke har nogen driver (Åbent Loop)</string>
+    <string name="virtual_pump_label">VIRTUEL PUMPE</string>
     <string name="virtualpump_settings">Indstillinger for virtuel pumpe</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Kun diskrete værdier, ingen intervaller er understøttet som granularitet for basal/bolus i virtuel pumpe.</string>
 </resources>

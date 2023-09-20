@@ -10,7 +10,7 @@ import info.nightscout.automation.elements.InputDouble
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -61,7 +61,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
         rh.gs(R.string.triggerHeartRateDesc, rh.gs(comparator.value.stringRes), heartRate.value)
 
     override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.main.R.drawable.ic_cp_heart_rate)
-    
+
     override fun duplicate(): Trigger {
         return TriggerHeartRate(injector).also { o ->
             o.heartRate.setValue(heartRate.value)

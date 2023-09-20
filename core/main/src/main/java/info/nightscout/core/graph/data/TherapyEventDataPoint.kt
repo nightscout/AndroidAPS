@@ -50,7 +50,7 @@ class TherapyEventDataPoint(
             }
     override val paintStyle: Paint.Style = Paint.Style.FILL // not used
 
-    override val size get() = if (rh.gb(info.nightscout.shared.R.bool.isTablet)) 12.0f else 10.0f
+    override val size get() = if (rh.gb(info.nightscout.core.ui.R.bool.isTablet)) 12.0f else 10.0f
     override fun color(context: Context?): Int {
         return when (data.type) {
             TherapyEvent.Type.ANNOUNCEMENT          -> rh.gac(context, info.nightscout.core.ui.R.attr.notificationAnnouncement)

@@ -8,9 +8,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.Omnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
-import info.nightscout.rx.logging.AAPSLoggerTest
+import info.nightscout.sharedtests.AAPSLoggerTest
 import org.junit.Before
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 

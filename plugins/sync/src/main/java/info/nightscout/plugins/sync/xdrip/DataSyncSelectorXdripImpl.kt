@@ -1,13 +1,13 @@
 package info.nightscout.plugins.sync.xdrip
 
 import dagger.Lazy
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

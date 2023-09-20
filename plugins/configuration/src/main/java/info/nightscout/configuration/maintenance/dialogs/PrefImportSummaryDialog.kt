@@ -20,7 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.configuration.R
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.maintenance.Prefs
-import info.nightscout.interfaces.maintenance.PrefsStatus
+import info.nightscout.interfaces.maintenance.PrefsStatusImpl
 import info.nightscout.shared.extensions.runOnUiThread
 import java.util.LinkedList
 
@@ -57,8 +57,8 @@ object PrefImportSummaryDialog {
             (rowLayout.findViewById<View>(R.id.summary_icon) as ImageView).setImageResource(metaKey.icon)
             (rowLayout.findViewById<View>(R.id.status_icon) as ImageView).setImageResource(metaEntry.status.icon)
 
-            if (metaEntry.status == PrefsStatus.WARN) label.setTextColor(themedCtx.getColor(info.nightscout.interfaces.R.color.metadataTextWarning))
-            else if (metaEntry.status == PrefsStatus.ERROR) label.setTextColor(themedCtx.getColor(info.nightscout.interfaces.R.color.metadataTextError))
+            if (metaEntry.status == PrefsStatusImpl.WARN) label.setTextColor(themedCtx.getColor(info.nightscout.interfaces.R.color.metadataTextWarning))
+            else if (metaEntry.status == PrefsStatusImpl.ERROR) label.setTextColor(themedCtx.getColor(info.nightscout.interfaces.R.color.metadataTextError))
 
             if (metaEntry.info != null) {
                 details.add("<b>${context.getString(metaKey.label)}</b>: ${metaEntry.value}<br/><i style=\"color:silver\">${metaEntry.info}</i>")
@@ -66,9 +66,9 @@ object PrefImportSummaryDialog {
                 rowLayout.setOnClickListener {
                     val msg = "[${context.getString(metaKey.label)}] ${metaEntry.info}"
                     when (metaEntry.status) {
-                        PrefsStatus.WARN  -> ToastUtils.Long.warnToast(context, msg)
-                        PrefsStatus.ERROR -> ToastUtils.Long.errorToast(context, msg)
-                        else              -> ToastUtils.Long.infoToast(context, msg)
+                        PrefsStatusImpl.WARN  -> ToastUtils.Long.warnToast(context, msg)
+                        PrefsStatusImpl.ERROR -> ToastUtils.Long.errorToast(context, msg)
+                        else                  -> ToastUtils.Long.infoToast(context, msg)
                     }
                 }
             } else {

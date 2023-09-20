@@ -12,6 +12,7 @@ import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataStoreObject
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.DateUtilImpl
 import info.nightscout.shared.utils.T
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
@@ -46,7 +47,7 @@ class AutosensDataStoreTest : TestBase() {
 
     @BeforeEach
     fun mock() {
-        dateUtil = DateUtil(context)
+        dateUtil = DateUtilImpl(context)
     }
 
     @Test

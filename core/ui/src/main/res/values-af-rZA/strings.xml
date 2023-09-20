@@ -200,6 +200,7 @@
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="no_action_selected">Geen aksie gekies, niks sal gebeur</string>
+    <string name="quickwizard">SlimNutsman</string>
     <!--    Preferences-->
     <string name="teenage">Tiener</string>
     <string name="adult">Volwassene</string>
@@ -270,4 +271,13 @@
         <item quantity="other">%1$d minute</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <string name="weekday_saturday_short">Sat</string>
+    <string name="weekday_friday_short">Vry</string>
+    <string name="weekday_thursday_short">Don</string>
+    <string name="weekday_wednesday_short">Woens</string>
+    <string name="weekday_tuesday_short">Dins</string>
+    <string name="weekday_monday_short">Maan</string>
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

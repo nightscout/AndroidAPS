@@ -1,19 +1,18 @@
 package info.nightscout.plugins.sync.nsShared
 
 import info.nightscout.annotations.OpenForTesting
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.nsclient.NSSgv
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.source.NSClientSource
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.extensions.fromJson
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolus
@@ -70,7 +69,7 @@ class NsIncomingDataProcessor @Inject constructor(
 ) {
 
     private fun toGv(jsonObject: JSONObject): TransactionGlucoseValue? {
-        val sgv = NSSgv(jsonObject)
+        val sgv = NSSgvObject(jsonObject)
         return TransactionGlucoseValue(
             timestamp = sgv.mills ?: return null,
             value = sgv.mgdl?.toDouble() ?: return null,

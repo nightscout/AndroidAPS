@@ -157,4 +157,15 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="wear_import_custom_watchface_title">Sélectionner un cadran personnalisé</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Veuillez redémarrer votre téléphone ou redémarrer AAPS à partir des Paramètres du système\nsinon AAPS ne sera pas connecté aux journaux (important pour suivre et vérifier que les algorithmes fonctionnent correctement)!</string>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Format de fichier</string>
+    <string name="metadata_label_created_at">Créé le</string>
+    <string name="metadata_label_aaps_version">Version d\'AAPS</string>
+    <string name="metadata_label_aaps_flavour">Version de construction</string>
+    <string name="metadata_label_device_name">Export du nom du patient de l\'appareil</string>
+    <string name="metadata_label_device_model">Export du modèle de l\'appareil</string>
+    <string name="metadata_label_encryption">Cryptage du fichier</string>
+    <string name="metadata_format_new">Nouveau format chiffré</string>
+    <string name="metadata_format_debug">Nouveau format de débogage (non crypté)</string>
+    <string name="metadata_format_other">Format d\'export inconnu</string>
 </resources>

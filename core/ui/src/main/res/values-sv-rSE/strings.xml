@@ -580,4 +580,8 @@
     <string name="cleanup_db_confirm">Vill du rensa databasen?\nDet kommer att ta bort spårade ändringar och historiska data äldre än 3 månader.</string>
     <string name="cleanup_db_confirm_sync">Vill du rensa databasen?\nDet kommer att ta bort spårade ändringar och historiska data äldre än 3 månader.\nAtt göra det kommer att påskynda full synkronisering dramatiskt.</string>
     <string name="cleared_entries">Rensade poster</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units">%1$.2fU</string>
 </resources>

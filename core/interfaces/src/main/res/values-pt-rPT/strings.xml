@@ -1,21 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">Formato do ficheiro</string>
-    <string name="metadata_label_created_at">Criado em</string>
-    <string name="metadata_label_aaps_version">Versão AAPS</string>
-    <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
-    <string name="metadata_label_device_name">A exportar nome do paciente do dispositivo</string>
-    <string name="metadata_label_device_model">A exportar modelo do dispositivo</string>
-    <string name="metadata_label_encryption">Encriptação do Ficheiro</string>
-    <string name="metadata_format_new">Novo formato de encriptação</string>
-    <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
-    <string name="metadata_format_other">Formato de exportação desconhecido</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Driver da bomba trocado.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d m atrás</string>
+    <string name="minago_long">%%1$d minutos atrás</string>
+    <string name="hoursago">%1$.1f h atrás</string>
+    <string name="days_ago">%1$.1f dias atrás</string>
+    <string name="days_ago_round">%1$.0f dias atrás</string>
+    <string name="in_days">em %1$.0f dias</string>
+    <string name="in_days_round">em %1$.0f dias</string>
+    <string name="shorthour">h</string>
+    <string name="days">dias</string>
+    <string name="hours">horas</string>
+    <string name="unit_second">segundo</string>
+    <string name="unit_minute">minuto</string>
+    <string name="unit_hour">hora</string>
+    <string name="unit_day">dia</string>
+    <string name="unit_week">semana</string>
+    <string name="unit_seconds">segundos</string>
+    <string name="unit_minutes">minutos</string>
+    <string name="unit_hours">horas</string>
+    <string name="unit_days">dias</string>
+    <string name="unit_weeks">semanas</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="later_today">Hoje mais tarde</string>
+    <string name="tomorrow">Amanhã</string>
+    <string name="today">Hoje</string>
+    <string name="yesterday">Ontem</string>
+    <!-- Rx -->
+    <string name="connecting_for">A ligar durante %1$d s</string>
+    <string name="handshaking">Cumprimento</string>
+    <string name="connected">Ligado</string>
+    <string name="disconnecting">A desconectar</string>
+    <string name="waiting_for_disconnection">A aguardar a desconexão</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Criado em: %1$s</string>
+    <string name="metadata_label_watchface_author">Autor: %1$s</string>
+    <string name="metadata_label_watchface_name">Nome: %1$s</string>
+    <string name="metadata_wear_import_filename">Nome do ficheiro: %1$s</string>
+    <string name="metadata_label_plugin_version">Versão do plugin: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Nome: %1$s (%2$s)</string>
+    <string name="pref_show_iob">Mostrar IA</string>
+    <string name="pref_show_detailed_iob">Mostrar IA detalhada</string>
+    <string name="pref_show_cob">Mostrar HCA</string>
+    <string name="pref_show_delta">Mostrar Delta</string>
+    <string name="pref_show_detailed_delta">Mostrar Delta detalhado</string>
+    <string name="pref_show_avgdelta">Mostrar Delta Médio</string>
+    <string name="pref_show_phone_battery">Mostrar Bateria Telefone</string>
+    <string name="pref_show_rig_battery">Mostrar Bateria Equipamento</string>
+    <string name="pref_show_basal_rate">Mostrar Taxa Basal</string>
+    <string name="pref_show_loop_status">Mostrar Estado Loop</string>
+    <string name="pref_show_bg">Mostrar glicemia</string>
+    <string name="pref_show_bgi">Mostrar IG</string>
+    <string name="pref_show_direction_arrow">Mostrar Seta Direcção</string>
+    <string name="pref_show_ago">Mostrar Atrás</string>
+    <string name="default_custom_watchface_comment">Watchface padrão, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
+    <string name="wear_default_watchface">Watchface padrão</string>
+    <string name="cwf_comment_background">Imagem de fundo</string>
+    <string name="cwf_comment_chart">Gráficos (GLIC, basal, linhas de previsão...)</string>
+    <string name="cwf_comment_cover_chart">Imagem na frente do gráfico e atrás dos campos de texto</string>
+    <string name="cwf_comment_freetext1">Texto livre 1</string>
+    <string name="cwf_comment_freetext2">Texto livre 2</string>
+    <string name="cwf_comment_freetext3">Texto livre 3</string>
+    <string name="cwf_comment_freetext4">Texto livre 4</string>
+    <string name="cwf_comment_iob1">Etiqueta de IA ou Soma IA se detalhada</string>
+    <string name="cwf_comment_iob2">Soma IA ou (Bolus_IA|Basal_IA) se detalhada</string>
+    <string name="cwf_comment_cob1">Etiqueta HCA</string>
+    <string name="cwf_comment_cob2">valor HCA</string>
+    <string name="cwf_comment_delta">Delta curto da glicemia</string>
+    <string name="cwf_comment_avg_delta">Delta da glicemia média (15min)</string>
+    <string name="cwf_comment_uploader_battery">Bateria do telefone (%)</string>
+    <string name="cwf_comment_rig_battery">Bateria do loop (%)</string>
+    <string name="cwf_comment_basalRate">Taxa Basal</string>
+    <string name="cwf_comment_bgi">Valor de IG</string>
+    <string name="cwf_comment_time">Horário (HH:MM ou HH:MM:SS)</string>
+    <string name="cwf_comment_hour">Hora (HH)</string>
+    <string name="cwf_comment_minute">Minuto (MM)</string>
+    <string name="cwf_comment_second">Segundo (SS)</string>
+    <string name="cwf_comment_timePeriod">AM ou PM</string>
+    <string name="cwf_comment_day_name">Nome do Dia da Semana</string>
+    <string name="cwf_comment_day">Dia (DD)</string>
+    <string name="cwf_comment_month">Nome do Mês (curto)</string>
+    <string name="cwf_comment_direction">Seta de direção</string>
+    <string name="cwf_comment_timestamp">Minutos desde a recepção do último valor de GLIC</string>
+    <string name="cwf_comment_sgv">Valor de GLIC</string>
+    <string name="cwf_comment_cover_plate">Imagem da capa na frente do texto</string>
+    <string name="cwf_comment_hour_hand">Imagem do ponteiro das horas (Relógio Analógico)</string>
+    <string name="cwf_comment_minute_hand">Imagem do ponteiro dos minutos (Relógio Analógico)</string>
+    <string name="cwf_comment_second_hand">Imagem do ponteiro dos segundos (Relógio Analógico)</string>
 </resources>

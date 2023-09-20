@@ -12,6 +12,7 @@ import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.fromConstant
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
@@ -24,7 +25,6 @@ import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper

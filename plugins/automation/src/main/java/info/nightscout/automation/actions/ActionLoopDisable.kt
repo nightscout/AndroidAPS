@@ -30,7 +30,7 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_stop_24dp
 
     override fun doAction(callback: Callback) {
-        if ((loopPlugin as PluginBase).isEnabled()) {
+        if (loopPlugin.isEnabled()) {
             (loopPlugin as PluginBase).setPluginEnabled(PluginType.LOOP, false)
             configBuilder.storeSettings("ActionLoopDisable")
             uel.log(UserEntry.Action.LOOP_DISABLED, Sources.Automation, title)

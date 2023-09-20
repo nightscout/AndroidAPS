@@ -11,6 +11,9 @@ import info.nightscout.core.extensions.toStringFull
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.defs.DoseStepSize
+import info.nightscout.interfaces.pump.defs.PumpTempBasalType
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.pump.virtual.databinding.VirtualPumpFragmentBinding
 import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
@@ -97,7 +100,7 @@ class VirtualPumpFragment : DaggerFragment() {
         binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter)
             ?: ""
         binding.battery.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, virtualPumpPlugin.batteryPercent)
-        binding.reservoir.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, virtualPumpPlugin.reservoirInUnits.toDouble())
+        binding.reservoir.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, virtualPumpPlugin.reservoirInUnits.toDouble())
 
         virtualPumpPlugin.refreshConfiguration()
         val pumpType = virtualPumpPlugin.pumpType
@@ -105,5 +108,24 @@ class VirtualPumpFragment : DaggerFragment() {
         binding.type.text = pumpType?.description
         binding.typeDef.text = pumpType?.getFullDescription(rh.gs(R.string.virtual_pump_pump_def), pumpType.hasExtendedBasals(), rh)
         binding.serialNumber.text = virtualPumpPlugin.serialNumber()
+    }
+
+    private fun getStep(step: String, stepSize: DoseStepSize?): String =
+        if (stepSize != null) step + " [" + stepSize.description + "] *"
+        else step
+
+    private fun PumpType.getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, rh: ResourceHelper): String {
+        val unit = if (pumpTempBasalType == PumpTempBasalType.Percent) "%" else ""
+        val eb = extendedBolusSettings ?: return "INVALID"
+        val tbr = tbrSettings ?: return "INVALID"
+        val extendedNote = if (hasExtendedBasals) rh.gs(R.string.def_extended_note) else ""
+        return String.format(
+            i18nTemplate,
+            getStep(bolusSize.toString(), specialBolusSize),
+            eb.step, eb.durationStep, eb.maxDuration / 60,
+            getStep(baseBasalRange(), baseBasalSpecialSteps),
+            tbr.minDose.toString() + unit + "-" + tbr.maxDose + unit, tbr.step.toString() + unit,
+            tbr.durationStep, tbr.maxDuration / 60, extendedNote
+        )
     }
 }

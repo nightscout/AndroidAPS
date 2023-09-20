@@ -22,7 +22,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.VariableSensitivityResult
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -62,10 +62,11 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var loop: Loop
     @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var decimalFormatter: DecimalFormatter
 
     companion object {
+
         // This object doesn't behave like singleton,
         // many threads were created. Making handler static resolve this issue
         private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -78,6 +79,7 @@ class Widget : AppWidgetProvider() {
             })
         }
     }
+
     private val intentAction = "OpenApp"
 
     override fun onReceive(context: Context, intent: Intent?) {
@@ -133,9 +135,9 @@ class Widget : AppWidgetProvider() {
             overviewData.lastBg(iobCobCalculator.ads)?.let { profileUtil.fromMgdlToStringInUnits(it.value) } ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short))
         views.setTextColor(
             R.id.bg, when {
-                overviewData.isLow(iobCobCalculator.ads) -> rh.gc(info.nightscout.core.ui.R.color.widget_low)
+                overviewData.isLow(iobCobCalculator.ads)  -> rh.gc(info.nightscout.core.ui.R.color.widget_low)
                 overviewData.isHigh(iobCobCalculator.ads) -> rh.gc(info.nightscout.core.ui.R.color.widget_high)
-                else -> rh.gc(info.nightscout.core.ui.R.color.widget_inrange)
+                else                                      -> rh.gc(info.nightscout.core.ui.R.color.widget_inrange)
             }
         )
         trendCalculator.getTrendArrow(iobCobCalculator.ads)?.let {

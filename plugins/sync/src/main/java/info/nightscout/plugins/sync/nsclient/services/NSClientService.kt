@@ -17,18 +17,18 @@ import com.google.gson.JsonDeserializer
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.utils.JsonHelper.safeGetString
+import info.nightscout.core.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.JsonHelper.safeGetString
-import info.nightscout.interfaces.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.plugins.sync.R
+import info.nightscout.plugins.sync.nsShared.NSAlarmObject
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
@@ -638,7 +638,7 @@ import javax.inject.Inject
     private fun handleAnnouncement(announcement: JSONObject) {
         val defaultVal = config.NSCLIENT
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, defaultVal)) {
-            val nsAlarm = NSAlarm(announcement)
+            val nsAlarm = NSAlarmObject(announcement)
             uiInteraction.addNotificationWithAction(injector, nsAlarm)
             rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", safeGetString(announcement, "message", "received")))
             aapsLogger.debug(LTag.NSCLIENT, announcement.toString())
@@ -650,7 +650,7 @@ import javax.inject.Inject
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
             val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                val nsAlarm = NSAlarm(alarm)
+                val nsAlarm = NSAlarmObject(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)
             }
             rxBus.send(EventNSClientNewLog("◄ ALARM", safeGetString(alarm, "message", "received")))
@@ -663,7 +663,7 @@ import javax.inject.Inject
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
             val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                val nsAlarm = NSAlarm(alarm)
+                val nsAlarm = NSAlarmObject(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)
             }
             rxBus.send(EventNSClientNewLog("◄ URGENTALARM", safeGetString(alarm, "message", "received")))

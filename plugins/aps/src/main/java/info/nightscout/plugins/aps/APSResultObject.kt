@@ -5,17 +5,17 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.convertedToPercent
 import info.nightscout.core.ui.R
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -34,7 +34,7 @@ import kotlin.math.max
 open class APSResultObject @Inject constructor(val injector: HasAndroidInjector) : APSResult {
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var sp: SP
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
@@ -74,12 +74,12 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
         val pump = activePlugin.activePump
         if (isChangeRequested) {
             // rate
-            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(info.nightscout.core.ui.R.string.cancel_temp)} "
-            else if (rate == -1.0) "${rh.gs(info.nightscout.core.ui.R.string.let_temp_basal_run)}\n"
-            else if (usePercent) "${rh.gs(info.nightscout.core.ui.R.string.rate)}: ${decimalFormatter.to2Decimal(percent.toDouble())}% (${decimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0)} U/h) " +
-                "${rh.gs(info.nightscout.core.ui.R.string.duration)}: ${decimalFormatter.to2Decimal(duration.toDouble())} min "
-            else "${rh.gs(info.nightscout.core.ui.R.string.rate)}: ${decimalFormatter.to2Decimal(rate)} U/h (${decimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100)}%) " +
-                "${rh.gs(info.nightscout.core.ui.R.string.duration)}: ${decimalFormatter.to2Decimal(duration.toDouble())} min "
+            var ret: String = if (rate == 0.0 && duration == 0) "${rh.gs(R.string.cancel_temp)} "
+            else if (rate == -1.0) "${rh.gs(R.string.let_temp_basal_run)}\n"
+            else if (usePercent) "${rh.gs(R.string.rate)}: ${decimalFormatter.to2Decimal(percent.toDouble())}% (${decimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0)} U/h) " +
+                "${rh.gs(R.string.duration)}: ${decimalFormatter.to2Decimal(duration.toDouble())} min "
+            else "${rh.gs(R.string.rate)}: ${decimalFormatter.to2Decimal(rate)} U/h (${decimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100)}%) " +
+                "${rh.gs(R.string.duration)}: ${decimalFormatter.to2Decimal(duration.toDouble())} min "
             // smb
             if (smb != 0.0) ret += "SMB: ${decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep)} "
             if (isCarbsRequired) {
@@ -92,7 +92,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
         }
         return if (isCarbsRequired) {
             carbsRequiredText
-        } else rh.gs(info.nightscout.core.ui.R.string.nochangerequested)
+        } else rh.gs(R.string.nochangerequested)
     }
 
     override fun toSpanned(): Spanned {
@@ -100,17 +100,17 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
         if (isChangeRequested) {
             // rate
             var ret: String =
-                if (rate == 0.0 && duration == 0) rh.gs(info.nightscout.core.ui.R.string.cancel_temp) + "<br>" else if (rate == -1.0) rh.gs(info.nightscout.core.ui.R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + rh.gs(
-                    info.nightscout.core.ui.R.string.rate
+                if (rate == 0.0 && duration == 0) rh.gs(R.string.cancel_temp) + "<br>" else if (rate == -1.0) rh.gs(R.string.let_temp_basal_run) + "<br>" else if (usePercent) "<b>" + rh.gs(
+                    R.string.rate
                 ) + "</b>: " + decimalFormatter.to2Decimal(
                     percent.toDouble()
                 ) + "% " +
                     "(" + decimalFormatter.to2Decimal(percent * pump.baseBasalRate / 100.0) + " U/h)<br>" +
-                    "<b>" + rh.gs(info.nightscout.core.ui.R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>" else "<b>" + rh.gs(info.nightscout.core.ui.R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(
+                    "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>" else "<b>" + rh.gs(R.string.rate) + "</b>: " + decimalFormatter.to2Decimal(
                     rate
                 ) + " U/h " +
                     "(" + decimalFormatter.to2Decimal(rate / pump.baseBasalRate * 100.0) + "%) <br>" +
-                    "<b>" + rh.gs(info.nightscout.core.ui.R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
+                    "<b>" + rh.gs(R.string.duration) + "</b>: " + decimalFormatter.to2Decimal(duration.toDouble()) + " min<br>"
 
             // smb
             if (smb != 0.0) ret += "<b>" + "SMB" + "</b>: " + decimalFormatter.toPumpSupportedBolus(smb, activePlugin.activePump.pumpDescription.bolusStep) + "<br>"

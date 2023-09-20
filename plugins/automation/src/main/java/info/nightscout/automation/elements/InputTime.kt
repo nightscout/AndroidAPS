@@ -19,7 +19,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import java.util.Calendar
 
-class InputTime(private val rh: ResourceHelper, private val dateUtil: DateUtil) : Element() {
+class InputTime(private val rh: ResourceHelper, private val dateUtil: DateUtil) : Element {
 
     var value: Int = getMinSinceMidnight(dateUtil.now())
 

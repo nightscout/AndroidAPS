@@ -102,7 +102,7 @@ class ActivityMonitor @Inject constructor(
                             row.gravity = Gravity.CENTER_HORIZONTAL
                             row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = activity })
                             row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = duration })
-                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; text = rh.gs(info.nightscout.shared.R.string.in_days, days.toDouble()) })
+                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; text = rh.gs(info.nightscout.interfaces.R.string.in_days, days.toDouble()) })
                         }
                     )
                 }

@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Integration för pumpar som ännu inte stöds av AndroidAPS (Open loop)</string>
     <string name="virtual_pump_label">VIRTUELL PUMP</string>
     <string name="virtualpump_settings">Inställningar för Virtuell pump</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Inga spann stöds som granularitet för basal/bolus i den virtuella pumpen. Endast enkla värden.</string>
 </resources>

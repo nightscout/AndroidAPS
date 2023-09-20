@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.Ero
 import org.junit.Assert.assertNotNull
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class ErosHistoryTest {
 

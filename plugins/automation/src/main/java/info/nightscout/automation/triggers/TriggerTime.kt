@@ -7,7 +7,7 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDateTime
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.T
 import org.json.JSONObject

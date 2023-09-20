@@ -3,7 +3,6 @@ package info.nightscout.plugins.sync.nsclient
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.sync.R
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -20,7 +19,6 @@ class ReceiverDelegateTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var fabricPrivacy: FabricPrivacy
-    private val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
     @Mock private lateinit var receiverStatusStore: ReceiverStatusStore
     private lateinit var sut: ReceiverDelegate

@@ -20,7 +20,6 @@ import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
@@ -86,7 +85,7 @@ class AndroidPermissionImpl @Inject constructor(
 
     @Synchronized
     override fun notifyForSMSPermissions(activity: FragmentActivity, smsCommunicator: SmsCommunicator) {
-        if ((smsCommunicator as PluginBase).isEnabled()) {
+        if (smsCommunicator.isEnabled()) {
             if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS))
                 activePlugin.activeOverview.addNotification(
                     id = Notification.PERMISSION_SMS,

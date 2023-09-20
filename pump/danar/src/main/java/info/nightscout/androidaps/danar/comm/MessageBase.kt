@@ -7,7 +7,7 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageOriginalNames.getName
 import info.nightscout.androidaps.utils.CRC.getCrc16
 import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
@@ -48,7 +48,7 @@ open class MessageBase(injector: HasAndroidInjector) {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var temporaryBasalStorage: TemporaryBasalStorage
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var uiInteraction: UiInteraction

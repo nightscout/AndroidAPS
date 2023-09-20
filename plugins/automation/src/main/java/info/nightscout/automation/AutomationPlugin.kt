@@ -49,7 +49,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.automation.Automation
 import info.nightscout.interfaces.automation.AutomationEvent
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -87,7 +87,7 @@ class AutomationPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,
     private val rxBus: RxBus,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val config: Config,
@@ -244,7 +244,7 @@ class AutomationPlugin @Inject constructor(
         }
         val enabled = constraintChecker.isAutomationEnabled()
         if (!enabled.value()) {
-            executionLog.add(enabled.getMostLimitedReasons(aapsLogger))
+            executionLog.add(enabled.getMostLimitedReasons())
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -413,7 +413,7 @@ class AutomationPlugin @Inject constructor(
     }
 
     /**
-     * Generate reminder via [info.nightscout.interfaces.utils.TimerUtil]
+     * Generate reminder via [info.nightscout.automation.ui.TimerUtil]
      *
      * @param seconds seconds to the future
      */

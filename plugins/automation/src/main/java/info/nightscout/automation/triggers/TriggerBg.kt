@@ -9,9 +9,8 @@ import info.nightscout.automation.elements.InputBg
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.interfaces.Constants
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 
@@ -71,7 +70,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        bg.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", Constants.MGDL)))
+        bg.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText)))
         bg.value = JsonHelper.safeGetDouble(d, "bg")
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this

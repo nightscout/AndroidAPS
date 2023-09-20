@@ -1170,13 +1170,14 @@ class MedtronicPumpPlugin @Inject constructor(
     private var customActions: List<CustomAction>? = null
     private val customActionWakeUpAndTune = CustomAction(
         R.string.medtronic_custom_action_wake_and_tune,
-        MedtronicCustomActionType.WakeUpAndTune
+        MedtronicCustomActionType.WakeUpAndTune,
+        info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
     )
     private val customActionClearBolusBlock = CustomAction(
-        R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock, false
+        R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock, info.nightscout.core.ui.R.drawable.ic_actions_profileswitch, false
     )
     private val customActionResetRLConfig = CustomAction(
-        R.string.medtronic_custom_action_reset_rileylink, MedtronicCustomActionType.ResetRileyLinkConfiguration, true
+        R.string.medtronic_custom_action_reset_rileylink, MedtronicCustomActionType.ResetRileyLinkConfiguration, info.nightscout.core.ui.R.drawable.ic_actions_profileswitch, true
     )
 
     override fun getCustomActions(): List<CustomAction>? {

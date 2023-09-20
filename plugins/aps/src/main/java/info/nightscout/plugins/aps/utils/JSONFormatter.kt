@@ -1,7 +1,7 @@
 package info.nightscout.plugins.aps.utils
 
 import android.text.Spanned
-import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.rx.logging.AAPSLogger
 import org.json.JSONArray
 import org.json.JSONException

@@ -14,10 +14,9 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.pump.common.defs.TempBasalPair
-import info.nightscout.rx.TestAapsSchedulers
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.sharedtests.TestBase
+import info.nightscout.sharedtests.rx.TestAapsSchedulers
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider
 import org.junit.jupiter.api.Assertions
@@ -41,7 +40,6 @@ class OmnipodErosPumpPluginTest : TestBase() {
     @Mock lateinit var erosHistoryDatabase: ErosHistoryDatabase
 
     private lateinit var decimalFormatter: DecimalFormatter
-    private var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
     @BeforeEach fun prepare() {
         `when`(rh.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
@@ -54,7 +52,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
 
         // mock all the things
         val plugin = OmnipodErosPumpPlugin(
-            injector, aapsLogger, TestAapsSchedulers(), rxBusWrapper, null,
+            injector, aapsLogger, TestAapsSchedulers(), rxBus, null,
             rh, null, null, aapsOmnipodErosManager, commandQueue,
             null, null, null, null,
             rileyLinkUtil, null, null, pumpSync, uiInteraction, erosHistoryDatabase, decimalFormatter

@@ -63,13 +63,6 @@
     <string name="time_range">Времеви диапазон</string>
     <string name="timerange_value">Часът е между %1$s и %2$s</string>
     <string name="between">Между </string>
-    <string name="weekday_sunday_short">Нед</string>
-    <string name="weekday_saturday_short">Съб</string>
-    <string name="weekday_friday_short">Пет</string>
-    <string name="weekday_thursday_short">Чет</string>
-    <string name="weekday_wednesday_short">Ср</string>
-    <string name="weekday_tuesday_short">Вт</string>
-    <string name="weekday_monday_short">Пон</string>
     <string name="delete_short">ИЗТР</string>
     <string name="add_short">ДОБ</string>
     <string name="copy_short">КОП</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Стартирай автомаций</string>
     <string name="add_automation">Добавяне на правило</string>
     <string name="stop_processing">Спри изпълнението</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">П</string>
-    <string name="tuesday_short">Вт</string>
-    <string name="wednesday_short">Ср</string>
-    <string name="thursday_short">Ч</string>
-    <string name="friday_short">П</string>
-    <string name="saturday_short">С</string>
-    <string name="sunday_short">Н</string>
     <!--    Reminders-->
     <string name="time_to_eat">Време за ядене!\Стартирайте болус съветника и направете изчисления отново.</string>
     <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>

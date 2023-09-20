@@ -1,10 +1,12 @@
 package info.nightscout.implementation.queue
 
+import com.google.common.truth.Truth.assertThat
 import android.content.Context
 import android.os.Handler
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
@@ -16,8 +18,7 @@ import info.nightscout.implementation.queue.commands.CommandLoadHistory
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -38,7 +39,6 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.sharedtests.TestBaseWithProfile
 import info.nightscout.sharedtests.TestPumpPlugin
 import io.reactivex.rxjava3.core.Single
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -50,7 +50,7 @@ import java.util.Calendar
 
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var uiInteraction: UiInteraction
@@ -63,7 +63,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         rxBus: RxBus,
         aapsSchedulers: AapsSchedulers,
         rh: ResourceHelper,
-        constraintChecker: Constraints,
+        constraintChecker: ConstraintsChecker,
         profileFunction: ProfileFunction,
         activePlugin: ActivePlugin,
         context: Context,
@@ -140,17 +140,17 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         )
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
 
-        val bolusConstraint = Constraint(0.0)
+        val bolusConstraint = ConstraintObject(0.0, aapsLogger)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(bolusConstraint)
         `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(bolusConstraint)
-        val carbsConstraint = Constraint(0)
+        val carbsConstraint = ConstraintObject(0, aapsLogger)
         `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(carbsConstraint)
-        val rateConstraint = Constraint(0.0)
+        val rateConstraint = ConstraintObject(0.0, aapsLogger)
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
-        val percentageConstraint = Constraint(0)
+        val percentageConstraint = ConstraintObject(0, aapsLogger)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
         `when`(rh.gs(info.nightscout.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
-        `when`(rh.gs(info.nightscout.interfaces.R.string.format_insulin_units)).thenReturn("%1\$.2f U")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.format_insulin_units)).thenReturn("%1\$.2f U")
         `when`(rh.gs(info.nightscout.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
     }
 
@@ -169,121 +169,121 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue.handler = handler
 
         // start with empty queue
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // add bolus command
         commandQueue.bolus(DetailedBolusInfo(), null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
 
         commandQueue.waitForFinishedThread()
         Thread.sleep(1000)
 
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
     }
 
     @Test
     fun doTests() {
 
         // start with empty queue
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // add bolus command
         commandQueue.bolus(DetailedBolusInfo(), null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
 
         // add READSTATUS
         commandQueue.readStatus("anyString", null)
-        Assertions.assertEquals(2, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(2)
 
         // adding another bolus should remove the first one (size still == 2)
         commandQueue.bolus(DetailedBolusInfo(), null)
-        Assertions.assertEquals(2, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(2)
 
         // clear the queue should reset size
         commandQueue.clear()
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // add tempbasal
         commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
 
         // add tempbasal percent. it should replace previous TEMPBASAL
         commandQueue.tempBasalPercent(0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
 
         // cancel tempbasal it should replace previous TEMPBASAL
         commandQueue.cancelTempBasal(false, null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
 
         // add extended bolus
         commandQueue.extendedBolus(1.0, 30, null)
-        Assertions.assertEquals(2, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(2)
 
         // add extended should remove previous extended setting
         commandQueue.extendedBolus(1.0, 30, null)
-        Assertions.assertEquals(2, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(2)
 
         // cancel extended bolus should replace previous extended
         commandQueue.cancelExtended(null)
-        Assertions.assertEquals(2, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(2)
 
         // add setProfile
         // TODO: this crash the test
         //        commandQueue.setProfile(validProfile, null)
-        //        Assertions.assertEquals(3, commandQueue.size())
+        //        assertThat(commandQueue.size()).isEqualTo(3)
 
         // add loadHistory
         commandQueue.loadHistory(0.toByte(), null)
-        Assertions.assertEquals(3, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(3)
 
         // add loadEvents
         commandQueue.loadEvents(null)
-        Assertions.assertEquals(4, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(4)
 
         // add clearAlarms
         commandQueue.clearAlarms(null)
-        Assertions.assertEquals(5, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(5)
 
         // add deactivate
         commandQueue.deactivate(null)
-        Assertions.assertEquals(6, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(6)
 
         // add updateTime
         commandQueue.updateTime(null)
-        Assertions.assertEquals(7, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(7)
 
         commandQueue.clear()
         commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         commandQueue.pickup()
-        Assertions.assertEquals(0, commandQueue.size())
-        Assertions.assertNotNull(commandQueue.performing)
-        Assertions.assertEquals(Command.CommandType.TEMPBASAL, commandQueue.performing?.commandType)
+        assertThat(commandQueue.size()).isEqualTo(0)
+        assertThat(commandQueue.performing).isNotNull()
+        assertThat(commandQueue.performing?.commandType).isEqualTo(Command.CommandType.TEMPBASAL)
         commandQueue.resetPerforming()
-        Assertions.assertNull(commandQueue.performing)
+        assertThat(commandQueue.performing).isNull()
     }
 
     @Test
     fun callingCancelAllBolusesClearsQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
         val smb = DetailedBolusInfo()
         smb.lastKnownBolusTime = System.currentTimeMillis()
         smb.bolusType = DetailedBolusInfo.BolusType.SMB
         commandQueue.bolus(smb, null)
         commandQueue.bolus(DetailedBolusInfo(), null)
-        Assertions.assertEquals(2, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(2)
 
         // when
         commandQueue.cancelAllBoluses(null)
 
         // then
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
     }
 
     @Test
     fun smbIsRejectedIfABolusIsQueued() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.bolus(DetailedBolusInfo(), null)
@@ -292,14 +292,14 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val queued: Boolean = commandQueue.bolus(smb, null)
 
         // then
-        Assertions.assertFalse(queued)
-        Assertions.assertEquals(commandQueue.size(), 1)
+        assertThat(queued).isFalse()
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun smbIsRejectedIfLastKnownBolusIsOutdated() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         val bolus = DetailedBolusInfo()
@@ -308,14 +308,14 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val queued: Boolean = commandQueue.bolus(bolus, null)
 
         // then
-        Assertions.assertFalse(queued)
-        Assertions.assertEquals(commandQueue.size(), 0)
+        assertThat(queued).isFalse()
+        assertThat(commandQueue.size()).isEqualTo(0)
     }
 
     @Test
     fun isCustomCommandRunning() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         val queued1 = commandQueue.customCommand(CustomCommand1(), null)
@@ -323,249 +323,249 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue.pickup()
 
         // then
-        Assertions.assertTrue(queued1)
-        Assertions.assertTrue(queued2)
-        Assertions.assertTrue(commandQueue.isCustomCommandInQueue(CustomCommand1::class.java))
-        Assertions.assertTrue(commandQueue.isCustomCommandInQueue(CustomCommand2::class.java))
-        Assertions.assertFalse(commandQueue.isCustomCommandInQueue(CustomCommand3::class.java))
+        assertThat(queued1).isTrue()
+        assertThat(queued2).isTrue()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand1::class.java)).isTrue()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand2::class.java)).isTrue()
+        assertThat(commandQueue.isCustomCommandInQueue(CustomCommand3::class.java)).isFalse()
 
-        Assertions.assertTrue(commandQueue.isCustomCommandRunning(CustomCommand1::class.java))
-        Assertions.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand2::class.java))
-        Assertions.assertFalse(commandQueue.isCustomCommandRunning(CustomCommand3::class.java))
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand1::class.java)).isTrue()
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand2::class.java)).isFalse()
+        assertThat(commandQueue.isCustomCommandRunning(CustomCommand3::class.java)).isFalse()
 
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isSetUserOptionsCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.setUserOptions(null)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.SET_USER_SETTINGS))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.SET_USER_SETTINGS)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
         commandQueue.setUserOptions(null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isLoadEventsCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.loadEvents(null)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.LOAD_EVENTS))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.LOAD_EVENTS)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
         commandQueue.loadEvents(null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isClearAlarmsCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.clearAlarms(null)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.CLEAR_ALARMS))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.CLEAR_ALARMS)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
         commandQueue.clearAlarms(null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isDeactivateCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.deactivate(null)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.DEACTIVATE))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.DEACTIVATE)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
         commandQueue.deactivate(null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isUpdateTimeCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.updateTime(null)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.UPDATE_TIME))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.UPDATE_TIME)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
         commandQueue.updateTime(null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isLoadTDDsCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.loadTDDs(null)
 
         // then
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
         commandQueue.loadTDDs(null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isLoadHistoryCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.loadHistory(0, null)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.LOAD_HISTORY))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.LOAD_HISTORY)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
         commandQueue.loadHistory(0, null)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isProfileSetCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         testPumpPlugin.isProfileSet = true
         commandQueue.setProfile(validProfile, false, object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
-                Assertions.assertFalse(result.enacted)
+                assertThat(result.success).isTrue()
+                assertThat(result.enacted).isFalse()
             }
         })
 
         // then
         // the same profile -> ignore
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
         // different should be added
         testPumpPlugin.isProfileSet = false
         commandQueue.setProfile(validProfile, false, object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
-                Assertions.assertTrue(result.enacted)
+                assertThat(result.success).isTrue()
+                assertThat(result.enacted).isTrue()
             }
         })
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
         // next should be ignored
         commandQueue.setProfile(validProfile, false, object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
+                assertThat(result.success).isTrue()
             }
         })
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(1)
         testPumpPlugin.isProfileSet = true
     }
 
     @Test
     fun isStopCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.stopPump(null)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.STOP_PUMP))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.STOP_PUMP)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isStarCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.startPump(null)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.START_PUMP))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.START_PUMP)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun isSetTbrNotificationCommandInQueue() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         commandQueue.setTBROverNotification(null, true)
 
         // then
-        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.INSIGHT_SET_TBR_OVER_ALARM))
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(commandQueue.isLastScheduled(Command.CommandType.INSIGHT_SET_TBR_OVER_ALARM)).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun differentCustomCommandsAllowed() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         val queued1 = commandQueue.customCommand(CustomCommand1(), null)
         val queued2 = commandQueue.customCommand(CustomCommand2(), null)
 
         // then
-        Assertions.assertTrue(queued1)
-        Assertions.assertTrue(queued2)
-        Assertions.assertEquals(2, commandQueue.size())
+        assertThat(queued1).isTrue()
+        assertThat(queued2).isTrue()
+        assertThat(commandQueue.size()).isEqualTo(2)
     }
 
     @Test
     fun sameCustomCommandNotAllowed() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         val queued1 = commandQueue.customCommand(CustomCommand1(), null)
         val queued2 = commandQueue.customCommand(CustomCommand1(), null)
 
         // then
-        Assertions.assertTrue(queued1)
-        Assertions.assertFalse(queued2)
-        Assertions.assertEquals(1, commandQueue.size())
+        assertThat(queued1).isTrue()
+        assertThat(queued2).isFalse()
+        assertThat(commandQueue.size()).isEqualTo(1)
     }
 
     @Test
     fun readStatusTwiceIsNotAllowed() {
         // given
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
 
         // when
         val queued1 = commandQueue.readStatus("1", null)
         val queued2 = commandQueue.readStatus("2", null)
 
         // then
-        Assertions.assertTrue(queued1)
-        Assertions.assertFalse(queued2)
-        Assertions.assertEquals(1, commandQueue.size())
-        Assertions.assertTrue(commandQueue.statusInQueue())
+        assertThat(queued1).isTrue()
+        assertThat(queued2).isFalse()
+        assertThat(commandQueue.size()).isEqualTo(1)
+        assertThat(commandQueue.statusInQueue()).isTrue()
     }
 
     private class CustomCommand1 : CustomCommand {
