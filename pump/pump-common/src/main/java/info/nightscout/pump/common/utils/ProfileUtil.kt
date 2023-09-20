@@ -43,7 +43,7 @@ object ProfileUtil {
         // }
         // return if (stringBuilder.length > 3) stringBuilder.substring(0, stringBuilder.length - 2) else stringBuilder.toString()
 
-        var entriesCopy = profile.getBasalValues()
+        val entriesCopy = profile.getBasalValues()
 
         for (i in entriesCopy.indices) {
             val current = entriesCopy[i]

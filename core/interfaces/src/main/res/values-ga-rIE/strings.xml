@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Maintenance -->
-    <!--    PumpType-->
-    <!-- PumpPluginBase -->
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f A</string>
-    <string name="format_insulin_units">%1$.2f A</string>
-</resources>
