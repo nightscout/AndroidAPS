@@ -55,6 +55,7 @@
     <string name="pref_show_bgi">Afficher IGly</string>
     <string name="pref_show_direction_arrow">Afficher Flèche</string>
     <string name="pref_show_ago">Afficher Min Passées</string>
+    <string name="pref_show_week_number">Afficher numéro semaine</string>
     <string name="default_custom_watchface_comment">Cadran par défaut, vous pouvez cliquer sur le bouton EXPORTER WATCHFACE pour générer un modèle</string>
     <string name="wear_default_watchface">Cadran par défaut</string>
     <string name="cwf_comment_background">Image d\'arrière-plan</string>
@@ -81,6 +82,7 @@
     <string name="cwf_comment_timePeriod">AM ou PM</string>
     <string name="cwf_comment_day_name">Nom du jour de la semaine</string>
     <string name="cwf_comment_day">Jour (JJ)</string>
+    <string name="cwf_comment_week_number">Numéro de semaine (ww)</string>
     <string name="cwf_comment_month">Nom du mois (court)</string>
     <string name="cwf_comment_loop">État de la boucle et délais</string>
     <string name="cwf_comment_direction">Flèche de direction</string>

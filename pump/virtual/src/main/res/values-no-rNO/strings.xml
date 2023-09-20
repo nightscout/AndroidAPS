@@ -9,4 +9,5 @@
     <string name="virtual_pump_label">VIRTUELL PUMPE</string>
     <string name="virtualpump_settings">Innstillinger for virtuell pumpe</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
 </resources>

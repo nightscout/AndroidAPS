@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sensitivity
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.aps.AutosensDataStore
@@ -12,7 +13,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.sharedtests.TestBase
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
@@ -45,12 +45,12 @@ class AbstractSensitivityPluginTest : TestBase() {
     fun fillResultTest() {
         val sut = SensitivityTestClass(pluginDescription, aapsLogger, rh, sp)
         var ar = sut.fillResult(1.0, 1.0, "1", "1.2", "1", 12, 0.7, 1.2)
-        Assertions.assertEquals(1.0, ar.ratio, 0.01)
+        assertThat(ar.ratio).isWithin(0.01).of(1.0)
         ar = sut.fillResult(1.2, 1.0, "1", "1.2", "1", 40, 0.7, 1.2)
-        Assertions.assertEquals(1.16, ar.ratio, 0.01)
+        assertThat(ar.ratio).isWithin(0.01).of(1.16)
         ar = sut.fillResult(1.2, 1.0, "1", "1.2", "1", 50, 0.7, 1.2)
-        Assertions.assertEquals(1.2, ar.ratio, 0.01)
+        assertThat(ar.ratio).isWithin(0.01).of(1.2)
         ar = sut.fillResult(1.2, 1.0, "1", "1.2", "1", 50, 0.7, 1.1)
-        Assertions.assertEquals(1.1, ar.ratio, 0.01)
+        assertThat(ar.ratio).isWithin(0.01).of(1.1)
     }
 }

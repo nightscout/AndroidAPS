@@ -1,8 +1,8 @@
 package info.nightscout.implementation.pump
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.sharedtests.TestBase
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -29,9 +29,9 @@ class TemporaryBasalStorageTest : TestBase() {
     @Test
     fun add() {
         temporaryBasalStorage.store.clear()
-        Assertions.assertEquals(0, temporaryBasalStorage.store.size)
+        assertThat(temporaryBasalStorage.store).isEmpty()
         temporaryBasalStorage.add(info1)
-        Assertions.assertEquals(1, temporaryBasalStorage.store.size)
+        assertThat(temporaryBasalStorage.store).hasSize(1)
     }
 
     @Test
@@ -40,38 +40,38 @@ class TemporaryBasalStorageTest : TestBase() {
         // Look for exact bolus
         setUp()
         var d = temporaryBasalStorage.findTemporaryBasal(1000000, 4.0)
-        Assertions.assertEquals(4.0, d!!.rate, 0.01)
-        Assertions.assertEquals(2, temporaryBasalStorage.store.size)
+        assertThat(d!!.rate).isWithin(0.01).of(4.0)
+        assertThat(temporaryBasalStorage.store).hasSize(2)
         // Look for exact bolus
         setUp()
         d = temporaryBasalStorage.findTemporaryBasal(1000000, 3.0)
-        Assertions.assertEquals(3.0, d!!.rate, 0.01)
-        Assertions.assertEquals(2, temporaryBasalStorage.store.size)
+        assertThat(d!!.rate).isWithin(0.01).of(3.0)
+        assertThat(temporaryBasalStorage.store).hasSize(2)
         // With less rate (bolus not delivered completely). Should return first one matching date
         setUp()
         d = temporaryBasalStorage.findTemporaryBasal(1000500, 2.0)
-        Assertions.assertEquals(3.0, d!!.rate, 0.01)
-        Assertions.assertEquals(2, temporaryBasalStorage.store.size)
+        assertThat(d!!.rate).isWithin(0.01).of(3.0)
+        assertThat(temporaryBasalStorage.store).hasSize(2)
         // With less rate (bolus not delivered completely). Should return first one matching date
         setUp()
         d = temporaryBasalStorage.findTemporaryBasal(1000500, 3.5)
-        Assertions.assertEquals(4.0, d!!.rate, 0.01)
-        Assertions.assertEquals(2, temporaryBasalStorage.store.size)
+        assertThat(d!!.rate).isWithin(0.01).of(4.0)
+        assertThat(temporaryBasalStorage.store).hasSize(2)
         // With more rate should return null
         setUp()
         d = temporaryBasalStorage.findTemporaryBasal(1000500, 4.5)
-        Assertions.assertNull(d)
-        Assertions.assertEquals(3, temporaryBasalStorage.store.size)
+        assertThat(d).isNull()
+        assertThat(temporaryBasalStorage.store).hasSize(3)
         // With more than one minute off should return null
         setUp()
         d = temporaryBasalStorage.findTemporaryBasal(1070000, 4.0)
-        Assertions.assertNull(d)
-        Assertions.assertEquals(3, temporaryBasalStorage.store.size)
+        assertThat(d).isNull()
+        assertThat(temporaryBasalStorage.store).hasSize(3)
         // Use last, if bolus size is the same
         setUp()
         d = temporaryBasalStorage.findTemporaryBasal(1070000, 5.0)
-        Assertions.assertEquals(5.0, d!!.rate, 0.01)
-        Assertions.assertEquals(2, temporaryBasalStorage.store.size)
+        assertThat(d!!.rate).isWithin(0.01).of(5.0)
+        assertThat(temporaryBasalStorage.store).hasSize(2)
 
     }
 }
