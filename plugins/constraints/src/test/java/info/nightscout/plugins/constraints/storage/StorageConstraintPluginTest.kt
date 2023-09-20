@@ -20,13 +20,6 @@ class StorageConstraintPluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var uiInteraction: UiInteraction
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
     private lateinit var storageConstraintPlugin: StorageConstraintPlugin
 
     @BeforeEach fun prepareMock() {
@@ -49,9 +42,9 @@ class StorageConstraintPluginTest : TestBase() {
         val mocked = MockedStorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, uiInteraction)
         // Set free space under 200(Mb) to disable loop
         mocked.memSize = 150L
-        Assertions.assertEquals(false, mocked.isClosedLoopAllowed(ConstraintObject(true, injector)).value())
+        Assertions.assertEquals(false, mocked.isClosedLoopAllowed(ConstraintObject(true, aapsLogger)).value())
         // Set free space over 200(Mb) to enable loop
         mocked.memSize = 300L
-        Assertions.assertEquals(true, mocked.isClosedLoopAllowed(ConstraintObject(true, injector)).value())
+        Assertions.assertEquals(true, mocked.isClosedLoopAllowed(ConstraintObject(true, aapsLogger)).value())
     }
 }

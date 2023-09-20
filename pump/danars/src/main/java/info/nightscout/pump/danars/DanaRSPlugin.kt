@@ -288,7 +288,7 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, injector)).value()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         return if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             val preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0)
             var speed = 12
@@ -343,7 +343,7 @@ class DanaRSPlugin @Inject constructor(
     // This is called from APS
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, injector), profile).value()
+        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         var doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
         val doHighTemp = absoluteAfterConstrain > baseBasalRate
@@ -419,7 +419,7 @@ class DanaRSPlugin @Inject constructor(
     @Synchronized
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, injector), profile).value()
+        var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
         if (percentAfterConstraint < 0) {
             result.isTempCancel = false
             result.enacted = false
@@ -489,7 +489,7 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
-        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, injector)).value()
+        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)

@@ -22,13 +22,7 @@ class APSResultTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintsChecker: ConstraintsChecker
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
+    private val injector = HasAndroidInjector { AndroidInjector { } }
 
     private lateinit var closedLoopEnabled: Constraint<Boolean>
 
@@ -336,7 +330,7 @@ class APSResultTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        closedLoopEnabled = ConstraintObject(false, injector)
+        closedLoopEnabled = ConstraintObject(false, aapsLogger)
         `when`(constraintsChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled)
         `when`(sp.getDouble(ArgumentMatchers.anyInt(), ArgumentMatchers.anyDouble())).thenReturn(30.0)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)

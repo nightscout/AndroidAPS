@@ -159,9 +159,9 @@ class LoopDialog : DaggerDialogFragment() {
         if (_binding == null) return
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
-        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(ConstraintObject(true, injector))
+        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
-        val lgsEnabled = constraintChecker.isLgsAllowed(ConstraintObject(true, injector))
+        val lgsEnabled = constraintChecker.isLgsAllowed(ConstraintObject(true, aapsLogger))
         val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
         val pump = activePlugin.activePump
 

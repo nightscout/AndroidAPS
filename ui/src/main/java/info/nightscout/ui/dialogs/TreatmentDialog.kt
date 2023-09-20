@@ -138,8 +138,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbs = SafeParse.stringToInt(binding.carbs.text)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val actions: LinkedList<String?> = LinkedList()
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, injector)).value()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, injector)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
 
         if (insulinAfterConstraints > 0) {
             actions.add(

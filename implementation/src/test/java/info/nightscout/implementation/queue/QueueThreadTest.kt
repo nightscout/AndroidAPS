@@ -34,9 +34,6 @@ class QueueThreadTest : TestBaseWithProfile() {
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
             if (it is Command) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
@@ -67,14 +64,14 @@ class QueueThreadTest : TestBaseWithProfile() {
         Mockito.`when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
         Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
 
-        val bolusConstraint = ConstraintObject(0.0, injector)
+        val bolusConstraint = ConstraintObject(0.0, aapsLogger)
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(bolusConstraint)
         Mockito.`when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(bolusConstraint)
-        val carbsConstraint = ConstraintObject(0, injector)
+        val carbsConstraint = ConstraintObject(0, aapsLogger)
         Mockito.`when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(carbsConstraint)
-        val rateConstraint = ConstraintObject(0.0, injector)
+        val rateConstraint = ConstraintObject(0.0, aapsLogger)
         Mockito.`when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
-        val percentageConstraint = ConstraintObject(0, injector)
+        val percentageConstraint = ConstraintObject(0, aapsLogger)
         Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
             .thenReturn(percentageConstraint)
         Mockito.`when`(rh.gs(ArgumentMatchers.eq(info.nightscout.core.ui.R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")

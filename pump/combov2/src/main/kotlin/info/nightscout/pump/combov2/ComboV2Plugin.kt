@@ -1014,7 +1014,7 @@ class ComboV2Plugin @Inject constructor(
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         val oldInsulinAmount = detailedBolusInfo.insulin
         detailedBolusInfo.insulin = constraintChecker
-            .applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, injector))
+            .applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger))
             .value()
         aapsLogger.debug(
             LTag.PUMP,

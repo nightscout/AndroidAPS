@@ -36,13 +36,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
 
     private lateinit var danaRv2Plugin: DanaRv2Plugin
 
-    val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
+    val injector = HasAndroidInjector { AndroidInjector { } }
 
     @BeforeEach
     fun prepareMocks() {
@@ -64,7 +58,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         danaRv2Plugin.setPluginEnabled(PluginType.PUMP, true)
         danaRv2Plugin.setPluginEnabled(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
-        val c = ConstraintObject(Double.MAX_VALUE, injector)
+        val c = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         danaRv2Plugin.applyBasalConstraints(c, validProfile)
         Assertions.assertEquals(0.8, c.value(), 0.01)
         Assertions.assertEquals("DanaRv2: Limiting max basal rate to 0.80 U/h because of pump limit", c.getReasons())
@@ -76,7 +70,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         danaRv2Plugin.setPluginEnabled(PluginType.PUMP, true)
         danaRv2Plugin.setPluginEnabled(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
-        val c = ConstraintObject(Int.MAX_VALUE, injector)
+        val c = ConstraintObject(Int.MAX_VALUE, aapsLogger)
         danaRv2Plugin.applyBasalPercentConstraints(c, validProfile)
         Assertions.assertEquals(200, c.value())
         Assertions.assertEquals("DanaRv2: Limiting max percent rate to 200% because of pump limit", c.getReasons())

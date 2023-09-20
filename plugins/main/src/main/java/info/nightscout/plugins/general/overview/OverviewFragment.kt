@@ -516,7 +516,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
             val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
-                val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), injector)).value()
+                val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
                 activity?.let {
                     if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
                         OKDialog.show(it, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))

@@ -275,11 +275,11 @@ class LoopPlugin @Inject constructor(
 
             // check rate for constraints
             val resultAfterConstraints = apsResult.newAndClone(injector)
-            resultAfterConstraints.rateConstraint = ConstraintObject(resultAfterConstraints.rate, injector)
+            resultAfterConstraints.rateConstraint = ConstraintObject(resultAfterConstraints.rate, aapsLogger)
             resultAfterConstraints.rate = constraintChecker.applyBasalConstraints(resultAfterConstraints.rateConstraint!!, profile).value()
-            resultAfterConstraints.percentConstraint = ConstraintObject(resultAfterConstraints.percent, injector)
+            resultAfterConstraints.percentConstraint = ConstraintObject(resultAfterConstraints.percent, aapsLogger)
             resultAfterConstraints.percent = constraintChecker.applyBasalPercentConstraints(resultAfterConstraints.percentConstraint!!, profile).value()
-            resultAfterConstraints.smbConstraint = ConstraintObject(resultAfterConstraints.smb, injector)
+            resultAfterConstraints.smbConstraint = ConstraintObject(resultAfterConstraints.smb, aapsLogger)
             resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint!!).value()
 
             // safety check for multiple SMBs

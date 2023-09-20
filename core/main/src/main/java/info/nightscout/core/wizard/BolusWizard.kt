@@ -272,7 +272,7 @@ class BolusWizard @Inject constructor(
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep)
 
-        insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(calculatedTotalInsulin, injector)).value()
+        insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(calculatedTotalInsulin, aapsLogger)).value()
 
         aapsLogger.debug(this.toString())
         return this

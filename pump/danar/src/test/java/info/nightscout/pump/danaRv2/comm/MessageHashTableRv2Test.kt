@@ -13,7 +13,7 @@ class MessageHashTableRv2Test : DanaRTestBase() {
 
     @Test
     fun runTest() {
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, injector))
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
         val messageHashTableRv2 = MessageHashTableRv2(injector)
         val forTesting: MessageBase = MsgStatusAPS_v2(injector)
         val testPacket: MessageBase = messageHashTableRv2.findMessage(forTesting.command)

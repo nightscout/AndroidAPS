@@ -12,7 +12,7 @@ class MsgBolusStart(
     init {
         setCommand(0x0102)
         // HARDCODED LIMIT
-        amount = constraintChecker.applyBolusConstraints(ConstraintObject(amount, injector)).value()
+        amount = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
         addParamInt((amount * 100).toInt())
         aapsLogger.debug(LTag.PUMPBTCOMM, "Bolus start : $amount")
     }

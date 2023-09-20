@@ -40,7 +40,7 @@ ActionsTestBase : TestBaseWithProfile() {
 
         private var suspended = false
         override var lastRun: Loop.LastRun? = Loop.LastRun()
-        override var closedLoopEnabled: Constraint<Boolean>? = ConstraintObject(true, injector)
+        override var closedLoopEnabled: Constraint<Boolean>? = ConstraintObject(false, aapsLogger)
         override val isSuspended: Boolean = suspended
         override val isLGS: Boolean = false
         override val isSuperBolus: Boolean = false
@@ -167,9 +167,6 @@ ActionsTestBase : TestBaseWithProfile() {
             }
             if (it is Action) {
                 it.rh = rh
-                it.aapsLogger = aapsLogger
-            }
-            if (it is ConstraintObject<*>) {
                 it.aapsLogger = aapsLogger
             }
         }

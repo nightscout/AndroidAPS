@@ -75,6 +75,6 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
                 danaHistoryDatabase,
                 decimalFormatter
             )
-        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, injector))
+        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
     }
 }

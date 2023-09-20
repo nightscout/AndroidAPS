@@ -36,9 +36,6 @@ class ComboPluginTest : TestBase() {
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
             if (it is PumpEnactResult) {
                 it.context = context
             }
@@ -58,7 +55,7 @@ class ComboPluginTest : TestBase() {
     fun invalidBasalRateOnComboPumpShouldLimitLoopInvocation() {
         comboPlugin.setPluginEnabled(PluginType.PUMP, true)
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false)
-        val c = comboPlugin.isLoopInvocationAllowed(ConstraintObject(true, injector))
+        val c = comboPlugin.isLoopInvocationAllowed(ConstraintObject(true, aapsLogger))
         Assertions.assertEquals("Combo: No valid basal rate read from pump", c.getReasons())
         Assertions.assertEquals(false, c.value())
         comboPlugin.setPluginEnabled(PluginType.PUMP, false)

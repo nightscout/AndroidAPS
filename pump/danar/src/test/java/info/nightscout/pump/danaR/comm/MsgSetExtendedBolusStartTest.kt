@@ -9,7 +9,7 @@ import org.mockito.Mockito.`when`
 class MsgSetExtendedBolusStartTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, injector))
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
         val packet = MsgSetExtendedBolusStart(injector, 2.0, 2.toByte())
 
         // test message decoding

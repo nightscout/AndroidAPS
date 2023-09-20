@@ -159,7 +159,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     // Pump interface
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getInjector())).value();
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             // v2 stores end time for bolus, we need to adjust time
             // default delivery speed is 12 sec/U
@@ -224,7 +224,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
         PumpEnactResult result = new PumpEnactResult(getInjector());
 
-        absoluteRate = constraintChecker.applyBasalConstraints(new ConstraintObject<>(absoluteRate, getInjector()), profile).value();
+        absoluteRate = constraintChecker.applyBasalConstraints(new ConstraintObject<>(absoluteRate, getAapsLogger()), profile).value();
 
         boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d && absoluteRate >= 0.10d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate() || absoluteRate < 0.10d;
@@ -290,7 +290,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         DanaPump pump = danaPump;
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getInjector()), profile).value();
+        percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getAapsLogger()), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(info.nightscout.core.ui.R.string.invalid_input);
             aapsLogger.error("setTempBasalPercent: Invalid input");
@@ -351,7 +351,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
         DanaPump pump = danaPump;
-        insulin = constraintChecker.applyExtendedBolusConstraints(new ConstraintObject<>(insulin, getInjector())).value();
+        insulin = constraintChecker.applyExtendedBolusConstraints(new ConstraintObject<>(insulin, getAapsLogger())).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());

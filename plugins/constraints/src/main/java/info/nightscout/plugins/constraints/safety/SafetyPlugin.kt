@@ -121,7 +121,7 @@ class SafetyPlugin @Inject constructor(
                 currentBasal
             ) + " U/h", this
         )
-        val absoluteConstraint = ConstraintObject(absoluteRate, injector)
+        val absoluteConstraint = ConstraintObject(absoluteRate, aapsLogger)
         applyBasalConstraints(absoluteConstraint, profile)
         percentRate.copyReasons(absoluteConstraint)
         val pump = activePlugin.activePump

@@ -310,8 +310,8 @@ class CommandQueueImplementation @Inject constructor(
             removeAll(type)
         }
         // apply constraints
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, injector)).value()
-        detailedBolusInfo.carbs = constraintChecker.applyCarbsConstraints(ConstraintObject(detailedBolusInfo.carbs.toInt(), injector)).value().toDouble()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
+        detailedBolusInfo.carbs = constraintChecker.applyCarbsConstraints(ConstraintObject(detailedBolusInfo.carbs.toInt(), aapsLogger)).value().toDouble()
         // add new command to queue
         if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) {
             add(CommandSMBBolus(injector, detailedBolusInfo, callback))
@@ -368,7 +368,7 @@ class CommandQueueImplementation @Inject constructor(
         }
         // remove all unfinished
         removeAll(CommandType.TEMPBASAL)
-        val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, injector), profile).value()
+        val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         // add new command to queue
         add(CommandTempBasalAbsolute(injector, rateAfterConstraints, durationInMinutes, enforceNew, profile, tbrType, callback))
         notifyAboutNewCommand()
@@ -383,7 +383,7 @@ class CommandQueueImplementation @Inject constructor(
         }
         // remove all unfinished
         removeAll(CommandType.TEMPBASAL)
-        val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, injector), profile).value()
+        val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
         // add new command to queue
         add(CommandTempBasalPercent(injector, percentAfterConstraints, durationInMinutes, enforceNew, profile, tbrType, callback))
         notifyAboutNewCommand()
@@ -396,7 +396,7 @@ class CommandQueueImplementation @Inject constructor(
             callback?.result(executingNowError())?.run()
             return false
         }
-        val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, injector)).value()
+        val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // remove all unfinished
         removeAll(CommandType.EXTENDEDBOLUS)
         // add new command to queue

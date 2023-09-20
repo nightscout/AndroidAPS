@@ -1,22 +1,22 @@
 package info.nightscout.plugins.constraints
 
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ConstraintsCheckerImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
-    val injector: HasAndroidInjector
+    private val aapsLogger: AAPSLogger
 ) : ConstraintsChecker {
 
-    override fun isLoopInvocationAllowed(): Constraint<Boolean> = isLoopInvocationAllowed(ConstraintObject(true, injector))
+    override fun isLoopInvocationAllowed(): Constraint<Boolean> = isLoopInvocationAllowed(ConstraintObject(true, aapsLogger))
 
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -28,7 +28,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isClosedLoopAllowed(): Constraint<Boolean> = isClosedLoopAllowed(ConstraintObject(true, injector))
+    override fun isClosedLoopAllowed(): Constraint<Boolean> = isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -40,7 +40,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isLgsAllowed(): Constraint<Boolean> = isLgsAllowed(ConstraintObject(true, injector))
+    override fun isLgsAllowed(): Constraint<Boolean> = isLgsAllowed(ConstraintObject(true, aapsLogger))
 
     override fun isLgsAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -52,7 +52,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isAutosensModeEnabled(): Constraint<Boolean> = isAutosensModeEnabled(ConstraintObject(true, injector))
+    override fun isAutosensModeEnabled(): Constraint<Boolean> = isAutosensModeEnabled(ConstraintObject(true, aapsLogger))
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -64,7 +64,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isSMBModeEnabled(): Constraint<Boolean> = isSMBModeEnabled(ConstraintObject(true, injector))
+    override fun isSMBModeEnabled(): Constraint<Boolean> = isSMBModeEnabled(ConstraintObject(true, aapsLogger))
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -76,7 +76,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isDynIsfModeEnabled(): Constraint<Boolean> = isDynIsfModeEnabled(ConstraintObject(true, injector))
+    override fun isDynIsfModeEnabled(): Constraint<Boolean> = isDynIsfModeEnabled(ConstraintObject(true, aapsLogger))
 
     override fun isDynIsfModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -88,7 +88,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isUAMEnabled(): Constraint<Boolean> = isUAMEnabled(ConstraintObject(true, injector))
+    override fun isUAMEnabled(): Constraint<Boolean> = isUAMEnabled(ConstraintObject(true, aapsLogger))
 
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -100,7 +100,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isAdvancedFilteringEnabled(): Constraint<Boolean> = isAdvancedFilteringEnabled(ConstraintObject(true, injector))
+    override fun isAdvancedFilteringEnabled(): Constraint<Boolean> = isAdvancedFilteringEnabled(ConstraintObject(true, aapsLogger))
 
     override fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -112,7 +112,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isSuperBolusEnabled(): Constraint<Boolean> = isSuperBolusEnabled(ConstraintObject(true, injector))
+    override fun isSuperBolusEnabled(): Constraint<Boolean> = isSuperBolusEnabled(ConstraintObject(true, aapsLogger))
 
     override fun isSuperBolusEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -124,7 +124,7 @@ class ConstraintsCheckerImpl @Inject constructor(
         return value
     }
 
-    override fun isAutomationEnabled(): Constraint<Boolean> = isAutomationEnabled(ConstraintObject(true, injector))
+    override fun isAutomationEnabled(): Constraint<Boolean> = isAutomationEnabled(ConstraintObject(true, aapsLogger))
 
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)
@@ -201,20 +201,20 @@ class ConstraintsCheckerImpl @Inject constructor(
      */
 
     override fun getMaxBasalAllowed(profile: Profile): Constraint<Double> =
-        applyBasalConstraints(ConstraintObject(Double.MAX_VALUE, injector), profile)
+        applyBasalConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger), profile)
 
     override fun getMaxBasalPercentAllowed(profile: Profile): Constraint<Int> =
-        applyBasalPercentConstraints(ConstraintObject(Int.MAX_VALUE, injector), profile)
+        applyBasalPercentConstraints(ConstraintObject(Int.MAX_VALUE, aapsLogger), profile)
 
     override fun getMaxBolusAllowed(): Constraint<Double> =
-        applyBolusConstraints(ConstraintObject(Double.MAX_VALUE, injector))
+        applyBolusConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
 
     override fun getMaxExtendedBolusAllowed(): Constraint<Double> =
-        applyExtendedBolusConstraints(ConstraintObject(Double.MAX_VALUE, injector))
+        applyExtendedBolusConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
 
     override fun getMaxCarbsAllowed(): Constraint<Int> =
-        applyCarbsConstraints(ConstraintObject(Int.MAX_VALUE, injector))
+        applyCarbsConstraints(ConstraintObject(Int.MAX_VALUE, aapsLogger))
 
     override fun getMaxIOBAllowed(): Constraint<Double> =
-        applyMaxIOBConstraints(ConstraintObject(Double.MAX_VALUE, injector))
+        applyMaxIOBConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
 }

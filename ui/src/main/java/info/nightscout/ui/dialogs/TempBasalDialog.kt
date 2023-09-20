@@ -120,13 +120,13 @@ class TempBasalDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String> = LinkedList()
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(binding.basalPercentInput.text)
-            percent = constraintChecker.applyBasalPercentConstraints(ConstraintObject(basalPercentInput, injector), profile).value()
+            percent = constraintChecker.applyBasalPercentConstraints(ConstraintObject(basalPercentInput, aapsLogger), profile).value()
             actions.add(rh.gs(info.nightscout.core.ui.R.string.tempbasal_label) + ": $percent%")
             actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, durationInMinutes))
             if (percent != basalPercentInput) actions.add(rh.gs(info.nightscout.core.ui.R.string.constraint_applied))
         } else {
             val basalAbsoluteInput = SafeParse.stringToDouble(binding.basalAbsoluteInput.text)
-            absolute = constraintChecker.applyBasalConstraints(ConstraintObject(basalAbsoluteInput, injector), profile).value()
+            absolute = constraintChecker.applyBasalConstraints(ConstraintObject(basalAbsoluteInput, aapsLogger), profile).value()
             actions.add(rh.gs(info.nightscout.core.ui.R.string.tempbasal_label) + ": " + rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, absolute))
             actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)

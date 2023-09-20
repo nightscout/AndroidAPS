@@ -226,7 +226,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getInjector()), profile).value();
+        percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getAapsLogger()), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(info.nightscout.core.ui.R.string.invalid_input);
             getAapsLogger().error("setTempBasalPercent: Invalid input");
@@ -273,7 +273,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
-        insulin = constraintChecker.applyExtendedBolusConstraints(new ConstraintObject<>(insulin, getInjector())).value();
+        insulin = constraintChecker.applyExtendedBolusConstraints(new ConstraintObject<>(insulin, getAapsLogger())).value();
         // needs to be rounded
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());

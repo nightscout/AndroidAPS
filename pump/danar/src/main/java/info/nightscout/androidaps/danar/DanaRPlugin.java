@@ -160,7 +160,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getInjector())).value();
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
             boolean connectionOK = false;
@@ -207,7 +207,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         //This should not be needed while using queue because connection should be done before calling this
         PumpEnactResult result = new PumpEnactResult(getInjector());
 
-        absoluteRate = constraintChecker.applyBasalConstraints(new ConstraintObject<>(absoluteRate, getInjector()), profile).value();
+        absoluteRate = constraintChecker.applyBasalConstraints(new ConstraintObject<>(absoluteRate, getAapsLogger()), profile).value();
 
         boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d && absoluteRate >= 0.10d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate() || absoluteRate < 0.10d;
@@ -286,7 +286,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
             // We keep current basal running so need to sub current basal
             double extendedRateToSet = absoluteRate - getBaseBasalRate();
-            extendedRateToSet = constraintChecker.applyBasalConstraints(new ConstraintObject<>(extendedRateToSet, getInjector()), profile).value();
+            extendedRateToSet = constraintChecker.applyBasalConstraints(new ConstraintObject<>(extendedRateToSet, getAapsLogger()), profile).value();
             // needs to be rounded to 0.1
             extendedRateToSet = Round.INSTANCE.roundTo(extendedRateToSet, pumpDescription.getExtendedBolusStep() * 2); // *2 because of half hours
 

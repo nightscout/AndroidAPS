@@ -88,9 +88,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
             if (it is Command) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
@@ -143,14 +140,14 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         )
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
 
-        val bolusConstraint = ConstraintObject(0.0, injector)
+        val bolusConstraint = ConstraintObject(0.0, aapsLogger)
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(bolusConstraint)
         `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(bolusConstraint)
-        val carbsConstraint = ConstraintObject(0, injector)
+        val carbsConstraint = ConstraintObject(0, aapsLogger)
         `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(carbsConstraint)
-        val rateConstraint = ConstraintObject(0.0, injector)
+        val rateConstraint = ConstraintObject(0.0, aapsLogger)
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
-        val percentageConstraint = ConstraintObject(0, injector)
+        val percentageConstraint = ConstraintObject(0, aapsLogger)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
         `when`(rh.gs(info.nightscout.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
         `when`(rh.gs(info.nightscout.core.ui.R.string.format_insulin_units)).thenReturn("%1\$.2f U")

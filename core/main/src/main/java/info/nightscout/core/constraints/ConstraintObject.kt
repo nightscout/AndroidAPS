@@ -1,14 +1,10 @@
 package info.nightscout.core.constraints
 
-import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import javax.inject.Inject
 
-class ConstraintObject<T : Comparable<T>>(private var value: T, injector: HasAndroidInjector) : Constraint<T> {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
+class ConstraintObject<T : Comparable<T>>(private var value: T, private val aapsLogger: AAPSLogger) : Constraint<T> {
 
     private var originalValue: T
     private val reasons: MutableList<String> = ArrayList()
@@ -115,7 +111,6 @@ class ConstraintObject<T : Comparable<T>>(private var value: T, injector: HasAnd
     }
 
     init {
-        injector.androidInjector().inject(this)
         originalValue = value
     }
 }

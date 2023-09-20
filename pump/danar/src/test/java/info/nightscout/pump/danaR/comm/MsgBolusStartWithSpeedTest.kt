@@ -9,7 +9,7 @@ import org.mockito.Mockito
 class MsgBolusStartWithSpeedTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, injector))
+        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
         val packet = MsgBolusStartWithSpeed(injector, 0.0, 0)
 
         // test message decoding

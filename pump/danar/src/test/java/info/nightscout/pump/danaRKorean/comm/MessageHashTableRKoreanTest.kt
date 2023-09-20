@@ -10,7 +10,7 @@ import org.mockito.Mockito
 class MessageHashTableRKoreanTest : DanaRTestBase() {
 
     @Test fun runTest() {
-        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, injector))
+        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
         val messageHashTable = MessageHashTableRKorean(injector)
         val testMessage = messageHashTable.findMessage(0x41f2)
         Assertions.assertEquals("CMD_HISTORY_ALL", testMessage.messageName)

@@ -34,13 +34,7 @@ class BgQualityCheckPluginTest : TestBase() {
 
     private lateinit var plugin: BgQualityCheckPlugin
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
+    private val injector = HasAndroidInjector { AndroidInjector { } }
     private val now = 100000000L
     //private val autosensDataStore = AutosensDataStoreObject()
 
@@ -565,13 +559,13 @@ class BgQualityCheckPluginTest : TestBase() {
     @Test
     fun applyMaxIOBConstraintsTest() {
         plugin.state = BgQualityCheck.State.UNKNOWN
-        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, injector)).value(), 0.001)
+        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value(), 0.001)
         plugin.state = BgQualityCheck.State.FIVE_MIN_DATA
-        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, injector)).value(), 0.001)
+        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value(), 0.001)
         plugin.state = BgQualityCheck.State.RECALCULATED
-        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, injector)).value(), 0.001)
+        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value(), 0.001)
         plugin.state = BgQualityCheck.State.DOUBLED
-        Assertions.assertEquals(0.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, injector)).value(), 0.001)
+        Assertions.assertEquals(0.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value(), 0.001)
     }
 
 }

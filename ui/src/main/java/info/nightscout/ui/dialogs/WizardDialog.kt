@@ -444,7 +444,7 @@ class WizardDialog : DaggerDialogFragment() {
                 SafeParse.stringToDouble(binding.correctionInput.text)
         } else
             sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
-        val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, injector)).value()
+        val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
             ToastUtils.warnToast(ctx, R.string.carbs_constraint_applied)

@@ -79,7 +79,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     var tddLast24H: Double? = null
     var tddLast4H: Double? = null
     var tddLast8to4H: Double? = null
-    var dynIsfEnabled: Constraint<Boolean> = ConstraintObject(false, injector)
+    var dynIsfEnabled: Constraint<Boolean> = ConstraintObject(false, aapsLogger)
 
     // last values
     override var lastAPSRun: Long = 0
@@ -131,7 +131,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
             return
         }
 
-        val inputConstraints = ConstraintObject(0.0, injector) // fake. only for collecting all results
+        val inputConstraints = ConstraintObject(0.0, aapsLogger) // fake. only for collecting all results
         val maxBasal = constraintChecker.getMaxBasalAllowed(profile).also {
             inputConstraints.copyReasons(it)
         }.value()
@@ -209,19 +209,19 @@ open class OpenAPSSMBPlugin @Inject constructor(
         val iobArray = iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
         profiler.log(LTag.APS, "calculateIobArrayInDia()", startPart)
         startPart = System.currentTimeMillis()
-        val smbAllowed = ConstraintObject(!tempBasalFallback, injector).also {
+        val smbAllowed = ConstraintObject(!tempBasalFallback, aapsLogger).also {
             constraintChecker.isSMBModeEnabled(it)
             inputConstraints.copyReasons(it)
         }
-        val advancedFiltering = ConstraintObject(!tempBasalFallback, injector).also {
+        val advancedFiltering = ConstraintObject(!tempBasalFallback, aapsLogger).also {
             constraintChecker.isAdvancedFilteringEnabled(it)
             inputConstraints.copyReasons(it)
         }
-        val uam = ConstraintObject(true, injector).also {
+        val uam = ConstraintObject(false, aapsLogger).also {
             constraintChecker.isUAMEnabled(it)
             inputConstraints.copyReasons(it)
         }
-        dynIsfEnabled = ConstraintObject(true, injector).also {
+        dynIsfEnabled = ConstraintObject(false, aapsLogger).also {
             constraintChecker.isDynIsfModeEnabled(it)
             inputConstraints.copyReasons(it)
         }
@@ -241,12 +241,12 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
         if (tdd1D == null || tdd7D == null || tddLast4H == null || tddLast8to4H == null || tddLast24H == null) {
             inputConstraints.copyReasons(
-                ConstraintObject(false, injector).also {
+                ConstraintObject(false, aapsLogger).also {
                     it.set(false, rh.gs(R.string.fallback_smb_no_tdd), this)
                 }
             )
             inputConstraints.copyReasons(
-                ConstraintObject(false, injector).apply { set(true, "tdd1D=$tdd1D tdd7D=$tdd7D tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=$tddLast24H", this) }
+                ConstraintObject(false, aapsLogger).apply { set(true, "tdd1D=$tdd1D tdd7D=$tdd7D tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=$tddLast24H", this) }
             )
         }
 

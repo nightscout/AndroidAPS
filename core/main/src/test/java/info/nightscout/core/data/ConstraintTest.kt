@@ -13,16 +13,10 @@ import org.junit.jupiter.api.Test
  */
 class ConstraintTest : TestBase() {
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is ConstraintObject<*>) {
-                it.aapsLogger = aapsLogger
-            }
-        }
-    }
+    private val injector = HasAndroidInjector { AndroidInjector { } }
 
     @Test fun doTests() {
-        val b = ConstraintObject(true, injector)
+        val b = ConstraintObject(false, aapsLogger)
         Assertions.assertEquals(true, b.value())
         Assertions.assertEquals("", b.getReasons())
         Assertions.assertEquals("", b.getMostLimitedReasons())
@@ -38,7 +32,7 @@ class ConstraintTest : TestBase() {
         Assertions.assertEquals(false, b.value())
         Assertions.assertEquals("ConstraintTest: Set true\nConstraintTest: Set false", b.getReasons())
         Assertions.assertEquals("ConstraintTest: Set true\nConstraintTest: Set false", b.getMostLimitedReasons())
-        val d = ConstraintObject(10.0, injector)
+        val d = ConstraintObject(10.0, aapsLogger)
         d.set(5.0, "Set 5d", this)
         Assertions.assertEquals(5.0, d.value(), 0.01)
         Assertions.assertEquals("ConstraintTest: Set 5d", d.getReasons())

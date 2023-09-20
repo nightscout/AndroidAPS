@@ -96,7 +96,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val insulin = SafeParse.stringToDouble(binding.insulin.text)
         val durationInMinutes = binding.duration.value.toInt()
         val actions: LinkedList<String> = LinkedList()
-        val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, injector)).value()
+        val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         actions.add(rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, insulinAfterConstraint))
         actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)

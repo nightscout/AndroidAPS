@@ -348,7 +348,7 @@ import kotlin.math.abs
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: " + detailedBolusInfo.insulin + "U")
         if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, injector)).value()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         return if (detailedBolusInfo.insulin > 0 && detailedBolusInfo.carbs == 0.0) {
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
@@ -388,7 +388,7 @@ import kotlin.math.abs
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         // round rate to pump rate
-        val pumpRate = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, injector), profile).value()
+        val pumpRate = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
         val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
         return if (connectionOK

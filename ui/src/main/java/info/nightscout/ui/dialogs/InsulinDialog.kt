@@ -191,7 +191,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         if (_binding == null) return false
         val pumpDescription = activePlugin.activePump.pumpDescription
         val insulin = SafeParse.stringToDouble(binding.amount.text)
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, injector)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)

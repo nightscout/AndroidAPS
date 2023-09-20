@@ -839,7 +839,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 20% 20")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
-        `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(20, injector))
+        `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(20, aapsLogger))
 
         //BASAL 20% 30
         smsCommunicatorPlugin.messages = ArrayList()
@@ -865,7 +865,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.processSms(sms)
         assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 1 0")
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
-        `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(1.0, injector))
+        `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(ConstraintObject(1.0, aapsLogger))
 
         //BASAL 1 20
         smsCommunicatorPlugin.messages = ArrayList()

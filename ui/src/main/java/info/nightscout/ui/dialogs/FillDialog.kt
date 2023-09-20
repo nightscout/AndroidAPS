@@ -118,7 +118,7 @@ class FillDialog : DialogFragmentWithDate() {
         val insulin = SafeParse.stringToDouble(binding.fillInsulinAmount.text)
         val actions: LinkedList<String?> = LinkedList()
 
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, injector)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         if (insulinAfterConstraints > 0) {
             actions.add(rh.gs(R.string.fill_warning))
             actions.add("")

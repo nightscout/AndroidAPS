@@ -152,7 +152,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
 
             var constraints =
                 it.constraintsProcessed?.let { constraintsProcessed ->
-                    val allConstraints = ConstraintObject(0.0, injector)
+                    val allConstraints = ConstraintObject(0.0, aapsLogger)
                     constraintsProcessed.rateConstraint?.let { rateConstraint -> allConstraints.copyReasons(rateConstraint) }
                     constraintsProcessed.smbConstraint?.let { smbConstraint -> allConstraints.copyReasons(smbConstraint) }
                     allConstraints.getMostLimitedReasons()

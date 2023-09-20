@@ -36,7 +36,7 @@ class DanaRsMessageHashTableTest : DanaRSTestBase() {
 
     @Test
     fun runTest() {
-        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, injector))
+        `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
 
         val danaRSMessageHashTable = DanaRSMessageHashTable(packetInjector)
         val forTesting: DanaRSPacket = DanaRSPacketAPSSetEventHistory(packetInjector, DanaPump.HistoryEntry.CARBS.value, 0, 0, 0)

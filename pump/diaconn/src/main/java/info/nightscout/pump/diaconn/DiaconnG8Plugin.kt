@@ -271,7 +271,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, injector)).value()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         return if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             val carbs = detailedBolusInfo.carbs
             detailedBolusInfo.carbs = 0.0
@@ -310,7 +310,7 @@ class DiaconnG8Plugin @Inject constructor(
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, injector), profile).value()
+        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         val doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
         val doHighTemp = absoluteAfterConstrain > baseBasalRate
@@ -397,7 +397,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     @Synchronized
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
-        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, injector)).value()
+        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
         val result = PumpEnactResult(injector)

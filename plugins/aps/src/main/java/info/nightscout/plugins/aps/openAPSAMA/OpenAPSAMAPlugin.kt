@@ -116,7 +116,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_no_glucose_data))
             return
         }
-        val inputConstraints = ConstraintObject(0.0, injector) // fake. only for collecting all results
+        val inputConstraints = ConstraintObject(0.0, aapsLogger) // fake. only for collecting all results
         val maxBasal = constraintChecker.getMaxBasalAllowed(profile).also {
             inputConstraints.copyReasons(it)
         }.value()

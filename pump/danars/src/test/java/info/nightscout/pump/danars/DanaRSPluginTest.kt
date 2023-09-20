@@ -33,7 +33,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
-        val c = ConstraintObject(Double.MAX_VALUE, injector)
+        val c = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         danaRSPlugin.applyBasalConstraints(c, validProfile)
         Assertions.assertEquals(java.lang.Double.valueOf(0.8), c.value(), 0.0001)
         Assertions.assertEquals("DanaRS: limitingbasalratio", c.getReasons())
@@ -45,7 +45,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
-        val c = ConstraintObject(Int.MAX_VALUE, injector)
+        val c = ConstraintObject(Int.MAX_VALUE, aapsLogger)
         danaRSPlugin.applyBasalPercentConstraints(c, validProfile)
         Assertions.assertEquals(200, c.value())
         Assertions.assertEquals("DanaRS: limitingpercentrate", c.getReasons())

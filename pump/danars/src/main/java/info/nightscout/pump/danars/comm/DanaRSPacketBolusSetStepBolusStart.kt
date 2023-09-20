@@ -21,7 +21,7 @@ class DanaRSPacketBolusSetStepBolusStart(
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START
         // Speed 0 => 12 sec/U, 1 => 30 sec/U, 2 => 60 sec/U
         // HARDCODED LIMIT - if there is one that could be created
-        amount = constraintChecker.applyBolusConstraints(ConstraintObject(amount, injector)).value()
+        amount = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus start : $amount speed: $speed")
     }
 
