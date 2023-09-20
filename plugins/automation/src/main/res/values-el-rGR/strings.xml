@@ -63,13 +63,6 @@
     <string name="time_range">Εύρος χρόνου</string>
     <string name="timerange_value">Ο χρόνος είναι μεταξύ %1$s και %2$s</string>
     <string name="between">Ανάμεσα </string>
-    <string name="weekday_sunday_short">Κυρ</string>
-    <string name="weekday_saturday_short">Σαβ</string>
-    <string name="weekday_friday_short">Παρ</string>
-    <string name="weekday_thursday_short">Πεμ</string>
-    <string name="weekday_wednesday_short">Τετ</string>
-    <string name="weekday_tuesday_short">Τρ</string>
-    <string name="weekday_monday_short">Δευτ</string>
     <string name="delete_short">ΔΙΑΓΡ</string>
     <string name="add_short">Προσθ</string>
     <string name="copy_short">Αντιγραφή</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Εκτέλεση αυτοματισμών</string>
     <string name="add_automation">Προσθήκη κανόνα</string>
     <string name="stop_processing">Διακοπή επεξεργασίας</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Δ</string>
-    <string name="tuesday_short">Τρ</string>
-    <string name="wednesday_short">Τε</string>
-    <string name="thursday_short">Πε</string>
-    <string name="friday_short">Πα</string>
-    <string name="saturday_short">Σ</string>
-    <string name="sunday_short">Κ</string>
     <!--    Reminders-->
     <string name="time_to_eat">Ώρα για φαγητόt!\nΤρέξτε τον οδηγό Bolus και κάντε υπολογίστε ξανά.</string>
     <string name="time_to_bolus">Ώρα για bolus!\nΤρέξτε τον οδηγό Bolus και κάντε υπολογισμό ξανά.</string>

@@ -15,7 +15,7 @@ android {
 }
 
 dependencies {
-    implementation project(':app-wear-shared:shared')
+    implementation project(':app-wear-shared:shared-impl')
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':core:main')

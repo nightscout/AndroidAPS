@@ -583,4 +583,7 @@
     <string name="cleanup_db_confirm">Doriți să curățați baza de date?\nAceasta va elimina schimbările înregistrate și datele istorice mai vechi de 3 luni.</string>
     <string name="cleanup_db_confirm_sync">Doriți să curățați baza de date?\nAceasta va elimina schimbările înregistrate și datele istorice mai vechi de 3 luni.\nFăcând acest lucru, veți accelera foarte mult sincronizarea completă.</string>
     <string name="cleared_entries">Înregistrări șterse</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

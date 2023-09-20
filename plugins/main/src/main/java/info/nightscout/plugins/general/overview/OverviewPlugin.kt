@@ -34,6 +34,7 @@ import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventUpdateOverviewCalcProgress
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.impl.rx.bus.RxBusImpl
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -72,7 +73,7 @@ class OverviewPlugin @Inject constructor(
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    override val overviewBus = RxBus(aapsSchedulers, aapsLogger)
+    override val overviewBus = RxBusImpl(aapsSchedulers, aapsLogger)
 
     override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, title: String, message: String) {
         rxBus.send(

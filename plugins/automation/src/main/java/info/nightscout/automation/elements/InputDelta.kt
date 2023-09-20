@@ -12,7 +12,7 @@ import info.nightscout.core.ui.elements.NumberPicker
 import info.nightscout.shared.interfaces.ResourceHelper
 import java.text.DecimalFormat
 
-class InputDelta(private val rh: ResourceHelper) : Element() {
+class InputDelta(private val rh: ResourceHelper) : Element {
 
     enum class DeltaType {
         DELTA, SHORT_AVERAGE, LONG_AVERAGE;

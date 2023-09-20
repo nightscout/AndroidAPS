@@ -528,4 +528,20 @@
         <item quantity="other">%1$d 分钟</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <string name="weekday_saturday_short">星期六</string>
+    <string name="weekday_friday_short">星期五</string>
+    <string name="weekday_thursday_short">星期四</string>
+    <string name="weekday_wednesday_short">星期三</string>
+    <string name="weekday_tuesday_short">星期二</string>
+    <string name="weekday_monday_short">星期一</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">周一</string>
+    <string name="tuesday_short">周二</string>
+    <string name="wednesday_short">周三</string>
+    <string name="thursday_short">周四</string>
+    <string name="friday_short">周五</string>
+    <string name="saturday_short">周六</string>
+    <string name="sunday_short">周日</string>
+    <!--    DecimalFormatterImpl -->
 </resources>

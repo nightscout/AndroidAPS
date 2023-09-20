@@ -13,7 +13,6 @@ apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 dependencies {
-    implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':core:graphview')
     implementation project(':core:interfaces')
@@ -21,6 +20,7 @@ dependencies {
     implementation project(':core:utils')
 
     testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':app-wear-shared:shared-impl')
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 

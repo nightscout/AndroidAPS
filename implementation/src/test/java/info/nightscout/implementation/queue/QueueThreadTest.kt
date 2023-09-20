@@ -1,14 +1,15 @@
 package info.nightscout.implementation.queue
 
+import com.google.common.truth.Truth.assertThat
 import android.content.Context
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
@@ -16,7 +17,6 @@ import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.sharedtests.TestBaseWithProfile
 import info.nightscout.sharedtests.TestPumpPlugin
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -25,7 +25,7 @@ import org.mockito.Mockito
 
 class QueueThreadTest : TestBaseWithProfile() {
 
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var androidPermission: AndroidPermission
@@ -64,14 +64,14 @@ class QueueThreadTest : TestBaseWithProfile() {
         Mockito.`when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
         Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
 
-        val bolusConstraint = Constraint(0.0)
+        val bolusConstraint = ConstraintObject(0.0, aapsLogger)
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(bolusConstraint)
         Mockito.`when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(bolusConstraint)
-        val carbsConstraint = Constraint(0)
+        val carbsConstraint = ConstraintObject(0, aapsLogger)
         Mockito.`when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(carbsConstraint)
-        val rateConstraint = Constraint(0.0)
+        val rateConstraint = ConstraintObject(0.0, aapsLogger)
         Mockito.`when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
-        val percentageConstraint = Constraint(0)
+        val percentageConstraint = ConstraintObject(0, aapsLogger)
         Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
             .thenReturn(percentageConstraint)
         Mockito.`when`(rh.gs(ArgumentMatchers.eq(info.nightscout.core.ui.R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
@@ -84,6 +84,6 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue.tempBasalAbsolute(2.0, 60, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         @Suppress("CallToThreadRun")
         sut.run()
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
     }
 }

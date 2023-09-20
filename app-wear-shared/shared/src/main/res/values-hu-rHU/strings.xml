@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!--    DateUtil-->
-    <string name="shortminute">p</string>
-    <string name="shortday">n</string>
-    <!-- Rx -->
-    <string name="connected">Kapcsolódva</string>
-    <!-- Custom Watchface -->
-</resources>

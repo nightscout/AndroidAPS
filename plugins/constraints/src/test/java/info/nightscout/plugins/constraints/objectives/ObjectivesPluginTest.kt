@@ -2,8 +2,8 @@ package info.nightscout.plugins.constraints.objectives
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.constraints.R
@@ -49,34 +49,30 @@ class ObjectivesPluginTest : TestBase() {
 
     @Test fun notStartedObjectivesShouldLimitLoopInvocation() {
         objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].startedOn = 0
-        var c = Constraint(true)
-        c = objectivesPlugin.isLoopInvocationAllowed(c)
-        Assertions.assertEquals("Objectives: Objective 1 not started", c.getReasons(aapsLogger))
+        val c = objectivesPlugin.isLoopInvocationAllowed(ConstraintObject(true, aapsLogger))
+        Assertions.assertEquals("Objectives: Objective 1 not started", c.getReasons())
         Assertions.assertEquals(false, c.value())
         objectivesPlugin.objectives[Objectives.FIRST_OBJECTIVE].startedOn = dateUtil.now()
     }
 
     @Test fun notStartedObjective6ShouldLimitClosedLoop() {
         objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
-        var c = Constraint(true)
-        c = objectivesPlugin.isClosedLoopAllowed(c)
-        Assertions.assertEquals(true, c.getReasons(aapsLogger).contains("Objective 6 not started"))
+        val c = objectivesPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
+        Assertions.assertEquals(true, c.getReasons().contains("Objective 6 not started"))
         Assertions.assertEquals(false, c.value())
     }
 
     @Test fun notStartedObjective8ShouldLimitAutosensMode() {
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
-        var c = Constraint(true)
-        c = objectivesPlugin.isAutosensModeEnabled(c)
-        Assertions.assertEquals(true, c.getReasons(aapsLogger).contains("Objective 8 not started"))
+        val c = objectivesPlugin.isAutosensModeEnabled(ConstraintObject(true, aapsLogger))
+        Assertions.assertEquals(true, c.getReasons().contains("Objective 8 not started"))
         Assertions.assertEquals(false, c.value())
     }
 
     @Test fun notStartedObjective10ShouldLimitSMBMode() {
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
-        var c = Constraint(true)
-        c = objectivesPlugin.isSMBModeEnabled(c)
-        Assertions.assertEquals(true, c.getReasons(aapsLogger).contains("Objective 9 not started"))
+        val c = objectivesPlugin.isSMBModeEnabled(ConstraintObject(true, aapsLogger))
+        Assertions.assertEquals(true, c.getReasons().contains("Objective 9 not started"))
         Assertions.assertEquals(false, c.value())
     }
 }

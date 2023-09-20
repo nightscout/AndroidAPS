@@ -8,7 +8,6 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
-import info.nightscout.plugins.sync.di.OpenHumansModule
 import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
@@ -24,6 +23,7 @@ import info.nightscout.insulin.di.InsulinModule
 import info.nightscout.plugins.aps.di.ApsModule
 import info.nightscout.plugins.constraints.di.PluginsConstraintsModule
 import info.nightscout.plugins.di.PluginsModule
+import info.nightscout.plugins.sync.di.OpenHumansModule
 import info.nightscout.plugins.sync.di.SyncModule
 import info.nightscout.pump.combo.di.ComboModule
 import info.nightscout.pump.combov2.di.ComboV2Module
@@ -31,11 +31,9 @@ import info.nightscout.pump.common.di.PumpCommonModule
 import info.nightscout.pump.dana.di.DanaHistoryModule
 import info.nightscout.pump.dana.di.DanaModule
 import info.nightscout.pump.danars.di.DanaRSModule
-import info.nightscout.pump.medtrum.di.MedtrumModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
+import info.nightscout.pump.medtrum.di.MedtrumModule
 import info.nightscout.pump.virtual.di.VirtualPumpModule
-import info.nightscout.rx.di.RxModule
-import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
 import info.nightscout.source.di.SourceModule
 import info.nightscout.ui.di.UiModule
@@ -62,8 +60,6 @@ import javax.inject.Singleton
         InsulinModule::class,
         OpenHumansModule::class,
         PluginsModule::class,
-        RxModule::class,
-        SharedModule::class,
         SharedImplModule::class,
         UiModule::class,
         ValidatorsModule::class,

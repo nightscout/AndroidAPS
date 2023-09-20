@@ -12,13 +12,14 @@ import android.view.ViewGroup
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.pump.toHtml
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.databinding.LoopFragmentBinding
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
@@ -44,6 +45,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var loop: Loop
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var injector: HasAndroidInjector
 
     @Suppress("PrivatePropertyName")
     private val ID_MENU_RUN = 501
@@ -150,12 +152,12 @@ class LoopFragment : DaggerFragment(), MenuProvider {
 
             var constraints =
                 it.constraintsProcessed?.let { constraintsProcessed ->
-                    val allConstraints = Constraint(0.0)
+                    val allConstraints = ConstraintObject(0.0, aapsLogger)
                     constraintsProcessed.rateConstraint?.let { rateConstraint -> allConstraints.copyReasons(rateConstraint) }
                     constraintsProcessed.smbConstraint?.let { smbConstraint -> allConstraints.copyReasons(smbConstraint) }
-                    allConstraints.getMostLimitedReasons(aapsLogger)
+                    allConstraints.getMostLimitedReasons()
                 } ?: ""
-            constraints += loop.closedLoopEnabled?.getReasons(aapsLogger) ?: ""
+            constraints += loop.closedLoopEnabled?.getReasons() ?: ""
             binding.constraints.text = constraints
             binding.swipeRefresh.isRefreshing = false
         }

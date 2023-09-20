@@ -9,14 +9,14 @@ enum class PumpDriverState(var resourceId: Int) {
 
     NotInitialized(R.string.pump_status_not_initialized), // this state should be set only when driver is created
     Connecting(info.nightscout.core.ui.R.string.connecting), //
-    Connected(info.nightscout.shared.R.string.connected), //
+    Connected(info.nightscout.interfaces.R.string.connected), //
     Initialized(R.string.pump_status_initialized), // this is weird state that probably won't be used, since its more driver centric that communication centric
     EncryptCommunication(R.string.pump_status_encrypt), //
     Ready(R.string.pump_status_ready),
     Busy(R.string.pump_status_busy), //
     Suspended(R.string.pump_status_suspended), //
     ExecutingCommand(R.string.pump_status_executing_command),
-    Disconnecting(info.nightscout.shared.R.string.disconnecting),
+    Disconnecting(info.nightscout.interfaces.R.string.disconnecting),
     Disconnected(info.nightscout.core.ui.R.string.disconnected);
 
     fun isConnected(): Boolean = this == Connected || this == Initialized || this == Busy || this == Suspended

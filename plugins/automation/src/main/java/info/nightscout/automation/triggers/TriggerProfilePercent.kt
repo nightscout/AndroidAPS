@@ -10,7 +10,7 @@ import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 
@@ -86,7 +86,7 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.percentagecompared, rh.gs(comparator.value.stringRes), pct.value.toInt())
 
-    override fun icon(): Optional<Int> = Optional.of(info.nightscout.interfaces.R.drawable.ic_actions_profileswitch)
+    override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.ui.R.drawable.ic_actions_profileswitch)
 
     override fun duplicate(): Trigger = TriggerProfilePercent(injector, this)
 

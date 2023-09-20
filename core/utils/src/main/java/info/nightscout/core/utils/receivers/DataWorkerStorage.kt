@@ -2,11 +2,11 @@ package info.nightscout.core.utils.receivers
 
 import android.content.Context
 import android.os.Bundle
+import androidx.annotation.OpenForTesting
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import info.nightscout.annotations.OpenForTesting
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject

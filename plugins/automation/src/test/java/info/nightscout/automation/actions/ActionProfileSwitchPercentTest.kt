@@ -34,7 +34,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(info.nightscout.interfaces.R.drawable.ic_actions_profileswitch, sut.icon())
+        Assertions.assertEquals(info.nightscout.core.ui.R.drawable.ic_actions_profileswitch, sut.icon())
     }
 
     @Test fun doActionTest() {

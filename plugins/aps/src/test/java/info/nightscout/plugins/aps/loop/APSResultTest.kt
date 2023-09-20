@@ -2,12 +2,14 @@ package info.nightscout.plugins.aps.loop
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
+import info.nightscout.core.utils.JsonHelper.safeGetDouble
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
+import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -18,11 +20,11 @@ import org.mockito.Mockito.`when`
 
 class APSResultTest : TestBaseWithProfile() {
 
-    @Mock lateinit var constraints: Constraints
+    @Mock lateinit var constraintsChecker: ConstraintsChecker
 
     private val injector = HasAndroidInjector { AndroidInjector { } }
 
-    private var closedLoopEnabled = Constraint(false)
+    private lateinit var closedLoopEnabled: Constraint<Boolean>
 
     private fun APSResult.percent(percent: Int): APSResult {
         this.percent = percent
@@ -52,10 +54,10 @@ class APSResultTest : TestBaseWithProfile() {
     @Test
     fun changeRequestedTest() {
 
-        val apsResult = info.nightscout.plugins.aps.APSResultObject { AndroidInjector { } }
+        val apsResult = APSResultObject { AndroidInjector { } }
             .also {
                 it.aapsLogger = aapsLogger
-                it.constraintChecker = constraints
+                it.constraintChecker = constraintsChecker
                 it.sp = sp
                 it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator
@@ -70,7 +72,7 @@ class APSResultTest : TestBaseWithProfile() {
         apsResult.usePercent(true)
 
         // closed loop mode return original request
-        closedLoopEnabled.set(aapsLogger, true)
+        closedLoopEnabled.set(true)
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(false)
         Assertions.assertEquals(false, apsResult.isChangeRequested)
@@ -78,7 +80,7 @@ class APSResultTest : TestBaseWithProfile() {
         Assertions.assertEquals(true, apsResult.isChangeRequested)
 
         // open loop
-        closedLoopEnabled.set(aapsLogger, false)
+        closedLoopEnabled.set(false)
         // no change requested
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(false)
@@ -184,7 +186,7 @@ class APSResultTest : TestBaseWithProfile() {
         apsResult.usePercent(false)
 
         // open loop
-        closedLoopEnabled.set(aapsLogger, false)
+        closedLoopEnabled.set(false)
         // request 100% when no temp is running
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(true).rate(1.0).duration(30)
@@ -293,10 +295,10 @@ class APSResultTest : TestBaseWithProfile() {
     }
 
     @Test fun cloneTest() {
-        val apsResult = info.nightscout.plugins.aps.APSResultObject { AndroidInjector { } }
+        val apsResult = APSResultObject(injector)
             .also {
                 it.aapsLogger = aapsLogger
-                it.constraintChecker = constraints
+                it.constraintChecker = constraintsChecker
                 it.sp = sp
                 it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator
@@ -309,11 +311,11 @@ class APSResultTest : TestBaseWithProfile() {
     }
 
     @Test fun jsonTest() {
-        closedLoopEnabled.set(aapsLogger, true)
-        val apsResult = info.nightscout.plugins.aps.APSResultObject { AndroidInjector { } }
+        closedLoopEnabled.set(true)
+        val apsResult = APSResultObject(injector)
             .also {
                 it.aapsLogger = aapsLogger
-                it.constraintChecker = constraints
+                it.constraintChecker = constraintsChecker
                 it.sp = sp
                 it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator
@@ -328,7 +330,8 @@ class APSResultTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        `when`(constraints.isClosedLoopAllowed(anyObject())).thenReturn(closedLoopEnabled)
+        closedLoopEnabled = ConstraintObject(false, aapsLogger)
+        `when`(constraintsChecker.isClosedLoopAllowed()).thenReturn(closedLoopEnabled)
         `when`(sp.getDouble(ArgumentMatchers.anyInt(), ArgumentMatchers.anyDouble())).thenReturn(30.0)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
     }

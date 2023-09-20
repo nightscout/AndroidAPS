@@ -63,7 +63,7 @@
     <string name="enable_smb_with_temp_target">Habilitar SMB amb objectius temporals</string>
     <string name="enable_smb_with_temp_target_summary">Habilitar SMB quan hi ha un objectiu temporal actiu (menjar aviat, esport)</string>
     <string name="enable_smb_with_high_temp_target">Habilitar SMB amb objectius temporals alts</string>
-    <string name="enable_smb_with_high_temp_target_summary">Habilitar SMB quan un objectiu temporal alt està actiu (esport, > 100mg/dl o 5,5 mmol/l)</string>
+    <string name="enable_smb_with_high_temp_target_summary">Habilitar SMB quan un objectiu temporal alt està actiu (esport, &gt; 100mg/dl o 5,5 mmol/l)</string>
     <string name="smb_max_minutes_summary">Max. minuts de basal als quals limitar SMB</string>
     <string name="uam_smb_max_minutes">Max. minuts d\'UAM SMB</string>
     <string name="uam_smb_max_minutes_summary">Max. minuts de basal als quals limitar SMB per UAM</string>

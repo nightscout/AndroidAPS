@@ -9,7 +9,7 @@ import java.text.DecimalFormat
 class InputDuration(
     var value: Int = 0,
     var unit: TimeUnit = TimeUnit.MINUTES,
-) : Element() {
+) : Element {
 
     enum class TimeUnit {
         MINUTES, HOURS, DAYS

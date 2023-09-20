@@ -9,9 +9,11 @@ import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.annotations.OpenForTesting
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.EffectiveProfileSwitch
@@ -41,8 +43,7 @@ import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.implementation.queue.commands.CommandUpdateTime
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -58,7 +59,6 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
@@ -85,7 +85,7 @@ class CommandQueueImplementation @Inject constructor(
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val rh: ResourceHelper,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val context: Context,
@@ -310,8 +310,8 @@ class CommandQueueImplementation @Inject constructor(
             removeAll(type)
         }
         // apply constraints
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
-        detailedBolusInfo.carbs = constraintChecker.applyCarbsConstraints(Constraint(detailedBolusInfo.carbs.toInt())).value().toDouble()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
+        detailedBolusInfo.carbs = constraintChecker.applyCarbsConstraints(ConstraintObject(detailedBolusInfo.carbs.toInt(), aapsLogger)).value().toDouble()
         // add new command to queue
         if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) {
             add(CommandSMBBolus(injector, detailedBolusInfo, callback))
@@ -368,7 +368,7 @@ class CommandQueueImplementation @Inject constructor(
         }
         // remove all unfinished
         removeAll(CommandType.TEMPBASAL)
-        val rateAfterConstraints = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
+        val rateAfterConstraints = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         // add new command to queue
         add(CommandTempBasalAbsolute(injector, rateAfterConstraints, durationInMinutes, enforceNew, profile, tbrType, callback))
         notifyAboutNewCommand()
@@ -383,7 +383,7 @@ class CommandQueueImplementation @Inject constructor(
         }
         // remove all unfinished
         removeAll(CommandType.TEMPBASAL)
-        val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(Constraint(percent), profile).value()
+        val percentAfterConstraints = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
         // add new command to queue
         add(CommandTempBasalPercent(injector, percentAfterConstraints, durationInMinutes, enforceNew, profile, tbrType, callback))
         notifyAboutNewCommand()
@@ -396,7 +396,7 @@ class CommandQueueImplementation @Inject constructor(
             callback?.result(executingNowError())?.run()
             return false
         }
-        val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
+        val rateAfterConstraints = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // remove all unfinished
         removeAll(CommandType.EXTENDEDBOLUS)
         // add new command to queue

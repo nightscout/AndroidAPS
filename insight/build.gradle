@@ -30,7 +30,6 @@ dependencies {
     implementation project(':core:main')
     implementation project(':core:utils')
     implementation project(':core:ui')
-    implementation project(':app-wear-shared:shared')
     implementation project(':pump:pump-common')
 
     api "androidx.room:room-ktx:$room_version"

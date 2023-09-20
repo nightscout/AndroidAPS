@@ -18,10 +18,12 @@ import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.wizard.BolusWizard
@@ -29,15 +31,13 @@ import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -65,7 +65,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
@@ -364,7 +364,7 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun valueToUnitsToString(value: Double, units: String): String =
-        if (units == Constants.MGDL) decimalFormatter.to0Decimal(value)
+        if (units == GlucoseUnit.MGDL.asText) decimalFormatter.to0Decimal(value)
         else decimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
     private fun initDialog() {
@@ -407,7 +407,7 @@ class WizardDialog : DaggerDialogFragment() {
 
             binding.ttCheckbox.isEnabled = tempTarget is ValueWrapper.Existing
             binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
-            binding.iobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, -bolusIob.iob - basalIob.basaliob)
+            binding.iobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, -bolusIob.iob - basalIob.basaliob)
 
             calculateInsulin()
         }
@@ -444,7 +444,7 @@ class WizardDialog : DaggerDialogFragment() {
                 SafeParse.stringToDouble(binding.correctionInput.text)
         } else
             sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
-        val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
+        val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
             ToastUtils.warnToast(ctx, R.string.carbs_constraint_applied)
@@ -482,18 +482,18 @@ class WizardDialog : DaggerDialogFragment() {
 
         wizard?.let { wizard ->
             binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(profileUtil.convertToMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
-            binding.bgInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromBG)
+            binding.bgInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromBG)
 
             binding.carbs.text = rh.gs(R.string.format_carbs_ic, carbs.toDouble(), wizard.ic)
-            binding.carbsInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromCarbs)
+            binding.carbsInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCarbs)
 
-            binding.iobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
+            binding.iobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
 
-            binding.correctionInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromCorrection)
+            binding.correctionInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCorrection)
 
             // Superbolus
             binding.sb.text = if (binding.sbCheckbox.isChecked) rh.gs(R.string.two_hours) else ""
-            binding.sbInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromSuperBolus)
+            binding.sbInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromSuperBolus)
 
             // Trend
             if (binding.bgTrendCheckbox.isChecked && wizard.glucoseStatus != null) {
@@ -503,21 +503,25 @@ class WizardDialog : DaggerDialogFragment() {
             } else {
                 binding.bgTrend.text = ""
             }
-            binding.bgTrendInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromTrend)
+            binding.bgTrendInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromTrend)
 
             // COB
             if (binding.cobCheckbox.isChecked) {
                 binding.cob.text = rh.gs(R.string.format_cob_ic, cob, wizard.ic)
-                binding.cobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromCOB)
+                binding.cobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCOB)
             } else {
                 binding.cob.text = ""
                 binding.cobInsulin.text = ""
             }
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin).formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(context, rh, info.nightscout.core.ui.R.attr
-                    .carbsColor) else ""
+                val insulinText =
+                    if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
+                        .formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
+                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(
+                    context, rh, info.nightscout.core.ui.R.attr
+                        .carbsColor
+                ) else ""
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))
                 binding.okcancel.ok.visibility = View.VISIBLE
             } else {

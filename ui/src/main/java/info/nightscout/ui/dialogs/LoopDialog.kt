@@ -10,7 +10,9 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
+import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -20,11 +22,10 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
-import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.ApsMode
+import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -64,7 +65,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loop: Loop
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var uel: UserEntryLogger
@@ -72,6 +73,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var injector: HasAndroidInjector
 
     private var queryingProtection = false
     private var showOkCancel: Boolean = true
@@ -152,16 +154,14 @@ class LoopDialog : DaggerDialogFragment() {
         disposable.clear()
     }
 
-    var task: Runnable? = null
-
     @Synchronized
     fun updateGUI(from: String) {
         if (_binding == null) return
         aapsLogger.debug("UpdateGUI from $from")
         val pumpDescription: PumpDescription = activePlugin.activePump.pumpDescription
-        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
+        val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
-        val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
+        val lgsEnabled = constraintChecker.isLgsAllowed(ConstraintObject(true, aapsLogger))
         val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
         val pump = activePlugin.activePump
 
@@ -189,7 +189,7 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewReconnect.visibility = View.VISIBLE
             }
 
-            !(loop as PluginBase).isEnabled()                      -> {
+            !loop.isEnabled()                                      -> {
                 binding.overviewLoop.visibility = View.VISIBLE
                 binding.overviewEnable.visibility = View.VISIBLE
                 binding.overviewDisable.visibility = View.GONE
@@ -279,7 +279,7 @@ class LoopDialog : DaggerDialogFragment() {
         return true
     }
 
-    fun onClick(v: View): Boolean {
+    private fun onClick(v: View): Boolean {
         when (v.id) {
             R.id.overview_closeloop                       -> {
                 uel.log(UserEntry.Action.CLOSED_LOOP_MODE, UserEntry.Sources.LoopDialog)

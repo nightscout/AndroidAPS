@@ -51,4 +51,19 @@ enum class BasalType {
     fun isSuspendedByPump(): Boolean {
         return this in SUSPEND_LOW_GLUCOSE..STOP
     }
+
+    companion object {
+
+        fun fromBasalEndReason(endReason: BasalEndReason): BasalType {
+            return when (endReason) {
+                BasalEndReason.SUSPEND_LOW_GLUCOSE            -> SUSPEND_LOW_GLUCOSE
+                BasalEndReason.SUSPEND_PREDICT_LOW_GLUCOSE    -> SUSPEND_PREDICT_LOW_GLUCOSE
+                BasalEndReason.SUSPEND_AUTO                   -> SUSPEND_AUTO
+                BasalEndReason.SUSPEND_MORE_THAN_MAX_PER_HOUR -> SUSPEND_MORE_THAN_MAX_PER_HOUR
+                BasalEndReason.SUSPEND_MORE_THAN_MAX_PER_DAY  -> SUSPEND_MORE_THAN_MAX_PER_DAY
+                BasalEndReason.SUSPEND_MANUAL                 -> SUSPEND_MANUAL
+                else                                          -> NONE
+            }
+        }
+    }
 }

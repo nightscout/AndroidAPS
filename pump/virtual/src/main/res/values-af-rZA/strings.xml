@@ -3,4 +3,6 @@
     <!-- VirtualPump -->
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
     <string name="virtualpump_settings">Virtuele pomp instellings</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Slegs diskrete waardes geen reekse word ondersteun as granulariteit vir basale/bolus in virtuele pomp.</string>
 </resources>

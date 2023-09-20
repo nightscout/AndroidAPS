@@ -1,9 +1,9 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.nsclient.data.NSMbg
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -22,7 +22,7 @@ fun therapyEventFromNsMbg(mbg: NSMbg) =
     )
 
 fun TherapyEvent.Companion.fromJson(jsonObject: JSONObject): TherapyEvent? {
-    val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL) == Constants.MGDL) TherapyEvent.GlucoseUnit.MGDL else TherapyEvent.GlucoseUnit.MMOL
+    val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) TherapyEvent.GlucoseUnit.MGDL else TherapyEvent.GlucoseUnit.MMOL
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val type = TherapyEvent.Type.fromString(JsonHelper.safeGetString(jsonObject, "eventType", TherapyEvent.Type.NONE.text))
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
@@ -57,7 +57,7 @@ fun TherapyEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("isValid", isValid)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", enteredBy)
-        .put("units", if (glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) Constants.MGDL else Constants.MMOL)
+        .put("units", if (glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
         .also {
             if (duration != 0L) it.put("duration", T.msecs(duration).mins())
             if (duration != 0L) it.put("durationInMilliseconds", duration)

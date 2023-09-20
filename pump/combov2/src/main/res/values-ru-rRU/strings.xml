@@ -47,6 +47,7 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Тайм-аут сканирования Combo</string>
     <string name="combov2_pairing_failed_due_to_error">Сопряжение не состоялось из-за ошибки: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Сопряжение прервано по неизвестной причине</string>
+    <string name="combov2_pairing_invalid_pin_length">"Недопустимая длина PIN-кода соединения: надо %1$d цифр, указано %2$d"</string>
     <string name="combov2_scanning_for_pump">Поиск помпы</string>
     <string name="combov2_establishing_bt_connection">Установка Bluetooth-соединения (попытка № %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Cинхронизация связи с помпой</string>
@@ -125,4 +126,6 @@
     <string name="combov2_refresh_pump_status_after_error">Обновление статуса помпы после сообщения об ошибке</string>
     <string name="combov2_go_back">Назад</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Невозможно выполнить сопряжение, т. к. драйвер не инициализирован. Обычно это происходит, потому что не были предоставлены необходимые разрешения Bluetooth. Вернитесь назад, предоставьте разрешения Bluetooth, а затем попробуйте еще раз.</string>
+    <string name="combov2_bluetooth_disabled">Невозможно запустить драйвер - Bluetooth отключен</string>
+    <string name="combov2_bluetooth_not_supported">Драйвер не может запуститься - это устройство не поддерживает Bluetooth</string>
 </resources>

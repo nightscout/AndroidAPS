@@ -580,4 +580,21 @@
     <string name="cleanup_db_confirm">Искате ли да изтриете базата данни\nТова ще премахне проследените промени и историята на данните, по-стари от 3 месеца.</string>
     <string name="cleanup_db_confirm_sync">Искате ли да изтриете базата данни?\nТова ще премахне проследените промени и историята на данните, по-стари от 3 месеца.\nИзвършването му ще ускори драстично пълната синхронизация.</string>
     <string name="cleared_entries">Изчистени записи</string>
+    <!--    Weekday-->
+    <string name="weekday_saturday_short">Съб</string>
+    <string name="weekday_friday_short">Пет</string>
+    <string name="weekday_thursday_short">Чет</string>
+    <string name="weekday_wednesday_short">Ср</string>
+    <string name="weekday_tuesday_short">Вт</string>
+    <string name="weekday_monday_short">Пон</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">П</string>
+    <string name="tuesday_short">Вт</string>
+    <string name="wednesday_short">Ср</string>
+    <string name="thursday_short">Ч</string>
+    <string name="friday_short">П</string>
+    <string name="saturday_short">С</string>
+    <string name="sunday_short">Н</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units">%1$.2fЕ</string>
 </resources>

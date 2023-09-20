@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Ovladač pumpy pro uživatele bez podporované pumpy (Otevřená smyčka)</string>
     <string name="virtual_pump_label">VIRTUÁLNÍ PUMPA</string>
     <string name="virtualpump_settings">Nastavení virtuální pumpy</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Pouze diskrétní hodnoty a ne rozsahy jsou podporovány pro bazál/bolus ve virtuální pumpě.</string>
 </resources>

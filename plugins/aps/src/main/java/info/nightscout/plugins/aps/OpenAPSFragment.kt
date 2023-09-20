@@ -15,6 +15,7 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.aps.databinding.OpenapsFragmentBinding
 import info.nightscout.plugins.aps.events.EventOpenAPSUpdateGui
@@ -30,6 +31,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
+import org.json.JSONObject
 import javax.inject.Inject
 
 class OpenAPSFragment : DaggerFragment(), MenuProvider {
@@ -64,7 +66,11 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.swipeRefresh.setColorSchemeColors(rh.gac(context, android.R.attr.colorPrimaryDark), rh.gac(context, android.R.attr.colorPrimary), rh.gac(context,com.google.android.material.R.attr.colorSecondary))
+        binding.swipeRefresh.setColorSchemeColors(
+            rh.gac(context, android.R.attr.colorPrimaryDark),
+            rh.gac(context, android.R.attr.colorPrimary),
+            rh.gac(context, com.google.android.material.R.attr.colorSecondary)
+        )
         binding.swipeRefresh.setOnRefreshListener {
             binding.lastrun.text = rh.gs(R.string.executing)
             handler.post { activePlugin.activeAPS.invoke("OpenAPS swipe refresh", false) }
@@ -144,7 +150,7 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
             binding.mealdata.text = jsonFormatter.format(determineBasalAdapter.mealDataParam)
             binding.scriptdebugdata.text = determineBasalAdapter.scriptDebug.replace("\\s+".toRegex(), " ")
             openAPSPlugin.lastAPSResult?.inputConstraints?.let {
-                binding.constraints.text = it.getReasons(aapsLogger)
+                binding.constraints.text = it.getReasons()
             }
         }
         if (openAPSPlugin.lastAPSRun != 0L) {
@@ -155,6 +161,13 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
         }
         binding.swipeRefresh.isRefreshing = false
     }
+
+    private fun AutosensResult.json(): JSONObject = JSONObject()
+        .put("ratio", ratio)
+        .put("ratioLimit", ratioLimit)
+        .put("pastSensitivity", pastSensitivity)
+        .put("sensResult", sensResult)
+        .put("ratio", ratio)
 
     @Synchronized
     private fun resetGUI(text: String) {

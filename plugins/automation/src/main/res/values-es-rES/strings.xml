@@ -63,13 +63,6 @@
     <string name="time_range">Intervalo de tiempo</string>
     <string name="timerange_value">El tiempo está entre %1$s y %2$s</string>
     <string name="between">Entre </string>
-    <string name="weekday_sunday_short">Dom</string>
-    <string name="weekday_saturday_short">Sáb</string>
-    <string name="weekday_friday_short">Vie</string>
-    <string name="weekday_thursday_short">Jue</string>
-    <string name="weekday_wednesday_short">Mie</string>
-    <string name="weekday_tuesday_short">Mar</string>
-    <string name="weekday_monday_short">Lun</string>
     <string name="delete_short">ELIMINAR</string>
     <string name="add_short">AÑADIR</string>
     <string name="copy_short">COPIAR</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Ejecutar automatizaciones</string>
     <string name="add_automation">Añadir regla</string>
     <string name="stop_processing">Parar procesamiento</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">M</string>
-    <string name="tuesday_short">T</string>
-    <string name="wednesday_short">X</string>
-    <string name="thursday_short">T</string>
-    <string name="friday_short">V</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">D</string>
     <!--    Reminders-->
     <string name="time_to_eat">¡Hora de comer!\nEjecuta el asistente de bolo y calcula de nuevo.</string>
     <string name="time_to_bolus">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>

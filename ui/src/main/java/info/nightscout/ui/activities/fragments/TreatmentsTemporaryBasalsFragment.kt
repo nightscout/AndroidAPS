@@ -196,7 +196,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
             var iob = IobTotal(now)
             val profile = profileFunction.getProfile(now)
             if (profile != null) iob = tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)
-            holder.binding.iob.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, iob.basaliob)
+            holder.binding.iob.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, iob.basaliob)
             holder.binding.extendedFlag.visibility = (tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED).toVisibility()
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()

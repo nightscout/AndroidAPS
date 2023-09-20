@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus;
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
-import info.nightscout.interfaces.utils.HtmlHelper;
+import info.nightscout.core.utils.HtmlHelper;
 
 public class InsightAlertActivity extends DaggerAppCompatActivity {
 

@@ -18,10 +18,13 @@ android {
 
 dependencies {
 
-    implementation project(':app-wear-shared:shared')
+    api "com.google.dagger:dagger-android:$dagger_version"
+    api "com.google.dagger:dagger-android-support:$dagger_version"
+
+    api "net.danlew:android.joda:$joda_version"
 
     //Firebase
-    api platform('com.google.firebase:firebase-bom:32.2.3')
+    api platform('com.google.firebase:firebase-bom:32.3.1')
     api "com.google.firebase:firebase-analytics-ktx"
     api "com.google.firebase:firebase-crashlytics-ktx"
     // StatsActivity not in use now

@@ -1,21 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">Failo formatas</string>
-    <string name="metadata_label_created_at">Sukurta</string>
-    <string name="metadata_label_aaps_version">AAPS versija</string>
-    <string name="metadata_label_aaps_flavour">Versijos variantas</string>
-    <string name="metadata_label_device_name">Eksportuojamas paciento vardas</string>
-    <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
-    <string name="metadata_label_encryption">Failo šifravimas</string>
-    <string name="metadata_format_new">Naujas šifruotas formatas</string>
-    <string name="metadata_format_debug">Naujas derinimo formatas (nešifruotas)</string>
-    <string name="metadata_format_other">Nežinomas eksporto formatas</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Virtualioje pompoje palaikomos tik atskiros vertės, o ne diapazonas detalumui užtikrinti.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f vv</string>
-    <string name="format_insulin_units">%1$.2f V</string>
+    <!--    DateUtil-->
+    <string name="minago">prieš %1$d min.</string>
+    <string name="minago_long">Prieš %1$d min.</string>
+    <string name="hoursago">Prieš %1$.1f val.</string>
+    <string name="days_ago">Prieš %1$s d.</string>
+    <string name="days_ago_round">Prieš %1$.0f d.</string>
+    <string name="in_days">Po %1$.0f d.</string>
+    <string name="in_days_round">Po %1$.0f d.</string>
+    <string name="shorthour">val.</string>
+    <string name="days">d.</string>
+    <string name="hours">val.</string>
+    <string name="unit_second">sek.</string>
+    <string name="unit_minute">min.</string>
+    <string name="unit_hour">val.</string>
+    <string name="unit_day">d.</string>
+    <string name="unit_week">sav.</string>
+    <string name="unit_seconds">sekundės</string>
+    <string name="unit_minutes"> min.</string>
+    <string name="unit_hours">val.</string>
+    <string name="unit_days">d.</string>
+    <string name="unit_weeks">savaičių</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="later_today">Šiandien vėliau</string>
+    <string name="tomorrow">Rytoj</string>
+    <string name="today">Šiandien</string>
+    <string name="yesterday">Vakar</string>
+    <!-- Rx -->
+    <string name="connecting_for">Jungiamasi %1$d s</string>
+    <string name="handshaking">Ryšio užmezgimas</string>
+    <string name="connected">Prisijungta</string>
+    <string name="disconnecting">Atsijungiama</string>
+    <string name="waiting_for_disconnection">Laukiama atsijungimo</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Sukurta: %1$s</string>
+    <string name="metadata_label_watchface_author">Autorius: %1$s</string>
+    <string name="metadata_label_watchface_name">Vardas: %1$s</string>
+    <string name="metadata_wear_import_filename">Failo pavadinimas: %1$s</string>
+    <string name="metadata_label_plugin_version">Įskiepio versija: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Pavadinimas: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
+    <string name="pref_show_iob">Rodyti AIO</string>
+    <string name="pref_show_detailed_iob">Rodyti detalų AIO</string>
+    <string name="pref_show_cob">Rodyti AAO</string>
+    <string name="pref_show_delta">Rodyti pokytį</string>
+    <string name="pref_show_detailed_delta">Rodyti glikemijos pokyčius detaliai</string>
+    <string name="pref_show_avgdelta">Rodyti vidutinį pokytį</string>
+    <string name="pref_show_phone_battery">Rodyti telefono bateriją</string>
+    <string name="pref_show_rig_battery">Rodyti įrenginio bateriją</string>
+    <string name="pref_show_basal_rate">Rodyti valandinę bazę</string>
+    <string name="pref_show_loop_status">Rodyti Ciklo statusą</string>
+    <string name="pref_show_bg">Rodyti KG</string>
+    <string name="pref_show_bgi">Rodyti GĮ</string>
+    <string name="pref_show_direction_arrow">Rodyti krypties rodyklę</string>
+    <string name="pref_show_ago">Laikas nuo pask. vertės</string>
+    <string name="pref_show_week_number">Rodyti savaitės numerį</string>
+    <string name="default_custom_watchface_comment">Numatytasis ekranas. Paspaudus EKSPORTUOTI, bus sukurtas ruošinys</string>
+    <string name="wear_default_watchface">Numatytasis ekranas</string>
+    <string name="cwf_comment_background">Fono paveiksliukas</string>
+    <string name="cwf_comment_chart">Grafikai (glikemija, bazė, prognozės...)</string>
+    <string name="cwf_comment_cover_chart">Paveiksliukas už teksto ir prieš grafiką</string>
+    <string name="cwf_comment_freetext1">Laisvas tekstas 1</string>
+    <string name="cwf_comment_freetext2">Laisvas tekstas 2</string>
+    <string name="cwf_comment_freetext3">Laisvas tekstas 3</string>
+    <string name="cwf_comment_freetext4">Laisvas tekstas 4</string>
+    <string name="cwf_comment_iob1">Sudėtinis arba detalus AIO</string>
+    <string name="cwf_comment_iob2">Sudėtinis arba detalus (Boluso_AIO|Bazės_AIO) AIO</string>
+    <string name="cwf_comment_cob1">AAO žyma</string>
+    <string name="cwf_comment_cob2">AAO vertė</string>
+    <string name="cwf_comment_delta">Trumpo laikotarpio pokytis</string>
+    <string name="cwf_comment_avg_delta">Vidutinis pokytis (15 min)</string>
+    <string name="cwf_comment_uploader_battery">Telefono baterija (%)</string>
+    <string name="cwf_comment_rig_battery">Baterija (%)</string>
+    <string name="cwf_comment_basalRate">Bazė</string>
+    <string name="cwf_comment_bgi">KGI vertė</string>
+    <string name="cwf_comment_time">Laikas (val:min arba val:min:sek)</string>
+    <string name="cwf_comment_hour">Val.</string>
+    <string name="cwf_comment_minute">Min.</string>
+    <string name="cwf_comment_second">Sek.</string>
+    <string name="cwf_comment_timePeriod">AM ar PM</string>
+    <string name="cwf_comment_day_name">Savaitės diena</string>
+    <string name="cwf_comment_day">Diena (d.)</string>
+    <string name="cwf_comment_week_number">Savaitės numeris</string>
+    <string name="cwf_comment_month">Mėnuo (sutrump.)</string>
+    <string name="cwf_comment_loop">Ciklo būsena</string>
+    <string name="cwf_comment_direction">Tendencijos rodyklė</string>
+    <string name="cwf_comment_timestamp">Prieš kiek minučių nuskaityta glikemija</string>
+    <string name="cwf_comment_sgv">Glikemija</string>
+    <string name="cwf_comment_cover_plate">Paveiksliukas prieš tekstą (skambučius...)</string>
+    <string name="cwf_comment_hour_hand">Analoginio laikrodžio valandinė rodyklė</string>
+    <string name="cwf_comment_minute_hand">Analoginio laikrodžio minutinė rodyklė</string>
+    <string name="cwf_comment_second_hand">Analoginio laikrodžio sekundinė rodyklė</string>
 </resources>

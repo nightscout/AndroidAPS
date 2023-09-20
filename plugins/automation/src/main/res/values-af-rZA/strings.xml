@@ -50,13 +50,6 @@
     <string name="time_range">Tyd reeks</string>
     <string name="timerange_value">Tyd is tussen %1$s en %2$s</string>
     <string name="between">Tussen </string>
-    <string name="weekday_sunday_short">Son</string>
-    <string name="weekday_saturday_short">Sat</string>
-    <string name="weekday_friday_short">Vry</string>
-    <string name="weekday_thursday_short">Don</string>
-    <string name="weekday_wednesday_short">Woens</string>
-    <string name="weekday_tuesday_short">Dins</string>
-    <string name="weekday_monday_short">Maan</string>
     <string name="delete_short">DEL</string>
     <string name="add_short">ADD</string>
     <string name="copy_short">Kopieer</string>
@@ -86,6 +79,5 @@
     <string name="edit_short">WYSIG</string>
     <string name="triggers">Snellers:</string>
     <string name="preconditions">Vereistes:</string>
-    <!-- WeekdayPicker -->
     <!--    Reminders-->
 </resources>

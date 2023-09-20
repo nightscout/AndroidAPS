@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import info.nightscout.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
-class InputPercent() : Element() {
+class InputPercent() : Element {
 
     var value: Double = 100.0
 

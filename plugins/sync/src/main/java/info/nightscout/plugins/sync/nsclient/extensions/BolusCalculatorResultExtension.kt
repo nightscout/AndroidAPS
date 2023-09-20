@@ -2,8 +2,8 @@ package info.nightscout.plugins.sync.nsclient.extensions
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject

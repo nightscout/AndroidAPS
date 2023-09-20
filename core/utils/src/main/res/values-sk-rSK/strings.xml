@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="count_selected">%1$d vybraných</string>
-    <string name="remove_items">Odstrániť položky</string>
-    <string name="sort_items">Zoradiť položky</string>
-    <string name="remove_selected_items">Odstrániť vybrané položky</string>
-    <string name="sort_label">Zoradiť</string>
-</resources>

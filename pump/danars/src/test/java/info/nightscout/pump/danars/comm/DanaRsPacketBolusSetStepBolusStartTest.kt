@@ -2,8 +2,8 @@ package info.nightscout.pump.danars.comm
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.core.constraints.ConstraintObject
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
@@ -18,7 +18,7 @@ import org.mockito.Mockito
 
 class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
 
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
@@ -75,6 +75,6 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
                 danaHistoryDatabase,
                 decimalFormatter
             )
-        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
+        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
     }
 }

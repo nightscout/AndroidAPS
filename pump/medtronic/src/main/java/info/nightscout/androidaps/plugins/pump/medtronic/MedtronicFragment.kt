@@ -275,7 +275,7 @@ class MedtronicFragment : DaggerFragment() {
             } else if (medtronicPumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
                 if (min < 60) {
-                    binding.lastConnection.text = rh.gs(info.nightscout.shared.R.string.minago, min)
+                    binding.lastConnection.text = rh.gs(info.nightscout.interfaces.R.string.minago, min)
                 } else if (min < 1440) {
                     val h = (min / 60).toInt()
                     binding.lastConnection.text = (rh.gq(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.plurals.duration_hours, h, h) + " "

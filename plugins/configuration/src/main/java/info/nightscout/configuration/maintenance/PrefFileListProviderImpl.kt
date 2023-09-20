@@ -14,7 +14,7 @@ import info.nightscout.interfaces.maintenance.PrefMetadataMap
 import info.nightscout.interfaces.maintenance.PrefsFile
 import info.nightscout.interfaces.maintenance.PrefsImportDir
 import info.nightscout.interfaces.maintenance.PrefsMetadataKey
-import info.nightscout.interfaces.maintenance.PrefsStatus
+import info.nightscout.interfaces.maintenance.PrefsStatusImpl
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.rx.bus.RxBus
@@ -89,8 +89,8 @@ class PrefFileListProviderImpl @Inject constructor(
         // we sort only if we have metadata to be used for that
         if (loadMetadata) {
             prefFiles.sortWith(
-                compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.status }
-                    .thenByDescending { it.metadata[PrefsMetadataKey.CREATED_AT]?.value }
+                compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status as PrefsStatusImpl }
+                    .thenByDescending { it.metadata[PrefsMetadataKeyImpl.CREATED_AT]?.value }
             )
         }
 
@@ -169,29 +169,29 @@ class PrefFileListProviderImpl @Inject constructor(
 
     override fun newCwfFile(filename: String, withDate: Boolean): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return if (withDate) File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CWF_EXTENTION}") else File(exportsPath,"${filename}${ZipWatchfaceFormat.CWF_EXTENTION}")
+        return if (withDate) File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CWF_EXTENTION}") else File(exportsPath, "${filename}${ZipWatchfaceFormat.CWF_EXTENTION}")
     }
 
     // check metadata for known issues, change their status and add info with explanations
     override fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata> {
         val meta = metadata.toMutableMap()
 
-        meta[PrefsMetadataKey.AAPS_FLAVOUR]?.let { flavour ->
+        meta[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.let { flavour ->
             val flavourOfPrefs = flavour.value
             if (flavour.value != config.get().FLAVOR) {
-                flavour.status = PrefsStatus.WARN
+                flavour.status = PrefsStatusImpl.WARN
                 flavour.info = rh.gs(R.string.metadata_warning_different_flavour, flavourOfPrefs, config.get().FLAVOR)
             }
         }
 
-        meta[PrefsMetadataKey.DEVICE_MODEL]?.let { model ->
+        meta[PrefsMetadataKeyImpl.DEVICE_MODEL]?.let { model ->
             if (model.value != config.get().currentDeviceModelString) {
-                model.status = PrefsStatus.WARN
+                model.status = PrefsStatusImpl.WARN
                 model.info = rh.gs(R.string.metadata_warning_different_device)
             }
         }
 
-        meta[PrefsMetadataKey.CREATED_AT]?.let { createdAt ->
+        meta[PrefsMetadataKeyImpl.CREATED_AT]?.let { createdAt ->
             try {
                 val date1 = DateTime.parse(createdAt.value)
                 val date2 = DateTime.now()
@@ -199,26 +199,26 @@ class PrefFileListProviderImpl @Inject constructor(
                 val daysOld = Days.daysBetween(date1.toLocalDate(), date2.toLocalDate()).days
 
                 if (daysOld > IMPORT_AGE_NOT_YET_OLD_DAYS) {
-                    createdAt.status = PrefsStatus.WARN
+                    createdAt.status = PrefsStatusImpl.WARN
                     createdAt.info = rh.gs(R.string.metadata_warning_old_export, daysOld.toString())
                 }
             } catch (e: Exception) {
-                createdAt.status = PrefsStatus.WARN
+                createdAt.status = PrefsStatusImpl.WARN
                 createdAt.info = rh.gs(R.string.metadata_warning_date_format)
             }
         }
 
-        meta[PrefsMetadataKey.AAPS_VERSION]?.let { version ->
+        meta[PrefsMetadataKeyImpl.AAPS_VERSION]?.let { version ->
             val currentAppVer = versionCheckerUtils.versionDigits(config.get().VERSION_NAME)
             val metadataVer = versionCheckerUtils.versionDigits(version.value)
 
             if ((currentAppVer.size >= 2) && (metadataVer.size >= 2) && (abs(currentAppVer[1] - metadataVer[1]) > 1)) {
-                version.status = PrefsStatus.WARN
+                version.status = PrefsStatusImpl.WARN
                 version.info = rh.gs(R.string.metadata_warning_different_version)
             }
 
             if ((currentAppVer.isNotEmpty()) && (metadataVer.isNotEmpty()) && (currentAppVer[0] != metadataVer[0])) {
-                version.status = PrefsStatus.WARN
+                version.status = PrefsStatusImpl.WARN
                 version.info = rh.gs(R.string.metadata_urgent_different_version)
             }
         }

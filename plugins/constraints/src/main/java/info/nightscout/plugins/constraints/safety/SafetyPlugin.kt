@@ -1,6 +1,7 @@
 package info.nightscout.plugins.constraints.safety
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.utils.extensions.putDouble
 import info.nightscout.core.utils.extensions.putInt
 import info.nightscout.core.utils.extensions.putString
@@ -10,7 +11,8 @@ import info.nightscout.core.utils.extensions.storeString
 import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.constraints.Safety
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.notifications.Notification
@@ -39,7 +41,7 @@ class SafetyPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val config: Config,
@@ -56,57 +58,57 @@ class SafetyPlugin @Inject constructor(
         .pluginName(R.string.safety)
         .preferencesId(R.xml.pref_safety),
     aapsLogger, rh, injector
-), Constraints, Safety {
+), PluginConstraints, Safety {
 
     /**
      * Constraints interface
      */
     override fun isLoopInvocationAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        if (!activePlugin.activePump.pumpDescription.isTempBasalCapable) value.set(aapsLogger, false, rh.gs(R.string.pumpisnottempbasalcapable), this)
+        if (!activePlugin.activePump.pumpDescription.isTempBasalCapable) value.set(false, rh.gs(R.string.pumpisnottempbasalcapable), this)
         return value
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val mode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
-        if (mode == ApsMode.OPEN) value.set(aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences), this)
+        if (mode == ApsMode.OPEN) value.set(false, rh.gs(R.string.closedmodedisabledinpreferences), this)
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 uiInteraction.addNotification(Notification.TOAST_ALARM, rh.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL)
             }
-            value.set(aapsLogger, false, rh.gs(R.string.closed_loop_disabled_on_dev_branch), this)
+            value.set(false, rh.gs(R.string.closed_loop_disabled_on_dev_branch), this)
         }
         val pump = activePlugin.activePump
         if (!pump.isFakingTempsByExtendedBoluses && iobCobCalculator.getExtendedBolus(dateUtil.now()) != null) {
-            value.set(aapsLogger, false, rh.gs(R.string.closed_loop_disabled_with_eb), this)
+            value.set(false, rh.gs(R.string.closed_loop_disabled_with_eb), this)
         }
         return value
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val closedLoop = constraintChecker.isClosedLoopAllowed()
-        if (!closedLoop.value()) value.set(aapsLogger, false, rh.gs(R.string.smbnotallowedinopenloopmode), this)
+        if (!closedLoop.value()) value.set(false, rh.gs(R.string.smbnotallowedinopenloopmode), this)
         return value
     }
 
     override fun isAdvancedFilteringEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val bgSource = activePlugin.activeBgSource
-        if (!bgSource.advancedFilteringSupported()) value.set(aapsLogger, false, rh.gs(R.string.smbalwaysdisabled), this)
+        if (!bgSource.advancedFilteringSupported()) value.set(false, rh.gs(R.string.smbalwaysdisabled), this)
         return value
     }
 
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        absoluteRate.setIfGreater(aapsLogger, 0.0, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, 0.0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
-        absoluteRate.setIfSmaller(aapsLogger, hardLimits.maxBasal(), rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, hardLimits.maxBasal(), rh.gs(R.string.hardlimit)), this)
+        absoluteRate.setIfGreater(0.0, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, 0.0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        absoluteRate.setIfSmaller(hardLimits.maxBasal(), rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, hardLimits.maxBasal(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
         // check for pump max
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
             val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
-            absoluteRate.setIfSmaller(aapsLogger, pumpLimit, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, pumpLimit, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+            absoluteRate.setIfSmaller(pumpLimit, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, pumpLimit, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         }
 
         // do rounding
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
-            absoluteRate.set(aapsLogger, Round.roundTo(absoluteRate.value(), pump.pumpDescription.tempAbsoluteStep))
+            absoluteRate.set(Round.roundTo(absoluteRate.value(), pump.pumpDescription.tempAbsoluteStep))
         }
         return absoluteRate
     }
@@ -119,52 +121,58 @@ class SafetyPlugin @Inject constructor(
                 currentBasal
             ) + " U/h", this
         )
-        val absoluteConstraint = Constraint(absoluteRate)
+        val absoluteConstraint = ConstraintObject(absoluteRate, aapsLogger)
         applyBasalConstraints(absoluteConstraint, profile)
         percentRate.copyReasons(absoluteConstraint)
         val pump = activePlugin.activePump
         var percentRateAfterConst = java.lang.Double.valueOf(absoluteConstraint.value() / currentBasal * 100).toInt()
-        percentRateAfterConst = if (percentRateAfterConst < 100) Round.ceilTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
-        percentRate.set(aapsLogger, percentRateAfterConst, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, percentRateAfterConst, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        percentRateAfterConst =
+            if (percentRateAfterConst < 100) Round.ceilTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble())
+                .toInt() else Round.floorTo(percentRateAfterConst.toDouble(), pump.pumpDescription.tempPercentStep.toDouble()).toInt()
+        percentRate.set(percentRateAfterConst, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, percentRateAfterConst, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.PERCENT) {
             val pumpLimit = pump.pumpDescription.pumpType.tbrSettings?.maxDose ?: 0.0
-            percentRate.setIfSmaller(aapsLogger, pumpLimit.toInt(), rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, pumpLimit, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+            percentRate.setIfSmaller(pumpLimit.toInt(), rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, pumpLimit, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         }
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfGreater(aapsLogger, 0.0, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, 0.0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        insulin.setIfGreater(0.0, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, 0.0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
         val maxBolus = sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)
-        insulin.setIfSmaller(aapsLogger, maxBolus, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
-        insulin.setIfSmaller(aapsLogger, hardLimits.maxBolus(), rh.gs(info.nightscout.core.ui.R.string.limitingbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
+        insulin.setIfSmaller(maxBolus, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
+        insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(info.nightscout.core.ui.R.string.limitingbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
         val rounded = pump.pumpDescription.pumpType.determineCorrectBolusSize(insulin.value())
-        insulin.setIfDifferent(aapsLogger, rounded, rh.gs(info.nightscout.core.ui.R.string.pumplimit), this)
+        insulin.setIfDifferent(rounded, rh.gs(info.nightscout.core.ui.R.string.pumplimit), this)
         return insulin
     }
 
     override fun applyExtendedBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfGreater(aapsLogger, 0.0, rh.gs(R.string.limitingextendedbolus, 0.0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        insulin.setIfGreater(0.0, rh.gs(R.string.limitingextendedbolus, 0.0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
         val maxBolus = sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)
-        insulin.setIfSmaller(aapsLogger, maxBolus, rh.gs(R.string.limitingextendedbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
-        insulin.setIfSmaller(aapsLogger, hardLimits.maxBolus(), rh.gs(R.string.limitingextendedbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
+        insulin.setIfSmaller(maxBolus, rh.gs(R.string.limitingextendedbolus, maxBolus, rh.gs(R.string.maxvalueinpreferences)), this)
+        insulin.setIfSmaller(hardLimits.maxBolus(), rh.gs(R.string.limitingextendedbolus, hardLimits.maxBolus(), rh.gs(R.string.hardlimit)), this)
         val pump = activePlugin.activePump
         val rounded = pump.pumpDescription.pumpType.determineCorrectExtendedBolusSize(insulin.value())
-        insulin.setIfDifferent(aapsLogger, rounded, rh.gs(info.nightscout.core.ui.R.string.pumplimit), this)
+        insulin.setIfDifferent(rounded, rh.gs(info.nightscout.core.ui.R.string.pumplimit), this)
         return insulin
     }
 
     override fun applyCarbsConstraints(carbs: Constraint<Int>): Constraint<Int> {
-        carbs.setIfGreater(aapsLogger, 0, rh.gs(R.string.limitingcarbs, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        carbs.setIfGreater(0, rh.gs(R.string.limitingcarbs, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
         val maxCarbs = sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)
-        carbs.setIfSmaller(aapsLogger, maxCarbs, rh.gs(R.string.limitingcarbs, maxCarbs, rh.gs(R.string.maxvalueinpreferences)), this)
+        carbs.setIfSmaller(maxCarbs, rh.gs(R.string.limitingcarbs, maxCarbs, rh.gs(R.string.maxvalueinpreferences)), this)
         return carbs
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
-        if (apsMode == ApsMode.LGS) maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)), this)
+        if (apsMode == ApsMode.LGS) maxIob.setIfSmaller(
+            HardLimits.MAX_IOB_LGS,
+            rh.gs(info.nightscout.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)),
+            this
+        )
         return maxIob
     }
 

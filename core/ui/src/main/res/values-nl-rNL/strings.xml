@@ -580,4 +580,23 @@
     <string name="cleanup_db_confirm">Wil je de database opschonen?\nHet zal bijgehouden wijzigingen en historische gegevens ouder dan 3 maanden verwijderen.</string>
     <string name="cleanup_db_confirm_sync">Wil je de database opschonen?\nHet zal bijgehouden wijzigingen en historische gegevens ouder dan 3 maanden verwijderen.\nDit zal de volledige synchronisatie drastisch versnellen.</string>
     <string name="cleared_entries">Invoer gewist</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Zo</string>
+    <string name="weekday_saturday_short">Za</string>
+    <string name="weekday_friday_short">Vr</string>
+    <string name="weekday_thursday_short">Do</string>
+    <string name="weekday_wednesday_short">Wo</string>
+    <string name="weekday_tuesday_short">Di</string>
+    <string name="weekday_monday_short">Ma</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">D</string>
+    <string name="wednesday_short">W</string>
+    <string name="thursday_short">D</string>
+    <string name="friday_short">V</string>
+    <string name="saturday_short">Z</string>
+    <string name="sunday_short">Z</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f E</string>
+    <string name="format_insulin_units">%1$.2f E</string>
 </resources>

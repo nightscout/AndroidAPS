@@ -586,4 +586,23 @@
     <string name="cleanup_db_confirm">Chcete vyčistiť databázu?\nOdstráni sledované zmeny a historické dáta staršie ako 3 mesiace.</string>
     <string name="cleanup_db_confirm_sync">Chcete vyčistiť databázu?\nOdstráni sledované zmeny a historické dáta staršie ako 3 mesiace.\nVýrazne to urýchli úplnú synchronizáciu.</string>
     <string name="cleared_entries">Vymazané záznamy</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Ned</string>
+    <string name="weekday_saturday_short">Sob</string>
+    <string name="weekday_friday_short">Pia</string>
+    <string name="weekday_thursday_short">Štv</string>
+    <string name="weekday_wednesday_short">Str</string>
+    <string name="weekday_tuesday_short">Uto</string>
+    <string name="weekday_monday_short">Pon</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Po</string>
+    <string name="tuesday_short">Ut</string>
+    <string name="wednesday_short">St</string>
+    <string name="thursday_short">Št</string>
+    <string name="friday_short">Pi</string>
+    <string name="saturday_short">So</string>
+    <string name="sunday_short">Ne</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f JI</string>
+    <string name="format_insulin_units">%1$.2f JI</string>
 </resources>

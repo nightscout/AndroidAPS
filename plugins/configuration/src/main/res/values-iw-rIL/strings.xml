@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">בחירת פני שעון מותאמים אישית</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי)!</string>
+    <!-- Maintenance -->
 </resources>

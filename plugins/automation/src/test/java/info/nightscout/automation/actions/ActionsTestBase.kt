@@ -3,30 +3,24 @@ package info.nightscout.automation.actions
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.triggers.Trigger
-import info.nightscout.database.entities.DeviceStatus
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileSource
-import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
@@ -46,7 +40,7 @@ ActionsTestBase : TestBaseWithProfile() {
 
         private var suspended = false
         override var lastRun: Loop.LastRun? = Loop.LastRun()
-        override var closedLoopEnabled: Constraint<Boolean>? = Constraint(true)
+        override var closedLoopEnabled: Constraint<Boolean>? = ConstraintObject(false, aapsLogger)
         override val isSuspended: Boolean = suspended
         override val isLGS: Boolean = false
         override val isSuperBolus: Boolean = false
@@ -62,16 +56,7 @@ ActionsTestBase : TestBaseWithProfile() {
         override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {}
         override fun suspendLoop(durationInMinutes: Int) {}
         override fun disableCarbSuggestions(durationMinutes: Int) {}
-        override fun buildDeviceStatus(
-            dateUtil: DateUtil,
-            loop: Loop,
-            iobCobCalculatorPlugin: IobCobCalculator,
-            profileFunction: ProfileFunction,
-            pump: Pump,
-            receiverStatusStore: ReceiverStatusStore,
-            runningConfiguration: RunningConfiguration,
-            version: String
-        ): DeviceStatus? = null
+        override fun buildAndStoreDeviceStatus() {}
 
         override fun setPluginEnabled(type: PluginType, newState: Boolean) {}
     }

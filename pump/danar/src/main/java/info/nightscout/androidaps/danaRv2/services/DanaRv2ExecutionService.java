@@ -405,7 +405,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingbolusstatus)));
                 mSerialIOThread.sendMessage(new MsgStatus(injector));
                 bolusingEvent.setPercent(100);
-                rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.shared.R.string.disconnecting)));
+                rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.interfaces.R.string.disconnecting)));
             }
         });
         return !start.getFailed();

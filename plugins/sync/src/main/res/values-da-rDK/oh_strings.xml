@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans giver dig mulighed for at uploade dine diabetes data og donere det til videnskabelige projekter.</string>
     <string name="logout">Log af</string>
     <string name="setup">Opsætning</string>
@@ -37,6 +39,8 @@
     <string name="algorithm_debug_data">Algoritme Fejlretningsdata</string>
     <string name="data_not_uploaded">Data IKKE uploadet</string>
     <string name="passwords">Kodeord</string>
+    <string name="nightscout_url">Nightscout URL</string>
+    <string name="nightscout_api_secret">Nightscout API Secret</string>
     <string name="free_text_fields">Fritekstfelt</string>
     <string name="agree">Jeg forstår og er enig.</string>
     <string name="login_open_humans">Login på Open Humans</string>

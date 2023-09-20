@@ -56,6 +56,7 @@ import info.nightscout.database.impl.transactions.UpdateNsIdTherapyEventTransact
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.StoreDataForDb
@@ -314,8 +315,8 @@ class StoreDataForDbImpl @Inject constructor(
                                 note = "",
                                 values = listOf(
                                     ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                    ValueWithUnit.fromGlucoseUnit(tt.lowTarget, Constants.MGDL),
-                                    ValueWithUnit.fromGlucoseUnit(tt.highTarget, Constants.MGDL).takeIf { tt.lowTarget != tt.highTarget },
+                                    ValueWithUnit.fromGlucoseUnit(tt.lowTarget, GlucoseUnit.MGDL.asText),
+                                    ValueWithUnit.fromGlucoseUnit(tt.highTarget, GlucoseUnit.MGDL.asText).takeIf { tt.lowTarget != tt.highTarget },
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                 )
                             )

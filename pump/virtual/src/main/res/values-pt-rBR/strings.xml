@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="virtual_pump_label">BOMBA VIRTUAL</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
 </resources>

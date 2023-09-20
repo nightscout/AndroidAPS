@@ -23,16 +23,25 @@
     <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
     <string name="pref_units_for_actions">Единицы для начала действий</string>
+    <string name="units_short">ед</string>
+    <string name="pref_display_settings">Экран</string>
+    <string name="pref_graph_settings">График</string>
+    <string name="pref_interface_settings">Интерфейс</string>
+    <string name="pref_others_settings">Другое</string>
+    <string name="pref_complication_settings">Дополнения</string>
     <string name="pref_show_date">Показать дату</string>
     <string name="pref_show_iob">Показать акт инс IOB</string>
+    <string name="pref_show_detailed_iob">Отображать IOB подробно</string>
     <string name="pref_show_cob">Показать акт угл COB</string>
     <string name="pref_show_delta">Показывать дельту</string>
+    <string name="pref_show_detailed_delta">Отображать дельту подробно</string>
     <string name="pref_show_avgdelta">Показывать среднюю дельту</string>
     <string name="pref_show_phone_battery">Показывать заряд батареи телефона</string>
     <string name="pref_show_rig_battery">Показывать заряд батареи системы</string>
     <string name="pref_show_basal_rate">Показать базальную скорость</string>
     <string name="pref_show_loop_status">Показывать состояние цикла</string>
     <string name="pref_show_bg">Показывать ГК</string>
+    <string name="pref_show_bgi">Отображать ГКИ (BGI)</string>
     <string name="pref_show_direction_arrow">Показывать стрелку тренда</string>
     <string name="pref_show_ago">Показывать ретро события</string>
     <string name="pref_dark" comment="Enables dark visual theme">Тёмная</string>

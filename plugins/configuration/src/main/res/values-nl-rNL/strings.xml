@@ -156,4 +156,15 @@
     <string name="wear_import_custom_watchface_title">Selecteer aangepaste watchface</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen a. u. b. \nanders zal AndroidAPS geen log mogelijkheid hebben (Dit is belangrijk om te controleren of de algoritmes correct werken)!</string>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Bestandsformaat</string>
+    <string name="metadata_label_created_at">Gemaakt op</string>
+    <string name="metadata_label_aaps_version">AAPS versie</string>
+    <string name="metadata_label_aaps_flavour">Build variant</string>
+    <string name="metadata_label_device_name">Patiëntnaam van exporterend apparaat</string>
+    <string name="metadata_label_device_model">Modelnaam/nr van exporterend apparaat</string>
+    <string name="metadata_label_encryption">Bestandsversleuteling</string>
+    <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
+    <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
+    <string name="metadata_format_other">Onbekende export indeling</string>
 </resources>

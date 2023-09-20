@@ -390,7 +390,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             // prepare task for execution in 1 sec
             scheduledEvent?.let {
                 // set reload bg data if was not set
-                if (!event.reloadBgData) event.reloadBgData = it.reloadBgData
+                event.reloadBgData = event.reloadBgData || it.reloadBgData
             }
             scheduledEvent = event
             scheduledHistoryPost = historyWorker.schedule(

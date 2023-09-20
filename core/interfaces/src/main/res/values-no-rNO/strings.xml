@@ -1,21 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">Filformat</string>
-    <string name="metadata_label_created_at">Opprettet den</string>
-    <string name="metadata_label_aaps_version">AAPS versjon</string>
-    <string name="metadata_label_aaps_flavour">Byggvariant</string>
-    <string name="metadata_label_device_name">Eksporterer enhetens pasientnavn</string>
-    <string name="metadata_label_device_model">Eksportere enhetsmodell</string>
-    <string name="metadata_label_encryption">Filkryptering</string>
-    <string name="metadata_format_new">Nytt krypteringsformat</string>
-    <string name="metadata_format_debug">Nytt feilsøkingsformat (ukryptert)</string>
-    <string name="metadata_format_other">Ukjent eksportformat</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpedriver er endret.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f E</string>
-    <string name="format_insulin_units">%1$.2f E</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d min siden</string>
+    <string name="minago_long">%1$d minutter siden</string>
+    <string name="hoursago">%1$.1f timer siden</string>
+    <string name="days_ago">%1$.1f dager siden</string>
+    <string name="days_ago_round">%1$.0f dager siden</string>
+    <string name="in_days">om %1$.0f dager</string>
+    <string name="in_days_round">om %1$.0f dager</string>
+    <string name="shorthour">t</string>
+    <string name="days">dager</string>
+    <string name="hours">timer</string>
+    <string name="unit_second">sekund</string>
+    <string name="unit_minute">minutt</string>
+    <string name="unit_hour">time</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">uke</string>
+    <string name="unit_seconds">sekunder</string>
+    <string name="unit_minutes">minutter</string>
+    <string name="unit_hours">timer</string>
+    <string name="unit_days">dager</string>
+    <string name="unit_weeks">uker</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="later_today">Senere i dag</string>
+    <string name="tomorrow">I morgen</string>
+    <string name="today">Idag</string>
+    <string name="yesterday">I går</string>
+    <!-- Rx -->
+    <string name="connecting_for">Tilkobler i %1$d sek</string>
+    <string name="handshaking">Tilkobling verifiseres</string>
+    <string name="connected">Tilkoblet</string>
+    <string name="disconnecting">Frakobler</string>
+    <string name="waiting_for_disconnection">Venter på frakobling</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Opprettet: %1$s</string>
+    <string name="metadata_label_watchface_author">Laget av: %1$s</string>
+    <string name="metadata_label_watchface_name">Navn: %1$s</string>
+    <string name="metadata_wear_import_filename">Filnavn: %1$s</string>
+    <string name="metadata_label_plugin_version">Plugin-versjon: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Navn: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
+    <string name="pref_show_iob">Vis IOB</string>
+    <string name="pref_show_detailed_iob">Vis detaljert IOB</string>
+    <string name="pref_show_cob">Vis COB</string>
+    <string name="pref_show_delta">Vis Delta</string>
+    <string name="pref_show_detailed_delta">Vis detaljert Delta</string>
+    <string name="pref_show_avgdelta">Vis Gj. snitt Delta</string>
+    <string name="pref_show_phone_battery">Vis telefonbatteri</string>
+    <string name="pref_show_rig_battery">Vis riggens batteri</string>
+    <string name="pref_show_basal_rate">Vis basalrate</string>
+    <string name="pref_show_loop_status">Vis loop status</string>
+    <string name="pref_show_bg">Vis BS</string>
+    <string name="pref_show_bgi">Vis BS</string>
+    <string name="pref_show_direction_arrow">Vis retningspil</string>
+    <string name="pref_show_ago">Vis tid siden</string>
+    <string name="pref_show_week_number">Vis ukenummer</string>
+    <string name="default_custom_watchface_comment">Standard klokkebakgrunn, du kan klikke på EKSPORTER KLOKKEBAKGRUNN for å lage en mal</string>
+    <string name="wear_default_watchface">Standard klokkebakgrunn</string>
+    <string name="cwf_comment_background">Bakgrunnsbilde</string>
+    <string name="cwf_comment_chart">Grafer (BS, basal, prediksjonslinjer...)</string>
+    <string name="cwf_comment_cover_chart">Bilde foran grafer og bak tekstfelter</string>
+    <string name="cwf_comment_freetext1">Fritekst 1</string>
+    <string name="cwf_comment_freetext2">Fritekst 2</string>
+    <string name="cwf_comment_freetext3">Fritekst 3</string>
+    <string name="cwf_comment_freetext4">Fritekst 4</string>
+    <string name="cwf_comment_iob1">IOB-merkelapp eller IOB-sum hvis angitt</string>
+    <string name="cwf_comment_iob2">IOB-sum eller (Bolus_IOB|Basal_IOB) hvis angitt</string>
+    <string name="cwf_comment_cob1">COB etikett</string>
+    <string name="cwf_comment_cob2">COB verdi</string>
+    <string name="cwf_comment_delta">Kort BS-endring</string>
+    <string name="cwf_comment_avg_delta">Gj.snitt BS-endring (15min)</string>
+    <string name="cwf_comment_uploader_battery">Telefonbatteri (%)</string>
+    <string name="cwf_comment_rig_battery">Rig-batteri (%)</string>
+    <string name="cwf_comment_basalRate">Basalrate</string>
+    <string name="cwf_comment_bgi">BGI verdi</string>
+    <string name="cwf_comment_time">Tid (TT:MM eller TT:MM:SS)</string>
+    <string name="cwf_comment_hour">Time (TT)</string>
+    <string name="cwf_comment_minute">Minutt (MM)</string>
+    <string name="cwf_comment_second">Sekund (SS)</string>
+    <string name="cwf_comment_timePeriod">AM eller PM</string>
+    <string name="cwf_comment_day_name">Navn på ukedag</string>
+    <string name="cwf_comment_day">Dag (DD)</string>
+    <string name="cwf_comment_week_number">Ukenummer (ww)</string>
+    <string name="cwf_comment_month">Navn på måned (kort)</string>
+    <string name="cwf_comment_loop">Loop-status og tid siden</string>
+    <string name="cwf_comment_direction">Retningspil</string>
+    <string name="cwf_comment_timestamp">Minutter siden BS sist ble mottatt</string>
+    <string name="cwf_comment_sgv">BS-verdi</string>
+    <string name="cwf_comment_cover_plate">Bilde foran tekst (urvisere...)</string>
+    <string name="cwf_comment_hour_hand">Bilde av timeviser (analog klokke)</string>
+    <string name="cwf_comment_minute_hand">Bilde av minuttviser (analog klokke)</string>
+    <string name="cwf_comment_second_hand">Bilde av sekundviser (analog klokke)</string>
 </resources>

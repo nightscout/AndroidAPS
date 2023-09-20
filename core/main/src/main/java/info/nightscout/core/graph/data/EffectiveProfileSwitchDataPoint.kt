@@ -19,7 +19,7 @@ class EffectiveProfileSwitchDataPoint(
         get() = "" +
             (if (data.originalPercentage != 100) "${data.originalPercentage}%" else "") +
             (if (data.originalPercentage != 100 && data.originalTimeshift != 0L) "," else "") +
-            (if (data.originalTimeshift != 0L) (T.msecs(data.originalTimeshift).hours().toString() + rh.gs(info.nightscout.shared.R.string.shorthour)) else "")
+            (if (data.originalTimeshift != 0L) (T.msecs(data.originalTimeshift).hours().toString() + rh.gs(info.nightscout.interfaces.R.string.shorthour)) else "")
     override val duration = 0L
     override val shape = PointsWithLabelGraphSeries.Shape.PROFILE
     override val size = 2f

@@ -1,25 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">File format</string>
-    <string name="metadata_label_created_at">Created at</string>
-    <string name="metadata_label_aaps_version">AAPS Version</string>
-    <string name="metadata_label_aaps_flavour">Build Variant</string>
-    <string name="metadata_label_device_name">Exporting device patient name</string>
-    <string name="metadata_label_device_model">Exporting device model</string>
-    <string name="metadata_label_encryption">File encryption</string>
-    <string name="metadata_format_new">New encrypted format</string>
-    <string name="metadata_format_debug">New debug format (unencrypted)</string>
-    <string name="metadata_format_other">Unknown export format</string>
-
-    <!--    PumpType-->
-    <string name="def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
-
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pump driver changed.</string>
 
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
+    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
+    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
+    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
+
+    <!--    DateUtil-->
+    <string name="minago">%1$d m ago</string>
+    <string name="minago_long">%1$d minutes ago</string>
+    <string name="hoursago">%1$.1f h ago</string>
+    <string name="days_ago">%1$.1f days ago</string>
+    <string name="days_ago_round">%1$.0f days ago</string>
+    <string name="in_days">in %1$.0f days</string>
+    <string name="in_days_round">in %1$.0f days</string>
+    <string name="shorthour">h</string>
+    <string name="days">days</string>
+    <string name="hours">hours</string>
+    <string name="unit_second">second</string>
+    <string name="unit_minute">minute</string>
+    <string name="unit_hour">hour</string>
+    <string name="unit_day">day</string>
+    <string name="unit_week">week</string>
+    <string name="unit_seconds">seconds</string>
+    <string name="unit_minutes">minutes</string>
+    <string name="unit_hours">hours</string>
+    <string name="unit_days">days</string>
+    <string name="unit_weeks">weeks</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="later_today">Later today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+
+    <!-- Rx -->
+    <string name="connecting_for">Connecting for %1$d s</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="connected">Connected</string>
+    <string name="disconnecting">Disconnecting</string>
+    <string name="waiting_for_disconnection">Waiting for disconnection</string>
+
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Created at: %1$s</string>
+    <string name="metadata_label_watchface_author">Author: %1$s</string>
+    <string name="metadata_label_watchface_name">Name: %1$s</string>
+    <string name="metadata_wear_import_filename">File name: %1$s</string>
+    <string name="metadata_label_plugin_version">Plugin version: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Name: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
+    <string name="metadata_label_watchface_authorization" translatable="false">%1$s</string>
+    <string name="pref_show_iob">Show IOB</string>
+    <string name="pref_show_detailed_iob">Show detailed IOB</string>
+    <string name="pref_show_cob">Show COB</string>
+    <string name="pref_show_delta">Show Delta</string>
+    <string name="pref_show_detailed_delta">Show detailed Delta</string>
+    <string name="pref_show_avgdelta">Show AvgDelta</string>
+    <string name="pref_show_phone_battery">Show Phone Battery</string>
+    <string name="pref_show_rig_battery">Show Rig Battery</string>
+    <string name="pref_show_basal_rate">Show Basal Rate</string>
+    <string name="pref_show_loop_status">Show Loop Status</string>
+    <string name="pref_show_bg">Show BG</string>
+    <string name="pref_show_bgi">Show BGI</string>
+    <string name="pref_show_direction_arrow">Show Direction Arrow</string>
+    <string name="pref_show_ago">Show Ago</string>
+    <string name="pref_show_week_number">Show Week number</string>
+    <string name="default_custom_watchface_comment">Default watchface, you can click on EXPORT WATCHFACE button to generate a template</string>
+    <string name="wear_default_watchface">Default Watchface</string>
+    <string name="cwf_comment_background">Background image</string>
+    <string name="cwf_comment_chart">Graphs (BG, basal, prediction lines...)</string>
+    <string name="cwf_comment_cover_chart">Image in front of graph and behind text fields</string>
+    <string name="cwf_comment_freetext1">Free text 1</string>
+    <string name="cwf_comment_freetext2">Free text 2</string>
+    <string name="cwf_comment_freetext3">Free text 3</string>
+    <string name="cwf_comment_freetext4">Free text 4</string>
+    <string name="cwf_comment_iob1">IOB label or IOB Sum if detailed</string>
+    <string name="cwf_comment_iob2">IOB Sum or (Bolus_IOB|Basal_IOB) if detailed</string>
+    <string name="cwf_comment_cob1">COB label</string>
+    <string name="cwf_comment_cob2">COB value</string>
+    <string name="cwf_comment_delta">Short BG delta</string>
+    <string name="cwf_comment_avg_delta">Average BG delta (15min)</string>
+    <string name="cwf_comment_uploader_battery">Phone battery (%)</string>
+    <string name="cwf_comment_rig_battery">Global loop battery (%)</string>
+    <string name="cwf_comment_basalRate">Basal Rate</string>
+    <string name="cwf_comment_bgi">BGI value</string>
+    <string name="cwf_comment_time">Time (HH:MM or HH:MM:SS)</string>
+    <string name="cwf_comment_hour">Hour (HH)</string>
+    <string name="cwf_comment_minute">Minute (MM)</string>
+    <string name="cwf_comment_second">Second (SS)</string>
+    <string name="cwf_comment_timePeriod">AM or PM</string>
+    <string name="cwf_comment_day_name">Name of day of the week</string>
+    <string name="cwf_comment_day">Day (DD)</string>
+    <string name="cwf_comment_week_number">Week number (ww)</string>
+    <string name="cwf_comment_month">Month name (short)</string>
+    <string name="cwf_comment_loop">Loop status and ago</string>
+    <string name="cwf_comment_direction">Direction arrow</string>
+    <string name="cwf_comment_timestamp">Mintutes ago for last received BG</string>
+    <string name="cwf_comment_sgv">BG value</string>
+    <string name="cwf_comment_cover_plate">Cover image in front of text (dials…)</string>
+    <string name="cwf_comment_hour_hand">Image of hour hand (Analog Watch)</string>
+    <string name="cwf_comment_minute_hand">Image of minute hand (Analog Watch)</string>
+    <string name="cwf_comment_second_hand">Image of second hand (Analog Watch)</string>
 
 </resources>

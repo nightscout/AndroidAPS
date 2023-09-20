@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
 import info.nightscout.core.utils.toHex
 import info.nightscout.interfaces.Config
-import info.nightscout.rx.logging.AAPSLoggerTest
+import info.nightscout.sharedtests.AAPSLoggerTest
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

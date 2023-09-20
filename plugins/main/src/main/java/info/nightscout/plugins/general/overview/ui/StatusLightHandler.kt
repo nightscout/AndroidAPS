@@ -146,11 +146,11 @@ class StatusLightHandler @Inject constructor(
     }
     private fun TherapyEvent.age(useShortText: Boolean, rh: ResourceHelper, dateUtil: DateUtil): String {
         val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
-        var days = " " + rh.gs(info.nightscout.shared.R.string.days) + " "
-        var hours = " " + rh.gs(info.nightscout.shared.R.string.hours) + " "
+        var days = " " + rh.gs(info.nightscout.interfaces.R.string.days) + " "
+        var hours = " " + rh.gs(info.nightscout.interfaces.R.string.hours) + " "
         if (useShortText) {
-            days = rh.gs(info.nightscout.shared.R.string.shortday)
-            hours = rh.gs(info.nightscout.shared.R.string.shorthour)
+            days = rh.gs(info.nightscout.interfaces.R.string.shortday)
+            hours = rh.gs(info.nightscout.interfaces.R.string.shorthour)
         }
         return diff[TimeUnit.DAYS].toString() + days + diff[TimeUnit.HOURS] + hours
     }

@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStil)</string>
+    <string name="label_watchface_custom">AAPS(Brugerdefineret)</string>
     <string name="label_actions_tile">AAPS (Handlinger)</string>
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Hurtig Guide)</string>
@@ -22,20 +23,30 @@
     <string name="msg_warning_old">AAPS data er %1$s gammel! Tjek din sensor, xDrip+, NS, AAPS config eller lign.!</string>
     <string name="pref_vibrate_on_bolus">Vibrér ved bolus</string>
     <string name="pref_units_for_actions">Enheder for handlinger</string>
+    <string name="units_short">IE</string>
+    <string name="pref_display_settings">Display</string>
+    <string name="pref_graph_settings">Graf</string>
+    <string name="pref_interface_settings">Interface</string>
+    <string name="pref_others_settings">Øvrige</string>
+    <string name="pref_complication_settings">Komplikation</string>
     <string name="pref_show_date">Vis dato</string>
     <string name="pref_show_iob">Vis IOB</string>
+    <string name="pref_show_detailed_iob">Vis detaljeret IOB</string>
     <string name="pref_show_cob">Vis COB</string>
     <string name="pref_show_delta">Vis Delta</string>
+    <string name="pref_show_detailed_delta">Vis detaljeret Delta</string>
     <string name="pref_show_avgdelta">Show GnsDelta</string>
     <string name="pref_show_phone_battery">Vis Telefonbatteri</string>
     <string name="pref_show_rig_battery">Vis Rig Batteri</string>
     <string name="pref_show_basal_rate">Vis Basal Rate</string>
     <string name="pref_show_loop_status">Vis Loop Status</string>
     <string name="pref_show_bg">Vis BG</string>
+    <string name="pref_show_bgi">Vis BSI</string>
     <string name="pref_show_direction_arrow">Vis Retningspil</string>
     <string name="pref_show_ago">Vis Siden</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørk</string>
     <string name="pref_highlight_basals">Fremhæv Basaler</string>
+    <string name="pref_prediction_lines">Vis forudsigelser</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matchende skilletegn</string>
     <string name="pref_chart_timeframe">Graf tidsspænd</string>
     <string name="pref_1_hour">1 time</string>
@@ -143,6 +154,7 @@
     <string name="pref_simplify_ui_sum">Vis kun tid og BG</string>
     <string name="pref_vibrate_hourly">Vibrér hver time</string>
     <string name="pref_show_weeknumber">Vis ugenummer</string>
+    <string name="custom_pref_show_seconds">Vis sekunder</string>
     <string name="digitalstyle_pref_your_style">Din stil:</string>
     <string name="digitalstyle_style_none">ingen stil</string>
     <string name="digitalstyle_style_minimal">minimalistisk stil</string>
@@ -176,6 +188,9 @@
     <string name="no_iob_u">--IE</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--E/t</string>
+    <string name="uploader_na">IE: ---%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Minutter siden</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Ingen Loop Status</string>
     <string name="cob_000g">000g</string>
@@ -183,4 +198,14 @@
     <string name="iob_0_00u">0,00E</string>
     <string name="snooze_alert">AAPS Snooze Alarm</string>
     <string name="sending_snooze">Sender snooze til AAPS</string>
+    <string name="short_hour">t</string>
+    <string name="week_short">u</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">t</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s %2$s %3$s</string>
+    <string name="old">gammel</string>
+    <string name="old_warning">!gammel!</string>
+    <string name="error">!fejl!</string>
+    <string name="pref_heartRateSampling">Puls</string>
 </resources>

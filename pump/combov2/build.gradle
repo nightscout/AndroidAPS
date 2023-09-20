@@ -13,12 +13,14 @@ apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 dependencies {
     implementation project(':core:libraries')
     implementation project(':core:interfaces')
+    implementation project(':core:main')
     implementation project(':core:ui')
     implementation project(':core:utils')
-    implementation project(':app-wear-shared:shared')
     implementation(project(":pump:combov2:comboctl"))
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime_version")
+
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    api "org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime_version"
+
     // This is necessary to avoid errors like these which otherwise come up often at runtime:
     // "WARNING: Failed to transform class kotlinx/datetime/TimeZone$Companion
     // java.lang.NoClassDefFoundError: kotlinx/serialization/KSerializer"

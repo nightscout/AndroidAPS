@@ -63,13 +63,6 @@
     <string name="time_range">Interval de temps</string>
     <string name="timerange_value">Temps entre %1$s i %2$s</string>
     <string name="between">Entre </string>
-    <string name="weekday_sunday_short">Dg</string>
-    <string name="weekday_saturday_short">Ds</string>
-    <string name="weekday_friday_short">Dv</string>
-    <string name="weekday_thursday_short">Dj</string>
-    <string name="weekday_wednesday_short">Dc</string>
-    <string name="weekday_tuesday_short">Dt</string>
-    <string name="weekday_monday_short">Dl</string>
     <string name="delete_short">ELIMR</string>
     <string name="add_short">AFEGR</string>
     <string name="copy_short">COPIAR</string>
@@ -109,14 +102,6 @@
     <string name="automation_event">Esdeveniment d\'automatització</string>
     <string name="reorder_label">Reordenar</string>
     <string name="user_action">Acció de l’usuari</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Dl</string>
-    <string name="tuesday_short">Dt</string>
-    <string name="wednesday_short">Dc</string>
-    <string name="thursday_short">Dj</string>
-    <string name="friday_short">Dv</string>
-    <string name="saturday_short">Ds</string>
-    <string name="sunday_short">Dg</string>
     <!--    Reminders-->
     <string name="time_to_bolus">Hora d’aplicar bolus!\nExecuteu l\'assistent de bolus i torneu a fer els càlculs.</string>
 </resources>

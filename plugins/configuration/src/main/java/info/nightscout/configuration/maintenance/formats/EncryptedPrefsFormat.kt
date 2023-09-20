@@ -1,6 +1,7 @@
 package info.nightscout.configuration.maintenance.formats
 
 import info.nightscout.configuration.R
+import info.nightscout.configuration.maintenance.PrefsMetadataKeyImpl
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.hexStringToByteArray
 import info.nightscout.core.utils.toHex
@@ -13,6 +14,7 @@ import info.nightscout.interfaces.maintenance.Prefs
 import info.nightscout.interfaces.maintenance.PrefsFormat
 import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.maintenance.PrefsStatus
+import info.nightscout.interfaces.maintenance.PrefsStatusImpl
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONException
@@ -59,8 +61,8 @@ class EncryptedPrefsFormat @Inject constructor(
         val content = JSONObject()
         val meta = JSONObject()
 
-        val encStatus = prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status ?: PrefsStatus.OK
-        var encrypted = encStatus == PrefsStatus.OK && masterPassword != null
+        val encStatus = prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status ?: PrefsStatusImpl.OK
+        var encrypted = encStatus == PrefsStatusImpl.OK && masterPassword != null
 
         try {
             for ((key, value) in prefs.values.toSortedMap()) {
@@ -68,14 +70,14 @@ class EncryptedPrefsFormat @Inject constructor(
             }
 
             for ((metaKey, metaEntry) in prefs.metadata) {
-                if (metaKey == PrefsMetadataKey.FILE_FORMAT)
+                if (metaKey == PrefsMetadataKeyImpl.FILE_FORMAT)
                     continue
-                if (metaKey == PrefsMetadataKey.ENCRYPTION)
+                if (metaKey == PrefsMetadataKeyImpl.ENCRYPTION)
                     continue
                 meta.put(metaKey.key, metaEntry.value)
             }
 
-            container.put(PrefsMetadataKey.FILE_FORMAT.key, if (encrypted) PrefsFormat.FORMAT_KEY_ENC else PrefsFormat.FORMAT_KEY_NOENC)
+            container.put(PrefsMetadataKeyImpl.FILE_FORMAT.key, if (encrypted) PrefsFormat.FORMAT_KEY_ENC else PrefsFormat.FORMAT_KEY_NOENC)
             container.put("metadata", meta)
 
             val security = JSONObject()
@@ -130,22 +132,22 @@ class EncryptedPrefsFormat @Inject constructor(
             val container = JSONObject(jsonBody)
             val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = loadMetadata(container)
 
-            if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content")) {
-                val fileFormat = container.getString(PrefsMetadataKey.FILE_FORMAT.key)
+            if (container.has(PrefsMetadataKeyImpl.FILE_FORMAT.key) && container.has("security") && container.has("content")) {
+                val fileFormat = container.getString(PrefsMetadataKeyImpl.FILE_FORMAT.key)
                 val security = container.getJSONObject("security")
                 val encrypted = fileFormat == PrefsFormat.FORMAT_KEY_ENC
-                var secure: PrefsStatus = PrefsStatus.OK
+                var secure: PrefsStatus = PrefsStatusImpl.OK
                 var decryptedOk = false
                 var contentJsonObj: JSONObject? = null
                 var insecurityReason = rh.gs(R.string.prefdecrypt_settings_tampered)
 
                 if (security.has("file_hash")) {
                     if (calculatedFileHash != security.getString("file_hash")) {
-                        secure = PrefsStatus.ERROR
+                        secure = PrefsStatusImpl.ERROR
                         issues.add(rh.gs(R.string.prefdecrypt_issue_modified))
                     }
                 } else {
-                    secure = PrefsStatus.ERROR
+                    secure = PrefsStatusImpl.ERROR
                     issues.add(rh.gs(R.string.prefdecrypt_issue_missing_file_hash))
                 }
 
@@ -164,38 +166,38 @@ class EncryptedPrefsFormat @Inject constructor(
                                         contentJsonObj = JSONObject(decrypted)
                                         decryptedOk = true
                                     } else {
-                                        secure = PrefsStatus.ERROR
+                                        secure = PrefsStatusImpl.ERROR
                                         issues.add(rh.gs(R.string.prefdecrypt_issue_modified))
                                     }
 
                                 } catch (e: JSONException) {
-                                    secure = PrefsStatus.ERROR
+                                    secure = PrefsStatusImpl.ERROR
                                     issues.add(rh.gs(R.string.prefdecrypt_issue_parsing))
                                 }
 
                             } else {
-                                secure = PrefsStatus.ERROR
+                                secure = PrefsStatusImpl.ERROR
                                 issues.add(rh.gs(R.string.prefdecrypt_issue_wrong_pass))
                                 insecurityReason = rh.gs(R.string.prefdecrypt_wrong_password)
                             }
 
                         } else {
-                            secure = PrefsStatus.ERROR
+                            secure = PrefsStatusImpl.ERROR
                             issues.add(rh.gs(R.string.prefdecrypt_issue_wrong_format))
                         }
                     } else {
-                        secure = PrefsStatus.ERROR
+                        secure = PrefsStatusImpl.ERROR
                         issues.add(rh.gs(R.string.prefdecrypt_issue_wrong_algorithm))
                     }
 
                 } else {
 
-                    if (secure == PrefsStatus.OK) {
-                        secure = PrefsStatus.WARN
+                    if (secure == PrefsStatusImpl.OK) {
+                        secure = PrefsStatusImpl.WARN
                     }
 
                     if (!(security.has("algorithm") && security.get("algorithm") == "none")) {
-                        secure = PrefsStatus.ERROR
+                        secure = PrefsStatusImpl.ERROR
                         issues.add(rh.gs(R.string.prefdecrypt_issue_wrong_algorithm))
                     }
 
@@ -211,12 +213,12 @@ class EncryptedPrefsFormat @Inject constructor(
 
                 val issuesStr: String? = if (issues.size > 0) issues.joinToString("\n") else null
                 val encryptionDescStr = if (encrypted) {
-                    if (secure == PrefsStatus.OK) rh.gs(R.string.prefdecrypt_settings_secure) else insecurityReason
+                    if (secure == PrefsStatusImpl.OK) rh.gs(R.string.prefdecrypt_settings_secure) else insecurityReason
                 } else {
-                    if (secure != PrefsStatus.ERROR) rh.gs(R.string.prefdecrypt_settings_unencrypted) else rh.gs(R.string.prefdecrypt_settings_tampered)
+                    if (secure != PrefsStatusImpl.ERROR) rh.gs(R.string.prefdecrypt_settings_unencrypted) else rh.gs(R.string.prefdecrypt_settings_tampered)
                 }
 
-                metadata[PrefsMetadataKey.ENCRYPTION] = PrefMetadata(encryptionDescStr, secure, issuesStr)
+                metadata[PrefsMetadataKeyImpl.ENCRYPTION] = PrefMetadata(encryptionDescStr, secure, issuesStr)
             }
 
             return Prefs(entries, metadata)
@@ -243,22 +245,22 @@ class EncryptedPrefsFormat @Inject constructor(
 
     private fun loadMetadata(container: JSONObject): MutableMap<PrefsMetadataKey, PrefMetadata> {
         val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
-        if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content") && container.has("metadata")) {
-            val fileFormat = container.getString(PrefsMetadataKey.FILE_FORMAT.key)
+        if (container.has(PrefsMetadataKeyImpl.FILE_FORMAT.key) && container.has("security") && container.has("content") && container.has("metadata")) {
+            val fileFormat = container.getString(PrefsMetadataKeyImpl.FILE_FORMAT.key)
             if ((fileFormat != PrefsFormat.FORMAT_KEY_ENC) && (fileFormat != PrefsFormat.FORMAT_KEY_NOENC)) {
-                metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(rh.gs(info.nightscout.interfaces.R.string.metadata_format_other), PrefsStatus.ERROR)
+                metadata[PrefsMetadataKeyImpl.FILE_FORMAT] = PrefMetadata(rh.gs(R.string.metadata_format_other), PrefsStatusImpl.ERROR)
             } else {
                 val meta = container.getJSONObject("metadata")
-                metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(fileFormat, PrefsStatus.OK)
+                metadata[PrefsMetadataKeyImpl.FILE_FORMAT] = PrefMetadata(fileFormat, PrefsStatusImpl.OK)
                 for (key in meta.keys()) {
-                    val metaKey = PrefsMetadataKey.fromKey(key)
+                    val metaKey = PrefsMetadataKeyImpl.fromKey(key)
                     if (metaKey != null) {
-                        metadata[metaKey] = PrefMetadata(meta.getString(key), PrefsStatus.OK)
+                        metadata[metaKey] = PrefMetadata(meta.getString(key), PrefsStatusImpl.OK)
                     }
                 }
             }
         } else {
-            metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(rh.gs(R.string.prefdecrypt_wrong_json), PrefsStatus.ERROR)
+            metadata[PrefsMetadataKeyImpl.FILE_FORMAT] = PrefMetadata(rh.gs(R.string.prefdecrypt_wrong_json), PrefsStatusImpl.ERROR)
         }
 
         return metadata

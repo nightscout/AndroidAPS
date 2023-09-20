@@ -3,9 +3,8 @@ package info.nightscout.pump.danaRv2
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.core.constraints.ConstraintObject
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
@@ -24,7 +23,7 @@ import org.mockito.Mockito.`when`
 
 class DanaRv2PluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
@@ -37,9 +36,7 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
 
     private lateinit var danaRv2Plugin: DanaRv2Plugin
 
-    val injector = HasAndroidInjector {
-        AndroidInjector { }
-    }
+    val injector = HasAndroidInjector { AndroidInjector { } }
 
     @BeforeEach
     fun prepareMocks() {
@@ -61,11 +58,11 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         danaRv2Plugin.setPluginEnabled(PluginType.PUMP, true)
         danaRv2Plugin.setPluginEnabled(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
-        val c = Constraint(Constants.REALLYHIGHBASALRATE)
+        val c = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         danaRv2Plugin.applyBasalConstraints(c, validProfile)
         Assertions.assertEquals(0.8, c.value(), 0.01)
-        Assertions.assertEquals("DanaRv2: Limiting max basal rate to 0.80 U/h because of pump limit", c.getReasons(aapsLogger))
-        Assertions.assertEquals("DanaRv2: Limiting max basal rate to 0.80 U/h because of pump limit", c.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals("DanaRv2: Limiting max basal rate to 0.80 U/h because of pump limit", c.getReasons())
+        Assertions.assertEquals("DanaRv2: Limiting max basal rate to 0.80 U/h because of pump limit", c.getMostLimitedReasons())
     }
 
     @Test
@@ -73,10 +70,10 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
         danaRv2Plugin.setPluginEnabled(PluginType.PUMP, true)
         danaRv2Plugin.setPluginEnabled(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
-        val c = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
+        val c = ConstraintObject(Int.MAX_VALUE, aapsLogger)
         danaRv2Plugin.applyBasalPercentConstraints(c, validProfile)
         Assertions.assertEquals(200, c.value())
-        Assertions.assertEquals("DanaRv2: Limiting max percent rate to 200% because of pump limit", c.getReasons(aapsLogger))
-        Assertions.assertEquals("DanaRv2: Limiting max percent rate to 200% because of pump limit", c.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals("DanaRv2: Limiting max percent rate to 200% because of pump limit", c.getReasons())
+        Assertions.assertEquals("DanaRv2: Limiting max percent rate to 200% because of pump limit", c.getMostLimitedReasons())
     }
 }

@@ -36,6 +36,14 @@
     <string name="pump_settings_error_wrong_max_bolus_set">Verkeerde Maks Bolus gestel op Pomp(moet %1$.2f wees).</string>
     <string name="pump_settings_error_wrong_max_basal_set">Verkeerde Maks Basale op Pomp (moet %1$.2f %1$.2f wees),.</string>
     <!-- Pump History -->
+    <!-- PumpDeviceState -->
+    <string name="pump_status_sleeping">Slaap</string>
+    <string name="pump_status_waking_up">Besig om te wek</string>
+    <string name="pump_status_active">Aktief</string>
+    <string name="pump_status_error_comm">Fout met kommunikasie</string>
+    <string name="pump_status_timeout_comm">Te lank op kommunikasie gewag</string>
+    <string name="pump_status_pump_unreachable">Pomp onbereikbaar</string>
+    <string name="pump_status_invalid_config">Ongeldige konfigirasie</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>

@@ -28,6 +28,15 @@
     <string name="pump_settings_error_wrong_max_bolus_set">Hibás a pumpán beállított Max. Bólus (%1$.2f kell legyen).</string>
     <string name="pump_settings_error_wrong_max_basal_set">Hibás a pumpán beállított Max. Bázis (%1$.2f kell legyen).</string>
     <!-- Pump History -->
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Soha nem kapcsolódott</string>
+    <string name="pump_status_sleeping">Alszik</string>
+    <string name="pump_status_waking_up">Felébred</string>
+    <string name="pump_status_active">Aktív</string>
+    <string name="pump_status_error_comm">Kapcsolati hiba</string>
+    <string name="pump_status_timeout_comm">Kapcsolati időtúllépés</string>
+    <string name="pump_status_pump_unreachable">Pumpa nem elérhető</string>
+    <string name="pump_status_invalid_config">Érvénytelen konfiguráció</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>

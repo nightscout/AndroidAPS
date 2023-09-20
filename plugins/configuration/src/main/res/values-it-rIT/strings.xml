@@ -156,4 +156,15 @@
     <string name="wear_import_custom_watchface_title">Seleziona watchface personalizzata</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Formato file</string>
+    <string name="metadata_label_created_at">Creato:</string>
+    <string name="metadata_label_aaps_version">Versione AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante build</string>
+    <string name="metadata_label_device_name">Esportazione nome dispositivo paziente</string>
+    <string name="metadata_label_device_model">Esportazione modello dispositivo</string>
+    <string name="metadata_label_encryption">Crittografia file</string>
+    <string name="metadata_format_new">Nuovo formato crittografato</string>
+    <string name="metadata_format_debug">Nuovo formato di debug (non crittografato)</string>
+    <string name="metadata_format_other">Formato esportazione sconosciuto</string>
 </resources>

@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -48,7 +48,7 @@ class BgQualityCheckPlugin @Inject constructor(
         .showInList(false)
         .pluginName(R.string.bg_quality),
     aapsLogger, rh, injector
-), Constraints, BgQualityCheck {
+), PluginConstraints, BgQualityCheck {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -71,7 +71,7 @@ class BgQualityCheckPlugin @Inject constructor(
     // Fallback to LGS if BG values are doubled
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
         if (state == BgQualityCheck.State.DOUBLED)
-            maxIob.set(aapsLogger, 0.0, "Doubled values in BGSource", this)
+            maxIob.set(0.0, "Doubled values in BGSource", this)
         else
             maxIob
 

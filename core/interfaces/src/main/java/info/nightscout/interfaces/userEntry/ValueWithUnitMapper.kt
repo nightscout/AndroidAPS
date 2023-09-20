@@ -4,6 +4,7 @@ import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
 
 sealed class ValueWithUnitMapper {          //I use a sealed class because of StringResource that contains a listOf as second parameter
 
@@ -79,12 +80,9 @@ sealed class ValueWithUnitMapper {          //I use a sealed class because of St
 
     companion object {
 
-        const val MGDL = Constants.MGDL
-        const val MMOL = Constants.MMOL
-
         fun fromGlucoseUnit(value: Double, string: String): ValueWithUnitMapper? = when (string) {
-            MGDL, "mgdl"   -> Mgdl(value)
-            MMOL, "mmol/l" -> Mmoll(value)
+            GlucoseUnit.MGDL.asText, "mgdl"   -> Mgdl(value)
+            GlucoseUnit.MMOL.asText, "mmol/l" -> Mmoll(value)
             else           -> null
         }
     }

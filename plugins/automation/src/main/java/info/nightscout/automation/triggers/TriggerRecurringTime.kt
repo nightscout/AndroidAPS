@@ -8,8 +8,9 @@ import info.nightscout.automation.elements.InputTime
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.core.ui.elements.WeekDay
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.MidnightUtils
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
@@ -35,7 +36,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     override fun shouldRun(): Boolean {
         val currentMinSinceMidnight = getMinSinceMidnight(dateUtil.now())
         val scheduledDayOfWeek = Calendar.getInstance()[Calendar.DAY_OF_WEEK]
-        if (days.isSet(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {
+        if (days.isSet(Objects.requireNonNull(WeekDay.DayOfWeek.fromCalendarInt(scheduledDayOfWeek)))) {
             if (currentMinSinceMidnight >= time.value && currentMinSinceMidnight - time.value < 5) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
                 return true
@@ -49,7 +50,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         val data = JSONObject()
             .put("time", time.value)
         for (i in days.weekdays.indices) {
-            data.put(InputWeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+            data.put(WeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
         }
         return data
     }
@@ -57,7 +58,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     override fun fromJSON(data: String): Trigger {
         val o = JSONObject(data)
         for (i in days.weekdays.indices)
-            days.weekdays[i] = JsonHelper.safeGetBoolean(o, InputWeekDay.DayOfWeek.values()[i].name)
+            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.values()[i].name)
         if (o.has("hour")) {
             // do conversion from 2.5.1 format
             val hour = JsonHelper.safeGetInt(o, "hour")
@@ -78,7 +79,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         var counter = 0
         for (i in days.getSelectedDays()) {
             if (counter++ > 0) sb.append(",")
-            sb.append(rh.gs(Objects.requireNonNull(InputWeekDay.DayOfWeek.fromCalendarInt(i)).shortName))
+            sb.append(rh.gs(Objects.requireNonNull(WeekDay.DayOfWeek.fromCalendarInt(i)).shortName))
         }
         sb.append(" ")
         sb.append(dateUtil.timeString(toMills(time.value)))

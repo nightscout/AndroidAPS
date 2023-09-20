@@ -12,7 +12,7 @@ import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.aps.Sensitivity.SensitivityType
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -51,7 +51,7 @@ class SensitivityOref1Plugin @Inject constructor(
         .description(R.string.description_sensitivity_oref1)
         .setDefault(),
     injector, aapsLogger, rh, sp
-), Constraints {
+), PluginConstraints {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
         val profile = profileFunction.getProfile()
@@ -260,7 +260,7 @@ class SensitivityOref1Plugin @Inject constructor(
         get() = SensitivityType.SENSITIVITY_OREF1
 
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        if (!isEnabled()) value.set(aapsLogger, false, rh.gs(R.string.uam_disabled_oref1_not_selected), this)
+        if (!isEnabled()) value.set(false, rh.gs(R.string.uam_disabled_oref1_not_selected), this)
         return value
     }
 }

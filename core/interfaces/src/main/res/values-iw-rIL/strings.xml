@@ -1,21 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">פורמט הקובץ</string>
-    <string name="metadata_label_created_at">נוצר ב-</string>
-    <string name="metadata_label_aaps_version">גרסת AAPS</string>
-    <string name="metadata_label_aaps_flavour">גרסת בנייה</string>
-    <string name="metadata_label_device_name">מייצא את שם מכשיר המטופל\\ת</string>
-    <string name="metadata_label_device_model">מייצא את דגם המכשיר</string>
-    <string name="metadata_label_encryption">הצפנת קבצים</string>
-    <string name="metadata_format_new">פורמט הצפנה חדש</string>
-    <string name="metadata_format_debug">פורמט דיבאג חדש (בלתי מוצפן)</string>
-    <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">מנהל התקן המשאבה שונה.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f יח\'</string>
-    <string name="format_insulin_units">%1$.2f יח\'</string>
+    <!--    DateUtil-->
+    <string name="minago">לפני %1$d דקות</string>
+    <string name="minago_long">לפני %1$d דקות</string>
+    <string name="hoursago">לפני %1$.1f שעות</string>
+    <string name="days_ago">לפני %1$.1f ימים</string>
+    <string name="days_ago_round">לפני %1$.0f ימים</string>
+    <string name="in_days">בעוד %1$.0f ימים</string>
+    <string name="in_days_round">בעוד %1$.0f ימים</string>
+    <string name="shorthour">ש\'</string>
+    <string name="days">ימים</string>
+    <string name="hours">שעות</string>
+    <string name="unit_second">שניה</string>
+    <string name="unit_minute">דקה</string>
+    <string name="unit_hour">שעה</string>
+    <string name="unit_day">יום</string>
+    <string name="unit_week">שבוע</string>
+    <string name="unit_seconds">שניות</string>
+    <string name="unit_minutes">דקות</string>
+    <string name="unit_hours">שעות</string>
+    <string name="unit_days">ימים</string>
+    <string name="unit_weeks">שבועות</string>
+    <string name="shortminute">דק\'</string>
+    <string name="shortday">י\'</string>
+    <string name="later_today">מאוחר יותר היום</string>
+    <string name="tomorrow">מחר</string>
+    <string name="today">היום</string>
+    <string name="yesterday">אתמול</string>
+    <!-- Rx -->
+    <string name="connecting_for">חיבור אל %1$s</string>
+    <string name="handshaking">לוחץ יד</string>
+    <string name="connected">מחובר</string>
+    <string name="disconnecting">מתנתק</string>
+    <string name="waiting_for_disconnection">ממתין לניתוק</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">נוצר ב: %1$s</string>
+    <string name="metadata_label_watchface_author">יוצר/ת: %1$s</string>
+    <string name="metadata_label_watchface_name">שם: %1$s</string>
+    <string name="metadata_wear_import_filename">שם קובץ: %1$s</string>
+    <string name="metadata_label_plugin_version">גרסת פלאגין: %1$s</string>
+    <string name="metadata_label_watchface_name_version">שם: %1$s (%2$s)</string>
+    <string name="pref_show_iob">הצג אינסולין פעיל</string>
+    <string name="pref_show_detailed_iob">הצגת אינס\' פעיל מפורט</string>
+    <string name="pref_show_cob">הצג פח\' פעילות</string>
+    <string name="pref_show_delta">הצג דלתא</string>
+    <string name="pref_show_detailed_delta">הצג דלתא מפורטת</string>
+    <string name="pref_show_avgdelta">הצג דלתא ממוצעת</string>
+    <string name="pref_show_phone_battery">הצג את סוללת הטלפון</string>
+    <string name="pref_show_rig_battery">הצג סוללת ריג</string>
+    <string name="pref_show_basal_rate">הצג מינון בזאלי</string>
+    <string name="pref_show_loop_status">הצג סטטוס לולאה</string>
+    <string name="pref_show_bg">הצג רמת סוכר</string>
+    <string name="pref_show_bgi">הצג השפעת רמת הסוכר</string>
+    <string name="pref_show_direction_arrow">הצג חץ מגמה</string>
+    <string name="pref_show_ago">הצג עבר</string>
+    <string name="pref_show_week_number">הצג מספר שבוע</string>
+    <string name="default_custom_watchface_comment">ברירת המחדל של פני השעון, ניתן ללחוץ על כפתור ייצוא פני שעון כדי ליצור תבנית</string>
+    <string name="wear_default_watchface">ברירת מחדל פני שעון</string>
+    <string name="cwf_comment_background">תמונת רקע</string>
+    <string name="cwf_comment_chart">גרפים (רמת הסוכר בדם, בזאלי, קווי תחזיות...)</string>
+    <string name="cwf_comment_cover_chart">תמונה בחזית הגרף ומאחורי שדות הטקסט</string>
+    <string name="cwf_comment_freetext1">טקסט חופשי 1</string>
+    <string name="cwf_comment_freetext2">טקסט חופשי 2</string>
+    <string name="cwf_comment_freetext3">טקסט חופשי 3</string>
+    <string name="cwf_comment_freetext4">טקסט חופשי 4</string>
+    <string name="cwf_comment_iob1">תווית האינסולין הפעיל או סכום האינסולין הפעיל אם מפורט</string>
+    <string name="cwf_comment_iob2">סכום אינסולין פעיל או (בולוס פעיל|באזל פעיל) אם מפורט</string>
+    <string name="cwf_comment_cob1">תווית הפחמימות הפעילות</string>
+    <string name="cwf_comment_cob2">ערך הפחמימות הפעילות</string>
+    <string name="cwf_comment_delta">הדלתא (שינוי) של רמת הסוכר בדם, טווח קצר</string>
+    <string name="cwf_comment_avg_delta">הדלתא (שינוי) הממוצע בטווח של 15 דק של רמת הסוכר בדם</string>
+    <string name="cwf_comment_uploader_battery">סוללת הטלפון (%)</string>
+    <string name="cwf_comment_rig_battery">בטריית לופ גלובאלי (%)</string>
+    <string name="cwf_comment_basalRate">קצב בזלי</string>
+    <string name="cwf_comment_bgi">השפעת רמת הסוכר בדם</string>
+    <string name="cwf_comment_time">זמן (שעות:דקות או שעות:דקות:שניות)</string>
+    <string name="cwf_comment_hour">שעה (HH)</string>
+    <string name="cwf_comment_minute">דקה (MM)</string>
+    <string name="cwf_comment_second">שניה (SS)</string>
+    <string name="cwf_comment_timePeriod">AM או PM</string>
+    <string name="cwf_comment_day_name">היום בשבוע (שם)</string>
+    <string name="cwf_comment_day">יום (DD)</string>
+    <string name="cwf_comment_month">שם החודש (קצר)</string>
+    <string name="cwf_comment_direction">חץ מגמה</string>
+    <string name="cwf_comment_timestamp">הדקות שעברו מאז התקבל הערך האחרון של רמת הסוכר בדם</string>
+    <string name="cwf_comment_sgv">רמת הסוכר בדם</string>
+    <string name="cwf_comment_hour_hand">תמונה של חוגת השעות (שעון אנולוגי)</string>
+    <string name="cwf_comment_minute_hand">תמונה של חוגת הדקות (שעון אנולוגי)</string>
+    <string name="cwf_comment_second_hand">תמונה של חוגת השניות (שעון אנולוגי)</string>
 </resources>

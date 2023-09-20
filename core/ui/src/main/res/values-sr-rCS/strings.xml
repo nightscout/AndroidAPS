@@ -23,6 +23,7 @@
     <string name="overview_treatment_label">Tretman</string>
     <string name="bolus_iob_label">Bolus IOB</string>
     <string name="treatments_wizard_basaliob_label">Basalni IOB</string>
+    <string name="invalid">NEVAŽEĆE</string>
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="lowglucosesuspend">Niska Glukoza Obustavi</string>
@@ -35,6 +36,7 @@
     <!--    Temptarget-->
     <!--    Translator-->
     <string name="glucosetype_sensor">Senzor</string>
+    <string name="wear">Sat</string>
     <string name="loop">Loop</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
@@ -53,6 +55,7 @@
     <string name="autotune_result">Rezultat: %1$s</string>
     <!-- Alerts -->
     <!-- BolusWizard -->
+    <string name="quickwizard">Brzi Čarobnjak</string>
     <!--    Preferences-->
     <!--    Protection-->
     <!--    Pumps -->
@@ -70,4 +73,7 @@
     <!-- SmsCommunicator -->
     <!-- About -->
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="count_selected">%1$d valt</string>
-    <string name="remove_items">Ta bort objekt</string>
-    <string name="sort_items">Sortera objekt</string>
-    <string name="remove_selected_items">Ta bort valda objekt</string>
-    <string name="sort_label">Sortera</string>
-</resources>

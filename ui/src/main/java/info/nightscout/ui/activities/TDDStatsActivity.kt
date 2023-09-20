@@ -313,17 +313,17 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBASAL ->
                             labelBASAL.id = 300 + i
-                            labelBASAL.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, record.basalAmount)
+                            labelBASAL.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.basalAmount)
                             labelBASAL.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBOLUS ->
                             labelBOLUS.id = 400 + i
-                            labelBOLUS.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, record.bolusAmount)
+                            labelBOLUS.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.bolusAmount)
                             labelBOLUS.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelTDD ->
                             labelTDD.id = 500 + i
-                            labelTDD.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, tdd)
+                            labelTDD.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, tdd)
                             labelTDD.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelRATIO ->
@@ -361,7 +361,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
 
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelCUMTDD ->
                             labelCUMTDD.id = 900 + i
-                            labelCUMTDD.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, sum / i)
+                            labelCUMTDD.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, sum / i)
                             labelCUMTDD.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
                         })
 
@@ -413,9 +413,9 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
                     etr.addView(TextView(this@TDDStatsActivity).also { labelEXPTDD ->
                         labelEXPTDD.id = 1300 + i
                         labelEXPTDD.text = """
-                ${rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, weighted03)}
-                ${rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, weighted05)}
-                ${rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, weighted07)}
+                ${rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, weighted03)}
+                ${rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, weighted05)}
+                ${rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, weighted07)}
                 """.trimIndent()
                         labelEXPTDD.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
                     })

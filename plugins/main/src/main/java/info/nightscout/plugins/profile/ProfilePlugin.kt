@@ -8,6 +8,7 @@ import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -24,7 +25,6 @@ import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventLocalProfileChanged
@@ -163,7 +163,7 @@ class ProfilePlugin @Inject constructor(
             profile.put("basal", basal)
             profile.put("target_low", targetLow)
             profile.put("target_high", targetHigh)
-            profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
+            profile.put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
             profile.put("timezone", TimeZone.getDefault().id)
         }
         val defaultUnits = JsonHelper.safeGetStringAllowNull(profile, "units", null)
@@ -400,7 +400,7 @@ class ProfilePlugin @Inject constructor(
                     profile.put("basal", basal)
                     profile.put("target_low", targetLow)
                     profile.put("target_high", targetHigh)
-                    profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
+                    profile.put("units", if (mgdl) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
                     profile.put("timezone", TimeZone.getDefault().id)
                     store.put(name, profile)
                 }

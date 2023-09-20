@@ -156,4 +156,15 @@
     <string name="wear_import_custom_watchface_title">Pasirinkite laikrodžio ekraną</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prašome perkrauti telefoną arba sistemos nustatymuose iš naujo paleisti AAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti, ar algoritmai veikia tinkamai)!</string>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Failo formatas</string>
+    <string name="metadata_label_created_at">Sukurta</string>
+    <string name="metadata_label_aaps_version">AAPS versija</string>
+    <string name="metadata_label_aaps_flavour">Versijos variantas</string>
+    <string name="metadata_label_device_name">Eksportuojamas paciento vardas</string>
+    <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
+    <string name="metadata_label_encryption">Failo šifravimas</string>
+    <string name="metadata_format_new">Naujas šifruotas formatas</string>
+    <string name="metadata_format_debug">Naujas derinimo formatas (nešifruotas)</string>
+    <string name="metadata_format_other">Nežinomas eksporto formatas</string>
 </resources>

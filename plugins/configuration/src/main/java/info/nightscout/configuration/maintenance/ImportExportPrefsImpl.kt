@@ -44,7 +44,7 @@ import info.nightscout.interfaces.maintenance.Prefs
 import info.nightscout.interfaces.maintenance.PrefsFile
 import info.nightscout.interfaces.maintenance.PrefsFormat
 import info.nightscout.interfaces.maintenance.PrefsMetadataKey
-import info.nightscout.interfaces.maintenance.PrefsStatus
+import info.nightscout.interfaces.maintenance.PrefsStatusImpl
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.ui.UiInteraction
@@ -114,12 +114,12 @@ class ImportExportPrefsImpl @Inject constructor(
 
         val metadata: MutableMap<PrefsMetadataKey, PrefMetadata> = mutableMapOf()
 
-        metadata[PrefsMetadataKey.DEVICE_NAME] = PrefMetadata(detectUserName(context), PrefsStatus.OK)
-        metadata[PrefsMetadataKey.CREATED_AT] = PrefMetadata(dateUtil.toISOString(dateUtil.now()), PrefsStatus.OK)
-        metadata[PrefsMetadataKey.AAPS_VERSION] = PrefMetadata(config.VERSION_NAME, PrefsStatus.OK)
-        metadata[PrefsMetadataKey.AAPS_FLAVOUR] = PrefMetadata(config.FLAVOR, PrefsStatus.OK)
-        metadata[PrefsMetadataKey.DEVICE_MODEL] = PrefMetadata(config.currentDeviceModelString, PrefsStatus.OK)
-        metadata[PrefsMetadataKey.ENCRYPTION] = PrefMetadata("Enabled", PrefsStatus.OK)
+        metadata[PrefsMetadataKeyImpl.DEVICE_NAME] = PrefMetadata(detectUserName(context), PrefsStatusImpl.OK)
+        metadata[PrefsMetadataKeyImpl.CREATED_AT] = PrefMetadata(dateUtil.toISOString(dateUtil.now()), PrefsStatusImpl.OK)
+        metadata[PrefsMetadataKeyImpl.AAPS_VERSION] = PrefMetadata(config.VERSION_NAME, PrefsStatusImpl.OK)
+        metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR] = PrefMetadata(config.FLAVOR, PrefsStatusImpl.OK)
+        metadata[PrefsMetadataKeyImpl.DEVICE_MODEL] = PrefMetadata(config.currentDeviceModelString, PrefsStatusImpl.OK)
+        metadata[PrefsMetadataKeyImpl.ENCRYPTION] = PrefMetadata("Enabled", PrefsStatusImpl.OK)
 
         return metadata
     }
@@ -133,7 +133,7 @@ class ImportExportPrefsImpl @Inject constructor(
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                 (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.name
             } else null
-        } catch (e: Exception){
+        } catch (e: Exception) {
             null
         }
         val n4 = Settings.System.getString(context.contentResolver, "device_name")
@@ -219,7 +219,7 @@ class ImportExportPrefsImpl @Inject constructor(
     ) {
 
         // current master password was not the one used for decryption, so we prompt for old password...
-        if (!importOk && (prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status == PrefsStatus.ERROR)) {
+        if (!importOk && (prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status == PrefsStatusImpl.ERROR)) {
             askForEncryptionPass(
                 activity, R.string.preferences_import_canceled, R.string.old_master_password,
                 R.string.different_password_used, R.string.master_password_will_be_replaced
@@ -303,6 +303,7 @@ class ImportExportPrefsImpl @Inject constructor(
     override fun importCustomWatchface(fragment: Fragment) {
         fragment.activity?.let { importCustomWatchface(it) }
     }
+
     override fun importCustomWatchface(activity: FragmentActivity) {
         try {
             if (activity is DaggerAppCompatActivityWithResult)
@@ -317,7 +318,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
     override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) {
         prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?:"", withDate)
+        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?: "", withDate)
         ZipWatchfaceFormat.saveCustomWatchface(newFile, customWatchface)
     }
 
@@ -374,7 +375,7 @@ class ImportExportPrefsImpl @Inject constructor(
         var importOk = true
 
         for ((_, value) in prefs.metadata) {
-            if (value.status == PrefsStatus.ERROR)
+            if (value.status == PrefsStatusImpl.ERROR)
                 importOk = false
         }
         return importOk
