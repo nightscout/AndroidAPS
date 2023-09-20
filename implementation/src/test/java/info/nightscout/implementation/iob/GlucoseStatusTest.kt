@@ -94,7 +94,7 @@ class GlucoseStatusTest : TestBaseWithProfile() {
     @Test fun returnOldDataIfAllowed() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateOldBgData())
         val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).getGlucoseStatusData(true)
-        assertThat(glucoseStatus).isNull()
+        assertThat(glucoseStatus).isNotNull()
     }
 
     @Test fun averageShouldNotFailOnEmptyArray() {
