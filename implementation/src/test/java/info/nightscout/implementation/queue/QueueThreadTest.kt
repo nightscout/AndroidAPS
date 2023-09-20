@@ -1,5 +1,6 @@
 package info.nightscout.implementation.queue
 
+import com.google.common.truth.Truth.assertThat
 import android.content.Context
 import android.os.PowerManager
 import dagger.android.AndroidInjector
@@ -16,7 +17,6 @@ import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.sharedtests.TestBaseWithProfile
 import info.nightscout.sharedtests.TestPumpPlugin
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -84,6 +84,6 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue.tempBasalAbsolute(2.0, 60, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         @Suppress("CallToThreadRun")
         sut.run()
-        Assertions.assertEquals(0, commandQueue.size())
+        assertThat(commandQueue.size()).isEqualTo(0)
     }
 }
