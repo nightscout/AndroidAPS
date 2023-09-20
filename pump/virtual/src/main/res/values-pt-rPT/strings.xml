@@ -9,4 +9,5 @@
     <string name="virtual_pump_label">VIRTUAL PUMP</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
 </resources>
