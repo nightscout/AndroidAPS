@@ -14,7 +14,7 @@ apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 android {
 
-    namespace 'info.nightscout.shared.impl'
+    namespace 'app.aaps.shared.impl'
     defaultConfig {
         minSdkVersion 25  // for wear
     }

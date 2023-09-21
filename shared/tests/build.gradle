@@ -13,7 +13,7 @@ apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 android {
-    namespace 'info.nightscout.sharedtests'
+    namespace 'app.aaps.shared.tests'
 }
 
 dependencies {
