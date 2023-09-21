@@ -457,6 +457,7 @@
     <string name="cobvsiob">угл COB к инс IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
     <string name="partialboluswizard">Подать эту часть рекомендации мастера болюса [%]</string>
+    <string name="partialboluswizard_reset_time">Пороговое время для устаревшей ГК [min]</string>
     <string name="bolus_constraint_applied_warn">Применено ограничение болюса: %1$.2f ед. до %2$.2f ед.</string>
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
     <string name="advisoralarm">Напомнить о еде</string>
@@ -586,6 +587,7 @@
     <string name="cleanup_db_confirm_sync">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.\nчто позволит значительно ускорить полную синхронизацию.</string>
     <string name="cleared_entries">Удалённые записи</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">Вс</string>
     <string name="weekday_saturday_short">Сб</string>
     <string name="weekday_friday_short">Пт</string>
     <string name="weekday_thursday_short">Чт</string>
@@ -601,5 +603,6 @@
     <string name="saturday_short">Сб</string>
     <string name="sunday_short">Вс</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1fед</string>
     <string name="format_insulin_units">%1$.2f ед</string>
 </resources>
