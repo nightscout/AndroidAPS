@@ -23,7 +23,7 @@ dependencies {
     implementation project(':core:validators')
     implementation project(':database:entities')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
 
     // Phone checker
     api 'com.scottyab:rootbeer-lib:0.1.0'

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.fromConstant
 import info.nightscout.core.utils.receivers.DataWorkerStorage
@@ -28,7 +29,6 @@ import info.nightscout.interfaces.source.BgSource
 import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.extensions.safeGetInstalledPackages
 import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

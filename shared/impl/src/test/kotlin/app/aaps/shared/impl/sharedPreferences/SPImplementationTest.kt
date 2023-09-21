@@ -1,8 +1,8 @@
-package info.nightscout.shared.impl.sharedPreferences
+package app.aaps.shared.impl.sharedPreferences
 
-import com.google.common.truth.Truth.assertThat
 import android.content.Context
-import info.nightscout.shared.impl.SharedPreferencesMock
+import app.aaps.shared.impl.SharedPreferencesMock
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

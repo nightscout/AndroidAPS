@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.di
 
+import app.aaps.shared.impl.di.SharedImplModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -34,7 +35,6 @@ import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.pump.medtrum.di.MedtrumModule
 import info.nightscout.pump.virtual.di.VirtualPumpModule
-import info.nightscout.shared.impl.di.SharedImplModule
 import info.nightscout.source.di.SourceModule
 import info.nightscout.ui.di.UiModule
 import info.nightscout.workflow.di.WorkflowModule

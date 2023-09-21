@@ -1,6 +1,7 @@
 package info.nightscout.core.data
 
 import android.content.Context
+import app.aaps.shared.impl.utils.DateUtilImpl
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
@@ -10,7 +11,6 @@ import info.nightscout.core.iob.plus
 import info.nightscout.core.iob.round
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.DateUtilImpl
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

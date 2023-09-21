@@ -181,7 +181,7 @@ dependencies {
     // in order to use internet's versions you'd need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
-    implementation project(':app-wear-shared:shared-impl')
+    implementation project(':shared:impl')
     implementation project(':core:main')
     implementation project(':core:graphview')
     implementation project(':core:interfaces')
@@ -222,7 +222,7 @@ dependencies {
     implementation project(':pump:virtual')
     implementation project(':workflow')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 

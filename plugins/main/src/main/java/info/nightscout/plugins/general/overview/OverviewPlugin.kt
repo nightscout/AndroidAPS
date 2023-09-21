@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.shared.impl.rx.bus.RxBusImpl
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.events.EventNewNotification
@@ -34,7 +35,6 @@ import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventUpdateOverviewCalcProgress
 import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.impl.rx.bus.RxBusImpl
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable

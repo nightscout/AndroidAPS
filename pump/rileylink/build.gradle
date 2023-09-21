@@ -19,5 +19,5 @@ dependencies {
     implementation project(':core:ui')
     implementation project(':pump:pump-common')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
 }

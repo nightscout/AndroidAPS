@@ -1,6 +1,7 @@
 package info.nightscout.core.data
 
 import android.content.Context
+import app.aaps.shared.impl.utils.DateUtilImpl
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import info.nightscout.core.extensions.pureProfileFromJson
@@ -11,7 +12,6 @@ import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.DateUtilImpl
 import info.nightscout.sharedtests.HardLimitsMock
 import info.nightscout.sharedtests.TestBase
 import info.nightscout.sharedtests.TestPumpPlugin
@@ -90,7 +90,7 @@ class ProfileTest : TestBase() {
             """
     00:00    6,0 mmol/U
     02:00    6,2 mmol/U
-    """.trimIndent() 
+    """.trimIndent()
         )
         assertThat(p.getIc(c.timeInMillis)).isWithin(0.01).of(30.0)
         assertThat(p.getIcTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(30.0)
@@ -103,9 +103,9 @@ class ProfileTest : TestBase() {
         assertThat(p.percentageBasalSum()).isWithin(0.01).of(2.4)
         assertThat(p.baseBasalSum()).isWithin(0.01).of(2.4)
 //        assertThat( p.getTargetMgdl(2 * 60 * 60)).isWithin(0.01).of(81.0)
-        assertThat( p.getTargetLowMgdl(c.timeInMillis)).isWithin(0.01).of(90.0)
+        assertThat(p.getTargetLowMgdl(c.timeInMillis)).isWithin(0.01).of(90.0)
 //        assertThat( p.getTargetLowTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(4.0)
-        assertThat( p.getTargetHighMgdl(c.timeInMillis)).isWithin(0.01).of(90.0)
+        assertThat(p.getTargetHighMgdl(c.timeInMillis)).isWithin(0.01).of(90.0)
 //        assertThat( p.getTargetHighTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(5.0)
         assertThat(p.getTargetList(rh, dateUtil).replace(".", ",")).isEqualTo("00:00    5,0 - 5,0 mmol")
         assertThat(p.percentage).isEqualTo(100)

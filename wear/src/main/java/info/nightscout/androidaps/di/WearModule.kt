@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.di
 
 import android.content.Context
+import app.aaps.shared.impl.di.SharedImplModule
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.WearApp
-import info.nightscout.shared.impl.di.SharedImplModule
 import kotlinx.datetime.Clock
 
 @Suppress("unused")

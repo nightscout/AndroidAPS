@@ -1,4 +1,4 @@
-package info.nightscout.shared.impl
+package app.aaps.shared.impl
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener

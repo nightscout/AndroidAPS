@@ -1,4 +1,4 @@
-package info.nightscout.shared.impl.logging
+package app.aaps.shared.impl.logging
 
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.rx.logging.LTag
