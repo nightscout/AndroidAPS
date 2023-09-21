@@ -1,8 +1,8 @@
 package info.nightscout.core.data
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.sharedtests.TestBase
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -13,43 +13,39 @@ class ConstraintTest : TestBase() {
 
     @Test fun doTests() {
         val b = ConstraintObject(true, aapsLogger)
-        Assertions.assertEquals(true, b.value())
-        Assertions.assertEquals("", b.getReasons())
-        Assertions.assertEquals("", b.getMostLimitedReasons())
+        assertThat(b.value()).isTrue()
+        assertThat(b.getReasons()).isEmpty()
+        assertThat(b.getMostLimitedReasons()).isEmpty()
         b.set(false)
-        Assertions.assertEquals(false, b.value())
-        Assertions.assertEquals("", b.getReasons())
-        Assertions.assertEquals("", b.getMostLimitedReasons())
+        assertThat(b.value()).isFalse()
+        assertThat(b.getReasons()).isEmpty()
+        assertThat(b.getMostLimitedReasons()).isEmpty()
         b.set(true, "Set true", this)
-        Assertions.assertEquals(true, b.value())
-        Assertions.assertEquals("ConstraintTest: Set true", b.getReasons())
-        Assertions.assertEquals("ConstraintTest: Set true", b.getMostLimitedReasons())
+        assertThat(b.value()).isTrue()
+        assertThat(b.getReasons()).isEqualTo("ConstraintTest: Set true")
+        assertThat(b.getMostLimitedReasons()).isEqualTo("ConstraintTest: Set true")
         b.set(false, "Set false", this)
-        Assertions.assertEquals(false, b.value())
-        Assertions.assertEquals("ConstraintTest: Set true\nConstraintTest: Set false", b.getReasons())
-        Assertions.assertEquals("ConstraintTest: Set true\nConstraintTest: Set false", b.getMostLimitedReasons())
+        assertThat(b.value()).isFalse()
+        assertThat(b.getReasons()).isEqualTo("ConstraintTest: Set true\nConstraintTest: Set false")
+        assertThat(b.getMostLimitedReasons()).isEqualTo("ConstraintTest: Set true\nConstraintTest: Set false")
         val d = ConstraintObject(10.0, aapsLogger)
         d.set(5.0, "Set 5d", this)
-        Assertions.assertEquals(5.0, d.value(), 0.01)
-        Assertions.assertEquals("ConstraintTest: Set 5d", d.getReasons())
-        Assertions.assertEquals("ConstraintTest: Set 5d", d.getMostLimitedReasons())
+        assertThat(d.value()).isWithin(0.01).of(5.0)
+        assertThat(d.getReasons()).isEqualTo("ConstraintTest: Set 5d")
+        assertThat(d.getMostLimitedReasons()).isEqualTo("ConstraintTest: Set 5d")
         d.setIfSmaller(6.0, "Set 6d", this)
-        Assertions.assertEquals(5.0, d.value(), 0.01)
-        Assertions.assertEquals("ConstraintTest: Set 5d\nConstraintTest: Set 6d", d.getReasons())
-        Assertions.assertEquals("ConstraintTest: Set 5d", d.getMostLimitedReasons())
+        assertThat(d.value()).isWithin(0.01).of(5.0)
+        assertThat(d.getReasons()).isEqualTo("ConstraintTest: Set 5d\nConstraintTest: Set 6d")
+        assertThat(d.getMostLimitedReasons()).isEqualTo("ConstraintTest: Set 5d")
         d.setIfSmaller(4.0, "Set 4d", this)
-        Assertions.assertEquals(4.0, d.value(), 0.01)
-        Assertions.assertEquals("ConstraintTest: Set 5d\nConstraintTest: Set 6d\nConstraintTest: Set 4d", d.getReasons())
-        Assertions.assertEquals("ConstraintTest: Set 4d", d.getMostLimitedReasons())
-        Assertions.assertEquals(10.0, d.originalValue(), 0.01)
+        assertThat(d.value()).isWithin(0.01).of(4.0)
+        assertThat(d.getReasons()).isEqualTo("ConstraintTest: Set 5d\nConstraintTest: Set 6d\nConstraintTest: Set 4d")
+        assertThat(d.getMostLimitedReasons()).isEqualTo("ConstraintTest: Set 4d")
+        assertThat(d.originalValue()).isWithin(0.01).of(10.0)
         d.setIfDifferent(7.0, "Set 7d", this)
-        Assertions.assertEquals(7.0, d.value(), 0.01)
-        Assertions.assertEquals("ConstraintTest: Set 5d\nConstraintTest: Set 6d\nConstraintTest: Set 4d\nConstraintTest: Set 7d", d.getReasons())
-        Assertions.assertEquals("ConstraintTest: Set 4d\nConstraintTest: Set 7d", d.getMostLimitedReasons())
-        Assertions.assertEquals(10.0, d.originalValue(), 0.01)
-    }
-
-    @BeforeEach
-    fun prepareMock() {
+        assertThat(d.value()).isWithin(0.01).of(7.0)
+        assertThat(d.getReasons()).isEqualTo("ConstraintTest: Set 5d\nConstraintTest: Set 6d\nConstraintTest: Set 4d\nConstraintTest: Set 7d")
+        assertThat(d.getMostLimitedReasons()).isEqualTo("ConstraintTest: Set 4d\nConstraintTest: Set 7d")
+        assertThat(d.originalValue()).isWithin(0.01).of(10.0)
     }
 }
