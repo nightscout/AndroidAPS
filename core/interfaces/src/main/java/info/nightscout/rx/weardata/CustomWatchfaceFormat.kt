@@ -243,7 +243,6 @@ enum class JsonKeys(val key: String) {
 enum class JsonKeyValues(val key: String) {
     GONE("gone"),
     VISIBLE("visible"),
-    INVISIBLE("invisible"),
     CENTER("center"),
     LEFT("left"),
     RIGHT("right"),
