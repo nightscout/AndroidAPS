@@ -223,8 +223,8 @@ class MainApp : DaggerApplication() {
         }
         if (!sp.contains(info.nightscout.plugins.sync.R.string.key_ns_log_app_started_event))
             sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_log_app_started_event, config.APS)
-        if (sp.getString(info.nightscout.configuration.R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
-            sp.putString(info.nightscout.configuration.R.string.key_maintenance_logs_email, "logs@aaps.app")
+        if (sp.getString(app.aaps.configuration.R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
+            sp.putString(app.aaps.configuration.R.string.key_maintenance_logs_email, "logs@aaps.app")
         // fix values for theme switching
         sp.putString(info.nightscout.plugins.R.string.value_dark_theme, "dark")
         sp.putString(info.nightscout.plugins.R.string.value_light_theme, "light")

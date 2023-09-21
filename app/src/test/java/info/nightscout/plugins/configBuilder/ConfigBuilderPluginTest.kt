@@ -1,9 +1,9 @@
 package info.nightscout.plugins.configBuilder
 
+import app.aaps.configuration.configBuilder.ConfigBuilderPlugin
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.configuration.configBuilder.ConfigBuilderPlugin
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.protection.ProtectionCheck

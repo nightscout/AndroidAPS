@@ -9,9 +9,9 @@ import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.configuration.maintenance.MaintenancePlugin
 import com.google.common.util.concurrent.ListenableFuture
 import info.nightscout.androidaps.R
-import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository

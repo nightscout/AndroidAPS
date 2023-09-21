@@ -1,10 +1,10 @@
 package info.nightscout.plugins.general.maintenance
 
 import android.content.Context
+import app.aaps.configuration.maintenance.MaintenancePlugin
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
-import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.maintenance.PrefFileListProvider

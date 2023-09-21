@@ -22,7 +22,7 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="info.nightscout.configuration.activities.SingleFragmentActivity"
+            android:name=".activities.SingleFragmentActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
 
