@@ -2,13 +2,13 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Color
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 
 import org.junit.jupiter.api.Test
@@ -34,15 +34,16 @@ internal class InMemoryGlucoseValueDataPointTest {
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         Mockito.`when`(rh.gac(any(), any())).thenReturn(Color.GREEN)
     }
+
     @Test
     fun alphaShouldBeAddedForFilledGaps() {
         val gv = InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN)
         val sut = InMemoryGlucoseValueDataPoint(gv, defaultValueHelper, profileFunction, rh)
 
         var alpha = sut.color(context).ushr(24)
-        Assertions.assertEquals(255, alpha)
+        assertThat(alpha).isEqualTo(255)
         gv.filledGap = true
         alpha = sut.color(context).ushr(24)
-        Assertions.assertEquals(128, alpha)
+        assertThat(alpha).isEqualTo(128)
     }
 }
