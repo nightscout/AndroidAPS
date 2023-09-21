@@ -4,8 +4,8 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BolusDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.pump.core.utils.StringUtil
+import info.nightscout.pump.common.utils.ByteUtil
+import info.nightscout.pump.common.utils.StringUtil
 import java.util.Objects
 
 /**

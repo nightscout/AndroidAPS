@@ -7,9 +7,11 @@ import java.util.EnumSet;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
-/** @noinspection SpellCheckingInspection*/
+/**
+ * @noinspection SpellCheckingInspection
+ */
 class CancelDeliveryCommandTest {
 
     @Test

@@ -38,8 +38,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
         // bs = RFTools.encode4b6b(new byte[] { (byte)0xa7, 0x12 });
@@ -47,8 +47,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
         // bs = RFTools.encode4b6b(new byte[] { (byte)0xa7, 0x12, (byte)0xa7 });
@@ -56,8 +56,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
 
@@ -96,8 +96,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
         //
@@ -106,8 +106,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
         //
@@ -116,8 +116,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
 
@@ -133,8 +133,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // }
         //
         // byte[] back = RFTools.decode4b6b(out);
@@ -142,8 +142,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(back, bs) != 0) {
         // Log.e(
         // TAG,
-        // "decode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "decode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
         //
@@ -152,8 +152,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // }
         //
         // back = RFTools.decode4b6b(out);
@@ -161,8 +161,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(back, bs) != 0) {
         // Log.e(
         // TAG,
-        // "decode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "decode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
         //
@@ -171,8 +171,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(bs, out) != 0) {
         // Log.e(
         // TAG,
-        // "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // }
         //
         // back = RFTools.decode4b6b(out);
@@ -180,8 +180,8 @@ class RFToolsUTest {
         // if (ByteUtil.compare(back, bs) != 0) {
         // Log.e(
         // TAG,
-        // "decode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-        // + ByteUtil.shortHexString(bs));
+        // "decode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+        // + ByteUtil.INSTANCE.shortHexString(bs));
         // Assert.fail();
         // }
 

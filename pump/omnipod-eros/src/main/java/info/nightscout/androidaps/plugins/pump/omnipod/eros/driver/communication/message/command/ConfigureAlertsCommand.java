@@ -7,7 +7,7 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.NonceResyncableMessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertConfiguration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class ConfigureAlertsCommand extends NonceResyncableMessageBlock {
     private final List<AlertConfiguration> configurations;
@@ -25,9 +25,9 @@ public class ConfigureAlertsCommand extends NonceResyncableMessageBlock {
     }
 
     private void encode() {
-        encodedData = ByteUtil.getBytesFromInt(nonce);
+        encodedData = ByteUtil.INSTANCE.getBytesFromInt(nonce);
         for (AlertConfiguration config : configurations) {
-            encodedData = ByteUtil.concat(encodedData, config.getRawData());
+            encodedData = ByteUtil.INSTANCE.concat(encodedData, config.getRawData());
         }
     }
 

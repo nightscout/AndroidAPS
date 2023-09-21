@@ -32,7 +32,7 @@ import info.nightscout.pump.common.sync.PumpDbEntryBolus
 import info.nightscout.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.pump.common.sync.PumpSyncStorage
-import info.nightscout.pump.core.utils.StringUtil
+import info.nightscout.pump.common.utils.StringUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

@@ -11,11 +11,11 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.RateEntry;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 class BasalScheduleExtraCommandTest {
     @Test
-     void testEncodingFromRateEntries() {
+    void testEncodingFromRateEntries() {
         List<RateEntry> rateEntries = RateEntry.createEntries(3.0, Duration.standardHours(24));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand( //
                 false, //
@@ -32,7 +32,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testParametersCorrectFromBasalSchedule() {
+    void testParametersCorrectFromBasalSchedule() {
         BasalSchedule basalSchedule = new BasalSchedule(Collections.singletonList(new BasalScheduleEntry(0.05, Duration.ZERO)));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand( //
                 basalSchedule, //
@@ -59,7 +59,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testEncodingFromBasalScheduleWithThreeEntries() {
+    void testEncodingFromBasalScheduleWithThreeEntries() {
         BasalSchedule schedule = new BasalSchedule(Arrays.asList( //
                 new BasalScheduleEntry(1.05, Duration.ZERO), //
                 new BasalScheduleEntry(0.9, Duration.standardHours(10).plus(Duration.standardMinutes(30))), //
@@ -73,7 +73,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testEncodingFromBasalScheduleWithSingleEntry() {
+    void testEncodingFromBasalScheduleWithSingleEntry() {
         BasalSchedule basalSchedule = new BasalSchedule(Arrays.asList(new BasalScheduleEntry(1.05, Duration.ZERO)));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(basalSchedule,
                 Duration.standardMinutes((0x20 + 1) * 30).minus(Duration.standardSeconds(0x33c0 / 8)),
@@ -83,7 +83,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testSegmentMerging() {
+    void testSegmentMerging() {
         List<BasalScheduleEntry> entries = Arrays.asList(
                 new BasalScheduleEntry(0.8, Duration.ZERO),
                 new BasalScheduleEntry(0.9, Duration.standardMinutes(180)), //
@@ -109,7 +109,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testEncodingFromBasalScheduleWithThirteenEntries() {
+    void testEncodingFromBasalScheduleWithThirteenEntries() {
         List<BasalScheduleEntry> entries = Arrays.asList(
                 new BasalScheduleEntry(1.30, Duration.ZERO), //
                 new BasalScheduleEntry(0.05, Duration.standardMinutes(30)), //
@@ -136,7 +136,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testBasalScheduleExtraCommandRoundsToNearestSecond() {
+    void testBasalScheduleExtraCommandRoundsToNearestSecond() {
         BasalSchedule basalSchedule = new BasalSchedule(Arrays.asList(new BasalScheduleEntry(1.00, Duration.ZERO)));
 
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(basalSchedule,
@@ -164,6 +164,6 @@ class BasalScheduleExtraCommandTest {
     }
 
     private double extractDelayUntilNextPulseInSeconds(byte[] message) {
-        return ByteUtil.toInt((int) message[6], (int) message[7], (int) message[8], (int) message[9], ByteUtil.BitConversion.BIG_ENDIAN) / 1_000_000.0;
+        return ByteUtil.INSTANCE.toInt((int) message[6], (int) message[7], (int) message[8], (int) message[9], ByteUtil.BitConversion.BIG_ENDIAN) / 1_000_000.0;
     }
 }

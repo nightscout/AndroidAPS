@@ -17,8 +17,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceTyp
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.core.defs.PumpDeviceState
-import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.common.defs.PumpDeviceState
+import info.nightscout.pump.common.utils.ByteUtil
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton

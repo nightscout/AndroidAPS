@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import org.joda.time.Duration;
 
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class AlertConfiguration {
     private final AlertType alertType;
@@ -66,14 +66,14 @@ public class AlertConfiguration {
 
         if (alertTrigger instanceof UnitsRemainingAlertTrigger) {
             int ticks = (int) (((UnitsRemainingAlertTrigger) alertTrigger).getValue() / OmnipodConstants.POD_PULSE_SIZE / 2);
-            encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt16(ticks));
+            encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt16(ticks));
         } else if (alertTrigger instanceof TimerAlertTrigger) {
             int durationInMinutes = (int) ((TimerAlertTrigger) alertTrigger).getValue().getStandardMinutes();
-            encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt16(durationInMinutes));
+            encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt16(durationInMinutes));
         }
 
-        encodedData = ByteUtil.concat(encodedData, beepRepeat.getValue());
-        encodedData = ByteUtil.concat(encodedData, beepType.getValue());
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, beepRepeat.getValue());
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, beepType.getValue());
 
         return encodedData;
     }

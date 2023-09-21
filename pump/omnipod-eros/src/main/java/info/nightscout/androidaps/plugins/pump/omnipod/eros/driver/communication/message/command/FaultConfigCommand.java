@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.NonceResyncableMessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class FaultConfigCommand extends NonceResyncableMessageBlock {
     private final byte tab5sub16;
@@ -20,9 +20,9 @@ public class FaultConfigCommand extends NonceResyncableMessageBlock {
     }
 
     private void encode() {
-        encodedData = ByteUtil.getBytesFromInt(nonce);
-        encodedData = ByteUtil.concat(encodedData, tab5sub16);
-        encodedData = ByteUtil.concat(encodedData, tab5sub17);
+        encodedData = ByteUtil.INSTANCE.getBytesFromInt(nonce);
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, tab5sub16);
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, tab5sub17);
     }
 
     @Override

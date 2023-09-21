@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.pump.core.defs.PumpDeviceState
+import info.nightscout.pump.common.defs.PumpDeviceState
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -140,7 +140,7 @@ abstract class RileyLinkService : DaggerService() {
     fun doTuneUpDevice() {
         rileyLinkServiceData.setServiceState(RileyLinkServiceState.TuneUpDevice)
         setPumpDeviceState(PumpDeviceState.Sleeping)
-        val lastGoodFrequency =  rileyLinkServiceData.lastGoodFrequency ?: sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0)
+        val lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency ?: sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0)
         val newFrequency = deviceCommunicationManager.tuneForDevice()
         if (newFrequency != 0.0 && newFrequency != lastGoodFrequency) {
             aapsLogger.info(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Saving new pump frequency of %.3f MHz", newFrequency))

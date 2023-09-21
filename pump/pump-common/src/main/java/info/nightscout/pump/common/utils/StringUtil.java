@@ -1,4 +1,4 @@
-package info.nightscout.pump.core.utils;
+package info.nightscout.pump.common.utils;
 
 import org.joda.time.LocalDateTime;
 

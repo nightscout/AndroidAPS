@@ -2,13 +2,14 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import static com.google.common.truth.Truth.assertThat;
 
+import org.joda.time.Duration;
+import org.junit.jupiter.api.Test;
+
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ErrorEventInfo;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-import info.nightscout.pump.core.utils.ByteUtil;
-import org.joda.time.Duration;
-import org.junit.jupiter.api.Test;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * @noinspection SpellCheckingInspection

@@ -13,7 +13,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.database.impl.serialisation.SealedClassHelper
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.common.utils.ByteUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

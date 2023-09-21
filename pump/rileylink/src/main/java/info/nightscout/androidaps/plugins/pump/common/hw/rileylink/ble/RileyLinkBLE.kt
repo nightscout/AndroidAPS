@@ -28,8 +28,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.interfaces.Config
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.pump.core.utils.ThreadUtil
+import info.nightscout.pump.common.utils.ByteUtil
+import info.nightscout.pump.common.utils.ThreadUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -54,6 +54,7 @@ class RileyLinkBLE @Inject constructor(
     private val orangeLink: OrangeLinkImpl,
     private val config: Config
 ) {
+
     private val gattDebugEnabled = true
     private var manualDisconnect = false
 

@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileylinkStatusHistoryBinding
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileylinkStatusHistoryItemBinding
-import info.nightscout.pump.core.defs.PumpDeviceState
+import info.nightscout.pump.common.defs.PumpDeviceState
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject

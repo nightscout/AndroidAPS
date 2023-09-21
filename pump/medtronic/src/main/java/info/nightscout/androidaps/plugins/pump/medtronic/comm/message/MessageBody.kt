@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.message
 
-import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.common.utils.ByteUtil
 
 /**
  * Created by geoff on 5/29/16.

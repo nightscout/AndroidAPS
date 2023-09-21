@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType
-import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.common.utils.ByteUtil
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

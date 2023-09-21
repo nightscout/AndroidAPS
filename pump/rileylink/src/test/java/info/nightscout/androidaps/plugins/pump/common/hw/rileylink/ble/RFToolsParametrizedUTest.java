@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by andy on 11/21/18.
@@ -19,7 +19,11 @@ import info.nightscout.pump.core.utils.ByteUtil;
 public class RFToolsParametrizedUTest {
 
     private static final String TAG = "RFToolsUTest";
-
+    @Parameterized.Parameter
+    // first data value (0) is default
+    public/* NOT private */ byte[] decoded;
+    @Parameterized.Parameter(1)
+    public/* NOT private */ byte[] encoded;
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
@@ -51,14 +55,6 @@ public class RFToolsParametrizedUTest {
                         }, //
                 });
     }
-
-    @Parameterized.Parameter
-    // first data value (0) is default
-    public/* NOT private */ byte[] decoded;
-
-    @Parameterized.Parameter(1)
-    public/* NOT private */ byte[] encoded;
-
 
     /**
      * @noinspection JUnit3StyleTestMethodInJUnit4Class, unused
@@ -94,8 +90,8 @@ public class RFToolsParametrizedUTest {
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
                     TAG,
-                    "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-                            + ByteUtil.shortHexString(bs));
+                    "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+                            + ByteUtil.INSTANCE.shortHexString(bs));
             Assert.fail();
         }
         bs = decoder.encode4b6b(new byte[]{(byte) 0xa7, 0x12});
@@ -103,8 +99,8 @@ public class RFToolsParametrizedUTest {
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
                     TAG,
-                    "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-                            + ByteUtil.shortHexString(bs));
+                    "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+                            + ByteUtil.INSTANCE.shortHexString(bs));
             Assert.fail();
         }
         bs = decoder.encode4b6b(new byte[]{(byte) 0xa7, 0x12, (byte) 0xa7});
@@ -112,8 +108,8 @@ public class RFToolsParametrizedUTest {
         if (ByteUtil.compare(bs, out) != 0) {
             Log.e(
                     TAG,
-                    "encode Data failed: expected " + ByteUtil.shortHexString(out) + " but got "
-                            + ByteUtil.shortHexString(bs));
+                    "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
+                            + ByteUtil.INSTANCE.shortHexString(bs));
             Assert.fail();
         }
 

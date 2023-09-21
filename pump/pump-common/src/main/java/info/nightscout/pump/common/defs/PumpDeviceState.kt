@@ -1,4 +1,4 @@
-package info.nightscout.pump.core.defs
+package info.nightscout.pump.common.defs
 
 import info.nightscout.pump.common.R
 
