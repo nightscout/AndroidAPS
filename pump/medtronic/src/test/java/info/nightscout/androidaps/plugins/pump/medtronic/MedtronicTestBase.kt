@@ -10,7 +10,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.common.sync.PumpSyncStorage
-import info.nightscout.pump.common.utils.ByteUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.sharedtests.TestBase
@@ -19,7 +18,6 @@ import org.mockito.Mock
 
 open class MedtronicTestBase : TestBase() {
 
-    var byteUtil = ByteUtil()
     var rileyLinkUtil = RileyLinkUtil()
 
     @Mock lateinit var pumpSync: PumpSync

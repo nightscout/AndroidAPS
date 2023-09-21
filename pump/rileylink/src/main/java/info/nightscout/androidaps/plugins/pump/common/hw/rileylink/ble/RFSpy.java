@@ -152,7 +152,7 @@ public class RFSpy {
     public String getVersion() {
         BLECommOperationResult result = rileyLinkBle.readCharacteristicBlocking(radioServiceUUID, radioVersionUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
-            String version = StringUtil.fromBytes(result.value);
+            String version = StringUtil.INSTANCE.fromBytes(result.value);
             aapsLogger.debug(LTag.PUMPBTCOMM, "BLE Version: " + version);
             return version;
         } else {
@@ -175,7 +175,7 @@ public class RFSpy {
 
             if (response != null) { // && response[0] == (byte) 0xDD) {
 
-                String versionString = StringUtil.fromBytes(response);
+                String versionString = StringUtil.INSTANCE.fromBytes(response);
                 if (versionString.length() > 3) {
                     if (versionString.indexOf('s') >= 0) {
                         versionString = versionString.substring(versionString.indexOf('s'));

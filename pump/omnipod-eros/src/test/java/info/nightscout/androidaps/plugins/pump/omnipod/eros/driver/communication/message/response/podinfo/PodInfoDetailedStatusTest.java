@@ -17,7 +17,7 @@ import info.nightscout.pump.common.utils.ByteUtil;
 class PodInfoDetailedStatusTest {
     @Test
     void testPodInfoFaultEventNoFaultAlerts() {
-        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.fromHexString("02080100000a003800000003ff008700000095ff0000"));
+        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.INSTANCE.fromHexString("02080100000a003800000003ff008700000095ff0000"));
 
         assertThat(podInfoDetailedStatus.getPodProgressStatus()).isEqualTo(PodProgressStatus.ABOVE_FIFTY_UNITS);
         assertThat(podInfoDetailedStatus.getDeliveryStatus()).isEqualTo(DeliveryStatus.NORMAL);
@@ -38,7 +38,7 @@ class PodInfoDetailedStatusTest {
 
     @Test
     void testPodInfoFaultEventDeliveryErrorDuringPriming() {
-        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.fromHexString("020f0000000900345c000103ff0001000005ae056029"));
+        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.INSTANCE.fromHexString("020f0000000900345c000103ff0001000005ae056029"));
 
         assertThat(podInfoDetailedStatus.getPodProgressStatus()).isEqualTo(PodProgressStatus.INACTIVE);
         assertThat(podInfoDetailedStatus.getDeliveryStatus()).isEqualTo(DeliveryStatus.SUSPENDED);
@@ -62,7 +62,7 @@ class PodInfoDetailedStatusTest {
 
     @Test
     void testPodInfoFaultEventErrorShuttingDown() {
-        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.fromHexString("020d0000000407f28609ff03ff0a0200000823080000"));
+        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.INSTANCE.fromHexString("020d0000000407f28609ff03ff0a0200000823080000"));
 
         assertThat(podInfoDetailedStatus.getPodProgressStatus()).isEqualTo(PodProgressStatus.FAULT_EVENT_OCCURRED);
         assertThat(podInfoDetailedStatus.getDeliveryStatus()).isEqualTo(DeliveryStatus.SUSPENDED);
@@ -87,7 +87,7 @@ class PodInfoDetailedStatusTest {
 
     @Test
     void testPodInfoFaultEventInsulinNotDelivered() {
-        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.fromHexString("020f0000010200ec6a026803ff026b000028a7082023"));
+        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.INSTANCE.fromHexString("020f0000010200ec6a026803ff026b000028a7082023"));
 
         assertThat(podInfoDetailedStatus.getPodProgressStatus()).isEqualTo(PodProgressStatus.INACTIVE);
         assertThat(podInfoDetailedStatus.getDeliveryStatus()).isEqualTo(DeliveryStatus.SUSPENDED);
@@ -112,7 +112,7 @@ class PodInfoDetailedStatusTest {
 
     @Test
     void testPodInfoFaultEventMaxBolusNotDelivered() {
-        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.fromHexString("020f00ffff0200ec6a026803ff026b000028a7082023"));
+        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.INSTANCE.fromHexString("020f00ffff0200ec6a026803ff026b000028a7082023"));
 
         assertThat(podInfoDetailedStatus.getPodProgressStatus()).isEqualTo(PodProgressStatus.INACTIVE);
         assertThat(podInfoDetailedStatus.getDeliveryStatus()).isEqualTo(DeliveryStatus.SUSPENDED);
@@ -137,7 +137,7 @@ class PodInfoDetailedStatusTest {
 
     @Test
     void testPodInfoFaultEventInsulinStateTableCorruptionFoundDuringErrorLogging() {
-        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.fromHexString("020D00000000000012FFFF03FF00160000879A070000"));
+        PodInfoDetailedStatus podInfoDetailedStatus = new PodInfoDetailedStatus(ByteUtil.INSTANCE.fromHexString("020D00000000000012FFFF03FF00160000879A070000"));
 
         assertThat(podInfoDetailedStatus.getPodProgressStatus()).isEqualTo(PodProgressStatus.FAULT_EVENT_OCCURRED);
         assertThat(podInfoDetailedStatus.getDeliveryStatus()).isEqualTo(DeliveryStatus.SUSPENDED);

@@ -27,7 +27,7 @@ class BasalScheduleExtraCommandTest {
                 rateEntries);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.createByteArrayFromHexString("130e40001aea01312d003840005b8d80"), // From https://github.com/openaps/openomni/wiki/Bolus
+                ByteUtil.INSTANCE.createByteArrayFromHexString("130e40001aea01312d003840005b8d80"), // From https://github.com/openaps/openomni/wiki/Bolus
                 basalScheduleExtraCommand.getRawData());
     }
 
@@ -68,7 +68,7 @@ class BasalScheduleExtraCommandTest {
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(schedule, Duration.standardMinutes((0x2e + 1) * 30).minus(Duration.standardSeconds(0x1be8 / 8)),
                 false, true, Duration.ZERO);
 
-        Assertions.assertArrayEquals(ByteUtil.fromHexString("131a4002009600a7d8c0089d0105944905a001312d00044c0112a880"),
+        Assertions.assertArrayEquals(ByteUtil.INSTANCE.fromHexString("131a4002009600a7d8c0089d0105944905a001312d00044c0112a880"),
                 basalScheduleExtraCommand.getRawData());
     }
 
@@ -152,7 +152,7 @@ class BasalScheduleExtraCommandTest {
         // recreating the offset, we can have small errors in reproducing the the encoded output, which we really
         // don't care about.
 
-        byte[] expected = ByteUtil.fromHexString(expectedHexString);
+        byte[] expected = ByteUtil.INSTANCE.fromHexString(expectedHexString);
 
         Assertions.assertEquals(extractDelayUntilNextPulseInSeconds(expected), extractDelayUntilNextPulseInSeconds(actual), 0.0001);
 

@@ -381,6 +381,7 @@ object ByteUtil {
     }
 
     // 000300050100C800A0
+    @JvmOverloads
     fun createByteArrayFromCompactString(dataFull: String, startIndex: Int = 0, length: Int = dataFull.length): ByteArray {
         var data = dataFull.substring(startIndex)
         data = data.substring(0, length)

@@ -131,7 +131,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         //     Log.e("", "DT is null. RawData=" + ByteUtil.getHex(rawData))
         // }
         sb.append(toStringStart)
-        sb.append(", DT: " + if (dt == null) "null" else StringUtil.getStringInLength(dt, 19))
+        sb.append(", DT: " + (dt?.let { StringUtil.getStringInLength(it, 19) } ?: "null"))
         sb.append(", length=")
         sb.append(headLength)
         sb.append(",")

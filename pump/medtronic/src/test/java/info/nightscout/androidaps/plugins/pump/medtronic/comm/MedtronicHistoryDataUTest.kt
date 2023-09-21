@@ -37,7 +37,7 @@ import org.mockito.Mock
     fun setup() {
         medtronicPumpStatus = MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
         medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
-        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, byteUtil)
+        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
         medtronicHistoryData = MedtronicHistoryData(
             packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
             medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction

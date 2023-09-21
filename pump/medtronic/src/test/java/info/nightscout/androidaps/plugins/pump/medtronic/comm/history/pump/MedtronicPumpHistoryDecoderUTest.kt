@@ -35,7 +35,7 @@ class MedtronicPumpHistoryDecoderUTest : MedtronicTestBase() {
             MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
         medtronicUtil =
             MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
-        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, ByteUtil())
+        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
     }
 
     /*

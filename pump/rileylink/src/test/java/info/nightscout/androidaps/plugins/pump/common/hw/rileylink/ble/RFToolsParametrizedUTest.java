@@ -29,28 +29,26 @@ public class RFToolsParametrizedUTest {
     public static Collection<Object[]> data() {
         return Arrays
                 .asList(new Object[][]{ //
-                        {ByteUtil.createByteArrayFromCompactString("00"), ByteUtil.createByteArrayFromCompactString("5555")},
+                        {ByteUtil.INSTANCE.createByteArrayFromCompactString("00"), ByteUtil.INSTANCE.createByteArrayFromCompactString("5555")},
                         //
                         {
-                                ByteUtil.createByteArrayFromCompactString("0000"),
-                                ByteUtil.createByteArrayFromCompactString("555555")}, //
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("0000"),
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("555555")}, //
                         {
-                                ByteUtil.createByteArrayFromCompactString("A71289865D00BE"),
-                                ByteUtil.createByteArrayFromCompactString("A96C726996A694D5552CE5")}, //
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A71289865D00BE"),
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A96C726996A694D5552CE5")}, //
                         {
-                                ByteUtil.createByteArrayFromCompactString("A7128986060015"),
-                                ByteUtil.createByteArrayFromCompactString("A96C726996A6566555C655")}, //
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A7128986060015"),
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A96C726996A6566555C655")}, //
                         {
-                                ByteUtil.createByteArrayFromCompactString("A7128986150956"),
-                                ByteUtil.createByteArrayFromCompactString("A96C726996A6C655599665")}, //
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A7128986150956"),
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A96C726996A6C655599665")}, //
                         {
-                                ByteUtil.createByteArrayFromCompactString("A71289868D00B0"),
-                                ByteUtil.createByteArrayFromCompactString("A96C726996A668D5552D55")}, //
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A71289868D00B0"),
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A96C726996A668D5552D55")}, //
                         {
-                                ByteUtil
-                                        .createByteArrayFromCompactString("A71289868D090337323200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000039"),
-                                ByteUtil
-                                        .createByteArrayFromCompactString("A96C726996A668D5595638D68F28F25555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555558D95")
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A71289868D090337323200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000039"),
+                                ByteUtil.INSTANCE.createByteArrayFromCompactString("A96C726996A668D5595638D68F28F25555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555558D95")
                                 //
                         }, //
                 });
@@ -72,22 +70,22 @@ public class RFToolsParametrizedUTest {
         // byte[] s1 = { 0, 1, 2 };
         // byte[] s2 = { 2, 1, 0, 3 };
         // byte[] s3 = { 0, 1, 2, 3 };
-        // if (ByteUtil.compare(s1, s1) != 0) {
+        // if (ByteUtil.INSTANCE.compare(s1, s1) != 0) {
         // LOG.error("test: compare failed.");
         // }
-        // if (ByteUtil.compare(s1, s2) >= 0) {
+        // if (ByteUtil.INSTANCE.compare(s1, s2) >= 0) {
         // LOG.error("test: compare failed.");
         // }
-        // if (ByteUtil.compare(s2, s1) <= 0) {
+        // if (ByteUtil.INSTANCE.compare(s2, s1) <= 0) {
         // LOG.error("test: compare failed.");
         // }
-        // if (ByteUtil.compare(s1, s3) >= 0) {
+        // if (ByteUtil.INSTANCE.compare(s1, s3) >= 0) {
         // LOG.error("test: compare failed.");
         // }
         // testCompose(new byte[] {(byte)0xa7, (byte)0xa7});
         byte[] bs = decoder.encode4b6b(new byte[]{(byte) 0xa7});
         byte[] out = new byte[]{(byte) (0xa9), 0x65};
-        if (ByteUtil.compare(bs, out) != 0) {
+        if (ByteUtil.INSTANCE.compare(bs, out) != 0) {
             Log.e(
                     TAG,
                     "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
@@ -96,7 +94,7 @@ public class RFToolsParametrizedUTest {
         }
         bs = decoder.encode4b6b(new byte[]{(byte) 0xa7, 0x12});
         out = new byte[]{(byte) (0xa9), 0x6c, 0x72};
-        if (ByteUtil.compare(bs, out) != 0) {
+        if (ByteUtil.INSTANCE.compare(bs, out) != 0) {
             Log.e(
                     TAG,
                     "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
@@ -105,7 +103,7 @@ public class RFToolsParametrizedUTest {
         }
         bs = decoder.encode4b6b(new byte[]{(byte) 0xa7, 0x12, (byte) 0xa7});
         out = new byte[]{(byte) (0xa9), 0x6c, 0x72, (byte) 0xa9, 0x65};
-        if (ByteUtil.compare(bs, out) != 0) {
+        if (ByteUtil.INSTANCE.compare(bs, out) != 0) {
             Log.e(
                     TAG,
                     "encode Data failed: expected " + ByteUtil.INSTANCE.shortHexString(out) + " but got "
@@ -125,7 +123,7 @@ public class RFToolsParametrizedUTest {
 
         byte[] encodedX = decoder.encode4b6b(this.decoded);
 
-        // if (ByteUtil.compare(encodedX, this.encoded) != 0) {
+        // if (ByteUtil.INSTANCE.compare(encodedX, this.encoded) != 0) {
         // Assert.assertEquals(encodedX, encoded);
         // }
 

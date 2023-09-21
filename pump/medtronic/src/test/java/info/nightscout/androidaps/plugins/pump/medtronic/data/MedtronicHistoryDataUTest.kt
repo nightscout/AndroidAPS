@@ -24,7 +24,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
     @BeforeEach
     fun setUp() {
         medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
-        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, byteUtil)
+        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
     }
 
     @Test
