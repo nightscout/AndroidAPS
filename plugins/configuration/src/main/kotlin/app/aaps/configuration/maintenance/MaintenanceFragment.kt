@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.text.toSpanned
 import app.aaps.configuration.R
 import app.aaps.configuration.databinding.MaintenanceFragmentBinding
 import app.aaps.configuration.maintenance.activities.LogSettingActivity
+import app.aaps.configuration.maintenance.compose.MaintenanceScreen
+import com.google.accompanist.themeadapter.material.MdcTheme
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -62,16 +66,27 @@ class MaintenanceFragment : DaggerFragment() {
     private val disposable = CompositeDisposable()
     private var inMenu = false
     private var queryingProtection = false
-    private var _binding: MaintenanceFragmentBinding? = null
+//    private var _binding: MaintenanceFragmentBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
-    private val binding get() = _binding!!
+//    private val binding get() = _binding!!
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        _binding = MaintenanceFragmentBinding.inflate(inflater, container, false)
-        return binding.root
+
+        return ComposeView(requireContext()).apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                MdcTheme {
+                    MaintenanceScreen(
+//                        scanResult = qrResult,
+//                        onScanAnotherButtonClick = { performAnotherScan() }
+                    )
+                }
+            }
+        }
     }
 
+/*
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val parentClass = this.activity?.let { it::class.java }
@@ -162,25 +177,29 @@ class MaintenanceFragment : DaggerFragment() {
 
         binding.unlock.setOnClickListener { queryProtection() }
     }
+*/
 
     override fun onResume() {
         super.onResume()
-        if (inMenu) queryProtection() else updateProtectedUi()
+//        if (inMenu) queryProtection() else updateProtectedUi()
     }
 
     @Synchronized
     override fun onDestroyView() {
         super.onDestroyView()
         disposable.clear()
-        _binding = null
+//        _binding = null
     }
 
+/*
     private fun updateProtectedUi() {
         val isLocked = protectionCheck.isLocked(PREFERENCES)
         binding.mainLayout.visibility = isLocked.not().toVisibility()
         binding.unlock.visibility = isLocked.toVisibility()
     }
+*/
 
+/*
     private fun queryProtection() {
         val isLocked = protectionCheck.isLocked(PREFERENCES)
         if (isLocked && !queryingProtection) {
@@ -191,4 +210,5 @@ class MaintenanceFragment : DaggerFragment() {
             }
         }
     }
+*/
 }

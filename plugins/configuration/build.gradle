@@ -13,6 +13,13 @@ apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 android {
     namespace 'app.aaps.configuration'
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
+
 }
 
 
@@ -31,4 +38,15 @@ dependencies {
     api "androidx.work:work-runtime-ktx:$work_version"
     // Maintenance
     api "androidx.gridlayout:gridlayout:$gridlayout_version"
+
+    api platform('androidx.compose:compose-bom:2023.09.01')
+
+    api "androidx.compose.runtime:runtime"
+    api "androidx.compose.ui:ui"
+    api "androidx.compose.foundation:foundation"
+    api "androidx.compose.foundation:foundation-layout"
+    api "androidx.compose.material:material"
+    api "androidx.compose.runtime:runtime-livedata"
+    api "androidx.compose.ui:ui-tooling"
+    api "com.google.accompanist:accompanist-themeadapter-material:0.33.1-alpha"
 }
