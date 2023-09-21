@@ -1,5 +1,6 @@
 package info.nightscout.core.wizard
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.aps.Loop
@@ -7,7 +8,6 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.sharedtests.TestBase
 import org.json.JSONArray
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -55,46 +55,46 @@ class QuickWizardTest : TestBase() {
     @Test
     fun setDataTest() {
         quickWizard.setData(array)
-        Assertions.assertEquals(2, quickWizard.size())
+        assertThat(quickWizard.size()).isEqualTo(2)
     }
 
     @Test
     fun test() {
         quickWizard.setData(array)
-        Assertions.assertEquals("Lunch", quickWizard[1].buttonText())
+        assertThat(quickWizard[1].buttonText()).isEqualTo("Lunch")
     }
 
     @Test
     fun active() {
         quickWizard.setData(array)
         val e: QuickWizardEntry = quickWizard.getActive()!!
-        Assertions.assertEquals(36.0, e.carbs().toDouble(), 0.01)
+        assertThat(e.carbs().toDouble()).isWithin(0.01).of(36.0)
         quickWizard.remove(0)
         quickWizard.remove(0)
-        Assertions.assertNull(quickWizard.getActive())
+        assertThat(quickWizard.getActive()).isNull()
     }
 
     @Test
     fun newEmptyItemTest() {
-        Assertions.assertNotNull(quickWizard.newEmptyItem())
+        assertThat(quickWizard.newEmptyItem()).isNotNull()
     }
 
     @Test
     fun addOrUpdate() {
         quickWizard.setData(array)
-        Assertions.assertEquals(2, quickWizard.size())
+        assertThat(quickWizard.size()).isEqualTo(2)
         quickWizard.addOrUpdate(quickWizard.newEmptyItem())
-        Assertions.assertEquals(3, quickWizard.size())
+        assertThat(quickWizard.size()).isEqualTo(3)
         val q: QuickWizardEntry = quickWizard.newEmptyItem()
         q.position = 0
         quickWizard.addOrUpdate(q)
-        Assertions.assertEquals(3, quickWizard.size())
+        assertThat(quickWizard.size()).isEqualTo(3)
     }
 
     @Test
     fun remove() {
         quickWizard.setData(array)
         quickWizard.remove(0)
-        Assertions.assertEquals(1, quickWizard.size())
+        assertThat(quickWizard.size()).isEqualTo(1)
     }
 }
