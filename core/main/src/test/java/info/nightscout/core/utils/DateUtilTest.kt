@@ -7,7 +7,6 @@ import info.nightscout.shared.utils.DateUtilImpl
 import info.nightscout.shared.utils.T
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -41,25 +40,25 @@ class DateUtilTest : TestBase() {
 
     @Test
     fun fromISODateStringTest() {
-        Assertions.assertEquals(1511124634417L, DateUtilImpl(context).fromISODateString("2017-11-19T22:50:34.417+0200"))
-        Assertions.assertEquals(1511124634000L, DateUtilImpl(context).fromISODateString("2017-11-19T22:50:34+0200"))
-        Assertions.assertEquals(1512317365000L, DateUtilImpl(context).fromISODateString("2017-12-03T16:09:25.000Z"))
-        Assertions.assertEquals(1513902750000L, DateUtilImpl(context).fromISODateString("2017-12-22T00:32:30Z"))
+        assertThat(DateUtilImpl(context).fromISODateString("2017-11-19T22:50:34.417+0200")).isEqualTo(1511124634417L)
+        assertThat(DateUtilImpl(context).fromISODateString("2017-11-19T22:50:34+0200")).isEqualTo(1511124634000L)
+        assertThat(DateUtilImpl(context).fromISODateString("2017-12-03T16:09:25.000Z")).isEqualTo(1512317365000L)
+        assertThat(DateUtilImpl(context).fromISODateString("2017-12-22T00:32:30Z")).isEqualTo(1513902750000L)
     }
 
     @Test
     fun toISOStringTest() {
-        Assertions.assertEquals("2017-12-22T00:32:30.000Z", DateUtilImpl(context).toISOString(1513902750000L))
+        assertThat(DateUtilImpl(context).toISOString(1513902750000L)).isEqualTo("2017-12-22T00:32:30.000Z")
     }
 
     @Test fun secondsOfTheDayToMillisecondsTest() {
-        Assertions.assertTrue(Date(DateUtilImpl(context).secondsOfTheDayToMilliseconds((T.hours(1).secs() + T.mins(1).secs() + 1).toInt())).toString().contains("01:01:00"))
+        assertThat(Date(DateUtilImpl(context).secondsOfTheDayToMilliseconds((T.hours(1).secs() + T.mins(1).secs() + 1).toInt())).toString()).contains("01:01:00")
     }
 
     @Test fun toSecondsTest() {
-        Assertions.assertEquals(3600, DateUtilImpl(context).toSeconds("01:00").toLong())
-        Assertions.assertEquals(3600, DateUtilImpl(context).toSeconds("01:00 a.m.").toLong())
-        Assertions.assertEquals(3600, DateUtilImpl(context).toSeconds("01:00 AM").toLong())
+        assertThat(DateUtilImpl(context).toSeconds("01:00").toLong()).isEqualTo(3600)
+        assertThat(DateUtilImpl(context).toSeconds("01:00 a.m.").toLong()).isEqualTo(3600)
+        assertThat(DateUtilImpl(context).toSeconds("01:00 AM").toLong()).isEqualTo(3600)
     }
 
     @Test fun dateStringTest() {
@@ -67,7 +66,7 @@ class DateUtilTest : TestBase() {
     }
 
     @Test fun timeStringTest() {
-        Assertions.assertTrue(DateUtilImpl(context).timeString(1513902750000L).contains("32"))
+        assertThat(DateUtilImpl(context).timeString(1513902750000L)).contains("32")
     }
 
     @Test fun dateAndTimeStringTest() {
@@ -85,11 +84,11 @@ class DateUtilTest : TestBase() {
     /*
     @Test
     public void timeStringFromSecondsTest() {
-        Assertions.assertEquals("1:00 AM", DateUtil.timeStringFromSeconds((int) T.hours(1).secs()));
+        assertThat(DateUtil.timeStringFromSeconds((int) T.hours(1).secs()));.isEqualTo("1:00 AM")
     }
     */
     @Test fun timeFrameStringTest() {
         `when`(rh.gs(info.nightscout.interfaces.R.string.shorthour)).thenReturn("h")
-        Assertions.assertEquals("(1h 1')", DateUtilImpl(context).timeFrameString(T.hours(1).msecs() + T.mins(1).msecs(), rh))
+        assertThat(DateUtilImpl(context).timeFrameString(T.hours(1).msecs() + T.mins(1).msecs(), rh)).isEqualTo("(1h 1')")
     }
 }
