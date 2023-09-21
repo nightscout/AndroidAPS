@@ -175,13 +175,10 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
     }
 
     private fun pair(scanResult: BluetoothDevice) {
-        aapsLogger.error(LTag.EQUILBLE, "result====" + scanResult.name.toString()+"==="+scanResult.address.toString())
-        // sp.putString(EquilConst.Prefs.addrss, scanResult.address.toString())
-        // equilPumpPlugin.equilManager.address = scanResult.address.toString()
-
+        aapsLogger.debug(LTag.EQUILBLE, "result====" + scanResult.name.toString()+"==="+scanResult.address.toString())
         commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString()), object : Callback() {
             override fun run() {
-                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
                     equilPumpPlugin.equilManager.closeBle();
                     SystemClock.sleep(100)

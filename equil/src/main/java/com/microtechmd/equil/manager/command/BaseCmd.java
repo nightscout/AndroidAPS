@@ -23,7 +23,7 @@ import info.nightscout.shared.sharedPreferences.SP;
 public abstract class BaseCmd implements CustomCommand {
     public static final String defaultPort = "0F0F";
     public static int reqIndex;
-    public static int index2 = 10;
+    public static int reqCmdIndex = 10;
     public static int rspIndex = -1;
     AAPSLogger aapsLogger;
     SP sp;

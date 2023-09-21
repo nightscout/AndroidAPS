@@ -115,9 +115,8 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
     private fun filterHistory(group: PumpHistoryEntryGroup) {
         filteredHistoryList.clear()
-        aapsLogger.error(LTag.EQUILBLE, "Items on full list: {}", fullHistoryList.size)
+        aapsLogger.debug(LTag.EQUILBLE, "Items on full list: {}", fullHistoryList.size)
         if (group === PumpHistoryEntryGroup.All) {
-            aapsLogger.error(LTag.EQUILBLE, "alll===")
             filteredHistoryList.addAll(fullHistoryList)
         } else {
             filteredHistoryList.addAll(fullHistoryList.filter { groupForCommandType(it.type) == group })
@@ -127,7 +126,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
             it.historyList = filteredHistoryList
             it.notifyDataSetChanged()
         }
-        aapsLogger.error(LTag.EQUILBLE, "Items on filtered list: {}", filteredHistoryList.size)
+        aapsLogger.debug(LTag.EQUILBLE, "Items on filtered list: {}", filteredHistoryList.size)
     }
 
     private fun groupForCommandType(type: EquilHistoryRecord.EventType): PumpHistoryEntryGroup {
@@ -203,7 +202,6 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         calendar.add(Calendar.DAY_OF_MONTH, 1)
         calendar.add(Calendar.MILLISECOND, -1)
         var endTime = calendar.timeInMillis
-        aapsLogger.error(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
         disposable += equilHistoryRecordDao
             .allSince(endTime)
             .subscribeOn(aapsSchedulers.io)

@@ -8,18 +8,18 @@ import info.nightscout.shared.logging.LTag;
 public class CmdModelGet extends BaseSetting {
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x02, 0x00};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x02, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
@@ -27,7 +27,7 @@ public class CmdModelGet extends BaseSetting {
     public void decodeConfirmData(byte[] data) {
 
         int mode = data[6] & 0xff;
-        aapsLogger.error(LTag.EQUILBLE, "CmdGetModel====" + mode);
+        aapsLogger.debug(LTag.EQUILBLE, "CmdGetModel====" + mode);
         equilManager.setModel(mode);
         cmdStatus = true;
         synchronized (this) {

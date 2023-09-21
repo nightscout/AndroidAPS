@@ -77,7 +77,7 @@ public class CmdUnPair extends BaseCmd {
                 return list;
             } catch (Exception e) {
                 response = new EquilResponse();
-                aapsLogger.debug(LTag.EQUILBLE, "decodeEquilPacket error =====" + e.getMessage());
+                aapsLogger.error(LTag.EQUILBLE, "decodeEquilPacket error =====" + e.getMessage());
 
             }
 

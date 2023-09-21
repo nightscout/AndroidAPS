@@ -1,8 +1,6 @@
 package com.microtechmd.equil.manager.command;
 
 
-import android.util.Log;
-
 import com.microtechmd.equil.EquilConst;
 import com.microtechmd.equil.manager.AESUtil;
 import com.microtechmd.equil.manager.EquilCmdModel;
@@ -23,7 +21,6 @@ public class CmdPair extends BaseCmd {
         this.address = address;
         sn = name.replace("Equil - ", "").trim();
         sn = convertString(sn);
-        Log.e(LTag.EQUILBLE.toString(), "sn===" + sn);
     }
 
     public String getAddress() {
@@ -62,15 +59,8 @@ public class CmdPair extends BaseCmd {
                     (byte) 0x6E, (byte) 0x7C, (byte) 0xDB, (byte) 0xDA, (byte) 0x46, (byte) 0xC0, (byte) 0xF0, (byte) 0x3D,
                     (byte) 0x3A, (byte) 0x51, (byte) 0xD7, (byte) 0xEA, (byte) 0x6F, (byte) 0xEA, (byte) 0x73, (byte) 0x77,
                     (byte) 0x30, (byte) 0x96, (byte) 0x48, (byte) 0xA1, (byte) 0x23, (byte) 0xA2, (byte) 0xD5, (byte) 0x8A};
-            aapsLogger.error(LTag.EQUILBLE, "pwd==" + Utils.bytesToHex(pwd));
-            aapsLogger.error(LTag.EQUILBLE, "data==" + Utils.bytesToHex(data));
             EquilCmdModel equilCmdModel = AESUtil.aesEncrypt(pwd, data);
 
-//            String p1 = "0D0D0000";
-//            String p2 = reqModel.tag;
-//            String p3 = reqModel.iv;
-//            String p4 = reqModel.content;
-//            return toRequestCmd(equilCmdModel, "0D0D0000");
             return responseCmd(equilCmdModel, "0D0D0000");
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,45 +74,6 @@ public class CmdPair extends BaseCmd {
         return null;
     }
 
-//    @Override
-//    public List<String> addData(String str) {
-//        dataList.add(str);
-//        if (dataList.size() < 10) {
-//            return null;
-//        }
-//        ZLog.e(TAG, "addData======" + dataList.size());
-//        List<String> list = decode(dataList);
-////        ZLog.e(TAG, "addData======" + list.size());
-//        dataList = new ArrayList<>();
-//        return list;
-//    }
-
-//
-//    public List<String> addData(String str) {
-//        if (config) {
-//            byte[] data = Crc.hexStringToBytes(str);
-//            byte code = data[4];
-//            boolean flag = isEnd(code);
-//            dataList.add(str);
-//            if (!flag) {
-//                return null;
-//            }
-//            List<String> list = decodeConfirm(dataList);
-//            dataList = new ArrayList<>();
-//            return list;
-//        }
-//        byte[] data = Crc.hexStringToBytes(str);
-//        byte code = data[4];
-//        boolean flag = isEnd(code);
-//        dataList.add(str);
-//        if (!flag) {
-//            return null;
-//        }
-//        List<String> list = decode(dataList);
-//        dataList = new ArrayList<>();
-//        config = true;
-//        return list;
-//    }
 
     public EquilResponse decodeEquilPacket(byte[] data) {
         if (!checkData(data)) {
@@ -145,7 +96,7 @@ public class CmdPair extends BaseCmd {
                 isEnd = true;
                 response = new EquilResponse();
                 rspIndex = intValue;
-                aapsLogger.error(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
+                aapsLogger.debug(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
                 return list;
             } catch (Exception e) {
                 response = new EquilResponse();
@@ -166,7 +117,7 @@ public class CmdPair extends BaseCmd {
             response = new EquilResponse();
             config = true;
             rspIndex = intValue;
-            aapsLogger.error(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
+            aapsLogger.debug(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
             return list;
         } catch (Exception e) {
             response = new EquilResponse();
@@ -188,26 +139,12 @@ public class CmdPair extends BaseCmd {
         String content = AESUtil.decrypt(equilCmdModel, keyBytes);
         String pwd1 = content.substring(0, 64);
         String pwd2 = content.substring(64, content.length());
-//        List<String> list = AESUtil.test21(reqModel);
-        aapsLogger.error(LTag.EQUILBLE, "decrypted====" + pwd1);
-        aapsLogger.error(LTag.EQUILBLE, "decrypted====" + pwd2);
         sp.putString(EquilConst.Prefs.EQUIL_PASSWORD, pwd2);
         sp.putString(EquilConst.Prefs.EQUIL_DEVICES, pwd1);
-//        ZLog.e2("decrypted====" + pwd2.length());
-//        ZLog.e2("decrypted====" + content);
-//        PersistentStore.setString("pwd",pwd2);
-//        PersistentStore.setString("tzm",pwd1);
         runPwd = pwd2;
         byte[] data1 = Utils.hexStringToBytes(pwd1);
         byte[] data = Utils.concat(data1, keyBytes);
-//        Crc.ReqModel reqModel2 = AESUtil.aesEncrypt(Crc.hexStringToBytes(runPwd), data);
         EquilCmdModel equilCmdModel2 = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
-
-//        String p1 = code2 + equilCmdModel.getCode();
-//        String p2 = reqModel2.tag;
-//        String p3 = reqModel2.iv;
-//        String p4 = reqModel2.content;
-//        return toRequestCmd(equilCmdModel2, port + equilCmdModel2.getCode());
         return responseCmd(equilCmdModel2, port + equilCmdModel2.getCode());
     }
 

@@ -232,16 +232,6 @@ class EquilFragment : DaggerFragment() {
 
         binding.imv.setOnClickListener {
 
-            aapsLogger.error(LTag.EQUILBLE, "execute customCommand: " + commandQueue.statusInQueue())
-            //
-            // val intent = Intent(context, com.microtechmd.equil.ui.pair.EquilPairActivity::class.java)
-            // intent.putExtra(com.microtechmd.equil.ui.pair.EquilPairActivity.KEY_TYPE, com.microtechmd.equil.ui.pair.EquilPairActivity.Type.PAIR)
-            // startActivity(intent)
-
-            // commandQueue.customCommand(
-            //     CmdGetDevices(),
-            //     null
-            // )
 
         }
 
@@ -263,14 +253,9 @@ class EquilFragment : DaggerFragment() {
             showSetModeDialog()
         }
         binding.btnUnbind.setOnClickListener {
-            // commandQueue.customCommand(
-            //     CmdStepSet(),
-            //     null
-            // )
             if (TextUtils.isEmpty(devName)) {
                 ToastUtils.errorToast(context, rh.gs(R.string.equil_error_no_devices))
             } else
-            // startActivity(Intent(context, EquilSettingsActivity::class.java))
                 startActivity(Intent(context, EquilUnPairDetachActivity::class.java))
 
         }
@@ -290,7 +275,6 @@ class EquilFragment : DaggerFragment() {
             commandQueue.customCommand(CmdAlarm(data.data.command), object : Callback() {
                 override fun run() {
                     dismissLoading();
-                    aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
                     if (result.success) {
                         equilPumpPlugin.equilManager.alarmMode = data.data;
                         runOnUiThread {
@@ -318,7 +302,6 @@ class EquilFragment : DaggerFragment() {
         commandQueue.customCommand(CmdModelSet(tempMode.command), object : Callback() {
             override fun run() {
                 dismissLoading();
-                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
                     var type = EquilHistoryRecord.EventType.SUSPEND_DELIVERY
                     if (tempMode == RunMode.RUN) {
@@ -344,20 +327,6 @@ class EquilFragment : DaggerFragment() {
             }
         })
 
-        // val alertDialog = context?.let {
-        //     AlertDialog.Builder(it)
-        //         .setTitle("提示")
-        //         .setMessage(msg)
-        //         .setPositiveButton(rh.gs(R.string.ok)) { dialog: DialogInterface, _: Int ->
-        //
-        //         }
-        //         .setNegativeButton(rh.gs(R.string.cancel)) { dialog: DialogInterface, _: Int ->
-        //             dialog.dismiss()
-        //         }
-        //         .create()
-        // }
-        //
-        // alertDialog?.show()
     }
 
     private fun updateTempBasal() {
@@ -426,7 +395,6 @@ class EquilFragment : DaggerFragment() {
         commandQueue.customCommand(CmdInsulinChange(), object : Callback() {
             override fun run() {
                 dismissLoading();
-                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
                     equilPumpPlugin.resetData();
                     equilPumpPlugin.equilManager.runMode = RunMode.STOP;

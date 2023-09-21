@@ -3,8 +3,6 @@ package com.microtechmd.equil.manager.command;
 
 import com.microtechmd.equil.manager.Utils;
 
-import info.nightscout.shared.logging.LTag;
-
 public class CmdSettingGet extends BaseSetting {
     private long useTime;
     private long closeTime;
@@ -18,18 +16,18 @@ public class CmdSettingGet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x02, 0x05};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x05, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
@@ -55,8 +53,6 @@ public class CmdSettingGet extends BaseSetting {
         infusionUnit = Utils.internalDecodeSpeedToUH(i4);
         basalAlarm = Utils.internalDecodeSpeedToUH(i5);
         largeAlarm = Utils.internalDecodeSpeedToUH(i6);
-        aapsLogger.error(LTag.EQUILBLE,
-                "CmdSettingGet===" + Utils.bytesToHex(data) + "====" + lowAlarm+"======="+i1);
         synchronized (this) {
             setCmdStatus(true);
             notify();

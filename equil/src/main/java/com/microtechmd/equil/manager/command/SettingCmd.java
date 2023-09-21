@@ -8,20 +8,20 @@ public class SettingCmd extends BaseSetting {
 
 
     public byte[] getData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] tzm = Utils.hexStringToBytes(getEquilDevices());
         byte[] data = Utils.concat(indexByte, tzm);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
 
     public byte[] getData2() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x01, 0x07};
         byte[] data3 = Utils.intToBytes(120);
         byte[] data = Utils.concat(indexByte, data2, data3);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
@@ -38,10 +38,10 @@ public class SettingCmd extends BaseSetting {
     }
 
     public byte[] getData3() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x07, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 

@@ -3,8 +3,6 @@ package com.microtechmd.equil.manager.command;
 
 import com.microtechmd.equil.manager.Utils;
 
-import info.nightscout.shared.logging.LTag;
-
 public class CmdSettingSet extends BaseSetting {
     double lowAlarm;
     public CmdSettingSet(double lowAlarm){
@@ -13,7 +11,7 @@ public class CmdSettingSet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x01, 0x05};
         byte[] data3 = Utils.intToBytes(0);
         byte[] lowAlarmByte = Utils.intToTwoBytes(Utils.decodeSpeedToUH(lowAlarm));
@@ -26,18 +24,15 @@ public class CmdSettingSet extends BaseSetting {
         byte[] data = Utils.concat(indexByte, data2, data3, data3,
                 lowAlarmByte, fast,
                 data5, data6, data7, data8);
-        index2++;
-
-        aapsLogger.error(LTag.EQUILBLE,
-                "CmdSettingSet data===" + Utils.bytesToHex(data)+"===="+lowAlarm+"==="+Utils.decodeSpeedToUH(lowAlarm));
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x05, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 

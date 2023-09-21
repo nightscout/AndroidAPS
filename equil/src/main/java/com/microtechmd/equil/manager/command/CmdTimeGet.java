@@ -10,18 +10,18 @@ public class CmdTimeGet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x02, 0x00};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x00, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 

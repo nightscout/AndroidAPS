@@ -18,23 +18,23 @@ public class CmdBasalGet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x02, 0x02};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x02, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
     public void decodeConfirmData(byte[] data) {
-        aapsLogger.error(LTag.EQUILBLE, "CmdBasalGet==" + Utils.bytesToHex(data));
+        aapsLogger.debug(LTag.EQUILBLE, "CmdBasalGet==" + Utils.bytesToHex(data));
         int start = 6;
         StringBuffer currentBasal = new StringBuffer();
         for (int i = 0; i < 24; i++) {
@@ -46,8 +46,6 @@ public class CmdBasalGet extends BaseSetting {
         }
         byte[] rspByte = Arrays.copyOfRange(data, 6, data.length);
         String rspBasal = Utils.bytesToHex(rspByte);
-//        aapsLogger.error(LTag.EQUILBLE,
-//                "CmdBasalGet==" + str2 + "====\n==" + sb.toString());
         synchronized (this) {
             if (currentBasal.toString().equals(rspBasal)) {
                 setCmdStatus(true);

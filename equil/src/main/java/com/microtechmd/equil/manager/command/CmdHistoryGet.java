@@ -2,8 +2,6 @@ package com.microtechmd.equil.manager.command;
 
 import com.microtechmd.equil.manager.Utils;
 
-import info.nightscout.shared.logging.LTag;
-
 public class CmdHistoryGet extends BaseSetting {
 
     private int battery;
@@ -34,21 +32,19 @@ public class CmdHistoryGet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x02, 0x01};
         byte[] data3 = Utils.intToBytes(currentIndex);
         byte[] data = Utils.concat(indexByte, data2, data3);
-        index2++;
-        aapsLogger.error(LTag.EQUILBLE, "getReqData2===" + Utils.bytesToHex(data));
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x01, 0x01};
-        aapsLogger.error(LTag.EQUILBLE, "currentIndex===" + currentIndex);
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
@@ -77,9 +73,6 @@ public class CmdHistoryGet extends BaseSetting {
             equilManager.decodeHistory(data);
         }
         currentIndex = index;
-        aapsLogger.error(LTag.EQUILBLE, "history index==" + index + "===" + Utils.bytesToHex(data) +
-                "===" + rate + "====" + largeRate + "===" + Utils.bytesToHex(new byte[]{data[16],
-                data[17]}));
         synchronized (this) {
             setCmdStatus(true);
             notify();

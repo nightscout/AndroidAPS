@@ -27,7 +27,6 @@ import com.microtechmd.equil.manager.EquilManager;
 import com.microtechmd.equil.manager.EquilResponse;
 import com.microtechmd.equil.manager.Utils;
 import com.microtechmd.equil.manager.command.BaseCmd;
-import com.microtechmd.equil.manager.command.CmdHistoryGet;
 import com.microtechmd.equil.manager.command.CmdLargeBasalSet;
 import com.microtechmd.equil.manager.command.CmdPair;
 
@@ -137,6 +136,7 @@ public class EquilBLE {
                 mStatus = status;
                 connecting = false;
                 if (status == 133) {
+                    baseCmd = null;
                     disconnect();
                     SystemClock.sleep(50);
                     unBond(macAddrss);
@@ -144,6 +144,7 @@ public class EquilBLE {
                     return;
                 }
                 if (i2 == 2) {
+
                     connected = true;
                     handler.removeMessages(TIME_OUT_CONNECT_WHAT);
                     if (mBluetoothGatt != null) {
@@ -151,6 +152,7 @@ public class EquilBLE {
                     }
                     rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED));
                 } else if (i2 == 0) {
+                    baseCmd = null;
                     disconnect();
                 }
 
@@ -249,23 +251,6 @@ public class EquilBLE {
         }
     }
 
-    public void nextCmd() {
-        dataList = new ArrayList<>();
-        flag = true;
-        writeConf = false;
-
-        aapsLogger.debug(LTag.EQUILBLE, "nextCmd===== " + baseCmd.isEnd);
-        if (baseCmd != null && baseCmd.isEnd && baseCmd instanceof CmdHistoryGet) {
-            runNext = false;
-            SystemClock.sleep(2000);
-            equilResponse = baseCmd.getNextEquilResponse();
-            if (equilResponse == null || equilResponse.getSend() == null || equilResponse.getSend().size() == 0) {
-                return;
-            }
-            indexData = 0;
-            writeData();
-        }
-    }
 
     public void nextCmd2() {
         dataList = new ArrayList<>();
@@ -302,7 +287,7 @@ public class EquilBLE {
         rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED));
     }
 
-    boolean autoScan = true;
+    boolean autoScan = false;
 
     public void findEquil(String mac) {
         initAdapter();
@@ -472,6 +457,8 @@ public class EquilBLE {
         if (startTrue || connected) {
             return;
         }
+        baseCmd = null;
+        autoScan = false;
         startScan();
     }
 
@@ -501,7 +488,6 @@ public class EquilBLE {
             String name = result.getDevice().getName();
             if (!TextUtils.isEmpty(name)) {
                 try {
-
                     equilManager.decodeData(result.getScanRecord().getBytes());
                     stopScan();
                     if (autoScan) {

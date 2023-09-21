@@ -3,8 +3,6 @@ package com.microtechmd.equil.manager.command;
 
 import com.microtechmd.equil.manager.Utils;
 
-import info.nightscout.shared.logging.LTag;
-
 public class CmdTempBasalSet extends BaseSetting {
     double insulin;
     int step;
@@ -21,22 +19,21 @@ public class CmdTempBasalSet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        aapsLogger.error(LTag.EQUILBLE, "step===" + step + "=====" + time);
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x01, 0x04};
         byte[] data3 = Utils.intToBytes(step);
         byte[] data4 = Utils.intToBytes(time);
         byte[] data = Utils.concat(indexByte, data2, data3, data4);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x04, 0x01};
         byte[] data3 = Utils.intToBytes(0);
         byte[] data = Utils.concat(indexByte, data2, data3);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 

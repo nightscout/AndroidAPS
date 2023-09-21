@@ -9,20 +9,20 @@ public class CmdInsulinChange extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x01, 0x06};
         byte[] data3 = Utils.intToBytes(32000);
         byte[] data = Utils.concat(indexByte, data2, data3);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x06, 0x01};
         byte[] data3 = Utils.intToBytes(0);
         byte[] data = Utils.concat(indexByte, data2, data3);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 

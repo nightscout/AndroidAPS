@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.interfaces.Profile;
-import info.nightscout.shared.logging.LTag;
 
 public class CmdBasalSet extends BaseSetting {
     Profile profile;
@@ -19,15 +18,14 @@ public class CmdBasalSet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x01, 0x02};
         List<Byte> list = new ArrayList<>();
         for (int i = 0; i < 24; i++) {
             double value = profile.getBasalTimeFromMidnight(i * 60 * 60);
             value = value / 2f;
+            aapsLogger.debug("profile====" + value);
             byte[] bs = intToByteArray(value);
-            aapsLogger.error(LTag.EQUILBLE,
-                    i + "==CmdBasalSet==" + value + "====" + Utils.bytesToHex(bs));
             list.add(bs[1]);
             list.add(bs[0]);
             list.add(bs[1]);
@@ -35,7 +33,7 @@ public class CmdBasalSet extends BaseSetting {
         }
         String hex = Utils.bytesToHex(list);
         byte[] data = Utils.concat(indexByte, data2, Utils.hexStringToBytes(hex));
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
@@ -48,10 +46,10 @@ public class CmdBasalSet extends BaseSetting {
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x02, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 

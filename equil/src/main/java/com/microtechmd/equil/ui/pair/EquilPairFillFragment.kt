@@ -111,7 +111,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     private fun setStep() {
         commandQueue.customCommand(CmdStepSet(), object : Callback() {
             override fun run() {
-                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
                     if (auto) {
                         SystemClock.sleep(50)
@@ -137,7 +137,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
             CmdResistanceGet(),
             object : Callback() {
                 override fun run() {
-                    aapsLogger.error(LTag.EQUILBLE, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
+                    aapsLogger.debug(LTag.EQUILBLE, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
                     if (result.success) {
                         if (!result.enacted) {
                             if (auto) {
@@ -174,7 +174,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         showLoading()
         commandQueue.customCommand(CmdTimeSet(), object : Callback() {
             override fun run() {
-                aapsLogger.error(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
                 if (result.success) {
                     SystemClock.sleep(50)
                     dismissLoading();
@@ -200,7 +200,6 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     private fun readFM() {
         commandQueue.customCommand(CmdDevicesGet(), object : Callback() {
             override fun run() {
-                aapsLogger.error(LTag.EQUILBLE, "CmdGetDevices result====" + result.success)
                 if (result.success) {
                     equilPumpPlugin.equilManager.closeBle()
                     SystemClock.sleep(50)
@@ -229,7 +228,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         }
         commandQueue.customCommand(CmdBasalSet(profile), object : Callback() {
             override fun run() {
-                aapsLogger.error(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
                 if (result.success) {
                     SystemClock.sleep(50)
                     dismissLoading()
@@ -248,7 +247,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         showLoading()
         commandQueue.customCommand(CmdModelSet(RunMode.RUN.command), object : Callback() {
             override fun run() {
-                aapsLogger.error(LTag.EQUILBLE, "setModel result====" + result.success + "====")
+                aapsLogger.debug(LTag.EQUILBLE, "setModel result====" + result.success + "====")
                 if (result.success) {
                     dismissLoading();
                     equilPumpPlugin.equilManager.runMode = RunMode.RUN;

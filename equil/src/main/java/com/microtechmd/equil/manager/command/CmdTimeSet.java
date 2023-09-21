@@ -12,7 +12,7 @@ public class CmdTimeSet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x01, 0x00};
         byte[] data3 = new byte[6];
         Calendar calendar = Calendar.getInstance();
@@ -31,15 +31,15 @@ public class CmdTimeSet extends BaseSetting {
         data3[5] = (byte) second;
         byte[] data = Utils.concat(indexByte, data2, data3);
 //        ZLog.e2("setTime==" + year + "==" + month + "===" + day + "===" + hour + "===" + minute + "===" + second);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] data2 = new byte[]{0x00, 0x00, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 

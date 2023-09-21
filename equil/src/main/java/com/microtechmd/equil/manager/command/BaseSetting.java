@@ -12,10 +12,10 @@ import info.nightscout.shared.logging.LTag;
 public abstract class BaseSetting extends BaseCmd {
 
     public byte[] getReqData() {
-        byte[] indexByte = Utils.intToBytes(index2);
+        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
         byte[] tzm = Utils.hexStringToBytes(getEquilDevices());
         byte[] data = Utils.concat(indexByte, tzm);
-        index2++;
+        reqCmdIndex++;
         return data;
     }
 

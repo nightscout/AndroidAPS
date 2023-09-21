@@ -234,7 +234,7 @@ public class EquilManager {
             int sleep = command.getStepTime() / 20 * 200;
             sleep = 2000;
             float percent1 = (float) (5f / detailedBolusInfo.insulin);
-            aapsLogger.error(LTag.EQUILBLE, "sleep===" + detailedBolusInfo.insulin + "===" + percent1);
+            aapsLogger.debug(LTag.EQUILBLE, "sleep===" + detailedBolusInfo.insulin + "===" + percent1);
             float percent = 0;
             if (command.isCmdStatus()) {
                 while (!bolusProfile.getStop() && percent < 100) {
@@ -245,7 +245,7 @@ public class EquilManager {
                     rxBus.send(progressUpdateEvent);
                     SystemClock.sleep(sleep);
                     percent = percent + percent1;
-                    aapsLogger.error(LTag.EQUILBLE, "isCmdStatus===" + percent + "====" + bolusProfile.getStop());
+                    aapsLogger.debug(LTag.EQUILBLE, "isCmdStatus===" + percent + "====" + bolusProfile.getStop());
                 }
             }
 
@@ -270,7 +270,6 @@ public class EquilManager {
                 command.wait(command.getTimeOut());
             }
             bolusProfile.setStop(command.isCmdStatus());
-            aapsLogger.error(LTag.EQUILBLE, "stopBolus===");
             result.setSuccess(command.isCmdStatus());
             result.enacted(true);
         } catch (Exception ex) {
@@ -281,15 +280,15 @@ public class EquilManager {
 
     public int loadHistory(int index) {
         try {
-            aapsLogger.error(LTag.EQUILBLE, "loadHistory start: ");
+            aapsLogger.debug(LTag.EQUILBLE, "loadHistory start: ");
             CmdHistoryGet historyGet = new CmdHistoryGet(index);
             historyGet.setEquilManager(this);
             equilBLE.writeCmd(historyGet);
             synchronized (historyGet) {
                 historyGet.wait(historyGet.getTimeOut());
             }
-            aapsLogger.error(LTag.EQUILBLE, "loadHistory end: ");
-            SystemClock.sleep(200);
+            aapsLogger.debug(LTag.EQUILBLE, "loadHistory end: ");
+            SystemClock.sleep(100);
             return historyGet.getCurrentIndex();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -326,7 +325,7 @@ public class EquilManager {
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
-            aapsLogger.error(LTag.EQUILBLE, "isCmdStatus===" + command.isCmdStatus());
+            aapsLogger.debug(LTag.EQUILBLE, "isCmdStatus===" + command.isCmdStatus());
             result.setSuccess(command.isCmdStatus());
             result.enacted(command.isEnacted());
 

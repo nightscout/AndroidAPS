@@ -178,7 +178,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
         readStatus = new Thread() {
             @Override public void run() {
                 super.run();
-                aapsLogger.error(LTag.EQUILBLE, "readStatus========" + VERSION);
+                aapsLogger.debug(LTag.EQUILBLE, "readStatus========" + VERSION);
                 equilManager.readStatus();
                 loopHandler.postDelayed(readStatus, 3 * 1000 * 60);
             }
@@ -199,7 +199,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
         }
         Intent intent = new Intent(context, EquilService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        aapsLogger.error(LTag.EQUILBLE, "EquilPumpPlugin is connected");
         loopHandler.postDelayed(new Runnable() {
             @Override public void run() {
                 getCommandQueue().customCommand(new CmdModelGet(), new Callback() {
@@ -338,7 +337,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     @Override
     public boolean isHandshakeInProgress() {
         if (displayConnectionMessages) {
-            aapsLogger.error(LTag.EQUILBLE, "isHandshakeInProgress [OmnipodPumpPlugin] - default " +
+            aapsLogger.debug(LTag.EQUILBLE, "isHandshakeInProgress [OmnipodPumpPlugin] - default " +
                     "(empty) implementation.");
         }
         return false;
@@ -365,7 +364,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     @NonNull
     @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
-        aapsLogger.error(LTag.EQUILBLE, "setNewBasalProfile");
         RunMode mode = equilManager.getRunMode();
         if (mode == RunMode.RUN || mode == RunMode.SUSPEND) {
             PumpEnactResult pumpEnactResult = equilManager.executeCmd(new CmdBasalSet(profile));
@@ -402,7 +400,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
 
     @Override
     public double getBaseBasalRate() {
-        aapsLogger.error(LTag.EQUILBLE, "getBaseBasalRate====" + equilManager.getRate());
         return equilManager.getRate();
     }
 
@@ -420,7 +417,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
             // neither carbs nor bolus requested
-            aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
+            aapsLogger.debug("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
             return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
                     .comment(R.string.invalidinput);
         }
@@ -436,7 +433,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
                     .bolusDelivered(0d)
                     .comment(R.string.equil_not_enough_insulin);
         }
-        aapsLogger.error(LTag.EQUILBLE, "deliverTreatment=====");
         bolusProfile.setInsulin(detailedBolusInfo.insulin);
         long time = System.currentTimeMillis();
         PumpEnactResult pumpEnactResult = equilManager.bolus(detailedBolusInfo, bolusProfile);
@@ -473,7 +469,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
             startIndex = equilHistoryPump2.getEventIndex();
         }
         int index = equilManager.loadHistory(0);
-        aapsLogger.error(LTag.EQUILBLE, "return ===" + index + "====" + startIndex);
         if (index == -1) {
             return pumpEnactResult.success(false);
         }
@@ -482,7 +477,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
             if (startIndex > 2000) {
                 startIndex = 1;
             }
-            aapsLogger.error(LTag.EQUILBLE, "while index===" + startIndex + "===" + index);
             equilManager.loadHistory(startIndex);
         }
         return pumpEnactResult.success(true);
@@ -502,7 +496,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
             );
             equilHistoryRecordDao.insert(equilHistoryRecord);
         }
-        aapsLogger.error(LTag.EQUILBLE, "stopBolusDelivering=====");
     }
 
     @Override
@@ -510,9 +503,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile,
                                                 boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
 
-        aapsLogger.error(LTag.EQUILBLE,
-                "setTempBasalAbsolute=====" + absoluteRate
-                        + "====" + durationInMinutes + "===" + enforceNew);
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
             return new PumpEnactResult(getInjector()).success(false).comment(rh.gs(R.string.equil_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
         }
@@ -557,7 +547,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     @Override
     @NonNull
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        aapsLogger.error(LTag.EQUILBLE, "cancelTempBasal=====" + enforceNew);
         PumpEnactResult pumpEnactResult = equilManager.setTempBasal(0, 0);
         if (pumpEnactResult.getSuccess()) {
             long time = System.currentTimeMillis();
@@ -682,7 +671,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
 
     @Override
     public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
-        aapsLogger.error(LTag.EQUILBLE, "executeCustomCommand: " + command.getStatusDescription());
         if (command instanceof CmdHistoryGet) {
             return loadHistory();
         }
@@ -744,7 +732,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     }
 
     @NonNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        aapsLogger.error(LTag.EQUILBLE, "setTempBasalPercent [OmnipodPumpPlugin] ");
 
         if (percent == 0) {
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew, tbrType);
@@ -756,8 +743,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     }
 
     @NonNull @Override public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
-        aapsLogger.error(LTag.EQUILBLE,
-                "setExtendedBolus [OmnipodPumpPlugin] - Not implemented." + insulin + "====" + durationInMinutes);
         PumpEnactResult pumpEnactResult = equilManager.setExtendedBolus(insulin, durationInMinutes);
         if (pumpEnactResult.getSuccess()) {
             long time = System.currentTimeMillis();
@@ -779,7 +764,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     }
 
     @NonNull @Override public PumpEnactResult cancelExtendedBolus() {
-        aapsLogger.error(LTag.EQUILBLE, "cancelExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
 //        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
 
         PumpEnactResult pumpEnactResult = equilManager.setExtendedBolus(0, 0);
@@ -796,7 +780,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     }
 
     @NonNull @Override public PumpEnactResult loadTDDs() {
-        aapsLogger.error(LTag.EQUILBLE, "loadTDDs [OmnipodPumpPlugin] - Not implemented.");
+        aapsLogger.debug(LTag.EQUILBLE, "loadTDDs [OmnipodPumpPlugin] - Not implemented.");
         return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
     }
 
@@ -807,8 +791,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
 
 
     @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        aapsLogger.error(LTag.EQUILBLE, "deliverBolus");
-
         return new PumpEnactResult(getInjector()).success(false).enacted(false);
     }
 
