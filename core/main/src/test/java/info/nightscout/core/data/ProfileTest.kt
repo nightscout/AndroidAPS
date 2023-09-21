@@ -1,6 +1,7 @@
 package info.nightscout.core.data
 
 import android.content.Context
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
@@ -15,7 +16,6 @@ import info.nightscout.sharedtests.HardLimitsMock
 import info.nightscout.sharedtests.TestBase
 import info.nightscout.sharedtests.TestPumpPlugin
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -71,77 +71,77 @@ class ProfileTest : TestBase() {
 
         // Test valid profile
         var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
-        Assertions.assertEquals(true, p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false).isValid)
-//        Assertions.assertEquals(true, p.log().contains("NS units: mmol"))
+        assertThat(p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false).isValid).isTrue()
+//        assertThat(p.log()).contains("NS units: mmol")
 //        JSONAssertions.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
-        Assertions.assertEquals(5.0, p.dia, 0.01)
-//        Assertions.assertEquals(TimeZone.getTimeZone("UTC"), p.timeZone)
-        Assertions.assertEquals("00:30", dateUtil.formatHHMM(30 * 60))
+        assertThat(p.dia).isWithin(0.01).of(5.0)
+//       assertThat(p.timeZone).isEqualTo(TimeZone.getTimeZone("UTC"))
+        assertThat(dateUtil.formatHHMM(30 * 60)).isEqualTo("00:30")
         val c = Calendar.getInstance()
         c[Calendar.HOUR_OF_DAY] = 1
         c[Calendar.MINUTE] = 0
         c[Calendar.SECOND] = 0
         c[Calendar.MILLISECOND] = 0
-        Assertions.assertEquals(108.0, p.getIsfMgdl(c.timeInMillis), 0.01)
+        assertThat(p.getIsfMgdl(c.timeInMillis)).isWithin(0.01).of(108.0)
         c[Calendar.HOUR_OF_DAY] = 2
-        Assertions.assertEquals(111.6, p.getIsfMgdl(c.timeInMillis), 0.01)
-//        Assertions.assertEquals(110.0, p.getIsfTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assertions.assertEquals(
+        assertThat(p.getIsfMgdl(c.timeInMillis)).isWithin(0.01).of(111.6)
+//        assertThat(p.getIsfTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(110.0)
+        assertThat(p.getIsfList(rh, dateUtil).replace(".", ",")).isEqualTo(
             """
     00:00    6,0 mmol/U
     02:00    6,2 mmol/U
-    """.trimIndent(), p.getIsfList(rh, dateUtil).replace(".", ",")
+    """.trimIndent() 
         )
-        Assertions.assertEquals(30.0, p.getIc(c.timeInMillis), 0.01)
-        Assertions.assertEquals(30.0, p.getIcTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assertions.assertEquals("00:00    30,0 g/U", p.getIcList(rh, dateUtil).replace(".", ","))
-        Assertions.assertEquals(0.1, p.getBasal(c.timeInMillis), 0.01)
-        Assertions.assertEquals(0.1, p.getBasalTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assertions.assertEquals("00:00    0,10 U/h", p.getBasalList(rh, dateUtil).replace(".", ","))
-        Assertions.assertEquals(0.1, p.getBasalValues()[0].value, 0.01)
-        Assertions.assertEquals(0.1, p.getMaxDailyBasal(), 0.01)
-        Assertions.assertEquals(2.4, p.percentageBasalSum(), 0.01)
-        Assertions.assertEquals(2.4, p.baseBasalSum(), 0.01)
-//        Assertions.assertEquals(81.0, p.getTargetMgdl(2 * 60 * 60), 0.01)
-        Assertions.assertEquals(90.0, p.getTargetLowMgdl(c.timeInMillis), 0.01)
-//        Assertions.assertEquals(4.0, p.getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assertions.assertEquals(90.0, p.getTargetHighMgdl(c.timeInMillis), 0.01)
-//        Assertions.assertEquals(5.0, p.getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assertions.assertEquals("00:00    5,0 - 5,0 mmol", p.getTargetList(rh, dateUtil).replace(".", ","))
-        Assertions.assertEquals(100, p.percentage)
-        Assertions.assertEquals(0, p.timeshift)
+        assertThat(p.getIc(c.timeInMillis)).isWithin(0.01).of(30.0)
+        assertThat(p.getIcTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(30.0)
+        assertThat(p.getIcList(rh, dateUtil).replace(".", ",")).isEqualTo("00:00    30,0 g/U")
+        assertThat(p.getBasal(c.timeInMillis)).isWithin(0.01).of(0.1)
+        assertThat(p.getBasalTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(0.1)
+        assertThat(p.getBasalList(rh, dateUtil).replace(".", ",")).isEqualTo("00:00    0,10 U/h")
+        assertThat(p.getBasalValues()[0].value).isWithin(0.01).of(0.1)
+        assertThat(p.getMaxDailyBasal()).isWithin(0.01).of(0.1)
+        assertThat(p.percentageBasalSum()).isWithin(0.01).of(2.4)
+        assertThat(p.baseBasalSum()).isWithin(0.01).of(2.4)
+//        assertThat( p.getTargetMgdl(2 * 60 * 60)).isWithin(0.01).of(81.0)
+        assertThat( p.getTargetLowMgdl(c.timeInMillis)).isWithin(0.01).of(90.0)
+//        assertThat( p.getTargetLowTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(4.0)
+        assertThat( p.getTargetHighMgdl(c.timeInMillis)).isWithin(0.01).of(90.0)
+//        assertThat( p.getTargetHighTimeFromMidnight(2 * 60 * 60)).isWithin(0.01).of(5.0)
+        assertThat(p.getTargetList(rh, dateUtil).replace(".", ",")).isEqualTo("00:00    5,0 - 5,0 mmol")
+        assertThat(p.percentage).isEqualTo(100)
+        assertThat(p.timeshift).isEqualTo(0)
 
         //Test basal profile below limit
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!)
         p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false)
 
         // Test profile w/o units
-        Assertions.assertNull(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil))
+        assertThat(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil)).isNull()
 
         //Test profile not starting at midnight
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notStartingAtZeroValidProfile), dateUtil)!!)
-        Assertions.assertEquals(30.0, p.getIc(0), 0.01)
+        assertThat(p.getIc(0)).isWithin(0.01).of(30.0)
 
         // Test wrong profile
-        Assertions.assertNull(pureProfileFromJson(JSONObject(wrongProfile), dateUtil))
+        assertThat(pureProfileFromJson(JSONObject(wrongProfile), dateUtil)).isNull()
 
         // Test percentage functionality
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
         p.pct = 50
-        Assertions.assertEquals(0.05, p.getBasal(c.timeInMillis), 0.01)
-        Assertions.assertEquals(1.2, p.percentageBasalSum(), 0.01)
-        Assertions.assertEquals(60.0, p.getIc(c.timeInMillis), 0.01)
-        Assertions.assertEquals(223.2, p.getIsfMgdl(c.timeInMillis), 0.01)
+        assertThat(p.getBasal(c.timeInMillis)).isWithin(0.01).of(0.05)
+        assertThat(p.percentageBasalSum()).isWithin(0.01).of(1.2)
+        assertThat(p.getIc(c.timeInMillis)).isWithin(0.01).of(60.0)
+        assertThat(p.getIsfMgdl(c.timeInMillis)).isWithin(0.01).of(223.2)
 
         // Test timeshift functionality
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
         p.ts = 1
-        Assertions.assertEquals(
+        assertThat(p.getIsfList(rh, dateUtil).replace(',', '.')).isEqualTo(
             """
                 00:00    6.2 mmol/U
                 01:00    6.0 mmol/U
                 03:00    6.2 mmol/U
-                """.trimIndent(), p.getIsfList(rh, dateUtil).replace(',', '.')
+                """.trimIndent()
         )
 
         // Test hour alignment

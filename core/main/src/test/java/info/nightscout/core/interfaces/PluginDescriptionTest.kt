@@ -1,70 +1,70 @@
 package info.nightscout.core.interfaces
 
+import com.google.common.truth.Truth.assertThat
 import androidx.fragment.app.Fragment
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class PluginDescriptionTest {
 
     @Test fun mainTypeTest() {
         val pluginDescription = PluginDescription().mainType(PluginType.PUMP)
-        Assertions.assertEquals(PluginType.PUMP, pluginDescription.mainType)
+        assertThat(pluginDescription.mainType).isEqualTo(PluginType.PUMP)
     }
 
     @Test fun fragmentClassTest() {
         val pluginDescription = PluginDescription().fragmentClass(Fragment::class.java.name)
-        Assertions.assertEquals(Fragment::class.java.name, pluginDescription.fragmentClass)
+        assertThat(pluginDescription.fragmentClass).isEqualTo(Fragment::class.java.name)
     }
 
     @Test fun alwaysEnabledTest() {
         val pluginDescription = PluginDescription().alwaysEnabled(true)
-        Assertions.assertEquals(true, pluginDescription.alwaysEnabled)
+        assertThat(pluginDescription.alwaysEnabled).isTrue()
     }
 
     @Test fun alwaysVisibleTest() {
         val pluginDescription = PluginDescription().alwaysVisible(true)
-        Assertions.assertEquals(true, pluginDescription.alwaysVisible)
+        assertThat(pluginDescription.alwaysVisible).isTrue()
     }
 
     @Test fun neverVisibleTest() {
         val pluginDescription = PluginDescription().neverVisible(true)
-        Assertions.assertEquals(true, pluginDescription.neverVisible)
+        assertThat(pluginDescription.neverVisible).isTrue()
     }
 
     @Test fun showInListTest() {
         val pluginDescription = PluginDescription().showInList(false)
-        Assertions.assertEquals(false, pluginDescription.showInList)
+        assertThat(pluginDescription.showInList).isFalse()
     }
 
     @Test fun pluginIcon() {
         val pluginDescription = PluginDescription().pluginIcon(10)
-        Assertions.assertEquals(10, pluginDescription.pluginIcon.toLong())
+        assertThat(pluginDescription.pluginIcon.toLong()).isEqualTo(10)
     }
 
     @Test fun pluginName() {
         val pluginDescription = PluginDescription().pluginName(10)
-        Assertions.assertEquals(10, pluginDescription.pluginName.toLong())
+        assertThat(pluginDescription.pluginName.toLong()).isEqualTo(10)
     }
 
     @Test fun shortNameTest() {
         val pluginDescription = PluginDescription().shortName(10)
-        Assertions.assertEquals(10, pluginDescription.shortName.toLong())
+        assertThat(pluginDescription.shortName.toLong()).isEqualTo(10)
     }
 
     @Test fun preferencesIdTest() {
         val pluginDescription = PluginDescription().preferencesId(10)
-        Assertions.assertEquals(10, pluginDescription.preferencesId.toLong())
+        assertThat(pluginDescription.preferencesId.toLong()).isEqualTo(10)
     }
 
     @Test fun enableByDefault() {
         val pluginDescription = PluginDescription().enableByDefault(true)
-        Assertions.assertEquals(true, pluginDescription.enableByDefault)
+        assertThat(pluginDescription.enableByDefault).isTrue()
     }
 
     @Test fun visibleByDefault() {
         val pluginDescription = PluginDescription().visibleByDefault(true)
-        Assertions.assertEquals(true, pluginDescription.visibleByDefault)
+        assertThat(pluginDescription.visibleByDefault).isTrue()
     }
 }
