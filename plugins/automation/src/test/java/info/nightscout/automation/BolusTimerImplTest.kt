@@ -2,6 +2,7 @@ package info.nightscout.automation
 
 import android.content.Context
 import app.aaps.shared.impl.utils.DateUtilImpl
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.services.LocationServiceHelper
@@ -17,7 +18,6 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

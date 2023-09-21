@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.database.entities.embedments.InterfaceIDs
@@ -7,7 +8,6 @@ import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,6 +26,7 @@ internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
         Mockito.`when`(insulin.insulinConfiguration).thenReturn(insulinConfiguration)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
     }
+
     @Test
     fun toEffectiveProfileSwitch() {
         val profileSwitch = EffectiveProfileSwitch(

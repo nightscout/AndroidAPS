@@ -1,8 +1,8 @@
 package info.nightscout.core.utils
 
+import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.TruthJUnit.assume
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Test
 
 // https://stackoverflow.com/questions/52344522/joseexception-couldnt-create-aes-gcm-nopadding-cipher-illegal-key-size

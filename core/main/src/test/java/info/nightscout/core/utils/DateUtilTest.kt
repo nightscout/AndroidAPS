@@ -2,10 +2,10 @@ package info.nightscout.core.utils
 
 import android.content.Context
 import app.aaps.shared.impl.utils.DateUtilImpl
+import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test

@@ -1,9 +1,9 @@
 package info.nightscout.pump.medtrum
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.stats.TddCalculator
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 import org.mockito.Mockito

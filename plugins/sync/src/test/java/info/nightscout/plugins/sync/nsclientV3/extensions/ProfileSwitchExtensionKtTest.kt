@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.core.extensions.fromConstant
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.embedments.InsulinConfiguration
@@ -7,7 +8,6 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,6 +26,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
         Mockito.`when`(insulin.insulinConfiguration).thenReturn(insulinConfiguration)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
     }
+
     @Test
     fun toProfileSwitch() {
         var profileSwitch = ProfileSwitch(

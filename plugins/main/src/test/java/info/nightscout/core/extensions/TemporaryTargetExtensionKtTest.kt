@@ -1,8 +1,8 @@
 package info.nightscout.core.extensions
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -22,16 +22,19 @@ class TemporaryTargetExtensionKtTest : TestBaseWithProfile() {
         lowTarget = 110.0,
         duration = 1800000
     )
+
     @Test
     fun lowValueToUnitsToString() {
         Assertions.assertEquals("110", temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MGDL, decimalFormatter))
         Assertions.assertEquals("6.1", temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MMOL, decimalFormatter))
     }
+
     @Test
     fun highValueToUnitsToString() {
         Assertions.assertEquals("120", temporaryTarget.highValueToUnitsToString(GlucoseUnit.MGDL, decimalFormatter))
         Assertions.assertEquals("6.7", temporaryTarget.highValueToUnitsToString(GlucoseUnit.MMOL, decimalFormatter))
     }
+
     @Test
     fun target() {
         Assertions.assertEquals(115.0, temporaryTarget.target())

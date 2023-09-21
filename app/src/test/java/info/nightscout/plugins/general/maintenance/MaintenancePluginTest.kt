@@ -1,6 +1,7 @@
 package info.nightscout.plugins.general.maintenance
 
 import android.content.Context
+import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.maintenance.MaintenancePlugin
@@ -10,7 +11,6 @@ import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

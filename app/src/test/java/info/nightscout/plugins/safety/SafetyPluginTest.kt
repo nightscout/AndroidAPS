@@ -1,5 +1,6 @@
 package info.nightscout.plugins.safety
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -20,7 +21,6 @@ import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.sharedtests.TestBaseWithProfile
 import info.nightscout.source.GlimpPlugin
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

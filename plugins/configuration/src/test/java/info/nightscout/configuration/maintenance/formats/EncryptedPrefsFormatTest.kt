@@ -1,5 +1,6 @@
 package info.nightscout.configuration.maintenance.formats
 
+import app.aaps.shared.tests.TestBase
 import com.google.common.truth.TruthJUnit.assume
 import info.nightscout.configuration.maintenance.PrefsMetadataKeyImpl
 import info.nightscout.core.utils.CryptoUtil
@@ -9,7 +10,6 @@ import info.nightscout.interfaces.maintenance.Prefs
 import info.nightscout.interfaces.maintenance.PrefsFormat
 import info.nightscout.interfaces.maintenance.PrefsStatusImpl
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

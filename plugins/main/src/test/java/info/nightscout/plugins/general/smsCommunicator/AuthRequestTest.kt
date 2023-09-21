@@ -1,5 +1,6 @@
 package info.nightscout.plugins.general.smsCommunicator
 
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Constants
@@ -11,7 +12,6 @@ import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValida
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

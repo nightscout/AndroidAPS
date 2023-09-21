@@ -1,5 +1,6 @@
 package info.nightscout.pump
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -7,7 +8,6 @@ import info.nightscout.core.pump.toHtml
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.plugins.aps.loop.extensions.json
 import info.nightscout.pump.virtual.extensions.toText
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

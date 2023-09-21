@@ -1,5 +1,6 @@
 package info.nightscout.automation.triggers
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.AutomationPlugin
@@ -8,7 +9,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 import org.mockito.Mockito.`when`

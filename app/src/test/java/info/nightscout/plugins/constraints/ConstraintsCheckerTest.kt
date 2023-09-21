@@ -1,5 +1,6 @@
 package info.nightscout.plugins.constraints
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -42,7 +43,6 @@ import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.DanaRSPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.sharedtests.TestBaseWithProfile
 import info.nightscout.source.GlimpPlugin
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

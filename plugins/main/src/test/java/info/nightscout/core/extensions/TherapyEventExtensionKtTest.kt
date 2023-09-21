@@ -1,14 +1,15 @@
 package info.nightscout.core.extensions
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.shared.utils.T
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 
 class TherapyEventExtensionKtTest : TestBaseWithProfile() {
+
     @Test
     fun isOlderThan() {
         val therapyEvent = TherapyEvent(

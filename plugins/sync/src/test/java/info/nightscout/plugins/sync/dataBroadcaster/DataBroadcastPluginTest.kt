@@ -1,5 +1,7 @@
 package info.nightscout.plugins.sync.dataBroadcaster
 
+import app.aaps.shared.tests.BundleMock
+import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.GlucoseValue
@@ -17,7 +19,6 @@ import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -53,7 +54,8 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         Mockito.`when`(iobCobCalculator.getCobInfo("broadcast")).thenReturn(CobInfo(1000, 100.0, 10.0))
         Mockito.`when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
-        Mockito.`when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(TemporaryBasal(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TemporaryBasal.Type.NORMAL))
+        Mockito.`when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(anyLong()))
+            .thenReturn(TemporaryBasal(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TemporaryBasal.Type.NORMAL))
         Mockito.`when`(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
         Mockito.`when`(loop.lastRun).thenReturn(Loop.LastRun().also {
             it.lastTBREnact = 1000
@@ -77,7 +79,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
             it.status = "Some status"
             it.percent = 100
         }
-        val bundle = info.nightscout.sharedtests.BundleMock.mock()
+        val bundle = BundleMock.mock()
         sut.prepareData(event, bundle)
         Assertions.assertTrue(bundle.containsKey("progressPercent"))
         Assertions.assertTrue(bundle.containsKey("progressStatus"))
@@ -119,7 +121,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
             it.status = "Some status"
             it.percent = 100
         }
-        val bundle = info.nightscout.sharedtests.BundleMock.mock()
+        val bundle = BundleMock.mock()
         sut.prepareData(event, bundle)
         Assertions.assertTrue(bundle.containsKey("progressPercent"))
         Assertions.assertTrue(bundle.containsKey("progressStatus"))

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.constraints.signatureVerifier
 
-import info.nightscout.sharedtests.TestBase
+import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

@@ -1,8 +1,8 @@
 package info.nightscout.implementation.profile
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Test
 
 internal class ProfileStoreTest : TestBaseWithProfile() {

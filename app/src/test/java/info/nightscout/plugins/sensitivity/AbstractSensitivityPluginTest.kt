@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sensitivity
 
+import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -11,7 +12,6 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.sensitivity.AbstractSensitivityPlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.sharedtests.TestBase
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

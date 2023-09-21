@@ -1,9 +1,9 @@
 package info.nightscout.plugins.general.autotune
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.plugins.general.autotune.data.BGDatum
 import info.nightscout.plugins.general.autotune.data.CRDatum
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

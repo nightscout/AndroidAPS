@@ -1,5 +1,6 @@
 package info.nightscout.plugins.aps.loop
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
@@ -10,7 +11,6 @@ import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.plugins.aps.APSResultObject
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

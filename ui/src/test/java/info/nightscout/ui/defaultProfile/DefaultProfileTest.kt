@@ -1,9 +1,9 @@
 package info.nightscout.ui.defaultProfile
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Test
 
 class DefaultProfileTest : TestBaseWithProfile() {

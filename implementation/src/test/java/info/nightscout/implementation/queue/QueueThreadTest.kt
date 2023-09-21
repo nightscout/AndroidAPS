@@ -1,8 +1,10 @@
 package info.nightscout.implementation.queue
 
-import com.google.common.truth.Truth.assertThat
 import android.content.Context
 import android.os.PowerManager
+import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.TestPumpPlugin
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
@@ -15,8 +17,6 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.sharedtests.TestBaseWithProfile
-import info.nightscout.sharedtests.TestPumpPlugin
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers

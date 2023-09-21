@@ -1,12 +1,12 @@
 package info.nightscout.core.extensions
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.database.entities.Bolus
 import info.nightscout.insulin.InsulinLyumjevPlugin
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.shared.utils.T
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

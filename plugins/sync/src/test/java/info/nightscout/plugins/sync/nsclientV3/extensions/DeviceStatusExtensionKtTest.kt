@@ -1,17 +1,17 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.shared.tests.TestBase
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.interfaces.Config
-import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
+import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

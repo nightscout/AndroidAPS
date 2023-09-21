@@ -1,6 +1,7 @@
 package info.nightscout.automation.actions
 
 import android.content.Context
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
@@ -12,7 +13,6 @@ import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.sharedtests.TestBase
 import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

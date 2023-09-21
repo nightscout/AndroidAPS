@@ -1,5 +1,6 @@
 package info.nightscout.plugins.constraints.signatureVerifier
 
+import app.aaps.shared.tests.TestBase
 import dagger.Lazy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
@@ -10,7 +11,6 @@ import info.nightscout.plugins.constraints.versionChecker.numericVersionPart
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

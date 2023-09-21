@@ -1,5 +1,6 @@
 package info.nightscout.plugins.constraints.objectives
 
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
@@ -11,7 +12,6 @@ import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

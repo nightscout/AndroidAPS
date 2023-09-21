@@ -1,5 +1,6 @@
 package info.nightscout.implementation.overview
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.GlucoseValue
@@ -9,7 +10,6 @@ import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.shared.utils.T
-import info.nightscout.sharedtests.TestBaseWithProfile
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

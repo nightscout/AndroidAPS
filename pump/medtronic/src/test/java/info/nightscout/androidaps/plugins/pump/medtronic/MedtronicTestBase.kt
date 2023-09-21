@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic
 
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
@@ -12,7 +13,6 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.common.sync.PumpSyncStorage
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.sharedtests.TestBase
 import org.mockito.Answers
 import org.mockito.Mock
 

@@ -2,13 +2,13 @@ package info.nightscout.androidaps
 
 import android.content.Context
 import android.content.SharedPreferences
+import app.aaps.shared.tests.TestBase
 import info.nightscout.androidaps.interaction.utils.Constants
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
 import info.nightscout.androidaps.testing.mocks.SharedPreferencesMock
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.sharedtests.TestBase
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.jupiter.api.BeforeEach

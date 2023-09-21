@@ -1,5 +1,6 @@
 package info.nightscout.plugins.configBuilder
 
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.configBuilder.ConfigBuilderPlugin
@@ -10,7 +11,6 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

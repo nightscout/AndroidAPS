@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros
 
+import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.rx.TestAapsSchedulers
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
@@ -15,8 +17,6 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.pump.common.defs.TempBasalPair
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.sharedtests.TestBase
-import info.nightscout.sharedtests.rx.TestAapsSchedulers
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider
 import org.junit.jupiter.api.Assertions

@@ -1,9 +1,8 @@
 package info.nightscout.core.data
 
+import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.sharedtests.TestBase
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 /**

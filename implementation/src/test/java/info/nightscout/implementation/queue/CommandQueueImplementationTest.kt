@@ -1,9 +1,11 @@
 package info.nightscout.implementation.queue
 
-import com.google.common.truth.Truth.assertThat
 import android.content.Context
 import android.os.Handler
 import android.os.PowerManager
+import app.aaps.shared.tests.TestBaseWithProfile
+import app.aaps.shared.tests.TestPumpPlugin
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
@@ -36,8 +38,6 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.sharedtests.TestBaseWithProfile
-import info.nightscout.sharedtests.TestPumpPlugin
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

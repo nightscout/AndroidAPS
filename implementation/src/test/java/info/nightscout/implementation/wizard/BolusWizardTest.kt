@@ -1,5 +1,6 @@
 package info.nightscout.implementation.wizard
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -13,7 +14,6 @@ import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito

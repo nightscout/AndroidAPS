@@ -1,8 +1,8 @@
 package info.nightscout.plugins.general.smsCommunicator
 
 import android.telephony.SmsMessage
+import app.aaps.shared.tests.TestBase
 import info.nightscout.interfaces.smsCommunicator.Sms
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito

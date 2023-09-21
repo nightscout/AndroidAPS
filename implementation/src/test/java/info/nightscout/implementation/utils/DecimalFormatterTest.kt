@@ -1,9 +1,9 @@
 package info.nightscout.implementation.utils
 
+import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

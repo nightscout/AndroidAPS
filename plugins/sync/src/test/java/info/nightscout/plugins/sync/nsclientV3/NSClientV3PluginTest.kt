@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3
 
+import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.fromConstant
@@ -34,7 +35,6 @@ import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
-import info.nightscout.sharedtests.TestBaseWithProfile
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
