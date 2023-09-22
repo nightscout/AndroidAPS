@@ -1,6 +1,7 @@
 package info.nightscout.plugins.aps.loop
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
@@ -11,7 +12,6 @@ import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.plugins.aps.APSResultObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -75,21 +75,21 @@ class APSResultTest : TestBaseWithProfile() {
         closedLoopEnabled.set(true)
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(false)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
         apsResult.tempBasalRequested(true).percent(200).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
 
         // open loop
         closedLoopEnabled.set(false)
         // no change requested
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(false)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
 
         // request 100% when no temp is running
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(true).percent(100).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
 
         // request equal temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -102,7 +102,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).percent(70).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
 
         // request zero temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -115,7 +115,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).percent(0).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
 
         // request high temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -128,7 +128,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).percent(200).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
 
         // request slightly different temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -141,7 +141,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).percent(80).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
 
         // request different temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -154,7 +154,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).percent(120).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
 
         // it should work with absolute temps too
         // request different temp
@@ -168,7 +168,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).percent(100).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
             TemporaryBasal(
                 timestamp = 0,
@@ -179,7 +179,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).percent(50).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
 
         // **** ABSOLUTE pump ****
         testPumpPlugin.pumpDescription.fillFor(PumpType.MEDTRONIC_515_715) // U/h based
@@ -190,7 +190,7 @@ class APSResultTest : TestBaseWithProfile() {
         // request 100% when no temp is running
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(null)
         apsResult.tempBasalRequested(true).rate(1.0).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
 
         // request equal temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -203,7 +203,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).rate(2.0).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
             TemporaryBasal(
                 timestamp = 0,
@@ -214,7 +214,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).rate(2.0).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
 
         // request zero temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -227,7 +227,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).rate(0.0).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
 
         // request high temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -240,7 +240,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).rate(35.0).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
 
         // request slightly different temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -253,7 +253,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).rate(1.2).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
 
         // request different temp
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
@@ -266,7 +266,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).rate(1.5).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
 
         // it should work with percent temps too
         // request different temp
@@ -280,7 +280,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).rate(1.1).duration(30)
-        Assertions.assertEquals(false, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isFalse()
         `when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(ArgumentMatchers.anyLong())).thenReturn(
             TemporaryBasal(
                 timestamp = 0,
@@ -291,7 +291,7 @@ class APSResultTest : TestBaseWithProfile() {
             )
         )
         apsResult.tempBasalRequested(true).rate(0.5).duration(30)
-        Assertions.assertEquals(true, apsResult.isChangeRequested)
+        assertThat(apsResult.isChangeRequested).isTrue()
     }
 
     @Test fun cloneTest() {
@@ -307,7 +307,7 @@ class APSResultTest : TestBaseWithProfile() {
             }
         apsResult.rate(10.0)
         val apsResult2 = apsResult.newAndClone(injector)
-        Assertions.assertEquals(apsResult.rate, apsResult2.rate, 0.0)
+        assertThat(apsResult2.rate).isEqualTo(apsResult.rate)
     }
 
     @Test fun jsonTest() {
@@ -323,9 +323,9 @@ class APSResultTest : TestBaseWithProfile() {
                 it.rh = rh
             }
         apsResult.rate(20.0).tempBasalRequested(true)
-        Assertions.assertEquals(20.0, safeGetDouble(apsResult.json(), "rate"), 0.0)
+        assertThat(safeGetDouble(apsResult.json(), "rate")).isEqualTo(20.0)
         apsResult.rate(20.0).tempBasalRequested(false)
-        Assertions.assertEquals(false, apsResult.json()?.has("rate"))
+        assertThat(apsResult.json()?.has("rate")).isFalse()
     }
 
     @BeforeEach

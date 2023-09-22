@@ -1,6 +1,7 @@
 package info.nightscout.plugins.general.autotune
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.data.Block
@@ -13,7 +14,6 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -47,15 +47,13 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test1/aapsorefprofile.json").readText()
-        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
+        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, inputProfile)
-        oapsOutputProfile?.let {
-            Assertions.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
-            Assertions.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
-            for (i in 0..23)
-                Assertions.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+        assertThat(outProfile.isf).isEqualTo(oapsOutputProfile.isf)
+        assertThat(outProfile.ic).isEqualTo(oapsOutputProfile.ic)
+        for (i in 0..23) {
+            assertThat(outProfile.basal[i]).isEqualTo(oapsOutputProfile.basal[i])
         }
-            ?: Assertions.fail()
     }
 
     @Suppress("SpellCheckingInspection")
@@ -71,15 +69,13 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test4/newprofile.2022-05-30.json").readText()
-        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
+        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, pumpProfile)
-        oapsOutputProfile?.let {
-            Assertions.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
-            Assertions.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
-            for (i in 0..23)
-                Assertions.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+        assertThat(outProfile.isf).isEqualTo(oapsOutputProfile.isf)
+        assertThat(outProfile.ic).isEqualTo(oapsOutputProfile.ic)
+        for (i in 0..23) {
+            assertThat(outProfile.basal[i]).isEqualTo(oapsOutputProfile.basal[i])
         }
-            ?: Assertions.fail()
     }
 
     /**
