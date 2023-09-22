@@ -36,8 +36,6 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventLocalProfileChanged
-import info.nightscout.rx.events.EventNSClientRestart
-import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -51,10 +49,8 @@ import info.nightscout.ui.activities.fragments.TreatmentsProfileSwitchFragment.R
 import info.nightscout.ui.databinding.TreatmentsProfileswitchFragmentBinding
 import info.nightscout.ui.databinding.TreatmentsProfileswitchItemBinding
 import info.nightscout.ui.dialogs.ProfileViewerDialog
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
@@ -96,30 +92,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun refreshFromNightscout() {
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
-                uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
-                disposable +=
-                    Completable.fromAction {
-                        repository.deleteAllEffectiveProfileSwitches()
-                        repository.deleteAllProfileSwitches()
-                    }
-                        .subscribeOn(aapsSchedulers.io)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribeBy(
-                            onError = { aapsLogger.error("Error removing entries", it) },
-                            onComplete = {
-                                rxBus.send(EventProfileSwitchChanged())
-                                rxBus.send(EventEffectiveProfileSwitchChanged(0L))
-                                rxBus.send(EventNewHistoryData(0, false))
-                            }
-                        )
-                rxBus.send(EventNSClientRestart())
-            }
-        }
     }
 
     private fun profileSwitchWithInvalid(now: Long) = repository
@@ -286,8 +258,6 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_profile_switch, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || !config.isEngineeringMode()
-        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
     }
 
     private fun updateMenuVisibility() {
@@ -315,18 +285,15 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                 true
             }
 
-            R.id.nav_refresh_ns -> {
-                refreshFromNightscout()
-                true
-            }
-
             else -> false
         }
 
     private fun getConfirmationText(selectedItems: SparseArray<ProfileSealed>): String {
         if (selectedItems.size() == 1) {
             val profileSwitch = selectedItems.valueAt(0)
-            return rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch) + ": " + profileSwitch.profileName + "\n" + rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(profileSwitch.timestamp)
+            return rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch) + ": " + profileSwitch.profileName + "\n" + rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(
+                profileSwitch.timestamp
+            )
         }
         return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }

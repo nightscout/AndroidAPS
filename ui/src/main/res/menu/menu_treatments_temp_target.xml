@@ -19,9 +19,4 @@
         android:icon="@drawable/ic_visibility_off"
         app:showAsAction="ifRoom" />
 
-    <item
-        android:id="@+id/nav_refresh_ns"
-        android:title="@string/refresh_from_nightscout"
-        app:showAsAction="never" />
-
 </menu>

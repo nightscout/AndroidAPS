@@ -36,10 +36,6 @@ import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.rx.events.EventNSClientRestart
-import info.nightscout.rx.events.EventNewHistoryData
-import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.events.EventTempTargetChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -53,10 +49,8 @@ import info.nightscout.ui.R
 import info.nightscout.ui.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
 import info.nightscout.ui.databinding.TreatmentsTemptargetFragmentBinding
 import info.nightscout.ui.databinding.TreatmentsTemptargetItemBinding
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -99,29 +93,6 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun refreshFromNightscout() {
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
-                uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
-                disposable +=
-                    Completable.fromAction {
-                        repository.deleteAllTempTargetEntries()
-                    }
-                        .subscribeOn(aapsSchedulers.io)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribeBy(
-                            onError = { aapsLogger.error("Error removing entries", it) },
-                            onComplete = {
-                                rxBus.send(EventProfileSwitchChanged())
-                                rxBus.send(EventEffectiveProfileSwitchChanged(0L))
-                                rxBus.send(EventNewHistoryData(0, false))
-                            }
-                        )
-                rxBus.send(EventNSClientRestart())
-            }
-        }
     }
 
     private fun swapAdapter() {
@@ -220,8 +191,6 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_temp_target, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || !config.isEngineeringMode()
-        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
     }
 
     private fun updateMenuVisibility() {
@@ -246,11 +215,6 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
                 updateMenuVisibility()
                 ToastUtils.infoToast(context, R.string.show_invalidated_records)
                 swapAdapter()
-                true
-            }
-
-            R.id.nav_refresh_ns -> {
-                refreshFromNightscout()
                 true
             }
 

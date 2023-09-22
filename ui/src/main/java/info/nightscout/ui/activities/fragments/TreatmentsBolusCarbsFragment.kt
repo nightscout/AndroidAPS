@@ -39,8 +39,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventNSClientRestart
-import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventTreatmentChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -54,10 +52,8 @@ import info.nightscout.ui.databinding.TreatmentsBolusCarbsFragmentBinding
 import info.nightscout.ui.databinding.TreatmentsBolusCarbsItemBinding
 import info.nightscout.ui.dialogs.WizardInfoDialog
 import info.nightscout.ui.extensions.isPumpHistory
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -212,6 +208,18 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             holder.binding.metadataLayout.visibility = (ml.bolusCalculatorResult != null && (ml.bolusCalculatorResult.isValid || showInvalidated)).toVisibility()
             ml.bolusCalculatorResult?.let { bolusCalculatorResult ->
                 holder.binding.calcTime.text = dateUtil.timeString(bolusCalculatorResult.timestamp)
+                holder.binding.metadataNs.visibility = (bolusCalculatorResult.interfaceIDs.nightscoutId != null).toVisibility()
+                holder.binding.cbMetadataRemove.visibility = (bolusCalculatorResult.isValid && actionHelper.isRemoving).toVisibility()
+                if (actionHelper.isRemoving) {
+                    holder.binding.cbMetadataRemove.setOnCheckedChangeListener { _, value ->
+                        actionHelper.updateSelection(position, ml, value)
+                    }
+                    holder.binding.root.setOnClickListener {
+                        holder.binding.cbMetadataRemove.toggle()
+                        actionHelper.updateSelection(position, ml, holder.binding.cbMetadataRemove.isChecked)
+                    }
+                    holder.binding.cbMetadataRemove.isChecked = actionHelper.isSelected(position)
+                }
             }
 
             // Bolus
@@ -310,8 +318,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_carbs_bolus, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_insulin, false) || !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_carbs, false) || !config.isEngineeringMode()
-        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
         val hasItems = (binding.recyclerview.adapter?.itemCount ?: 0) > 0
         menu.findItem(R.id.nav_delete_future)?.isVisible = hasItems
     }
@@ -346,37 +352,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                 true
             }
 
-            R.id.nav_refresh_ns       -> {
-                refreshFromNightscout()
-                true
-            }
-
             else                      -> false
         }
-
-    private fun refreshFromNightscout() {
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
-                uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
-                disposable +=
-                    Completable.fromAction {
-                        repository.deleteAllBolusCalculatorResults()
-                        repository.deleteAllBoluses()
-                        repository.deleteAllCarbs()
-                    }
-                        .subscribeOn(aapsSchedulers.io)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribeBy(
-                            onError = { aapsLogger.error("Error removing entries", it) },
-                            onComplete = {
-                                rxBus.send(EventTreatmentChange())
-                                rxBus.send(EventNewHistoryData(0, false))
-                            }
-                        )
-                rxBus.send(EventNSClientRestart())
-            }
-        }
-    }
 
     private fun deleteFutureTreatments() {
         activity?.let { activity ->
@@ -474,6 +451,17 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                             .subscribe(
                                 { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
                                 { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
+                            )
+                    }
+                    ml.bolusCalculatorResult?.let { bolusCalculatorResult ->
+                        uel.log(
+                            Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.Treatments,
+                            ValueWithUnit.Timestamp(bolusCalculatorResult.timestamp)
+                        )
+                        disposable += repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(bolusCalculatorResult.id))
+                            .subscribe(
+                                { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolusCalculatorResult $it") } },
+                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolusCalculatorResult", it) }
                             )
                     }
                 }

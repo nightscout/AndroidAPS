@@ -2,6 +2,7 @@ package info.nightscout.implementation.db
 
 import android.content.Context
 import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.EffectiveProfileSwitch
@@ -72,6 +73,11 @@ class CompatDBHelper @Inject constructor(
                 rxBus.send(EventNewHistoryData(timestamp, false))
             }
             it.filterIsInstance<Bolus>().minOfOrNull { t -> t.timestamp }?.let { timestamp ->
+                aapsLogger.debug(LTag.DATABASE, "Firing EventTreatmentChange $timestamp")
+                rxBus.send(EventTreatmentChange())
+                rxBus.send(EventNewHistoryData(timestamp, false))
+            }
+            it.filterIsInstance<BolusCalculatorResult>().minOfOrNull { t -> t.timestamp }?.let { timestamp ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventTreatmentChange $timestamp")
                 rxBus.send(EventTreatmentChange())
                 rxBus.send(EventNewHistoryData(timestamp, false))
