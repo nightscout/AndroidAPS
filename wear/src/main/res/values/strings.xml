@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">Show BGI</string>
     <string name="pref_show_direction_arrow">Show Direction Arrow</string>
     <string name="pref_show_ago">Show Ago</string>
+    <string name="pref_show_temp_basal">Show TBR</string>
+    <string name="pref_show_bolus">Show Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Show Grid</string>
     <string name="pref_dark" comment="Enables dark visual theme">Dark</string>
     <string name="pref_highlight_basals">Highlight Basals</string>
     <string name="pref_prediction_lines">Show predictions</string>
@@ -192,6 +195,11 @@
     <string name="key_show_wizard" translatable="false">showWizard</string>
     <string name="key_single_target" translatable="false">singletarget</string>
     <string name="key_wizard_percentage" translatable="false">wizardpercentage</string>
+    <string name="key_show_graph_basal" translatable="false">show_graph_basal</string>
+    <string name="key_show_graph_temp_basal" translatable="false">show_graph_temp_basal</string>
+    <string name="key_show_graph_carbs" translatable="false">show_graph_carbs</string>
+    <string name="key_show_graph_bolus" translatable="false">show_graph_bolus</string>
+    <string name="key_show_graph_grid" translatable="false">show_graph_grid</string>
     <string name="key_highlight_basals" translatable="false">highlight_basals</string>
     <string name="key_prediction_lines" translatable="false">prediction_lines</string>
     <string name="key_chart_time_frame" translatable="false">chart_time_frame</string>
