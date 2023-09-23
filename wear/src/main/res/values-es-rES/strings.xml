@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
     <string name="pref_show_ago">Mostrar histórico</string>
+    <string name="pref_show_temp_basal">Mostrar TBR</string>
+    <string name="pref_show_bolus">Mostrar Bolos &amp; SMB</string>
+    <string name="pref_show_grid">Mostrar cuadrícula</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tema oscuro</string>
     <string name="pref_highlight_basals">Resaltar las basales</string>
     <string name="pref_prediction_lines">Mostrar predicciones</string>
