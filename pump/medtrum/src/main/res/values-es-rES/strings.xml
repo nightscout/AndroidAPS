@@ -70,6 +70,7 @@
     <string name="step_retry_activation">Activación en progreso</string>
     <string name="unexpected_state">Estado inesperado: %1$s</string>
     <string name="no_profile_selected">No se ha seleccionado ningún perfil. Seleccione un perfil e inténtelo de nuevo.</string>
+    <string name="no_sn_in_settings">Número de serie desconocido. Por favor, introduce el número de serie de la base de la bomba en la configuración y vuelve a intentarlo.</string>
     <string name="base_serial">Número de serie de base de la bomba: %1$X</string>
     <string name="patch_begin_activation">No hay ningún parche activo. Presiona <b>Siguiente</b> para iniciar el proceso de activación.</string>
     <string name="patch_not_active_note">¡La base de la bomba no debe conectarse al parche hasta el siguiente paso!</string>
