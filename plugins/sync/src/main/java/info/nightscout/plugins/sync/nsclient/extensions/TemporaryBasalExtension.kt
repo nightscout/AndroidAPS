@@ -33,14 +33,19 @@ fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil)
     }
 
 fun TemporaryBasal.Companion.temporaryBasalFromJson(jsonObject: JSONObject): TemporaryBasal? {
-    val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
+    val timestamp =
+        JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
+            ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
+            ?: return null
     val percent = JsonHelper.safeGetDoubleAllowNull(jsonObject, "percent")
     val absolute = JsonHelper.safeGetDoubleAllowNull(jsonObject, "absolute")
     val duration = JsonHelper.safeGetLongAllowNull(jsonObject, "duration") ?: return null
     val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val type = fromString(JsonHelper.safeGetString(jsonObject, "type"))
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
-    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
+    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)
+        ?: JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
+        ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
     val endPumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "endId", null)
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))

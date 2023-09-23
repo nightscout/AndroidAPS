@@ -21,9 +21,14 @@ fun BolusCalculatorResult.toJson(isAdd: Boolean, dateUtil: DateUtil, profileUtil
         .also { if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId) }
 
 fun BolusCalculatorResult.Companion.fromJson(jsonObject: JSONObject): BolusCalculatorResult? {
-    val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
+    val timestamp =
+        JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
+            ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
+            ?: return null
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
-    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
+    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)
+        ?: JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
+        ?: return null
     val bcrString = JsonHelper.safeGetStringAllowNull(jsonObject, "bolusCalculatorResult", null) ?: return null
 
     if (timestamp == 0L) return null

@@ -26,12 +26,17 @@ fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         }
 
 fun Bolus.Companion.fromJson(jsonObject: JSONObject): Bolus? {
-    val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
+    val timestamp =
+        JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
+            ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
+            ?: return null
     val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "insulin") ?: return null
     val type = Bolus.Type.fromString(JsonHelper.safeGetString(jsonObject, "type"))
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
     val notes = JsonHelper.safeGetStringAllowNull(jsonObject, "notes", null)
-    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
+    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)
+        ?: JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
+        ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)

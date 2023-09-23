@@ -40,7 +40,10 @@ fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         }
 
 fun ExtendedBolus.Companion.extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
-    val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
+    val timestamp =
+        JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
+            ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
+            ?: return null
     if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitNow") != 0) return null
     if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitExt") != 100) return null
     val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "enteredinsulin") ?: return null
@@ -48,7 +51,9 @@ fun ExtendedBolus.Companion.extendedBolusFromJson(jsonObject: JSONObject): Exten
     val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
     val isEmulatingTempBasal = JsonHelper.safeGetBoolean(jsonObject, "isEmulatingTempBasal", false)
-    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null) ?: return null
+    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)
+        ?: JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
+        ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
     val endPumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "endId", null)
     val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))

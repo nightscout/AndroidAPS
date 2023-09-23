@@ -31,13 +31,18 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
         }
 
 fun EffectiveProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EffectiveProfileSwitch? {
-    val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
+    val timestamp =
+        JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
+            ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
+            ?: return null
     val originalTimeshift = JsonHelper.safeGetLong(jsonObject, "originalTimeshift")
     val originalDuration = JsonHelper.safeGetLong(jsonObject, "originalDuration")
     val originalEnd = JsonHelper.safeGetLong(jsonObject, "originalEnd")
     val originalPercentage = JsonHelper.safeGetInt(jsonObject, "originalPercentage", 100)
     val isValid = JsonHelper.safeGetBoolean(jsonObject, "isValid", true)
-    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
+    val id = JsonHelper.safeGetStringAllowNull(jsonObject, "identifier", null)
+        ?: JsonHelper.safeGetStringAllowNull(jsonObject, "_id", null)
+        ?: return null
     val originalProfileName = JsonHelper.safeGetStringAllowNull(jsonObject, "originalProfileName", null) ?: return null
     val originalCustomizedName = JsonHelper.safeGetStringAllowNull(jsonObject, "originalCustomizedName", null) ?: return null
     val profileJson = JsonHelper.safeGetStringAllowNull(jsonObject, "profileJson", null) ?: return null

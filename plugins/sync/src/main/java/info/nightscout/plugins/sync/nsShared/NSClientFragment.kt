@@ -233,6 +233,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     }
 
     private fun updateLog() {
+        _binding?.recyclerview?.recycledViewPool?.clear()
         _binding?.recyclerview?.swapAdapter(RecyclerViewAdapter(nsClientPlugin?.listLog ?: arrayListOf()), true)
     }
 
