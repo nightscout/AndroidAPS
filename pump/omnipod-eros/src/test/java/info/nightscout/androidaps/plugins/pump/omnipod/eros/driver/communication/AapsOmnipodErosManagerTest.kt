@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.Profile.ProfileValue
+import kotlin.test.assertFailsWith
 import org.joda.time.Duration
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -34,11 +35,11 @@ internal class AapsOmnipodErosManagerTest {
     }
 
     @Test fun invalidProfileNullProfile() {
-        Assertions.assertThrows(IllegalArgumentException::class.java) { AapsOmnipodErosManager.mapProfileToBasalSchedule(null) }
+        assertFailsWith<IllegalArgumentException> { AapsOmnipodErosManager.mapProfileToBasalSchedule(null) }
     }
 
     @Test fun invalidProfileNullEntries() {
-        Assertions.assertThrows(IllegalArgumentException::class.java) {
+        assertFailsWith<IllegalArgumentException> {
             AapsOmnipodErosManager.mapProfileToBasalSchedule(Mockito.mock(Profile::class.java))
         }
     }
@@ -46,7 +47,7 @@ internal class AapsOmnipodErosManagerTest {
     @Test fun invalidProfileZeroEntries() {
         val profile = Mockito.mock(Profile::class.java)
         Mockito.`when`(profile.getBasalValues()).thenReturn(emptyArray())
-        Assertions.assertThrows(IllegalArgumentException::class.java) { AapsOmnipodErosManager.mapProfileToBasalSchedule(profile) }
+        assertFailsWith<IllegalArgumentException> { AapsOmnipodErosManager.mapProfileToBasalSchedule(profile) }
     }
 
     @Test fun invalidProfileNonZeroOffset() {
@@ -56,7 +57,7 @@ internal class AapsOmnipodErosManagerTest {
                 ProfileValue(1800, 0.5)
             )
         )
-        Assertions.assertThrows(IllegalArgumentException::class.java) { AapsOmnipodErosManager.mapProfileToBasalSchedule(profile) }
+        assertFailsWith<IllegalArgumentException> { AapsOmnipodErosManager.mapProfileToBasalSchedule(profile) }
     }
 
     @Test fun invalidProfileMoreThan24Hours() {
@@ -67,7 +68,7 @@ internal class AapsOmnipodErosManagerTest {
                 ProfileValue(86400, 0.5)
             )
         )
-        Assertions.assertThrows(IllegalArgumentException::class.java) { AapsOmnipodErosManager.mapProfileToBasalSchedule(profile) }
+        assertFailsWith<IllegalArgumentException> { AapsOmnipodErosManager.mapProfileToBasalSchedule(profile) }
     }
 
     @Test fun invalidProfileNegativeOffset() {
@@ -77,7 +78,7 @@ internal class AapsOmnipodErosManagerTest {
                 ProfileValue(-1, 0.5)
             )
         )
-        Assertions.assertThrows(IllegalArgumentException::class.java) { AapsOmnipodErosManager.mapProfileToBasalSchedule(profile) }
+        assertFailsWith<IllegalArgumentException> { AapsOmnipodErosManager.mapProfileToBasalSchedule(profile) }
     }
 
     @Test fun roundsToSupportedPrecision() {
