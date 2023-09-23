@@ -31,20 +31,20 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightExcepti
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
-import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
+import info.nightscout.core.utils.HtmlHelper.fromHtml
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class InsightAlertService : DaggerService(), InsightConnectionService.StateCallback {
 
+    private val localBinder: LocalBinder = LocalBinder()
+    private val `$alertLock`: Any = arrayOfNulls<Any>(0)
+    val alertLiveData = MutableLiveData<Alert?>()
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var alertUtils: AlertUtils
 
-    private val localBinder: LocalBinder = LocalBinder()
     private var connectionRequested = false
-    private val `$alertLock`: Any = arrayOfNulls<Any>(0)
     private var alert: Alert? = null
-    val alertLiveData = MutableLiveData<Alert?>()
     private var thread: Thread? = null
     private var vibrator: Vibrator? = null
     private var vibrating = false

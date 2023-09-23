@@ -8,8 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import java.util.ArrayList
-import javax.inject.Inject
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.insight.databinding.LocalInsightFragmentBinding
@@ -18,12 +16,13 @@ import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightU
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.utils.DecimalFormatter.to2Decimal
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import javax.inject.Inject
 
 class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
@@ -34,6 +33,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var _binding: LocalInsightFragmentBinding? = null
 
@@ -66,6 +66,11 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
     @Synchronized override fun onPause() {
         super.onPause()
+        disposable.clear()
+    }
+
+    @Synchronized override fun onDestroy() {
+        super.onDestroy()
         disposable.clear()
     }
 
@@ -124,6 +129,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     }
 
     protected fun updateGUI() {
+        _binding ?: return
         binding.statusItemContainer.removeAllViews()
         if (!localInsightPlugin.isInitialized()) {
             binding.operatingMode.visibility = View.GONE
@@ -179,7 +185,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
                 InsightState.APP_FIRMWARE_VERSIONS,
                 InsightState.APP_SYSTEM_IDENTIFICATION,
                 InsightState.AWAITING_CODE_CONFIRMATION -> info.nightscout.core.ui.R.string.connecting
-                InsightState.CONNECTED                  -> info.nightscout.shared.R.string.connected
+                InsightState.CONNECTED                  -> info.nightscout.interfaces.R.string.connected
                 InsightState.RECOVERING                 -> R.string.recovering
             }
             statusItems.add(getStatusItem(rh.gs(R.string.insight_status), rh.gs(string)))
@@ -247,20 +253,20 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
     private fun getCartridgeStatusItem(statusItems: MutableList<View>) {
         val cartridgeStatus = localInsightPlugin.cartridgeStatus ?: return
         val status: String
-        status = if (cartridgeStatus.isInserted) to2Decimal(cartridgeStatus.remainingAmount) + "U" else rh.gs(R.string.not_inserted)
+        status = if (cartridgeStatus.isInserted) decimalFormatter.to2Decimal(cartridgeStatus.remainingAmount) + "U" else rh.gs(R.string.not_inserted)
         statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.reservoir_label), status))
     }
 
     private fun getTDDItems(statusItems: MutableList<View>) {
         val tdd = localInsightPlugin.totalDailyDose ?: return
-        statusItems.add(getStatusItem(rh.gs(R.string.tdd_bolus), to2Decimal(tdd.bolus)))
-        statusItems.add(getStatusItem(rh.gs(R.string.tdd_basal), to2Decimal(tdd.basal)))
-        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.tdd_total), to2Decimal(tdd.bolusAndBasal)))
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_bolus), decimalFormatter.to2Decimal(tdd.bolus)))
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_basal), decimalFormatter.to2Decimal(tdd.basal)))
+        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.tdd_total), decimalFormatter.to2Decimal(tdd.bolusAndBasal)))
     }
 
     private fun getBaseBasalRateItem(statusItems: MutableList<View>) {
         val activeBasalRate = localInsightPlugin.activeBasalRate ?: return
-        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.base_basal_rate_label),to2Decimal(activeBasalRate.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
+        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.base_basal_rate_label),decimalFormatter.to2Decimal(activeBasalRate.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
     }
 
     private fun getTBRItem(statusItems: MutableList<View>) {

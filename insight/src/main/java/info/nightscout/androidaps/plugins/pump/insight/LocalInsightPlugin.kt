@@ -35,7 +35,7 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.OwnDatabasePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -94,13 +94,17 @@ class LocalInsightPlugin @Inject constructor(
     .fragmentClass(LocalInsightFragment::class.java.name)
     .preferencesId(if (config.APS) R.xml.pref_insight_local_full else R.xml.pref_insight_local_pumpcontrol),
     injector, aapsLogger, rh, commandQueue
-), Pump, Insight, Constraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
+), Pump, Insight, PluginConstraints, InsightConnectionService.StateCallback, OwnDatabasePlugin {
 
     override val pumpDescription: PumpDescription = PumpDescription().also { it.fillFor(PumpType.ACCU_CHEK_INSIGHT) }
+    private val _bolusLock: Any = arrayOfNulls<Any>(0)
+    var lastBolusAmount = 0.0
+        private set
+    var lastBolusTimestamp = 0L
+        private set
     private var alertService: InsightAlertService? = null
     var connectionService: InsightConnectionService? = null
         private set
-    private var timeOffset: Long = 0
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             if (binder is InsightConnectionService.LocalBinder) {
@@ -118,7 +122,7 @@ class LocalInsightPlugin @Inject constructor(
             connectionService = null
         }
     }
-    private val _bolusLock: Any = arrayOfNulls<Any>(0)
+    private var timeOffset: Long = 0
     private var bolusID = 0
     private var bolusCancelled = false
     private var activeBasalProfile: BasalProfile? = null
@@ -142,10 +146,6 @@ class LocalInsightPlugin @Inject constructor(
         private set
     private var statusLoaded = false
     var tBROverNotificationBlock: TBROverNotificationBlock? = null
-        private set
-    var lastBolusAmount = 0.0
-        private set
-    var lastBolusTimestamp = 0L
         private set
 
     override fun onStart() {
@@ -1454,21 +1454,21 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.pumplimit))
+        percentRate.setIfGreater(0, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.pumplimit))
                                  , this)
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
         if (!limitsFetched) return insulin
-        insulin.setIfSmaller(aapsLogger, maximumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, maximumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        insulin.setIfSmaller(maximumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, maximumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
-            insulin.set(aapsLogger, 0.0, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, minimumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+            insulin.set(0.0, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, minimumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         }
         return insulin
     }
