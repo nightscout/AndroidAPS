@@ -167,6 +167,8 @@ class MedtrumOverviewViewModel @Inject constructor(
         val profile = profileFunction.getProfile()
         if (profile == null) {
             _eventHandler.postValue(UIEvent(EventType.PROFILE_NOT_SET))
+        } else if (medtrumPump.pumpSN == 0L){
+            _eventHandler.postValue(UIEvent(EventType.SERIAL_NOT_SET))
         } else {
             _eventHandler.postValue(UIEvent(EventType.CHANGE_PATCH_CLICKED))
         }
