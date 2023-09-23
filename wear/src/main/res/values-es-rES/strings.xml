@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
     <string name="pref_units_for_actions">Unidades para Acciones</string>
     <string name="units_short">U</string>
+    <string name="pref_display_settings">Pantalla</string>
+    <string name="pref_graph_settings">Gráfico</string>
+    <string name="pref_interface_settings">Interfaz</string>
+    <string name="pref_others_settings">Otros</string>
+    <string name="pref_complication_settings">Complicaciones</string>
     <string name="pref_show_date">Mostrar fecha</string>
     <string name="pref_show_iob">Mostrar Insulina activa (IOB)</string>
     <string name="pref_show_detailed_iob">Mostrar IOB detallada</string>
@@ -41,6 +46,7 @@
     <string name="pref_show_ago">Mostrar histórico</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tema oscuro</string>
     <string name="pref_highlight_basals">Resaltar las basales</string>
+    <string name="pref_prediction_lines">Mostrar predicciones</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Divisor de coincidencia</string>
     <string name="pref_chart_timeframe">Gráfico por franja de tiempo</string>
     <string name="pref_1_hour">1 hora</string>

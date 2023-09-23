@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="format_carbs">%1$d g</string>
+    <string name="count_selected">Vybráno: %1$d</string>
+    <string name="remove_items">Odebrat položky</string>
+    <string name="sort_items">Seřadit položky</string>
+    <string name="remove_selected_items">Odebrat vybrané položky</string>
+    <string name="sort_label">Seřadit</string>
+</resources>

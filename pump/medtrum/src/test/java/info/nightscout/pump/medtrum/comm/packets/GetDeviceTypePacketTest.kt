@@ -4,8 +4,8 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class GetDeviceTypePacketTest : MedtrumTestBase() {
 
@@ -28,8 +28,8 @@ class GetDeviceTypePacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        Assertions.assertEquals(1, result.size)
+        Assertions.assertEquals(opCode.toByte(), result[0])
     }
 
     @Test fun handleResponseGivenResponseWhenMessageIsCorrectLengthThenResultTrue() {
@@ -45,10 +45,10 @@ class GetDeviceTypePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertEquals(true, result)
-        assertEquals(false, packet.failed)
-        assertEquals(deviceType, packet.deviceType)
-        assertEquals(deviceSN, packet.deviceSN)
+        Assertions.assertEquals(true, result)
+        Assertions.assertEquals(false, packet.failed)
+        Assertions.assertEquals(deviceType, packet.deviceType)
+        Assertions.assertEquals(deviceSN, packet.deviceSN)
 
     }
 
@@ -65,9 +65,9 @@ class GetDeviceTypePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response.sliceArray(0..response.size - 2))
 
         // Expected values
-        assertEquals(false, result)
-        assertEquals(true, packet.failed)
-        assertEquals(0, packet.deviceType)
-        assertEquals(0, packet.deviceSN)
+        Assertions.assertEquals(false, result)
+        Assertions.assertEquals(true, packet.failed)
+        Assertions.assertEquals(0, packet.deviceType)
+        Assertions.assertEquals(0, packet.deviceSN)
     }
 }

@@ -12,11 +12,12 @@ import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.core.validators.ValidatingEditTextPreference
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -40,8 +41,8 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
-import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.services.MedtrumService
+import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -66,7 +67,7 @@ import kotlin.math.abs
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
@@ -75,7 +76,8 @@ import kotlin.math.abs
     private val medtrumPump: MedtrumPump,
     private val uiInteraction: UiInteraction,
     private val pumpSync: PumpSync,
-    private val temporaryBasalStorage: TemporaryBasalStorage
+    private val temporaryBasalStorage: TemporaryBasalStorage,
+    private val decimalFormatter: DecimalFormatter
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -93,6 +95,7 @@ import kotlin.math.abs
     override fun onStart() {
         super.onStart()
         aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStart()")
+        medtrumPump.loadVarsFromSP()
         val intent = Intent(context, MedtrumService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         disposable += rxBus
@@ -127,33 +130,41 @@ import kotlin.math.abs
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
+
+        preprocessSerialSettings(preferenceFragment)
+        preprocessAlarmSettings(preferenceFragment)
+        preprocessMaxInsulinSettings(preferenceFragment)
+    }
+
+    private fun preprocessSerialSettings(preferenceFragment: PreferenceFragmentCompat) {
         val serialSetting = preferenceFragment.findPreference<EditTextPreference>(rh.gs(R.string.key_sn_input))
-        serialSetting?.isEnabled = !isInitialized()
-        serialSetting?.setOnBindEditTextListener { editText ->
-            editText.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(newValue: Editable?) {
-                    val newSN = newValue.toString().toLongOrNull(radix = 16)
-                    val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN ?: 0)
-                    if (newDeviceType == MedtrumSnUtil.INVALID) {
-                        editText.error = rh.gs(R.string.sn_input_invalid)
-                    } else {
-                        editText.error = null
+        serialSetting?.apply {
+            isEnabled = !isInitialized()
+            setOnBindEditTextListener { editText ->
+                editText.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(newValue: Editable?) {
+                        val newSN = newValue?.toString()?.toLongOrNull(radix = 16) ?: 0
+                        val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN)
+                        editText.error = if (newDeviceType == MedtrumSnUtil.INVALID) {
+                            rh.gs(R.string.sn_input_invalid)
+                        } else {
+                            null
+                        }
                     }
-                }
 
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                    // Nothing to do here
-                }
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                        // Nothing to do here
+                    }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // Nothing to do here
-                }
-            })
-        }
-        serialSetting?.setOnPreferenceChangeListener { _, newValue ->
-            if (newValue is String) {
-                val newSN = newValue.toLongOrNull(radix = 16)
-                val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN ?: 0)
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        // Nothing to do here
+                    }
+                })
+            }
+            setOnPreferenceChangeListener { _, newValue ->
+                val newSN = (newValue as? String)?.toLongOrNull(radix = 16) ?: 0
+                val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN)
+
                 when {
                     newDeviceType == MedtrumSnUtil.INVALID                           -> {
                         preferenceFragment.activity?.let { activity ->
@@ -171,30 +182,61 @@ import kotlin.math.abs
 
                     else                                                             -> true
                 }
-            } else {
-                false
             }
         }
+    }
 
+    private fun preprocessAlarmSettings(preferenceFragment: PreferenceFragmentCompat) {
         val alarmSetting = preferenceFragment.findPreference<ListPreference>(rh.gs(R.string.key_alarm_setting))
         val allAlarmEntries = preferenceFragment.resources.getStringArray(R.array.alarmSettings)
         val allAlarmValues = preferenceFragment.resources.getStringArray(R.array.alarmSettingsValues)
 
         if (allAlarmEntries.size < 8 || allAlarmValues.size < 8) {
             aapsLogger.error(LTag.PUMP, "Alarm settings array is not complete")
-            return
+        } else {
+            when (medtrumPump.pumpType()) {
+                PumpType.MEDTRUM_NANO, PumpType.MEDTRUM_300U -> {
+                    alarmSetting?.apply {
+                        entries = arrayOf(allAlarmEntries[6], allAlarmEntries[7]) // "Beep", "Silent"
+                        entryValues = arrayOf(allAlarmValues[6], allAlarmValues[7]) // "6", "7"
+                    }
+                }
+
+                else                                         -> {
+                    // Use default
+                }
+            }
+        }
+    }
+
+    private fun preprocessMaxInsulinSettings(preferenceFragment: PreferenceFragmentCompat) {
+        val hourlyMaxSetting = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(R.string.key_hourly_max_insulin))
+        val dailyMaxSetting = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(R.string.key_daily_max_insulin))
+
+        val hourlyMaxValue = hourlyMaxSetting?.text?.toIntOrNull() ?: 0
+        val newDailyMaxMinValue = if (hourlyMaxValue > 20) hourlyMaxValue else 20
+        dailyMaxSetting?.setMinNumber(newDailyMaxMinValue)
+
+        val pumpTypeSettings = when (medtrumPump.pumpType()) {
+            PumpType.MEDTRUM_NANO -> Pair(40, 180) // maxHourlyMax, maxDailyMax
+            PumpType.MEDTRUM_300U -> Pair(60, 270)
+            else                  -> Pair(40, 180)
         }
 
-        when (medtrumPump.pumpType()) {
-            PumpType.MEDTRUM_NANO -> {
-                alarmSetting?.entries = arrayOf(allAlarmEntries[6], allAlarmEntries[7]) // "Beep", "Silent"
-                alarmSetting?.entryValues = arrayOf(allAlarmValues[6], allAlarmValues[7]) // "6", "7"
+        hourlyMaxSetting?.apply {
+            setMaxNumber(pumpTypeSettings.first)
+            val hourlyCurrentValue = text?.toIntOrNull() ?: 0
+            if (hourlyCurrentValue > pumpTypeSettings.first) {
+                text = pumpTypeSettings.first.toString()
             }
+        }
 
-            else                  -> {
-                // Use Nano settings for unknown pumps
-                alarmSetting?.entries = arrayOf(allAlarmEntries[6], allAlarmEntries[7]) // "Beep", "Silent"
-                alarmSetting?.entryValues = arrayOf(allAlarmValues[6], allAlarmValues[7]) // "6", "7"
+        dailyMaxSetting?.apply {
+            setMaxNumber(pumpTypeSettings.second)
+            val dailyCurrentValue = text?.toIntOrNull() ?: 0
+            when {
+                dailyCurrentValue < newDailyMaxMinValue     -> text = newDailyMaxMinValue.toString()
+                dailyCurrentValue > pumpTypeSettings.second -> text = pumpTypeSettings.second.toString()
             }
         }
     }
@@ -213,13 +255,18 @@ import kotlin.math.abs
 
     override fun isConnected(): Boolean {
         // This is a workaround to prevent AAPS to trigger connects when we have no patch activated
-        return if (!isInitialized()) true else medtrumService?.isConnected ?: false
+        return if (!isInitialized()) {
+            true
+        } else {
+            medtrumService?.isConnected ?: false
+        }
     }
 
     override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun finishHandshaking() {
+        // Unused
     }
 
     override fun connect(reason: String) {
@@ -301,7 +348,7 @@ import kotlin.math.abs
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: " + detailedBolusInfo.insulin + "U")
         if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         return if (detailedBolusInfo.insulin > 0 && detailedBolusInfo.carbs == 0.0) {
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
@@ -341,7 +388,7 @@ import kotlin.math.abs
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         // round rate to pump rate
-        val pumpRate = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
+        val pumpRate = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
         val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
         return if (connectionOK
@@ -417,6 +464,7 @@ import kotlin.math.abs
             try {
                 extended.put("ActiveProfile", profileName)
             } catch (ignored: Exception) {
+                // Ignore
             }
             pumpJson.put("status", status)
             pumpJson.put("extended", extended)
@@ -452,12 +500,12 @@ import kotlin.math.abs
             ret += "LastConn: $agoMin minAgo\n"
         }
         if (medtrumPump.lastBolusTime != 0L)
-            ret += "LastBolus: ${DecimalFormatter.to2Decimal(medtrumPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", medtrumPump.lastBolusTime)}\n"
+            ret += "LastBolus: ${decimalFormatter.to2Decimal(medtrumPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", medtrumPump.lastBolusTime)}\n"
 
         if (medtrumPump.tempBasalInProgress)
             ret += "Temp: ${medtrumPump.temporaryBasalToString()}\n"
 
-        ret += "Res: ${DecimalFormatter.to0Decimal(medtrumPump.reservoir)}U\n"
+        ret += "Res: ${decimalFormatter.to0Decimal(medtrumPump.reservoir)}U\n"
         return ret
     }
 
@@ -472,6 +520,7 @@ import kotlin.math.abs
     }
 
     override fun executeCustomAction(customActionType: CustomActionType) {
+        // Unused
     }
 
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {
@@ -499,31 +548,19 @@ import kotlin.math.abs
 
     // Medtrum interface
     override fun loadEvents(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.loadEvents() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.setUserSettings() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 
     override fun clearAlarms(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.clearAlarms() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
@@ -534,11 +571,7 @@ import kotlin.math.abs
     }
 
     override fun updateTime(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.updateTimeIfNeeded() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }

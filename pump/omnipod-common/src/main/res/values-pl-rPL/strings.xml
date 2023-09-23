@@ -104,7 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Pokaż przycisk wstrzymania podawania w zakładce Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Włączone wykrywanie strefy czasowej DST</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Przypomnienie o utracie ważności włączone</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Godziny przed wyłączeniem</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Jeśli włączono, pod zapiszczy po osiągnięciu określonego czasu</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Przypomnienie na 72 godziny przed upływem terminu ważności</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Alarm upływu terminu ważności włączony</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Jeśli włączono, pod zapiszczy po osiągnięciu określonego czasu i na godzinę przed wyłączeniem się poda</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alarm na 80 godzin przed wyłączeniem się poda</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Włączony alert o niskim poziomie w zbiorniczku</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Liczba jednostek</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Automatycznie wycisz alarmy Poda</string>

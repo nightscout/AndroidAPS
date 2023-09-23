@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
     <string name="pref_units_for_actions">Units for Actions</string>
     <string name="units_short">U</string>
+    <string name="pref_display_settings">Display</string>
+    <string name="pref_graph_settings">Graph</string>
+    <string name="pref_interface_settings">Interface</string>
+    <string name="pref_others_settings">Others</string>
+    <string name="pref_complication_settings">Complication</string>
     <string name="pref_show_date">Show Date</string>
     <string name="pref_show_iob">Show IOB</string>
     <string name="pref_show_detailed_iob">Show detailed IOB</string>
@@ -41,6 +46,7 @@
     <string name="pref_show_ago">Show Ago</string>
     <string name="pref_dark" comment="Enables dark visual theme">Dark</string>
     <string name="pref_highlight_basals">Highlight Basals</string>
+    <string name="pref_prediction_lines">Show predictions</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matching divider</string>
     <string name="pref_chart_timeframe">Chart Timeframe</string>
     <string name="pref_1_hour">1 hour</string>
@@ -174,6 +180,7 @@
     <string name="tile_no_config">No config available</string>
     <string name="wear_control_not_enabled">Wear controls disabled</string>
     <string name="wear_control_no_data">No data available</string>
+    <string name="key_preference_id" translatable="false">preference_id</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
@@ -186,6 +193,7 @@
     <string name="key_single_target" translatable="false">singletarget</string>
     <string name="key_wizard_percentage" translatable="false">wizardpercentage</string>
     <string name="key_highlight_basals" translatable="false">highlight_basals</string>
+    <string name="key_prediction_lines" translatable="false">prediction_lines</string>
     <string name="key_chart_time_frame" translatable="false">chart_time_frame</string>
     <string name="key_show_week_number" translatable="false">show_week_number</string>
     <string name="key_show_date" translatable="false">show_date</string>

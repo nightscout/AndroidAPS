@@ -47,7 +47,7 @@
     <string name="readstatus">Ler estado</string>
     <string name="data_choices">Escolha de Dados</string>
     <string name="fabric_upload">Envio Fabric</string>
-    <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
+    <string name="allow_automated_crash_reporting">Permitir que relatórios de falha automatizados e dados de uso de recursos sejam enviados aos desenvolvedores através do serviço fabric.io.</string>
     <string name="summary_email_for_crash_report">Esta identificação será anexada aos relatórios de erro para podermos contatá-lo em casos de urgência. É opcional.</string>
     <string name="identification">Identificação (e-mail, apelido FB ou Discord, etc)</string>
     <string name="request">Pedido</string>
@@ -127,7 +127,7 @@
     <string name="nav_logsettings">Definições de registo</string>
     <string name="miscellaneous">Adicionais</string>
     <string name="nav_resetdb">Redefinir banco de dados</string>
-    <string name="resettodefaults">Repor definições por defeito</string>
+    <string name="resettodefaults">Redefinir para padrões</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado %1$s atrás</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado em %1$s</string>
@@ -156,4 +156,15 @@
     <string name="wear_import_custom_watchface_title">Selecionar Watchface Personalizado</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Por favor, reinicie seu telefone ou reinicie o AndroidAPS nas Configurações do Sistema \nCaso contrário o Android APS não terá registro (importante para rastrear e verificar se os algoritmos estão funcionando corretamente)!</string>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Formato do arquivo</string>
+    <string name="metadata_label_created_at">Criado em</string>
+    <string name="metadata_label_aaps_version">Versão AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
+    <string name="metadata_label_device_name">Exportando nome do paciente do dispositivo</string>
+    <string name="metadata_label_device_model">Exportando modelo do dispositivo</string>
+    <string name="metadata_label_encryption">Criptografia do arquivo</string>
+    <string name="metadata_format_new">Novo formato de encriptação</string>
+    <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
+    <string name="metadata_format_other">Formato de exportação desconhecido</string>
 </resources>

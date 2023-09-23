@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLink
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
-import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.common.utils.ByteUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP

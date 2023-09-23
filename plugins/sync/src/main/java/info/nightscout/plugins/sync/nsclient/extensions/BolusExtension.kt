@@ -1,14 +1,17 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("eventType", if (type == Bolus.Type.SMB) info.nightscout.database.entities.TherapyEvent.Type.CORRECTION_BOLUS.text else info.nightscout.database.entities.TherapyEvent.Type.MEAL_BOLUS.text)
+        .put(
+            "eventType",
+            if (type == Bolus.Type.SMB) info.nightscout.database.entities.TherapyEvent.Type.CORRECTION_BOLUS.text else info.nightscout.database.entities.TherapyEvent.Type.MEAL_BOLUS.text
+        )
         .put("insulin", amount)
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("date", timestamp)
@@ -22,7 +25,7 @@ fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-fun bolusFromJson(jsonObject: JSONObject): Bolus? {
+fun Bolus.Companion.fromJson(jsonObject: JSONObject): Bolus? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "insulin") ?: return null
     val type = Bolus.Type.fromString(JsonHelper.safeGetString(jsonObject, "type"))

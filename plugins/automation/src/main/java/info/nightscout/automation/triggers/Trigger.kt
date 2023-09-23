@@ -23,6 +23,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -35,6 +36,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var sp: SP
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
     @Inject lateinit var repository: AppRepository

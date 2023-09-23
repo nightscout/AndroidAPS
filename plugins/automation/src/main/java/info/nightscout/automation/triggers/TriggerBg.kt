@@ -9,10 +9,8 @@ import info.nightscout.automation.elements.InputBg
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.interfaces.Constants
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 
@@ -56,7 +54,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
             return false
         }
-        if (comparator.value.check(glucoseStatus.glucose, Profile.toMgdl(bg.value, bg.units))) {
+        if (comparator.value.check(glucoseStatus.glucose, profileUtil.convertToMgdl(bg.value, bg.units))) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
@@ -72,7 +70,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        bg.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", Constants.MGDL)))
+        bg.setUnits(GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText)))
         bg.value = JsonHelper.safeGetDouble(d, "bg")
         comparator.setValue(Comparator.Compare.valueOf(JsonHelper.safeGetString(d, "comparator")!!))
         return this

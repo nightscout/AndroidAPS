@@ -11,12 +11,10 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.pump.core.utils.StringUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.joda.time.LocalDateTime
 import javax.inject.Inject
 
 class RileyLinkStatusGeneralFragment : DaggerFragment() {
@@ -85,7 +83,7 @@ class RileyLinkStatusGeneralFragment : DaggerFragment() {
         }
         val lastConnectionTimeMillis = rileyLinkPumpDevice.lastConnectionTimeMillis
         if (lastConnectionTimeMillis == 0L) binding.lastDeviceContact.text = rh.gs(R.string.riley_link_ble_config_connected_never)
-        else binding.lastDeviceContact.text = StringUtil.toDateTimeString(LocalDateTime(lastConnectionTimeMillis))
+        else binding.lastDeviceContact.text = dateUtil.dateAndTimeAndSecondsString(lastConnectionTimeMillis)
     }
 
     companion object {

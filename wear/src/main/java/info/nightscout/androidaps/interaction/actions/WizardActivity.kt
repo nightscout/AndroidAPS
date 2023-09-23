@@ -57,7 +57,7 @@ class WizardActivity : ViewSelectorActivity() {
                 val view = viewAdapter.root
                 val percentage = sp.getInt(getString(R.string.key_bolus_wizard_percentage), 100).toDouble()
                 val initValue = SafeParse.stringToDouble(editPercentage?.editText?.text.toString(), percentage)
-                editPercentage = PlusMinusEditText(viewAdapter, initValue, 50.0, 150.0, 1.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
+                editPercentage = PlusMinusEditText(viewAdapter, initValue, 10.0, 200.0, 5.0, DecimalFormat("0"), false, getString(R.string.action_percentage))
                 container.addView(view)
                 view
             }

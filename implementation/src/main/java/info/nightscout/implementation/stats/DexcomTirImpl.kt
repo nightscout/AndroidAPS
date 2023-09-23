@@ -8,9 +8,8 @@ import android.widget.TableRow
 import android.widget.TextView
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.stats.DexcomTIR
+import info.nightscout.shared.interfaces.ProfileUtil
 import java.util.Calendar
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -86,42 +85,42 @@ class DexcomTirImpl : DexcomTIR {
         }
 
     @SuppressLint("SetTextI18n")
-    override fun toSDView(context: Context, profileFunction: ProfileFunction): TextView =
+    override fun toSDView(context: Context, profileUtil: ProfileUtil): TextView =
         TextView(context).apply {
             val sd = calculateSD()
-            text = "\n" + context.getString(R.string.std_deviation, Profile.toUnitsString(sd, sd * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()))
+            text = "\n" + context.getString(R.string.std_deviation, profileUtil.fromMgdlToStringInUnits(sd))
             setTypeface(typeface, Typeface.NORMAL)
             gravity = Gravity.CENTER_HORIZONTAL
         }
 
-    override fun toRangeHeaderView(context: Context, profileFunction: ProfileFunction): TextView =
+    override fun toRangeHeaderView(context: Context, profileUtil: ProfileUtil): TextView =
         TextView(context).apply {
             text = StringBuilder()
                 .append(context.getString(R.string.detailed_14_days))
                 .append("\n")
                 .append(context.getString(R.string.day_tir))
                 .append(" (")
-                .append(Profile.toUnitsString(0.0, 0.0, profileFunction.getUnits()))
+                .append(profileUtil.fromMgdlToStringInUnits(0.0))
                 .append("-")
-                .append(Profile.toCurrentUnitsString(profileFunction, veryLowTirMgdl))
+                .append(profileUtil.stringInCurrentUnitsDetect(veryLowTirMgdl))
                 .append("-")
-                .append(Profile.toCurrentUnitsString(profileFunction, lowTirMgdl))
+                .append(profileUtil.stringInCurrentUnitsDetect(lowTirMgdl))
                 .append("-")
-                .append(Profile.toCurrentUnitsString(profileFunction, highTirMgdl))
+                .append(profileUtil.stringInCurrentUnitsDetect(highTirMgdl))
                 .append("-")
-                .append(Profile.toCurrentUnitsString(profileFunction, veryHighTirMgdl))
+                .append(profileUtil.stringInCurrentUnitsDetect(veryHighTirMgdl))
                 .append("-∞)\n")
                 .append(context.getString(R.string.night_tir))
                 .append(" (")
-                .append(Profile.toUnitsString(0.0, 0.0, profileFunction.getUnits()))
+                .append(profileUtil.fromMgdlToStringInUnits(0.0))
                 .append("-")
-                .append(Profile.toCurrentUnitsString(profileFunction, veryLowTirMgdl))
+                .append(profileUtil.stringInCurrentUnitsDetect(veryLowTirMgdl))
                 .append("-")
-                .append(Profile.toCurrentUnitsString(profileFunction, lowTirMgdl))
+                .append(profileUtil.stringInCurrentUnitsDetect(lowTirMgdl))
                 .append("-")
-                .append(Profile.toCurrentUnitsString(profileFunction, highNightTirMgdl))
+                .append(profileUtil.stringInCurrentUnitsDetect(highNightTirMgdl))
                 .append("-")
-                .append(Profile.toCurrentUnitsString(profileFunction, veryHighTirMgdl))
+                .append(profileUtil.stringInCurrentUnitsDetect(veryHighTirMgdl))
                 .append("-∞)\n")
                 .toString()
             setTypeface(typeface, Typeface.BOLD)

@@ -32,7 +32,7 @@ class MainMenuActivity : MenuListActivity() {
                 add(MenuItem(R.drawable.ic_e_carbs, getString(R.string.menu_ecarb)))
                 add(MenuItem(R.drawable.ic_treatment, getString(R.string.menu_treatment)))
                 add(MenuItem(R.drawable.ic_temptarget, getString(R.string.menu_tempt)))
-                add(MenuItem(R.drawable.ic_status, getString(R.string.status_profile_switch)))
+                add(MenuItem(R.drawable.ic_profile, getString(R.string.status_profile_switch)))
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
                 add(MenuItem(R.drawable.ic_status, getString(R.string.menu_status)))
                 if (sp.getBoolean(R.string.key_prime_fill, false))
@@ -42,7 +42,7 @@ class MainMenuActivity : MenuListActivity() {
 
     override fun doAction(position: String) {
         when (position) {
-            getString(R.string.menu_settings)         -> startActivity(Intent(this, WatchfaceConfigurationActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
+            getString(R.string.menu_settings)         -> startActivity(Intent(this, PreferenceMenuActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })
             getString(R.string.menu_resync)           -> rxBus.send(EventWearToMobile(ActionResendData("Re-Sync")))
             getString(R.string.status_profile_switch) -> rxBus.send(EventWearToMobile(EventData.ActionProfileSwitchSendInitialData(System.currentTimeMillis())))
             getString(R.string.menu_tempt)            -> startActivity(Intent(this, TempTargetActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) })

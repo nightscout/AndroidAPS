@@ -1,7 +1,7 @@
 package info.nightscout.implementation.profiling
 
 import dagger.Reusable
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

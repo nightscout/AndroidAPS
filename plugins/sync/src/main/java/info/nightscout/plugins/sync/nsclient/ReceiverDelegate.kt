@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclient
 
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.sync.R

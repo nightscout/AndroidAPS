@@ -10,9 +10,9 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -35,8 +35,7 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
@@ -45,7 +44,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync
@@ -65,6 +63,7 @@ import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -92,9 +91,10 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val smsManager: SmsManager?,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
@@ -106,7 +106,8 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -353,23 +354,23 @@ class SmsCommunicatorPlugin @Inject constructor(
         val actualBG = iobCobCalculator.ads.actualBg()
         val lastBG = iobCobCalculator.ads.lastBg()
         var reply = ""
-        val units = profileFunction.getUnits()
+        val units = profileUtil.units
         if (actualBG != null) {
-            reply = rh.gs(R.string.sms_actual_bg) + " " + actualBG.valueToUnitsString(units) + ", "
+            reply = rh.gs(R.string.sms_actual_bg) + " " + profileUtil.fromMgdlToStringInUnits(actualBG.value) + ", "
         } else if (lastBG != null) {
             val agoMilliseconds = dateUtil.now() - lastBG.timestamp
             val agoMin = (agoMilliseconds / 60.0 / 1000.0).toInt()
-            reply = rh.gs(R.string.sms_last_bg) + " " + lastBG.valueToUnitsString(units) + " " + rh.gs(R.string.sms_min_ago, agoMin) + ", "
+            reply = rh.gs(R.string.sms_last_bg) + " " + profileUtil.valueInCurrentUnitsDetect(lastBG.value) + " " + rh.gs(R.string.sms_min_ago, agoMin) + ", "
         }
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        if (glucoseStatus != null) reply += rh.gs(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", "
+        if (glucoseStatus != null) reply += rh.gs(R.string.sms_delta) + " " + profileUtil.fromMgdlToUnits(glucoseStatus.delta) + " " + units + ", "
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
         val cobInfo = iobCobCalculator.getCobInfo("SMS COB")
-        reply += (rh.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
-            + rh.gs(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-            + rh.gs(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U), "
-            + rh.gs(info.nightscout.core.ui.R.string.cob) + ": " + cobInfo.generateCOBString())
+        reply += (rh.gs(R.string.sms_iob) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+            + rh.gs(R.string.sms_bolus) + " " + decimalFormatter.to2Decimal(bolusIob.iob) + "U "
+            + rh.gs(R.string.sms_basal) + " " + decimalFormatter.to2Decimal(basalIob.basaliob) + "U), "
+            + rh.gs(info.nightscout.core.ui.R.string.cob) + ": " + cobInfo.generateCOBString(decimalFormatter))
         sendSMS(Sms(receivedSms.phoneNumber, reply))
         receivedSms.processed = true
     }
@@ -418,7 +419,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
             }
 
-            "STATUS"  -> {
+            "STATUS"          -> {
                 val reply = if (loop.enabled) {
                     if (loop.isSuspended) rh.gs(R.string.sms_loop_suspended_for, loop.minutesToEndOfSuspend())
                     else rh.gs(R.string.smscommunicator_loop_is_enabled) + " - " + getApsModeText()
@@ -456,7 +457,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 })
             }
 
-            "SUSPEND" -> {
+            "SUSPEND"         -> {
                 var duration = 0
                 if (divided.size == 3) duration = SafeParse.stringToInt(divided[2])
                 duration = max(0, duration)
@@ -504,7 +505,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 }
             }
 
-            "LGS"     -> {
+            "LGS"             -> {
                 val passCode = generatePassCode()
                 val reply = rh.gs(R.string.smscommunicator_set_lgs_reply_with_code, passCode)
                 receivedSms.processed = true
@@ -519,7 +520,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 })
             }
 
-            "CLOSED"  -> {
+            "CLOSED"          -> {
                 val passCode = generatePassCode()
                 val reply = rh.gs(R.string.smscommunicator_set_closed_loop_reply_with_code, passCode)
                 receivedSms.processed = true
@@ -534,7 +535,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 })
             }
 
-            else      -> sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+            else              -> sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
         }
     }
 
@@ -731,7 +732,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             else if (tempBasalPct == 0 && divided[1] != "0%") sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
             else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.sms_wrong_tbr_duration, durationStep)))
             else {
-                tempBasalPct = constraintChecker.applyBasalPercentConstraints(Constraint(tempBasalPct), profile).value()
+                tempBasalPct = constraintChecker.applyBasalPercentConstraints(ConstraintObject(tempBasalPct, aapsLogger), profile).value()
                 val passCode = generatePassCode()
                 val reply = rh.gs(R.string.smscommunicator_basal_pct_reply_with_code, tempBasalPct, duration, passCode)
                 receivedSms.processed = true
@@ -786,7 +787,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             else if (tempBasal == 0.0 && divided[1] != "0") sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
             else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.sms_wrong_tbr_duration, durationStep)))
             else {
-                tempBasal = constraintChecker.applyBasalConstraints(Constraint(tempBasal), profile).value()
+                tempBasal = constraintChecker.applyBasalConstraints(ConstraintObject(tempBasal, aapsLogger), profile).value()
                 val passCode = generatePassCode()
                 val reply = rh.gs(R.string.smscommunicator_basal_reply_with_code, tempBasal, duration, passCode)
                 receivedSms.processed = true
@@ -863,7 +864,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         } else {
             var extended = SafeParse.stringToDouble(divided[1])
             val duration = SafeParse.stringToInt(divided[2])
-            extended = constraintChecker.applyExtendedBolusConstraints(Constraint(extended)).value()
+            extended = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(extended, aapsLogger)).value()
             if (extended == 0.0 || duration == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
             else {
                 val passCode = generatePassCode()
@@ -882,7 +883,11 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         uel.log(
                                             Action.EXTENDED_BOLUS,
                                             Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_extended_set, aDouble, duration) + " / " + rh.gs(info.nightscout.core.ui.R.string.loopsuspended),
+                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(
+                                                R.string.smscommunicator_extended_set,
+                                                aDouble,
+                                                duration
+                                            ) + " / " + rh.gs(info.nightscout.core.ui.R.string.loopsuspended),
                                             ValueWithUnit.Insulin(aDouble ?: 0.0),
                                             ValueWithUnit.Minute(duration),
                                             ValueWithUnit.SimpleString(rh.gsNotLocalised(info.nightscout.core.ui.R.string.loopsuspended))
@@ -913,7 +918,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private fun processBOLUS(divided: Array<String>, receivedSms: Sms) {
         var bolus = SafeParse.stringToDouble(divided[1])
         val isMeal = divided.size > 2 && divided[2].equals("MEAL", ignoreCase = true)
-        bolus = constraintChecker.applyBolusConstraints(Constraint(bolus)).value()
+        bolus = constraintChecker.applyBolusConstraints(ConstraintObject(bolus, aapsLogger)).value()
         if (divided.size == 3 && !isMeal) {
             sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
         } else if (bolus > 0.0) {
@@ -962,8 +967,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                         timestamp = dateUtil.now(),
                                                         duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                                         reason = TemporaryTarget.Reason.EATING_SOON,
-                                                        lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
-                                                        highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
+                                                        lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
+                                                        highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)
                                                     )
                                                 ).subscribe({ result ->
                                                                 result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
@@ -972,8 +977,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                                 aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                                                             })
                                                 val tt = if (currentProfile.units == GlucoseUnit.MMOL) {
-                                                    DecimalFormatter.to1Decimal(eatingSoonTT)
-                                                } else DecimalFormatter.to0Decimal(eatingSoonTT)
+                                                    decimalFormatter.to1Decimal(eatingSoonTT)
+                                                } else decimalFormatter.to0Decimal(eatingSoonTT)
                                                 replyText += "\n" + rh.gs(R.string.smscommunicator_meal_bolus_delivered_tt, tt, eatingSoonTTDuration)
                                             }
                                         }
@@ -1026,7 +1031,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 return
             }
         }
-        grams = constraintChecker.applyCarbsConstraints(Constraint(grams)).value()
+        grams = constraintChecker.applyCarbsConstraints(ConstraintObject(grams, aapsLogger)).value()
         if (grams == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
         else {
             val passCode = generatePassCode()
@@ -1074,7 +1079,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             receivedSms.processed = true
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
-                    val units = profileFunction.getUnits()
+                    val units = profileUtil.units
                     var keyDuration = 0
                     var defaultTargetDuration = 0
                     var keyTarget = 0
@@ -1112,15 +1117,15 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var ttDuration = sp.getInt(keyDuration, defaultTargetDuration)
                     ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
                     var tt = sp.getDouble(keyTarget, if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL)
-                    tt = Profile.toCurrentUnits(profileFunction, tt)
+                    tt = profileUtil.valueInCurrentUnitsDetect(tt)
                     tt = if (tt > 0) tt else if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL
                     disposable += repository.runTransactionForResult(
                         InsertAndCancelCurrentTemporaryTargetTransaction(
                             timestamp = dateUtil.now(),
                             duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
                             reason = reason,
-                            lowTarget = Profile.toMgdl(tt, profileFunction.getUnits()),
-                            highTarget = Profile.toMgdl(tt, profileFunction.getUnits())
+                            lowTarget = profileUtil.convertToMgdl(tt, profileUtil.units),
+                            highTarget = profileUtil.convertToMgdl(tt, profileUtil.units)
                         )
                     ).subscribe({ result ->
                                     result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
@@ -1128,7 +1133,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                 }, {
                                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                                 })
-                    val ttString = if (units == GlucoseUnit.MMOL) DecimalFormatter.to1Decimal(tt) else DecimalFormatter.to0Decimal(tt)
+                    val ttString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(tt) else decimalFormatter.to0Decimal(tt)
                     val replyText = rh.gs(R.string.smscommunicator_tt_set, ttString, ttDuration)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                     uel.log(

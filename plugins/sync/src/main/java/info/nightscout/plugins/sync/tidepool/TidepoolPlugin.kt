@@ -5,6 +5,7 @@ import android.text.Spanned
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
@@ -13,7 +14,6 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.sync.Tidepool
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate

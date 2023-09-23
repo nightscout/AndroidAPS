@@ -1,10 +1,9 @@
 package info.nightscout.plugins.sync.dataBroadcaster
 
+import app.aaps.shared.tests.BundleMock
+import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.BundleMock
-import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.GlucoseUnit
@@ -17,7 +16,6 @@ import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.events.EventOverviewBolusProgress
@@ -35,19 +33,18 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var autosensDataStore: AutosensDataStore
+    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     private lateinit var sut: DataBroadcastPlugin
 
     private val injector = HasAndroidInjector { AndroidInjector { } }
-    private val testPumpPlugin = TestPumpPlugin(injector)
 
     @BeforeEach
     fun setUp() {
         sut = DataBroadcastPlugin(
             injector, aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, profileFunction, defaultValueHelper, processedDeviceStatusData,
-            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider
+            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN))
@@ -57,7 +54,8 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         Mockito.`when`(iobCobCalculator.getCobInfo("broadcast")).thenReturn(CobInfo(1000, 100.0, 10.0))
         Mockito.`when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
-        Mockito.`when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(anyLong())).thenReturn(TemporaryBasal(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TemporaryBasal.Type.NORMAL))
+        Mockito.`when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(anyLong()))
+            .thenReturn(TemporaryBasal(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TemporaryBasal.Type.NORMAL))
         Mockito.`when`(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
         Mockito.`when`(loop.lastRun).thenReturn(Loop.LastRun().also {
             it.lastTBREnact = 1000

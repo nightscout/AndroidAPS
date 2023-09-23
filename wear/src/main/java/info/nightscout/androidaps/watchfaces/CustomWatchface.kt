@@ -3,7 +3,6 @@
 package info.nightscout.androidaps.watchfaces
 
 import android.annotation.SuppressLint
-import android.app.ActionBar.LayoutParams
 import android.content.Context
 import android.graphics.Color
 import android.graphics.ColorFilter
@@ -11,6 +10,7 @@ import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Point
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.support.wearable.watchface.WatchFaceStyle
 import android.util.TypedValue
 import android.view.Gravity
@@ -34,25 +34,25 @@ import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CwfData
-import info.nightscout.rx.weardata.CwfDrawableFileMap
-import info.nightscout.rx.weardata.CwfDrawableDataMap
 import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.CwfMetadataMap
-import info.nightscout.rx.weardata.DrawableData
-import info.nightscout.rx.weardata.DrawableFormat
+import info.nightscout.rx.weardata.CwfResDataMap
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.JsonKeyValues
+import info.nightscout.rx.weardata.JsonKeys
 import info.nightscout.rx.weardata.JsonKeys.*
+import info.nightscout.rx.weardata.ResData
+import info.nightscout.rx.weardata.ResFileMap
+import info.nightscout.rx.weardata.ResFormat
 import info.nightscout.rx.weardata.ViewKeys
 import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.extensions.toVisibilityKeepSpace
-import info.nightscout.shared.sharedPreferences.SP
 import org.joda.time.TimeOfDay
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
+@SuppressLint("UseCompatLoadingForDrawables")
 class CustomWatchface : BaseWatchFace() {
 
     @Inject lateinit var context: Context
@@ -61,11 +61,17 @@ class CustomWatchface : BaseWatchFace() {
     private val displaySize = Point()
     private val TEMPLATE_RESOLUTION = 400
     private var lowBatColor = Color.RED
-    private var bgColor = Color.WHITE
+    private var resDataMap: CwfResDataMap = mutableMapOf()
+    private val bgColor: Int
+        get() = when (singleBg.sgvLevel) {
+            1L   -> highColor
+            0L   -> midColor
+            -1L  -> lowColor
+            else -> midColor
+        }
 
     override fun onCreate() {
         super.onCreate()
-        FontMap.init(context)
     }
 
     @Suppress("DEPRECATION")
@@ -75,6 +81,8 @@ class CustomWatchface : BaseWatchFace() {
         persistence.store(defaultWatchface(), true)
         (context.getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(displaySize)
         zoomFactor = (displaySize.x).toDouble() / TEMPLATE_RESOLUTION.toDouble()
+        FontMap.init(this)
+        ViewMap.init(this)
         return binding
     }
 
@@ -86,10 +94,9 @@ class CustomWatchface : BaseWatchFace() {
             .build()
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     override fun setDataFields() {
         super.setDataFields()
-        binding.direction2.setImageDrawable(this.resources.getDrawable(TrendArrowMap.icon(singleBg.slopeArrow)))
+        binding.direction2.setImageDrawable(TrendArrowMap.drawable(this))
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
         // rotate the minute hand.
@@ -101,7 +108,7 @@ class CustomWatchface : BaseWatchFace() {
     override fun setColorDark() {
         setWatchfaceStyle()
         binding.sgv.setTextColor(bgColor)
-        binding.direction2.colorFilter = changeDrawableColor(bgColor)
+        binding.direction2.setColorFilter(changeDrawableColor(bgColor))
 
         if (ageLevel != 1)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
@@ -129,7 +136,6 @@ class CustomWatchface : BaseWatchFace() {
             getString(R.string.hour_minute_second, dateUtil.hourString(), dateUtil.minuteString(), dateUtil.secondString())
         else
             getString(R.string.hour_minute, dateUtil.hourString(), dateUtil.minuteString())
-        //binding.time.text = "${dateUtil.hourString()}:${dateUtil.minuteString()}" + if (showSecond) ":${dateUtil.secondString()}" else ""
         binding.second.text = dateUtil.secondString()
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
@@ -140,86 +146,47 @@ class CustomWatchface : BaseWatchFace() {
         binding.secondHand.visibility = (binding.secondHand.visibility == View.VISIBLE && showSecond).toVisibility()
     }
 
-    @SuppressLint("UseCompatLoadingForDrawables")
     private fun setWatchfaceStyle() {
         val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
         customWatchface?.let {
             updatePref(it.customWatchfaceData.metadata)
             try {
                 val json = JSONObject(it.customWatchfaceData.json)
-                val drawableDataMap = it.customWatchfaceData.drawableDatas
-                enableSecond = (if (json.has(ENABLESECOND.key)) json.getBoolean(ENABLESECOND.key) else false) && sp.getBoolean(R.string.key_show_seconds, true)
-
-                highColor = if (json.has(HIGHCOLOR.key)) Color.parseColor(json.getString(HIGHCOLOR.key)) else ContextCompat.getColor(this, R.color.dark_highColor)
-                midColor = if (json.has(MIDCOLOR.key)) Color.parseColor(json.getString(MIDCOLOR.key)) else ContextCompat.getColor(this, R.color.inrange)
-                lowColor = if (json.has(LOWCOLOR.key)) Color.parseColor(json.getString(LOWCOLOR.key)) else ContextCompat.getColor(this, R.color.low)
-                lowBatColor = if (json.has(LOWBATCOLOR.key)) Color.parseColor(json.getString(LOWBATCOLOR.key)) else ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty)
-                carbColor = if (json.has(CARBCOLOR.key)) Color.parseColor(json.getString(CARBCOLOR.key)) else ContextCompat.getColor(this, R.color.carbs)
-                basalBackgroundColor = if (json.has(BASALBACKGROUNDCOLOR.key)) Color.parseColor(json.getString(BASALBACKGROUNDCOLOR.key)) else ContextCompat.getColor(this, R.color.basal_dark)
-                basalCenterColor = if (json.has(BASALCENTERCOLOR.key)) Color.parseColor(json.getString(BASALCENTERCOLOR.key)) else ContextCompat.getColor(this, R.color.basal_light)
-                gridColor = if (json.has(GRIDCOLOR.key)) Color.parseColor(json.getString(GRIDCOLOR.key)) else Color.WHITE
-                pointSize = if (json.has(POINTSIZE.key)) json.getInt(POINTSIZE.key) else 2
-                bgColor = when (singleBg.sgvLevel) {
-                    1L   -> highColor
-                    0L   -> midColor
-                    -1L  -> lowColor
-                    else -> midColor
-                }
-                val backGroundDrawable = when (singleBg.sgvLevel) {
-                    1L   -> drawableDataMap[CwfDrawableFileMap.BACKGROUND_HIGH]?.toDrawable(resources) ?: drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
-                    0L   -> drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
-                    -1L  -> drawableDataMap[CwfDrawableFileMap.BACKGROUND_LOW]?.toDrawable(resources) ?: drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
-                    else -> drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
-                }
+                resDataMap = it.customWatchfaceData.resDatas
+                FontMap.init(this)
+                enableSecond = json.optBoolean(ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
+                highColor = getColor(json.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
+                midColor = getColor(json.optString(MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
+                lowColor = getColor(json.optString(LOWCOLOR.key), ContextCompat.getColor(this, R.color.low))
+                lowBatColor = getColor(json.optString(LOWBATCOLOR.key), ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
+                carbColor = getColor(json.optString(CARBCOLOR.key), ContextCompat.getColor(this, R.color.carbs))
+                basalBackgroundColor = getColor(json.optString(BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
+                basalCenterColor = getColor(json.optString(BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
+                gridColor = getColor(json.optString(GRIDCOLOR.key), Color.WHITE)
+                pointSize = json.optInt(POINTSIZE.key, 2)
+                dayNameFormat = json.optString(DAYNAMEFORMAT.key, "E")
+                    .takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
+                monthFormat = json.optString(MONTHFORMAT.key, "MMM")
+                    .takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
+                binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update daynName and month according to format on cwf loading
+                binding.month.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
 
                 binding.mainLayout.forEach { view ->
-                    ViewMap.fromId(view.id)?.let { id ->
-                        if (json.has(id.key)) {
-                            val viewJson = json.getJSONObject(id.key)
-                            val wrapContent = LayoutParams.WRAP_CONTENT
-                            val width = if (viewJson.has(WIDTH.key)) (viewJson.getInt(WIDTH.key) * zoomFactor).toInt() else wrapContent
-                            val height = if (viewJson.has(HEIGHT.key)) (viewJson.getInt(HEIGHT.key) * zoomFactor).toInt() else wrapContent
-                            val params = FrameLayout.LayoutParams(width, height)
-                            params.topMargin = if (viewJson.has(TOPMARGIN.key)) (viewJson.getInt(TOPMARGIN.key) * zoomFactor).toInt() else 0
-                            params.leftMargin = if (viewJson.has(LEFTMARGIN.key)) (viewJson.getInt(LEFTMARGIN.key) * zoomFactor).toInt() else 0
-                            view.layoutParams = params
-                            view.visibility = if (viewJson.has(VISIBILITY.key)) setVisibility(viewJson.getString(VISIBILITY.key), id.visibility(sp)) else View.GONE
-                            if (view is TextView) {
-                                view.rotation = if (viewJson.has(ROTATION.key)) viewJson.getInt(ROTATION.key).toFloat() else 0F
-                                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((if (viewJson.has(TEXTSIZE.key)) viewJson.getInt(TEXTSIZE.key) else 22) * zoomFactor).toFloat())
-                                view.gravity = GravityMap.gravity(if (viewJson.has(GRAVITY.key)) viewJson.getString(GRAVITY.key) else GravityMap.CENTER.key)
-                                view.setTypeface(
-                                    FontMap.font(if (viewJson.has(FONT.key)) viewJson.getString(FONT.key) else FontMap.DEFAULT.key),
-                                    StyleMap.style(if (viewJson.has(FONTSTYLE.key)) viewJson.getString(FONTSTYLE.key) else StyleMap.NORMAL.key)
-                                )
-                                if (viewJson.has(FONTCOLOR.key))
-                                    view.setTextColor(getColor(viewJson.getString(FONTCOLOR.key)))
-
-                                if (viewJson.has(TEXTVALUE.key))
-                                    view.text = viewJson.getString(TEXTVALUE.key)
-                            }
-
-                            if (view is ImageView) {
-                                view.clearColorFilter()
-                                val drawable = if (id.key == CwfDrawableFileMap.BACKGROUND.key)
-                                    backGroundDrawable
-                                else
-                                    drawableDataMap[CwfDrawableFileMap.fromKey(id.key)]?.toDrawable(resources)
-                                drawable?.let {
-                                    if (viewJson.has(COLOR.key))
-                                        it.colorFilter = changeDrawableColor(getColor(viewJson.getString(COLOR.key)))
-                                    else
-                                        it.clearColorFilter()
-                                    view.setImageDrawable(it)
-                                } ?: apply {
-                                    view.setImageDrawable(CwfDrawableFileMap.fromKey(id.key).icon?.let { context.getDrawable(it) })
-                                    if (viewJson.has(COLOR.key))
-                                        view.setColorFilter(getColor(viewJson.getString(COLOR.key)))
-                                    else
-                                        view.clearColorFilter()
+                    ViewMap.fromId(view.id)?.let { viewMap ->
+                        json.optJSONObject(viewMap.key)?.also { viewJson ->
+                            viewMap.viewJson = viewJson
+                            viewMap.customizeViewCommon(view)
+                            when (view) {
+                                is TextView  -> {
+                                    viewMap.customizeTextView(view)
                                 }
+
+                                is ImageView -> {
+                                    viewMap.customizeImageView(view)
+                                }
+
                             }
-                        } else {
+                        } ?: apply {
                             view.visibility = View.GONE
                             if (view is TextView) {
                                 view.text = ""
@@ -227,9 +194,7 @@ class CustomWatchface : BaseWatchFace() {
                         }
                     }
                 }
-                binding.background.visibility = View.VISIBLE
-                updateSecondVisibility()
-                setSecond() // Update second visibility for time view
+                manageSpecificViews()
             } catch (e: Exception) {
                 aapsLogger.debug(LTag.WEAR, "Crash during Custom watch load")
                 persistence.store(defaultWatchface(), false) // relaod correct values to avoid crash of watchface
@@ -238,8 +203,8 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun updatePref(metadata: CwfMetadataMap) {
-        val cwf_authorization = metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()
-        cwf_authorization?.let { authorization ->
+        val cwfAuthorization = metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()
+        cwfAuthorization?.let { authorization ->
             if (authorization) {
                 PrefMap.values().forEach { pref ->
                     metadata[CwfMetadataKey.fromKey(pref.key)]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
@@ -250,13 +215,13 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
         val metadata = JSONObject()
-            .put(CwfMetadataKey.CWF_NAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
-            .put(CwfMetadataKey.CWF_FILENAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_NAME.key, getString(info.nightscout.interfaces.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_FILENAME.key, getString(info.nightscout.interfaces.R.string.wear_default_watchface))
             .put(CwfMetadataKey.CWF_AUTHOR.key, "Philoul")
             .put(CwfMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
             .put(CwfMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
             .put(CwfMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
-            .put(CwfMetadataKey.CWF_COMMENT.key, getString(info.nightscout.shared.R.string.default_custom_watchface_comment))
+            .put(CwfMetadataKey.CWF_COMMENT.key, getString(info.nightscout.interfaces.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put(METADATA.key, metadata)
             .put(HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
@@ -304,10 +269,9 @@ class CustomWatchface : BaseWatchFace() {
             }
         }
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
-        val drawableDataMap: CwfDrawableDataMap = mutableMapOf()
-        getResourceByteArray(info.nightscout.shared.R.drawable.watchface_custom)?.let {
-            val drawableData = DrawableData(it, DrawableFormat.PNG)
-            drawableDataMap[CwfDrawableFileMap.CUSTOM_WATCHFACE] = drawableData
+        val drawableDataMap: CwfResDataMap = mutableMapOf()
+        getResourceByteArray(app.aaps.shared.impl.R.drawable.watchface_custom)?.let {
+            drawableDataMap[ResFileMap.CUSTOM_WATCHFACE.fileName] = ResData(it, ResFormat.PNG)
         }
         return EventData.ActionSetCustomWatchface(CwfData(json.toString(4), metadataMap, drawableDataMap))
     }
@@ -324,17 +288,13 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun setVisibility(visibility: String, pref: Boolean = true): Int = when (visibility) {
-        JsonKeyValues.VISIBLE.key   -> pref.toVisibility()
-        JsonKeyValues.INVISIBLE.key -> pref.toVisibilityKeepSpace()
-        JsonKeyValues.GONE.key      -> View.GONE
-        else        -> View.GONE
+        JsonKeyValues.VISIBLE.key -> pref.toVisibility()
+        else                      -> View.GONE
     }
 
     private fun getVisibility(visibility: Int): String = when (visibility) {
-        View.VISIBLE   -> JsonKeyValues.VISIBLE.key
-        View.INVISIBLE -> JsonKeyValues.INVISIBLE.key
-        View.GONE      -> JsonKeyValues.GONE.key
-        else           -> JsonKeyValues.GONE.key
+        View.VISIBLE -> JsonKeyValues.VISIBLE.key
+        else         -> JsonKeyValues.GONE.key
     }
 
     private fun getResourceByteArray(resourceId: Int): ByteArray? {
@@ -369,21 +329,60 @@ class CustomWatchface : BaseWatchFace() {
         return ColorMatrixColorFilter(colorMatrix)
     }
 
-    private fun getColor(color: String): Int =
+    private fun getColor(color: String, defaultColor: Int = Color.GRAY): Int =
         if (color == JsonKeyValues.BGCOLOR.key)
             bgColor
         else
-            try { Color.parseColor(color) } catch (e: Exception) { Color.GRAY }
+            try {
+                Color.parseColor(color)
+            } catch (e: Exception) {
+                defaultColor
+            }
 
-    private enum class ViewMap(val key: String, @IdRes val id: Int, @StringRes val pref: Int?) {
+    private fun manageSpecificViews() {
+        //Background should fill all the watchface and must be visible
+        val params = FrameLayout.LayoutParams((TEMPLATE_RESOLUTION * zoomFactor).toInt(), (TEMPLATE_RESOLUTION * zoomFactor).toInt())
+        params.topMargin = 0
+        params.leftMargin = 0
+        binding.background.layoutParams = params
+        binding.background.visibility = View.VISIBLE
+        // Update second visibility
+        updateSecondVisibility()
+        setSecond() // Update second visibility for time view
+        // Update timePeriod visibility
+        binding.timePeriod.visibility = (binding.timePeriod.visibility == View.VISIBLE && android.text.format.DateFormat.is24HourFormat(this).not()).toVisibility()
+    }
 
-        BACKGROUND(ViewKeys.BACKGROUND.key, R.id.background, null),
-        CHART(ViewKeys.CHART.key, R.id.chart, null),
-        COVER_CHART(ViewKeys.COVER_CHART.key, R.id.cover_chart, null),
-        FREETEXT1(ViewKeys.FREETEXT1.key, R.id.freetext1, null),
-        FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2, null),
-        FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3, null),
-        FREETEXT4(ViewKeys.FREETEXT4.key, R.id.freetext4, null),
+    private enum class ViewMap(
+        val key: String,
+        @IdRes val id: Int,
+        @StringRes val pref: Int? = null,
+        @IdRes val defaultDrawable: Int? = null,
+        val customDrawable: ResFileMap? = null,
+        val customHigh: ResFileMap? = null,
+        val customLow: ResFileMap? = null
+    ) {
+
+        BACKGROUND(
+            key = ViewKeys.BACKGROUND.key,
+            id = R.id.background,
+            defaultDrawable = app.aaps.shared.impl.R.drawable.background,
+            customDrawable = ResFileMap.BACKGROUND,
+            customHigh = ResFileMap.BACKGROUND_HIGH,
+            customLow = ResFileMap.BACKGROUND_LOW
+        ),
+        CHART(ViewKeys.CHART.key, R.id.chart),
+        COVER_CHART(
+            key = ViewKeys.COVER_CHART.key,
+            id = R.id.cover_chart,
+            customDrawable = ResFileMap.COVER_CHART,
+            customHigh = ResFileMap.COVER_CHART_HIGH,
+            customLow = ResFileMap.COVER_CHART_LOW
+        ),
+        FREETEXT1(ViewKeys.FREETEXT1.key, R.id.freetext1),
+        FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2),
+        FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3),
+        FREETEXT4(ViewKeys.FREETEXT4.key, R.id.freetext4),
         IOB1(ViewKeys.IOB1.key, R.id.iob1, R.string.key_show_iob),
         IOB2(ViewKeys.IOB2.key, R.id.iob2, R.string.key_show_iob),
         COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob),
@@ -394,51 +393,150 @@ class CustomWatchface : BaseWatchFace() {
         RIG_BATTERY(ViewKeys.RIG_BATTERY.key, R.id.rig_battery, R.string.key_show_rig_battery),
         BASALRATE(ViewKeys.BASALRATE.key, R.id.basalRate, R.string.key_show_temp_basal),
         BGI(ViewKeys.BGI.key, R.id.bgi, R.string.key_show_bgi),
-        TIME(ViewKeys.TIME.key, R.id.time, null),
-        HOUR(ViewKeys.HOUR.key, R.id.hour, null),
-        MINUTE(ViewKeys.MINUTE.key, R.id.minute, null),
+        TIME(ViewKeys.TIME.key, R.id.time),
+        HOUR(ViewKeys.HOUR.key, R.id.hour),
+        MINUTE(ViewKeys.MINUTE.key, R.id.minute),
         SECOND(ViewKeys.SECOND.key, R.id.second, R.string.key_show_seconds),
-        TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod, null),
-        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, null),
-        DAY(ViewKeys.DAY.key, R.id.day, null),
-        MONTH(ViewKeys.MONTH.key, R.id.month, null),
+        TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod),
+        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name),
+        DAY(ViewKeys.DAY.key, R.id.day),
+        WEEKNUMBER(ViewKeys.WEEKNUMBER.key, R.id.week_number, R.string.key_show_week_number),
+        MONTH(ViewKeys.MONTH.key, R.id.month),
         LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status),
         DIRECTION(ViewKeys.DIRECTION.key, R.id.direction2, R.string.key_show_direction),
         TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, R.string.key_show_ago),
         SGV(ViewKeys.SGV.key, R.id.sgv, R.string.key_show_bg),
-        COVER_PLATE(ViewKeys.COVER_PLATE.key, R.id.cover_plate, null),
-        HOUR_HAND(ViewKeys.HOUR_HAND.key, R.id.hour_hand, null),
-        MINUTE_HAND(ViewKeys.MINUTE_HAND.key, R.id.minute_hand, null),
-        SECOND_HAND(ViewKeys.SECOND_HAND.key, R.id.second_hand, R.string.key_show_seconds);
+        COVER_PLATE(
+            key = ViewKeys.COVER_PLATE.key,
+            id = R.id.cover_plate,
+            defaultDrawable = app.aaps.shared.impl.R.drawable.simplified_dial,
+            customDrawable = ResFileMap.COVER_PLATE,
+            customHigh = ResFileMap.COVER_PLATE_HIGH,
+            customLow = ResFileMap.COVER_PLATE_LOW
+        ),
+        HOUR_HAND(
+            key = ViewKeys.HOUR_HAND.key,
+            id = R.id.hour_hand,
+            defaultDrawable = app.aaps.shared.impl.R.drawable.hour_hand,
+            customDrawable = ResFileMap.HOUR_HAND,
+            customHigh = ResFileMap.HOUR_HAND_HIGH,
+            customLow = ResFileMap.HOUR_HAND_LOW
+        ),
+        MINUTE_HAND(
+            key = ViewKeys.MINUTE_HAND.key,
+            id = R.id.minute_hand,
+            defaultDrawable = app.aaps.shared.impl.R.drawable.minute_hand,
+            customDrawable = ResFileMap.MINUTE_HAND,
+            customHigh = ResFileMap.MINUTE_HAND_HIGH,
+            customLow = ResFileMap.MINUTE_HAND_LOW
+        ),
+        SECOND_HAND(
+            key = ViewKeys.SECOND_HAND.key,
+            id = R.id.second_hand,
+            pref = R.string.key_show_seconds,
+            defaultDrawable = app.aaps.shared.impl.R.drawable.second_hand,
+            customDrawable = ResFileMap.SECOND_HAND,
+            customHigh = ResFileMap.SECOND_HAND_HIGH,
+            customLow = ResFileMap.SECOND_HAND_LOW
+        );
 
         companion object {
 
+            fun init(cwf: CustomWatchface) = values().forEach { it.cwf = cwf }
             fun fromId(id: Int): ViewMap? = values().firstOrNull { it.id == id }
         }
 
-        fun visibility(sp: SP): Boolean = this.pref?.let { sp.getBoolean(it, true) }
+        lateinit var cwf: CustomWatchface
+        var viewJson = JSONObject()
+        fun visibility(): Boolean = this.pref?.let { cwf.sp.getBoolean(it, true) }
             ?: true
-    }
 
-    private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int) {
-        NONE("??", R.drawable.ic_invalid),
-        TRIPLE_UP("X", R.drawable.ic_doubleup),
-        DOUBLE_UP("\u21c8", R.drawable.ic_doubleup),
-        SINGLE_UP("\u2191", R.drawable.ic_singleup),
-        FORTY_FIVE_UP("\u2197", R.drawable.ic_fortyfiveup),
-        FLAT("\u2192", R.drawable.ic_flat),
-        FORTY_FIVE_DOWN("\u2198", R.drawable.ic_fortyfivedown),
-        SINGLE_DOWN("\u2193", R.drawable.ic_singledown),
-        DOUBLE_DOWN("\u21ca", R.drawable.ic_doubledown),
-        TRIPLE_DOWN("X", R.drawable.ic_doubledown);
+        fun drawable(): Drawable? = customDrawable?.let { cd ->
+            when (cwf.singleBg.sgvLevel) {
+                1L   -> {
+                    customHigh?.let { resFileMap -> cwf.resDataMap[resFileMap.fileName] }?.toDrawable(cwf.resources) ?: cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
+                }
 
-        companion object {
+                0L   -> {
+                    cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
+                }
 
-            fun icon(direction: String?) = values().firstOrNull { it.symbol == direction }?.icon ?: NONE.icon
+                -1L  -> {
+                    customLow?.let { resFileMap -> cwf.resDataMap[resFileMap.fileName] }?.toDrawable(cwf.resources) ?: cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
+                }
+
+                else -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
+            }
+        }
+
+        fun customizeViewCommon(view: View) {
+            val width = (viewJson.optInt(WIDTH.key) * cwf.zoomFactor).toInt()
+            val height = (viewJson.optInt(HEIGHT.key) * cwf.zoomFactor).toInt()
+            val params = FrameLayout.LayoutParams(width, height)
+            params.topMargin = (viewJson.optInt(TOPMARGIN.key) * cwf.zoomFactor).toInt()
+            params.leftMargin = (viewJson.optInt(LEFTMARGIN.key) * cwf.zoomFactor).toInt()
+            view.layoutParams = params
+            view.visibility = cwf.setVisibility(viewJson.optString(VISIBILITY.key, JsonKeyValues.GONE.key), visibility())
+        }
+
+        fun customizeTextView(view: TextView) {
+            view.rotation = viewJson.optInt(ROTATION.key).toFloat()
+            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * cwf.zoomFactor).toFloat())
+            view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
+            view.setTypeface(
+                FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
+                StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
+            )
+            view.setTextColor(cwf.getColor(viewJson.optString(FONTCOLOR.key)))
+            view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
+            if (viewJson.has(TEXTVALUE.key))
+                view.text = viewJson.optString(TEXTVALUE.key)
+            view.background = cwf.resDataMap[viewJson.optString(JsonKeys.BACKGROUND.key)]?.toDrawable(cwf.resources, view.width, view.height)
+        }
+
+        fun customizeImageView(view: ImageView) {
+            view.clearColorFilter()
+            drawable()?.let {
+                if (viewJson.has(COLOR.key))        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                    it.colorFilter = cwf.changeDrawableColor(cwf.getColor(viewJson.optString(COLOR.key)))
+                else
+                    it.clearColorFilter()
+                view.setImageDrawable(it)
+            } ?: apply {
+                view.setImageDrawable(defaultDrawable?.let { cwf.resources.getDrawable(it) })
+                if (viewJson.has(COLOR.key))
+                    view.setColorFilter(cwf.getColor(viewJson.optString(COLOR.key)))
+                else
+                    view.clearColorFilter()
+            }
         }
     }
 
+    private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int, val customDrawable: ResFileMap?) {
+        NONE("??", R.drawable.ic_invalid, ResFileMap.ARROW_NONE),
+        TRIPLE_UP("X", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
+        DOUBLE_UP("\u21c8", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
+        SINGLE_UP("\u2191", R.drawable.ic_singleup, ResFileMap.ARROW_SINGLE_UP),
+        FORTY_FIVE_UP("\u2197", R.drawable.ic_fortyfiveup, ResFileMap.ARROW_FORTY_FIVE_UP),
+        FLAT("\u2192", R.drawable.ic_flat, ResFileMap.ARROW_FLAT),
+        FORTY_FIVE_DOWN("\u2198", R.drawable.ic_fortyfivedown, ResFileMap.ARROW_FORTY_FIVE_DOWN),
+        SINGLE_DOWN("\u2193", R.drawable.ic_singledown, ResFileMap.ARROW_SINGLE_DOWN),
+        DOUBLE_DOWN("\u21ca", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN),
+        TRIPLE_DOWN("X", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN);
+
+        companion object {
+
+            fun drawable(cwf: CustomWatchface): Drawable {
+                val arrow = values().firstOrNull { it.symbol == cwf.singleBg.slopeArrow } ?: NONE
+                return arrow.customDrawable?.let { cwf.resDataMap[it.fileName] }?.toDrawable(cwf.resources) ?: cwf.resources.getDrawable(arrow.icon)
+            }
+
+        }
+    }
+
+    @SuppressLint("RtlHardcoded")
     private enum class GravityMap(val key: String, val gravity: Int) {
+
         CENTER(JsonKeyValues.CENTER.key, Gravity.CENTER),
         LEFT(JsonKeyValues.LEFT.key, Gravity.LEFT),
         RIGHT(JsonKeyValues.RIGHT.key, Gravity.RIGHT);
@@ -450,20 +548,35 @@ class CustomWatchface : BaseWatchFace() {
         }
     }
 
-    private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
-        SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null),
-        DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null),
-        DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null),
-        MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null),
-        SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null),
+    private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int? = null) {
+        SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF),
+        DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT),
+        DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD),
+        MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE),
+        SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF),
         ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold),
         ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light),
         ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular),
         ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light);
 
         companion object {
-            fun init(context: Context) = values().forEach { it.font = it.fontRessources?.let { font -> ResourcesCompat.getFont(context, font) } ?: it.font }
-            fun font(key: String) = values().firstOrNull { it.key == key }?.font ?: DEFAULT.font
+
+            private val customFonts = mutableMapOf<String, Typeface>()
+            fun init(cwf: CustomWatchface) {
+                customFonts.clear()
+                values().forEach { fontMap ->
+                    customFonts[fontMap.key.lowercase()] = fontMap.fontRessources?.let { fontResource ->
+                        ResourcesCompat.getFont(cwf.context, fontResource)
+                    } ?: fontMap.font
+                }
+                cwf.resDataMap.filter { (_, resData) ->
+                    resData.format == ResFormat.TTF || resData.format == ResFormat.OTF
+                }.forEach { (key, resData) ->
+                    customFonts[key.lowercase()] = resData.toTypeface() ?: Typeface.DEFAULT
+                }
+            }
+
+            fun font(key: String) = customFonts[key.lowercase()] ?: DEFAULT.font
             fun key() = DEFAULT.key
         }
     }
@@ -483,6 +596,7 @@ class CustomWatchface : BaseWatchFace() {
 
     // This class containt mapping between keys used within json of Custom Watchface and preferences
     private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
+
         SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
         SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
         SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
@@ -496,7 +610,9 @@ class CustomWatchface : BaseWatchFace() {
         SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
         SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
         SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
-        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status)
+        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status),
+        SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number)
     }
-
 }
+
+

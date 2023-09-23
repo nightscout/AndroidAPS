@@ -37,6 +37,9 @@
     <string name="glucoseisnotavailable">혈당을 사용할 수 없습니다.</string>
     <string name="glucosecomparedmgdl">혈당 %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">혈당 %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">임시목표가 존재하지 않습니다</string>
+    <string name="temptargetcomparedmgdl">임시목표 %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">임시목표 %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">프로파일 pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">또는</string>
@@ -60,13 +63,6 @@
     <string name="time_range">시간 범위</string>
     <string name="timerange_value">시간은 %1$s 와 %2$s사이입니다</string>
     <string name="between">사이 </string>
-    <string name="weekday_sunday_short">일</string>
-    <string name="weekday_saturday_short">토</string>
-    <string name="weekday_friday_short">금</string>
-    <string name="weekday_thursday_short">목</string>
-    <string name="weekday_wednesday_short">수</string>
-    <string name="weekday_tuesday_short">화</string>
-    <string name="weekday_monday_short">월</string>
     <string name="delete_short">삭제</string>
     <string name="add_short">추가</string>
     <string name="copy_short">복사</string>
@@ -84,10 +80,13 @@
     <string name="latitude_short">위도:</string>
     <string name="longitude_short">경도</string>
     <string name="glucose_u">혈당 [%1$s]:</string>
+    <string name="target_u">목표 [%1$s]:</string>
     <string name="lastboluslabel">마지막 Bolus</string>
     <string name="lastboluscompared">마지막 Bolus 시간 %1$s %2$s 분 전</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">심장 박동</string>
+    <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">거리 [m]:</string>
     <string name="recurringTime">반복 시간</string>
@@ -99,17 +98,22 @@
     <string name="edit_short">편집</string>
     <string name="please_choose_an_action_type">실행 유형을 선택하세요</string>
     <string name="please_choose_a_trigger_type">트리거 유형을 선택하세요</string>
+    <string name="please_choose_a_operation_type">실행 유형을 선택하세요</string>
     <string name="triggers">트리거:</string>
     <string name="preconditions">전제 조건:</string>
     <string name="automation_event">자동화 이벤트</string>
     <string name="reorder_label">정렬</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">월</string>
-    <string name="tuesday_short">화</string>
-    <string name="wednesday_short">수</string>
-    <string name="thursday_short">목</string>
-    <string name="friday_short">금</string>
-    <string name="saturday_short">토</string>
-    <string name="sunday_short">일</string>
+    <string name="user_action">사용자 동작</string>
+    <string name="remove_automation">자동 설정 제거하기</string>
+    <string name="sort_automation">자동 설정 분류하기</string>
+    <string name="remove_selected_items">선택된 항목 제거하기</string>
+    <string name="count_selected">%1$d 선택됨</string>
+    <string name="system_automation">자동 설정 시스템</string>
+    <string name="run_automations">자동 설정 실행하기</string>
+    <string name="add_automation">규칙 추가하기</string>
+    <string name="stop_processing">처리 중단하기</string>
     <!--    Reminders-->
+    <string name="time_to_eat">식사할 시간입니다! \nBolus 마법사를 켜고 다시 계산하십시오.</string>
+    <string name="time_to_bolus">Bolus 주입할 시간입니다! \nBolus 마법사를 켜고 다시 계산하십시오</string>
+    <string name="error_setting_reminder">향후 경고 설정 중 오류 발생</string>
 </resources>

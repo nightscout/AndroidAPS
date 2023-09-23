@@ -35,7 +35,7 @@ data class APSResultLink(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     @Embedded
-        override var interfaceIDs_backing: InterfaceIDs? = null,
+    override var interfaceIDs_backing: InterfaceIDs? = null,
     var apsResultId: Long,
     var smbId: Long? = null,
     var tbrId: Long? = null

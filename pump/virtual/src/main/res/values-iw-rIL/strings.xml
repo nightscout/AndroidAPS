@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
     <string name="virtual_pump_label">משאבה וירטואלית</string>
     <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* רק ערכים בדידים, טווחים אינם נתמכים עבור ערכי בזאלי ובולוס במשאבה וירטואלית.</string>
 </resources>

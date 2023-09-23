@@ -1,7 +1,7 @@
 package info.nightscout.source
 
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.Config
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.junit.jupiter.api.Assertions

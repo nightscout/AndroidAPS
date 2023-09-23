@@ -18,6 +18,7 @@ import info.nightscout.plugins.sync.tidepool.utils.GsonInstance
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -33,6 +34,7 @@ class UploadChunk @Inject constructor(
     private val rxBus: RxBus,
     private val aapsLogger: AAPSLogger,
     private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
     private val repository: AppRepository,
     private val dateUtil: DateUtil
@@ -111,7 +113,7 @@ class UploadChunk @Inject constructor(
 
     private fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
         val readings = repository.compatGetTherapyEventDataFromToTime(start, end).blockingGet()
-        val selection = BloodGlucoseElement.fromCareportalEvents(readings, dateUtil)
+        val selection = BloodGlucoseElement.fromCareportalEvents(readings, dateUtil, profileUtil)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))
         return selection
@@ -140,14 +142,14 @@ class UploadChunk @Inject constructor(
 
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
         val temporaryBasals = repository.getTemporaryBasalsDataFromTimeToTime(start, end, true).blockingGet()
-        val selection = fromTemporaryBasals(temporaryBasals, start, end) // TODO do not upload running TBR
+        val selection = fromTemporaryBasals(temporaryBasals, start, end)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))
         return selection
     }
 
     private fun newInstanceOrNull(ps: EffectiveProfileSwitch): ProfileElement? = try {
-        ProfileElement(ps, activePlugin.activePump.serialNumber(), dateUtil)
+        ProfileElement(ps, activePlugin.activePump.serialNumber(), dateUtil, profileUtil)
     } catch (e: Throwable) {
         null
     }

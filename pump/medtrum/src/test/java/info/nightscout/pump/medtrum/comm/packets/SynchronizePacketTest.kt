@@ -6,8 +6,8 @@ import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class SynchronizePacketTest : MedtrumTestBase() {
 
@@ -35,8 +35,8 @@ class SynchronizePacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        Assertions.assertEquals(1, result.size)
+        Assertions.assertEquals(opCode.toByte(), result[0])
     }
 
     @Test fun handleResponseGivenResponseWhenMessageIsCorrectLengthThenResultTrue() {
@@ -53,9 +53,9 @@ class SynchronizePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertEquals(true, result)
-        assertEquals(false, packet.failed)
-        assertEquals(state, packet.medtrumPump.pumpState.state)
+        Assertions.assertEquals(true, result)
+        Assertions.assertEquals(false, packet.failed)
+        Assertions.assertEquals(state, packet.medtrumPump.pumpState.state)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -71,31 +71,80 @@ class SynchronizePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertEquals(false, result)
-        assertEquals(true, packet.failed)
+        Assertions.assertEquals(false, result)
+        Assertions.assertEquals(true, packet.failed)
     }
 
     @Test fun handleResponseContainingSyncDataThenDataSaved() {
         // Inputs
-        val data = byteArrayOf(47, 3, 3, 1, 0, 0, 32, -18, 13, -128, 5, 0, -128, 0, 0, 6, 25, 0, 14, 0, 84, -93, -83, 17, 17, 64, 0, -104, 14, -8, -119, -83, 17, -16, 11, 90, 26, 0, 14, 0, -69, 31, 0, 0, -116, 14, -56)
+        val data =
+            byteArrayOf(
+                47,
+                3,
+                3,
+                1,
+                0,
+                0,
+                32,
+                -18,
+                13,
+                -128,
+                5,
+                0,
+                -128,
+                0,
+                0,
+                6,
+                25,
+                0,
+                14,
+                0,
+                84,
+                -93,
+                -83,
+                17,
+                17,
+                64,
+                0,
+                -104,
+                14,
+                -8,
+                -119,
+                -83,
+                17,
+                -16,
+                11,
+                90,
+                26,
+                0,
+                14,
+                0,
+                -69,
+                31,
+                0,
+                0,
+                -116,
+                14,
+                -56
+            )
 
         // Call
         val packet = SynchronizePacket(packetInjector)
         val result = packet.handleResponse(data)
 
         // Expected values
-        assertEquals(true, result)
-        assertEquals(false, packet.failed)
-        assertEquals(MedtrumPumpState.ACTIVE, packet.medtrumPump.pumpState)
-        assertEquals(BasalType.ABSOLUTE_TEMP, packet.medtrumPump.lastBasalType)
-        assertEquals(0.85, packet.medtrumPump.lastBasalRate, 0.01)
-        assertEquals(25, packet.medtrumPump.lastBasalSequence)
-        assertEquals(14, packet.medtrumPump.lastBasalPatchId)
-        assertEquals(1685126612000, packet.medtrumPump.lastBasalStartTime)
-        assertEquals(8123, packet.medtrumPump.patchAge)
-        assertEquals(186.80, packet.medtrumPump.reservoir, 0.01)
-        assertEquals(1685120120000, packet.medtrumPump.patchStartTime)
-        assertEquals(5.96875, packet.medtrumPump.batteryVoltage_A, 0.01)
-        assertEquals(2.8125, packet.medtrumPump.batteryVoltage_B, 0.01)
+        Assertions.assertEquals(true, result)
+        Assertions.assertEquals(false, packet.failed)
+        Assertions.assertEquals(MedtrumPumpState.ACTIVE, packet.medtrumPump.pumpState)
+        Assertions.assertEquals(BasalType.ABSOLUTE_TEMP, packet.medtrumPump.lastBasalType)
+        Assertions.assertEquals(0.85, packet.medtrumPump.lastBasalRate, 0.01)
+        Assertions.assertEquals(25, packet.medtrumPump.lastBasalSequence)
+        Assertions.assertEquals(14, packet.medtrumPump.lastBasalPatchId)
+        Assertions.assertEquals(1685126612000, packet.medtrumPump.lastBasalStartTime)
+        Assertions.assertEquals(8123, packet.medtrumPump.patchAge)
+        Assertions.assertEquals(186.80, packet.medtrumPump.reservoir, 0.01)
+        Assertions.assertEquals(1685120120000, packet.medtrumPump.patchStartTime)
+        Assertions.assertEquals(5.96875, packet.medtrumPump.batteryVoltage_A, 0.01)
+        Assertions.assertEquals(2.8125, packet.medtrumPump.batteryVoltage_B, 0.01)
     }
 }

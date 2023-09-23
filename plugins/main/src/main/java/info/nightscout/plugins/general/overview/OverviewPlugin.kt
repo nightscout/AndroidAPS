@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.annotation.StringRes
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.shared.impl.rx.bus.RxBusImpl
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.events.EventNewNotification
@@ -72,7 +73,7 @@ class OverviewPlugin @Inject constructor(
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    override val overviewBus = RxBus(aapsSchedulers, aapsLogger)
+    override val overviewBus = RxBusImpl(aapsSchedulers, aapsLogger)
 
     override fun addNotificationWithDialogResponse(id: Int, text: String, level: Int, @StringRes actionButtonId: Int, title: String, message: String) {
         rxBus.send(

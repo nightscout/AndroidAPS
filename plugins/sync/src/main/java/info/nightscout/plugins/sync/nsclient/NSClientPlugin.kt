@@ -15,16 +15,14 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
@@ -41,6 +39,7 @@ import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -62,10 +61,10 @@ class NSClientPlugin @Inject constructor(
     private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val dataSyncSelectorV1: DataSyncSelectorV1,
-    private val activePlugin: ActivePlugin,
     private val dateUtil: DateUtil,
-    private val profileFunction: ProfileFunction,
-    private val nsSettingsStatus: NSSettingsStatus
+    private val profileUtil: ProfileUtil,
+    private val nsSettingsStatus: NSSettingsStatus,
+    private val decimalFormatter: DecimalFormatter
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -129,9 +128,6 @@ class NSClientPlugin @Inject constructor(
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
-        if (activePlugin.activeBgSource is DoingOwnUploadSource) {
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_do_ns_upload))?.isVisible = false
-        }
     }
 
     override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false
@@ -204,15 +200,15 @@ class NSClientPlugin @Inject constructor(
         when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(true, dateUtil, profileFunction)
-            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(true, profileFunction.getUnits(), dateUtil)
+            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(true, dateUtil, profileUtil)
+            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(true, dateUtil, profileUtil)
             is DataSyncSelector.PairFood                   -> dataPair.value.toJson(true)
             is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairDeviceStatus           -> dataPair.value.toJson(dateUtil)
             is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(true, profile, dateUtil)
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(true, profile, dateUtil)
-            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(true, dateUtil, decimalFormatter)
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairProfileStore           -> dataPair.value
@@ -242,14 +238,14 @@ class NSClientPlugin @Inject constructor(
         when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(false, dateUtil)
             is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
-            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
+            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileUtil)
+            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, dateUtil, profileUtil)
             is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
             is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
             is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
             is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profile, dateUtil)
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profile, dateUtil)
-            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil, decimalFormatter)
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
             is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
             else                                           -> null

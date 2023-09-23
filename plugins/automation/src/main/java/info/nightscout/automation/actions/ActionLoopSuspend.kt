@@ -7,6 +7,7 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
@@ -14,7 +15,6 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview
 import org.json.JSONObject

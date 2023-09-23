@@ -1,7 +1,7 @@
 package info.nightscout.automation.services
 
 import android.location.Location
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import javax.inject.Inject
 import javax.inject.Singleton
 

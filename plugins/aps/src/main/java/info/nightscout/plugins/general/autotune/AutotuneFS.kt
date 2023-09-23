@@ -1,6 +1,6 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
@@ -25,9 +25,9 @@ import javax.inject.Singleton
 @Singleton
 @OpenForTesting
 class AutotuneFS @Inject constructor(
-    private val  rh: ResourceHelper,
+    private val rh: ResourceHelper,
     private val loggerUtils: LoggerUtils
-    ) {
+) {
 
     val AUTOTUNEFOLDER = "autotune"
     val SETTINGSFOLDER = "settings"

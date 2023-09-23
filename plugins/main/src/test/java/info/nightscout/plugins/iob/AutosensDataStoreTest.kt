@@ -2,9 +2,10 @@ package info.nightscout.plugins.iob
 
 import android.content.Context
 import androidx.collection.LongSparseArray
+import app.aaps.shared.impl.utils.DateUtilImpl
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -46,7 +47,7 @@ class AutosensDataStoreTest : TestBase() {
 
     @BeforeEach
     fun mock() {
-        dateUtil = DateUtil(context)
+        dateUtil = DateUtilImpl(context)
     }
 
     @Test

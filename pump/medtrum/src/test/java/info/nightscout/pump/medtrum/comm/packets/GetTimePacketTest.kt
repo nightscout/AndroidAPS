@@ -5,8 +5,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class GetTimePacketTest : MedtrumTestBase() {
 
@@ -30,8 +30,8 @@ class GetTimePacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        Assertions.assertEquals(1, result.size)
+        Assertions.assertEquals(opCode.toByte(), result[0])
     }
 
     @Test fun handleResponseGivenResponseWhenMessageIsCorrectLengthThenResultTrue() {
@@ -46,9 +46,9 @@ class GetTimePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertEquals(true, result)
-        assertEquals(false, packet.failed)
-        assertEquals(MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(time), medtrumPump.lastTimeReceivedFromPump)
+        Assertions.assertEquals(true, result)
+        Assertions.assertEquals(false, packet.failed)
+        Assertions.assertEquals(MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(time), medtrumPump.lastTimeReceivedFromPump)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -63,8 +63,8 @@ class GetTimePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response.sliceArray(0..response.size - 2))
 
         // Expected values
-        assertEquals(false, result)
-        assertEquals(true, packet.failed)
-        assertEquals(0, medtrumPump.lastTimeReceivedFromPump)
+        Assertions.assertEquals(false, result)
+        Assertions.assertEquals(true, packet.failed)
+        Assertions.assertEquals(0, medtrumPump.lastTimeReceivedFromPump)
     }
 }

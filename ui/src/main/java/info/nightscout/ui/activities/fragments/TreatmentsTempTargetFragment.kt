@@ -33,17 +33,14 @@ import info.nightscout.database.impl.transactions.InvalidateTemporaryTargetTrans
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.rx.events.EventNSClientRestart
-import info.nightscout.rx.events.EventNewHistoryData
-import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.events.EventTempTargetChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -52,10 +49,8 @@ import info.nightscout.ui.R
 import info.nightscout.ui.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
 import info.nightscout.ui.databinding.TreatmentsTemptargetFragmentBinding
 import info.nightscout.ui.databinding.TreatmentsTemptargetItemBinding
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -64,7 +59,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var translator: Translator
@@ -73,6 +68,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var _binding: TreatmentsTemptargetFragmentBinding? = null
 
@@ -97,30 +93,6 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun refreshFromNightscout() {
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.refresheventsfromnightscout) + "?") {
-                uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
-                disposable +=
-                    Completable.fromAction {
-                        repository.deleteAllEffectiveProfileSwitches()
-                        repository.deleteAllProfileSwitches()
-                    }
-                        .subscribeOn(aapsSchedulers.io)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribeBy(
-                            onError = { aapsLogger.error("Error removing entries", it) },
-                            onComplete = {
-                                rxBus.send(EventProfileSwitchChanged())
-                                rxBus.send(EventEffectiveProfileSwitchChanged(0L))
-                                rxBus.send(EventNewHistoryData(0, false))
-                            }
-                        )
-                rxBus.send(EventNSClientRestart())
-            }
-        }
     }
 
     private fun swapAdapter() {
@@ -174,7 +146,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
 
         @SuppressLint("SetTextI18n")
         override fun onBindViewHolder(holder: TempTargetsViewHolder, position: Int) {
-            val units = profileFunction.getUnits()
+            val units = profileUtil.units
             val tempTarget = tempTargetList[position]
             holder.binding.ns.visibility = (tempTarget.interfaceIDs.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = tempTarget.isValid.not().toVisibility()
@@ -194,8 +166,8 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempTarget.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end)
             holder.binding.duration.text = rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(tempTarget.duration).mins())
-            holder.binding.low.text = tempTarget.lowValueToUnitsToString(units)
-            holder.binding.high.text = tempTarget.highValueToUnitsToString(units)
+            holder.binding.low.text = tempTarget.lowValueToUnitsToString(units, decimalFormatter)
+            holder.binding.high.text = tempTarget.highValueToUnitsToString(units, decimalFormatter)
             holder.binding.reason.text = translator.translate(tempTarget.reason)
             holder.binding.time.setTextColor(
                 when {
@@ -219,8 +191,6 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_temp_target, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || !config.isEngineeringMode()
-        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
     }
 
     private fun updateMenuVisibility() {
@@ -248,18 +218,13 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
                 true
             }
 
-            R.id.nav_refresh_ns -> {
-                refreshFromNightscout()
-                true
-            }
-
             else -> false
         }
 
     private fun getConfirmationText(selectedItems: SparseArray<TemporaryTarget>): String {
         if (selectedItems.size() == 1) {
             val tempTarget = selectedItems.valueAt(0)
-            return "${rh.gs(info.nightscout.core.ui.R.string.temporary_target)}: ${tempTarget.friendlyDescription(profileFunction.getUnits(), rh)}\n" +
+            return "${rh.gs(info.nightscout.core.ui.R.string.temporary_target)}: ${tempTarget.friendlyDescription(profileUtil.units, rh, profileUtil)}\n" +
                 dateUtil.dateAndTimeString(tempTarget.timestamp)
         }
         return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
@@ -286,5 +251,4 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
             })
         }
     }
-
 }

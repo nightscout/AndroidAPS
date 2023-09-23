@@ -2,7 +2,7 @@ package info.nightscout.implementation.receivers
 
 import android.content.Context
 import android.content.Intent
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState

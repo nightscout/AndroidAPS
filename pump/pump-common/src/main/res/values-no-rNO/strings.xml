@@ -64,6 +64,15 @@
     <string name="pump_settings_error_wrong_max_basal_set">Feil maks-basal er satt på pumpen (må være %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Aldri tilkoblet</string>
+    <string name="pump_status_sleeping">Hvilemodus</string>
+    <string name="pump_status_waking_up">Våkner opp</string>
+    <string name="pump_status_active">Aktiv</string>
+    <string name="pump_status_error_comm">Feil med kommunikasjon</string>
+    <string name="pump_status_timeout_comm">Tidsavbrudd ved kommunikasjon</string>
+    <string name="pump_status_pump_unreachable">Pumpe er utilgjengelig</string>
+    <string name="pump_status_invalid_config">Ugyldig konfigurasjon</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

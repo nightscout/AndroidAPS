@@ -41,7 +41,7 @@ class CommandSMBBolus(
 
     override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)
 
-    override fun log(): String = "SMB BOLUS ${rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, detailedBolusInfo.insulin)}"
+    override fun log(): String = "SMB BOLUS ${rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, detailedBolusInfo.insulin)}"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
         callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()

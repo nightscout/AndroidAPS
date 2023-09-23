@@ -7,7 +7,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.ProfileFunction
 import java.text.DecimalFormat
 
-class InputBg(profileFunction: ProfileFunction) : Element() {
+class InputBg(profileFunction: ProfileFunction) : Element {
 
     var units = GlucoseUnit.MGDL
     var value = 0.0

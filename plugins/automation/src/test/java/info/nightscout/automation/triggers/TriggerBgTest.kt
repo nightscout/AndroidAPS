@@ -13,13 +13,10 @@ import org.mockito.Mockito.`when`
 
 class TriggerBgTest : TriggerTestBase() {
 
-    var now = 1514766900000L
-
     @BeforeEach
     fun prepare() {
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        `when`(dateUtil.now()).thenReturn(now)
-    }
+     }
 
     @Test
     fun shouldRunTest() {

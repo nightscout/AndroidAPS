@@ -11,5 +11,8 @@
     <string name="insulin_peak_time">피크 시간 [min]</string>
     <string name="free_peak_oref">사용자지정-피크 Oref</string>
     <string name="rapid_acting_oref">초속효성 Oref</string>
+    <string name="ultra_rapid_oref">초고속 Oref</string>
     <string name="dia_too_short">DIA %1$f는 너무 짧습니다. 대신 %2$f을 사용하세요!</string>
+    <string name="fast_acting_insulin_comment">노보래피드, 노보로그, 휴마로그</string>
+    <string name="ultra_fast_acting_insulin_comment">피아스프</string>
 </resources>

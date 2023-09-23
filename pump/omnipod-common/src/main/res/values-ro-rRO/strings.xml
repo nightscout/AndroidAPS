@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Afișare buton de Suspendare Livrare în secțiunea Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detectare DST/fus orar activată</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Notificare de expirare activata</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Numar de ore înainte de oprire</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alertă rezervor aproape gol activată</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Număr unități</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Confirmare automată alerte Pod</string>

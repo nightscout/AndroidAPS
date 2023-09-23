@@ -3,7 +3,7 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Intégration de pompe pour Medtrum Nano</string>
+    <string name="medtrum_pump_description">Intégration des pompes Medtrum Nano et Medtrum 300U</string>
     <string name="medtrum_pump_setting">Paramètres de la pompe Medtrum</string>
     <string name="pump_error">Erreur pompe: %1$s!! </string>
     <string name="pump_is_suspended">La pompe est suspendue</string>
@@ -14,6 +14,7 @@
     <!-- overview fragment -->
     <string name="ble_status_label">État BT</string>
     <string name="last_connection_label">Dernière connexion</string>
+    <string name="active_bolus_label">Bolus actif</string>
     <string name="pump_state_label">État de la pompe</string>
     <string name="active_alarms_label">Alarmes actives</string>
     <string name="reservoir_level"> %.2f U</string>

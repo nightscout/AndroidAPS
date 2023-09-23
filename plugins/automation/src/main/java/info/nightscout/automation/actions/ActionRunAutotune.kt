@@ -8,12 +8,13 @@ import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.core.ui.elements.WeekDay
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.interfaces.autotune.Autotune
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -28,14 +29,14 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
 
-    var defaultValue = 0
+    private var defaultValue = 0
     private var inputProfileName = InputProfileName(rh, activePlugin, "", true)
     private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
     private val days = InputWeekDay().also { it.setAll(true) }
 
     override fun friendlyName(): Int = info.nightscout.core.ui.R.string.autotune_run
     override fun shortDescription(): String = resourceHelper.gs(info.nightscout.core.ui.R.string.autotune_profile_name, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = info.nightscout.interfaces.R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
         val autoSwitch = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_auto, false)
@@ -77,7 +78,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
             .put("profileToTune", inputProfileName.value)
             .put("tunedays", daysBack.value)
         for (i in days.weekdays.indices) {
-            data.put(InputWeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+            data.put(WeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
         }
         return JSONObject()
             .put("type", this.javaClass.simpleName)
@@ -88,7 +89,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
         for (i in days.weekdays.indices)
-            days.weekdays[i] = JsonHelper.safeGetBoolean(o, InputWeekDay.DayOfWeek.values()[i].name,true)
+            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.values()[i].name, true)
         inputProfileName.value = JsonHelper.safeGetString(o, "profileToTune", "")
         defaultValue = JsonHelper.safeGetInt(o, "tunedays")
         if (defaultValue == 0)

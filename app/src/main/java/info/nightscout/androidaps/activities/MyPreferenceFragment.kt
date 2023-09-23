@@ -15,25 +15,22 @@ import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import androidx.preference.size
+import app.aaps.configuration.maintenance.MaintenancePlugin
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.automation.AutomationPlugin
-import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.BIOMETRIC
 import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
@@ -49,6 +46,7 @@ import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
+import info.nightscout.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.plugins.sync.xdrip.XdripPlugin
 import info.nightscout.pump.combo.ComboPlugin
@@ -63,6 +61,7 @@ import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.source.AidexPlugin
@@ -83,7 +82,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
-    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var config: Config
 
@@ -227,7 +226,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(wearPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(statusLinePlugin, rootKey)
             addPreferencesFromResource(R.xml.pref_alerts, rootKey)
-            addPreferencesFromResource(info.nightscout.configuration.R.xml.pref_datachoices, rootKey)
+            addPreferencesFromResource(app.aaps.configuration.R.xml.pref_datachoices, rootKey)
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(openHumansUploaderPlugin, rootKey)
         }
@@ -252,7 +251,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
         if (key == rh.gs(info.nightscout.plugins.aps.R.string.key_openapsama_use_autosens) && sp.getBoolean(info.nightscout.plugins.aps.R.string.key_openapsama_use_autosens, false)) {
             activity?.let {
-                OKDialog.show(it, rh.gs(info.nightscout.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
+                OKDialog.show(it, rh.gs(app.aaps.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }
         }
         checkForBiometricFallback(key)
@@ -277,7 +276,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         ) {
             activity?.let {
                 val title = rh.gs(info.nightscout.core.ui.R.string.unsecure_fallback_biometric)
-                val message = rh.gs(info.nightscout.configuration.R.string.master_password_missing, rh.gs(info.nightscout.configuration.R.string.configbuilder_general), rh.gs(info.nightscout.configuration.R.string.protection))
+                val message =
+                    rh.gs(app.aaps.configuration.R.string.master_password_missing, rh.gs(app.aaps.configuration.R.string.configbuilder_general), rh.gs(app.aaps.configuration.R.string.protection))
                 OKDialog.show(it, title = title, message = message)
             }
         }
@@ -326,7 +326,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             rh.gs(info.nightscout.core.utils.R.string.key_low_mark)
         )
         if (unitDependent.toList().contains(pref.key) && pref is EditTextPreference) {
-            val converted = Profile.toCurrentUnits(profileFunction, SafeParse.stringToDouble(pref.text))
+            val converted = profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(pref.text))
             pref.summary = converted.toString()
         }
     }
@@ -442,7 +442,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun onPreferenceTreeClick(preference: Preference): Boolean {
         context?.let { context ->
             if (preference.key == rh.gs(info.nightscout.core.utils.R.string.key_master_password)) {
-                passwordCheck.queryPassword(context, info.nightscout.configuration.R.string.current_master_password, info.nightscout.core.utils.R.string.key_master_password, {
+                passwordCheck.queryPassword(context, app.aaps.configuration.R.string.current_master_password, info.nightscout.core.utils.R.string.key_master_password, {
                     passwordCheck.setPassword(context, info.nightscout.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password)
                 })
                 return true

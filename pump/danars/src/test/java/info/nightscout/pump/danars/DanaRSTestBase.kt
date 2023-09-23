@@ -1,11 +1,12 @@
 package info.nightscout.pump.danars
 
-import info.nightscout.androidaps.TestBaseWithProfile
+import app.aaps.shared.tests.TestBaseWithProfile
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.danars.comm.DanaRSPacket
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
@@ -13,11 +14,15 @@ import org.mockito.Mockito
 
 open class DanaRSTestBase : TestBaseWithProfile() {
 
-    @Mock lateinit var sp: SP
     @Mock lateinit var instantiator: Instantiator
     @Mock lateinit var uiInteraction: UiInteraction
 
     lateinit var danaPump: DanaPump
+
+    val injector = HasAndroidInjector {
+        AndroidInjector {
+        }
+    }
 
     @BeforeEach
     fun prepare() {
@@ -54,6 +59,6 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
     }
 }

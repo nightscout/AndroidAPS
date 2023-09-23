@@ -6,6 +6,7 @@
     <string name="previous_button">이전</string>
     <string name="nav_setupwizard">설정 마법사</string>
     <string name="setupwizard_finish">완료</string>
+    <string name="welcome">환영합니다</string>
     <string name="welcometosetupwizard">설정 마법사에 오신것을 환영합니다. 설정 마법사가 설정 과정을 안내하여 줄것입니다.</string>
     <string name="end_user_license_agreement">최종 사용자 라이선스 동의서</string>
     <string name="end_user_license_agreement_text">이 프로그램을 의학적 결정을 내리는 데 사용해서는 안되며, 여기에 대한 어떠한 보증도 없습니다. 이 프로그램의 품질과 성능에 관한 모든 위험은 사용자에게 있습니다.\nMUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
@@ -20,10 +21,12 @@
     <string name="need_location_permission">어플은 BT scan과 WiFi 식별을 위해 \"위치 허용\"이 요구됩니다.</string>
     <string name="need_storage_permission">어플은 로그 파일 저장과 설정 내보내기를 위해 \"저장공간 허용\"이 요구됩니다.</string>
     <string name="askforpermission">권한 요청하기</string>
+    <string name="need_whitelisting">%1$s를 사용하기 위해서는 배터리 최적화 화이트리스팅이 필요합니다</string>
     <string name="storedsettingsfound">저장된 설정이 있습니다.</string>
     <string name="master_password_summary">마스터 비밀번호는 백업 암호 또는 보안 해제를 위해 사용됩니다. 이를 기억하거나 안전한 곳에 저장해두세요.</string>
     <string name="current_master_password">현재 마스터 비밀번호</string>
     <string name="common_values">평소 섭취하는 가장 많은 양의 탄수화물 값을 사용하세요.\n</string>
+    <string name="syncinfotext">데이터 클라우드에 동기화합니다. 지금 이 부분을 건너뛸 수 있지만 Nightscout 또는 Tidepool 클라이언트를 설정할 때까지목표를 전달할 수 없습니다.</string>
     <string name="status">상태:</string>
     <string name="patient_name">환자 이름</string>
     <string name="patient_name_summary">다양한 설정들을 구별하기 위하여 환자 이름 또는 별명을 입력합니다.</string>
@@ -33,7 +36,9 @@
     <string name="profile">프로파일</string>
     <string name="doprofileswitch">프로파일 변경 실행</string>
     <string name="exitwizard">설정 마법사 건너뛰기</string>
+    <string name="setupwizard_loop_description">아래 버튼을 눌러 AAPS가 기본적인 변경을 제안/실행할 수 있도록 합니다</string>
     <string name="setupwizard_sensitivity_description">민감도 플러그인은 민감도감지와 COB 계산을 위해 사용됩니다. 더 많은 정보는 다름 링크를 방문하세요.</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">사용 가능한 알고리즘 중 하나를 선택하세요. 과거부터 최신의 순으로 정렬이 되어 있습니다. 일반적으로 새로운 알고리즘은 보다 강력하고 공격적입니다. 따라서 당신이 신규 사용자라면 최신의 알고리즘보단 AMA로 시작하는것이 나을 수 있습니다. 사용 전에 OpenAPS 문서를 읽어보고 설정하는 것을 잊지마세요.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">하단의 RileyLink를 설정하십시오. RileyLink를 선택한 뒤, RileyLink 상태가 \"연결됨\"이 되고 나면 설정을 계속 할 수 있습니다. 이 작업은 금방 진행됩니다.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>참고:</b> 펌프가 한 번 연동되면 계속 설정할 수 있습니다.\n</string>
@@ -43,27 +48,40 @@
     <string name="data_choices">데이터선택</string>
     <string name="fabric_upload">Fabric 업로드</string>
     <string name="allow_automated_crash_reporting">fabric.io 서비스를 통해 개발자에게 앱 오류 및 특정 데이터를 자동 전송합니다.</string>
+    <string name="summary_email_for_crash_report">긴급 상황에서 사용자에게 연락을 취하기 위해 이 신원 증명을 충돌 보고서에 첨부합니다. 이는 선택사항입니다.</string>
+    <string name="identification">신원 증명 (이메일, FB, 또는 Discord nick 등)</string>
     <string name="request">요청</string>
     <string name="apsmode_title">APS 모드</string>
     <string name="setupwizard_preferred_aps_mode">선호하는 APS 모드</string>
+    <string name="error_asking_for_permissions">사용 권한을 묻는 중 오류가 발생했습니다</string>
     <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">구성 관리자</string>
     <string name="configbuilder_pump">펌프</string>
+    <string name="configbuilder_pump_description">어떤 펌프를 AAPS에서 사용하시겠습니까?</string>
     <string name="configbuilder_profile">프로파일</string>
+    <string name="configbuilder_profile_description">어떤 프로파일을 AAPS에서 사용하시겠습니까?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">어떤 APS 알고리즘을 사용합니까?</string>
     <string name="configbuilder_general">일반</string>
     <string name="configbuilder_general_description">유용한 여러가지 플러그인</string>
     <string name="configbuilder_sync">동기화</string>
+    <string name="configbuilder_sync_description">데이터 업로드 및 동기화 플러그인.</string>
     <string name="configbuilder_constraints_description">어떤 제약을 적용합니까?</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">AAPS의 루프를 활성하기 위해서 이것을 사용하십시오.</string>
     <string name="configbuilder_insulin_description">어떤 종류의 인슐린을 사용합니까?</string>
     <string name="configbuilder_bgsource">혈당 출처</string>
+    <string name="configbuilder_bgsource_description">AAPS가 어디에서 데이터를 가져옵니까?</string>
+    <string name="configbuilder_smoothing">평탄화</string>
+    <string name="configbuilder_smoothing_description">평탄화 알고리즘을 선택합니다</string>
     <string name="configbuilder_sensitivity">민감도 감지</string>
     <string name="configbuilder_sensitivity_description">어떤 민감도 알고리즘을 사용하겠습니까?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">활성화된 플러그인을 구성하는 데 사용됩니다.</string>
+    <string name="allow_hardware_pump_text">주의: 하드웨어 펌프를 활성화하고 연결하면 AAPS가 basal 설정을 프로파일에서 펌프로 복사하여 펌프에 저장된 기존 basal양을 덮어쓰게 될것입니다. AAPS의 basal 설정이 올바른지 확인하십시오. 확실하지 않거나 펌프의 basal 설정을 덮어쓰지 않으려면 취소를 누르고 나중에 펌프로 전환을 연결하십시오.</string>
+    <string name="a11y_open_settings">설정 열기</string>
+    <string name="nsclient_version_does_not_match">AAPS 클라이언트 버전이 AAPS 버전과 일치하지 않습니다. 업데이트 하십시오.</string>
     <!--ImportExport-->
     <string name="nav_preferences">설정</string>
     <string name="password_preferences_encrypt_prompt">내보낸 preferences 암호화 하기 위해 마스터 비밀번호가 필요합니다.</string>
@@ -96,6 +114,7 @@
     <string name="maintenance">정비</string>
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">정비를 위한 여러가지 기능을 제공합니다.(예, 로그 전송,로그 삭제 등)</string>
+    <string name="database_cleanup">데이터베이스 정리하기</string>
     <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="maintenance_settings">정비 설정</string>
     <string name="maintenance_email">Email</string>
@@ -104,7 +123,9 @@
     <string name="delete_logs">로그 삭제하기</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
     <string name="engineering_mode_enabled">전문가 모드 사용</string>
+    <string name="log_files">로그 파일</string>
     <string name="nav_logsettings">로그 설정</string>
+    <string name="miscellaneous">기타 설정</string>
     <string name="nav_resetdb">데이터베이스 초기화</string>
     <string name="resettodefaults">기본값으로 초기화</string>
     <!-- Maintenance -->
@@ -132,5 +153,18 @@
     <string name="prefdecrypt_issue_wrong_format">암호화 설정이 누락되었음, 설정 형식이 유효하지 않습니다!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">지원되지 않는 또는 명시되지 않은 암호화 알고리즘!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">사용자 지정 워치페이스 선택하기</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">폰을 다시시작하거나 시스템 설정에서 AAPS를 다시 시작하십시오 \n그렇지 않으면 Android APS에 로그 기록이 남지 않습니다 (알고리즘이 올바르게 작동하는지 확인하기 위해 로그가 중요합니다)!</string>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">파일 형식</string>
+    <string name="metadata_label_created_at">생성 일자</string>
+    <string name="metadata_label_aaps_version">AAPS 버전</string>
+    <string name="metadata_label_aaps_flavour">다른 형식 빌드</string>
+    <string name="metadata_label_device_name">장치의 환자 이름 내보내기</string>
+    <string name="metadata_label_device_model">장치 모델 내보내기</string>
+    <string name="metadata_label_encryption">파일 암호화</string>
+    <string name="metadata_format_new">암호화된 새로운 형식</string>
+    <string name="metadata_format_debug">오류가 제거된 새로운 형식 (암호화되지 않음)</string>
+    <string name="metadata_format_other">알려지지 않은 내보내기 형식</string>
 </resources>

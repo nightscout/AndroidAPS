@@ -29,7 +29,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.pump.core.defs.PumpDeviceState
+import info.nightscout.pump.common.defs.PumpDeviceState
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventExtendedBolusChange
@@ -188,7 +188,7 @@ class MedtronicFragment : DaggerFragment() {
     @Synchronized
     private fun setDeviceStatus() {
         val resourceId = rileyLinkServiceData.rileyLinkServiceState.resourceId
-        val rileyLinkError =rileyLinkServiceData.rileyLinkError
+        val rileyLinkError = rileyLinkServiceData.rileyLinkError
         binding.rlStatus.text =
             when {
                 rileyLinkServiceData.rileyLinkServiceState == RileyLinkServiceState.NotStarted -> rh.gs(resourceId)
@@ -275,7 +275,7 @@ class MedtronicFragment : DaggerFragment() {
             } else if (medtronicPumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
                 if (min < 60) {
-                    binding.lastConnection.text = rh.gs(info.nightscout.shared.R.string.minago, min)
+                    binding.lastConnection.text = rh.gs(info.nightscout.interfaces.R.string.minago, min)
                 } else if (min < 1440) {
                     val h = (min / 60).toInt()
                     binding.lastConnection.text = (rh.gq(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.plurals.duration_hours, h, h) + " "

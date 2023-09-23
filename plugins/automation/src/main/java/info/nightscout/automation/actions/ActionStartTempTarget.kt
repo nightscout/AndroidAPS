@@ -11,6 +11,8 @@ import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerTempTarget
 import info.nightscout.core.extensions.friendlyDescription
+import info.nightscout.core.utils.JsonHelper
+import info.nightscout.core.utils.JsonHelper.safeGetDouble
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
@@ -21,13 +23,11 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -42,6 +42,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var profileUtil: ProfileUtil
 
     private val disposable = CompositeDisposable()
 
@@ -53,7 +54,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
     }
 
     override fun friendlyName(): Int = R.string.starttemptarget
-    override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh)
+    override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
     @DrawableRes override fun icon(): Int = info.nightscout.core.main.R.drawable.ic_temptarget_high
 
     override fun doAction(callback: Callback) {
@@ -100,7 +101,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun fromJSON(data: String): Action {
         val o = JSONObject(data)
-        value.units = GlucoseUnit.fromText(JsonHelper.safeGetString(o, "units", Constants.MGDL))
+        value.units = GlucoseUnit.fromText(JsonHelper.safeGetString(o, "units", GlucoseUnit.MGDL.asText))
         value.value = safeGetDouble(o, "value")
         duration.setMinutes(JsonHelper.safeGetInt(o, "durationInMinutes"))
         return this
@@ -110,8 +111,8 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
         timestamp = dateUtil.now(),
         duration = TimeUnit.MINUTES.toMillis(duration.getMinutes().toLong()),
         reason = TemporaryTarget.Reason.AUTOMATION,
-        lowTarget = Profile.toMgdl(value.value, value.units),
-        highTarget = Profile.toMgdl(value.value, value.units)
+        lowTarget = profileUtil.convertToMgdl(value.value, value.units),
+        highTarget = profileUtil.convertToMgdl(value.value, value.units)
     )
 
     override fun isValid(): Boolean =

@@ -9,10 +9,10 @@ import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.core.utils.JsonHelper
+import info.nightscout.core.utils.JsonHelper.safeGetString
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
-import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 
@@ -83,7 +83,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
         LayoutBuilder()
             .add(StaticLabel(rh, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(info.nightscout.shared.R.string.unit_minutes), minutesAgo))
+            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(info.nightscout.interfaces.R.string.unit_minutes), minutesAgo))
             .build(root)
     }
 }

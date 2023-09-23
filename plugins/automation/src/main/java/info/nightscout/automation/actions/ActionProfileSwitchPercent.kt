@@ -10,6 +10,7 @@ import info.nightscout.automation.elements.InputPercent
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerProfilePercent
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
@@ -17,7 +18,6 @@ import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
         if (duration.value == 0) rh.gs(R.string.startprofileforever, pct.value.toInt())
         else rh.gs(info.nightscout.core.ui.R.string.startprofile, pct.value.toInt(), duration.value)
 
-    @DrawableRes override fun icon(): Int = info.nightscout.interfaces.R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
 
     init {
         precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)

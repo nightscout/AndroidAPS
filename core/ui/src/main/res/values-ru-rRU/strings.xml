@@ -376,6 +376,9 @@
     <string name="carbs_g">УГЛ %1$d г</string>
     <string name="extended_bolus_u_min">Пролонгированный болюс %1$.2f ед %2$d мин</string>
     <string name="load_events">ЗАГРУЗИТЬ СОБЫТИЯ</string>
+    <string name="clear_alarms">ОЧИСТИТЬ ОПОВЕЩЕНИЯ</string>
+    <string name="deactivate">ДЕАКТИВИРОВАТЬ</string>
+    <string name="update_time">ВРЕМЯ ОБНОВЛЕНИЯ</string>
     <string name="load_history">ЗАГРУЗИТЬ ИСТОРИЮ %1$d</string>
     <string name="load_tdds">ЗАГРУЗИТЬ СУТ ДОЗЫ</string>
     <string name="set_profile">ЗАДАТЬ ПРОФИЛЬ</string>
@@ -421,6 +424,7 @@
     <string name="autotune_ic_warning">Выбранный профиль имеет %1$d значений IC. Автоматически будет использоваться %2$.2f г/ед</string>
     <string name="autotune_isf_warning">Выбранный профиль имеет %1$d значений ISF. Автоматически будет использоваться %2$.1f%3$s/ед</string>
     <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
+    <string name="autotune_error_more_days">Ошибка в данных, увеличьте количество дней</string>
     <string name="autotune_warning_during_run">Идет настройка автоматизации, ждите</string>
     <string name="autotune_warning_after_run">Перед использованием внимательно проверьте результаты!</string>
     <string name="autotune_partial_result">Частичный результат дня %1$d / %2$d с отладкой</string>
@@ -453,6 +457,7 @@
     <string name="cobvsiob">угл COB к инс IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Обнаружено медленное всасывание углеводов: %2$d%% времени. Еще раз проверьте свои расчеты. Возможно акт углеводы COB вне диапазона и может быть подано больше инсулина!!!!!</font>]]></string>
     <string name="partialboluswizard">Подать эту часть рекомендации мастера болюса [%]</string>
+    <string name="partialboluswizard_reset_time">Пороговое время для устаревшей ГК [min]</string>
     <string name="bolus_constraint_applied_warn">Применено ограничение болюса: %1$.2f ед. до %2$.2f ед.</string>
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
     <string name="advisoralarm">Напомнить о еде</string>
@@ -581,4 +586,23 @@
     <string name="cleanup_db_confirm">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.</string>
     <string name="cleanup_db_confirm_sync">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.\nчто позволит значительно ускорить полную синхронизацию.</string>
     <string name="cleared_entries">Удалённые записи</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Вс</string>
+    <string name="weekday_saturday_short">Сб</string>
+    <string name="weekday_friday_short">Пт</string>
+    <string name="weekday_thursday_short">Чт</string>
+    <string name="weekday_wednesday_short">Ср</string>
+    <string name="weekday_tuesday_short">Вт</string>
+    <string name="weekday_monday_short">Пн</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Пн</string>
+    <string name="tuesday_short">Вт</string>
+    <string name="wednesday_short">Ср</string>
+    <string name="thursday_short">Чт</string>
+    <string name="friday_short">Пт</string>
+    <string name="saturday_short">Сб</string>
+    <string name="sunday_short">Вс</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1fед</string>
+    <string name="format_insulin_units">%1$.2f ед</string>
 </resources>

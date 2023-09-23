@@ -1,6 +1,7 @@
 package info.nightscout.pump.dana
 
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileStore
@@ -33,7 +34,8 @@ class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val instantiator: Instantiator
+    private val instantiator: Instantiator,
+    private val decimalFormatter: DecimalFormatter
 ) {
 
     @Suppress("unused")
@@ -196,7 +198,7 @@ class DanaPump @Inject constructor(
     fun extendedBolusToString(): String {
         if (!isExtendedInProgress) return ""
 
-        return "E " + DecimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
+        return "E " + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
             dateUtil.timeString(extendedBolusStart) +
             " " + extendedBolusPassedMinutes + "/" + extendedBolusDurationInMinutes + "'"
     }
@@ -238,7 +240,6 @@ class DanaPump @Inject constructor(
     var cf24 = Array(24) { 0.0 }
     var cir24 = Array(24) { 0.0 }
 
-    //var pumpProfiles = arrayOf<Array<Double>>()
     var pumpProfiles: Array<Array<Double>>? = null
 
     //Limits
@@ -268,7 +269,7 @@ class DanaPump @Inject constructor(
     var bolusCalculationOption = 0
     var missedBolusConfig = 0
     fun getUnits(): String {
-        return if (units == UNITS_MGDL) Constants.MGDL else Constants.MMOL
+        return if (units == UNITS_MGDL) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText
     }
 
     var bolusStartErrorCode: Int = 0 // last start bolus errorCode
@@ -368,7 +369,7 @@ class DanaPump @Inject constructor(
                             .put("value", currentTarget)
                     )
                 )
-                profile.put("units", if (units == UNITS_MGDL) Constants.MGDL else Constants.MMOL)
+                profile.put("units", if (units == UNITS_MGDL) GlucoseUnit.MGDL.asText else GlucoseUnit.MMOL.asText)
                 store.put(PROFILE_PREFIX + (activeProfile + 1), profile)
             } catch (e: JSONException) {
                 aapsLogger.error("Unhandled exception", e)

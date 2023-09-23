@@ -7,9 +7,11 @@
     <string name="label_watchface_big_chart">AAPS (BigChart)</string>
     <string name="label_watchface_no_chart">AAPS (NoChart)</string>
     <string name="label_watchface_circle">AAPS (Circle)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
     <string name="label_watchface_cockpit">AAPS (Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS (anpassad)</string>
     <string name="label_actions_tile">AAPS(Åtgärder)</string>
     <string name="label_temp_target_tile">AAPS(Temp-mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Snabbsteg)</string>
@@ -21,16 +23,20 @@
     <string name="msg_warning_old">AAPS-data är %1$s gammal. Kontrollera sensorn, xDrip+, NS, AAPS-inställning eller något annat!</string>
     <string name="pref_vibrate_on_bolus">Vibrera vid bolus</string>
     <string name="pref_units_for_actions">Enheter för åtgärder</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Visa datum</string>
     <string name="pref_show_iob">Visa IOB</string>
+    <string name="pref_show_detailed_iob">Visa detaljerad IOB</string>
     <string name="pref_show_cob">Visa COB</string>
     <string name="pref_show_delta">Visa skillnad</string>
+    <string name="pref_show_detailed_delta">Visa detaljerad delta</string>
     <string name="pref_show_avgdelta">Visa genomsnittlig skillnad</string>
     <string name="pref_show_phone_battery">Visa telefonens batterinivå</string>
     <string name="pref_show_rig_battery">Visa riggens batterinivå</string>
     <string name="pref_show_basal_rate">Visa basaldos</string>
     <string name="pref_show_loop_status">Visa APS-status</string>
     <string name="pref_show_bg">Visa BG</string>
+    <string name="pref_show_bgi">Visa BGI</string>
     <string name="pref_show_direction_arrow">Visa riktningspil</string>
     <string name="pref_show_ago">Visa sedan</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mörkt</string>
@@ -72,6 +78,7 @@
     <string name="menu_treatment_short">Beh</string>
     <string name="menu_bolus">Bolus</string>
     <string name="menu_carb">Kolhydrater</string>
+    <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Inställningar</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Synkronisera om</string>
@@ -88,10 +95,12 @@
     <string name="action_wizard_confirmation">Kalkylator begärd</string>
     <string name="action_fill_confirmation">Påfyllning begärd</string>
     <string name="action_ecarb_confirmation">Kolhydrater begärda</string>
+    <string name="action_profile_switch_confirmation">Profilbyte begärt</string>
     <string name="action_target" comment="In temp target menu, single target value">Mål</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Låg</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Hög</string>
     <string name="action_carbs">KH</string>
+    <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Procent</string>
     <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Duration [tim]</string>
@@ -139,6 +148,7 @@
     <string name="pref_simplify_ui_sum">Visa bara tid och BG</string>
     <string name="pref_vibrate_hourly">Vibrera varje timme</string>
     <string name="pref_show_weeknumber">Visa veckonummer</string>
+    <string name="custom_pref_show_seconds">Visa sekunder</string>
     <string name="digitalstyle_pref_your_style">Din stil:</string>
     <string name="digitalstyle_style_none">ingen stil</string>
     <string name="digitalstyle_style_minimal">minimal stil</string>
@@ -164,5 +174,32 @@
     <string name="tile_no_config">Ingen konfiguration tillgänglig</string>
     <string name="wear_control_not_enabled">Wear-kontroller inaktiverade</string>
     <string name="wear_control_no_data">Ingen data tillgänglig</string>
+    <string name="increment">öka</string>
+    <string name="decrement">minska</string>
+    <string name="first_char_high">H</string>
+    <string name="first_char_low">L</string>
+    <string name="abbreviation_average">medel</string>
     <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Min. sedan</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Ingen loop-status</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
+    <string name="snooze_alert">AAPS Snooze-varning</string>
+    <string name="sending_snooze">Skickar Snooze till AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">v</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="old">gammal</string>
+    <string name="old_warning">gammal!</string>
+    <string name="error">fel!</string>
+    <string name="pref_heartRateSampling">Hjärtfrekvens</string>
 </resources>

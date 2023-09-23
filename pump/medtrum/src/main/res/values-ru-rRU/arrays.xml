@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Подсветка, вибрация и звук</item>
+        <item>Подсветка и вибрация</item>
+        <item>Подсветка и звук</item>
+        <item>Подсветка</item>
+        <item>Вибрация и звук</item>
+        <item>Вибрация</item>
+        <item>Звук</item>
+        <item>Бесшумно</item>
+    </string-array>
+</resources>

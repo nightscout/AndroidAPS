@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
     <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt, werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">UNGÜLTIGE GRÖSSE!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">FALSCHE PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">FALSCHE OTP</string>
     <string name="sms_wrong_code">Falscher Code. Befehl wurde abgebrochen.</string>
     <string name="sms_timeout_while_waiting">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
     <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
@@ -306,12 +310,9 @@ Unerwartetes Verhalten.</string>
     <string name="wearcontrol_title">Steuerung durch die Uhr</string>
     <string name="wearcontrol_summary">Setze temporäre Ziele und Behandlungen mit der Uhr</string>
     <string name="wear_wizard_settings_summary">Berechnungen, die im Assistenten berücksichtigt werden:</string>
-    <string name="wear_display_settings">Anzeigeeinstellungen</string>
     <string name="wear_general_settings">Allgemeine Einstellungen</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
-    <string name="wear_predictions_summary">Zeige Vorhersagen auf dem Watchface.</string>
-    <string name="wear_predictions_title">Vorhersagen</string>
     <string name="wear_custom_watchface_settings">Benutzerdefinierte Watchface Einstellungen</string>
     <string name="wear_custom_watchface_authorization_title">Benutzerdefinierte Watchface Autorisierung</string>
     <string name="wear_custom_watchface_authorization_summary">Autorisiere geladene benutzerdefinierte Watchface zum Ändern und Sperren einiger Watchscreen-Einstellungen für das Design der Uhr</string>
@@ -323,6 +324,7 @@ Unerwartetes Verhalten.</string>
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
     <string name="cwf_infos_pref_locked">Liste der von der Watchface gesperrten Prefs</string>
+    <string name="cwf_infos_pref_required">Liste der von der Watchface angeforderten Voreinstellungen</string>
     <string name="cwf_infos_view_title">Liste der Felder, die in der Watchface enthalten sind</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
@@ -352,5 +354,5 @@ Unerwartetes Verhalten.</string>
     <string name="until">bis</string>
     <string name="default_range">STANDARD-BEREICH</string>
     <string name="target">Ziel</string>
-    <string name="rate_duration">Rate: %1$.2fIE/h (%2$.2f%) \nDauer %3$d% min</string>
+    <string name="rate_duration">Rate: %1$.2fIE/h (%2$.2f%%) \nDauer %3$d min</string>
 </resources>

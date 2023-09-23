@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.NotificationHolder
 import javax.inject.Inject
 import javax.inject.Singleton

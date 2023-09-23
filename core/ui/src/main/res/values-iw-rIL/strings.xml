@@ -585,4 +585,8 @@
     <string name="cleanup_db_confirm">אתם בטוחים שברצונכם לנקות את מסד הנתונים? \nפעולה זו תמחק את הנתונים הישנים מ-3 החודשים האחרונים.</string>
     <string name="cleanup_db_confirm_sync">האם ברצונכם לנקות את מסד הנתונים?\nשינויים הנמצאים במעקב ונתונים היסטוריים הישנים מ-3 חודשים יימחקו.\nפעולה זו תזרז משמעותית את מהירות הסינכרון המלא.</string>
     <string name="cleared_entries">רשומות שנמחקו</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units">%1$.2f יח\'</string>
 </resources>

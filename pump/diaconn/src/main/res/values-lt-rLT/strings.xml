@@ -49,7 +49,7 @@
     <string name="bolus_step">Boluso žingsnis</string>
     <string name="basal_step">Bazės žingsnis</string>
     <string name="pump_firmware_label">Programinė įranga</string>
-    <string name="diaconn_g8_user_options">VARTOTOJO PARINKTYS</string>
+    <string name="diaconn_g8_user_options">NAUDOTOJO PARINKTYS</string>
     <string name="pairfirst">Susiekite pompą su telefonu!</string>
     <string name="processinghistory">"Apdorojama "</string>
     <string name="apslastLogNum">aps_last_log_num</string>
@@ -106,7 +106,7 @@
     <string name="diaconn_g8_reasoninjectonblock">Užblokuotas leidimas</string>
     <string name="diaconn_g8_reasonbatteryshortage">Nepakankama baterijos įkrova</string>
     <string name="diaconn_g8_reasoninsulinshortage">Insulino trūkumas</string>
-    <string name="diaconn_g8_reasonuserstop">Sustabdyta vartotojo</string>
+    <string name="diaconn_g8_reasonuserstop">Sustabdyta naudotojo</string>
     <string name="diaconn_g8_reasonsystemreset">Sistemos atstatymas</string>
     <string name="diaconn_g8_reasonother">Kita</string>
     <string name="diaconn_g8_reasonemergencystop">Avarinis sustabdymas</string>

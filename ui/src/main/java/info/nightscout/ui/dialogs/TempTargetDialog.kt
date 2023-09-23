@@ -10,6 +10,7 @@ import com.google.common.base.Joiner
 import com.google.common.collect.Lists
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
@@ -19,14 +20,13 @@ import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIf
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogTemptargetBinding
@@ -39,9 +39,10 @@ import javax.inject.Inject
 
 class TempTargetDialog : DialogFragmentWithDate() {
 
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
@@ -77,7 +78,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 ?: 0.0, 0.0, Constants.MAX_PROFILE_SWITCH_DURATION, 10.0, DecimalFormat("0"), false, binding.okcancel.ok
         )
 
-        if (profileFunction.getUnits() == GlucoseUnit.MMOL)
+        if (profileUtil.units == GlucoseUnit.MMOL)
             binding.temptarget.setParams(
                 savedInstanceState?.getDouble("tempTarget")
                     ?: 8.0,
@@ -90,7 +91,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 Constants.MIN_TT_MGDL, Constants.MAX_TT_MGDL, 1.0, DecimalFormat("0"), false, binding.okcancel.ok
             )
 
-        val units = profileFunction.getUnits()
+        val units = profileUtil.units
         binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)
 
         // temp target
@@ -172,7 +173,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
         val duration = binding.duration.value.toInt()
         if (target != 0.0 && duration != 0) {
             actions.add(rh.gs(info.nightscout.core.ui.R.string.reason) + ": " + reason)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + rh.gs(unitResId))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.target_label) + ": " + profileUtil.stringInCurrentUnitsDetect(target) + " " + rh.gs(unitResId))
             actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, duration))
         } else {
             actions.add(rh.gs(info.nightscout.core.ui.R.string.stoptemptarget))
@@ -185,31 +186,34 @@ class TempTargetDialog : DialogFragmentWithDate() {
             OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.temporary_target), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val units = profileFunction.getUnits()
                 when (reason) {
-                    rh.gs(info.nightscout.core.ui.R.string.eatingsoon)     -> uel.log(
+                    rh.gs(info.nightscout.core.ui.R.string.eatingsoon) -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.EATING_SOON
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(info.nightscout.core.ui.R.string.activity)       -> uel.log(
+                    rh.gs(info.nightscout.core.ui.R.string.activity) -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.ACTIVITY
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(info.nightscout.core.ui.R.string.hypo)           -> uel.log(
+                    rh.gs(info.nightscout.core.ui.R.string.hypo) -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.HYPOGLYCEMIA
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(info.nightscout.core.ui.R.string.manual)         -> uel.log(
+                    rh.gs(info.nightscout.core.ui.R.string.manual) -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.CUSTOM
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(info.nightscout.core.ui.R.string.stoptemptarget) -> uel.log(UserEntry.Action.CANCEL_TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                    rh.gs(info.nightscout.core.ui.R.string.stoptemptarget) -> uel.log(
+                        UserEntry.Action.CANCEL_TT,
+                        UserEntry.Sources.TTDialog,
+                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
                 }
                 if (target == 0.0 || duration == 0) {
                     disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(eventTime))
@@ -227,10 +231,10 @@ class TempTargetDialog : DialogFragmentWithDate() {
                                 rh.gs(info.nightscout.core.ui.R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
                                 rh.gs(info.nightscout.core.ui.R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
                                 rh.gs(info.nightscout.core.ui.R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
-                                else                                                 -> TemporaryTarget.Reason.CUSTOM
+                                else                                               -> TemporaryTarget.Reason.CUSTOM
                             },
-                            lowTarget = Profile.toMgdl(target, profileFunction.getUnits()),
-                            highTarget = Profile.toMgdl(target, profileFunction.getUnits())
+                            lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
+                            highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
                         )
                     ).subscribe({ result ->
                                     result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }

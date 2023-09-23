@@ -22,6 +22,11 @@
     <string name="msg_warning_old">נתוני AAPS מלפני %1$s! בדקו את החיישן, הגדרות xDrip, NS, AAPS או אחר!</string>
     <string name="pref_vibrate_on_bolus">רטט במתן בולוס</string>
     <string name="pref_units_for_actions">יחידות עבור פעולות</string>
+    <string name="pref_display_settings">תצוגה</string>
+    <string name="pref_graph_settings">גרף</string>
+    <string name="pref_interface_settings">ממשק</string>
+    <string name="pref_others_settings">אחרים</string>
+    <string name="pref_complication_settings">סיבוכים</string>
     <string name="pref_show_date">הצג תאריך</string>
     <string name="pref_show_iob">הצג אינסולין IOB</string>
     <string name="pref_show_cob">הצג COB</string>
@@ -36,6 +41,7 @@
     <string name="pref_show_ago">הצג עבר</string>
     <string name="pref_dark" comment="Enables dark visual theme">כהה</string>
     <string name="pref_highlight_basals">הדגש בזאלים</string>
+    <string name="pref_prediction_lines">הצג תחזיות</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">מחיצות מותאמות</string>
     <string name="pref_chart_timeframe">מסגרת זמן התרשים</string>
     <string name="pref_1_hour">שעה</string>

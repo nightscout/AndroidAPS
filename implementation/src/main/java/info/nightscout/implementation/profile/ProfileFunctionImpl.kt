@@ -8,7 +8,6 @@ import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertOrUpdateProfileSwitch
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -143,7 +142,7 @@ class ProfileFunctionImpl @Inject constructor(
     }
 
     override fun getUnits(): GlucoseUnit =
-        if (sp.getString(info.nightscout.core.utils.R.string.key_units, Constants.MGDL) == Constants.MGDL) GlucoseUnit.MGDL
+        if (sp.getString(info.nightscout.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
 
     override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): ProfileSwitch? {

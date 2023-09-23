@@ -82,4 +82,6 @@ data class EffectiveProfileSwitch(
 
         companion object
     }
+
+    companion object
 }

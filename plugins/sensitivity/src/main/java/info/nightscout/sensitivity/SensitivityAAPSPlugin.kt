@@ -1,7 +1,7 @@
 package info.nightscout.sensitivity
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.core.utils.Percentile
 import info.nightscout.database.entities.TherapyEvent
@@ -162,18 +162,30 @@ class SensitivityAAPSPlugin @Inject constructor(
     override fun applyConfiguration(configuration: JSONObject) {
         try {
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_absorption_maxtime))) sp.putDouble(
-                info.nightscout.core.utils.R.string.key_absorption_maxtime, configuration.getDouble(rh.gs(
-                    info.nightscout.core.utils.R.string.key_absorption_maxtime)))
+                info.nightscout.core.utils.R.string.key_absorption_maxtime, configuration.getDouble(
+                    rh.gs(
+                        info.nightscout.core.utils.R.string.key_absorption_maxtime
+                    )
+                )
+            )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_period))) sp.putDouble(
                 info.nightscout.core.utils.R.string.key_openapsama_autosens_period,
                 configuration.getDouble(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_period))
             )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max))) sp.getDouble(
-                info.nightscout.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(rh.gs(
-                    info.nightscout.core.utils.R.string.key_openapsama_autosens_max)))
+                info.nightscout.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(
+                    rh.gs(
+                        info.nightscout.core.utils.R.string.key_openapsama_autosens_max
+                    )
+                )
+            )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min))) sp.getDouble(
-                info.nightscout.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(rh.gs(
-                    info.nightscout.core.utils.R.string.key_openapsama_autosens_min)))
+                info.nightscout.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(
+                    rh.gs(
+                        info.nightscout.core.utils.R.string.key_openapsama_autosens_min
+                    )
+                )
+            )
         } catch (e: JSONException) {
             e.printStackTrace()
         }

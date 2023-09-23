@@ -32,7 +32,8 @@ class StatusLightHandler @Inject constructor(
     private val warnColors: WarnColors,
     private val config: Config,
     private val repository: AppRepository,
-    private val tddCalculator: TddCalculator
+    private val tddCalculator: TddCalculator,
+    private val decimalFormatter: DecimalFormatter
 ) {
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
@@ -112,7 +113,7 @@ class StatusLightHandler @Inject constructor(
     private fun handleLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
         val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
         val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
-        if (level > 0) view?.text = " " + DecimalFormatter.to0Decimal(level, units)
+        if (level > 0) view?.text = " " + decimalFormatter.to0Decimal(level, units)
         else view?.text = ""
         warnColors.setColorInverse(view, level, resWarn, resUrgent)
     }
@@ -124,7 +125,7 @@ class StatusLightHandler @Inject constructor(
         warnDefaultValue: Double, level: Double, units: String, maxReading: Double
     ) {
         if (level >= maxReading) {
-            view?.text = DecimalFormatter.to0Decimal(maxReading, units)
+            view?.text = decimalFormatter.to0Decimal(maxReading, units)
             view?.setTextColor(rh.gac(view.context, info.nightscout.core.ui.R.attr.defaultTextColor))
         } else {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
@@ -139,17 +140,17 @@ class StatusLightHandler @Inject constructor(
                     tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
                 } else 0.0
             runOnUiThread {
-                view?.text = DecimalFormatter.to0Decimal(usage, units)
+                view?.text = decimalFormatter.to0Decimal(usage, units)
             }
         }
     }
     private fun TherapyEvent.age(useShortText: Boolean, rh: ResourceHelper, dateUtil: DateUtil): String {
         val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
-        var days = " " + rh.gs(info.nightscout.shared.R.string.days) + " "
-        var hours = " " + rh.gs(info.nightscout.shared.R.string.hours) + " "
+        var days = " " + rh.gs(info.nightscout.interfaces.R.string.days) + " "
+        var hours = " " + rh.gs(info.nightscout.interfaces.R.string.hours) + " "
         if (useShortText) {
-            days = rh.gs(info.nightscout.shared.R.string.shortday)
-            hours = rh.gs(info.nightscout.shared.R.string.shorthour)
+            days = rh.gs(info.nightscout.interfaces.R.string.shortday)
+            hours = rh.gs(info.nightscout.interfaces.R.string.shorthour)
         }
         return diff[TimeUnit.DAYS].toString() + days + diff[TimeUnit.HOURS] + hours
     }

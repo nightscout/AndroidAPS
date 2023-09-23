@@ -23,11 +23,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepRepetitionType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.MAX_POD_LIFETIME
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS_DURATION
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_ALERT_HOURS_REMAINING_DEFAULT
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_PULSE_BOLUS_UNITS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ProgramReminder
@@ -161,9 +159,9 @@ class OmnipodDashManagerImpl @Inject constructor(
         // TODO move somewhere else
         val expectedResponseType = when (type) {
             ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE -> DefaultStatusResponse::class
-            ResponseType.StatusResponseType.ALARM_STATUS -> AlarmStatusResponse::class
+            ResponseType.StatusResponseType.ALARM_STATUS            -> AlarmStatusResponse::class
 
-            else -> return Observable.error(UnsupportedOperationException("No response type to class mapping for ${type.name}"))
+            else                                                    -> return Observable.error(UnsupportedOperationException("No response type to class mapping for ${type.name}"))
         }
 
         return Observable.defer {
@@ -368,19 +366,19 @@ class OmnipodDashManagerImpl @Inject constructor(
         return observables.reversed()
     }
 
-    override fun activatePodPart2(basalProgram: BasalProgram, userConfiguredExpirationHours: Long?):
+    override fun activatePodPart2(basalProgram: BasalProgram, userConfiguredExpirationReminderHours: Long?, userConfiguredExpirationAlarmHours: Long?):
         Observable<PodEvent> {
         return Observable.concat(
             observePodReadyForActivationPart2,
             observeConnectToPod,
-            observeActivationPart2Commands(basalProgram, userConfiguredExpirationHours)
+            observeActivationPart2Commands(basalProgram, userConfiguredExpirationReminderHours, userConfiguredExpirationAlarmHours)
         ).doOnComplete(ActivationProgressUpdater(ActivationProgress.COMPLETED))
             .interceptPodEvents()
     }
 
-    private fun observeActivationPart2Commands(basalProgram: BasalProgram, userConfiguredExpirationHours: Long?):
+    private fun observeActivationPart2Commands(basalProgram: BasalProgram, userConfiguredExpirationReminderHours: Long?, userConfiguredExpirationAlarmHours: Long?):
         Observable<PodEvent> {
-        val observables = createActivationPart2Observables(basalProgram, userConfiguredExpirationHours)
+        val observables = createActivationPart2Observables(basalProgram, userConfiguredExpirationReminderHours, userConfiguredExpirationAlarmHours)
 
         return if (observables.isEmpty()) {
             Observable.empty()
@@ -391,7 +389,8 @@ class OmnipodDashManagerImpl @Inject constructor(
 
     private fun createActivationPart2Observables(
         basalProgram: BasalProgram,
-        userConfiguredExpirationHours: Long?
+        userConfiguredExpirationReminderHours: Long?,
+        userConfiguredExpirationAlarmHours: Long?
     ):
         List<Observable<PodEvent>> {
         val observables = ArrayList<Observable<PodEvent>>()
@@ -422,48 +421,60 @@ class OmnipodDashManagerImpl @Inject constructor(
         if (podStateManager.activationProgress.isBefore(ActivationProgress.UPDATED_EXPIRATION_ALERTS)) {
             val podLifeLeft = Duration.between(ZonedDateTime.now(), podStateManager.expiry)
 
+            val expirationAlarmEnabled = userConfiguredExpirationAlarmHours != null && userConfiguredExpirationAlarmHours > 0
+            val expirationAlarmDelay = podLifeLeft.minus(
+                Duration.ofHours(userConfiguredExpirationAlarmHours ?: POD_EXPIRATION_ALERT_HOURS_REMAINING_DEFAULT)
+            ).plus(Duration.ofHours(8)) // Add 8 hours for grace period
+
+            val expirationImminentDelay = podLifeLeft.minus(
+                Duration.ofHours(POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING)
+            ).plus(Duration.ofHours(8)) // Add 8 hours for grace period
+
             val alerts = mutableListOf(
                 AlertConfiguration(
                     AlertType.EXPIRATION,
-                    enabled = true,
-                    durationInMinutes = TimeUnit.HOURS.toMinutes(POD_EXPIRATION_ALERT_HOURS_DURATION).toShort(),
+                    enabled = expirationAlarmEnabled,
+                    durationInMinutes = (TimeUnit.HOURS.toMinutes(
+                        userConfiguredExpirationAlarmHours ?: POD_EXPIRATION_ALERT_HOURS_REMAINING_DEFAULT
+                    ) - 60).toShort(),
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
-                        TimeUnit.HOURS.toMinutes(POD_EXPIRATION_ALERT_HOURS).toShort()
-                    ), // FIXME use activation time
+                        expirationAlarmDelay.toMinutes().toShort()
+                    ),
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX3
                 ),
                 AlertConfiguration(
                     AlertType.EXPIRATION_IMMINENT,
-                    enabled = true,
+                    enabled = expirationAlarmEnabled,
                     durationInMinutes = 0,
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
-                        TimeUnit.HOURS.toMinutes(POD_EXPIRATION_IMMINENT_ALERT_HOURS).toShort()
-                    ), // FIXME use activation time
+                        expirationImminentDelay.toMinutes().toShort()
+                    ),
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX4
                 )
             )
-            val userExpiryAlertDelay = podLifeLeft.minus(
-                Duration.ofHours(userConfiguredExpirationHours ?: MAX_POD_LIFETIME.toHours() + 1)
+            val userExpiryReminderEnabled = userConfiguredExpirationReminderHours != null && userConfiguredExpirationReminderHours > 0
+            val userExpiryReminderDelay = podLifeLeft.minus(
+                Duration.ofHours(userConfiguredExpirationReminderHours ?: MAX_POD_LIFETIME.toHours() + 1)
             )
-            if (userExpiryAlertDelay.isNegative) {
+            if (userExpiryReminderDelay.isNegative) {
                 logger.warn(
                     LTag.PUMPBTCOMM,
                     "createActivationPart2Observables negative " +
-                        "expiryAlertDuration=$userExpiryAlertDelay"
+                        "expiryAlertDuration=$userExpiryReminderDelay"
                 )
             } else {
                 alerts.add(
                     AlertConfiguration(
                         AlertType.USER_SET_EXPIRATION,
-                        enabled = true,
+                        enabled = userExpiryReminderEnabled,
                         durationInMinutes = 0,
                         autoOff = false,
                         AlertTrigger.TimerTrigger(
-                            userExpiryAlertDelay.toMinutes().toShort()
+                            userExpiryReminderDelay.toMinutes().toShort()
                         ),
                         BeepType.FOUR_TIMES_BIP_BEEP,
                         BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
@@ -693,16 +704,16 @@ class OmnipodDashManagerImpl @Inject constructor(
             logger.debug(LTag.PUMP, "Intercepted PodEvent in OmnipodDashManagerImpl: ${event.javaClass.simpleName}")
 
             when (event) {
-                is PodEvent.AlreadyConnected -> {
+                is PodEvent.AlreadyConnected        -> {
                 }
 
-                is PodEvent.BluetoothConnected -> {
+                is PodEvent.BluetoothConnected      -> {
                 }
 
-                is PodEvent.Connected -> {
+                is PodEvent.Connected               -> {
                 }
 
-                is PodEvent.CommandSent -> {
+                is PodEvent.CommandSent             -> {
                     logger.debug(LTag.PUMP, "Command sent: ${event.command.commandType}")
                     podStateManager.activeCommand?.let {
                         if (it.sequence == event.command.sequenceNumber) {
@@ -721,16 +732,16 @@ class OmnipodDashManagerImpl @Inject constructor(
                     podStateManager.increaseMessageSequenceNumber()
                 }
 
-                is PodEvent.ResponseReceived -> {
+                is PodEvent.ResponseReceived        -> {
                     podStateManager.increaseMessageSequenceNumber()
                     handleResponse(event.response)
                 }
 
-                is PodEvent.Paired -> {
+                is PodEvent.Paired                  -> {
                     podStateManager.uniqueId = event.uniqueId.toLong()
                 }
 
-                else -> {
+                else                                -> {
                     // Do nothing
                 }
             }
@@ -738,11 +749,11 @@ class OmnipodDashManagerImpl @Inject constructor(
 
         private fun handleResponse(response: Response) {
             when (response) {
-                is VersionResponse -> {
+                is VersionResponse       -> {
                     podStateManager.updateFromVersionResponse(response)
                 }
 
-                is SetUniqueIdResponse -> {
+                is SetUniqueIdResponse   -> {
                     podStateManager.updateFromSetUniqueIdResponse(response)
                 }
 
@@ -750,7 +761,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                     podStateManager.updateFromDefaultStatusResponse(response)
                 }
 
-                is AlarmStatusResponse -> {
+                is AlarmStatusResponse   -> {
                     podStateManager.updateFromAlarmStatusResponse(response)
                 }
             }

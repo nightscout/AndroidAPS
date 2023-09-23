@@ -4,13 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import app.aaps.shared.tests.AAPSLoggerTest
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
-import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.Before
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.runner.RunWith
 

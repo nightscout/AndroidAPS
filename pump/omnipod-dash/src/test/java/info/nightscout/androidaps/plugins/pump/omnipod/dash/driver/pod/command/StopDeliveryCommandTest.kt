@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class StopDeliveryCommandTest {
@@ -18,7 +18,7 @@ class StopDeliveryCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("0242000300071F05494E532E6201B1"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("0242000300071F05494E532E6201B1"), encoded)
     }
 
     @Test @Throws(DecoderException::class) fun testSuspendDelivery() {
@@ -31,7 +31,7 @@ class StopDeliveryCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("0242000308071F05494E532E078287"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("0242000308071F05494E532E078287"), encoded)
     }
 
     // TODO test cancel bolus

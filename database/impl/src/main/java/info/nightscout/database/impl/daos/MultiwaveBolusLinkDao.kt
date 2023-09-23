@@ -21,5 +21,5 @@ internal interface MultiwaveBolusLinkDao : TraceableDao<MultiwaveBolusLink> {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT * FROM $TABLE_MULTIWAVE_BOLUS_LINKS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<MultiwaveBolusLink>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<MultiwaveBolusLink>
 }

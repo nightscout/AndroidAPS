@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interaction.utils
 
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.EventData
@@ -176,7 +176,7 @@ open class Persistence @Inject constructor(
     }
 
     fun setDefaultWatchface() {
-        readCustomWatchface(true)?.let {store(it)}
+        readCustomWatchface(true)?.let { store(it) }
         aapsLogger.debug(LTag.WEAR, "Custom Watchface reset to default")
     }
 

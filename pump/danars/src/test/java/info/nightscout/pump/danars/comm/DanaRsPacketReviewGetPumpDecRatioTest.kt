@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketReviewGetPumpDecRatioTest : DanaRSTestBase() {
@@ -23,7 +23,7 @@ class DanaRsPacketReviewGetPumpDecRatioTest : DanaRSTestBase() {
         val array = ByteArray(100)
         putByteToArray(array, 0, 4.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(20, danaPump.decRatio)
-        Assert.assertEquals("REVIEW__GET_PUMP_DEC_RATIO", packet.friendlyName)
+        Assertions.assertEquals(20, danaPump.decRatio)
+        Assertions.assertEquals("REVIEW__GET_PUMP_DEC_RATIO", packet.friendlyName)
     }
 }

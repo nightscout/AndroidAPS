@@ -1,20 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">Format del fitxer</string>
-    <string name="metadata_label_created_at">Creat:</string>
-    <string name="metadata_label_aaps_version">Versió d\'AAPS</string>
-    <string name="metadata_label_aaps_flavour">Variant de compilació</string>
-    <string name="metadata_label_device_name">Exportant nom del pacient del dispositiu</string>
-    <string name="metadata_label_device_model">Exportant model del dispositiu</string>
-    <string name="metadata_label_encryption">Encriptació d\'arxius</string>
-    <string name="metadata_format_new">Format nou d\'encriptació</string>
-    <string name="metadata_format_debug">Nou format de debug (no encriptat)</string>
-    <string name="metadata_format_other">Format d\'exportació desconegut</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Només son acceptats valors discrets, no rangs, com a granularitat pels bolus/basals a la bomba virtual.</string>
     <!-- PumpPluginBase -->
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
+    <!--    DateUtil-->
+    <string name="minago">Fa %1$d m</string>
+    <string name="hoursago">Fa %1$.1f h</string>
+    <string name="shorthour">h</string>
+    <string name="days">dies</string>
+    <string name="hours">hores</string>
+    <string name="unit_second">segon</string>
+    <string name="unit_minute">minut</string>
+    <string name="unit_hour">hora</string>
+    <string name="unit_day">dia</string>
+    <string name="unit_week">setmana</string>
+    <string name="unit_seconds">segons</string>
+    <string name="unit_minutes">minuts</string>
+    <string name="unit_hours">hores</string>
+    <string name="unit_days">dies</string>
+    <string name="unit_weeks">setmanes</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <!-- Rx -->
+    <string name="connecting_for">Connectant %1$d s</string>
+    <string name="handshaking">Establint comunicació</string>
+    <string name="connected">Connectat</string>
+    <string name="disconnecting">Desconnectant</string>
+    <string name="waiting_for_disconnection">S\'està esperant la desconnexió</string>
+    <!-- Custom Watchface -->
+    <string name="pref_show_iob">Mostrar IOB</string>
+    <string name="pref_show_cob">Mostrar COB</string>
+    <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_avgdelta">Mostrar delta promig</string>
+    <string name="pref_show_phone_battery">Mostrar bateria telèfon</string>
+    <string name="pref_show_rig_battery">Mostrar bateria rig</string>
+    <string name="pref_show_basal_rate">Mostrar basal</string>
+    <string name="pref_show_loop_status">Mostrar estat llaç</string>
+    <string name="pref_show_bg">Mostrar glucèmia</string>
+    <string name="pref_show_direction_arrow">Mostrar fletxa direcció</string>
+    <string name="pref_show_ago">Mostrar històric</string>
 </resources>

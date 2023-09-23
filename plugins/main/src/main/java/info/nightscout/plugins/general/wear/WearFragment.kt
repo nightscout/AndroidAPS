@@ -18,7 +18,7 @@ import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.CwfData
-import info.nightscout.rx.weardata.CwfDrawableFileMap
+import info.nightscout.rx.weardata.ResFileMap
 import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.extensions.toVisibility
@@ -91,7 +91,6 @@ class WearFragment : DaggerFragment() {
                        }, fabricPrivacy::logException)
         if (wearPlugin.savedCustomWatchface == null)
             rxBus.send(EventMobileToWear(EventData.ActionrequestCustomWatchface(false)))
-        //EventMobileDataToWear
         updateGui()
     }
 
@@ -111,7 +110,7 @@ class WearFragment : DaggerFragment() {
         wearPlugin.savedCustomWatchface?.let {
             wearPlugin.checkCustomWatchfacePreferences()
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CwfMetadataKey.CWF_NAME])
-            binding.coverChart.setImageDrawable(it.drawableDatas[CwfDrawableFileMap.CUSTOM_WATCHFACE]?.toDrawable(resources))
+            binding.coverChart.setImageDrawable(it.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources))
             binding.infosCustom.visibility = View.VISIBLE
         } ?:apply {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, "")

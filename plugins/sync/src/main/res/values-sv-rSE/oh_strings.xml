@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Med Open Humans kan du ladda upp din diabetesdata och donera den till vetenskapliga projekt.</string>
     <string name="logout">Logga ut</string>
     <string name="setup">Konfiguration</string>
@@ -10,17 +12,45 @@
     <string name="only_upload_if_charging">Ladda bara upp vid laddning</string>
     <string name="open_humans_uploading">Laddar upp till Open Humans…</string>
     <string name="open_humans_notifications">Aviseringar från Open Humans</string>
+    <string name="uploading_to_open_humans">AAPS laddar upp till Open Humans. Det kan ta ett tag.</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen.</string>
     <string name="next">Nästa</string>
+    <string name="welcome_to_open_humans">Välkommen till Open Humans</string>
+    <string name="setup_data_upload">För att ställa in datauppladdning, klicka på \"Nästa\".</string>
+    <string name="consent">Samtycke</string>
     <string name="terms_of_use">Användarvillkor</string>
+    <string name="please_read__information">Läs noggrant följande information och godkänn användarvillkoren för att fortsätta.</string>
     <string name="info_openhumans">Detta är ett open source-verktyg som kommer att ladda upp dina data till Open Humans. Vi förbehåller oss inga rättigheter att dela dina uppgifter med tredje part utan ditt uttryckliga tillstånd. De data som projektet och appen tar emot identifieras via ett slumpmässigt användar-ID och kommer endast att överföras på ett säkert sätt till ett Open Humans-konto om du tillåter det. Du kan när som helst sluta ladda upp och radera dina uppladdningsdata via www.openhumans.org.</string>
+    <string name="data_uploaded">Data uppladdat</string>
+    <string name="glucose_values">Glukosvärden</string>
     <string name="boluses">Bolusar</string>
+    <string name="extended_boluses">Förlängda bolusar</string>
     <string name="carbohydrates">Kolhydrater</string>
+    <string name="careportal_events">Careportal-händelser (utom anteckningar)</string>
+    <string name="profile_switches">Profilbyten</string>
+    <string name="total_daily_doses">Total daglig dos (TDD)</string>
+    <string name="temporary_basal_rates">Tillfälliga basaldoser</string>
+    <string name="temporary_targets">Tillfälliga målvärden</string>
     <string name="settings">Inställningar</string>
+    <string name="application_version">Programversion</string>
     <string name="device_model">Modell</string>
+    <string name="screen_dimensions">Skärmdimensioner</string>
+    <string name="algorithm_debug_data">Felsökningsdata för algoritmen</string>
+    <string name="data_not_uploaded">Data INTE uppladdat</string>
+    <string name="passwords">Lösenord</string>
     <string name="nightscout_url">Nightscout-URL</string>
+    <string name="nightscout_api_secret">Nightscout API-hemlighet</string>
+    <string name="free_text_fields">Fritextfält</string>
     <string name="agree">Jag förstår och instämmer.</string>
+    <string name="login_open_humans">Logga in på Open Humans</string>
+    <string name="final_touches">Avslutande detaljer</string>
+    <string name="uploading_proceed">Du är bara ett steg från att ladda upp dina data till Open Humans. Vill du fortsätta?</string>
     <string name="cancel">Avbryt</string>
+    <string name="proceed">Fortsätt</string>
+    <string name="finishing">Slutför...</string>
+    <string name="this_may_take_a_few_seconds">Detta kan ta några sekunder.</string>
+    <string name="we_re_done">Vi är klara!</string>
+    <string name="silently_upload_date_note">Från och med nu kommer telefonen att ladda upp data i bakgrunden då och då.</string>
     <string name="close">Stäng</string>
 </resources>

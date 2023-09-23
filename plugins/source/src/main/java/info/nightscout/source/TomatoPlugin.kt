@@ -25,17 +25,16 @@ import javax.inject.Singleton
 class TomatoPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger,
-    private val sp: SP
+    aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(info.nightscout.core.main.R.drawable.ic_sensor)
-    .pluginName(R.string.tomato)
-    .preferencesId(R.xml.pref_bgsource)
-    .shortName(R.string.tomato_short)
-    .description(R.string.description_source_tomato),
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_sensor)
+        .preferencesId(R.xml.pref_bgsource)
+        .pluginName(R.string.tomato)
+        .shortName(R.string.tomato_short)
+        .description(R.string.description_source_tomato),
     aapsLogger, rh, injector
 ), BgSource {
 
@@ -78,8 +77,4 @@ class TomatoPlugin @Inject constructor(
             return ret
         }
     }
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_TOMATO && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
-
 }

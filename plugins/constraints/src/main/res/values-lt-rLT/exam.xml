@@ -120,7 +120,7 @@
     <string name="sensitivity_adjust">Jautrumo įskiepiai leidžia AndroidAPS prisitaikyti prie laikinų ar trumpalaikių jautrumo insulinui pokyčių (pavyzdžiui, hormoninių pokyčių ar absorbcijos problemų infuzijos vietoje).</string>
     <string name="sensitivity_edit">Jautrumo įskiepiai pateikia bazės, IA ir JIF pakeitimų pasiūlymus, kuriais remiantis galima redaguoti profilį.</string>
     <string name="sensitivity_cannula">Pažymėjus kateterio keitimą, Autosens santykis vėl bus grąžintas į 100%.</string>
-    <string name="sensitivity_time">Kai kurios įskiepio parinktys turi konfigūruojamus laiko intervalus, kuriuos gali nustatyti vartotojas.</string>
+    <string name="sensitivity_time">Kai kurios įskiepio parinktys turi konfigūruojamus laiko intervalus, kuriuos gali nustatyti naudotojas.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/Usage/Open-APS-features.html#autosens</string>
     <string name="wrongcarbs_label">Angliavandenių įvedimo klaidos</string>

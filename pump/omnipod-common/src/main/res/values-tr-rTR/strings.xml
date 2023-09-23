@@ -104,7 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Omnipod sekmesinde İletimi Askıya Al düğmesini göster</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Saat dilimi algılamayı etkinleştir</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Süre sonu hatırlatıcısını etkinleştir</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Kapanmadan kaç saat önce?</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Etkinleştirirseniz, belirtilen süreye ulaşıldığında pod bip sesi çıkarır</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Süre bitiminden önce hatırlatma (72 Saat)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Süre sonu alarmını etkinleştir</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Etkinleştirildiğinde, pompa kapanmadan 1 saat önce pod bip sesi çıkarır</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Pompa kapanmadan önce uyar (80 Saat)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Düşük rezervuar uyarısını etkinleştir</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Ünite</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Pod uyarılarını otomatik olarak sustur</string>

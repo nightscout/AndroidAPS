@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Restablecer autentificadores</string>
     <string name="smscommunicator_otp_install_info">En cada teléfono seguidor, instale la aplicación Authenticator que admita tokens RFC 6238 TOTP. Las aplicaciones gratuitas populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Al reiniciar el autenticador, haces que todos los autenticadores previos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">¡TAMAÑO INVÁLIDO!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN INCORRECTO</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP ERRÓNEO</string>
     <string name="sms_wrong_code">Código incorrecto. Comando cancelado.</string>
     <string name="sms_timeout_while_waiting">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
@@ -305,12 +309,9 @@
     <string name="wearcontrol_title">Control desde el reloj</string>
     <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
-    <string name="wear_display_settings">Ajustes de pantalla</string>
     <string name="wear_general_settings">Configuración general</string>
     <string name="wear_notifysmb_title">Notificar los SMB</string>
     <string name="wear_notifysmb_summary">Mostrar los SMB en el reloj como un bolo estándar</string>
-    <string name="wear_predictions_summary">Mostrar las predicciones en la esfera</string>
-    <string name="wear_predictions_title">Predicciones</string>
     <string name="wear_custom_watchface_settings">Configuración personalizada de esferas</string>
     <string name="wear_custom_watchface_authorization_title">Autorización de esferas personalizadas</string>
     <string name="wear_custom_watchface_authorization_summary">Autorizar a la esfera personalizada a cambiar y bloquear algunos ajustes de la pantalla del reloj, para que se adapten al diseño de la esfera</string>

@@ -61,6 +61,6 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
     fun getCurrentFromHistoric(referenceId: Long): Maybe<EffectiveProfileSwitch>
 
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<EffectiveProfileSwitch>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<EffectiveProfileSwitch>
 
 }

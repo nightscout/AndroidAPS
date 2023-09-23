@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Ljus, vibration och pip</item>
+        <item>Ljus och vibration</item>
+        <item>Ljus och pip</item>
+        <item>Ljus</item>
+        <item>Vibration och pip</item>
+        <item>Vibration</item>
+        <item>Pip</item>
+        <item>Ljudlös</item>
+    </string-array>
+</resources>

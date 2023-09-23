@@ -3,7 +3,7 @@ package info.nightscout.automation.actions
 import info.nightscout.automation.R
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.queue.Callback
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -24,15 +24,15 @@ class ActionLoopEnableTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.core.ui.R.string.enableloop, sut.friendlyName())
+        Assertions.assertEquals(info.nightscout.core.ui.R.string.enableloop, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
-        Assert.assertEquals("Enable loop", sut.shortDescription())
+        Assertions.assertEquals("Enable loop", sut.shortDescription())
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(R.drawable.ic_play_circle_outline_24dp, sut.icon())
+        Assertions.assertEquals(R.drawable.ic_play_circle_outline_24dp, sut.icon())
     }
 
     @Test fun doActionTest() {

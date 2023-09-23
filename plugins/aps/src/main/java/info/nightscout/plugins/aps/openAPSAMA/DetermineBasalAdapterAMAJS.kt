@@ -7,7 +7,7 @@ import info.nightscout.core.extensions.plannedRemainingMinutes
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.aps.SMBDefaults
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.GlucoseStatus
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
@@ -43,7 +43,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     private val injector: HasAndroidInjector
 
     @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
@@ -107,7 +107,8 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
                     makeParam(profile, rhino, scope),
                     makeParam(autosensData, rhino, scope),
                     makeParam(mealData, rhino, scope),
-                    setTempBasalFunctionsObj)
+                    setTempBasalFunctionsObj
+                )
                 val jsResult = determineBasalObj.call(rhino, scope, scope, params) as NativeObject
                 scriptDebug = LoggerCallback.scriptDebug
 

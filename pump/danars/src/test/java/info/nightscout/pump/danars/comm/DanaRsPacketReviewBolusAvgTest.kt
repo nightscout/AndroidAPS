@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketReviewBolusAvgTest : DanaRSTestBase() {
@@ -19,13 +19,13 @@ class DanaRsPacketReviewBolusAvgTest : DanaRSTestBase() {
     @Test fun runTest() {
         val packet = DanaRSPacketReviewBolusAvg(packetInjector)
         // test params
-        Assert.assertEquals(0, packet.getRequestParams().size)
+        Assertions.assertEquals(0, packet.getRequestParams().size)
         // test message decoding
         packet.handleMessage(createArray(12, 0.toByte()))
-        Assert.assertEquals(false, packet.failed)
+        Assertions.assertEquals(false, packet.failed)
         // every average equals 1
         packet.handleMessage(createArray(12, 1.toByte()))
-        Assert.assertEquals(true, packet.failed)
-        Assert.assertEquals("REVIEW__BOLUS_AVG", packet.friendlyName)
+        Assertions.assertEquals(true, packet.failed)
+        Assertions.assertEquals("REVIEW__BOLUS_AVG", packet.friendlyName)
     }
 }

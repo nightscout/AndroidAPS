@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketBasalGetProfileNumberTest : DanaRSTestBase() {
@@ -23,7 +23,7 @@ class DanaRsPacketBasalGetProfileNumberTest : DanaRSTestBase() {
         val array = ByteArray(100)
         putByteToArray(array, 0, 1.toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(1, danaPump.activeProfile)
-        Assert.assertEquals("BASAL__GET_PROFILE_NUMBER", packet.friendlyName)
+        Assertions.assertEquals(1, danaPump.activeProfile)
+        Assertions.assertEquals("BASAL__GET_PROFILE_NUMBER", packet.friendlyName)
     }
 }

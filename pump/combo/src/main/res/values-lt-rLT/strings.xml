@@ -8,7 +8,7 @@
     <string name="combo_tbr_remaining">%1$d%% (liko%2$d min)</string>
     <string name="combo_pump_state_initializing">Inicijuojama</string>
     <string name="combo_pump_state_suspended_due_to_error">Sustabdyta dėl klaidos</string>
-    <string name="combo_pump_state_suspended_by_user">Sustabdyta vartotojo</string>
+    <string name="combo_pump_state_suspended_by_user">Sustabdyta naudotojo</string>
     <string name="combo_pump_state_running">Vykdoma</string>
     <string name="combo_pump_action_cancelling_tbr">Laikina bazė atšaukiama</string>
     <string name="combo_pump_action_setting_tbr">Nustatyti laikiną bazę (%1$d%% / %2$d min)</string>

@@ -1,8 +1,6 @@
 package info.nightscout.interfaces.pump.defs
 
-import info.nightscout.interfaces.R
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.shared.interfaces.ResourceHelper
 import kotlin.math.min
 
 @Suppress("unused")
@@ -410,10 +408,33 @@ enum class PumpType {
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.MedtrumCapabilities,
         isPatchPump = true,
-        maxReservoirReading = 400,
+        maxReservoirReading = 200,
         source = Source.Medtrum
     ),
-    MEDTRUM_UNTESTED(description = "Medtrum untested", model = "untested", parent = MEDTRUM_NANO);
+    MEDTRUM_300U(
+        description = "Medtrum 300U",
+        manufacturer = ManufacturerType.Medtrum,
+        model = "300U",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 30.0),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 30.0),
+        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 30.0,
+        baseBasalStep = 0.05,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.MedtrumCapabilities,
+        isPatchPump = true,
+        maxReservoirReading = 300,
+        source = Source.Medtrum
+    ),
+    MEDTRUM_UNTESTED(
+        description = "Medtrum untested",
+        model = "untested",
+        parent = MEDTRUM_NANO
+    );
 
     val description: String
     var manufacturer: ManufacturerType? = null
@@ -424,7 +445,7 @@ enum class PumpType {
         private set
     var bolusSize = 0.0
         get() = parent?.bolusSize ?: field
-    private var specialBolusSize: DoseStepSize? = null
+    var specialBolusSize: DoseStepSize? = null
         get() = parent?.specialBolusSize ?: field
     var extendedBolusSettings: DoseSettings? = null
         get() = parent?.extendedBolusSettings ?: field
@@ -447,7 +468,7 @@ enum class PumpType {
     var baseBasalStep = 1.0
         get() = parent?.baseBasalStep ?: field
         private set
-    private var baseBasalSpecialSteps: DoseStepSize? = null
+    var baseBasalSpecialSteps: DoseStepSize? = null
         get() = parent?.baseBasalSpecialSteps ?: field
     var pumpCapability: PumpCapability? = null
         get() = parent?.pumpCapability ?: field
@@ -455,8 +476,10 @@ enum class PumpType {
     var hasCustomUnreachableAlertCheck = false
         private set
     var isPatchPump = false
+        get() = parent?.isPatchPump ?: field
         private set
     var maxReservoirReading = 50
+        get() = parent?.maxReservoirReading ?: field
         private set
     var supportBatteryLevel = true
         private set
@@ -545,28 +568,9 @@ enum class PumpType {
         this.source = source
     }
 
-    fun getFullDescription(i18nTemplate: String, hasExtendedBasals: Boolean, rh: ResourceHelper): String {
-        val unit = if (pumpTempBasalType == PumpTempBasalType.Percent) "%" else ""
-        val eb = extendedBolusSettings ?: return "INVALID"
-        val tbr = tbrSettings ?: return "INVALID"
-        val extendedNote = if (hasExtendedBasals) rh.gs(R.string.def_extended_note) else ""
-        return String.format(
-            i18nTemplate,
-            getStep("" + bolusSize, specialBolusSize),
-            eb.step, eb.durationStep, eb.maxDuration / 60,
-            getStep(baseBasalRange(), baseBasalSpecialSteps),
-            tbr.minDose.toString() + unit + "-" + tbr.maxDose + unit, tbr.step.toString() + unit,
-            tbr.durationStep, tbr.maxDuration / 60, extendedNote
-        )
-    }
-
-    private fun baseBasalRange(): String =
+    fun baseBasalRange(): String =
         if (baseBasalMaxValue == null) baseBasalMinValue.toString()
         else baseBasalMinValue.toString() + "-" + baseBasalMaxValue.toString()
-
-    private fun getStep(step: String, stepSize: DoseStepSize?): String =
-        if (stepSize != null) step + " [" + stepSize.description + "] *"
-        else step
 
     fun hasExtendedBasals(): Boolean = baseBasalSpecialSteps != null || specialBolusSize != null
 

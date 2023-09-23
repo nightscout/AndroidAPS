@@ -3,10 +3,10 @@ package info.nightscout.plugins.sync.nsclientV3.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.interfaces.sync.NsClient
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus

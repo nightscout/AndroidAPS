@@ -10,10 +10,9 @@ import info.nightscout.automation.elements.InputDelta.DeltaType
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -78,7 +77,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
             DeltaType.LONG_AVERAGE  -> glucoseStatus.longAvgDelta
             else                    -> glucoseStatus.delta
         }
-        if (comparator.value.check(calculatedDelta, Profile.toMgdl(delta.value, units))) {
+        if (comparator.value.check(calculatedDelta, profileUtil.convertToMgdl(delta.value, units))) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: delta is " + calculatedDelta + " " + friendlyDescription())
             return true
         }
@@ -95,7 +94,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun fromJSON(data: String): Trigger {
         val d = JSONObject(data)
-        units = GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", Constants.MGDL))
+        units = GlucoseUnit.fromText(JsonHelper.safeGetString(d, "units", GlucoseUnit.MGDL.asText))
         val type = DeltaType.valueOf(JsonHelper.safeGetString(d, "deltaType", ""))
         val value = JsonHelper.safeGetDouble(d, "value")
         delta =

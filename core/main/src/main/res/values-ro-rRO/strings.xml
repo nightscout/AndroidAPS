@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="count_selected">%1$d selectat(e)</string>
+    <string name="remove_items">Elimină elemente</string>
+    <string name="sort_items">Sortați elementele</string>
+    <string name="remove_selected_items">Eliminați elementele selectate</string>
+    <string name="sort_label">Sortează</string>
+</resources>

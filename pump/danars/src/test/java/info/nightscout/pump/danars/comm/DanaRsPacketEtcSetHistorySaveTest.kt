@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketEtcSetHistorySaveTest : DanaRSTestBase() {
@@ -20,13 +20,13 @@ class DanaRsPacketEtcSetHistorySaveTest : DanaRSTestBase() {
         val packet = DanaRSPacketEtcSetHistorySave(packetInjector, 0, 0, 0, 0, 0, 0, 0, 0, 2)
         // test params
         val testParams = packet.getRequestParams()
-        Assert.assertEquals(2.toByte(), testParams[8])
-        Assert.assertEquals((2 ushr 8).toByte(), testParams[9])
+        Assertions.assertEquals(2.toByte(), testParams[8])
+        Assertions.assertEquals((2 ushr 8).toByte(), testParams[9])
         // test message decoding
         packet.handleMessage(createArray(34, 0.toByte()))
-        Assert.assertEquals(false, packet.failed)
+        Assertions.assertEquals(false, packet.failed)
         packet.handleMessage(createArray(34, 1.toByte()))
-        Assert.assertEquals(true, packet.failed)
-        Assert.assertEquals("ETC__SET_HISTORY_SAVE", packet.friendlyName)
+        Assertions.assertEquals(true, packet.failed)
+        Assertions.assertEquals("ETC__SET_HISTORY_SAVE", packet.friendlyName)
     }
 }

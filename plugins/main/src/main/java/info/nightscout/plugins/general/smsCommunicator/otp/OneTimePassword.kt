@@ -3,7 +3,7 @@ package info.nightscout.plugins.general.smsCommunicator.otp
 import android.util.Base64
 import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.Constants
 import info.nightscout.plugins.R
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -107,7 +107,9 @@ class OneTimePassword @Inject constructor(
      * Return URI used to provision Authenticator apps
      */
     fun provisioningURI(): String? =
-        key?.let { "otpauth://totp/AndroidAPS:" + URLEncoder.encode(name(), "utf-8").replace("+", "%20") + "?secret=" + BaseEncoding.base32().encode(it.encoded).replace("=", "") + "&issuer=AndroidAPS" }
+        key?.let {
+            "otpauth://totp/AndroidAPS:" + URLEncoder.encode(name(), "utf-8").replace("+", "%20") + "?secret=" + BaseEncoding.base32().encode(it.encoded).replace("=", "") + "&issuer=AndroidAPS"
+        }
 
     /**
      * Return secret used to provision Authenticator apps, in Base32 format

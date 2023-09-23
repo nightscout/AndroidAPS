@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 
-class InputString(var value: String = "") : Element() {
+class InputString(var value: String = "") : Element {
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}

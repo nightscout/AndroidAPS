@@ -2,13 +2,14 @@ package info.nightscout.core.extensions
 
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.shared.utils.DateUtil
 
-fun TherapyEvent.isOlderThan(hours: Double): Boolean {
-    return getHoursFromStart() > hours
+fun TherapyEvent.isOlderThan(hours: Double, dateUtil: DateUtil): Boolean {
+    return getHoursFromStart(dateUtil) > hours
 }
 
-fun TherapyEvent.getHoursFromStart(): Double {
-    return (System.currentTimeMillis() - timestamp) / (60 * 60 * 1000.0)
+fun TherapyEvent.getHoursFromStart(dateUtil: DateUtil): Double {
+    return (dateUtil.now() - timestamp) / (60 * 60 * 1000.0)
 }
 
 fun TherapyEvent.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): TherapyEvent.GlucoseUnit =

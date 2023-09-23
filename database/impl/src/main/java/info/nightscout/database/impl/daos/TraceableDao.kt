@@ -3,8 +3,9 @@ package info.nightscout.database.impl.daos
 import androidx.room.Insert
 import androidx.room.Update
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
+import info.nightscout.database.impl.daos.workaround.TraceableDaoWorkaround
 
-internal interface TraceableDao<T : TraceableDBEntry> : info.nightscout.database.impl.daos.workaround.TraceableDaoWorkaround<T> {
+internal interface TraceableDao<T : TraceableDBEntry> : TraceableDaoWorkaround<T> {
 
     fun findById(id: Long): T?
 

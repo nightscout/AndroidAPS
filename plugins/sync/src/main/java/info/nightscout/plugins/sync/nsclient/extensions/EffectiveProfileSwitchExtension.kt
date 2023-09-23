@@ -2,10 +2,10 @@ package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
@@ -30,7 +30,7 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-fun effectiveProfileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil): EffectiveProfileSwitch? {
+fun EffectiveProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EffectiveProfileSwitch? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val originalTimeshift = JsonHelper.safeGetLong(jsonObject, "originalTimeshift")
     val originalDuration = JsonHelper.safeGetLong(jsonObject, "originalDuration")

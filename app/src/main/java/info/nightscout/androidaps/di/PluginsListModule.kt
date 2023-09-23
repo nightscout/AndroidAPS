@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.di
 
+import app.aaps.configuration.configBuilder.ConfigBuilderPlugin
+import app.aaps.configuration.maintenance.MaintenancePlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -7,15 +9,12 @@ import dagger.multibindings.IntoMap
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
 import info.nightscout.automation.AutomationPlugin
-import info.nightscout.configuration.configBuilder.ConfigBuilderPlugin
-import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.insulin.InsulinLyumjevPlugin
 import info.nightscout.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.insulin.InsulinOrefRapidActingPlugin
@@ -42,12 +41,13 @@ import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.sync.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
+import info.nightscout.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.plugins.sync.xdrip.XdripPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
-import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
+import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin

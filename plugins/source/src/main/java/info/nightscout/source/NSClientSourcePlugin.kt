@@ -7,7 +7,6 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.source.BgSource
-import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -31,14 +30,12 @@ class NSClientSourcePlugin @Inject constructor(
         .alwaysEnabled(config.NSCLIENT)
         .setDefault(config.NSCLIENT),
     aapsLogger, rh, injector
-), BgSource, NSClientSource, DoingOwnUploadSource {
+), BgSource, NSClientSource {
 
     private var lastBGTimeStamp: Long = 0
     private var isAdvancedFilteringEnabled = false
 
     override fun advancedFilteringSupported(): Boolean = isAdvancedFilteringEnabled
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = false
 
     override fun detectSource(glucoseValue: GlucoseValue) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {

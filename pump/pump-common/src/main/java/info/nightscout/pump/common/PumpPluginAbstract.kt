@@ -8,7 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.profile.Profile
@@ -22,8 +22,7 @@ import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.utils.DecimalFormatter.to0Decimal
-import info.nightscout.interfaces.utils.DecimalFormatter.to2Decimal
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.pump.common.data.PumpStatus
 import info.nightscout.pump.common.defs.PumpDriverState
 import info.nightscout.pump.common.sync.PumpDbEntryCarbs
@@ -62,8 +61,9 @@ abstract class PumpPluginAbstract protected constructor(
     var dateUtil: DateUtil,
     var aapsSchedulers: AapsSchedulers,
     var pumpSync: PumpSync,
-    var pumpSyncStorage: PumpSyncStorage
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, Constraints, PumpSyncEntriesCreator {
+    var pumpSyncStorage: PumpSyncStorage,
+    var decimalFormatter: DecimalFormatter
+) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, PluginConstraints, PumpSyncEntriesCreator {
 
     protected val disposable = CompositeDisposable()
 
@@ -290,13 +290,13 @@ abstract class PumpPluginAbstract protected constructor(
 
         pumpStatusData.lastBolusTime?.let {
             if (it.time != 0L) {
-                ret += "LastBolus: ${to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", it)}\n"
+                ret += "LastBolus: ${decimalFormatter.to2Decimal(pumpStatusData.lastBolusAmount!!)}U @${DateFormat.format("HH:mm", it)}\n"
             }
         }
-        pumpSync.expectedPumpState().temporaryBasal?.let { ret += "Temp: ${it.toStringFull(dateUtil)}\n" }
-        pumpSync.expectedPumpState().extendedBolus?.let { ret += "Extended: ${it.toStringFull(dateUtil)}\n" }
+        pumpSync.expectedPumpState().temporaryBasal?.let { ret += "Temp: ${it.toStringFull(dateUtil, decimalFormatter)}\n" }
+        pumpSync.expectedPumpState().extendedBolus?.let { ret += "Extended: ${it.toStringFull(dateUtil, decimalFormatter)}\n" }
         ret += "IOB: ${pumpStatusData.iob}U\n"
-        ret += "Reserv: ${to0Decimal(pumpStatusData.reservoirRemainingUnits)}U\n"
+        ret += "Reserv: ${decimalFormatter.to0Decimal(pumpStatusData.reservoirRemainingUnits)}U\n"
         ret += "Batt: ${pumpStatusData.batteryRemaining}\n"
         return ret
     }

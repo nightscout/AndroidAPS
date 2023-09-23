@@ -64,4 +64,6 @@ data class ExtendedBolus(
 
     val rate: Double // in U/h
         get() = amount * (60 * 60 * 1000.0) / duration
+
+    companion object
 }

@@ -16,7 +16,7 @@ import info.nightscout.automation.elements.InputDropdownMenu
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.rx.events.EventBTChange
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject

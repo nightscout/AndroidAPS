@@ -3,10 +3,10 @@ package info.nightscout.plugins.general.wear.wearintegration
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.toStringShort
 import info.nightscout.core.extensions.valueToUnits
-import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.graph.data.GlucoseValueDataPoint
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
@@ -34,8 +34,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
@@ -64,6 +63,7 @@ import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -96,6 +96,7 @@ class DataHandlerMobile @Inject constructor(
     private val repository: AppRepository,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val loop: Loop,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val receiverStatusStore: ReceiverStatusStore,
@@ -103,14 +104,15 @@ class DataHandlerMobile @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val trendCalculator: TrendCalculator,
     private val dateUtil: DateUtil,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
     private val uiInteraction: UiInteraction,
     private val persistenceLayer: PersistenceLayer,
-    private val importExportPrefs: ImportExportPrefs
+    private val importExportPrefs: ImportExportPrefs,
+    private val decimalFormatter: DecimalFormatter
 ) {
 
     private val disposable = CompositeDisposable()
@@ -267,7 +269,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionFillConfirmed received $it from ${it.sourceNodeId}")
-                           if (constraintChecker.applyBolusConstraints(Constraint(it.insulin)).value() - it.insulin != 0.0) {
+                           if (constraintChecker.applyBolusConstraints(ConstraintObject(it.insulin, aapsLogger)).value() - it.insulin != 0.0) {
                                ToastUtils.showToastInUiThread(context, "aborting: previously applied constraint changed")
                                sendError("aborting: previously applied constraint changed")
                            } else
@@ -381,7 +383,7 @@ class DataHandlerMobile @Inject constructor(
             return
         }
         val carbsBeforeConstraints = command.carbs
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbsBeforeConstraints)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbsBeforeConstraints, aapsLogger)).value()
         if (carbsAfterConstraints - carbsBeforeConstraints != 0) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_carbs_constraint))
             return
@@ -478,7 +480,7 @@ class DataHandlerMobile @Inject constructor(
 
         val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
 
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != quickWizardEntry.carbs()) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_carbs_constraint))
             return
@@ -504,8 +506,8 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleBolusPreCheck(command: EventData.ActionBolusPreCheck) {
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(command.carbs)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(command.insulin, aapsLogger)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
         val pump = activePlugin.activePump
         if (insulinAfterConstraints > 0 && (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected)) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_pump_not_available))
@@ -528,7 +530,7 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {
         val startTimeStamp = System.currentTimeMillis() + T.mins(command.carbsTimeShift.toLong()).msecs()
-        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(command.carbs)).value()
+        val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
         var message = rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short) +
             "\n" + rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
             "\n" + rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + command.duration + rh.gs(R.string.hour_short)
@@ -556,7 +558,7 @@ class DataHandlerMobile @Inject constructor(
             3    -> sp.getDouble("fill_button3", 0.0)
             else -> return
         }
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
         var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
         if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
         rxBus.send(
@@ -570,7 +572,7 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
-        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
+        val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(command.insulin, aapsLogger)).value()
         var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
         if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
         rxBus.send(
@@ -748,8 +750,8 @@ class DataHandlerMobile @Inject constructor(
                     bolusPercentage = sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100),
                     maxCarbs = sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 48),
                     maxBolus = sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0),
-                    insulinButtonIncrement1 = sp.getDouble(info.nightscout.shared.R.string.key_insulin_button_increment_1, Constants.INSULIN_PLUS1_DEFAULT),
-                    insulinButtonIncrement2 = sp.getDouble(info.nightscout.shared.R.string.key_insulin_button_increment_2, Constants.INSULIN_PLUS2_DEFAULT),
+                    insulinButtonIncrement1 = sp.getDouble(info.nightscout.interfaces.R.string.key_insulin_button_increment_1, Constants.INSULIN_PLUS1_DEFAULT),
+                    insulinButtonIncrement2 = sp.getDouble(info.nightscout.interfaces.R.string.key_insulin_button_increment_2, Constants.INSULIN_PLUS2_DEFAULT),
                     carbsButtonIncrement1 = sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_1, Constants.CARBS_FAV1_DEFAULT),
                     carbsButtonIncrement2 = sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_2, Constants.CARBS_FAV2_DEFAULT)
                 )
@@ -873,16 +875,16 @@ class DataHandlerMobile @Inject constructor(
         repository.getCarbsDataFromTimeExpanded(startTimeWindow, true).blockingGet()
             .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
         val finalLastRun = loop.lastRun
-        if (sp.getBoolean(rh.gs(R.string.key_wear_predictions), true) && finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
+        if (finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
             val predArray = finalLastRun.constraintsProcessed!!.predictions
-                .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, profileFunction, rh) }
+                .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, profileUtil, rh) }
                 .collect(Collectors.toList())
             if (predArray.isNotEmpty())
                 for (bg in predArray) if (bg.data.value > 39)
                     predictions.add(
                         EventData.SingleBg(
                             timeStamp = bg.data.timestamp,
-                            glucoseUnits = Constants.MGDL,
+                            glucoseUnits = GlucoseUnit.MGDL.asText,
                             sgv = bg.data.value,
                             high = 0.0,
                             low = 0.0,
@@ -904,15 +906,18 @@ class DataHandlerMobile @Inject constructor(
         if (config.appInitialized && profile != null) {
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-            iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
-            iobDetail = "(${DecimalFormatter.to2Decimal(bolusIob.iob)}|${DecimalFormatter.to2Decimal(basalIob.basaliob)})"
-            cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString()
+            iobSum = decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
+            iobDetail = "(${decimalFormatter.to2Decimal(bolusIob.iob)}|${decimalFormatter.to2Decimal(basalIob.basaliob)})"
+            cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString(decimalFormatter)
             currentBasal =
-                iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
+                iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(decimalFormatter) ?: rh.gs(
+                    info.nightscout.core.ui.R.string.pump_base_basal_rate, profile
+                        .getBasal()
+                )
 
             //bgi
-            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
-            bgiString = "" + (if (bgi >= 0) "+" else "") + DecimalFormatter.to1Decimal(bgi)
+            val bgi = -(bolusIob.activity + basalIob.activity) * 5 * profileUtil.fromMgdlToUnits(profile.getIsfMgdl())
+            bgiString = "" + (if (bgi >= 0) "+" else "") + decimalFormatter.to1Decimal(bgi)
             status = generateStatusString(profile)
         }
 
@@ -945,18 +950,19 @@ class DataHandlerMobile @Inject constructor(
     private fun deltaString(deltaMGDL: Double, deltaMMOL: Double, units: GlucoseUnit): String {
         var deltaString = if (deltaMGDL >= 0) "+" else "-"
         deltaString += if (units == GlucoseUnit.MGDL) {
-            DecimalFormatter.to0Decimal(abs(deltaMGDL))
+            decimalFormatter.to0Decimal(abs(deltaMGDL))
         } else {
-            DecimalFormatter.to1Decimal(abs(deltaMMOL))
+            decimalFormatter.to1Decimal(abs(deltaMMOL))
         }
         return deltaString
     }
+
     private fun deltaStringDetailed(deltaMGDL: Double, deltaMMOL: Double, units: GlucoseUnit): String {
         var deltaStringDetailed = if (deltaMGDL >= 0) "+" else "-"
         deltaStringDetailed += if (units == GlucoseUnit.MGDL) {
-            DecimalFormatter.to1Decimal(abs(deltaMGDL))
+            decimalFormatter.to1Decimal(abs(deltaMGDL))
         } else {
-            DecimalFormatter.to2Decimal(abs(deltaMMOL))
+            decimalFormatter.to2Decimal(abs(deltaMMOL))
         }
         return deltaStringDetailed
     }
@@ -964,12 +970,12 @@ class DataHandlerMobile @Inject constructor(
     private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
-        val lowLine = Profile.toMgdl(defaultValueHelper.determineLowLine(), units)
-        val highLine = Profile.toMgdl(defaultValueHelper.determineHighLine(), units)
+        val lowLine = profileUtil.convertToMgdl(defaultValueHelper.determineLowLine(), units)
+        val highLine = profileUtil.convertToMgdl(defaultValueHelper.determineHighLine(), units)
 
         return EventData.SingleBg(
             timeStamp = glucoseValue.timestamp,
-            sgvString = glucoseValue.valueToUnitsString(units),
+            sgvString = profileUtil.stringInCurrentUnitsDetect(glucoseValue.value),
             glucoseUnits = units.asText,
             slopeArrow = trendCalculator.getTrendArrow(glucoseValue).symbol,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
@@ -996,17 +1002,14 @@ class DataHandlerMobile @Inject constructor(
             //Check for Temp-Target:
             val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
             if (tempTarget is ValueWrapper.Existing) {
-                val target = Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, GlucoseUnit.MGDL, profileFunction.getUnits())
+                val target = profileUtil.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, GlucoseUnit.MGDL)
                 ret += rh.gs(R.string.temp_target) + ": " + target
-                ret += "\n"+ rh.gs(R.string.until) + ": " + dateUtil.timeString(tempTarget.value.end)
+                ret += "\n" + rh.gs(R.string.until) + ": " + dateUtil.timeString(tempTarget.value.end)
                 ret += "\n\n"
             }
             ret += rh.gs(R.string.default_range) + ": "
-            ret += Profile.fromMgdlToUnits(profile.getTargetLowMgdl(), profileFunction.getUnits()).toString() + " - " + Profile.fromMgdlToUnits(
-                profile.getTargetHighMgdl(),
-                profileFunction.getUnits()
-            )
-            ret += " " + rh.gs(R.string.target) + ": " + Profile.fromMgdlToUnits(profile.getTargetMgdl(), profileFunction.getUnits())
+            ret += profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL)
+            ret += " " + rh.gs(R.string.target) + ": " + profileUtil.fromMgdlToStringInUnits(profile.getTargetMgdl())
             return ret
         }
 
@@ -1035,7 +1038,7 @@ class DataHandlerMobile @Inject constructor(
         get() {
             var ret = ""
             // decide if enabled/disabled closed/open; what Plugin as APS?
-            if ((loop as PluginBase).isEnabled()) {
+            if (loop.isEnabled()) {
                 ret += if (constraintChecker.isClosedLoopAllowed().value()) {
                     rh.gs(R.string.loop_status_closed) + "\n"
                 } else {
@@ -1134,7 +1137,7 @@ class DataHandlerMobile @Inject constructor(
     private fun generateStatusString(profile: Profile?): String {
         var status = ""
         profile ?: return rh.gs(info.nightscout.core.ui.R.string.noprofile)
-        if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
+        if (!loop.isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
         return status
     }
 
@@ -1145,8 +1148,8 @@ class DataHandlerMobile @Inject constructor(
                     timestamp = System.currentTimeMillis(),
                     duration = TimeUnit.MINUTES.toMillis(command.duration.toLong()),
                     reason = TemporaryTarget.Reason.WEAR,
-                    lowTarget = Profile.toMgdl(command.low, profileFunction.getUnits()),
-                    highTarget = Profile.toMgdl(command.high, profileFunction.getUnits())
+                    lowTarget = profileUtil.convertToMgdl(command.low, profileFunction.getUnits()),
+                    highTarget = profileUtil.convertToMgdl(command.high, profileFunction.getUnits())
                 )
             ).subscribe({ result ->
                             result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
@@ -1253,18 +1256,17 @@ class DataHandlerMobile @Inject constructor(
             duration = actionHeartRate.duration,
             timestamp = actionHeartRate.timestamp,
             beatsPerMinute = actionHeartRate.beatsPerMinute,
-            device = actionHeartRate.device)
+            device = actionHeartRate.device
+        )
         repository.runTransaction(InsertOrUpdateHeartRateTransaction(hr)).blockingAwait()
     }
-
 
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {
         val customWatchface = command.customWatchface
         aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}: ${customWatchface.customWatchfaceData.json}")
         rxBus.send(EventWearUpdateGui(customWatchface.customWatchfaceData, command.exportFile))
         if (command.exportFile)
-            importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData)
-
+            importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData, command.withDate)
     }
 
 }

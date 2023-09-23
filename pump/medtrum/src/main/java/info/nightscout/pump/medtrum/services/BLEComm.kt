@@ -310,9 +310,7 @@ class BLEComm @Inject internal constructor(
     private fun readDescriptor(descriptor: BluetoothGattDescriptor?) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "readDescriptor")
         if (mBluetoothAdapter == null || mBluetoothGatt == null || descriptor == null) {
-            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-            isConnecting = false
-            isConnected = false
+            handleNotInitialized()
             return
         }
         mBluetoothGatt?.readDescriptor(descriptor)
@@ -323,9 +321,7 @@ class BLEComm @Inject internal constructor(
         aapsLogger.debug(LTag.PUMPBTCOMM, "checkDescriptor")
         val service = getGattService()
         if (mBluetoothAdapter == null || mBluetoothGatt == null || service == null) {
-            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-            isConnecting = false
-            isConnected = false
+            handleNotInitialized()
             return
         }
         if (descriptor.value.toInt() > 0) {
@@ -352,9 +348,7 @@ class BLEComm @Inject internal constructor(
     private fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic?, enabled: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "setCharacteristicNotification")
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-            isConnecting = false
-            isConnected = false
+            handleNotInitialized()
             return
         }
         mBluetoothGatt?.setCharacteristicNotification(characteristic, enabled)
@@ -366,7 +360,7 @@ class BLEComm @Inject internal constructor(
                 it.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
                 mBluetoothGatt?.writeDescriptor(it)
             } else {
-
+                // Do nothing
             }
         }
     }
@@ -417,9 +411,7 @@ class BLEComm @Inject internal constructor(
     private fun getGattService(): BluetoothGattService? {
         aapsLogger.debug(LTag.PUMPBTCOMM, "getGattService")
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-            isConnecting = false
-            isConnected = false
+            handleNotInitialized()
             return null
         }
         return mBluetoothGatt?.getService(UUID.fromString(SERVICE_UUID))
@@ -431,9 +423,7 @@ class BLEComm @Inject internal constructor(
     private fun writeCharacteristic(characteristic: BluetoothGattCharacteristic, data: ByteArray?) {
         handler.postDelayed({
                                 if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-                                    aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                                    isConnecting = false
-                                    isConnected = false
+                                    handleNotInitialized()
                                 } else {
                                     characteristic.value = data
                                     characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
@@ -456,7 +446,7 @@ class BLEComm @Inject internal constructor(
         var uuid: String
         val gattCharacteristics = gattService.characteristics
         for (i in 0 until gattCharacteristics.size) {
-            val gattCharacteristic = gattCharacteristics.get(i)
+            val gattCharacteristic = gattCharacteristics[i]
             // Check whether read or write properties is set, the pump needs us to enable notifications on all characteristics that have these properties
             if (gattCharacteristic.properties and NEEDS_ENABLE > 0) {
                 handler.postDelayed({
@@ -471,5 +461,12 @@ class BLEComm @Inject internal constructor(
                                     }, (i * 600).toLong())
             }
         }
+    }
+
+    private fun handleNotInitialized() {
+        aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+        isConnecting = false
+        isConnected = false
+        return
     }
 }

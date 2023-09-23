@@ -1,16 +1,31 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import info.nightscout.androidaps.TestBaseWithProfile
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.core.extensions.fromConstant
 import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito
 
 @Suppress("SpellCheckingInspection")
 internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
+
+    @Mock lateinit var insulin: Insulin
+
+    private var insulinConfiguration: InsulinConfiguration = InsulinConfiguration("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
+
+    @BeforeEach
+    fun mock() {
+        Mockito.`when`(insulin.insulinConfiguration).thenReturn(insulinConfiguration)
+        Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
+    }
 
     @Test
     fun toProfileSwitch() {
@@ -37,7 +52,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
+        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
         Assertions.assertTrue(profileSwitch.contentEqualsTo(profileSwitch2))
         Assertions.assertTrue(profileSwitch.interfaceIdsEqualsTo(profileSwitch2))
 
@@ -64,7 +79,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
+        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
         Assertions.assertTrue(profileSwitch.contentEqualsTo(profileSwitch2))
         Assertions.assertTrue(profileSwitch.interfaceIdsEqualsTo(profileSwitch2))
     }

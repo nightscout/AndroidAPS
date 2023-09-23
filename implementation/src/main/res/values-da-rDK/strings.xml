@@ -4,6 +4,7 @@
     <string name="executing_right_now">Kommando udføres lige nu</string>
     <string name="basal_value_below_minimum">Basal værdi under minimum. Profil ikke angivet!</string>
     <string name="permission">Tilladelse</string>
+    <string name="need_whitelisting">%1$s har brug for batterioptimeringstilladelse for at opnå den rette ydeevne</string>
     <string name="need_location_permission">Applikationen mangler lokations tilladelse til BT scanning og WIFI identifikation</string>
     <string name="need_storage_permission">Applikationen mangler lagerstyrings tilladelse for at gemme logfiler og exporteringsindstillinger</string>
     <!--       Stats -->
@@ -19,4 +20,5 @@
     <string name="detailed_14_days">Detaljerede 14 dage</string>
     <string name="day_tir">Dags TIR</string>
     <string name="night_tir">Nat TIR</string>
+    <string name="carbs_short" comment="max 6 characters">Kulhydrater</string>
 </resources>

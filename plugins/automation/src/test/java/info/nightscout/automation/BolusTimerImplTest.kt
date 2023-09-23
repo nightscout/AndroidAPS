@@ -1,20 +1,20 @@
 package info.nightscout.automation
 
 import android.content.Context
+import app.aaps.shared.impl.utils.DateUtilImpl
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.automation.services.LocationServiceHelper
 import info.nightscout.automation.triggers.Trigger
+import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.automation.ui.TimerUtil
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -32,8 +32,7 @@ class BolusTimerImplTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var loop: Loop
-    @Mock lateinit var rxBus: RxBus
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var config: Config
     @Mock lateinit var locationServiceHelper: LocationServiceHelper
     @Mock lateinit var activePlugin: ActivePlugin
@@ -49,16 +48,17 @@ class BolusTimerImplTest : TestBase() {
         }
     }
     private lateinit var dateUtil: DateUtil
-
     private lateinit var automationPlugin: AutomationPlugin
 
     @BeforeEach
     fun init() {
         Mockito.`when`(rh.gs(anyInt())).thenReturn("")
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        dateUtil = DateUtil(context)
-        automationPlugin = AutomationPlugin(injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil,
-                                            activePlugin, timerUtil)
+        dateUtil = DateUtilImpl(context)
+        automationPlugin = AutomationPlugin(
+            injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil,
+            activePlugin, timerUtil
+        )
     }
 
     @Test

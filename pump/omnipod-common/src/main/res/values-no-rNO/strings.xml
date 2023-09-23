@@ -104,7 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knapp for å Pause insulintilførsel i Omnipod-fanen</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Tidssone-deteksjon aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Timer før utløp</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Når aktivert, vil Pod\'en pipe når tidspunktet er nådd</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Påminelse før utløp (72 timer)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Utløpspåminnelse aktivert</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Når aktivert, vil Pod\'en pipe når tidspunktet er nådd og en time før nedstenging</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Påminelse før utløp (80 timer)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Varsel om lavt reservoar aktivert</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Antall enheter</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Demp Pod-varsler automatisk</string>

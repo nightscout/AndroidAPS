@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 import com.google.crypto.tink.subtle.Hex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
 import info.nightscout.core.utils.toHex
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class PayloadJoinerTest {
@@ -15,6 +15,6 @@ class PayloadJoinerTest {
         val joiner = PayloadJoiner(f1)
         joiner.accumulate(f2)
         val actual = joiner.finalize()
-        assertEquals(payload, actual.toHex())
+        Assertions.assertEquals(payload, actual.toHex())
     }
 }

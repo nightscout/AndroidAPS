@@ -10,6 +10,7 @@ import info.nightscout.core.extensions.plannedRemainingMinutes
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
@@ -64,7 +65,8 @@ open class VirtualPumpPlugin @Inject constructor(
     private val pumpSync: PumpSync,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val persistenceLayer: PersistenceLayer
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -207,23 +209,19 @@ open class VirtualPumpPlugin @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result)
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()
-        if (detailedBolusInfo.insulin > 0)
-            pumpSync.syncBolusWithPumpId(
-                timestamp = detailedBolusInfo.timestamp,
-                amount = detailedBolusInfo.insulin,
-                type = detailedBolusInfo.bolusType,
-                pumpId = dateUtil.now(),
-                pumpType = pumpType ?: PumpType.GENERIC_AAPS,
-                pumpSerial = serialNumber()
-            )
-        if (detailedBolusInfo.carbs > 0)
-            pumpSync.syncCarbsWithTimestamp(
-                timestamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp,
-                amount = detailedBolusInfo.carbs,
-                pumpId = null,
-                pumpType = pumpType ?: PumpType.GENERIC_AAPS,
-                pumpSerial = serialNumber()
-            )
+        if (detailedBolusInfo.insulin > 0) {
+            if (config.NSCLIENT) // do not store pump serial (record will not be marked PH)
+                persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
+            else
+                pumpSync.syncBolusWithPumpId(
+                    timestamp = detailedBolusInfo.timestamp,
+                    amount = detailedBolusInfo.insulin,
+                    type = detailedBolusInfo.bolusType,
+                    pumpId = dateUtil.now(),
+                    pumpType = pumpType ?: PumpType.GENERIC_AAPS,
+                    pumpSerial = serialNumber()
+                )
+        }
         return result
     }
 

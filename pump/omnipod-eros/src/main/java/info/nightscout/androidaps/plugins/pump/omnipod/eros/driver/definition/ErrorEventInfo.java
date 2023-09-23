@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public final class ErrorEventInfo {
     private final boolean insulinStateTableCorruption;
@@ -16,7 +16,7 @@ public final class ErrorEventInfo {
     }
 
     public static ErrorEventInfo fromByte(byte faultEventInfo) {
-        int loggedFaultEventInfo = ByteUtil.convertUnsignedByteToInt(faultEventInfo);
+        int loggedFaultEventInfo = ByteUtil.INSTANCE.convertUnsignedByteToInt(faultEventInfo);
         boolean insulinStateTableCorruption = (loggedFaultEventInfo & 0x80) == 0x80;
         byte internalVariable = (byte) ((loggedFaultEventInfo >>> 5) & 0x03);
         boolean immediateBolusInProgress = (loggedFaultEventInfo & 0x10) == 0x10;

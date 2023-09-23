@@ -28,7 +28,7 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = R.drawable.ic_play_circle_outline_24dp
 
     override fun doAction(callback: Callback) {
-        if (!(loopPlugin as PluginBase).isEnabled()) {
+        if (!loopPlugin.isEnabled()) {
             (loopPlugin as PluginBase).setPluginEnabled(PluginType.LOOP, true)
             configBuilder.storeSettings("ActionLoopEnable")
             rxBus.send(EventRefreshOverview("ActionLoopEnable"))

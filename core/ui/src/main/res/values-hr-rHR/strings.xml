@@ -59,6 +59,7 @@
     <string name="basal_long_label">Bazalna stopa</string>
     <string name="target_long_label">Ciljana razina glukoze u krvi</string>
     <string name="shortgram">g</string>
+    <string name="pump_time_updated">Vrijeme pumpe ažurirano</string>
     <string name="exit">Izlaz</string>
     <string name="iob">Aktivni inzulin</string>
     <string name="cob">Aktivni UGH</string>
@@ -132,6 +133,7 @@
     <!--    Translator-->
     <string name="careportal_profileswitch">Zamjena profila</string>
     <string name="glucosetype_sensor">Senzor</string>
+    <string name="wear">Wear</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <string name="percent">Postotak</string>
@@ -318,4 +320,14 @@
         <item quantity="other">%1$d dana</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Po</string>
+    <string name="tuesday_short">Ut</string>
+    <string name="wednesday_short">Sr</string>
+    <string name="thursday_short">Če</string>
+    <string name="friday_short">Pe</string>
+    <string name="saturday_short">Su</string>
+    <string name="sunday_short">Ne</string>
+    <!--    DecimalFormatterImpl -->
 </resources>

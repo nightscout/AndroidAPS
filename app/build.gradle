@@ -181,10 +181,8 @@ dependencies {
     // in order to use internet's versions you'd need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
-    implementation project(':app-wear-shared:shared')
-    implementation project(':app-wear-shared:shared-impl')
+    implementation project(':shared:impl')
     implementation project(':core:main')
-    implementation project(':core:graph')
     implementation project(':core:graphview')
     implementation project(':core:interfaces')
     implementation project(':core:libraries')
@@ -217,13 +215,14 @@ dependencies {
     implementation project(':insight')
     implementation project(':pump:medtronic')
     implementation project(':pump:pump-common')
-    implementation project(':pump:pump-core')
     implementation project(':pump:omnipod-common')
     implementation project(':pump:omnipod-eros')
     implementation project(':pump:omnipod-dash')
     implementation project(':pump:rileylink')
     implementation project(':pump:virtual')
     implementation project(':workflow')
+
+    testImplementation project(':shared:tests')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 

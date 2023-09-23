@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugi
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
-import info.nightscout.pump.core.defs.PumpDeviceState;
+import info.nightscout.pump.common.defs.PumpDeviceState;
 import info.nightscout.rx.logging.LTag;
 
 
@@ -30,12 +30,10 @@ import info.nightscout.rx.logging.LTag;
 public class RileyLinkOmnipodService extends RileyLinkService {
 
     private static final String REGEX_MAC = "([\\da-fA-F]{1,2}(?::|$)){6}";
-
+    private final IBinder mBinder = new LocalBinder();
     @Inject OmnipodErosPumpPlugin omnipodErosPumpPlugin;
     @Inject AapsOmnipodUtil aapsOmnipodUtil;
     @Inject OmnipodRileyLinkCommunicationManager omnipodRileyLinkCommunicationManager;
-
-    private final IBinder mBinder = new LocalBinder();
     private boolean rileyLinkAddressChanged = false;
     private boolean inPreInit = true;
     private String rileyLinkAddress;
@@ -89,17 +87,11 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         return errorDescription;
     }
 
-    public class LocalBinder extends Binder {
-        public RileyLinkOmnipodService getServiceInstance() {
-            return RileyLinkOmnipodService.this;
-        }
-    }
-
-    /* private functions */
-
     public boolean isInitialized() {
         return rileyLinkServiceData.getRileyLinkServiceState().isReady();
     }
+
+    /* private functions */
 
     @Override
     public boolean verifyConfiguration(boolean forceRileyLinkAddressRenewal) {
@@ -152,5 +144,11 @@ public class RileyLinkOmnipodService extends RileyLinkService {
         this.inPreInit = false;
 
         return reconfigureService(false);
+    }
+
+    public class LocalBinder extends Binder {
+        public RileyLinkOmnipodService getServiceInstance() {
+            return RileyLinkOmnipodService.this;
+        }
     }
 }

@@ -24,7 +24,7 @@ data class APSResult(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     @Embedded
-        override var interfaceIDs_backing: InterfaceIDs? = null,
+    override var interfaceIDs_backing: InterfaceIDs? = null,
     override var timestamp: Long,
     override var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var algorithm: Algorithm,

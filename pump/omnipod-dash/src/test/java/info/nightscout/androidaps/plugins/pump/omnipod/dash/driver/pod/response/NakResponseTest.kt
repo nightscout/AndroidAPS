@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class NakResponseTest {
@@ -14,13 +14,13 @@ class NakResponseTest {
         val encoded = Hex.decodeHex("0603070009")
         val response = NakResponse(encoded)
 
-        Assert.assertArrayEquals(encoded, response.encoded)
-        Assert.assertNotSame(encoded, response.encoded)
-        Assert.assertEquals(ResponseType.NAK_RESPONSE, response.responseType)
-        Assert.assertEquals(ResponseType.NAK_RESPONSE.value, response.messageType)
-        Assert.assertEquals(NakErrorType.ILLEGAL_PARAM, response.nakErrorType)
-        Assert.assertEquals(AlarmType.NONE, response.alarmType)
-        Assert.assertEquals(PodStatus.RUNNING_BELOW_MIN_VOLUME, response.podStatus)
-        Assert.assertEquals(0x00.toShort(), response.securityNakSyncCount)
+        Assertions.assertArrayEquals(encoded, response.encoded)
+        Assertions.assertNotSame(encoded, response.encoded)
+        Assertions.assertEquals(ResponseType.NAK_RESPONSE, response.responseType)
+        Assertions.assertEquals(ResponseType.NAK_RESPONSE.value, response.messageType)
+        Assertions.assertEquals(NakErrorType.ILLEGAL_PARAM, response.nakErrorType)
+        Assertions.assertEquals(AlarmType.NONE, response.alarmType)
+        Assertions.assertEquals(PodStatus.RUNNING_BELOW_MIN_VOLUME, response.podStatus)
+        Assertions.assertEquals(0x00.toShort(), response.securityNakSyncCount)
     }
 }

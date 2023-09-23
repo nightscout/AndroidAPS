@@ -48,7 +48,7 @@ class MsgHistoryEventsV2 constructor(
             aapsLogger.debug(LTag.PUMPCOMM, "Last record received")
 
             val array: Array<ByteArray> = messageBuffer.toTypedArray()
-            val sorted = array.sortedArrayWith { s1: ByteArray, s2: ByteArray -> (dateTime(s1) - dateTime(s2)).toInt() }
+            val sorted = array.sortedArrayWith { s1: ByteArray, s2: ByteArray -> dateTime(s1).compareTo(dateTime(s2)) }
             for (message in sorted) processMessage(message)
             danaPump.historyDoneReceived = true
         } else messageBuffer.add(bytes)

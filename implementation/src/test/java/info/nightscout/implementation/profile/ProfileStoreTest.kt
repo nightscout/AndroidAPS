@@ -1,47 +1,47 @@
 package info.nightscout.implementation.profile
 
-import info.nightscout.androidaps.TestBaseWithProfile
+import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.interfaces.profile.PureProfile
-import org.junit.Assert
 import org.junit.jupiter.api.Test
 
 internal class ProfileStoreTest : TestBaseWithProfile() {
 
     @Test
     fun getStartDateTest() {
-        Assert.assertEquals(0, getValidProfileStore().getStartDate())
+        assertThat(getValidProfileStore().getStartDate()).isEqualTo(0)
     }
 
     @Test
     fun getDefaultProfileTest() {
-        Assert.assertTrue(getValidProfileStore().getDefaultProfile() is PureProfile)
+        assertThat(getValidProfileStore().getDefaultProfile()).isInstanceOf(PureProfile::class.java)
     }
 
     @Test
     fun getDefaultProfileJsonTest() {
-        Assert.assertTrue(getValidProfileStore().getDefaultProfileJson()?.has("dia") ?: false)
-        Assert.assertEquals(null, getInvalidProfileStore2().getDefaultProfileJson())
+        assertThat(getValidProfileStore().getDefaultProfileJson()?.has("dia")).isTrue()
+        assertThat(getInvalidProfileStore2().getDefaultProfileJson()).isNull()
     }
 
     @Test
     fun getDefaultProfileNameTest() {
-        Assert.assertEquals(TESTPROFILENAME, getValidProfileStore().getDefaultProfileName())
+        assertThat(getValidProfileStore().getDefaultProfileName()).isEqualTo(TESTPROFILENAME)
     }
 
     @Test
     fun getProfileListTest() {
-        Assert.assertEquals(1, getValidProfileStore().getProfileList().size)
+        assertThat(getValidProfileStore().getProfileList()).hasSize(1)
     }
 
     @Test
     fun getSpecificProfileTest() {
-        Assert.assertTrue(getValidProfileStore().getSpecificProfile(TESTPROFILENAME) is PureProfile)
+        assertThat(getValidProfileStore().getSpecificProfile(TESTPROFILENAME)).isInstanceOf(PureProfile::class.java)
     }
 
     @Test
     fun allProfilesValidTest() {
-        Assert.assertTrue(getValidProfileStore().allProfilesValid)
-        Assert.assertFalse(getInvalidProfileStore1().allProfilesValid)
-        Assert.assertFalse(getInvalidProfileStore2().allProfilesValid)
+        assertThat(getValidProfileStore().allProfilesValid).isTrue()
+        assertThat(getInvalidProfileStore1().allProfilesValid).isFalse()
+        assertThat(getInvalidProfileStore2().allProfilesValid).isFalse()
     }
 }

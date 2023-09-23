@@ -1,7 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.database.entities.TemporaryTarget
+import app.aaps.shared.tests.TestBaseWithProfile
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent

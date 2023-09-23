@@ -1,17 +1,16 @@
 package info.nightscout.pump.danars.comm
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.core.constraints.ConstraintObject
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -19,9 +18,8 @@ import org.mockito.Mockito
 
 class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
 
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
-    @Mock lateinit var context: Context
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync
@@ -43,14 +41,14 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
         val packet = DanaRSPacketBolusSetStepBolusStart(packetInjector)
         // test params
         val testParams = packet.getRequestParams()
-        Assert.assertEquals(0.toByte(), testParams[0])
-        Assert.assertEquals(0.toByte(), testParams[2])
+        Assertions.assertEquals(0.toByte(), testParams[0])
+        Assertions.assertEquals(0.toByte(), testParams[2])
         // test message decoding
         packet.handleMessage(byteArrayOf(0.toByte(), 0.toByte(), 0.toByte()))
-        Assert.assertEquals(false, packet.failed)
+        Assertions.assertEquals(false, packet.failed)
         packet.handleMessage(byteArrayOf(1.toByte(), 1.toByte(), 1.toByte(), 1.toByte(), 1.toByte(), 1.toByte(), 1.toByte(), 1.toByte()))
-        Assert.assertEquals(true, packet.failed)
-        Assert.assertEquals("BOLUS__SET_STEP_BOLUS_START", packet.friendlyName)
+        Assertions.assertEquals(true, packet.failed)
+        Assertions.assertEquals("BOLUS__SET_STEP_BOLUS_START", packet.friendlyName)
     }
 
     @BeforeEach
@@ -74,8 +72,9 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
                 fabricPrivacy,
                 dateUtil,
                 uiInteraction,
-                danaHistoryDatabase
+                danaHistoryDatabase,
+                decimalFormatter
             )
-        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
+        Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
     }
 }

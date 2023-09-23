@@ -34,16 +34,16 @@ private fun TemporaryBasal.netExtendedRate(profile: Profile) = rate - profile.ge
 val TemporaryBasal.durationInMinutes
     get() = T.msecs(duration).mins()
 
-fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil): String {
+fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String {
     return when {
         type == TemporaryBasal.Type.FAKE_EXTENDED -> {
-            DecimalFormatter.to2Decimal(rate) + "U/h (" + DecimalFormatter.to2Decimal(netExtendedRate(profile)) + "E) @" +
+            decimalFormatter.to2Decimal(rate) + "U/h (" + decimalFormatter.to2Decimal(netExtendedRate(profile)) + "E) @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
         isAbsolute                                -> {
-            DecimalFormatter.to2Decimal(rate) + "U/h @" +
+            decimalFormatter.to2Decimal(rate) + "U/h @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
@@ -56,11 +56,12 @@ fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil): String {
     }
 }
 
-fun TemporaryBasal.toStringShort(): String =
-    if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) DecimalFormatter.to2Decimal(rate) + "U/h"
-    else "${DecimalFormatter.to0Decimal(rate)}%"
+fun TemporaryBasal.toStringShort(decimalFormatter: DecimalFormatter): String =
+    if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) decimalFormatter.to2Decimal(rate) + "U/h"
+    else "${decimalFormatter.to0Decimal(rate)}%"
 
 fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
+    if (!isValid) return IobTotal(time)
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
     var netBasalAmount = 0.0
@@ -105,20 +106,21 @@ fun TemporaryBasal.iobCalc(
     time: Long,
     profile: Profile,
     lastAutosensResult: AutosensResult,
-    exercise_mode: Boolean,
-    half_basal_exercise_target: Int,
+    exerciseMode: Boolean,
+    halfBasalExerciseTarget: Int,
     isTempTarget: Boolean,
     insulinInterface: Insulin
 ): IobTotal {
+    if (!isValid) return IobTotal(time)
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
     var netBasalAmount = 0.0
     var sensitivityRatio = lastAutosensResult.ratio
     val normalTarget = 100.0
-    if (exercise_mode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
+    if (exerciseMode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
         // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
         // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
-        val c = half_basal_exercise_target - normalTarget
+        val c = halfBasalExerciseTarget - normalTarget
         sensitivityRatio = c / (c + profile.getTargetMgdl() - normalTarget)
     }
     if (realDuration > 0) {

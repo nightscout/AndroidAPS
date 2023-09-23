@@ -22,9 +22,9 @@ import info.nightscout.core.utils.ActionModeHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
-import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter
-import info.nightscout.interfaces.dragHelpers.OnStartDragListener
-import info.nightscout.interfaces.dragHelpers.SimpleItemTouchHelperCallback
+import info.nightscout.core.ui.dragHelpers.ItemTouchHelperAdapter
+import info.nightscout.core.ui.dragHelpers.OnStartDragListener
+import info.nightscout.core.ui.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility
@@ -74,7 +74,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             holder.binding.from.text = dateUtil.timeString(entry.validFromDate())
             holder.binding.to.text = dateUtil.timeString(entry.validToDate())
             holder.binding.buttonText.text = entry.buttonText()
-            holder.binding.carbs.text = rh.gs(info.nightscout.core.graph.R.string.format_carbs, entry.carbs())
+            holder.binding.carbs.text = rh.gs(info.nightscout.core.main.R.string.format_carbs, entry.carbs())
             if (entry.device() == QuickWizardEntry.DEVICE_ALL) {
                 holder.binding.device.visibility = View.GONE
             } else {
@@ -156,7 +156,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
         }
         addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(info.nightscout.core.utils.R.menu.menu_actions, menu)
+                menuInflater.inflate(info.nightscout.core.main.R.menu.menu_actions, menu)
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
@@ -194,7 +194,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
     private fun getConfirmationText(selectedItems: SparseArray<QuickWizardEntry>): String {
         if (selectedItems.size() == 1) {
             val entry = selectedItems.valueAt(0)
-            return "${rh.gs(info.nightscout.core.ui.R.string.remove_button)} ${entry.buttonText()} ${rh.gs(info.nightscout.core.graph.R.string.format_carbs, entry.carbs())}\n" +
+            return "${rh.gs(info.nightscout.core.ui.R.string.remove_button)} ${entry.buttonText()} ${rh.gs(info.nightscout.core.main.R.string.format_carbs, entry.carbs())}\n" +
                 "${dateUtil.timeString(entry.validFromDate())} - ${dateUtil.timeString(entry.validToDate())}"
         }
         return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())

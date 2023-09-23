@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
+import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.durationInMinutes
 import info.nightscout.core.extensions.toStringFull
@@ -22,6 +23,7 @@ import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -31,7 +33,6 @@ import info.nightscout.rx.events.EventLoopUpdateGui
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.extensions.safeQueryBroadcastReceivers
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -57,7 +58,8 @@ class DataBroadcastPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private var receiverStatusStore: ReceiverStatusStore,
     private val config: Config,
-    private val glucoseStatusProvider: GlucoseStatusProvider
+    private val glucoseStatusProvider: GlucoseStatusProvider,
+    private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -105,7 +107,6 @@ class DataBroadcastPlugin @Inject constructor(
         val bundle = Bundle()
         prepareData(event, bundle)
 
-        //aapsLogger.debug("Prepared bundle:\n" + BundleLogger.log(bundle))
         sendBroadcast(
             Intent(Intents.AAPS_BROADCAST) // "info.nightscout.androidaps.status"
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
@@ -176,7 +177,7 @@ class DataBroadcastPlugin @Inject constructor(
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
             if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR
             else bundle.putInt("tempBasalPercent", it.rate.toInt()) // % for percent type TBR
-            bundle.putString("tempBasalString", it.toStringFull(profile, dateUtil)) // user friendly string
+            bundle.putString("tempBasalString", it.toStringFull(profile, dateUtil, decimalFormatter)) // user friendly string
         }
     }
 

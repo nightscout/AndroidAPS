@@ -6,20 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -34,12 +35,13 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var ctx: Context
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var injector: HasAndroidInjector
 
     private var queryingProtection = false
     private var _binding: DialogExtendedbolusBinding? = null
@@ -94,8 +96,8 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val insulin = SafeParse.stringToDouble(binding.insulin.text)
         val durationInMinutes = binding.duration.value.toInt()
         val actions: LinkedList<String> = LinkedList()
-        val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
-        actions.add(rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, insulinAfterConstraint))
+        val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
+        actions.add(rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, insulinAfterConstraint))
         actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)
             actions.add(rh.gs(info.nightscout.core.ui.R.string.constraint_applied).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))

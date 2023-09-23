@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Doğrulayıcıları (Authenticators) Sıfırla</string>
     <string name="smscommunicator_otp_install_info">Her takipçi telefonunda, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Kimlik doğrulayıcıyı sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
+    <string name="smscommunicator_otp_verification_ok">Tamam</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">GEÇERSİZ BOYUT!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">HATALI PİN KODU</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">HATALI OTP</string>
     <string name="sms_wrong_code">Hatalı kod. Komut iptal edildi.</string>
     <string name="sms_timeout_while_waiting">Önceki pompa iletişiminin bitmesini beklerken zaman aşımı</string>
     <string name="smscommunicator_allowednumbers">İzinli telefon numaraları</string>
@@ -305,12 +309,9 @@
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
     <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
-    <string name="wear_display_settings">Görüntü Ayarları</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
     <string name="wear_notifysmb_title">SMB\'yi bildir</string>
     <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
-    <string name="wear_predictions_summary">Saat arayüzü üzerindeki tahminleri göster.</string>
-    <string name="wear_predictions_title">Tahminler</string>
     <string name="wear_custom_watchface_settings">Özel Saat arayüzü Ayarları</string>
     <string name="wear_custom_watchface_authorization_title">Özel Saat arayüzü Yetkilendirmesi</string>
     <string name="wear_custom_watchface_authorization_summary">Bazı saat ekranı ayarlarını saatarayüzü tasarımına uyacak şekilde değiştirmek ve kilitlemek için, yüklenen özel saat arayüzüne yetki verin</string>

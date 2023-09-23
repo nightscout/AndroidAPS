@@ -2,11 +2,11 @@ package info.nightscout.plugins.aps.openAPSSMBDynamicISF
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -32,7 +32,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
-    constraintChecker: Constraints,
+    constraintChecker: ConstraintsChecker,
     rh: ResourceHelper,
     profileFunction: ProfileFunction,
     context: Context,

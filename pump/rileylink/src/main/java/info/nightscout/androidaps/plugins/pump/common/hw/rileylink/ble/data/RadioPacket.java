@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by geoff on 5/22/16.
@@ -15,9 +15,8 @@ import info.nightscout.pump.core.utils.ByteUtil;
 
 public class RadioPacket {
 
-    @Inject RileyLinkUtil rileyLinkUtil;
-
     private final byte[] pkt;
+    @Inject RileyLinkUtil rileyLinkUtil;
 
 
     public RadioPacket(HasAndroidInjector injector, byte[] pkt) {
@@ -32,8 +31,7 @@ public class RadioPacket {
 
 
     private byte[] getWithCRC() {
-        byte[] withCRC = ByteUtil.concat(pkt, CRC.crc8(pkt));
-        return withCRC;
+        return ByteUtil.INSTANCE.concat(pkt, CRC.crc8(pkt));
     }
 
 
@@ -48,7 +46,7 @@ public class RadioPacket {
                 byte[] withCRC = getWithCRC();
 
                 byte[] encoded = rileyLinkUtil.getEncoding4b6b().encode4b6b(withCRC);
-                return ByteUtil.concat(encoded, (byte) 0);
+                return ByteUtil.INSTANCE.concat(encoded, (byte) 0);
             }
 
             case FourByteSixByteRileyLink: {

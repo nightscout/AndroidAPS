@@ -15,7 +15,7 @@ android {
 }
 
 dependencies {
-    implementation project(':app-wear-shared:shared')
+    implementation project(':shared:impl')
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':core:main')
@@ -27,6 +27,8 @@ dependencies {
 
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     testImplementation "androidx.work:work-testing:$work_version"
+
+    testImplementation project(':shared:tests')
     testImplementation project(':implementation')
     testImplementation project(':plugins:aps')
 

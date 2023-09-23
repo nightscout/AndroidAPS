@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">איפוס מאמתים</string>
     <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">אתחול המאמת הופך את כל המאמתים הקיימים לבלתי חוקיים. יש להגדיר אותם מחדש!</string>
+    <string name="smscommunicator_otp_verification_ok">אישור</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">אורך לא תקין!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">קוד שגוי</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">קוד חד פעמי שגוי</string>
     <string name="sms_wrong_code">קוד שגוי. הפקודה בוטלה.</string>
     <string name="sms_timeout_while_waiting">בהמתנה עד לסיום תקשורת קודמת עם המשאבה</string>
     <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>
@@ -305,12 +309,9 @@
     <string name="wearcontrol_title">שליטה מהשעון</string>
     <string name="wearcontrol_summary">הגדירו ערכי מטרה זמניים וציינו טיפולים מהשעון.</string>
     <string name="wear_wizard_settings_summary">חישובים הכלולים בתוצאת האשף:</string>
-    <string name="wear_display_settings">הגדרות תצוגה</string>
     <string name="wear_general_settings">הגדרות כלליות</string>
     <string name="wear_notifysmb_title">דיווח על SMB</string>
     <string name="wear_notifysmb_summary">הצג SMB על השעון כמו בולוס סטנדרטי.</string>
-    <string name="wear_predictions_summary">הראה את התחזיות על לוח השעון.</string>
-    <string name="wear_predictions_title">חיזוי</string>
     <string name="wear_custom_watchface_settings">הגדרות פני שעון מותאמים אישית</string>
     <string name="wear_custom_watchface_authorization_title">אישור פני שעון מותאמים אישית</string>
     <string name="wear_custom_watchface">פני שעון מותאמים אישית: %1$s</string>

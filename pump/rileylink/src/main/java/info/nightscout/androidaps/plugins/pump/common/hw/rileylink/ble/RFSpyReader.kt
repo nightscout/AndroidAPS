@@ -4,8 +4,8 @@ import android.os.SystemClock
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.pump.core.utils.ThreadUtil
+import info.nightscout.pump.common.utils.ByteUtil
+import info.nightscout.pump.common.utils.ThreadUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import java.util.UUID

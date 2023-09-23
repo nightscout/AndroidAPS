@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.dana.comm.RecordTypes
 import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import java.util.GregorianCalendar
@@ -44,14 +44,14 @@ class DanaRSPacketHistoryAlarmTest : DanaRSTestBase() {
         putByteToArray(array, 9, 100) // value
 
         packet.handleMessage(array)
-        Assert.assertEquals(RecordTypes.RECORD_TYPE_ALARM, packet.danaRHistoryRecord.code)
+        Assertions.assertEquals(RecordTypes.RECORD_TYPE_ALARM, packet.danaRHistoryRecord.code)
         val date = GregorianCalendar().also {
             it.clear()
             it.set(2019, 1, 4, 20, 11, 35)
         }
-        Assert.assertEquals(date.timeInMillis, packet.danaRHistoryRecord.timestamp)
-        Assert.assertEquals("Occlusion", packet.danaRHistoryRecord.alarm)
-        Assert.assertEquals(3.56, packet.danaRHistoryRecord.value, 0.01)
-        Assert.assertEquals("REVIEW__ALARM", packet.friendlyName)
+        Assertions.assertEquals(date.timeInMillis, packet.danaRHistoryRecord.timestamp)
+        Assertions.assertEquals("Occlusion", packet.danaRHistoryRecord.alarm)
+        Assertions.assertEquals(3.56, packet.danaRHistoryRecord.value, 0.01)
+        Assertions.assertEquals("REVIEW__ALARM", packet.friendlyName)
     }
 }

@@ -1,12 +1,11 @@
 package info.nightscout.implementation.pump
 
-import info.nightscout.androidaps.TestBase
+import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -16,7 +15,7 @@ class DetailedBolusInfoStorageTest : TestBase() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
-    
+
     private val info1 = DetailedBolusInfo()
     private val info2 = DetailedBolusInfo()
     private val info3 = DetailedBolusInfo()
@@ -48,9 +47,9 @@ class DetailedBolusInfoStorageTest : TestBase() {
     @Test
     fun add() {
         detailedBolusInfoStorage.store.clear()
-        assertEquals(0, detailedBolusInfoStorage.store.size)
+        assertThat(detailedBolusInfoStorage.store).isEmpty()
         detailedBolusInfoStorage.add(info1)
-        assertEquals(1, detailedBolusInfoStorage.store.size)
+        assertThat(detailedBolusInfoStorage.store).hasSize(1)
     }
 
     @Test
@@ -59,38 +58,38 @@ class DetailedBolusInfoStorageTest : TestBase() {
         // Look for exact bolus
         setUp()
         var d: DetailedBolusInfo? = detailedBolusInfoStorage.findDetailedBolusInfo(1000000, 4.0)
-        assertEquals(4.0, d!!.insulin, 0.01)
-        assertEquals(2, detailedBolusInfoStorage.store.size)
+        assertThat(d!!.insulin).isWithin(0.01).of(4.0)
+        assertThat(detailedBolusInfoStorage.store).hasSize(2)
         // Look for exact bolus
         setUp()
         d = detailedBolusInfoStorage.findDetailedBolusInfo(1000000, 3.0)
-        assertEquals(3.0, d!!.insulin, 0.01)
-        assertEquals(2, detailedBolusInfoStorage.store.size)
+        assertThat(d!!.insulin).isWithin(0.01).of(3.0)
+        assertThat(detailedBolusInfoStorage.store).hasSize(2)
         // With less insulin (bolus not delivered completely). Should return first one matching date
         setUp()
         d = detailedBolusInfoStorage.findDetailedBolusInfo(1000500, 2.0)
-        assertEquals(3.0, d!!.insulin, 0.01)
-        assertEquals(2, detailedBolusInfoStorage.store.size)
+        assertThat(d!!.insulin).isWithin(0.01).of(3.0)
+        assertThat(detailedBolusInfoStorage.store).hasSize(2)
         // With less insulin (bolus not delivered completely). Should return first one matching date
         setUp()
         d = detailedBolusInfoStorage.findDetailedBolusInfo(1000500, 3.5)
-        assertEquals(4.0, d!!.insulin, 0.01)
-        assertEquals(2, detailedBolusInfoStorage.store.size)
+        assertThat(d!!.insulin).isWithin(0.01).of(4.0)
+        assertThat(detailedBolusInfoStorage.store).hasSize(2)
         // With more insulin should return null
         setUp()
         d = detailedBolusInfoStorage.findDetailedBolusInfo(1000500, 4.5)
-        assertNull(d)
-        assertEquals(3, detailedBolusInfoStorage.store.size)
+        assertThat(d).isNull()
+        assertThat(detailedBolusInfoStorage.store).hasSize(3)
         // With more than one minute off should return null
         setUp()
         d = detailedBolusInfoStorage.findDetailedBolusInfo(1070000, 4.0)
-        assertNull(d)
-        assertEquals(3, detailedBolusInfoStorage.store.size)
+        assertThat(d).isNull()
+        assertThat(detailedBolusInfoStorage.store).hasSize(3)
         // Use last, if bolus size is the same
 //        setUp()
 //        d = detailedBolusInfoStorage.findDetailedBolusInfo(1070000, 5.0)
-//        assertEquals(5.0, d!!.insulin, 0.01)
-//        assertEquals(2, detailedBolusInfoStorage.store.size)
+//        assertThat( d!!.insulin).isWithin(0.01).of(5.0)
+//        assertThat(detailedBolusInfoStorage.store).hasSize(2)
 
     }
 }

@@ -6,7 +6,6 @@ import info.nightscout.automation.elements.Comparator
 import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
@@ -14,7 +13,6 @@ import org.mockito.Mockito.`when`
 
 class TriggerAutosensValueTest : TriggerTestBase() {
 
-    var now = 1514766900000L
     @Test fun shouldRunTest() {
         `when`(sp.getDouble(Mockito.eq(info.nightscout.core.utils.R.string.key_openapsama_autosens_max), ArgumentMatchers.anyDouble())).thenReturn(1.2)
         `when`(sp.getDouble(Mockito.eq(info.nightscout.core.utils.R.string.key_openapsama_autosens_min), ArgumentMatchers.anyDouble())).thenReturn(0.7)
@@ -103,11 +101,6 @@ class TriggerAutosensValueTest : TriggerTestBase() {
 
     @Test fun iconTest() {
         Assertions.assertEquals(Optional.of(R.drawable.ic_as), TriggerAutosensValue(injector).icon())
-    }
-
-    @BeforeEach
-    fun mock() {
-        `when`(dateUtil.now()).thenReturn(now)
     }
 
     private fun generateAutosensData(): AutosensDataObject {

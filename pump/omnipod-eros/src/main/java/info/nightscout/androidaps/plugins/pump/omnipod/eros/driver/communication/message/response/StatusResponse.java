@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.De
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class StatusResponse extends MessageBlock implements StatusUpdatableResponse {
     private static final int MESSAGE_LENGTH = 10;
@@ -30,25 +30,25 @@ public class StatusResponse extends MessageBlock implements StatusUpdatableRespo
         if (encodedData.length < MESSAGE_LENGTH) {
             throw new IllegalArgumentException("Not enough data");
         }
-        this.encodedData = ByteUtil.substring(encodedData, 1, MESSAGE_LENGTH - 1);
+        this.encodedData = ByteUtil.INSTANCE.substring(encodedData, 1, MESSAGE_LENGTH - 1);
 
-        deliveryStatus = DeliveryStatus.fromByte((byte) (ByteUtil.convertUnsignedByteToInt(encodedData[1]) >>> 4));
+        deliveryStatus = DeliveryStatus.fromByte((byte) (ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[1]) >>> 4));
         podProgressStatus = PodProgressStatus.fromByte((byte) (encodedData[1] & 0x0F));
 
         int minutes = ((encodedData[7] & 0x7F) << 6) | ((encodedData[8] & 0xFC) >>> 2);
         timeActive = Duration.standardMinutes(minutes);
 
         int highInsulinBits = (encodedData[2] & 0xF) << 9;
-        int middleInsulinBits = ByteUtil.convertUnsignedByteToInt(encodedData[3]) << 1;
-        int lowInsulinBits = ByteUtil.convertUnsignedByteToInt(encodedData[4]) >>> 7;
+        int middleInsulinBits = ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[3]) << 1;
+        int lowInsulinBits = ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[4]) >>> 7;
         ticksDelivered = (highInsulinBits | middleInsulinBits | lowInsulinBits);
         insulinDelivered = OmnipodConstants.POD_PULSE_SIZE * ticksDelivered;
         podMessageCounter = (byte) ((encodedData[4] >>> 3) & 0xf);
 
-        bolusNotDelivered = OmnipodConstants.POD_PULSE_SIZE * (((encodedData[4] & 0x03) << 8) | ByteUtil.convertUnsignedByteToInt(encodedData[5]));
-        unacknowledgedAlerts = new AlertSet((byte) (((encodedData[6] & 0x7f) << 1) | (ByteUtil.convertUnsignedByteToInt(encodedData[7]) >>> 7)));
+        bolusNotDelivered = OmnipodConstants.POD_PULSE_SIZE * (((encodedData[4] & 0x03) << 8) | ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[5]));
+        unacknowledgedAlerts = new AlertSet((byte) (((encodedData[6] & 0x7f) << 1) | (ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[7]) >>> 7)));
 
-        double reservoirValue = (((encodedData[8] & 0x3) << 8) + ByteUtil.convertUnsignedByteToInt(encodedData[9])) * OmnipodConstants.POD_PULSE_SIZE;
+        double reservoirValue = (((encodedData[8] & 0x3) << 8) + ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[9])) * OmnipodConstants.POD_PULSE_SIZE;
         if (reservoirValue > OmnipodConstants.MAX_RESERVOIR_READING) {
             reservoirLevel = null;
         } else {
@@ -120,7 +120,7 @@ public class StatusResponse extends MessageBlock implements StatusUpdatableRespo
                 ", bolusNotDelivered=" + bolusNotDelivered +
                 ", podMessageCounter=" + podMessageCounter +
                 ", unacknowledgedAlerts=" + unacknowledgedAlerts +
-                ", encodedData=" + ByteUtil.shortHexStringWithoutSpaces(encodedData) +
+                ", encodedData=" + ByteUtil.INSTANCE.shortHexStringWithoutSpaces(encodedData) +
                 '}';
     }
 }

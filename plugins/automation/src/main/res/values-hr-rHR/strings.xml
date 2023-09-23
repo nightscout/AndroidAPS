@@ -5,14 +5,6 @@
     <string name="never">Nikada</string>
     <string name="action">Aktivnost:</string>
     <string name="stop_processing">Zaustavi obradu</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Po</string>
-    <string name="tuesday_short">Ut</string>
-    <string name="wednesday_short">Sr</string>
-    <string name="thursday_short">Če</string>
-    <string name="friday_short">Pe</string>
-    <string name="saturday_short">Su</string>
-    <string name="sunday_short">Ne</string>
     <!--    Reminders-->
     <string name="time_to_bolus">Vrijeme je za bolus!\nPokrenite čarobnjak za bolus i ponovite izračun.</string>
 </resources>

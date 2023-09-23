@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.core.extensions.toTemporaryBasal
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONObject
@@ -17,7 +17,6 @@ fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil):
                 ?.put("extendedEmulated", toRealJson(isAdd, dateUtil))
         else toRealJson(isAdd, dateUtil)
     }
-
 
 fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
@@ -40,7 +39,7 @@ fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
+fun ExtendedBolus.Companion.extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitNow") != 0) return null
     if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitExt") != 100) return null

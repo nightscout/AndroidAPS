@@ -6,13 +6,13 @@ import android.os.Bundle
 import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
+import app.aaps.configuration.activities.SingleFragmentActivity
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.MainActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.activities.PreferencesActivity
-import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.notifications.Notification
@@ -77,8 +77,8 @@ class UiInteractionImpl @Inject constructor(
     override fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int?, name: String?) {
         WizardDialog().also { dialog ->
             dialog.arguments = Bundle().also { bundle ->
-                carbs?.let { bundle.putDouble("carbs_input", carbs.toDouble())}
-                name?.let {bundle.putString("notes_input", " $name - ${carbs}g") }
+                carbs?.let { bundle.putDouble("carbs_input", carbs.toDouble()) }
+                name?.let { bundle.putString("notes_input", " $name - ${carbs}g") }
             }
         }.show(fragmentManager, "Food Item")
 
@@ -160,6 +160,7 @@ class UiInteractionImpl @Inject constructor(
             }
             .show(fragmentManager, "CareDialog")
     }
+
     override fun runBolusProgressDialog(fragmentManager: FragmentManager, insulin: Double, id: Long) {
         BolusProgressDialog().also {
             it.setInsulin(insulin)

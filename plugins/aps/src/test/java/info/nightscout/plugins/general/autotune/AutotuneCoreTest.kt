@@ -1,20 +1,19 @@
 package info.nightscout.plugins.general.autotune
 
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBaseWithProfile
+import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -24,9 +23,7 @@ import java.util.TimeZone
 
 class AutotuneCoreTest : TestBaseWithProfile() {
 
-    @Mock lateinit var sp: SP
     @Mock lateinit var autotuneFS: AutotuneFS
-    @Mock lateinit var injector: HasAndroidInjector
     private lateinit var autotuneCore: AutotuneCore
     private var min5mCarbImpact = 0.0
     private var autotuneMin = 0.0
@@ -50,15 +47,13 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test1/aapsorefprofile.json").readText()
-        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
+        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, inputProfile)
-        oapsOutputProfile?.let {
-            Assert.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
-            Assert.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
-            for (i in 0..23)
-                Assert.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+        assertThat(outProfile.isf).isEqualTo(oapsOutputProfile.isf)
+        assertThat(outProfile.ic).isEqualTo(oapsOutputProfile.ic)
+        for (i in 0..23) {
+            assertThat(outProfile.basal[i]).isEqualTo(oapsOutputProfile.basal[i])
         }
-            ?: Assert.fail()
     }
 
     @Suppress("SpellCheckingInspection")
@@ -74,22 +69,20 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test4/newprofile.2022-05-30.json").readText()
-        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
+        val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, pumpProfile)
-        oapsOutputProfile?.let {
-            Assert.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
-            Assert.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
-            for (i in 0..23)
-                Assert.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+        assertThat(outProfile.isf).isEqualTo(oapsOutputProfile.isf)
+        assertThat(outProfile.ic).isEqualTo(oapsOutputProfile.ic)
+        for (i in 0..23) {
+            assertThat(outProfile.basal[i]).isEqualTo(oapsOutputProfile.basal[i])
         }
-            ?: Assert.fail()
     }
 
     /**
      * OpenAPS profile for Autotune only have one ISF value and one IC value
      */
     @Suppress("SpellCheckingInspection")
-    private fun atProfileFromOapsJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): info.nightscout.plugins.general.autotune.data.ATProfile? {
+    private fun atProfileFromOapsJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): ATProfile? {
         try {
             min5mCarbImpact = JsonHelper.safeGetDoubleAllowNull(jsonObject, "min_5m_carbimpact") ?: return null
             autotuneMin = JsonHelper.safeGetDoubleAllowNull(jsonObject, "autosens_min") ?: return null
@@ -126,7 +119,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 timeZone = timezone,
                 dia = dia
             )
-            return info.nightscout.plugins.general.autotune.data.ATProfile(ProfileSealed.Pure(pure), localInsulin, profileInjector).also { it.dateUtil = dateUtil }
+            return ATProfile(ProfileSealed.Pure(pure), localInsulin, profileInjector).also { it.dateUtil = dateUtil; it.profileUtil = profileUtil }
         } catch (ignored: Exception) {
             return null
         }

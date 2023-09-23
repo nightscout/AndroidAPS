@@ -143,4 +143,6 @@ data class TherapyEvent(
             fun fromString(text: String?) = values().firstOrNull { it.text == text } ?: NONE
         }
     }
+
+    companion object
 }

@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum.comm
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class WriteCommandPacketsTest {
 
@@ -13,7 +13,7 @@ class WriteCommandPacketsTest {
         val cmdPackets = WriteCommandPackets(input, sequence)
         val output = cmdPackets.getNextPacket()
 
-        assertEquals(expect.contentToString(), output.contentToString())
+        Assertions.assertEquals(expect.contentToString(), output.contentToString())
     }
 
     @Test
@@ -31,10 +31,10 @@ class WriteCommandPacketsTest {
         val output4 = cmdPackets.getNextPacket()
 
 
-        assertEquals(expect1.contentToString(), output1.contentToString())
-        assertEquals(expect2.contentToString(), output2.contentToString())
-        assertEquals(expect3.contentToString(), output3.contentToString())
-        assertNull(output4)
-        assertEquals(true, cmdPackets.allPacketsConsumed())
+        Assertions.assertEquals(expect1.contentToString(), output1.contentToString())
+        Assertions.assertEquals(expect2.contentToString(), output2.contentToString())
+        Assertions.assertEquals(expect3.contentToString(), output3.contentToString())
+        Assertions.assertNull(output4)
+        Assertions.assertEquals(true, cmdPackets.allPacketsConsumed())
     }
 }

@@ -22,7 +22,7 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.core.utils.fabric.InstanceId;
 import info.nightscout.interfaces.constraints.Constraint;
-import info.nightscout.interfaces.constraints.Constraints;
+import info.nightscout.interfaces.constraints.PluginConstraints;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.plugin.PluginDescription;
 import info.nightscout.interfaces.plugin.PluginType;
@@ -86,23 +86,41 @@ import info.nightscout.shared.utils.T;
  * Created by mike on 05.08.2016.
  */
 @Singleton
-public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
+public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstraints {
+    private final static PumpDescription pumpDescription = new PumpDescription();
+    @NonNull
+    private static final ComboPump pump = new ComboPump();
     // collaborators
     private final ProfileFunction profileFunction;
     private final SP sp;
-    private RxBus rxBus;
     private final CommandQueue commandQueue;
     private final PumpSync pumpSync;
     private final DateUtil dateUtil;
     private final RuffyCommands ruffyScripter;
     private final UiInteraction uiInteraction;
-
-    private final static PumpDescription pumpDescription = new PumpDescription();
-
-
-    @NonNull
-    private static final ComboPump pump = new ComboPump();
-
+    private RxBus rxBus;
+    private final BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
+        EventOverviewBolusProgress event = EventOverviewBolusProgress.INSTANCE;
+        switch (state) {
+            case PROGRAMMING:
+                event.setStatus(getRh().gs(R.string.combo_programming_bolus));
+                break;
+            case DELIVERING:
+                event.setStatus(getRh().gs(info.nightscout.core.ui.R.string.bolus_delivering, delivered));
+                break;
+            case DELIVERED:
+                event.setStatus(getRh().gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, delivered));
+                break;
+            case STOPPING:
+                event.setStatus(getRh().gs(R.string.bolusstopping));
+                break;
+            case STOPPED:
+                event.setStatus(getRh().gs(R.string.bolusstopped));
+                break;
+        }
+        event.setPercent(percent);
+        rxBus.send(event);
+    };
     /**
      * This is used to determine when to pass a bolus cancel request to the scripter
      */
@@ -112,7 +130,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
      * will reset this flag.
      */
     private volatile boolean cancelBolus;
-
     /**
      * This is set (in {@link #checkHistory()} whenever a connection to the pump is made and
      * indicates if new history records on the pump have been found. This effectively blocks
@@ -128,7 +145,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
      * direction - so that adding more complexity yields little benefit.
      */
     private volatile boolean pumpHistoryChanged = false;
-
     /**
      * Cache of the last <=2 boluses on the pump. Used to detect changes in pump history,
      * requiring reading more pump history. This is read/set in {@link #checkHistory()} when changed
@@ -136,8 +152,11 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
      * after bolus delivery. Newest record is the first one.
      */
     private volatile List<Bolus> recentBoluses = new ArrayList<>(0);
-
     private PumpEnactResult OPERATION_NOT_SUPPORTED;
+    // Constraints interface
+    private long lowSuspendOnlyLoopEnforcedUntil = 0;
+    private long violationWarningRaisedForBolusAt = 0;
+    private boolean validBasalRateProfileSelectedOnPump = true;
 
     @Inject
     public ComboPlugin(
@@ -468,29 +487,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
                 return 100;
         }
     }
-
-    private final BolusProgressReporter bolusProgressReporter = (state, percent, delivered) -> {
-        EventOverviewBolusProgress event = EventOverviewBolusProgress.INSTANCE;
-        switch (state) {
-            case PROGRAMMING:
-                event.setStatus(getRh().gs(R.string.combo_programming_bolus));
-                break;
-            case DELIVERING:
-                event.setStatus(getRh().gs(info.nightscout.core.ui.R.string.bolus_delivering, delivered));
-                break;
-            case DELIVERED:
-                event.setStatus(getRh().gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, delivered));
-                break;
-            case STOPPING:
-                event.setStatus(getRh().gs(R.string.bolusstopping));
-                break;
-            case STOPPED:
-                event.setStatus(getRh().gs(R.string.bolusstopped));
-                break;
-        }
-        event.setPercent(percent);
-        rxBus.send(event);
-    };
 
     /**
      * Updates Treatment records with carbs and boluses and delivers a bolus if needed
@@ -850,10 +846,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         return 0;
     }
 
-    private interface CommandExecution {
-        CommandResult execute();
-    }
-
     /**
      * Runs a command, sets an activity if provided, retries if requested and updates fields
      * concerned with last connection.
@@ -979,7 +971,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
 
         return null;
     }
-
 
     private void checkBasalRate(PumpState state) {
         if (!pump.initialized) {
@@ -1386,27 +1377,26 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
         return result;
     }
 
-    // Constraints interface
-    private long lowSuspendOnlyLoopEnforcedUntil = 0;
-    private long violationWarningRaisedForBolusAt = 0;
-    private boolean validBasalRateProfileSelectedOnPump = true;
-
     @NonNull @Override
     public Constraint<Boolean> isLoopInvocationAllowed(@NonNull Constraint<Boolean> value) {
         if (!validBasalRateProfileSelectedOnPump)
-            value.set(getAapsLogger(), false, getRh().gs(info.nightscout.core.ui.R.string.no_valid_basal_rate), this);
+            value.set(false, getRh().gs(info.nightscout.core.ui.R.string.no_valid_basal_rate), this);
         return value;
     }
 
     @NonNull @Override
     public Constraint<Double> applyMaxIOBConstraints(@NonNull Constraint<Double> maxIob) {
         if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
-            maxIob.setIfSmaller(getAapsLogger(), 0d, getRh().gs(info.nightscout.core.ui.R.string.limiting_iob, 0d, getRh().gs(R.string.unsafeusage)), this);
+            maxIob.setIfSmaller(0d, getRh().gs(info.nightscout.core.ui.R.string.limiting_iob, 0d, getRh().gs(R.string.unsafeusage)), this);
         return maxIob;
     }
 
     @Override
     public boolean canHandleDST() {
         return false;
+    }
+
+    private interface CommandExecution {
+        CommandResult execute();
     }
 }

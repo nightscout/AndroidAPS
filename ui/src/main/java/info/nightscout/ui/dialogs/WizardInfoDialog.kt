@@ -9,9 +9,8 @@ import android.view.WindowManager
 import com.google.gson.Gson
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R
@@ -22,6 +21,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var dateUtil: DateUtil
 
     private lateinit var data: BolusCalculatorResult
@@ -55,37 +55,36 @@ class WizardInfoDialog : DaggerDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.close.setOnClickListener { dismiss() }
-        val units = profileFunction.getUnits()
-        val bgString = Profile.toUnitsString(data.glucoseValue, data.glucoseValue * Constants.MGDL_TO_MMOLL, units)
-        val isf = Profile.toUnits(data.isf, data.isf * Constants.MGDL_TO_MMOLL, units)
-        val trend = Profile.toUnitsString(data.glucoseTrend * 3, data.glucoseTrend * 3 * Constants.MGDL_TO_MMOLL, units)
+        val bgString = profileUtil.fromMgdlToStringInUnits(data.glucoseValue)
+        val isf = profileUtil.fromMgdlToUnits(data.isf)
+        val trend = profileUtil.fromMgdlToStringInUnits(data.glucoseTrend * 3)
         // BG
         binding.bg.text = rh.gs(R.string.format_bg_isf, bgString, isf)
-        binding.bgInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.glucoseInsulin)
+        binding.bgInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.glucoseInsulin)
         binding.bgCheckbox.isChecked = data.wasGlucoseUsed
         binding.ttCheckbox.isChecked = data.wasTempTargetUsed
         // Trend
         binding.bgTrend.text = trend
-        binding.bgTrendInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.trendInsulin)
+        binding.bgTrendInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.trendInsulin)
         binding.bgTrendCheckbox.isChecked = data.wasTrendUsed
         // COB
         binding.cob.text = rh.gs(R.string.format_cob_ic, data.cob, data.ic)
-        binding.cobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.cobInsulin)
+        binding.cobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.cobInsulin)
         binding.cobCheckbox.isChecked = data.wasCOBUsed
         // Bolus IOB
-        binding.bolusIobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.bolusIOB)
+        binding.bolusIobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.bolusIOB)
         binding.bolusIobCheckbox.isChecked = data.wasBolusIOBUsed
         // Basal IOB
-        binding.basalIobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.basalIOB)
+        binding.basalIobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.basalIOB)
         binding.basalIobCheckbox.isChecked = data.wasBasalIOBUsed
         // Superbolus
-        binding.sbInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.superbolusInsulin)
+        binding.sbInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.superbolusInsulin)
         binding.sbCheckbox.isChecked = data.wasSuperbolusUsed
         // Carbs
         binding.carbs.text = rh.gs(R.string.format_carbs_ic, data.carbs, data.ic)
-        binding.carbsInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.carbsInsulin)
+        binding.carbsInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.carbsInsulin)
         // Correction
-        binding.correctionInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.otherCorrection)
+        binding.correctionInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.otherCorrection)
         // Profile
         binding.profile.text = data.profileName
         // Notes
@@ -93,7 +92,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
         // Percentage
         binding.percentUsed.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, data.percentageCorrection)
         // Total
-        binding.totalInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.totalInsulin)
+        binding.totalInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, data.totalInsulin)
     }
 
     override fun onStart() {

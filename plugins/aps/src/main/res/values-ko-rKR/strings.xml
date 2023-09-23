@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">감도 및 BG 조정</string>
+    <string name="DynISFAdjust_title" formatted="false">동적ISF 조정 계수 %</string>
+    <string name="DynISFAdjust_summary" formatted="false">동적ISF 에 대한 조정 계수. 더 호전적인 보정 양인 경우 100% 이상으로 설정하고, 덜 호전적인 보정의 경우 100% 미만으로 설정합니다.</string>
     <string name="high_temptarget_raises_sensitivity_title">높은 임시목표는 민감도를 올립니다.</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[임시목표 100이상을 위해 민감도를 올립니다.]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">낮은 임시목표는 민감도를 내립니다.</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[임시목표 100미만을 위해 민감도를 낮춥니다.]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">동적 ISF</string>
     <string name="smb_interval_summary">SMB를 주입하는 빈도 (몇 분마다)</string>
     <string name="resistance_lowers_target_title">저항성이 목표 낮추기</string>
     <string name="resistance_lowers_target_summary">저항성이 감지되면, 목표 혈당을 낮춥니다.</string>
@@ -13,12 +17,14 @@
     <string name="openapsma_disabled">플러그인이 사용불가능 합니다</string>
     <string name="openapsma_no_glucose_data">혈당 데이터 없음</string>
     <string name="openaps_no_as_data">사용할 수 있는 Autosens 데이터가 없습니다.</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="executing">실행중</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d 요소의 배열.\n실제 값:</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">2017년의 알고리즘</string>
     <string name="description_smb">고급사용자를 위한 가장 최신의 알고리즘</string>
+    <string name="description_smb_dynamic_isf">동적/자동 ISF를 사용하는 고급 사용자를 위한 최신 알고리즘</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze DIA 나눗수</string>
     <string name="openapsma_run">지금 실행</string>
     <string name="openapsma_last_run_label">최근 실행</string>
@@ -69,6 +75,8 @@
     <string name="uam_smb_max_minutes_summary">SMB가 UAM에 대해 basal을 제한할 수 있는 최대 시간(분)</string>
     <string name="carbs_req_threshold">제안을 위한 최소 탄수화물 필요량</string>
     <string name="carbs_req_threshold_summary">탄수화물 제안 알림을 보여주는 최소 탄수화물 g수. 이 양보다 적은 경우 탄수화물 제안 알림이 작동하지 않습니다.</string>
+    <string name="lgs_threshold_summary">BG 값이 이하인 경우 인슐린 공급이 중단됩니다. 기본값은 표준 타겟 모델을 사용합니다. 사용자는 60mg/dl (3.3mmol/l)에서 100mg/dl(5.5mmol/l) 사이의 값을 설정할 수 있습니다. 65/3.6 이하의 값은 기본 모델을 사용하게 됩니다.</string>
+    <string name="lgs_threshold_title">BG 값이 이하인 경우 낮은 포도당 공급이 중단됩니다</string>
     <string name="increasing_max_basal">설정이 프로파일에서의 최대 Basal보다 낮은 이유로 최대 Basal을 올립니다</string>
     <string name="max_basal_multiplier">최대 Basal 승수</string>
     <string name="max_daily_basal_multiplier">최대 일 Basal 승수</string>
@@ -80,13 +88,30 @@
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
     <string name="hardlimit">하드한계</string>
     <!--    Autotune   -->
+    <string name="insulin_peak">피크</string>
     <!--    Loop -->
+    <string name="run_now">지금 실행하기</string>
     <string name="smb_frequency_exceeded">최근 3분 이내에 Bolus가 주입되었습니다. SMB를 건너뜁니다.</string>
+    <string name="pump_not_initialized">펌프가 초기화 되지 않았습니다!</string>
     <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Loop를 활성화 혹은 비활성화합니다.</string>
+    <string name="no_aps_selected">APS가 선택되지 않았거나 제공된 결과가 없습니다.</string>
     <string name="ignore5m">5분간 무시하기</string>
     <string name="ignore15m">5분간 무시하기</string>
     <string name="ignore30m">30분간 무시하기</string>
+    <string name="carbs_suggestion">탄수화물 제안</string>
+    <string name="open_loop_new_suggestion">새로운 제안이 있습니다</string>
     <string name="basal_set_correctly">Basal이 정상적으로 설정되었습니다.</string>
+    <string name="last_run_label">마지막 실행</string>
     <string name="loop_aps_label">APS</string>
+    <string name="request_label">요청</string>
+    <string name="loop_constraints_processed_label">제약 적용 후</string>
+    <string name="loop_tbr_request_time_label">임시 basal 요청시간</string>
+    <string name="loop_tbr_execution_time_label">임시 basal 실행 시간</string>
+    <string name="loop_tbr_set_by_pump_label">펌프에 의한 임시 basal 설정</string>
+    <string name="loop_smb_request_time_label">SMB 요청 시간</string>
+    <string name="loop_smb_execution_time_label">SMB 실행 시간</string>
+    <string name="loop_smb_set_by_pump_label">펌프에 의한 SMB 설정</string>
+    <string name="loop_open_mode_min_change">최소 요청 변경 [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">변경 사항이 %의 값보다 큰 경우에만 열린 루프의 새 변경 요청을 팝업합니다. 기본값은 20%입니다.</string>
 </resources>

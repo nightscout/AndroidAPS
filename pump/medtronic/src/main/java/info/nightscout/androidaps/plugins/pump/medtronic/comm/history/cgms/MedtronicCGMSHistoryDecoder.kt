@@ -5,7 +5,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDeco
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType.Companion.getByCode
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.core.utils.DateTimeUtil
-import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import org.joda.time.LocalDateTime
@@ -20,9 +19,8 @@ import java.util.Arrays
  */
 class MedtronicCGMSHistoryDecoder constructor(
     aapsLogger: AAPSLogger,
-    medtronicUtil: MedtronicUtil,
-    bitUtils: ByteUtil
-) : MedtronicHistoryDecoder<CGMSHistoryEntry>(aapsLogger, medtronicUtil, bitUtils) {
+    medtronicUtil: MedtronicUtil
+) : MedtronicHistoryDecoder<CGMSHistoryEntry>(aapsLogger, medtronicUtil) {
 
     override fun decodeRecord(record: CGMSHistoryEntry): RecordDecodeStatus? {
         return try {
@@ -172,8 +170,10 @@ class MedtronicCGMSHistoryDecoder constructor(
         if (!entry.entryType.hasDate()) return null
         val data = entry.datetime
         return if (entry.entryType.dateType === CGMSHistoryEntryType.DateType.MinuteSpecific) {
-            val atechDateTime = DateTimeUtil.toATechDate(parseYear(data[3].toInt()), parseMonths(data[0].toInt(), data[1].toInt()),
-                                                                                                       parseDay(data[2].toInt()), parseHours(data[0].toInt()), parseMinutes(data[1].toInt()), 0)
+            val atechDateTime = DateTimeUtil.toATechDate(
+                parseYear(data[3].toInt()), parseMonths(data[0].toInt(), data[1].toInt()),
+                parseDay(data[2].toInt()), parseHours(data[0].toInt()), parseMinutes(data[1].toInt()), 0
+            )
             entry.atechDateTime = atechDateTime
             atechDateTime
         } else if (entry.entryType.dateType === CGMSHistoryEntryType.DateType.SecondSpecific) {

@@ -4,21 +4,22 @@ import info.nightscout.core.extensions.fromConstant
 import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
-fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): JSONObject =
     JSONObject()
         .put("timeshift", timeshift)
         .put("percentage", percentage)
         .put("duration", T.msecs(duration).mins())
-        .put("profile", getCustomizedName())
+        .put("profile", getCustomizedName(decimalFormatter))
         .put("originalProfileName", profileName)
         .put("originalDuration", duration)
         .put("created_at", dateUtil.toISOString(timestamp))
@@ -50,7 +51,7 @@ fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
    "mgdl":98
 }
  */
-fun profileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlugin: ActivePlugin): ProfileSwitch? {
+fun ProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil, activePlugin: ActivePlugin): ProfileSwitch? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
     val originalDuration = JsonHelper.safeGetLongAllowNull(jsonObject, "originalDuration")

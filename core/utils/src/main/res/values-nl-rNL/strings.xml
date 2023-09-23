@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="count_selected">%1$d geselecteerd</string>
-    <string name="remove_items">Items verwijderen</string>
-    <string name="sort_items">Sorteer items</string>
-    <string name="remove_selected_items">Verwijder geselecteerde items</string>
-    <string name="sort_label">Sorteren</string>
-</resources>

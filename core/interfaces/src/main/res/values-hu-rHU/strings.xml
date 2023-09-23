@@ -1,13 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">Fájlformátum</string>
-    <string name="metadata_label_created_at">Létrehozva</string>
-    <string name="metadata_label_aaps_version">AAPS verzió</string>
-    <string name="metadata_label_aaps_flavour">Build variant</string>
-    <!--    PumpType-->
     <!-- PumpPluginBase -->
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f E</string>
-    <string name="format_insulin_units">%1$.2f E</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d perce</string>
+    <string name="minago_long">%1$d perccel ezelőtt</string>
+    <string name="hoursago">%1$.1f órája</string>
+    <string name="days_ago">%1$.1f napja</string>
+    <string name="days_ago_round">%1$.0f napja</string>
+    <string name="in_days">%1$.0f napon belül</string>
+    <string name="in_days_round">%1$.0f napon belül</string>
+    <string name="shorthour">ó</string>
+    <string name="days">nap</string>
+    <string name="hours">óra</string>
+    <string name="unit_second">másodperc</string>
+    <string name="unit_minute">perc</string>
+    <string name="unit_hour">óra</string>
+    <string name="unit_day">nap</string>
+    <string name="unit_week">hét</string>
+    <string name="unit_seconds">másodperc</string>
+    <string name="unit_minutes">perc</string>
+    <string name="unit_hours">óra</string>
+    <string name="unit_days">nap</string>
+    <string name="unit_weeks">hét</string>
+    <string name="shortminute">p</string>
+    <string name="shortday">n</string>
+    <string name="later_today">Később még ma</string>
+    <string name="tomorrow">Holnap</string>
+    <string name="today">Ma</string>
+    <string name="yesterday">Tegnap</string>
+    <!-- Rx -->
+    <string name="connecting_for">Csatlakozás %1$d másodpercig</string>
+    <string name="handshaking">Összekapcsolódás</string>
+    <string name="connected">Kapcsolódva</string>
+    <string name="disconnecting">Kapcsolat bontása</string>
+    <string name="waiting_for_disconnection">Várakozás a kapcsolat bontására</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Létrehozva ekkor: %1$s</string>
+    <string name="metadata_label_watchface_author">Szerző: %1$s</string>
+    <string name="metadata_label_watchface_name">Név: %1$s</string>
+    <string name="metadata_wear_import_filename">Fájl név: %1$s</string>
+    <string name="metadata_label_plugin_version">Plugin verzió: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Név: %1$s (%2$s)</string>
+    <string name="pref_show_iob">IOB megjelenítése</string>
+    <string name="pref_show_detailed_iob">Részletes IOB mutatása</string>
+    <string name="pref_show_cob">COB megjelenítése</string>
+    <string name="pref_show_delta">Különbség megjelenítése</string>
+    <string name="pref_show_detailed_delta">Részletes különbség megjelenítése</string>
+    <string name="pref_show_avgdelta">Átlagos különbség megjelenítése</string>
+    <string name="pref_show_phone_battery">Telefon akkumulátor állapot megjelenítése</string>
+    <string name="pref_show_rig_battery">Rig akkumulátor állapot megjelenítése</string>
+    <string name="pref_show_basal_rate">Bázisütem megjelenítése</string>
+    <string name="pref_show_loop_status">Loop állapot megjelenítése</string>
+    <string name="pref_show_bg">VC megjelenítése</string>
+    <string name="pref_show_bgi">BGI megjelenítése</string>
+    <string name="pref_show_direction_arrow">Trend nyíl megjelenítése</string>
+    <string name="cwf_comment_background">Háttérkép</string>
+    <string name="cwf_comment_freetext1">Szabad szöveg 1</string>
+    <string name="cwf_comment_freetext2">Szabad szöveg 2</string>
+    <string name="cwf_comment_freetext3">Szabad szöveg 3</string>
+    <string name="cwf_comment_freetext4">Szabad szöveg 4</string>
+    <string name="cwf_comment_cob2">COB érték</string>
+    <string name="cwf_comment_uploader_battery">Telefon akkumulátor (%)</string>
+    <string name="cwf_comment_rig_battery">Globális loop akkumulátor (%)</string>
+    <string name="cwf_comment_basalRate">Bázisütem</string>
+    <string name="cwf_comment_bgi">BGI érték</string>
+    <string name="cwf_comment_time">Idő (HH:MM vagy HH:MM:SS)</string>
+    <string name="cwf_comment_hour">Óra (HH)</string>
+    <string name="cwf_comment_minute">Perc (MM)</string>
+    <string name="cwf_comment_second">Másodperc (SS)</string>
+    <string name="cwf_comment_timePeriod">AM vagy PM</string>
+    <string name="cwf_comment_day_name">A hét napjának a neve</string>
+    <string name="cwf_comment_day">Nap (DD)</string>
+    <string name="cwf_comment_month">Hónap neve (rövid)</string>
+    <string name="cwf_comment_direction">Trend nyíl</string>
+    <string name="cwf_comment_sgv">VC érték</string>
+    <string name="cwf_comment_hour_hand">Óramutató képe (Analóg Óra)</string>
+    <string name="cwf_comment_minute_hand">Percmutató képe (Analóg Óra)</string>
+    <string name="cwf_comment_second_hand">Pásodperc mutató képe (Analóg Óra)</string>
 </resources>

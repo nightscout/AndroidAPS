@@ -19,7 +19,6 @@ import info.nightscout.interfaces.source.BgSource
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.Dispatchers
 import java.util.Arrays
@@ -30,24 +29,20 @@ import javax.inject.Singleton
 class EversensePlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger,
-    private val sp: SP
+    aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(info.nightscout.core.main.R.drawable.ic_eversense)
-    .pluginName(R.string.eversense)
-    .shortName(R.string.eversense_shortname)
-    .preferencesId(R.xml.pref_bgsource)
-    .description(R.string.description_source_eversense),
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_eversense)
+        .preferencesId(R.xml.pref_bgsource)
+        .pluginName(R.string.eversense)
+        .shortName(R.string.eversense_shortname)
+        .description(R.string.description_source_eversense),
     aapsLogger, rh, injector
 ), BgSource {
 
     override var sensorBatteryLevel = -1
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.EVERSENSE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     // cannot be inner class because of needed injection
     class EversenseWorker(
@@ -126,14 +121,16 @@ class EversensePlugin @Inject constructor(
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationTimestamps" + Arrays.toString(calibrationTimestamps))
                     aapsLogger.debug(LTag.BGSOURCE, "calibrationRecordNumbers" + Arrays.toString(calibrationRecordNumbers))
                     for (i in calibrationGlucoseLevels.indices) {
-                        repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(
-                            timestamp = calibrationTimestamps[i],
-                            type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
-                            glucose = calibrationGlucoseLevels[i].toDouble(),
-                            glucoseType = TherapyEvent.MeterType.FINGER,
-                            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
-                            enteredBy = "AndroidAPS-Eversense"
-                        ))
+                        repository.runTransactionForResult(
+                            InsertIfNewByTimestampTherapyEventTransaction(
+                                timestamp = calibrationTimestamps[i],
+                                type = TherapyEvent.Type.FINGER_STICK_BG_VALUE,
+                                glucose = calibrationGlucoseLevels[i].toDouble(),
+                                glucoseType = TherapyEvent.MeterType.FINGER,
+                                glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+                                enteredBy = "AndroidAPS-Eversense"
+                            )
+                        )
                             .doOnError {
                                 aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                                 ret = Result.failure(workDataOf("Error" to it.toString()))

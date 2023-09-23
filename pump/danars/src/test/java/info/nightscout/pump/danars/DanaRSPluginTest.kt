@@ -1,17 +1,15 @@
 package info.nightscout.pump.danars
 
-import android.content.Context
 import dagger.android.AndroidInjector
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.core.constraints.ConstraintObject
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
@@ -21,8 +19,7 @@ import org.mockito.Mockito
 @Suppress("SpellCheckingInspection")
 class DanaRSPluginTest : DanaRSTestBase() {
 
-    @Mock lateinit var context: Context
-    @Mock lateinit var constraintChecker: Constraints
+    @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
@@ -36,11 +33,11 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
-        val c = Constraint(Constants.REALLYHIGHBASALRATE)
+        val c = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         danaRSPlugin.applyBasalConstraints(c, validProfile)
-        Assert.assertEquals(java.lang.Double.valueOf(0.8), c.value(), 0.0001)
-        Assert.assertEquals("DanaRS: limitingbasalratio", c.getReasons(aapsLogger))
-        Assert.assertEquals("DanaRS: limitingbasalratio", c.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(java.lang.Double.valueOf(0.8), c.value(), 0.0001)
+        Assertions.assertEquals("DanaRS: limitingbasalratio", c.getReasons())
+        Assertions.assertEquals("DanaRS: limitingbasalratio", c.getMostLimitedReasons())
     }
 
     @Test
@@ -48,11 +45,11 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaRSPlugin.setPluginEnabled(PluginType.PUMP, true)
         danaPump.maxBasal = 0.8
-        val c = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
+        val c = ConstraintObject(Int.MAX_VALUE, aapsLogger)
         danaRSPlugin.applyBasalPercentConstraints(c, validProfile)
-        Assert.assertEquals(200, c.value())
-        Assert.assertEquals("DanaRS: limitingpercentrate", c.getReasons(aapsLogger))
-        Assert.assertEquals("DanaRS: limitingpercentrate", c.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(200, c.value())
+        Assertions.assertEquals("DanaRS: limitingpercentrate", c.getReasons())
+        Assertions.assertEquals("DanaRS: limitingpercentrate", c.getMostLimitedReasons())
     }
 
     @BeforeEach
@@ -81,7 +78,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
                 fabricPrivacy,
                 dateUtil,
                 uiInteraction,
-                danaHistoryDatabase
+                danaHistoryDatabase,
+                decimalFormatter
             )
     }
 }

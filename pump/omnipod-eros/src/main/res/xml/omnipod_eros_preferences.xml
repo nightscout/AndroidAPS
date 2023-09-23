@@ -76,8 +76,8 @@
             android:dependency="@string/key_omnipod_common_expiration_reminder_enabled"
             android:digits="0123456789"
             android:inputType="number"
-            android:key="@string/key_omnipod_common_expiration_reminder_hours_before_shutdown"
-            android:title="@string/omnipod_common_preferences_expiration_reminder_hours_before_shutdown"
+            android:key="@string/key_omnipod_common_expiration_reminder_hours_before_expiry"
+            android:title="@string/omnipod_common_preferences_expiration_reminder_hours_before_expiry"
             validate:maxNumber="24"
             validate:minNumber="2"
             validate:testType="numericRange" />

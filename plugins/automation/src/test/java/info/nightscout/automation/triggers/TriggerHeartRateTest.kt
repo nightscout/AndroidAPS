@@ -3,12 +3,9 @@ package info.nightscout.automation.triggers
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.database.entities.HeartRate
+import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotSame
-import org.junit.Assert.assertTrue
-import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
@@ -16,16 +13,9 @@ import org.mockito.Mockito.`when`
 
 class TriggerHeartRateTest : TriggerTestBase() {
 
-    private var now = 1000L
-
-    @BeforeEach
-    fun mock() {
-        `when`(dateUtil.now()).thenReturn(now)
-    }
-
     @Test
     fun friendlyName() {
-        assertEquals(R.string.triggerHeartRate, TriggerHeartRate(injector).friendlyName())
+        Assertions.assertEquals(R.string.triggerHeartRate, TriggerHeartRate(injector).friendlyName())
     }
 
     @Test
@@ -33,7 +23,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
         val t = TriggerHeartRate(injector)
         `when`(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
         `when`(rh.gs(R.string.triggerHeartRateDesc, ">", 80.0)).thenReturn("test")
-        assertEquals("test", t.friendlyDescription())
+        Assertions.assertEquals("test", t.friendlyDescription())
     }
 
     @Test
@@ -43,16 +33,16 @@ class TriggerHeartRateTest : TriggerTestBase() {
             comparator.value = Comparator.Compare.IS_GREATER
         }
         val dup = t.duplicate() as TriggerHeartRate
-        assertNotSame(t, dup)
-        assertEquals(100.0, dup.heartRate.value, 0.01)
-        assertEquals(Comparator.Compare.IS_GREATER, dup.comparator.value)
+        Assertions.assertNotSame(t, dup)
+        Assertions.assertEquals(100.0, dup.heartRate.value, 0.01)
+        Assertions.assertEquals(Comparator.Compare.IS_GREATER, dup.comparator.value)
 
     }
 
     @Test
     fun shouldRunNotAvailable() {
         val t = TriggerHeartRate(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
-        assertTrue(t.shouldRun())
+        Assertions.assertTrue(t.shouldRun())
         verifyNoMoreInteractions(repository)
     }
 
@@ -62,8 +52,8 @@ class TriggerHeartRateTest : TriggerTestBase() {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
-        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(emptyList())
-        assertFalse(t.shouldRun())
+        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(emptyList()))
+        Assertions.assertFalse(t.shouldRun())
         verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
         verifyNoMoreInteractions(repository)
     }
@@ -78,8 +68,8 @@ class TriggerHeartRateTest : TriggerTestBase() {
             HeartRate(duration = 300_000, timestamp = now - 300_000, beatsPerMinute = 80.0, device = "test"),
             HeartRate(duration = 300_000, timestamp = now, beatsPerMinute = 60.0, device = "test"),
         )
-        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(hrs)
-        assertFalse(t.shouldRun())
+        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(hrs))
+        Assertions.assertFalse(t.shouldRun())
         verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
         verifyNoMoreInteractions(repository)
     }
@@ -93,8 +83,8 @@ class TriggerHeartRateTest : TriggerTestBase() {
         val hrs = listOf(
             HeartRate(duration = 300_000, timestamp = now, beatsPerMinute = 120.0, device = "test"),
         )
-        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(hrs)
-        assertTrue(t.shouldRun())
+        `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(hrs))
+        Assertions.assertTrue(t.shouldRun())
         verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
         verifyNoMoreInteractions(repository)
     }
@@ -105,12 +95,9 @@ class TriggerHeartRateTest : TriggerTestBase() {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
-        assertEquals(Comparator.Compare.IS_GREATER, t.comparator.value)
+        Assertions.assertEquals(Comparator.Compare.IS_GREATER, t.comparator.value)
 
-        assertEquals(
-            """{"data":{"comparator":"IS_GREATER","heartRate":100},"type":"TriggerHeartRate"}""".trimMargin(),
-            t.toJSON()
-        )
+        Assertions.assertEquals("""{"data":{"comparator":"IS_GREATER","heartRate":100},"type":"TriggerHeartRate"}""".trimMargin(), t.toJSON())
     }
 
     @Test
@@ -120,7 +107,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
                 """{"data":{"comparator":"IS_GREATER","heartRate":100},"type":"TriggerHeartRate"}"""
             )
         ) as TriggerHeartRate
-        assertEquals(Comparator.Compare.IS_GREATER, t.comparator.value)
-        assertEquals(100.0, t.heartRate.value, 0.01)
+        Assertions.assertEquals(Comparator.Compare.IS_GREATER, t.comparator.value)
+        Assertions.assertEquals(100.0, t.heartRate.value, 0.01)
     }
 }

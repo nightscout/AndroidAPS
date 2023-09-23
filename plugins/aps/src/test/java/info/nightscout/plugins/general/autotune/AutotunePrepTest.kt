@@ -1,9 +1,10 @@
 package info.nightscout.plugins.general.autotune
 
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBaseWithProfile
+import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.extensions.shiftBlock
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.GlucoseValue
@@ -14,7 +15,6 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.sharedPreferences.SP
@@ -22,7 +22,6 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -32,9 +31,7 @@ import java.util.TimeZone
 
 class AutotunePrepTest : TestBaseWithProfile() {
 
-    @Mock lateinit var sp: SP
     @Mock lateinit var autotuneFS: AutotuneFS
-    @Mock lateinit var injector: HasAndroidInjector
     @Mock lateinit var repository: AppRepository
     private lateinit var autotunePrep: AutotunePrep
     private lateinit var autotuneIob: TestAutotuneIob
@@ -66,26 +63,20 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         `when`(sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)).thenReturn(false)
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)
-        try {
-            aapsPreppedGlucose?.let {       // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
-                for (i in aapsPreppedGlucose.crData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i]))
-                for (i in aapsPreppedGlucose.csfGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i]))
-                oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
-                aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
-                for (i in aapsPreppedGlucose.isfGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i]))
-                oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
-                aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
-                for (i in aapsPreppedGlucose.basalGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i]))
-            }
-                ?: Assert.fail()
-        } catch (e: Exception) {
-            Assert.fail()
-        }
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
+        for (i in aapsPreppedGlucose.crData.indices)
+            assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
+        for (i in aapsPreppedGlucose.csfGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i])).isTrue()
+        oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+        aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+        for (i in aapsPreppedGlucose.isfGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i])).isTrue()
+        oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+        aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+        for (i in aapsPreppedGlucose.basalGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i])).isTrue()
     }
 
     @Test
@@ -105,26 +96,20 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         `when`(sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)).thenReturn(false)           // CategorizeUAM as Basal = False
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)
-        try {
-            aapsPreppedGlucose?.let {       // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
-                for (i in aapsPreppedGlucose.crData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i]))
-                for (i in aapsPreppedGlucose.csfGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i]))
-                oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
-                aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
-                for (i in aapsPreppedGlucose.isfGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i]))
-                oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
-                aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
-                for (i in aapsPreppedGlucose.basalGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i]))
-            }
-                ?: Assert.fail()
-        } catch (e: Exception) {
-            Assert.fail()
-        }
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
+        for (i in aapsPreppedGlucose.crData.indices)
+            assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
+        for (i in aapsPreppedGlucose.csfGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i])).isTrue()
+        oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+        aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+        for (i in aapsPreppedGlucose.isfGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i])).isTrue()
+        oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+        aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+        for (i in aapsPreppedGlucose.basalGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i])).isTrue()
     }
 
     @Test
@@ -144,26 +129,20 @@ class AutotunePrepTest : TestBaseWithProfile() {
         autotuneIob.boluses = buildBoluses(oapsPreppedGlucose) //Values from oapsPrepData because linked to iob calculation method for TBR
         `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         `when`(sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)).thenReturn(true)           // CategorizeUAM as Basal = True
-        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)
-        try {
-            aapsPreppedGlucose?.let {       // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
-                for (i in aapsPreppedGlucose.crData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i]))
-                for (i in aapsPreppedGlucose.csfGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i]))
-                oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
-                aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
-                for (i in aapsPreppedGlucose.isfGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i]))
-                oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
-                aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
-                for (i in aapsPreppedGlucose.basalGlucoseData.indices)
-                    Assert.assertTrue(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i]))
-            }
-                ?: Assert.fail()
-        } catch (e: Exception) {
-            Assert.fail()
-        }
+        val aapsPreppedGlucose = autotunePrep.categorizeBGDatums(inputProfile, inputProfile.localInsulin, false)!!
+        // compare all categorization calculated by aaps plugin (aapsPreppedGlucose) with categorization calculated by OpenAPS (oapsPreppedGlucose)
+        for (i in aapsPreppedGlucose.crData.indices)
+            assertThat(oapsPreppedGlucose.crData[i].equals(aapsPreppedGlucose.crData[i])).isTrue()
+        for (i in aapsPreppedGlucose.csfGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.csfGlucoseData[i].equals(aapsPreppedGlucose.csfGlucoseData[i])).isTrue()
+        oapsPreppedGlucose.isfGlucoseData = oapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+        aapsPreppedGlucose.isfGlucoseData = aapsPreppedGlucose.isfGlucoseData.sortedBy { it.date }
+        for (i in aapsPreppedGlucose.isfGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.isfGlucoseData[i].equals(aapsPreppedGlucose.isfGlucoseData[i])).isTrue()
+        oapsPreppedGlucose.basalGlucoseData = oapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+        aapsPreppedGlucose.basalGlucoseData = aapsPreppedGlucose.basalGlucoseData.sortedBy { it.date }
+        for (i in aapsPreppedGlucose.basalGlucoseData.indices)
+            assertThat(oapsPreppedGlucose.basalGlucoseData[i].equals(aapsPreppedGlucose.basalGlucoseData[i])).isTrue()
     }
 
     /*************************************************************************************************************************************************************************************

@@ -120,7 +120,7 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
         _binding = null
     }
 
-    inner class UserEntryAdapter internal constructor(var entries: List<UserEntry>) : RecyclerView.Adapter<UserEntryAdapter.UserEntryViewHolder>() {
+    inner class UserEntryAdapter internal constructor(private var entries: List<UserEntry>) : RecyclerView.Adapter<UserEntryAdapter.UserEntryViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserEntryViewHolder {
             val view: View = LayoutInflater.from(parent.context).inflate(R.layout.treatments_user_entry_item, parent, false)

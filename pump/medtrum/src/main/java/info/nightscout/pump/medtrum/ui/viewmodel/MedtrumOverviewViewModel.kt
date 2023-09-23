@@ -7,6 +7,7 @@ import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
 import info.nightscout.pump.medtrum.ui.event.UIEvent
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
@@ -28,6 +29,7 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val commandQueue: CommandQueue,
     private val dateUtil: DateUtil,
+    private val medtrumPlugin: MedtrumPlugin,
     val medtrumPump: MedtrumPump
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
@@ -77,6 +79,10 @@ class MedtrumOverviewViewModel @Inject constructor(
     val patchExpiry: LiveData<String>
         get() = _patchExpiry
 
+    private val _activeBolusStatus = SingleLiveEvent<String>()
+    val activeBolusStatus: LiveData<String>
+        get() = _activeBolusStatus
+
     init {
         scope.launch {
             medtrumPump.connectionStateFlow.collect { state ->
@@ -113,12 +119,23 @@ class MedtrumOverviewViewModel @Inject constructor(
             medtrumPump.pumpStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
                 _canDoResetAlarms.postValue(
-                    medtrumPump.pumpState in listOf(
-                        MedtrumPumpState.PAUSED, MedtrumPumpState.HOURLY_MAX_SUSPENDED, MedtrumPumpState.DAILY_MAX_SUSPENDED
-                    )
+                    medtrumPump.pumpState.isSuspendedByPump()
                 )
 
                 updateGUI()
+            }
+        }
+        scope.launch {
+            medtrumPump.bolusAmountDeliveredFlow.collect { bolusAmount ->
+                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel bolusAmountDeliveredFlow: $bolusAmount")
+                if (!medtrumPump.bolusDone && medtrumPlugin.isInitialized()) {
+                    _activeBolusStatus.postValue(
+                        dateUtil.timeString(medtrumPump.bolusStartTime) + " " + dateUtil.sinceString(medtrumPump.bolusStartTime, rh)
+                            + " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, bolusAmount) + " / " + rh.gs(
+                            info.nightscout.core.ui.R.string.format_insulin_units, medtrumPump.bolusAmountToBeDelivered
+                        )
+                    )
+                }
             }
         }
         // Periodically update gui
@@ -128,6 +145,8 @@ class MedtrumOverviewViewModel @Inject constructor(
                 kotlinx.coroutines.delay(T.mins(1).msecs())
             }
         }
+        // Update gui on init
+        updateGUI()
     }
 
     override fun onCleared() {
@@ -158,7 +177,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         if (medtrumPump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection
             val agoMinutes = agoMilliseconds / 1000 / 60
-            _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.shared.R.string.minago, agoMinutes))
+            _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.interfaces.R.string.minago, agoMinutes))
         }
         if (medtrumPump.lastBolusTime != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastBolusTime
@@ -167,10 +186,13 @@ class MedtrumOverviewViewModel @Inject constructor(
             // max 6h back
                 _lastBolus.postValue(
                     dateUtil.timeString(medtrumPump.lastBolusTime) + " " + dateUtil.sinceString(medtrumPump.lastBolusTime, rh) + " " + rh.gs(
-                        info.nightscout.interfaces.R.string.format_insulin_units, medtrumPump.lastBolusAmount
+                        info.nightscout.core.ui.R.string.format_insulin_units, medtrumPump.lastBolusAmount
                     )
                 )
             else _lastBolus.postValue("")
+        }
+        if (medtrumPump.bolusDone || !medtrumPlugin.isInitialized()) {
+            _activeBolusStatus.postValue("")
         }
 
         val activeAlarmStrings = medtrumPump.activeAlarms.map { medtrumPump.alarmStateToString(it) }

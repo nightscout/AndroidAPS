@@ -31,7 +31,7 @@ data class MultiwaveBolusLink(
     override var isValid: Boolean = true,
     override var referenceId: Long? = null,
     @Embedded
-        override var interfaceIDs_backing: InterfaceIDs? = null,
+    override var interfaceIDs_backing: InterfaceIDs? = null,
     var bolusId: Long,
     var extendedBolusId: Long
 ) : TraceableDBEntry {

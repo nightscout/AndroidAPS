@@ -29,6 +29,9 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.viewpager2.widget.ViewPager2
+import app.aaps.configuration.activities.DaggerAppCompatActivityWithResult
+import app.aaps.configuration.activities.SingleFragmentActivity
+import app.aaps.configuration.setupwizard.SetupWizardActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -37,9 +40,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.activities.HistoryBrowseActivity
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
-import info.nightscout.configuration.activities.SingleFragmentActivity
-import info.nightscout.configuration.setupwizard.SetupWizardActivity
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.locale.LocaleHelper
@@ -52,11 +52,10 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
@@ -96,7 +95,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var iconsProvider: IconsProvider
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var signatureVerifierPlugin: SignatureVerifierPlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var profileFunction: ProfileFunction
@@ -208,8 +207,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     R.id.nav_about              -> {
                         var message = "Build: ${BuildConfig.BUILDVERSION}\n"
                         message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
-                        message += "${rh.gs(info.nightscout.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
-                        if (config.isEngineeringMode()) message += "\n${rh.gs(info.nightscout.configuration.R.string.engineering_mode_enabled)}"
+                        message += "${rh.gs(app.aaps.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
+                        if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.configuration.R.string.engineering_mode_enabled)}"
                         if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
                         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(info.nightscout.core.ui.R.string.fabric_upload_disabled)}"
                         message += rh.gs(info.nightscout.core.ui.R.string.about_link_urls)
@@ -283,7 +282,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private fun start() {
         binding.splash.visibility = View.GONE
         //Check here if loop plugin is disabled. Else check via constraints
-        if (!(loop as PluginBase).isEnabled()) versionCheckerUtils.triggerCheckVersion()
+        if (!loop.isEnabled()) versionCheckerUtils.triggerCheckVersion()
         setUserStats()
         setupViews()
 
@@ -308,7 +307,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun startWizard(): Boolean =
-        !sp.getBoolean(info.nightscout.configuration.R.string.key_setupwizard_processed, false)
+        !sp.getBoolean(app.aaps.configuration.R.string.key_setupwizard_processed, false)
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)

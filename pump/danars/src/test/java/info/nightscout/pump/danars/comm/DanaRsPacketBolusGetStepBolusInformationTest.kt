@@ -3,7 +3,6 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.Calendar
@@ -36,15 +35,15 @@ class DanaRsPacketBolusGetStepBolusInformationTest : DanaRSTestBase() {
         putByteToArray(array, 10, 100) // bolus step 1
 
         packet.handleMessage(array)
-        Assert.assertTrue(packet.failed)
-        Assert.assertEquals(6.0, danaPump.initialBolusAmount, 0.01)
+        Assertions.assertTrue(packet.failed)
+        Assertions.assertEquals(6.0, danaPump.initialBolusAmount, 0.01)
         val lastBolus = Calendar.getInstance()
         lastBolus.timeInMillis = danaPump.lastBolusTime
-        Assert.assertEquals(13, lastBolus.get(Calendar.HOUR_OF_DAY))
-        Assert.assertEquals(20, lastBolus.get(Calendar.MINUTE))
+        Assertions.assertEquals(13, lastBolus.get(Calendar.HOUR_OF_DAY))
+        Assertions.assertEquals(20, lastBolus.get(Calendar.MINUTE))
         Assertions.assertEquals(12.5, danaPump.lastBolusAmount, 0.01)
-        Assert.assertEquals(25.0, danaPump.maxBolus, 0.01)
-        Assert.assertEquals(1.0, danaPump.bolusStep, 0.01)
-        Assert.assertEquals("BOLUS__GET_STEP_BOLUS_INFORMATION", packet.friendlyName)
+        Assertions.assertEquals(25.0, danaPump.maxBolus, 0.01)
+        Assertions.assertEquals(1.0, danaPump.bolusStep, 0.01)
+        Assertions.assertEquals("BOLUS__GET_STEP_BOLUS_INFORMATION", packet.friendlyName)
     }
 }

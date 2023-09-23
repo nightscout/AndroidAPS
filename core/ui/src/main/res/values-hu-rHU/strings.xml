@@ -125,6 +125,7 @@
     <string name="cancel">Mégse</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
+    <string name="close">Bezár</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
@@ -143,4 +144,14 @@
         <item quantity="other">%1$d óra</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <string name="weekday_saturday_short">Szo</string>
+    <string name="weekday_friday_short">Pé</string>
+    <string name="weekday_thursday_short">Csü</string>
+    <string name="weekday_wednesday_short">Sze</string>
+    <string name="weekday_tuesday_short">Ke</string>
+    <string name="weekday_monday_short">Hé</string>
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units">%1$.2f E</string>
 </resources>

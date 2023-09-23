@@ -7,15 +7,12 @@ import android.support.wearable.watchface.WatchFaceStyle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityDigitalstyleBinding
-import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.rx.logging.LTag
-
 
 class DigitalStyleWatchface : BaseWatchFace() {
 
@@ -113,11 +110,6 @@ class DigitalStyleWatchface : BaseWatchFace() {
             binding.minute.textSize = 26f
             binding.hour.letterSpacing = 0.toFloat()
             binding.minute.letterSpacing = 0.toFloat()
-
-            /* display week number */
-            val mWeekNumber = layoutView?.findViewById<TextView>(R.id.week_number)
-            mWeekNumber?.visibility = sp.getBoolean(R.string.key_show_week_number, false).toVisibility()
-            mWeekNumber?.text = "(" + dateUtil.weekString() + ")"
         }
     }
 

@@ -5,7 +5,9 @@
     <string name="danars_pairingok">연동완료</string>
     <string name="danars_pairingtimedout">연동시간초과</string>
     <string name="danars_waitingforpairing">펌프연동 대기중</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">DANA Diabecare RS와 Dana-i 펌프를 위한 펌프 연동</string>
     <string name="maxbolusviolation">최대 Bolus 위반</string>
     <string name="commanderror">명령 오류</string>
     <string name="speederror">속도 오류</string>
@@ -113,4 +115,6 @@
     <string name="press_ok_on_the_pump">펌프\n에 있는 OK을 누르고 2개의 표시된 번호\n를 입력하는 동안 빼기 버튼을 눌러 화면이 꺼지지 않게 합니다.</string>
     <string name="num1pin">1: (12자리)</string>
     <string name="num2pin">2: (8자리)</string>
+    <string name="basal_bolus_step">Basal/bolus 단계</string>
+    <string name="carbs_store_error">탄수화물이 올바르게 저장되지 않았을 수 있습니다. 필요한 경우 수동으로 확인하고 다시 저장하십시오.</string>
 </resources>

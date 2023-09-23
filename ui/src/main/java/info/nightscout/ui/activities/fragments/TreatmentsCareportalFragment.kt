@@ -30,7 +30,6 @@ import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventNSClientRestart
 import info.nightscout.rx.events.EventTherapyEventChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -43,10 +42,8 @@ import info.nightscout.ui.R
 import info.nightscout.ui.activities.fragments.TreatmentsCareportalFragment.RecyclerViewAdapter.TherapyEventsViewHolder
 import info.nightscout.ui.databinding.TreatmentsCareportalFragmentBinding
 import info.nightscout.ui.databinding.TreatmentsCareportalItemBinding
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -87,21 +84,6 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
         binding.recyclerview.emptyView = binding.noRecordsText
         binding.recyclerview.loadingView = binding.progressBar
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
-    }
-
-    private fun refreshFromNightscout() {
-        activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.careportal), rh.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
-                uel.log(Action.CAREPORTAL_NS_REFRESH, Sources.Treatments)
-                disposable += Completable.fromAction { repository.deleteAllTherapyEventsEntries() }
-                    .subscribeOn(aapsSchedulers.io)
-                    .subscribeBy(
-                        onError = { aapsLogger.error("Error removing entries", it) },
-                        onComplete = { rxBus.send(EventTherapyEventChange()) }
-                    )
-                rxBus.send(EventNSClientRestart())
-            })
-        }
     }
 
     private fun removeStartedEvents() {
@@ -200,8 +182,6 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_careportal, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || !config.isEngineeringMode()
-        menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
     }
 
     private fun updateMenuVisibility() {
@@ -231,11 +211,6 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
 
             R.id.nav_remove_started_events -> {
                 removeStartedEvents()
-                true
-            }
-
-            R.id.nav_refresh_ns            -> {
-                refreshFromNightscout()
                 true
             }
 

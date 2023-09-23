@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class PodInfoOlderPulseLog extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 3;
@@ -23,9 +23,9 @@ public class PodInfoOlderPulseLog extends PodInfo {
 
         dwords = new ArrayList<>();
 
-        int numberOfDwordLogEntries = ByteUtil.toInt(encodedData[1], encodedData[2]);
+        int numberOfDwordLogEntries = ByteUtil.INSTANCE.toInt(encodedData[1], encodedData[2]);
         for (int i = 0; numberOfDwordLogEntries > i; i++) {
-            byte[] dword = ByteUtil.substring(encodedData, 3 + (4 * i), 4);
+            byte[] dword = ByteUtil.INSTANCE.substring(encodedData, 3 + (4 * i), 4);
             dwords.add(dword);
         }
     }
@@ -46,7 +46,7 @@ public class PodInfoOlderPulseLog extends PodInfo {
 
         List<String> hexDwords = new ArrayList<>();
         for (byte[] dword : dwords) {
-            hexDwords.add(ByteUtil.shortHexStringWithoutSpaces(dword));
+            hexDwords.add(ByteUtil.INSTANCE.shortHexStringWithoutSpaces(dword));
         }
         out += TextUtils.join(", ", hexDwords);
         out += "]}";

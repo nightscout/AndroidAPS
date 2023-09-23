@@ -289,12 +289,9 @@
     <string name="wearcontrol_title">从手表上控制</string>
     <string name="wearcontrol_summary">设置临时目标并从手表中进行治疗操作。</string>
     <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
-    <string name="wear_display_settings">显示设置</string>
     <string name="wear_general_settings">常规设置</string>
     <string name="wear_notifysmb_title">在 SMB 上通知</string>
     <string name="wear_notifysmb_summary">在手表上像显示常规大剂量一样显示SMB微型大剂量</string>
-    <string name="wear_predictions_summary">在手表的表盘上显示预测</string>
-    <string name="wear_predictions_title">预测</string>
     <string name="resend_all_data">重新发送所有数据</string>
     <string name="open_settings_on_wear">在手表上打开设置</string>
     <!--    PersistentNotification-->

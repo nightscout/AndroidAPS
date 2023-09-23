@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DeactivateCommandTest {
@@ -15,6 +15,6 @@ class DeactivateCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("0242000114061C04494E532E001C"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("0242000114061C04494E532E001C"), encoded)
     }
 }

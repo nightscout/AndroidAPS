@@ -1,14 +1,12 @@
 package info.nightscout.pump.danars.comm
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import java.util.Calendar
@@ -16,8 +14,6 @@ import java.util.GregorianCalendar
 
 class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
 
-    @Mock lateinit var context: Context
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
@@ -48,18 +44,18 @@ class DanaRsPacketApsHistoryEventsTest : DanaRSTestBase() {
         val returnedValues = testPacket.getRequestParams()
         val expectedValues = getCalender(now)
         //year
-        Assert.assertEquals(expectedValues[0], returnedValues[0])
+        Assertions.assertEquals(expectedValues[0], returnedValues[0])
         //month
-        Assert.assertEquals(expectedValues[1], returnedValues[1])
+        Assertions.assertEquals(expectedValues[1], returnedValues[1])
         //day of month
-        Assert.assertEquals(expectedValues[2], returnedValues[2])
+        Assertions.assertEquals(expectedValues[2], returnedValues[2])
         // hour
-        Assert.assertEquals(expectedValues[3], returnedValues[3])
+        Assertions.assertEquals(expectedValues[3], returnedValues[3])
         // minute
-        Assert.assertEquals(expectedValues[4], returnedValues[4])
+        Assertions.assertEquals(expectedValues[4], returnedValues[4])
         // second
-        Assert.assertEquals(expectedValues[5], returnedValues[5])
-        Assert.assertEquals("APS_HISTORY_EVENTS", testPacket.friendlyName)
+        Assertions.assertEquals(expectedValues[5], returnedValues[5])
+        Assertions.assertEquals("APS_HISTORY_EVENTS", testPacket.friendlyName)
     }
 
     private fun getCalender(from: Long): ByteArray {

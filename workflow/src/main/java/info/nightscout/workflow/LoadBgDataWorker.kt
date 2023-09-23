@@ -43,7 +43,6 @@ class LoadBgDataWorker(
             bgReadings = repository
                 .compatGetBgReadingsDataFromTime(start, to + T.mins(2).msecs(), false)
                 .blockingGet()
-                .filter { it.value >= 39 }
             aapsLogger.debug(LTag.AUTOSENS) { "BG data loaded. Size: ${bgReadings.size} Start date: ${dateUtil.dateAndTimeString(start)} End date: ${dateUtil.dateAndTimeString(to)}" }
             createBucketedData(aapsLogger, dateUtil)
         }

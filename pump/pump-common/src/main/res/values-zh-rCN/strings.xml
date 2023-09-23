@@ -63,6 +63,11 @@
     <string name="pump_settings_error_wrong_max_basal_set">泵上设置的最大基础率错误 (应当为 %1$.2f)。</string>
     <!-- Pump History -->
     <string name="pump_history_type">类型：</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">从未连接</string>
+    <string name="pump_status_sleeping">休眠</string>
+    <string name="pump_status_waking_up">唤醒中</string>
+    <string name="pump_status_active">启用</string>
     <plurals name="duration_days">
         <item quantity="other">%1$d 天</item>
     </plurals>

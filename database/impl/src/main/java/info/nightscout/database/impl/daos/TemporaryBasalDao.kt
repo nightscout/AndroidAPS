@@ -62,21 +62,15 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getTemporaryBasalDataIncludingInvalidFromTime(timestamp: Long): Single<List<TemporaryBasal>>
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getTemporaryBasalDataIncludingInvalidFromTimeToTime(from: Long, to: Long): Single<List<TemporaryBasal>>
-
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getTemporaryBasalData(): Single<List<TemporaryBasal>>
-
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE referenceId = :id ORDER BY id DESC LIMIT 1")
     fun getLastHistoryRecord(id: Long): TemporaryBasal?
 
     // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_TEMPORARY_BASALS WHERE id > :id) ORDER BY id ASC")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id > :id AND pumpId IS NOT NULL AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_TEMPORARY_BASALS WHERE id > :id) ORDER BY id ASC")
     fun getModifiedFrom(id: Long): Single<List<TemporaryBasal>>
 
     // for WS we need 1 record only
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id > :id ORDER BY id ASC limit 1")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id > :id AND pumpId IS NOT NULL ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfter(id: Long): Maybe<TemporaryBasal>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id = :referenceId")
@@ -86,5 +80,5 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     fun getOldestRecord(): TemporaryBasal?
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TemporaryBasal>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TemporaryBasal>
 }

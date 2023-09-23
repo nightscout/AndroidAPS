@@ -1,7 +1,7 @@
 package info.nightscout.smoothing
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.plugin.PluginBase
@@ -123,11 +123,6 @@ class ExponentialSmoothingPlugin @Inject constructor(
                 // here
                 ssBG.add(o1_weight * o1_sBG[i] + (1 - o1_weight) * o2_sBG[i]) //MP build array of doubly smoothed bgs
             }
-            /*
-            for (i in 0 until ssBG.size - 1) {
-                ssD.add(ssBG[i] - ssBG[i + 1]) //MP build array of doubly smoothed bg deltas
-            }
-             */
             for (i in 0 until minOf(ssBG.size, data.size)) { // noise at the beginning of the smoothing window is the greatest, so only include the 10 most recent values in the output
                 data[i].smoothed = max(round(ssBG[i]), 39.0) //Make 39 the smallest value as smaller values trigger errors (xDrip error state = 38)
                 data[i].trendArrow = GlucoseValue.TrendArrow.NONE

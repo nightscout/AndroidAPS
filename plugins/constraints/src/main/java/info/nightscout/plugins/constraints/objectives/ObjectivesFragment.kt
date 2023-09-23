@@ -18,13 +18,13 @@ import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
-import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.constraints.R
 import info.nightscout.plugins.constraints.databinding.ObjectivesFragmentBinding
 import info.nightscout.plugins.constraints.databinding.ObjectivesItemBinding
@@ -100,8 +100,8 @@ class ObjectivesFragment : DaggerFragment() {
             .toObservable(EventObjectivesUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                binding.recyclerview.adapter?.notifyDataSetChanged()
-            }, fabricPrivacy::logException)
+                           binding.recyclerview.adapter?.notifyDataSetChanged()
+                       }, fabricPrivacy::logException)
     }
 
     @Synchronized
@@ -224,7 +224,12 @@ class ObjectivesFragment : DaggerFragment() {
                     val state = TextView(holder.binding.progress.context)
                     state.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                     val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
-                    val formattedHTML = String.format(basicHTML, if (task.isCompleted()) rh.gac(context, info.nightscout.core.ui.R.attr.isCompletedColor) else rh.gac(context, info.nightscout.core.ui.R.attr.isNotCompletedColor), task.progress)
+                    val formattedHTML =
+                        String.format(
+                            basicHTML,
+                            if (task.isCompleted()) rh.gac(context, info.nightscout.core.ui.R.attr.isCompletedColor) else rh.gac(context, info.nightscout.core.ui.R.attr.isNotCompletedColor),
+                            task.progress
+                        )
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
                     holder.binding.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -333,8 +338,10 @@ class ObjectivesFragment : DaggerFragment() {
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
                     OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.objectives), rh.gs(R.string.doyouwantresetstart), Runnable {
-                        uel.log(Action.OBJECTIVE_UNSTARTED, Sources.Objectives,
-                            ValueWithUnit.SimpleInt(position + 1))
+                        uel.log(
+                            Action.OBJECTIVE_UNSTARTED, Sources.Objectives,
+                            ValueWithUnit.SimpleInt(position + 1)
+                        )
                         objective.startedOn = 0
                         scrollToCurrentObjective()
                         rxBus.send(EventObjectivesUpdateGui())

@@ -8,10 +8,12 @@ import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
+import info.nightscout.interfaces.constraints.PluginConstraints
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.OwnDatabasePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -68,7 +70,7 @@ class DanaRSPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val context: Context,
     rh: ResourceHelper,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
     commandQueue: CommandQueue,
@@ -79,7 +81,8 @@ class DanaRSPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
-    private val danaHistoryDatabase: DanaHistoryDatabase
+    private val danaHistoryDatabase: DanaHistoryDatabase,
+    private val decimalFormatter: DecimalFormatter
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -91,7 +94,7 @@ class DanaRSPlugin @Inject constructor(
         .preferencesId(R.xml.pref_danars)
         .description(info.nightscout.pump.dana.R.string.description_pump_dana_rs),
     injector, aapsLogger, rh, commandQueue
-), Pump, Dana, Constraints, OwnDatabasePlugin {
+), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
     private var danaRSService: DanaRSService? = null
@@ -201,18 +204,22 @@ class DanaRSPlugin @Inject constructor(
 
     // Constraints interface
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        absoluteRate.setIfSmaller(aapsLogger, danaPump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, danaPump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        absoluteRate.setIfSmaller(danaPump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, danaPump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         return absoluteRate
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        percentRate.setIfGreater(0, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(
+            pumpDescription.maxTempPercent,
+            rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.pumplimit)),
+            this
+        )
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfSmaller(aapsLogger, danaPump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, danaPump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        insulin.setIfSmaller(danaPump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, danaPump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         return insulin
     }
 
@@ -281,7 +288,7 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         return if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             val preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0)
             var speed = 12
@@ -336,7 +343,7 @@ class DanaRSPlugin @Inject constructor(
     // This is called from APS
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
+        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         var doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
         val doHighTemp = absoluteAfterConstrain > baseBasalRate
@@ -412,7 +419,7 @@ class DanaRSPlugin @Inject constructor(
     @Synchronized
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(Constraint(percent), profile).value()
+        var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
         if (percentAfterConstraint < 0) {
             result.isTempCancel = false
             result.enacted = false
@@ -482,7 +489,7 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
-        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
+        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
@@ -617,7 +624,7 @@ class DanaRSPlugin @Inject constructor(
             ret += "LastConn: $agoMin minAgo\n"
         }
         if (danaPump.lastBolusTime != 0L)
-            ret += "LastBolus: ${DecimalFormatter.to2Decimal(danaPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", danaPump.lastBolusTime)}"
+            ret += "LastBolus: ${decimalFormatter.to2Decimal(danaPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", danaPump.lastBolusTime)}"
 
         if (danaPump.isTempBasalInProgress)
             ret += "Temp: ${danaPump.temporaryBasalToString()}"
@@ -626,9 +633,9 @@ class DanaRSPlugin @Inject constructor(
             ret += "Extended: ${danaPump.extendedBolusToString()}\n"
 
         if (!veryShort) {
-            ret += "TDD: ${DecimalFormatter.to0Decimal(danaPump.dailyTotalUnits)} / ${danaPump.maxDailyTotalUnits} U"
+            ret += "TDD: ${decimalFormatter.to0Decimal(danaPump.dailyTotalUnits)} / ${danaPump.maxDailyTotalUnits} U"
         }
-        ret += "Reserv: ${DecimalFormatter.to0Decimal(danaPump.reservoirRemainingUnits)} U"
+        ret += "Reserv: ${decimalFormatter.to0Decimal(danaPump.reservoirRemainingUnits)} U"
         ret += "Batt: ${danaPump.batteryRemaining}"
         return ret
     }

@@ -4,8 +4,8 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class SetPatchPacketTest : MedtrumTestBase() {
 
@@ -33,6 +33,6 @@ class SetPatchPacketTest : MedtrumTestBase() {
 
         // Expected values
         val expected = byteArrayOf(35, 1, 32, 3, 16, 14, 0, 0, 12, 0, 0, 30)
-        assertEquals(expected.contentToString(), result.contentToString())
+        Assertions.assertEquals(expected.contentToString(), result.contentToString())
     }
 }

@@ -2,7 +2,7 @@ package info.nightscout.plugins.iob.iobCobCalculator.data
 
 import androidx.collection.LongSparseArray
 import androidx.collection.size
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.AutosensDataStore
@@ -232,7 +232,6 @@ class AutosensDataStoreObject : AutosensDataStore {
         // after adjusting time may be newer. In this case use T-5min
         currentTime = if (adjustedTime > currentTime) adjustedTime - T.mins(5).msecs() else adjustedTime
         aapsLogger.debug("Adjusted time " + dateUtil.dateAndTimeAndSecondsString(currentTime))
-        //log.debug("First reading: " + new Date(currentTime).toLocaleString());
         while (true) {
             // test if current value is older than current time
             val newer = findNewer(currentTime)
@@ -248,7 +247,6 @@ class AutosensDataStoreObject : AutosensDataStore {
                 val currentBg = newer.value - timeDiffToNew.toDouble() / (newer.timestamp - older.timestamp) * bgDelta
                 val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble(), filledGap = filledGap, sourceSensor = lastBg.sourceSensor)
                 newBucketedData.add(newBgReading)
-                //log.debug("BG: " + newBgReading.value + " (" + new Date(newBgReading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
             }
             currentTime -= T.mins(5).msecs()
         }
@@ -268,23 +266,19 @@ class AutosensDataStoreObject : AutosensDataStore {
         for (i in 1 until bgReadings.size) {
             val bgTime = bgReadings[i].timestamp
             var lastBgTime = bgReadings[i - 1].timestamp
-            //log.error("Processing " + i + ": " + new Date(bgTime).toString() + " " + bgReadings.get(i).value + "   Previous: " + new Date(lastBgTime).toString() + " " + bgReadings.get(i - 1).value);
             var elapsedMinutes = (bgTime - lastBgTime) / (60 * 1000)
             when {
                 abs(elapsedMinutes) > 8 -> {
                     // interpolate missing data points
                     var lastBgValue = bgReadings[i - 1].value
                     elapsedMinutes = abs(elapsedMinutes)
-                    //console.error(elapsed_minutes);
                     var nextBgTime: Long
                     while (elapsedMinutes > 5) {
                         nextBgTime = lastBgTime - 5 * 60 * 1000
                         j++
                         val gapDelta = bgReadings[i].value - lastBgValue
-                        //console.error(gapDelta, lastBg, elapsed_minutes);
                         val nextBg = lastBgValue + 5.0 / elapsedMinutes * gapDelta
                         val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble(), filledGap = true, sourceSensor = lastBg.sourceSensor)
-                        //console.error("Interpolated", bData[j]);
                         bData.add(newBgReading)
                         aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgTime)} lastBgTime: ${dateUtil.toISOString(lastBgTime)} $newBgReading" }
                         elapsedMinutes -= 5
@@ -306,7 +300,6 @@ class AutosensDataStoreObject : AutosensDataStore {
 
                 else                    -> {
                     bData[j].value = (bData[j].value + bgReadings[i].value) / 2
-                    //log.error("***** Average");
                 }
             }
         }

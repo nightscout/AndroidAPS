@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.ResponseType
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class GetStatusCommandTest {
@@ -16,6 +16,6 @@ class GetStatusCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("024200023C030E0100024C"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("024200023C030E0100024C"), encoded)
     }
 }

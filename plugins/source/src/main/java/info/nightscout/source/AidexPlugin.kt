@@ -35,16 +35,12 @@ class AidexPlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon((info.nightscout.core.main.R.drawable.ic_blooddrop_48))
+        .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.aidex)
         .shortName(R.string.aidex_short)
         .description(R.string.description_source_aidex),
     aapsLogger, rh, injector
 ), BgSource {
-
-    /**
-     * Aidex App doesn't have upload to NS
-     */
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = true
 
     // Allow only for pumpcontrol or dev & engineering_mode
     override fun specialEnableCondition(): Boolean {

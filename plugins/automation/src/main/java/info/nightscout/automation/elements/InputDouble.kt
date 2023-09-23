@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import info.nightscout.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
-class InputDouble() : Element() {
+class InputDouble() : Element {
 
     var value = 0.0
     private var minValue = 0.0

@@ -1,10 +1,8 @@
 package info.nightscout.interfaces.profile
 
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
@@ -132,63 +130,5 @@ interface Profile {
             result = 31 * result + value.hashCode()
             return result
         }
-    }
-
-    companion object {
-        /*
-         * Units conversion
-         */
-
-        fun fromMgdlToUnits(value: Double, units: GlucoseUnit): Double =
-            if (units == GlucoseUnit.MGDL) value else value * Constants.MGDL_TO_MMOLL
-
-        fun fromMmolToUnits(value: Double, units: GlucoseUnit): Double =
-            if (units == GlucoseUnit.MMOL) value else value * Constants.MMOLL_TO_MGDL
-
-        fun toUnits(valueInMgdl: Double, valueInMmol: Double, units: GlucoseUnit): Double =
-            if (units == GlucoseUnit.MGDL) valueInMgdl else valueInMmol
-
-        fun toUnitsString(valueInMgdl: Double, valueInMmol: Double, units: GlucoseUnit): String =
-            if (units == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(valueInMgdl) else DecimalFormatter.to1Decimal(valueInMmol)
-
-        fun toSignedUnitsString(valueInMgdl: Double, valueInMmol: Double, units: GlucoseUnit): String =
-            if (units == GlucoseUnit.MGDL) (if (valueInMgdl > 0) "+" else "") + DecimalFormatter.to0Decimal(valueInMgdl)
-            else (if (valueInMmol > 0) "+" else "") + DecimalFormatter.to1Decimal(valueInMmol)
-
-        fun isMgdl(anyBg: Double) = anyBg >= 39
-        fun isMmol(anyBg: Double) = anyBg < 39
-        fun unit(anyBg: Double) = if (isMgdl(anyBg)) GlucoseUnit.MGDL else GlucoseUnit.MMOL
-
-        fun toCurrentUnits(profileFunction: ProfileFunction, anyBg: Double): Double =
-            if (isMmol(anyBg)) fromMmolToUnits(anyBg, profileFunction.getUnits())
-            else fromMgdlToUnits(anyBg, profileFunction.getUnits())
-
-        fun toCurrentUnits(units: GlucoseUnit, anyBg: Double): Double =
-            if (isMmol(anyBg)) fromMmolToUnits(anyBg, units)
-            else fromMgdlToUnits(anyBg, units)
-
-        fun toCurrentUnitsString(profileFunction: ProfileFunction, anyBg: Double): String =
-            if (isMmol(anyBg)) toUnitsString(anyBg * Constants.MMOLL_TO_MGDL, anyBg, profileFunction.getUnits())
-            else toUnitsString(anyBg, anyBg * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
-
-        fun toMgdl(value: Double): Double =
-            if (isMgdl(value)) value else value * Constants.MMOLL_TO_MGDL
-
-        fun toMgdl(value: Double, units: GlucoseUnit): Double =
-            if (units == GlucoseUnit.MGDL) value else value * Constants.MMOLL_TO_MGDL
-
-        fun toMmol(value: Double, units: GlucoseUnit): Double =
-            if (units == GlucoseUnit.MGDL) value * Constants.MGDL_TO_MMOLL else value
-
-        // targets are stored in mg/dl but profile vary
-        fun toTargetRangeString(low: Double, high: Double, sourceUnits: GlucoseUnit, units: GlucoseUnit): String {
-            val lowMgdl = toMgdl(low, sourceUnits)
-            val highMgdl = toMgdl(high, sourceUnits)
-            val lowMmol = toMmol(low, sourceUnits)
-            val highMmol = toMmol(high, sourceUnits)
-            return if (low == high) toUnitsString(lowMgdl, lowMmol, units)
-            else toUnitsString(lowMgdl, lowMmol, units) + " - " + toUnitsString(highMgdl, highMmol, units)
-        }
-
     }
 }

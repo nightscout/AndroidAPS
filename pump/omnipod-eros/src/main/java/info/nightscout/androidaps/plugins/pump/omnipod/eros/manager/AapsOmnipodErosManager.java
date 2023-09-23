@@ -70,7 +70,7 @@ import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.pump.common.defs.TempBasalPair;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.Event;
@@ -148,6 +148,23 @@ public class AapsOmnipodErosManager {
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
         reloadSettings();
+    }
+
+    public static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
+        if (profile == null) {
+            throw new IllegalArgumentException("Profile can not be null");
+        }
+        Profile.ProfileValue[] basalValues = profile.getBasalValues();
+        if (basalValues == null) {
+            throw new IllegalArgumentException("Basal values can not be null");
+        }
+        List<BasalScheduleEntry> entries = new ArrayList<>();
+        for (Profile.ProfileValue basalValue : basalValues) {
+            entries.add(new BasalScheduleEntry(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(basalValue.getValue()),
+                    Duration.standardSeconds(basalValue.getTimeAsSeconds())));
+        }
+
+        return new BasalSchedule(entries);
     }
 
     public void reloadSettings() {
@@ -250,7 +267,6 @@ public class AapsOmnipodErosManager {
         addSuccessToHistory(PodHistoryEntryType.PLAY_TEST_BEEP, beepType);
         return new PumpEnactResult(injector).success(true).enacted(false);
     }
-
 
     public PumpEnactResult getPodStatus() {
         StatusResponse statusResponse;
@@ -375,7 +391,7 @@ public class AapsOmnipodErosManager {
 
         boolean beepsEnabled = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
 
-        EventOverviewBolusProgress.INSTANCE.setT(new EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0,detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId()));
+        EventOverviewBolusProgress.INSTANCE.setT(new EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId()));
 
         Date bolusStarted;
         try {
@@ -960,7 +976,7 @@ public class AapsOmnipodErosManager {
 
     private String createPodFaultErrorMessage(FaultEventCode faultEventCode) {
         return getStringResource(R.string.omnipod_eros_error_pod_fault,
-                ByteUtil.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
+                ByteUtil.INSTANCE.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
     }
 
     private void sendEvent(Event event) {
@@ -989,23 +1005,6 @@ public class AapsOmnipodErosManager {
 
     private String getStringResource(int id, Object... args) {
         return rh.gs(id, args);
-    }
-
-    public static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
-        if (profile == null) {
-            throw new IllegalArgumentException("Profile can not be null");
-        }
-        Profile.ProfileValue[] basalValues = profile.getBasalValues();
-        if (basalValues == null) {
-            throw new IllegalArgumentException("Basal values can not be null");
-        }
-        List<BasalScheduleEntry> entries = new ArrayList<>();
-        for (Profile.ProfileValue basalValue : basalValues) {
-            entries.add(new BasalScheduleEntry(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(basalValue.getValue()),
-                    Duration.standardSeconds(basalValue.getTimeAsSeconds())));
-        }
-
-        return new BasalSchedule(entries);
     }
 
     private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="count_selected">%1$d seçildi</string>
-    <string name="remove_items">Öğeleri kaldır</string>
-    <string name="sort_items">Öğeleri Sırala</string>
-    <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
-    <string name="sort_label">Sırala</string>
-</resources>

@@ -1,11 +1,11 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.TestBaseWithProfile
+import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.plugins.general.autotune.data.BGDatum
 import info.nightscout.plugins.general.autotune.data.CRDatum
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import org.json.JSONObject
-import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
@@ -43,10 +43,10 @@ class PreppedGlucoseTest : TestBaseWithProfile() {
                 JSONObject("{\"device\":\"AndroidAPS-DexcomG6\",\"date\":1653180549000,\"dateString\":\"2022-05-22T00:49:09.000Z\",\"isValid\":true,\"sgv\":121,\"direction\":\"FortyFiveDown\",\"type\":\"sgv\",\"_id\":\"628988a3da46aa0004d1e0f5\",\"glucose\":121,\"avgDelta\":\"-5.25\",\"BGI\":-3.32,\"deviation\":\"-1.93\"}"),
                 dateUtil
             )
-        Assert.assertEquals(3, prep1.crData.size)
-        Assert.assertTrue(crData0.equals(prep1.crData[0]))
-        Assert.assertTrue(csfDataEnd.equals(prep1.csfGlucoseData[prep1.csfGlucoseData.size - 1]))
-        Assert.assertTrue(isfData0.equals(prep1.isfGlucoseData[0]))
-        Assert.assertTrue(basalDataEnd.equals(prep1.basalGlucoseData[prep1.basalGlucoseData.size - 1]))
+        assertThat(prep1.crData).hasSize(3)
+        assertThat(crData0.equals(prep1.crData[0])).isTrue()
+        assertThat(csfDataEnd.equals(prep1.csfGlucoseData[prep1.csfGlucoseData.size - 1])).isTrue()
+        assertThat(isfData0.equals(prep1.isfGlucoseData[0])).isTrue()
+        assertThat(basalDataEnd.equals(prep1.basalGlucoseData[prep1.basalGlucoseData.size - 1])).isTrue()
     }
 }

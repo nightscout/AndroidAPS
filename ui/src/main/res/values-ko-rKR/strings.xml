@@ -3,16 +3,21 @@
     <string name="bolus_constraint_applied">Bolus 제한이 적용되었습니다</string>
     <string name="carbs_constraint_applied">탄수화물 제한이 적용되었습니다</string>
     <string name="temp_target_short">임시목표</string>
+    <string name="dialog_canceled">대화상자 취소됨</string>
     <string name="start_activity_tt">활동 임시목표 시작</string>
     <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
     <string name="start_hypo_tt">저혈당 임시목표 시작</string>
     <string name="time_offset">시간 이동</string>
     <string name="unit_minute_short">분</string>
+    <string name="remind_to_bolus_later">나중에 bolus 알림</string>
+    <string name="a11y_carb_reminder">알림 설정</string>
     <!--    Widget-->
+    <string name="configure">불투명도 설정</string>
     <string name="widget_description">AAPS 위젯</string>
     <!--     Activities-->
     <string name="activity_monitor">활동 모니터</string>
     <string name="do_you_want_reset_stats">활동 통계를 초기화하시겠습니까?</string>
+    <string name="do_you_want_reset_tdd_stats">TDD 통계를 재설정하시겠습니까?</string>
     <string name="statistics">통계</string>
     <string name="calculation_in_progress">계산 진행 중</string>
     <string name="invalid_age">유효하지 않은 나이입니다</string>
@@ -22,6 +27,7 @@
     <string name="age">나이</string>
     <string name="weight_label">가중</string>
     <string name="most_common_profile">가장 많이 사용된 프로파일:</string>
+    <string name="survey_comment">참고: 이 화면에 보이는 데이터만 익명으로 업로드됩니다. 이 AAPS 설치에는 ID가 할당됩니다. 기본 프로파일이 변경되면 데이터를 다시 제출할 수 있지만, 결과가 어느정도 시간 범위에서 보이도록 최소 1주일 이상 실행하여 주세요. 귀하의 도움에 감사드립니다.</string>
     <string name="glucose_type">혈당 종류</string>
     <string name="bg_other">기타</string>
     <string name="bg_meter">측정기</string>
@@ -61,12 +67,17 @@
     <string name="duration3h">3시간</string>
     <string name="duration10h">10시간</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">결과를 %로 수정</string>
+    <string name="a11_correction_units">결과를 units으로 수정</string>
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">결과: %1$s %2$s</string>
     <string name="missing_carbs">부족 %1$d g</string>
+    <string name="a11y_current_bg">현재 혈당</string>
     <string name="carb_time_label">탄수화물 시간</string>
+    <string name="a11y_set_carb_timer">탄수화물 타이머 알람 설정</string>
     <string name="show_calculation">계산 표시</string>
     <!-- Treatments -->
+    <string name="no_records_available">사용 가능한 기록 없음</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">인슐린:</string>
@@ -80,10 +91,25 @@
     <string name="treatments_wizard_correction_label">교정</string>
     <string name="meal_bolus">Meal</string>
     <string name="prime">교체</string>
+    <string name="profile_changes">프로파일 변경</string>
+    <string name="tempt_targets">임시 목표</string>
+    <string name="carbs_and_bolus">탄수화물과 bolus</string>
+    <string name="show_invalidated_records">무효화된/제거된 기록 표시</string>
+    <string name="hide_invalidated_records">무효화된/제거된 기록 숨기기</string>
+    <string name="refresh_from_nightscout">Nightscout에서 새로 고침</string>
     <string name="refresheventsfromnightscout">NS로부터 최신 정보로 업데이트 함.</string>
+    <string name="show_invalidated">무효화 표시</string>
+    <string name="hide_invalidated">무효화 숨기기</string>
+    <string name="careportal_remove_started_events">AAPS 시작 입력 제거</string>
+    <string name="hide_loop">Loop 숨기기</string>
+    <string name="show_loop">Loop 표시</string>
     <string name="user_entry">사용자 항목</string>
     <string name="clone_label">복사</string>
+    <string name="show_loop_records">Loop 기록 표시</string>
+    <string name="show_hide_records">Loop 기록 숨기기</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">프로파일 1</string>
+    <string name="profile2">프로파일 2</string>
     <string name="profile_type">프로파일 종류</string>
     <string name="basal_pct_from_tdd_label">% basal</string>
     <string name="selected_profile">선택:</string>
@@ -102,4 +128,29 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">정지 누름</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">watch에서만</string>
+    <string name="a11y_only_on_phone">핸드폰에서만</string>
+    <string name="quickwizard_settings">빠른마법사 설정</string>
+    <string name="overview_edit_quickwizard_button_text">버튼 텍스트:</string>
+    <string name="overview_edit_quickwizard_carbs">탄수화물:</string>
+    <string name="overview_edit_quickwizard_valid">유효한:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">추가</string>
+    <string name="overview_quickwizard_item_edit_button">편집</string>
+    <string name="overview_edit_quickwizard_show_on_device">기기에 항목 표시:</string>
+    <string name="overview_edit_quickwizard_use_bg">BG 계산</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB 계산</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB 계산</string>
+    <string name="overview_edit_quickwizard_use_trend">추이 계산</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolus 계산</string>
+    <string name="overview_edit_quickwizard_percentage">퍼센트</string>
+    <string name="device_all">모두</string>
+    <string name="device_phone">핸드폰</string>
+    <string name="device_watch">워치</string>
+    <string name="positive_only">양수만</string>
+    <string name="negative_only">음수만</string>
+    <string name="overview_editquickwizard_usecob">COB 계산</string>
+    <string name="overview_editquickwizard_usetemptarget">임시 목표 계산</string>
+    <string name="overview_editquickwizard_usepercentage">퍼센트 계산</string>
+    <string name="app_default">애플리케이션 기본값</string>
+    <string name="a11y_drag_and_drop_handle">드래그 앤 드롭 핸들</string>
 </resources>

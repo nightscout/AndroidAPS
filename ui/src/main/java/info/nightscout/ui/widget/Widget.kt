@@ -14,28 +14,27 @@ import android.view.View
 import android.widget.RemoteViews
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.directionToIcon
-import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.VariableSensitivityResult
-import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.extensions.toVisibilityKeepSpace
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -50,6 +49,7 @@ import kotlin.math.abs
 class Widget : AppWidgetProvider() {
 
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var trendCalculator: TrendCalculator
     @Inject lateinit var uiInteraction: UiInteraction
@@ -62,9 +62,11 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var loop: Loop
     @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
-    @Inject lateinit var constraintChecker: Constraints
+    @Inject lateinit var constraintChecker: ConstraintsChecker
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     companion object {
+
         // This object doesn't behave like singleton,
         // many threads were created. Making handler static resolve this issue
         private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -77,6 +79,7 @@ class Widget : AppWidgetProvider() {
             })
         }
     }
+
     private val intentAction = "OpenApp"
 
     override fun onReceive(context: Context, intent: Intent?) {
@@ -127,8 +130,9 @@ class Widget : AppWidgetProvider() {
     }
 
     private fun updateBg(views: RemoteViews) {
-        val units = profileFunction.getUnits()
-        views.setTextViewText(R.id.bg, overviewData.lastBg(iobCobCalculator.ads)?.valueToUnitsString(units) ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short))
+        views.setTextViewText(
+            R.id.bg,
+            overviewData.lastBg(iobCobCalculator.ads)?.let { profileUtil.fromMgdlToStringInUnits(it.value) } ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short))
         views.setTextColor(
             R.id.bg, when {
                 overviewData.isLow(iobCobCalculator.ads)  -> rh.gc(info.nightscout.core.ui.R.color.widget_low)
@@ -150,9 +154,9 @@ class Widget : AppWidgetProvider() {
 
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         if (glucoseStatus != null) {
-            views.setTextViewText(R.id.delta, Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units))
-            views.setTextViewText(R.id.avg_delta, Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units))
-            views.setTextViewText(R.id.long_avg_delta, Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units))
+            views.setTextViewText(R.id.delta, profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta))
+            views.setTextViewText(R.id.avg_delta, profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.shortAvgDelta))
+            views.setTextViewText(R.id.long_avg_delta, profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.longAvgDelta))
         } else {
             views.setTextViewText(R.id.delta, rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short))
             views.setTextViewText(R.id.avg_delta, rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short))
@@ -183,7 +187,7 @@ class Widget : AppWidgetProvider() {
     private fun updateIobCob(views: RemoteViews) {
         views.setTextViewText(R.id.iob, overviewData.iobText(iobCobCalculator))
         // cob
-        var cobText = overviewData.cobInfo(iobCobCalculator).displayText(rh) ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
+        var cobText = overviewData.cobInfo(iobCobCalculator).displayText(rh, decimalFormatter) ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
 
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
         val lastRun = loop.lastRun
@@ -206,7 +210,10 @@ class Widget : AppWidgetProvider() {
             //views.setTextColor(R.id.temp_target, rh.gc(R.color.ribbonTextWarning))
             //views.setInt(R.id.temp_target, "setBackgroundColor", rh.gc(R.color.ribbonWarning))
             views.setTextColor(R.id.temp_target, rh.gc(info.nightscout.core.ui.R.color.widget_ribbonWarning))
-            views.setTextViewText(R.id.temp_target, Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh))
+            views.setTextViewText(
+                R.id.temp_target,
+                profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
+            )
         } else {
             // If the target is not the same as set in the profile then oref has overridden it
             profileFunction.getProfile()?.let { profile ->
@@ -214,7 +221,7 @@ class Widget : AppWidgetProvider() {
 
                 if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                     aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
-                    views.setTextViewText(R.id.temp_target, Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units))
+                    views.setTextViewText(R.id.temp_target, profileUtil.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units))
                     // this is crashing, use background as text for now
                     //views.setTextColor(R.id.temp_target, rh.gc(R.color.ribbonTextWarning))
                     //views.setInt(R.id.temp_target, "setBackgroundResource", rh.gc(R.color.tempTargetBackground))
@@ -224,7 +231,7 @@ class Widget : AppWidgetProvider() {
                     //views.setTextColor(R.id.temp_target, rh.gc(R.color.ribbonTextDefault))
                     //views.setInt(R.id.temp_target, "setBackgroundColor", rh.gc(R.color.ribbonDefault))
                     views.setTextColor(R.id.temp_target, rh.gc(info.nightscout.core.ui.R.color.widget_ribbonTextDefault))
-                    views.setTextViewText(R.id.temp_target, Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units))
+                    views.setTextViewText(R.id.temp_target, profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units))
                 }
             }
         }
@@ -270,8 +277,8 @@ class Widget : AppWidgetProvider() {
                     R.id.variable_sensitivity,
                     String.format(
                         Locale.getDefault(), "%1$.1f→%2$.1f",
-                        Profile.toUnits(isfMgdl, isfMgdl * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()),
-                        Profile.toUnits(variableSens, variableSens * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+                        profileUtil.fromMgdlToUnits(isfMgdl),
+                        profileUtil.fromMgdlToUnits(variableSens)
                     )
                 )
                 views.setViewVisibility(R.id.variable_sensitivity, View.VISIBLE)

@@ -1,7 +1,7 @@
 package info.nightscout.implementation
 
 import android.content.Context
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.interfaces.ui.UiInteraction

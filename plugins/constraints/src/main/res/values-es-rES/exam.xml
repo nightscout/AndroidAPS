@@ -5,7 +5,7 @@
     <string name="dia_profile">Debes establecer el valor de DAI en tu perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
-    <string name="dia_meaningisequaltodiapump">Si usted está satisfecho de que el valor para DIA que utilizó en su bomba antes de que AAPS funcionara bien, no hay necesidad de cambiar esto cuando comience a hacer bucle.</string>
+    <string name="dia_meaningisequaltodiapump">Si usted está satisfecho de que el valor para DIA que utilizó en su bomba antes de que AAPS funcionara bien, no hay necesidad de cambiar esto cuando comience usar el bucle cerrado.</string>
     <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
     <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>

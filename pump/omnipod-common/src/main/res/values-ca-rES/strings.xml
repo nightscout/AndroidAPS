@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar botó \"Suspendre lliurament\" a la pestanya Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecció d\'horari d\'estiu/hivern activada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Recordatori d\'expiració activat</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Hores fins aturada</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerta de reservori baix activada</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Nr. d\'unitats</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar automàticament alertes del pod</string>
