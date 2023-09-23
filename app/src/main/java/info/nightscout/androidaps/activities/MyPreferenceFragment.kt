@@ -249,7 +249,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.recreate()
             return
         }
-        if (key == rh.gs(info.nightscout.plugins.aps.R.string.key_openapsama_use_autosens) && sp.getBoolean(info.nightscout.plugins.aps.R.string.key_openapsama_use_autosens, false)) {
+        if (key == rh.gs(info.nightscout.core.utils.R.string.key_use_autosens) && sp.getBoolean(info.nightscout.core.utils.R.string.key_use_autosens, false)) {
             activity?.let {
                 OKDialog.show(it, rh.gs(app.aaps.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }

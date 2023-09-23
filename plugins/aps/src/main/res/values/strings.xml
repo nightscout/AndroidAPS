@@ -23,7 +23,6 @@
     <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
     <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
-    <string name="key_openapsama_use_autosens" translatable="false">openapsama_useautosens</string>
 
     <string name="dynisf_adjust_sensitivity">Adjust sensitivity and BG</string>
     <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
@@ -112,6 +111,7 @@
     <string name="smb_disabled_in_preferences">SMB disabled in preferences</string>
     <string name="uam_disabled_in_preferences">UAM disabled in preferences</string>
     <string name="autosens_disabled_in_preferences">Autosens disabled in preferences</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens disabled in DynISF</string>
 
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>

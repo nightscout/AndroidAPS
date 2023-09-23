@@ -1088,7 +1088,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateSensitivity() {
         _binding ?: return
         val lastAutosensData = overviewData.lastAutosensData(iobCobCalculator)
-        if (constraintChecker.isAutosensModeEnabled().value() || !(config.NSCLIENT && lastAutosensData == null)) {
+        if (config.NSCLIENT && sp.getBoolean(info.nightscout.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
+            !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()) {
             binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_swap_vert_black_48dp_green)
         } else {
             binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_x_swap_vert)

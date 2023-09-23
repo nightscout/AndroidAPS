@@ -264,7 +264,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun isAutosensModeEnabledTest() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
-        `when`(sp.getBoolean(info.nightscout.plugins.aps.R.string.key_openapsama_use_autosens, false)).thenReturn(false)
+        `when`(sp.getBoolean(info.nightscout.core.utils.R.string.key_use_autosens, false)).thenReturn(false)
         val c = constraintChecker.isAutosensModeEnabled()
         assertThat(c.reasonList).hasSize(2) // Safety & Objectives
         assertThat(c.mostLimitedReasonList).hasSize(2) // Safety & Objectives

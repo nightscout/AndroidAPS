@@ -183,9 +183,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         try {
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_absorption_maxtime))) sp.putDouble(
                 info.nightscout.core.utils.R.string.key_absorption_maxtime, configuration.getDouble(
-                    rh.gs(
-                        info.nightscout.core.utils.R.string.key_absorption_maxtime
-                    )
+                    rh.gs(info.nightscout.core.utils.R.string.key_absorption_maxtime)
                 )
             )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_period))) sp.putDouble(
@@ -194,16 +192,12 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max))) sp.getDouble(
                 info.nightscout.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(
-                    rh.gs(
-                        info.nightscout.core.utils.R.string.key_openapsama_autosens_max
-                    )
+                    rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max)
                 )
             )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min))) sp.getDouble(
                 info.nightscout.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(
-                    rh.gs(
-                        info.nightscout.core.utils.R.string.key_openapsama_autosens_min
-                    )
+                    rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min)
                 )
             )
         } catch (e: JSONException) {

@@ -6,6 +6,7 @@ import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
+import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -80,4 +81,9 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
         if (tdd1D == null || tdd7D == null || tddLast4H == null || tddLast8to4H == null || tddLast24H == null || !dynIsfEnabled.value())
             DetermineBasalAdapterSMBJS(ScriptReader(context), injector)
         else DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(context), injector)
+
+    override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        value.set(false, rh.gs(R.string.autosens_disabled_in_dyn_isf), this)
+        return value
+    }
 }

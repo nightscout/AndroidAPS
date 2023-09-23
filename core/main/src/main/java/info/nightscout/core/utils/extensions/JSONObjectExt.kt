@@ -41,6 +41,6 @@ fun JSONObject.storeString(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSO
 }
 
 fun JSONObject.storeBoolean(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject {
-    if (has(rh.gs(key))) sp.putString(key, getBoolean(rh.gs(key)).toString())
+    if (has(rh.gs(key))) sp.putBoolean(key, getBoolean(rh.gs(key)))
     return this
 }

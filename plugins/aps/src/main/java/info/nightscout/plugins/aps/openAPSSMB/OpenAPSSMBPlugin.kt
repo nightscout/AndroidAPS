@@ -30,6 +30,7 @@ import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.aps.R
+import info.nightscout.plugins.aps.events.EventResetOpenAPSGui
 import info.nightscout.plugins.aps.utils.ScriptReader
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -199,7 +200,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         if (constraintChecker.isAutosensModeEnabled().value()) {
             val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
             if (autosensData == null) {
-                rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
+                rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
                 return
             }
             lastAutosensResult = autosensData.autosensResult
@@ -345,7 +346,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(R.string.key_openapsama_use_autosens, false)
+        val enabled = sp.getBoolean(info.nightscout.core.utils.R.string.key_use_autosens, false)
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
     }
