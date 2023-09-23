@@ -14,6 +14,7 @@ import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.support.wearable.complications.ComplicationData
+import android.support.wearable.complications.ComplicationText
 import android.support.wearable.complications.rendering.ComplicationDrawable
 import android.support.wearable.watchface.WatchFaceStyle
 import android.util.TypedValue
@@ -35,6 +36,8 @@ import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityCustomBinding
+import info.nightscout.androidaps.interaction.utils.DisplayFormat
+import info.nightscout.androidaps.interaction.utils.SmallestDoubleString
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
@@ -158,9 +161,24 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     override fun onComplicationDataUpdate(complicationId: Int, data: ComplicationData) {
-        aapsLogger.debug("XXXXX $complicationId : $data")
         ComplicationMap.fromComplicationId(complicationId)?.drawable?.also {
-            it.setComplicationData(data)
+            // Use Manual ComplicationData with Fake ComplicationId to test CustomWatchface Code for COMPLICATION1
+            if (complicationId == 10) { // Fake COMPLICATION1 for tests
+                val cob = rawData.status.cob
+                val iob = SmallestDoubleString(rawData.status.iobSum, SmallestDoubleString.Units.USE).minimise(DisplayFormat.MAX_FIELD_LEN_SHORT)
+                // Here I try to build a fake valid "ComplicationData" to try to show it within customWatchface in place set for COMPLICATION1
+                val builder = ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
+                    .setShortText(ComplicationText.plainText(cob))
+                    .setShortTitle(ComplicationText.plainText(iob))
+                val testData = builder.build()
+                aapsLogger.debug("XXXXX $complicationId : $testData")
+                it.setComplicationData(testData)
+            } else {
+                aapsLogger.debug("XXXXX $complicationId : $data")
+                it.setComplicationData(data)
+            }
+            // End of Manual complicationData for COMPLICATION1, line Below should be enabled
+            //it.setComplicationData(data)
             invalidate()
         }
     }
@@ -227,6 +245,8 @@ class CustomWatchface : BaseWatchFace() {
                         }
                     }
                 }
+                // Use Fake Complication Id to test CustomWatchface code for COMPLICATION1
+                ComplicationMap.COMPLICATION1.complicationId = 10
                 setActiveComplications(ComplicationMap.getActiveComplicationIds())
                 manageSpecificViews()
             } catch (e: Exception) {
@@ -417,6 +437,7 @@ class CustomWatchface : BaseWatchFace() {
             fun draw(canvas: Canvas, now: Long) {
                 values().forEach {
                     it.drawable?.draw(canvas, now)
+                    it.cwf.aapsLogger.debug("XXXXX ${it.ordinal} ${it.complicationId} ${it.drawable?.bounds?.left} ${it.drawable?.bounds?.top} ${it.drawable?.bounds?.right} ${it.drawable?.bounds?.bottom} ")
                 }
             }
 
@@ -435,12 +456,15 @@ class CustomWatchface : BaseWatchFace() {
         lateinit var cwf: CustomWatchface
 
         fun customizeComplication(view: View, viewJson: JSONObject) {
-            if (view.isVisible)
+            if (view.isVisible) {
+                // Here I suppose interface between Complication Configuration and CustomWatchface is done by an integer
+                // If it's another interface, line and code below should be tuned
+                complicationId = cwf.sp.getInt(pref, -1)
+                // Note, after this initialization, complicationId is updated with a fake number for COMPLICATION1 for customWatchface tests
                 drawable?.also {
                     Rect(view.left, view.top, view.right, view.bottom).also { rect ->
                         it.bounds = rect
                     }
-                    complicationId = cwf.sp.getInt(pref, -1)
                     it.setTextTypefaceActive(FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)))
                     it.setTitleTypefaceActive(FontMap.font(viewJson.optString(FONTTITLE.key, FontMap.DEFAULT.key)))
                     if (viewJson.has(FONTCOLOR.key))
@@ -450,7 +474,7 @@ class CustomWatchface : BaseWatchFace() {
                     if (viewJson.has(COLOR.key))
                         it.setIconColorActive(cwf.getColor(viewJson.optString(COLOR.key)))
                 }
-            else
+            } else
                 complicationId = null
         }
     }

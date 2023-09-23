@@ -59,7 +59,7 @@ abstract class BaseWatchFace : WatchFace() {
     @Inject lateinit var simpleUi: SimpleUi
 
     private var disposable = CompositeDisposable()
-    private val rawData = RawDisplayData()
+    val rawData = RawDisplayData()
 
     protected val singleBg get() = rawData.singleBg
     protected val status get() = rawData.status
