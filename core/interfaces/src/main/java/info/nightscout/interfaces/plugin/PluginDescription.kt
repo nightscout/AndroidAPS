@@ -1,6 +1,6 @@
 package info.nightscout.interfaces.plugin
 
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 
 @OpenForTesting
 class PluginDescription {

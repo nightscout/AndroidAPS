@@ -9,8 +9,8 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.iob.generateCOBString

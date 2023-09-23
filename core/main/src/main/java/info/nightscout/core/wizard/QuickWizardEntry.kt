@@ -1,7 +1,7 @@
 package info.nightscout.core.wizard
 
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.JsonHelper.safeGetInt

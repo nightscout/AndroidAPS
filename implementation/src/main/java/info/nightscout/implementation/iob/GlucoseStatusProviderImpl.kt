@@ -1,7 +1,7 @@
 package info.nightscout.implementation.iob
 
+import app.aaps.annotations.OpenForTesting
 import dagger.Reusable
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.iob.asRounded
 import info.nightscout.core.iob.log
 import info.nightscout.interfaces.iob.GlucoseStatus

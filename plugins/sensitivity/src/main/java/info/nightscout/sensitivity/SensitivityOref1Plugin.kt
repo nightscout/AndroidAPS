@@ -1,7 +1,7 @@
 package info.nightscout.sensitivity
 
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.core.utils.Percentile
 import info.nightscout.database.entities.TherapyEvent

@@ -1,7 +1,7 @@
 package info.nightscout.implementation
 
+import app.aaps.annotations.OpenForTesting
 import dagger.Reusable
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources

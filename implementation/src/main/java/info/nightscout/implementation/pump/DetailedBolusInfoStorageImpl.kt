@@ -1,8 +1,8 @@
 package info.nightscout.implementation.pump
 
+import app.aaps.annotations.OpenForTesting
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage

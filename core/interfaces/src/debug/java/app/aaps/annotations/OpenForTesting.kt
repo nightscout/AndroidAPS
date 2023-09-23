@@ -1,4 +1,4 @@
-package info.nightscout.annotations
+package app.aaps.annotations
 
 /**
  * This is the actual annotation that makes the class open. Don't use it directly, only through [OpenForTesting]

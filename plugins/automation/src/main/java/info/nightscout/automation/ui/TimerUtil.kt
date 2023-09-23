@@ -3,7 +3,7 @@ package info.nightscout.automation.ui
 import android.content.Context
 import android.content.Intent
 import android.provider.AlarmClock
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.automation.R
 import info.nightscout.core.ui.toast.ToastUtils
 import javax.inject.Inject

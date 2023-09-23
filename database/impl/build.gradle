@@ -51,8 +51,3 @@ dependencies {
 
     androidTestImplementation "androidx.room:room-testing:$room_version"
 }
-
-allOpen {
-    // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.database.annotations.DbOpenForTesting'
-}

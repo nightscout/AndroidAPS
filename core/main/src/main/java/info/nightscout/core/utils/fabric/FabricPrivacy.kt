@@ -1,11 +1,11 @@
 package info.nightscout.core.utils.fabric
 
 import android.os.Bundle
+import app.aaps.annotations.OpenForTesting
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

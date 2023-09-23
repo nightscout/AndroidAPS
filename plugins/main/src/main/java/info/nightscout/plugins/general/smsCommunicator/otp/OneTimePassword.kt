@@ -1,9 +1,9 @@
 package info.nightscout.plugins.general.smsCommunicator.otp
 
 import android.util.Base64
+import app.aaps.annotations.OpenForTesting
 import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.Constants
 import info.nightscout.plugins.R
 import info.nightscout.shared.interfaces.ResourceHelper

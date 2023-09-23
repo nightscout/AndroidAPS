@@ -5,11 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.ConstraintsChecker

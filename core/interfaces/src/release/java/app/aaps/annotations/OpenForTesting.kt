@@ -1,4 +1,4 @@
-package info.nightscout.annotations
+package app.aaps.annotations
 
 /**
  * Annotate a class with [OpenForTesting] if it should be extendable for testing.

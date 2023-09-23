@@ -2,7 +2,7 @@ package info.nightscout.plugins.iob.iobCobCalculator.data
 
 import androidx.collection.LongSparseArray
 import androidx.collection.size
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.AutosensDataStore

@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.collection.LongSparseArray
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.interfaces.R
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper

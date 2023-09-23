@@ -12,8 +12,8 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.convertedToAbsolute

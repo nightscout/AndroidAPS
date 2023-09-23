@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.interaction.utils
 
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.EventData

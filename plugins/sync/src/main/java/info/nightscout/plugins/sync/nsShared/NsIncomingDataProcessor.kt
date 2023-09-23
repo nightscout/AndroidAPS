@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsShared
 
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.GlucoseValue

@@ -1,7 +1,7 @@
 package app.aaps.shared.tests
 
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump

@@ -1,7 +1,7 @@
 package info.nightscout.implementation.profiling
 
+import app.aaps.annotations.OpenForTesting
 import dagger.Reusable
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

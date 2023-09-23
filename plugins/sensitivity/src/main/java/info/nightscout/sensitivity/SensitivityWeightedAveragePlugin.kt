@@ -1,8 +1,8 @@
 package info.nightscout.sensitivity
 
 import androidx.collection.LongSparseArray
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository

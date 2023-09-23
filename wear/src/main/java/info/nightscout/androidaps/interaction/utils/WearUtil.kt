@@ -2,12 +2,12 @@ package info.nightscout.androidaps.interaction.utils
 
 import android.content.Context
 import android.os.PowerManager
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import kotlinx.datetime.Clock
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlinx.datetime.Clock
 
 /**
  * Created by andy on 3/5/19.

@@ -1,6 +1,6 @@
 package info.nightscout.implementation.pump
 
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.rx.logging.AAPSLogger

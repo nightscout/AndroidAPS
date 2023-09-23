@@ -1,6 +1,6 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose

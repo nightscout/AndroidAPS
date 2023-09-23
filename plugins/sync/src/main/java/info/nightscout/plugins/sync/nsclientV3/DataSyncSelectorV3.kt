@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3
 
-import info.nightscout.annotations.OpenForTesting
+import app.aaps.annotations.OpenForTesting
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config

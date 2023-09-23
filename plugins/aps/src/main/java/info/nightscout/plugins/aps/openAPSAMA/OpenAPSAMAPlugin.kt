@@ -1,8 +1,8 @@
 package info.nightscout.plugins.aps.openAPSAMA
 
 import android.content.Context
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.target
 import info.nightscout.core.utils.MidnightUtils

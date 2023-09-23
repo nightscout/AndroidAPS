@@ -1,8 +1,8 @@
 package info.nightscout.plugins.profile
 
 import androidx.fragment.app.FragmentActivity
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.extensions.blockFromJsonArray
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed

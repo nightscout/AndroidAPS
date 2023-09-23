@@ -3,8 +3,8 @@ package info.nightscout.source
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository

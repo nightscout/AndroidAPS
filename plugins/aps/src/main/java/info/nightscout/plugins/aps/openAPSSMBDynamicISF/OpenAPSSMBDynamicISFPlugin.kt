@@ -1,8 +1,8 @@
 package info.nightscout.plugins.aps.openAPSSMBDynamicISF
 
 import android.content.Context
+import app.aaps.annotations.OpenForTesting
 import dagger.android.HasAndroidInjector
-import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
