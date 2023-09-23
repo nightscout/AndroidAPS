@@ -82,8 +82,10 @@ class BgGraphBuilder(
 
     fun lineData(): LineChartData {
         val lineData = LineChartData(defaultLines())
-        lineData.axisYLeft = yAxis()
-        lineData.axisXBottom = xAxis()
+        if (sp.getBoolean(R.string.key_show_graph_grid, true)) {
+            lineData.axisYLeft = yAxis()
+            lineData.axisXBottom = xAxis()
+        }
         return lineData
     }
 
@@ -113,19 +115,24 @@ class BgGraphBuilder(
         // in case basal is the highest, don't paint it totally at the top.
         factor = min(factor, (maxChart - minChart) / maxBasal * (2 / 3.0))
         val highlight = sp.getBoolean(R.string.key_highlight_basals, false)
-        for (twd in tempWatchDataList) {
-            if (twd.endTime > startingTime) {
-                lines.add(tempValuesLine(twd, minChart.toFloat(), factor, false, if (highlight) pointSize + 1 else pointSize))
-                if (highlight) lines.add(tempValuesLine(twd, minChart.toFloat(), factor, true, 1))
+        if (sp.getBoolean(R.string.key_show_graph_temp_basal, true))
+            for (twd in tempWatchDataList) {
+                if (twd.endTime > startingTime) {
+                    lines.add(tempValuesLine(twd, minChart.toFloat(), factor, false, if (highlight) pointSize + 1 else pointSize))
+                    if (highlight) lines.add(tempValuesLine(twd, minChart.toFloat(), factor, true, 1))
+                }
             }
-        }
         if (sp.getBoolean(R.string.key_prediction_lines, true))
             addPredictionLines(lines)
-        lines.add(basalLine(minChart.toFloat(), factor, highlight))
-        lines.add(bolusLine(minChart.toFloat()))
+        if (sp.getBoolean(R.string.key_show_graph_basal, true))
+            lines.add(basalLine(minChart.toFloat(), factor, highlight))
         lines.add(bolusInvalidLine(minChart.toFloat()))
-        lines.add(carbsLine(minChart.toFloat()))
-        lines.add(smbLine(minChart.toFloat()))
+        if (sp.getBoolean(R.string.key_show_graph_carbs, true))
+            lines.add(carbsLine(minChart.toFloat()))
+        if (sp.getBoolean(R.string.key_show_graph_bolus, true)) {
+            lines.add(bolusLine(minChart.toFloat()))
+            lines.add(smbLine(minChart.toFloat()))
+        }
         return lines
     }
 
