@@ -3,7 +3,7 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumOverviewBinding
@@ -14,6 +14,7 @@ import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -23,6 +24,7 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var rh: ResourceHelper
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -64,7 +66,13 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                             )
                         }
 
-                        EventType.PROFILE_NOT_SET      -> ToastUtils.infoToast(requireContext(), R.string.no_profile_selected)
+                        EventType.PROFILE_NOT_SET      -> {
+                            OKDialog.show(requireActivity(), rh.gs(info.nightscout.core.ui.R.string.message), rh.gs(R.string.no_profile_selected))
+                        }
+
+                        EventType.SERIAL_NOT_SET       -> {
+                            OKDialog.show(requireActivity(), rh.gs(info.nightscout.core.ui.R.string.message), rh.gs(R.string.no_sn_in_settings))
+                        }
                     }
                 }
             }

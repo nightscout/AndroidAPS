@@ -14,7 +14,7 @@ enum class BasalEndReason {
     STOP_PATCH_FAULT,
     STOP_PATCH_FAULT2,
     STOP_BASE_FAULT,
-    STOP_PATCH_BATTERY_EXAUSTED,
+    STOP_PATCH_BATTERY_EMPTY,
     STOP_MAG_SENSOR_NO_CALIBRATION,
     STOP,
     STOP_LOW_BATTERY,
@@ -29,6 +29,6 @@ enum class BasalEndReason {
     AUTO_MODE_EXIT_MAX_DELIVERY_TOO_LONG;
 
     fun isSuspendedByPump(): Boolean {
-        return this in SUSPEND_LOW_GLUCOSE..SUSPEND_MANUAL
+        return this in SUSPEND_LOW_GLUCOSE..STOP_DISCARD
     }
 }

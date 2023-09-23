@@ -267,7 +267,8 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
         val basalStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START, RESP_RECORD_DATA_START + 4).toLong())
         val basalEndTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START + 4, RESP_RECORD_DATA_START + 8).toLong())
         val basalType = enumValues<BasalType>()[data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 9).toInt()]
-        val basalEndReason = enumValues<BasalEndReason>()[data.copyOfRange(RESP_RECORD_DATA_START + 9, RESP_RECORD_DATA_START + 10).toInt()]
+        val basalEndReasonInt = data.copyOfRange(RESP_RECORD_DATA_START + 9, RESP_RECORD_DATA_START + 10).toInt()
+        val basalEndReason = enumValues<BasalEndReason>().getOrNull(basalEndReasonInt)
         val basalRate = data.copyOfRange(RESP_RECORD_DATA_START + 10, RESP_RECORD_DATA_START + 12).toInt() * 0.05
         val basalDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 12, RESP_RECORD_DATA_START + 14).toInt() * 0.05
         val basalPercent = data.copyOfRange(RESP_RECORD_DATA_START + 14, RESP_RECORD_DATA_START + 16).toInt()
@@ -333,11 +334,18 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
             }
         }
 
-        if (basalEndReason.isSuspendedByPump()) {
-            // Pump doesn't seem to sync suspend explicitly, so we need to do it here
+        if (basalEndReason == null) {
+            aapsLogger.error(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Unknown basal end reason: $basalEndReasonInt")
+        } else if (basalEndReason.isSuspendedByPump()) {
+            // Pump doesn't seem to sync suspend/stop explicitly, so we need to do it here
             // Sync suspend using handleBasalStatusUpdate to make sure other variables are updated as well
-            aapsLogger.warn(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: Got suspended end reason, syncing suspend")
-            medtrumPump.handleBasalStatusUpdate(BasalType.fromBasalEndReason(basalEndReason), 0.0, recordSequence, recordPatchId, basalEndTime)
+            // Check if we don't have another temp basal running which is not a suspend
+            // (record maybe to old and information not valid). For suspends we want to update timestamp
+            val expectedTemporaryBasal = pumpSync.expectedPumpState().temporaryBasal
+            if (expectedTemporaryBasal == null || expectedTemporaryBasal.timestamp <= basalEndTime || expectedTemporaryBasal.duration == T.mins(MedtrumPump.FAKE_TBR_LENGTH).msecs()) {
+                aapsLogger.warn(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: Got suspended end reason, syncing suspend")
+                medtrumPump.handleBasalStatusUpdate(BasalType.fromBasalEndReason(basalEndReason), 0.0, recordSequence, recordPatchId, basalEndTime)
+            }
         }
     }
 
