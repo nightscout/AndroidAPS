@@ -242,7 +242,7 @@ class MedtrumPump @Inject constructor(
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus stopped by user
-    var bolusDone = false // Bolus completed or stopped on pump
+    var bolusDone = true // Bolus completed or stopped on pump, initialize as true as to don't show bolus on init
 
     private val _bolusAmountDelivered = MutableStateFlow(0.0)
     val bolusAmountDeliveredFlow: StateFlow<Double> = _bolusAmountDelivered
@@ -426,6 +426,10 @@ class MedtrumPump @Inject constructor(
             }
 
             basalType.isSuspendedByPump() && expectedTemporaryBasal?.pumpId != basalStartTime                                                               -> {
+                if (expectedTemporaryBasal != null && expectedTemporaryBasal.timestamp > basalStartTime && expectedTemporaryBasal.duration == T.mins(FAKE_TBR_LENGTH).msecs()) {
+                    aapsLogger.debug(LTag.PUMPCOMM, "handleBasalStatusUpdate: invalidateTemporaryBasal: ${expectedTemporaryBasal.timestamp}")
+                    pumpSync.invalidateTemporaryBasalWithPumpId(expectedTemporaryBasal.pumpId ?: 0L, expectedTemporaryBasal.pumpType, expectedTemporaryBasal.pumpSerial)
+                }
                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                     timestamp = basalStartTime,
                     rate = 0.0,
@@ -438,7 +442,8 @@ class MedtrumPump @Inject constructor(
                 )
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) expectedTemporaryBasal: $expectedTemporaryBasal"
+                    "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
+                        "expectedTemporaryBas$expectedTemporaryBasal"
                 )
             }
 
@@ -487,10 +492,12 @@ class MedtrumPump @Inject constructor(
         }
     }
 
-    fun setFakeTBRIfNeeded() {
+    fun setFakeTBRIfNotSet() {
         val expectedTemporaryBasal = pumpSync.expectedPumpState().temporaryBasal
         if (expectedTemporaryBasal?.duration != T.mins(FAKE_TBR_LENGTH).msecs()) {
             setFakeTBR()
+            _lastBasalType.value = BasalType.NONE
+            _lastBasalRate.value = 0.0
         }
     }
 

@@ -133,7 +133,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                                medtrumPump.deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(medtrumPump.pumpSN)
                                medtrumPump.resetPatchParameters()
                                pumpSync.connectNewPump()
-                               medtrumPump.setFakeTBRIfNeeded()
+                               medtrumPump.setFakeTBRIfNotSet()
                            }
                            if (event.isChanged(rh.gs(R.string.key_alarm_setting))
                                || event.isChanged(rh.gs(R.string.key_patch_expiration))
@@ -584,7 +584,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     rh.gs(R.string.patch_not_active),
                     Notification.URGENT,
                 )
-                medtrumPump.setFakeTBRIfNeeded()
+                medtrumPump.setFakeTBRIfNotSet()
                 medtrumPump.clearAlarmState()
 
                 // Reset sequence numbers, make sure AAPS history can be synced properly on next activation
@@ -599,7 +599,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             MedtrumPumpState.EJECTED              -> {
                 rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
                 rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
-                medtrumPump.setFakeTBRIfNeeded()
+                medtrumPump.setFakeTBRIfNotSet()
                 medtrumPump.clearAlarmState()
             }
 
@@ -620,7 +620,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     rh.gs(R.string.pump_is_suspended),
                     Notification.NORMAL,
                 )
-                // Pump will report proper TBR for this
+                // Pump will report proper TBR for this from loadEvents()
+                commandQueue.loadEvents(null)
             }
 
             MedtrumPumpState.HOURLY_MAX_SUSPENDED -> {
@@ -629,7 +630,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     rh.gs(R.string.pump_is_suspended_hour_max),
                     Notification.NORMAL,
                 )
-                // Pump will report proper TBR for this
+                // Pump will report proper TBR for this from loadEvents()
+                commandQueue.loadEvents(null)
             }
 
             MedtrumPumpState.DAILY_MAX_SUSPENDED  -> {
@@ -638,7 +640,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     rh.gs(R.string.pump_is_suspended_day_max),
                     Notification.NORMAL,
                 )
-                // Pump will report proper TBR for this
+                // Pump will report proper TBR for this from loadEvents()
+                commandQueue.loadEvents(null)
             }
 
             MedtrumPumpState.OCCLUSION,
@@ -658,7 +661,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     Notification.URGENT,
                     info.nightscout.core.ui.R.raw.alarm
                 )
-                medtrumPump.setFakeTBRIfNeeded()
+                // Get pump status, use readStatus here as for loadEvents() we cannot be sure callback is executed
+                commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), object : Callback() {
+                    override fun run() {
+                        // Make sure a 0 temp is set
+                        medtrumPump.setFakeTBRIfNotSet()
+                    }
+                })
             }
         }
     }
