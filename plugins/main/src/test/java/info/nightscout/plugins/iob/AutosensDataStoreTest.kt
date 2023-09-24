@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.collection.LongSparseArray
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.GlucoseValue
@@ -15,7 +16,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -97,7 +97,7 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
 
         // too much shifted data should return false
         bgReadingList.clear()
@@ -142,7 +142,7 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
 
         // too much shifted and missing data should return false
         bgReadingList.clear()
@@ -177,7 +177,7 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
 
         // too much shifted and missing data should return false
         bgReadingList.clear()
@@ -322,7 +322,7 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
 
         // slightly shifted data should return true
         bgReadingList.clear()
@@ -367,7 +367,7 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
 
         // slightly shifted and missing data should return true
         bgReadingList.clear()
@@ -402,7 +402,7 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
     }
 
     @Test
@@ -452,11 +452,11 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(bgReadingList[0].timestamp, autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(bgReadingList[3].timestamp, autosensDataStore.bucketedData!![3].timestamp)
-        Assertions.assertEquals(bgReadingList.size.toLong(), autosensDataStore.bucketedData!!.size.toLong())
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(bgReadingList[0].timestamp)
+        assertThat(autosensDataStore.bucketedData!![3].timestamp).isEqualTo(bgReadingList[3].timestamp)
+        assertThat(autosensDataStore.bucketedData!!).hasSize(bgReadingList.size)
 
         // Missing value should be replaced
         bgReadingList.clear()
@@ -491,11 +491,11 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(bgReadingList[0].timestamp, autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(bgReadingList[2].timestamp, autosensDataStore.bucketedData!![3].timestamp)
-        Assertions.assertEquals(bgReadingList.size + 1.toLong(), autosensDataStore.bucketedData!!.size.toLong())
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(bgReadingList[0].timestamp)
+        assertThat(autosensDataStore.bucketedData!![3].timestamp).isEqualTo(bgReadingList[2].timestamp)
+        assertThat(autosensDataStore.bucketedData!!).hasSize(bgReadingList.size + 1)
 
         // drift should be cleared
         bgReadingList.clear()
@@ -550,13 +550,13 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(T.mins(15).msecs(), autosensDataStore.bucketedData!![1].timestamp)
-        Assertions.assertEquals(T.mins(10).msecs(), autosensDataStore.bucketedData!![2].timestamp)
-        Assertions.assertEquals(T.mins(5).msecs(), autosensDataStore.bucketedData!![3].timestamp)
-        Assertions.assertEquals(bgReadingList.size.toLong(), autosensDataStore.bucketedData!!.size.toLong())
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(T.mins(20).msecs())
+        assertThat(autosensDataStore.bucketedData!![1].timestamp).isEqualTo(T.mins(15).msecs())
+        assertThat(autosensDataStore.bucketedData!![2].timestamp).isEqualTo(T.mins(10).msecs())
+        assertThat(autosensDataStore.bucketedData!![3].timestamp).isEqualTo(T.mins(5).msecs())
+        assertThat(autosensDataStore.bucketedData!!).hasSize(bgReadingList.size)
 
         // bucketed data should return null if not enough bg data
         bgReadingList.clear()
@@ -581,9 +581,9 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(null, autosensDataStore.bucketedData)
+        assertThat(autosensDataStore.bucketedData).isNull()
 
         // data should be reconstructed
         bgReadingList.clear()
@@ -618,15 +618,15 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(T.mins(50).msecs(), autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![6].timestamp)
-        Assertions.assertEquals(7, autosensDataStore.bucketedData!!.size.toLong())
-        Assertions.assertEquals(100.0, autosensDataStore.bucketedData!![0].value, 1.0)
-        Assertions.assertEquals(90.0, autosensDataStore.bucketedData!![1].value, 1.0)
-        Assertions.assertEquals(50.0, autosensDataStore.bucketedData!![5].value, 1.0)
-        Assertions.assertEquals(40.0, autosensDataStore.bucketedData!![6].value, 1.0)
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(T.mins(50).msecs())
+        assertThat(autosensDataStore.bucketedData!![6].timestamp).isEqualTo(T.mins(20).msecs())
+        assertThat(autosensDataStore.bucketedData!!).hasSize(7)
+        assertThat(autosensDataStore.bucketedData!![0].value).isWithin(1.0).of(100.0)
+        assertThat(autosensDataStore.bucketedData!![1].value).isWithin(1.0).of(90.0)
+        assertThat(autosensDataStore.bucketedData!![5].value).isWithin(1.0).of(50.0)
+        assertThat(autosensDataStore.bucketedData!![6].value).isWithin(1.0).of(40.0)
 
         // non 5min data should be reconstructed
         bgReadingList.clear()
@@ -661,15 +661,15 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(T.mins(50).msecs(), autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![6].timestamp)
-        Assertions.assertEquals(7, autosensDataStore.bucketedData!!.size.toLong())
-        Assertions.assertEquals(100.0, autosensDataStore.bucketedData!![0].value, 1.0)
-        Assertions.assertEquals(90.0, autosensDataStore.bucketedData!![1].value, 1.0)
-        Assertions.assertEquals(50.0, autosensDataStore.bucketedData!![5].value, 1.0)
-        Assertions.assertEquals(40.0, autosensDataStore.bucketedData!![6].value, 1.0)
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(T.mins(50).msecs())
+        assertThat(autosensDataStore.bucketedData!![6].timestamp).isEqualTo(T.mins(20).msecs())
+        assertThat(autosensDataStore.bucketedData!!).hasSize(7)
+        assertThat(autosensDataStore.bucketedData!![0].value).isWithin(1.0).of(100.0)
+        assertThat(autosensDataStore.bucketedData!![1].value).isWithin(1.0).of(90.0)
+        assertThat(autosensDataStore.bucketedData!![5].value).isWithin(1.0).of(50.0)
+        assertThat(autosensDataStore.bucketedData!![6].value).isWithin(1.0).of(40.0)
     }
 
     @Test
@@ -679,7 +679,7 @@ class AutosensDataStoreTest : TestBase() {
         //bucketed data should be null if no bg data available
         autosensDataStore.bgReadings = ArrayList()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(null, autosensDataStore.bucketedData)
+        assertThat(autosensDataStore.bucketedData).isNull()
 
         // real data gap test
         bgReadingList.clear()
@@ -956,10 +956,10 @@ class AutosensDataStoreTest : TestBase() {
         )
         autosensDataStore.bgReadings = bgReadingList
         autosensDataStore.referenceTime = -1
-        Assertions.assertEquals(true, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isTrue()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(dateUtil.fromISODateString("2018-09-05T13:34:57Z"), autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(dateUtil.fromISODateString("2018-09-05T03:44:57Z"), autosensDataStore.bucketedData!![autosensDataStore.bucketedData!!.size - 1].timestamp)
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(dateUtil.fromISODateString("2018-09-05T13:34:57Z"))
+        assertThat(autosensDataStore.bucketedData!!.last().timestamp).isEqualTo(dateUtil.fromISODateString("2018-09-05T03:44:57Z"))
 
         // 5min 4sec data
         bgReadingList.clear()
@@ -1174,7 +1174,7 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
     }
 
     @Test
@@ -1225,16 +1225,16 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(T.mins(45).msecs(), autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(T.mins(35).msecs(), autosensDataStore.bucketedData!![2].timestamp)
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![5].timestamp)
-        Assertions.assertEquals(6, autosensDataStore.bucketedData!!.size.toLong())
-        Assertions.assertEquals(99.0, autosensDataStore.bucketedData!![0].value, 1.0) // Recalculated data to 45min
-        Assertions.assertEquals(90.0, autosensDataStore.bucketedData!![1].value, 1.0) // Recalculated data to 40min
-        Assertions.assertEquals(67.0, autosensDataStore.bucketedData!![3].value, 1.0) // Recalculated data to 30min
-        Assertions.assertEquals(45.0, autosensDataStore.bucketedData!![5].value, 1.0) // Recalculated data to 20min
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(T.mins(45).msecs())
+        assertThat(autosensDataStore.bucketedData!![2].timestamp).isEqualTo(T.mins(35).msecs())
+        assertThat(autosensDataStore.bucketedData!![5].timestamp).isEqualTo(T.mins(20).msecs())
+        assertThat(autosensDataStore.bucketedData!!).hasSize(6)
+        assertThat(autosensDataStore.bucketedData!![0].value).isWithin(1.0).of(99.0) // Recalculated data to 45min
+        assertThat(autosensDataStore.bucketedData!![1].value).isWithin(1.0).of(90.0) // Recalculated data to 40min
+        assertThat(autosensDataStore.bucketedData!![3].value).isWithin(1.0).of(67.0) // Recalculated data to 30min
+        assertThat(autosensDataStore.bucketedData!![5].value).isWithin(1.0).of(45.0) // Recalculated data to 20min
 
         // non 5min data not aligned to referenceTime should be recalculated to referenceTime
         autosensDataStore.referenceTime = T.mins(5).msecs()
@@ -1280,16 +1280,16 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(T.mins(45).msecs(), autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(T.mins(35).msecs(), autosensDataStore.bucketedData!![2].timestamp)
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![5].timestamp)
-        Assertions.assertEquals(6, autosensDataStore.bucketedData!!.size.toLong())
-        Assertions.assertEquals(99.0, autosensDataStore.bucketedData!![0].value, 1.0) // Recalculated data to 45min
-        Assertions.assertEquals(90.0, autosensDataStore.bucketedData!![1].value, 1.0) // Recalculated data to 40min
-        Assertions.assertEquals(67.0, autosensDataStore.bucketedData!![3].value, 1.0) // Recalculated data to 30min
-        Assertions.assertEquals(45.0, autosensDataStore.bucketedData!![5].value, 1.0) // Recalculated data to 20min
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(T.mins(45).msecs())
+        assertThat(autosensDataStore.bucketedData!![2].timestamp).isEqualTo(T.mins(35).msecs())
+        assertThat(autosensDataStore.bucketedData!![5].timestamp).isEqualTo(T.mins(20).msecs())
+        assertThat(autosensDataStore.bucketedData!!).hasSize(6)
+        assertThat(autosensDataStore.bucketedData!![0].value).isWithin(1.0).of(99.0) // Recalculated data to 45min
+        assertThat(autosensDataStore.bucketedData!![1].value).isWithin(1.0).of(90.0) // Recalculated data to 40min
+        assertThat(autosensDataStore.bucketedData!![3].value).isWithin(1.0).of(67.0) // Recalculated data to 30min
+        assertThat(autosensDataStore.bucketedData!![5].value).isWithin(1.0).of(45.0) // Recalculated data to 20min
 
         // non 5min data without referenceTime set, should align the data to the time of the last reading
         autosensDataStore.referenceTime = -1
@@ -1335,29 +1335,29 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        assertThat(autosensDataStore.isAbout5minData(aapsLogger)).isFalse()
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(T.mins(48).msecs(), autosensDataStore.bucketedData!![0].timestamp)
-        Assertions.assertEquals(T.mins(43).msecs(), autosensDataStore.bucketedData!![1].timestamp)
-        Assertions.assertEquals(T.mins(33).msecs(), autosensDataStore.bucketedData!![3].timestamp)
-        Assertions.assertEquals(T.mins(18).msecs(), autosensDataStore.bucketedData!![6].timestamp)
-        Assertions.assertEquals(7, autosensDataStore.bucketedData!!.size.toLong())
-        Assertions.assertEquals(100.0, autosensDataStore.bucketedData!![0].value, 1.0) // Recalculated data to 48min
-        Assertions.assertEquals(98.0, autosensDataStore.bucketedData!![1].value, 1.0)  // Recalculated data to 43min
-        Assertions.assertEquals(74.0, autosensDataStore.bucketedData!![3].value, 1.0)  // Recalculated data to 33min
-        Assertions.assertEquals(40.0, autosensDataStore.bucketedData!![6].value, 1.0)  // Recalculated data to 18min
+        assertThat(autosensDataStore.bucketedData!![0].timestamp).isEqualTo(T.mins(48).msecs())
+        assertThat(autosensDataStore.bucketedData!![1].timestamp).isEqualTo(T.mins(43).msecs())
+        assertThat(autosensDataStore.bucketedData!![3].timestamp).isEqualTo(T.mins(33).msecs())
+        assertThat(autosensDataStore.bucketedData!![6].timestamp).isEqualTo(T.mins(18).msecs())
+        assertThat(autosensDataStore.bucketedData!!).hasSize(7)
+        assertThat(autosensDataStore.bucketedData!![0].value).isWithin(1.0).of(100.0) // Recalculated data to 48min
+        assertThat(autosensDataStore.bucketedData!![1].value).isWithin(1.0).of(98.0) // Recalculated data to 43min
+        assertThat(autosensDataStore.bucketedData!![3].value).isWithin(1.0).of(74.0) // Recalculated data to 33min
+        assertThat(autosensDataStore.bucketedData!![6].value).isWithin(1.0).of(40.0) // Recalculated data to 18min
     }
 
     @Test
     fun bgReadingsTest() {
         val bgReadingList: List<GlucoseValue> = ArrayList()
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(bgReadingList, autosensDataStore.bgReadings)
+        assertThat(autosensDataStore.bgReadings).isEmpty()
     }
 
     @Test
     fun roundUpTimeTest() {
-        Assertions.assertEquals(T.mins(3).msecs(), autosensDataStore.roundUpTime(T.secs(155).msecs()))
+        assertThat(autosensDataStore.roundUpTime(T.secs(155).msecs())).isEqualTo(T.mins(3).msecs())
     }
 
     @Test
@@ -1404,11 +1404,11 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(T.mins(10).msecs(), autosensDataStore.findNewer(T.mins(8).msecs())!!.timestamp)
-        Assertions.assertEquals(T.mins(5).msecs(), autosensDataStore.findNewer(T.mins(5).msecs())!!.timestamp)
-        Assertions.assertEquals(T.mins(10).msecs(), autosensDataStore.findNewer(T.mins(10).msecs())!!.timestamp)
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.findNewer(T.mins(20).msecs())!!.timestamp)
-        Assertions.assertEquals(null, autosensDataStore.findNewer(T.mins(22).msecs()))
+        assertThat(autosensDataStore.findNewer(T.mins(8).msecs())!!.timestamp).isEqualTo(T.mins(10).msecs())
+        assertThat(autosensDataStore.findNewer(T.mins(5).msecs())!!.timestamp).isEqualTo(T.mins(5).msecs())
+        assertThat(autosensDataStore.findNewer(T.mins(10).msecs())!!.timestamp).isEqualTo(T.mins(10).msecs())
+        assertThat(autosensDataStore.findNewer(T.mins(20).msecs())!!.timestamp).isEqualTo(T.mins(20).msecs())
+        assertThat(autosensDataStore.findNewer(T.mins(22).msecs())).isNull()
     }
 
     @Test
@@ -1455,11 +1455,11 @@ class AutosensDataStoreTest : TestBase() {
             )
         )
         autosensDataStore.bgReadings = bgReadingList
-        Assertions.assertEquals(T.mins(5).msecs(), autosensDataStore.findOlder(T.mins(8).msecs())!!.timestamp)
-        Assertions.assertEquals(T.mins(5).msecs(), autosensDataStore.findOlder(T.mins(5).msecs())!!.timestamp)
-        Assertions.assertEquals(T.mins(10).msecs(), autosensDataStore.findOlder(T.mins(10).msecs())!!.timestamp)
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.findOlder(T.mins(20).msecs())!!.timestamp)
-        Assertions.assertEquals(null, autosensDataStore.findOlder(T.mins(4).msecs()))
+        assertThat(autosensDataStore.findOlder(T.mins(8).msecs())!!.timestamp).isEqualTo(T.mins(5).msecs())
+        assertThat(autosensDataStore.findOlder(T.mins(5).msecs())!!.timestamp).isEqualTo(T.mins(5).msecs())
+        assertThat(autosensDataStore.findOlder(T.mins(10).msecs())!!.timestamp).isEqualTo(T.mins(10).msecs())
+        assertThat(autosensDataStore.findOlder(T.mins(20).msecs())!!.timestamp).isEqualTo(T.mins(20).msecs())
+        assertThat(autosensDataStore.findOlder(T.mins(4).msecs())).isNull()
     }
 
     @Test
@@ -1467,7 +1467,7 @@ class AutosensDataStoreTest : TestBase() {
         val bgReadingList: MutableList<GlucoseValue> = ArrayList()
         autosensDataStore.bgReadings = bgReadingList
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(null, autosensDataStore.findPreviousTimeFromBucketedData(1000))
+        assertThat(autosensDataStore.findPreviousTimeFromBucketedData(1000)).isNull()
 
         // Super data should not be touched
         bgReadingList.clear()
@@ -1513,10 +1513,10 @@ class AutosensDataStoreTest : TestBase() {
         )
         autosensDataStore.bgReadings = bgReadingList
         autosensDataStore.createBucketedData(aapsLogger, dateUtil)
-        Assertions.assertEquals(null, autosensDataStore.findPreviousTimeFromBucketedData(T.mins(4).msecs()))
-        Assertions.assertEquals(T.mins(5).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(6).msecs()))
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(20).msecs()))
-        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(25).msecs()))
+        assertThat(autosensDataStore.findPreviousTimeFromBucketedData(T.mins(4).msecs())).isNull()
+        assertThat(autosensDataStore.findPreviousTimeFromBucketedData(T.mins(6).msecs())).isEqualTo(T.mins(5).msecs())
+        assertThat(autosensDataStore.findPreviousTimeFromBucketedData(T.mins(20).msecs())).isEqualTo(T.mins(20).msecs())
+        assertThat(autosensDataStore.findPreviousTimeFromBucketedData(T.mins(25).msecs())).isEqualTo(T.mins(20).msecs())
     }
 
     @Test
@@ -1527,18 +1527,18 @@ class AutosensDataStoreTest : TestBase() {
         ads.storedLastAutosensResult = AutosensDataObject(injector).apply { time = now - 10 }
         // empty array, return last stored
         ads.autosensDataTable = LongSparseArray<AutosensData>()
-        Assertions.assertEquals(now - 10, ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time)
+        assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time).isEqualTo(now - 10)
 
         // data is there, return it
         ads.autosensDataTable.append(now - 1, AutosensDataObject(injector).apply { time = now - 1 })
-        Assertions.assertEquals(now - 1, ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time)
+        assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time).isEqualTo(now - 1)
         // and latest value should be saved
-        Assertions.assertEquals(now - 1, ads.storedLastAutosensResult?.time)
+        assertThat(ads.storedLastAutosensResult?.time).isEqualTo(now - 1)
 
         // data is old, return last stored
         ads.storedLastAutosensResult = AutosensDataObject(injector).apply { time = now - 1 }
         ads.autosensDataTable = LongSparseArray<AutosensData>()
         ads.autosensDataTable.append(now - T.mins(20).msecs(), AutosensDataObject(injector).apply { time = now - T.mins(20).msecs() })
-        Assertions.assertEquals(now - 1, ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time)
+        assertThat(ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time).isEqualTo(now - 1)
     }
 }
