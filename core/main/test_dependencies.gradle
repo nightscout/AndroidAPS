@@ -1,5 +1,6 @@
 dependencies {
     //testImplementation "junit:junit:$junit_version"
+    testImplementation 'org.jetbrains.kotlin:kotlin-test:1.9.10'
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter_version"
     testImplementation "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
     testImplementation "org.json:json:$json_version"

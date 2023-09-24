@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType
 import info.nightscout.pump.common.utils.ByteUtil
 import org.junit.jupiter.api.Assertions
@@ -31,8 +32,6 @@ internal class PodInfoResponseTest {
     @Test fun testInvalidPodInfoTypeMessageDecoding() {
         val podInfoResponse = PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d"))
         Assertions.assertEquals(PodInfoType.DETAILED_STATUS, podInfoResponse.subType)
-        Assertions.assertThrows(ClassCastException::class.java) {
-            @Suppress("UNUSED_VARIABLE") val podInfo = podInfoResponse.podInfo as PodInfoActiveAlerts
-        }
+        assertThat(podInfoResponse.podInfo).isNotInstanceOf(PodInfoActiveAlerts::class.java)
     }
 }

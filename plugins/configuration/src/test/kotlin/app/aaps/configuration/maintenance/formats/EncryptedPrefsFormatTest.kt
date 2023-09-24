@@ -17,6 +17,7 @@ import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import java.io.File
+import kotlin.test.assertFailsWith
 
 // https://stackoverflow.com/questions/52344522/joseexception-couldnt-create-aes-gcm-nopadding-cipher-illegal-key-size
 // https://stackoverflow.com/questions/47708951/can-aes-256-work-on-android-devices-with-api-level-26
@@ -208,7 +209,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
 
     @Test
     fun garbageInputTest() {
-        Assertions.assertThrows(PrefFormatError::class.java) {
+        assertFailsWith<PrefFormatError> {
             val frozenPrefs = "whatever man, i duno care"
 
             val storage = SingleStringStorage(frozenPrefs)
@@ -219,7 +220,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
 
     @Test
     fun unknownFormatTest() {
-        Assertions.assertThrows(PrefFormatError::class.java) {
+        assertFailsWith<PrefFormatError> {
             val frozenPrefs = "{\n" +
                 "  \"metadata\": {},\n" +
                 "  \"security\": {\n" +
