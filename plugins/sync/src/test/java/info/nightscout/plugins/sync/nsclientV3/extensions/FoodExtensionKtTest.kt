@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.food.NSFood
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
@@ -30,7 +30,7 @@ internal class FoodExtensionKtTest {
         )
 
         val food2 = (food.toNSFood().convertToRemoteAndBack() as NSFood).toFood()
-        Assertions.assertTrue(food.contentEqualsTo(food2))
-        Assertions.assertTrue(food.interfaceIdsEqualsTo(food2))
+        assertThat(food.contentEqualsTo(food2)).isTrue()
+        assertThat(food.interfaceIdsEqualsTo(food2)).isTrue()
     }
 }
