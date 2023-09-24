@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
@@ -29,8 +29,8 @@ internal class TemporaryTargetExtensionKtTest : TestBaseWithProfile() {
         )
 
         var temporaryTarget2 = (temporaryTarget.toNSTemporaryTarget().convertToRemoteAndBack() as NSTemporaryTarget).toTemporaryTarget()
-        Assertions.assertTrue(temporaryTarget.contentEqualsTo(temporaryTarget2))
-        Assertions.assertTrue(temporaryTarget.interfaceIdsEqualsTo(temporaryTarget2))
+        assertThat(temporaryTarget.contentEqualsTo(temporaryTarget2)).isTrue()
+        assertThat(temporaryTarget.interfaceIdsEqualsTo(temporaryTarget2)).isTrue()
 
         temporaryTarget = TemporaryTarget(
             timestamp = 10000,
@@ -48,7 +48,7 @@ internal class TemporaryTargetExtensionKtTest : TestBaseWithProfile() {
         )
 
         temporaryTarget2 = (temporaryTarget.toNSTemporaryTarget().convertToRemoteAndBack() as NSTemporaryTarget).toTemporaryTarget()
-        Assertions.assertTrue(temporaryTarget.contentEqualsTo(temporaryTarget2))
-        Assertions.assertTrue(temporaryTarget.interfaceIdsEqualsTo(temporaryTarget2))
+        assertThat(temporaryTarget.contentEqualsTo(temporaryTarget2)).isTrue()
+        assertThat(temporaryTarget.interfaceIdsEqualsTo(temporaryTarget2)).isTrue()
     }
 }

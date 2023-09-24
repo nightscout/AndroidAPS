@@ -1,6 +1,7 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
@@ -12,7 +13,6 @@ import info.nightscout.sdk.mapper.convertToRemoteAndBack
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -57,20 +57,20 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
         val nsDeviceStatus = deviceStatus.toNSDeviceStatus()
 
         nsDeviceStatusHandler.handleNewData(arrayOf(nsDeviceStatus))
-        Assertions.assertEquals(75, processedDeviceStatusData.pumpData?.percent)
+        assertThat(processedDeviceStatusData.pumpData!!.percent).isEqualTo(75)
 
         val nsDeviceStatus2 = nsDeviceStatus.convertToRemoteAndBack()
-        Assertions.assertTrue(nsDeviceStatus.device == nsDeviceStatus2.device)
-        Assertions.assertTrue(nsDeviceStatus.identifier == nsDeviceStatus2.identifier)
-        Assertions.assertTrue(nsDeviceStatus.srvCreated == nsDeviceStatus2.srvCreated)
-        Assertions.assertTrue(nsDeviceStatus.srvModified == nsDeviceStatus2.srvModified)
-        Assertions.assertTrue(nsDeviceStatus.createdAt == nsDeviceStatus2.createdAt)
-        Assertions.assertTrue(nsDeviceStatus.date == nsDeviceStatus2.date)
-        Assertions.assertTrue(nsDeviceStatus.uploaderBattery == nsDeviceStatus2.uploaderBattery)
-        Assertions.assertTrue(nsDeviceStatus.device == nsDeviceStatus2.device)
-        Assertions.assertTrue(nsDeviceStatus.uploader?.battery == nsDeviceStatus2.uploader?.battery)
-        Assertions.assertTrue(nsDeviceStatus.pump?.battery == nsDeviceStatus2.pump?.battery)
-        Assertions.assertTrue(nsDeviceStatus.openaps?.enacted?.toString() == nsDeviceStatus2.openaps?.enacted?.toString())
-        Assertions.assertTrue(nsDeviceStatus.configuration?.toString() == nsDeviceStatus2.configuration?.toString())
+        assertThat(nsDeviceStatus2.device).isEqualTo(nsDeviceStatus.device)
+        assertThat(nsDeviceStatus2.identifier).isEqualTo(nsDeviceStatus.identifier)
+        assertThat(nsDeviceStatus2.srvCreated).isEqualTo(nsDeviceStatus.srvCreated)
+        assertThat(nsDeviceStatus2.srvModified).isEqualTo(nsDeviceStatus.srvModified)
+        assertThat(nsDeviceStatus2.createdAt).isEqualTo(nsDeviceStatus.createdAt)
+        assertThat(nsDeviceStatus2.date).isEqualTo(nsDeviceStatus.date)
+        assertThat(nsDeviceStatus2.uploaderBattery).isEqualTo(nsDeviceStatus.uploaderBattery)
+        assertThat(nsDeviceStatus2.device).isEqualTo(nsDeviceStatus.device)
+        assertThat(nsDeviceStatus2.uploader?.battery).isEqualTo(nsDeviceStatus.uploader?.battery)
+        assertThat(nsDeviceStatus2.pump?.battery).isEqualTo(nsDeviceStatus.pump?.battery)
+        assertThat(nsDeviceStatus2.openaps?.enacted?.toString()).isEqualTo(nsDeviceStatus.openaps?.enacted?.toString())
+        assertThat(nsDeviceStatus2.configuration?.toString()).isEqualTo(nsDeviceStatus.configuration?.toString())
     }
 }

@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
@@ -26,8 +26,8 @@ internal class OfflineEventExtensionKtTest {
         )
 
         var offlineEvent2 = (offlineEvent.toNSOfflineEvent().convertToRemoteAndBack() as NSOfflineEvent).toOfflineEvent()
-        Assertions.assertTrue(offlineEvent.contentEqualsTo(offlineEvent2))
-        Assertions.assertTrue(offlineEvent.interfaceIdsEqualsTo(offlineEvent2))
+        assertThat(offlineEvent.contentEqualsTo(offlineEvent2)).isTrue()
+        assertThat(offlineEvent.interfaceIdsEqualsTo(offlineEvent2)).isTrue()
 
         offlineEvent = OfflineEvent(
             timestamp = 10000,
@@ -43,8 +43,8 @@ internal class OfflineEventExtensionKtTest {
         )
 
         offlineEvent2 = (offlineEvent.toNSOfflineEvent().convertToRemoteAndBack() as NSOfflineEvent).toOfflineEvent()
-        Assertions.assertTrue(offlineEvent.contentEqualsTo(offlineEvent2))
-        Assertions.assertTrue(offlineEvent.interfaceIdsEqualsTo(offlineEvent2))
+        assertThat(offlineEvent.contentEqualsTo(offlineEvent2)).isTrue()
+        assertThat(offlineEvent.interfaceIdsEqualsTo(offlineEvent2)).isTrue()
 
         offlineEvent = OfflineEvent(
             timestamp = 10000,
@@ -60,7 +60,7 @@ internal class OfflineEventExtensionKtTest {
         )
 
         offlineEvent2 = (offlineEvent.toNSOfflineEvent().convertToRemoteAndBack() as NSOfflineEvent).toOfflineEvent()
-        Assertions.assertTrue(offlineEvent.contentEqualsTo(offlineEvent2))
-        Assertions.assertTrue(offlineEvent.interfaceIdsEqualsTo(offlineEvent2))
+        assertThat(offlineEvent.contentEqualsTo(offlineEvent2)).isTrue()
+        assertThat(offlineEvent.interfaceIdsEqualsTo(offlineEvent2)).isTrue()
     }
 }

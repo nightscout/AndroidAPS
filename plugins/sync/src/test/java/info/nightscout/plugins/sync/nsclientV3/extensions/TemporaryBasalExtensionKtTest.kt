@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
@@ -29,8 +29,8 @@ internal class TemporaryBasalExtensionKtTest : TestBaseWithProfile() {
         )
 
         var temporaryBasal2 = (temporaryBasal.toNSTemporaryBasal(validProfile).convertToRemoteAndBack() as NSTemporaryBasal).toTemporaryBasal()
-        Assertions.assertTrue(temporaryBasal.contentEqualsTo(temporaryBasal2))
-        Assertions.assertTrue(temporaryBasal.interfaceIdsEqualsTo(temporaryBasal2))
+        assertThat(temporaryBasal.contentEqualsTo(temporaryBasal2)).isTrue()
+        assertThat(temporaryBasal.interfaceIdsEqualsTo(temporaryBasal2)).isTrue()
 
         temporaryBasal = TemporaryBasal(
             timestamp = 10000,
@@ -48,7 +48,7 @@ internal class TemporaryBasalExtensionKtTest : TestBaseWithProfile() {
         )
 
         temporaryBasal2 = (temporaryBasal.toNSTemporaryBasal(validProfile).convertToRemoteAndBack() as NSTemporaryBasal).toTemporaryBasal()
-        Assertions.assertTrue(temporaryBasal.contentEqualsTo(temporaryBasal2))
-        Assertions.assertTrue(temporaryBasal.interfaceIdsEqualsTo(temporaryBasal2))
+        assertThat(temporaryBasal.contentEqualsTo(temporaryBasal2)).isTrue()
+        assertThat(temporaryBasal.interfaceIdsEqualsTo(temporaryBasal2)).isTrue()
     }
 }

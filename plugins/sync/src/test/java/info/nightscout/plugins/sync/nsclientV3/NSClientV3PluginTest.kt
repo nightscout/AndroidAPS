@@ -1,6 +1,7 @@
 package info.nightscout.plugins.sync.nsclientV3
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.fromConstant
@@ -36,7 +37,6 @@ import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -108,11 +108,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createDeviceStatus(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("devicestatus", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdDeviceStatuses.size)
+        assertThat(storeDataForDb.nsIdDeviceStatuses).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.createDeviceStatus(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsAdd("devicestatus", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdDeviceStatuses.size) // still only 1
+        assertThat(storeDataForDb.nsIdDeviceStatuses).hasSize(2) // still only 1
     }
 
     @Test
@@ -134,11 +134,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createSgv(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("entries", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdGlucoseValues.size)
+        assertThat(storeDataForDb.nsIdGlucoseValues).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateSvg(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("entries", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdGlucoseValues.size)
+        assertThat(storeDataForDb.nsIdGlucoseValues).hasSize(2)
     }
 
     @Test
@@ -164,11 +164,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createFood(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("food", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdFoods.size)
+        assertThat(storeDataForDb.nsIdFoods).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateFood(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("food", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdFoods.size)
+        assertThat(storeDataForDb.nsIdFoods).hasSize(2)
     }
 
     @Test
@@ -192,11 +192,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdBoluses.size)
+        assertThat(storeDataForDb.nsIdBoluses).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdBoluses.size)
+        assertThat(storeDataForDb.nsIdBoluses).hasSize(2)
     }
 
     @Test
@@ -219,11 +219,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdCarbs.size)
+        assertThat(storeDataForDb.nsIdCarbs).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdCarbs.size)
+        assertThat(storeDataForDb.nsIdCarbs).hasSize(2)
     }
 
     @Test
@@ -272,11 +272,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdBolusCalculatorResults.size)
+        assertThat(storeDataForDb.nsIdBolusCalculatorResults).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdBolusCalculatorResults.size)
+        assertThat(storeDataForDb.nsIdBolusCalculatorResults).hasSize(2)
     }
 
     @Test
@@ -310,11 +310,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdEffectiveProfileSwitches.size)
+        assertThat(storeDataForDb.nsIdEffectiveProfileSwitches).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdEffectiveProfileSwitches.size)
+        assertThat(storeDataForDb.nsIdEffectiveProfileSwitches).hasSize(2)
     }
 
     @Test
@@ -346,11 +346,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdProfileSwitches.size)
+        assertThat(storeDataForDb.nsIdProfileSwitches).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdProfileSwitches.size)
+        assertThat(storeDataForDb.nsIdProfileSwitches).hasSize(2)
     }
 
     @Test
@@ -373,11 +373,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3", validProfile)
-        Assertions.assertEquals(1, storeDataForDb.nsIdExtendedBoluses.size)
+        assertThat(storeDataForDb.nsIdExtendedBoluses).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3", validProfile)
-        Assertions.assertEquals(2, storeDataForDb.nsIdExtendedBoluses.size)
+        assertThat(storeDataForDb.nsIdExtendedBoluses).hasSize(2)
     }
 
     @Test
@@ -399,11 +399,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdOfflineEvents.size)
+        assertThat(storeDataForDb.nsIdOfflineEvents).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdOfflineEvents.size)
+        assertThat(storeDataForDb.nsIdOfflineEvents).hasSize(2)
     }
 
     @Test
@@ -427,11 +427,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3", validProfile)
-        Assertions.assertEquals(1, storeDataForDb.nsIdTemporaryBasals.size)
+        assertThat(storeDataForDb.nsIdTemporaryBasals).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3", validProfile)
-        Assertions.assertEquals(2, storeDataForDb.nsIdTemporaryBasals.size)
+        assertThat(storeDataForDb.nsIdTemporaryBasals).hasSize(2)
     }
 
     @Test
@@ -455,11 +455,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdTemporaryTargets.size)
+        assertThat(storeDataForDb.nsIdTemporaryTargets).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdTemporaryTargets.size)
+        assertThat(storeDataForDb.nsIdTemporaryTargets).hasSize(2)
     }
 
     @Test
@@ -486,11 +486,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         // create
         Mockito.`when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdTherapyEvents.size)
+        assertThat(storeDataForDb.nsIdTherapyEvents).hasSize(1)
         // update
         Mockito.`when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        Assertions.assertEquals(2, storeDataForDb.nsIdTherapyEvents.size)
+        assertThat(storeDataForDb.nsIdTherapyEvents).hasSize(2)
     }
 
     @Test
