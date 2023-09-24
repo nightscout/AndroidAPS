@@ -1,6 +1,7 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.extensions.fromConstant
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.embedments.InsulinConfiguration
@@ -8,7 +9,6 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -53,8 +53,8 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
         )
 
         var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
-        Assertions.assertTrue(profileSwitch.contentEqualsTo(profileSwitch2))
-        Assertions.assertTrue(profileSwitch.interfaceIdsEqualsTo(profileSwitch2))
+        assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
+        assertThat(profileSwitch.interfaceIdsEqualsTo(profileSwitch2)).isTrue()
 
         profileSwitch = ProfileSwitch(
             timestamp = 10000,
@@ -80,7 +80,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
         )
 
         profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
-        Assertions.assertTrue(profileSwitch.contentEqualsTo(profileSwitch2))
-        Assertions.assertTrue(profileSwitch.interfaceIdsEqualsTo(profileSwitch2))
+        assertThat(profileSwitch.contentEqualsTo(profileSwitch2)).isTrue()
+        assertThat(profileSwitch.interfaceIdsEqualsTo(profileSwitch2)).isTrue()
     }
 }
