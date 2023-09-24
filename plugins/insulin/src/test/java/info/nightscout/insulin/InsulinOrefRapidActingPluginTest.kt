@@ -1,5 +1,6 @@
 package info.nightscout.insulin
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Config
@@ -10,7 +11,6 @@ import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -47,24 +47,24 @@ class InsulinOrefRapidActingPluginTest {
 
     @Test
     fun `simple peak test`() {
-        Assertions.assertEquals(75, sut.peak)
+        assertThat(sut.peak).isEqualTo(75)
     }
 
     @Test
     fun getIdTest() {
-        Assertions.assertEquals(Insulin.InsulinType.OREF_RAPID_ACTING, sut.id)
+        assertThat(sut.id).isEqualTo(Insulin.InsulinType.OREF_RAPID_ACTING)
     }
 
     @Test
     fun commentStandardTextTest() {
         `when`(rh.gs(eq(R.string.fast_acting_insulin_comment))).thenReturn("Novorapid, Novolog, Humalog")
-        Assertions.assertEquals("Novorapid, Novolog, Humalog", sut.commentStandardText())
+        assertThat(sut.commentStandardText()).isEqualTo("Novorapid, Novolog, Humalog")
     }
 
     @Test
     fun getFriendlyNameTest() {
         `when`(rh.gs(eq(R.string.rapid_acting_oref))).thenReturn("Rapid-Acting Oref")
-        Assertions.assertEquals("Rapid-Acting Oref", sut.friendlyName)
+        assertThat(sut.friendlyName).isEqualTo("Rapid-Acting Oref")
     }
 
 }
