@@ -83,6 +83,7 @@
     <string name="smb_disabled_in_preferences">SMB zakázáno v nastavení</string>
     <string name="uam_disabled_in_preferences">UAM zakázáno v nastavení</string>
     <string name="autosens_disabled_in_preferences">Autosens zakázán v nastavení</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens zakázán v DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">IOB omezeno na %1$.1f U: %2$s</string>
     <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>

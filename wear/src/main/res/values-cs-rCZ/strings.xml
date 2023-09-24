@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">Zobrazovat BGI</string>
     <string name="pref_show_direction_arrow">Zobrazovat trendovou šipku</string>
     <string name="pref_show_ago">Zobrazit aktualizováno před</string>
+    <string name="pref_show_temp_basal">Zobrazit dočasný bazál</string>
+    <string name="pref_show_bolus">Zobrazit Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Zobrazit mřížku</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tmavý</string>
     <string name="pref_highlight_basals">Zvýraznit bazály</string>
     <string name="pref_prediction_lines">Zobrazit predikce</string>
