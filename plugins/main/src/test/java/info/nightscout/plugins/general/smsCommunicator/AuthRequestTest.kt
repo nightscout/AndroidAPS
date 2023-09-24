@@ -1,6 +1,7 @@
 package info.nightscout.plugins.general.smsCommunicator
 
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Constants
@@ -12,7 +13,6 @@ import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValida
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -61,26 +61,26 @@ class AuthRequestTest : TestBase() {
 
         // Check if SMS requesting code is sent
         var authRequest = AuthRequest(injector, requester, "Request text", "ABC", action)
-        Assertions.assertEquals(sentSms!!.phoneNumber, "aNumber")
-        Assertions.assertEquals(sentSms!!.text, "Request text")
+        assertThat(sentSms!!.phoneNumber).isEqualTo("aNumber")
+        assertThat(sentSms!!.text).isEqualTo("Request text")
 
         // wrong reply
         actionCalled = false
         authRequest.action("EFG")
-        Assertions.assertEquals(sentSms!!.phoneNumber, "aNumber")
-        Assertions.assertEquals(sentSms!!.text, "Wrong code. Command cancelled.")
-        Assertions.assertFalse(actionCalled)
+        assertThat(sentSms!!.phoneNumber).isEqualTo("aNumber")
+        assertThat(sentSms!!.text).isEqualTo("Wrong code. Command cancelled.")
+        assertThat(actionCalled).isFalse()
 
         // correct reply
         authRequest = AuthRequest(injector, requester, "Request text", "ABC", action)
         actionCalled = false
         `when`(otp.checkOTP(anyObject())).thenReturn(OneTimePasswordValidationResult.OK)
         authRequest.action("ABC")
-        Assertions.assertTrue(actionCalled)
+        assertThat(actionCalled).isTrue()
         // second time action should not be called
         actionCalled = false
         authRequest.action("ABC")
-        Assertions.assertFalse(actionCalled)
+        assertThat(actionCalled).isFalse()
 
         // test timed out message
         val now: Long = 10000
@@ -89,6 +89,6 @@ class AuthRequestTest : TestBase() {
         actionCalled = false
         `when`(dateUtil.now()).thenReturn(now + T.mins(Constants.SMS_CONFIRM_TIMEOUT).msecs() + 1)
         authRequest.action("ABC")
-        Assertions.assertFalse(actionCalled)
+        assertThat(actionCalled).isFalse()
     }
 }
