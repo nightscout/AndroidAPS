@@ -1,6 +1,7 @@
 package info.nightscout.plugins.constraints.bgQualityCheck
 
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
@@ -15,7 +16,6 @@ import info.nightscout.plugins.constraints.R
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -62,16 +62,16 @@ class BgQualityCheckPluginTest : TestBase() {
     fun runTest() {
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(null)
         plugin.processBgData()
-        Assertions.assertEquals(BgQualityCheck.State.UNKNOWN, plugin.state)
-        Assertions.assertEquals(0, plugin.icon())
+        assertThat(plugin.state).isEqualTo(BgQualityCheck.State.UNKNOWN)
+        assertThat(plugin.icon()).isEqualTo(0)
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
-        Assertions.assertEquals(BgQualityCheck.State.FIVE_MIN_DATA, plugin.state)
-        Assertions.assertEquals(0, plugin.icon())
+        assertThat(plugin.state).isEqualTo(BgQualityCheck.State.FIVE_MIN_DATA)
+        assertThat(plugin.icon()).isEqualTo(0)
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
-        Assertions.assertEquals(BgQualityCheck.State.RECALCULATED, plugin.state)
-        Assertions.assertEquals(R.drawable.ic_baseline_warning_24_yellow, plugin.icon())
+        assertThat(plugin.state).isEqualTo(BgQualityCheck.State.RECALCULATED)
+        assertThat(plugin.icon()).isEqualTo(R.drawable.ic_baseline_warning_24_yellow)
 
         val superData: MutableList<GlucoseValue> = ArrayList()
         superData.add(
@@ -118,10 +118,10 @@ class BgQualityCheckPluginTest : TestBase() {
 
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
-        Assertions.assertEquals(BgQualityCheck.State.FIVE_MIN_DATA, plugin.state)
+        assertThat(plugin.state).isEqualTo(BgQualityCheck.State.FIVE_MIN_DATA)
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
-        Assertions.assertEquals(BgQualityCheck.State.RECALCULATED, plugin.state)
+        assertThat(plugin.state).isEqualTo(BgQualityCheck.State.RECALCULATED)
 
         val duplicatedData: MutableList<GlucoseValue> = ArrayList()
         duplicatedData.add(
@@ -178,8 +178,8 @@ class BgQualityCheckPluginTest : TestBase() {
 
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
-        Assertions.assertEquals(BgQualityCheck.State.DOUBLED, plugin.state)
-        Assertions.assertEquals(R.drawable.ic_baseline_warning_24_red, plugin.icon())
+        assertThat(plugin.state).isEqualTo(BgQualityCheck.State.DOUBLED)
+        assertThat(plugin.icon()).isEqualTo(R.drawable.ic_baseline_warning_24_red)
 
         val identicalData: MutableList<GlucoseValue> = ArrayList()
         identicalData.add(
@@ -236,7 +236,7 @@ class BgQualityCheckPluginTest : TestBase() {
 
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
-        Assertions.assertEquals(BgQualityCheck.State.DOUBLED, plugin.state)
+        assertThat(plugin.state).isEqualTo(BgQualityCheck.State.DOUBLED)
 
         // Flat data Libre
         val flatData: MutableList<GlucoseValue> = ArrayList()
@@ -344,8 +344,8 @@ class BgQualityCheckPluginTest : TestBase() {
         `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue(flatData[0]))
 
         plugin.processBgData()
-        Assertions.assertEquals(BgQualityCheck.State.FLAT, plugin.state)
-        Assertions.assertEquals(R.drawable.ic_baseline_trending_flat_24, plugin.icon())
+        assertThat(plugin.state).isEqualTo(BgQualityCheck.State.FLAT)
+        assertThat(plugin.icon()).isEqualTo(R.drawable.ic_baseline_trending_flat_24)
 
         // Flat data Libre
         val flatDataDexcom: MutableList<GlucoseValue> = ArrayList()
@@ -453,8 +453,8 @@ class BgQualityCheckPluginTest : TestBase() {
         `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue(flatDataDexcom[0]))
 
         plugin.processBgData()
-        Assertions.assertNotEquals(BgQualityCheck.State.FLAT, plugin.state)
-        Assertions.assertNotEquals(R.drawable.ic_baseline_trending_flat_24, plugin.icon())
+        assertThat(plugin.state).isNotEqualTo(BgQualityCheck.State.FLAT)
+        assertThat(plugin.icon()).isNotEqualTo(R.drawable.ic_baseline_trending_flat_24)
 
         // not enough data
         val incompleteData: MutableList<GlucoseValue> = ArrayList()
@@ -481,7 +481,7 @@ class BgQualityCheckPluginTest : TestBase() {
         `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(incompleteData)
         `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue(incompleteData[0]))
         plugin.processBgData()// must be more than 5 values
-        Assertions.assertNotEquals(BgQualityCheck.State.FLAT, plugin.state)
+        assertThat(plugin.state).isNotEqualTo(BgQualityCheck.State.FLAT)
         flatData.add(
             GlucoseValue(
                 raw = 0.0,
@@ -553,19 +553,19 @@ class BgQualityCheckPluginTest : TestBase() {
             )
         )
         plugin.processBgData() // must be at least 45 min old
-        Assertions.assertNotEquals(BgQualityCheck.State.FLAT, plugin.state)
+        assertThat(plugin.state).isNotEqualTo(BgQualityCheck.State.FLAT)
     }
 
     @Test
     fun applyMaxIOBConstraintsTest() {
         plugin.state = BgQualityCheck.State.UNKNOWN
-        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value(), 0.001)
+        assertThat(plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value()).isWithin(0.001).of(10.0)
         plugin.state = BgQualityCheck.State.FIVE_MIN_DATA
-        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value(), 0.001)
+        assertThat(plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value()).isWithin(0.001).of(10.0)
         plugin.state = BgQualityCheck.State.RECALCULATED
-        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value(), 0.001)
+        assertThat(plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value()).isWithin(0.001).of(10.0)
         plugin.state = BgQualityCheck.State.DOUBLED
-        Assertions.assertEquals(0.0, plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value(), 0.001)
+        assertThat(plugin.applyMaxIOBConstraints(ConstraintObject(10.0, aapsLogger)).value()).isWithin(0.001).of(0.0)
     }
 
 }
