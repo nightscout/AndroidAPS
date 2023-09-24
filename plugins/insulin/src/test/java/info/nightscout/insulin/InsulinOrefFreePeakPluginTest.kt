@@ -1,6 +1,7 @@
 package info.nightscout.insulin
 
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Config
@@ -10,7 +11,6 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -46,24 +46,24 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
     @Test
     fun `simple peak test`() {
         `when`(sp.getInt(eq(info.nightscout.core.utils.R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
-        Assertions.assertEquals(90, sut.peak)
+        assertThat(sut.peak).isEqualTo(90)
     }
 
     @Test
     fun getIdTest() {
-        Assertions.assertEquals(Insulin.InsulinType.OREF_FREE_PEAK, sut.id)
+        assertThat(sut.id).isEqualTo(Insulin.InsulinType.OREF_FREE_PEAK)
     }
 
     @Test
     fun commentStandardTextTest() {
         `when`(sp.getInt(eq(info.nightscout.core.utils.R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
         `when`(rh.gs(eq(R.string.insulin_peak_time))).thenReturn("Peak Time [min]")
-        Assertions.assertEquals("Peak Time [min]: 90", sut.commentStandardText())
+        assertThat(sut.commentStandardText()).isEqualTo("Peak Time [min]: 90")
     }
 
     @Test
     fun getFriendlyNameTest() {
         `when`(rh.gs(eq(R.string.free_peak_oref))).thenReturn("Free-Peak Oref")
-        Assertions.assertEquals("Free-Peak Oref", sut.friendlyName)
+        assertThat(sut.friendlyName).isEqualTo("Free-Peak Oref")
     }
 }
