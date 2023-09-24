@@ -1,6 +1,7 @@
 package info.nightscout.plugins.constraints.signatureVerifier
 
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.Lazy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
@@ -11,7 +12,6 @@ import info.nightscout.plugins.constraints.versionChecker.numericVersionPart
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -39,97 +39,97 @@ class VersionCheckerUtilsKtTest : TestBase() {
 
     @Test
     fun `should handle invalid version`() {
-        Assertions.assertArrayEquals(intArrayOf(), versionCheckerUtils.versionDigits("definitely not version string"))
+        assertThat(versionCheckerUtils.versionDigits("definitely not version string")).isEmpty()
     }
 
     @Test
     fun `should handle empty version`() {
-        Assertions.assertArrayEquals(intArrayOf(), versionCheckerUtils.versionDigits(""))
+        assertThat(versionCheckerUtils.versionDigits("")).isEmpty()
     }
 
     @Test
     fun `should parse 2 digit version`() {
-        Assertions.assertArrayEquals(intArrayOf(0, 999), versionCheckerUtils.versionDigits("0.999-beta"))
+        assertThat(versionCheckerUtils.versionDigits("0.999-beta")).asList().containsExactly(0, 999).inOrder()
     }
 
     @Test
     fun `should parse 3 digit version`() {
-        Assertions.assertArrayEquals(intArrayOf(6, 83, 93), versionCheckerUtils.versionDigits("6.83.93"))
+        assertThat(versionCheckerUtils.versionDigits("6.83.93")).asList().containsExactly(6, 83, 93).inOrder()
     }
 
     @Test
     fun `should parse 4 digit version`() {
-        Assertions.assertArrayEquals(intArrayOf(42, 7, 13, 101), versionCheckerUtils.versionDigits("42.7.13.101"))
+        assertThat(versionCheckerUtils.versionDigits("42.7.13.101")).asList().containsExactly(42, 7, 13, 101).inOrder()
     }
 
     @Test
     fun `should parse 4 digit version with extra`() {
-        Assertions.assertArrayEquals(intArrayOf(1, 2, 3, 4), versionCheckerUtils.versionDigits("1.2.3.4-RC5"))
+        assertThat(versionCheckerUtils.versionDigits("1.2.3.4-RC5")).asList().containsExactly(1, 2, 3, 4).inOrder()
     }
 
     @Test
     fun `should parse version but only 4 digits are taken`() {
-        Assertions.assertArrayEquals(intArrayOf(67, 8, 31, 5), versionCheckerUtils.versionDigits("67.8.31.5.153.4.2"))
+        assertThat(versionCheckerUtils.versionDigits("67.8.31.5.153.4.2")).asList().containsExactly(67, 8, 31, 5).inOrder()
     }
 
     @Test
     fun `should keep 2 digit version`() {
-        Assertions.assertEquals("1.2", "1.2".numericVersionPart())
+        assertThat("1.2".numericVersionPart()).isEqualTo("1.2")
     }
 
     @Test
     fun `should keep 3 digit version`() {
-        Assertions.assertEquals("1.2.3", "1.2.3".numericVersionPart())
+        assertThat("1.2.3".numericVersionPart()).isEqualTo("1.2.3")
     }
 
     @Test
     fun `should keep 4 digit version`() {
-        Assertions.assertEquals("1.2.3.4", "1.2.3.4".numericVersionPart())
+        assertThat("1.2.3.4".numericVersionPart()).isEqualTo("1.2.3.4")
     }
 
     @Test
     fun `should strip 2 digit version RC`() {
-        Assertions.assertEquals("1.2", "1.2-RC1".numericVersionPart())
+        assertThat("1.2-RC1".numericVersionPart()).isEqualTo("1.2")
     }
 
     @Test
     fun `should strip 2 digit version RC old format`() {
-        Assertions.assertEquals("1.2", "1.2RC1".numericVersionPart())
+        assertThat("1.2RC1".numericVersionPart()).isEqualTo("1.2")
     }
 
     @Test
     fun `should strip 2 digit version RC without digit`() {
-        Assertions.assertEquals("1.2", "1.2-RC".numericVersionPart())
+        assertThat("1.2-RC".numericVersionPart()).isEqualTo("1.2")
     }
 
     @Test
     fun `should strip 2 digit version dev`() {
-        Assertions.assertEquals("1.2", "1.2-dev".numericVersionPart())
+        assertThat("1.2-dev".numericVersionPart()).isEqualTo("1.2")
     }
 
     @Test
     fun `should strip 2 digit version dev old format 1`() {
-        Assertions.assertEquals("1.2", "1.2dev".numericVersionPart())
+        assertThat("1.2dev".numericVersionPart()).isEqualTo("1.2")
     }
 
     @Test
     fun `should strip 2 digit version dev old format 2`() {
-        Assertions.assertEquals("1.2", "1.2dev-a3".numericVersionPart())
+        assertThat("1.2dev-a3".numericVersionPart()).isEqualTo("1.2")
     }
 
     @Test
     fun `should strip 3 digit version RC`() {
-        Assertions.assertEquals("1.2.3", "1.2.3-RC1".numericVersionPart())
+        assertThat("1.2.3-RC1".numericVersionPart()).isEqualTo("1.2.3")
     }
 
     @Test
     fun `should strip 4 digit version RC`() {
-        Assertions.assertEquals("1.2.3.4", "1.2.3.4-RC5".numericVersionPart())
+        assertThat("1.2.3.4-RC5".numericVersionPart()).isEqualTo("1.2.3.4")
     }
 
     @Test
     fun `should strip even with dot`() {
-        Assertions.assertEquals("1.2", "1.2.RC5".numericVersionPart())
+        assertThat("1.2.RC5".numericVersionPart()).isEqualTo("1.2")
     }
 
     @Suppress("SpellCheckingInspection")
@@ -143,7 +143,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   appName = "Aaoeu"
         """.trimMargin()
         val detectedVersion: String? = versionCheckerUtils.findVersion(buildGradle)
-        Assertions.assertEquals("2.2.2", detectedVersion)
+        assertThat(detectedVersion).isEqualTo("2.2.2")
     }
 
     // In case we merge a "x.x.x-dev" into master, don't see it as update.
@@ -157,14 +157,14 @@ class VersionCheckerUtilsKtTest : TestBase() {
             |   appName = "Aaoeu"
         """.trimMargin()
         val detectedVersion: String? = versionCheckerUtils.findVersion(buildGradle)
-        Assertions.assertEquals(null, detectedVersion)
+        assertThat(detectedVersion).isNull()
     }
 
     @Test
     fun findVersionMatchesDoesNotMatchErrorResponse() {
         val buildGradle = """<html><body>Balls! No build.gradle here. Move along</body><html>"""
         val detectedVersion: String? = versionCheckerUtils.findVersion(buildGradle)
-        Assertions.assertEquals(null, detectedVersion)
+        assertThat(detectedVersion).isNull()
     }
 
     @Test
@@ -375,7 +375,7 @@ class VersionCheckerUtilsKtTest : TestBase() {
     @BeforeEach
     fun `set time`() {
         `when`(dateUtil.now()).thenReturn(10000000000L)
-        Assertions.assertEquals(10000000000L, dateUtil.now())
+        assertThat(dateUtil.now()).isEqualTo(10000000000L)
 
         `when`(rh.gs(anyInt(), anyString())).thenReturn("")
     }
