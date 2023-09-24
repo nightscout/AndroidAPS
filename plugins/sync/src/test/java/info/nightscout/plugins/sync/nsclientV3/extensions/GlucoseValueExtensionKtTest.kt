@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 internal class GlucoseValueExtensionKtTest : TestBaseWithProfile() {
@@ -25,7 +25,7 @@ internal class GlucoseValueExtensionKtTest : TestBaseWithProfile() {
         )
 
         val glucoseValue2 = glucoseValue.toNSSvgV3().convertToRemoteAndBack()?.toTransactionGlucoseValue()?.toGlucoseValue()
-        Assertions.assertTrue(glucoseValue.contentEqualsTo(glucoseValue2!!))
-        Assertions.assertTrue(glucoseValue.interfaceIdsEqualsTo(glucoseValue2))
+        assertThat(glucoseValue.contentEqualsTo(glucoseValue2!!)).isTrue()
+        assertThat(glucoseValue.interfaceIdsEqualsTo(glucoseValue2)).isTrue()
     }
 }
