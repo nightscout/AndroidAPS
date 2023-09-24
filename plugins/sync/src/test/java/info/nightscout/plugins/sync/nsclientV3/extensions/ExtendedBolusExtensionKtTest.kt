@@ -1,12 +1,12 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSExtendedBolus
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
@@ -29,8 +29,8 @@ internal class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
         )
 
         var extendedBolus2 = (extendedBolus.toNSExtendedBolus(validProfile).convertToRemoteAndBack() as NSExtendedBolus).toExtendedBolus()
-        Assertions.assertTrue(extendedBolus.contentEqualsTo(extendedBolus2))
-        Assertions.assertTrue(extendedBolus.interfaceIdsEqualsTo(extendedBolus2))
+        assertThat(extendedBolus.contentEqualsTo(extendedBolus2)).isTrue()
+        assertThat(extendedBolus.interfaceIdsEqualsTo(extendedBolus2)).isTrue()
 
         extendedBolus = ExtendedBolus(
             timestamp = 10000,
@@ -47,13 +47,13 @@ internal class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
         )
 
         val converted = extendedBolus.toNSExtendedBolus(validProfile)
-        Assertions.assertTrue(converted is NSTemporaryBasal)
-        Assertions.assertNotNull((converted as NSTemporaryBasal).extendedEmulated)
+        assertThat(converted).isInstanceOf(NSTemporaryBasal::class.java)
+        assertThat((converted as NSTemporaryBasal).extendedEmulated).isNotNull()
         val convertedBack = converted.convertToRemoteAndBack()
-        Assertions.assertTrue(convertedBack is NSExtendedBolus)
+        assertThat(convertedBack).isInstanceOf(NSExtendedBolus::class.java)
 
         extendedBolus2 = (extendedBolus.toNSExtendedBolus(validProfile).convertToRemoteAndBack() as NSExtendedBolus).toExtendedBolus()
-        Assertions.assertTrue(extendedBolus.contentEqualsTo(extendedBolus2))
-        Assertions.assertTrue(extendedBolus.interfaceIdsEqualsTo(extendedBolus2))
+        assertThat(extendedBolus.contentEqualsTo(extendedBolus2)).isTrue()
+        assertThat(extendedBolus.interfaceIdsEqualsTo(extendedBolus2)).isTrue()
     }
 }
