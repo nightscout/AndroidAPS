@@ -1,17 +1,17 @@
 package info.nightscout.sensitivity
 
+import app.aaps.interfaces.aps.AutosensDataStore
+import app.aaps.interfaces.aps.AutosensResult
+import app.aaps.interfaces.aps.Sensitivity
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.plugin.PluginDescription
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.Round
+import app.aaps.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.aps.AutosensDataStore
-import info.nightscout.interfaces.aps.AutosensResult
-import info.nightscout.interfaces.aps.Sensitivity
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.utils.Round
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import kotlin.math.max
 import kotlin.math.min
 
@@ -25,17 +25,23 @@ abstract class AbstractSensitivityPlugin(
 
     abstract override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
 
-    fun fillResult(ratio: Double, carbsAbsorbed: Double, pastSensitivity: String,
-                   ratioLimit: String, sensResult: String, deviationsArraySize: Int): AutosensResult {
-        return fillResult(ratio, carbsAbsorbed, pastSensitivity, ratioLimit, sensResult,
-                          deviationsArraySize,
-                          SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, "0.7")),
-                          SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, "1.2")))
+    fun fillResult(
+        ratio: Double, carbsAbsorbed: Double, pastSensitivity: String,
+        ratioLimit: String, sensResult: String, deviationsArraySize: Int
+    ): AutosensResult {
+        return fillResult(
+            ratio, carbsAbsorbed, pastSensitivity, ratioLimit, sensResult,
+            deviationsArraySize,
+            SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, "0.7")),
+            SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, "1.2"))
+        )
     }
 
-    fun fillResult(ratioParam: Double, carbsAbsorbed: Double, pastSensitivity: String,
-                   ratioLimitParam: String, sensResult: String, deviationsArraySize: Int,
-                   ratioMin: Double, ratioMax: Double): AutosensResult {
+    fun fillResult(
+        ratioParam: Double, carbsAbsorbed: Double, pastSensitivity: String,
+        ratioLimitParam: String, sensResult: String, deviationsArraySize: Int,
+        ratioMin: Double, ratioMax: Double
+    ): AutosensResult {
         var ratio = ratioParam
         var ratioLimit = ratioLimitParam
         val rawRatio = ratio
@@ -45,8 +51,10 @@ abstract class AbstractSensitivityPlugin(
         //If not-excluded data <= MIN_HOURS -> don't do Autosens
         //If not-excluded data >= MIN_HOURS_FULL_AUTOSENS -> full Autosens
         //Between MIN_HOURS and MIN_HOURS_FULL_AUTOSENS: gradually increase autosens
-        val autosensContrib = (min(max(Sensitivity.MIN_HOURS, deviationsArraySize / 12.0),
-                                   Sensitivity.MIN_HOURS_FULL_AUTOSENS) - Sensitivity.MIN_HOURS) / (Sensitivity.MIN_HOURS_FULL_AUTOSENS - Sensitivity.MIN_HOURS)
+        val autosensContrib = (min(
+            max(Sensitivity.MIN_HOURS, deviationsArraySize / 12.0),
+            Sensitivity.MIN_HOURS_FULL_AUTOSENS
+        ) - Sensitivity.MIN_HOURS) / (Sensitivity.MIN_HOURS_FULL_AUTOSENS - Sensitivity.MIN_HOURS)
         ratio = autosensContrib * (ratio - 1) + 1
         if (autosensContrib != 1.0) {
             ratioLimit += "(" + deviationsArraySize + " of " + Sensitivity.MIN_HOURS_FULL_AUTOSENS * 12 + " values) "

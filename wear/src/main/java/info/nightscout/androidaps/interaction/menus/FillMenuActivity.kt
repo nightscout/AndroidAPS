@@ -2,11 +2,11 @@ package info.nightscout.androidaps.interaction.menus
 
 import android.content.Intent
 import android.os.Bundle
+import app.aaps.interfaces.rx.events.EventWearToMobile
+import app.aaps.interfaces.rx.weardata.EventData
 import info.nightscout.androidaps.R
-import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.actions.FillActivity
 import info.nightscout.androidaps.interaction.utils.MenuListActivity
-import info.nightscout.rx.weardata.EventData
 
 class FillMenuActivity : MenuListActivity() {
 

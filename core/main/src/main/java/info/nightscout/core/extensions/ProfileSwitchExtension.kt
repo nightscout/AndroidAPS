@@ -1,14 +1,14 @@
 package info.nightscout.core.extensions
 
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.profile.PureProfile
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import java.util.TimeZone
 

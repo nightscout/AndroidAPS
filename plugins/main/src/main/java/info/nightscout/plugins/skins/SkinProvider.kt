@@ -1,8 +1,8 @@
 package info.nightscout.plugins.skins
 
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.plugins.R
 import info.nightscout.plugins.di.SkinsModule
-import info.nightscout.shared.sharedPreferences.SP
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton

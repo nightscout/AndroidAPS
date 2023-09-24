@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
+import app.aaps.interfaces.ui.UiInteraction
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.common.utils.ByteUtil
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

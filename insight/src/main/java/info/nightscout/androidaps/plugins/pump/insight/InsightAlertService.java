@@ -20,6 +20,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import javax.inject.Inject;
 
+import app.aaps.interfaces.logging.AAPSLogger;
+import app.aaps.interfaces.logging.LTag;
+import app.aaps.interfaces.resources.ResourceHelper;
 import dagger.android.DaggerService;
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ConfirmAlertMessage;
@@ -35,9 +38,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.core.utils.HtmlHelper;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
 
 public class InsightAlertService extends DaggerService implements InsightConnectionService.StateCallback {
 

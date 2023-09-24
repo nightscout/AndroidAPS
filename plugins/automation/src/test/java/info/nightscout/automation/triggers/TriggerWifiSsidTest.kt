@@ -1,9 +1,9 @@
 package info.nightscout.automation.triggers
 
+import app.aaps.interfaces.rx.events.EventNetworkChange
 import com.google.common.base.Optional
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
-import info.nightscout.rx.events.EventNetworkChange
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions

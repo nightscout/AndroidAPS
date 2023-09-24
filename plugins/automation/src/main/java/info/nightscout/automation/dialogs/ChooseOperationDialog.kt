@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.automation.databinding.AutomationDialogChooseOperationBinding
 import info.nightscout.automation.triggers.TriggerConnector
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class ChooseOperationDialog : BaseDialog() {

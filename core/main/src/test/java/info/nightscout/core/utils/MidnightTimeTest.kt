@@ -1,7 +1,7 @@
 package info.nightscout.core.utils
 
+import app.aaps.interfaces.utils.MidnightTime
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.interfaces.utils.MidnightTime
 import org.junit.jupiter.api.Test
 import java.util.Calendar
 

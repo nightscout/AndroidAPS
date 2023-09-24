@@ -7,8 +7,8 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.automation.R
-import info.nightscout.shared.interfaces.ResourceHelper
 
 class InputLocationMode(private val rh: ResourceHelper) : Element {
 

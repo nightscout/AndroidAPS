@@ -5,20 +5,20 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.widget.TextView
 import androidx.annotation.StringRes
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.extensions.runOnUiThread
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.pump.WarnColors
+import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.stats.TddCalculator
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.WarnColors
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.stats.TddCalculator
-import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.R
-import info.nightscout.shared.extensions.runOnUiThread
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,6 +35,7 @@ class StatusLightHandler @Inject constructor(
     private val tddCalculator: TddCalculator,
     private val decimalFormatter: DecimalFormatter
 ) {
+
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     /**
@@ -52,11 +53,39 @@ class StatusLightHandler @Inject constructor(
     ) {
         val pump = activePlugin.activePump
         val bgSource = activePlugin.activeBgSource
-        handleAge(cannulaAge, TherapyEvent.Type.CANNULA_CHANGE, info.nightscout.core.utils.R.string.key_statuslights_cage_warning, 48.0, info.nightscout.core.utils.R.string.key_statuslights_cage_critical, 72.0)
-        handleAge(insulinAge, TherapyEvent.Type.INSULIN_CHANGE, info.nightscout.core.utils.R.string.key_statuslights_iage_warning, 72.0, info.nightscout.core.utils.R.string.key_statuslights_iage_critical, 144.0)
-        handleAge(sensorAge, TherapyEvent.Type.SENSOR_CHANGE, info.nightscout.core.utils.R.string.key_statuslights_sage_warning, 216.0, info.nightscout.core.utils.R.string.key_statuslights_sage_critical, 240.0)
+        handleAge(
+            cannulaAge,
+            TherapyEvent.Type.CANNULA_CHANGE,
+            info.nightscout.core.utils.R.string.key_statuslights_cage_warning,
+            48.0,
+            info.nightscout.core.utils.R.string.key_statuslights_cage_critical,
+            72.0
+        )
+        handleAge(
+            insulinAge,
+            TherapyEvent.Type.INSULIN_CHANGE,
+            info.nightscout.core.utils.R.string.key_statuslights_iage_warning,
+            72.0,
+            info.nightscout.core.utils.R.string.key_statuslights_iage_critical,
+            144.0
+        )
+        handleAge(
+            sensorAge,
+            TherapyEvent.Type.SENSOR_CHANGE,
+            info.nightscout.core.utils.R.string.key_statuslights_sage_warning,
+            216.0,
+            info.nightscout.core.utils.R.string.key_statuslights_sage_critical,
+            240.0
+        )
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
-            handleAge(batteryAge, TherapyEvent.Type.PUMP_BATTERY_CHANGE, info.nightscout.core.utils.R.string.key_statuslights_bage_warning, 216.0, info.nightscout.core.utils.R.string.key_statuslights_bage_critical, 240.0)
+            handleAge(
+                batteryAge,
+                TherapyEvent.Type.PUMP_BATTERY_CHANGE,
+                info.nightscout.core.utils.R.string.key_statuslights_bage_warning,
+                216.0,
+                info.nightscout.core.utils.R.string.key_statuslights_bage_critical,
+                240.0
+            )
         }
 
         val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
@@ -144,13 +173,14 @@ class StatusLightHandler @Inject constructor(
             }
         }
     }
+
     private fun TherapyEvent.age(useShortText: Boolean, rh: ResourceHelper, dateUtil: DateUtil): String {
         val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
-        var days = " " + rh.gs(info.nightscout.interfaces.R.string.days) + " "
-        var hours = " " + rh.gs(info.nightscout.interfaces.R.string.hours) + " "
+        var days = " " + rh.gs(app.aaps.interfaces.R.string.days) + " "
+        var hours = " " + rh.gs(app.aaps.interfaces.R.string.hours) + " "
         if (useShortText) {
-            days = rh.gs(info.nightscout.interfaces.R.string.shortday)
-            hours = rh.gs(info.nightscout.interfaces.R.string.shorthour)
+            days = rh.gs(app.aaps.interfaces.R.string.shortday)
+            hours = rh.gs(app.aaps.interfaces.R.string.shorthour)
         }
         return diff[TimeUnit.DAYS].toString() + days + diff[TimeUnit.HOURS] + hours
     }

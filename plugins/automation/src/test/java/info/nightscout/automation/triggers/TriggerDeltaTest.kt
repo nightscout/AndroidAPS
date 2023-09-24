@@ -1,12 +1,12 @@
 package info.nightscout.automation.triggers
 
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.InMemoryGlucoseValue
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputDelta.DeltaType
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -54,7 +54,7 @@ class TriggerDeltaTest : TriggerTestBase() {
     @Test fun copyConstructorTest() {
         val t: TriggerDelta = TriggerDelta(injector).units(GlucoseUnit.MGDL).setValue(213.0, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         val t1 = t.duplicate() as TriggerDelta
-        assertThat( t1.delta.value).isWithin( 0.01).of(213.0)
+        assertThat(t1.delta.value).isWithin(0.01).of(213.0)
         assertThat(t1.units).isEqualTo(GlucoseUnit.MGDL)
         assertThat(t.delta.deltaType).isEqualTo(DeltaType.DELTA)
         assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
@@ -73,7 +73,7 @@ class TriggerDeltaTest : TriggerTestBase() {
         val t: TriggerDelta = TriggerDelta(injector).units(GlucoseUnit.MMOL).setValue(4.1, DeltaType.DELTA).comparator(Comparator.Compare.IS_EQUAL)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerDelta
         assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
-        assertThat( t2.delta.value).isWithin( 0.01).of(4.1)
+        assertThat(t2.delta.value).isWithin(0.01).of(4.1)
         assertThat(t2.units).isEqualTo(GlucoseUnit.MMOL)
         assertThat(t2.delta.deltaType).isEqualTo(DeltaType.DELTA)
     }

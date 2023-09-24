@@ -1,6 +1,18 @@
 package app.aaps.shared.tests
 
 import android.content.Context
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.ProfileStore
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.HardLimits
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -12,18 +24,6 @@ import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.implementation.profile.ProfileStoreObject
 import info.nightscout.implementation.profile.ProfileUtilImpl
 import info.nightscout.implementation.utils.DecimalFormatterImpl
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.ProfileStore
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers.anyDouble

@@ -1,10 +1,10 @@
 package info.nightscout.implementation.profiling
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.profiling.Profiler
 import dagger.Reusable
-import info.nightscout.interfaces.profiling.Profiler
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 @OpenForTesting

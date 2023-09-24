@@ -2,14 +2,14 @@ package info.nightscout.core.graph
 
 import android.content.Context
 import android.util.AttributeSet
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.utils.Round
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.utils.Round
 import java.text.NumberFormat
 import kotlin.math.max
 import kotlin.math.min

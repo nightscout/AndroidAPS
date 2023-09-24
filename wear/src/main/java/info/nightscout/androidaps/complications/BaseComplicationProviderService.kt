@@ -15,23 +15,22 @@ import android.support.wearable.complications.ComplicationProviderService
 import android.support.wearable.complications.ComplicationText
 import android.support.wearable.complications.ProviderUpdateRequester
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventWearToMobile
+import app.aaps.interfaces.rx.weardata.EventData.ActionResendData
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.comm.DataLayerListenerServiceWear.Companion.INTENT_NEW_DATA
 import info.nightscout.androidaps.complications.ComplicationTapBroadcastReceiver.Companion.getTapActionIntent
 import info.nightscout.androidaps.complications.ComplicationTapBroadcastReceiver.Companion.getTapWarningSinceIntent
 import info.nightscout.androidaps.data.RawDisplayData
-import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.utils.Constants
 import info.nightscout.androidaps.interaction.utils.DisplayFormat
 import info.nightscout.androidaps.interaction.utils.Inevitable
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-
-import info.nightscout.rx.weardata.EventData.ActionResendData
 import javax.inject.Inject
 
 /**

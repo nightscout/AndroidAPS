@@ -1,6 +1,8 @@
 package info.nightscout.core.data
 
 import android.content.Context
+import app.aaps.interfaces.iob.IobTotal
+import app.aaps.interfaces.utils.DateUtil
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -10,8 +12,6 @@ import info.nightscout.core.iob.determineBasalJson
 import info.nightscout.core.iob.json
 import info.nightscout.core.iob.plus
 import info.nightscout.core.iob.round
-import info.nightscout.interfaces.iob.IobTotal
-import info.nightscout.shared.utils.DateUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

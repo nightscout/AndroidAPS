@@ -6,9 +6,9 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import app.aaps.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.elements.NumberPicker
-import info.nightscout.shared.SafeParse
 import java.text.DecimalFormat
 
 class SWEditNumber(injector: HasAndroidInjector, private val init: Double, private val min: Double, private val max: Double) : SWItem(injector, Type.DECIMAL_NUMBER) {

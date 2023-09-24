@@ -1,11 +1,11 @@
 package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.queue.Callback
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
 import org.json.JSONObject
 
 class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {

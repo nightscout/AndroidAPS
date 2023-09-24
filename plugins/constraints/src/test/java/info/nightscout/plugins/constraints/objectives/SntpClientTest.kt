@@ -1,8 +1,8 @@
 package info.nightscout.plugins.constraints.objectives
 
+import app.aaps.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.shared.utils.DateUtil
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import kotlin.math.abs

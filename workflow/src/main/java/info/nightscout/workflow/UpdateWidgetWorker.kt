@@ -2,8 +2,8 @@ package info.nightscout.workflow
 
 import android.content.Context
 import androidx.work.WorkerParameters
+import app.aaps.interfaces.ui.UiInteraction
 import info.nightscout.core.utils.worker.LoggingWorker
-import info.nightscout.interfaces.ui.UiInteraction
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

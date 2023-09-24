@@ -17,6 +17,26 @@ import android.widget.ArrayAdapter
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.extensions.runOnUiThread
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.objects.Instantiator
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.ProfileStore
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventLocalProfileChanged
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.MidnightTime
+import app.aaps.interfaces.utils.Round
+import app.aaps.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.profile.ProfileSealed
@@ -25,31 +45,11 @@ import info.nightscout.core.ui.elements.WeekDay
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.ProfileStore
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.MidnightTime
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.databinding.AutotuneFragmentBinding
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.events.EventAutotuneUpdateGui
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventLocalProfileChanged
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.extensions.runOnUiThread
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -156,16 +156,16 @@ class AutotuneFragment : DaggerFragment() {
                                           rh.gs(info.nightscout.core.ui.R.string.autotune_copy_localprofile_button),
                                           rh.gs(info.nightscout.core.ui.R.string.autotune_copy_local_profile_message) + "\n" + localName,
                                           Runnable {
-                                     val profilePlugin = activePlugin.activeProfileSource
-                                     profilePlugin.addProfile(profilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
-                                     rxBus.send(EventLocalProfileChanged())
-                                     uel.log(
-                                         UserEntry.Action.NEW_PROFILE,
-                                         UserEntry.Sources.Autotune,
-                                         ValueWithUnit.SimpleString(localName)
-                                     )
-                                     updateGui()
-                                 })
+                                              val profilePlugin = activePlugin.activeProfileSource
+                                              profilePlugin.addProfile(profilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
+                                              rxBus.send(EventLocalProfileChanged())
+                                              uel.log(
+                                                  UserEntry.Action.NEW_PROFILE,
+                                                  UserEntry.Sources.Autotune,
+                                                  ValueWithUnit.SimpleString(localName)
+                                              )
+                                              updateGui()
+                                          })
             }
         }
 
@@ -175,17 +175,17 @@ class AutotuneFragment : DaggerFragment() {
                                       rh.gs(info.nightscout.core.ui.R.string.autotune_update_input_profile_button),
                                       rh.gs(info.nightscout.core.ui.R.string.autotune_update_local_profile_message, localName),
                                       Runnable {
-                                 autotunePlugin.tunedProfile?.profileName = localName
-                                 autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
-                                 autotunePlugin.updateButtonVisibility = View.GONE
-                                 autotunePlugin.saveLastRun()
-                                 uel.log(
-                                     UserEntry.Action.STORE_PROFILE,
-                                     UserEntry.Sources.Autotune,
-                                     ValueWithUnit.SimpleString(localName)
-                                 )
-                                 updateGui()
-                             }
+                                          autotunePlugin.tunedProfile?.profileName = localName
+                                          autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
+                                          autotunePlugin.updateButtonVisibility = View.GONE
+                                          autotunePlugin.saveLastRun()
+                                          uel.log(
+                                              UserEntry.Action.STORE_PROFILE,
+                                              UserEntry.Sources.Autotune,
+                                              ValueWithUnit.SimpleString(localName)
+                                          )
+                                          updateGui()
+                                      }
             )
         }
 
@@ -195,17 +195,17 @@ class AutotuneFragment : DaggerFragment() {
                                       rh.gs(info.nightscout.core.ui.R.string.autotune_revert_input_profile_button),
                                       rh.gs(info.nightscout.core.ui.R.string.autotune_revert_local_profile_message, localName),
                                       Runnable {
-                                 autotunePlugin.tunedProfile?.profileName = ""
-                                 autotunePlugin.updateProfile(autotunePlugin.pumpProfile)
-                                 autotunePlugin.updateButtonVisibility = View.VISIBLE
-                                 autotunePlugin.saveLastRun()
-                                 uel.log(
-                                     UserEntry.Action.STORE_PROFILE,
-                                     UserEntry.Sources.Autotune,
-                                     ValueWithUnit.SimpleString(localName)
-                                 )
-                                 updateGui()
-                             }
+                                          autotunePlugin.tunedProfile?.profileName = ""
+                                          autotunePlugin.updateProfile(autotunePlugin.pumpProfile)
+                                          autotunePlugin.updateButtonVisibility = View.VISIBLE
+                                          autotunePlugin.saveLastRun()
+                                          uel.log(
+                                              UserEntry.Action.STORE_PROFILE,
+                                              UserEntry.Sources.Autotune,
+                                              ValueWithUnit.SimpleString(localName)
+                                          )
+                                          updateGui()
+                                      }
             )
         }
 
@@ -482,7 +482,15 @@ class AutotuneFragment : DaggerFragment() {
                                             isfFormat
                                         )
                                     )
-                                    layout.addView(toTableRowValue(context, rh.gs(info.nightscout.core.ui.R.string.ic_short), Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001), Round.roundTo(tuned.ic, 0.001), "%.2f"))
+                                    layout.addView(
+                                        toTableRowValue(
+                                            context,
+                                            rh.gs(info.nightscout.core.ui.R.string.ic_short),
+                                            Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001),
+                                            Round.roundTo(tuned.ic, 0.001),
+                                            "%.2f"
+                                        )
+                                    )
                                     layout.addView(
                                         TextView(context).apply {
                                             text = rh.gs(info.nightscout.core.ui.R.string.basal)

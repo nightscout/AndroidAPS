@@ -11,6 +11,11 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
@@ -22,13 +27,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.Resolve
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.DateTimeUtil
-import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.pump.common.utils.ProfileUtil
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -64,44 +64,55 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
 
     private fun groupForCommandType(type: OmnipodCommandType): PumpHistoryEntryGroup {
         return when (type) {
-            OmnipodCommandType.INITIALIZE_POD ->
+            OmnipodCommandType.INITIALIZE_POD         ->
                 PumpHistoryEntryGroup.Prime
-            OmnipodCommandType.INSERT_CANNULA ->
+
+            OmnipodCommandType.INSERT_CANNULA         ->
                 PumpHistoryEntryGroup.Prime
-            OmnipodCommandType.DEACTIVATE_POD ->
+
+            OmnipodCommandType.DEACTIVATE_POD         ->
                 PumpHistoryEntryGroup.Prime
-            OmnipodCommandType.DISCARD_POD ->
+
+            OmnipodCommandType.DISCARD_POD            ->
                 PumpHistoryEntryGroup.Prime
 
             OmnipodCommandType.CANCEL_TEMPORARY_BASAL ->
                 PumpHistoryEntryGroup.Basal
-            OmnipodCommandType.SET_BASAL_PROFILE ->
-                PumpHistoryEntryGroup.Basal
-            OmnipodCommandType.SET_TEMPORARY_BASAL ->
-                PumpHistoryEntryGroup.Basal
-            OmnipodCommandType.RESUME_DELIVERY ->
-                PumpHistoryEntryGroup.Basal
-            OmnipodCommandType.SUSPEND_DELIVERY ->
+
+            OmnipodCommandType.SET_BASAL_PROFILE      ->
                 PumpHistoryEntryGroup.Basal
 
-            OmnipodCommandType.SET_BOLUS ->
+            OmnipodCommandType.SET_TEMPORARY_BASAL    ->
+                PumpHistoryEntryGroup.Basal
+
+            OmnipodCommandType.RESUME_DELIVERY        ->
+                PumpHistoryEntryGroup.Basal
+
+            OmnipodCommandType.SUSPEND_DELIVERY       ->
+                PumpHistoryEntryGroup.Basal
+
+            OmnipodCommandType.SET_BOLUS              ->
                 PumpHistoryEntryGroup.Bolus
-            OmnipodCommandType.CANCEL_BOLUS ->
+
+            OmnipodCommandType.CANCEL_BOLUS           ->
                 PumpHistoryEntryGroup.Bolus
 
-            OmnipodCommandType.ACKNOWLEDGE_ALERTS ->
-                PumpHistoryEntryGroup.Alarm
-            OmnipodCommandType.CONFIGURE_ALERTS ->
-                PumpHistoryEntryGroup.Alarm
-            OmnipodCommandType.PLAY_TEST_BEEP ->
+            OmnipodCommandType.ACKNOWLEDGE_ALERTS     ->
                 PumpHistoryEntryGroup.Alarm
 
-            OmnipodCommandType.GET_POD_STATUS ->
-                PumpHistoryEntryGroup.Configuration
-            OmnipodCommandType.SET_TIME ->
+            OmnipodCommandType.CONFIGURE_ALERTS       ->
+                PumpHistoryEntryGroup.Alarm
+
+            OmnipodCommandType.PLAY_TEST_BEEP         ->
+                PumpHistoryEntryGroup.Alarm
+
+            OmnipodCommandType.GET_POD_STATUS         ->
                 PumpHistoryEntryGroup.Configuration
 
-            OmnipodCommandType.READ_POD_PULSE_LOG ->
+            OmnipodCommandType.SET_TIME               ->
+                PumpHistoryEntryGroup.Configuration
+
+            OmnipodCommandType.READ_POD_PULSE_LOG     ->
                 PumpHistoryEntryGroup.Unknown
         }
     }
@@ -238,13 +249,13 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
                 OmnipodCommandType.DISCARD_POD,
                 OmnipodCommandType.SUSPEND_DELIVERY,
                 OmnipodCommandType.RESUME_DELIVERY,
-                OmnipodCommandType.SET_BASAL_PROFILE -> {
+                OmnipodCommandType.SET_BASAL_PROFILE   -> {
                     info.nightscout.core.ui.R.attr.omniCyanColor
                 }
                 // User action
                 OmnipodCommandType.PLAY_TEST_BEEP,
                 OmnipodCommandType.ACKNOWLEDGE_ALERTS,
-                OmnipodCommandType.CANCEL_BOLUS -> {
+                OmnipodCommandType.CANCEL_BOLUS        -> {
                     info.nightscout.core.ui.R.attr.omniCyanColor
                 }
                 // Insulin treatment
@@ -253,7 +264,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
                     info.nightscout.core.ui.R.attr.defaultTextColor
                 }
 
-                else ->
+                else                                   ->
                     // Other
                     info.nightscout.core.ui.R.attr.omniGrayColor
             }
@@ -281,7 +292,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
                     }
                 }
 
-                OmnipodCommandType.SET_BOLUS -> {
+                OmnipodCommandType.SET_BOLUS           -> {
                     val bolus = historyEntry.record as BolusRecord
                     bolus.let {
                         rh.gs(R.string.omnipod_common_history_bolus_value, it.amout)
@@ -291,12 +302,12 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
                 OmnipodCommandType.SET_BASAL_PROFILE,
                 OmnipodCommandType.SET_TIME,
                 OmnipodCommandType.INSERT_CANNULA,
-                OmnipodCommandType.RESUME_DELIVERY -> {
+                OmnipodCommandType.RESUME_DELIVERY     -> {
                     val basal = historyEntry.record as BasalValuesRecord
                     ProfileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.OMNIPOD_DASH)
                 }
 
-                else ->
+                else                                   ->
                     ""
             }
             // Set some color
@@ -326,12 +337,15 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
         return when {
             historyEntry.initialResult == InitialResult.FAILURE_SENDING ->
                 R.string.omnipod_dash_failed_to_send
-            historyEntry.initialResult == InitialResult.NOT_SENT ->
+
+            historyEntry.initialResult == InitialResult.NOT_SENT        ->
                 R.string.omnipod_dash_command_not_sent
+
             historyEntry.initialResult == InitialResult.SENT &&
-                historyEntry.resolvedResult == ResolvedResult.FAILURE ->
+                historyEntry.resolvedResult == ResolvedResult.FAILURE   ->
                 R.string.omnipod_dash_command_not_received_by_the_pod
-            else ->
+
+            else                                                        ->
                 R.string.omnipod_dash_unknown
         }
     }

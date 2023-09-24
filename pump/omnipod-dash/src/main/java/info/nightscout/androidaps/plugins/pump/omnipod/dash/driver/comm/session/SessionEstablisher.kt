@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.Nonce
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.SessionEstablishmentException
@@ -8,9 +11,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageSendSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.core.utils.toHex
-import info.nightscout.interfaces.Config
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import java.security.SecureRandom
 
 class SessionEstablisher(
@@ -114,7 +114,7 @@ class SessionEstablisher(
 
         for (attr in eapMsg.attributes) {
             when (attr) {
-                is EapAkaAttributeRes ->
+                is EapAkaAttributeRes      ->
                     if (!milenage.res.contentEquals(attr.payload)) {
                         throw SessionEstablishmentException(
                             "RES mismatch." +
@@ -122,9 +122,11 @@ class SessionEstablisher(
                                 "Actual: ${attr.payload.toHex()}."
                         )
                     }
+
                 is EapAkaAttributeCustomIV ->
                     nodeIV = attr.payload.copyOfRange(0, IV_SIZE)
-                else ->
+
+                else                       ->
                     throw SessionEstablishmentException("Unknown attribute received: $attr")
             }
         }
@@ -137,7 +139,7 @@ class SessionEstablisher(
             if (eapMsg.attributes.size == 1 && eapMsg.attributes[0] is EapAkaAttributeClientErrorCode) {
                 throw SessionEstablishmentException(
                     "Received CLIENT_ERROR_CODE for EAP-AKA challenge: ${
-                    eapMsg.attributes[0].toByteArray().toHex()
+                        eapMsg.attributes[0].toByteArray().toHex()
                     }"
                 )
             }

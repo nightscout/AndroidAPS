@@ -1,9 +1,9 @@
 package info.nightscout.plugins.di
 
+import app.aaps.interfaces.profile.ProfileSource
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.plugins.profile.ProfileFragment
 import info.nightscout.plugins.profile.ProfilePlugin
 

@@ -5,15 +5,15 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventNtpStatus
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.constraints.databinding.DialogNtpProgressBinding
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventNtpStatus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -37,8 +37,10 @@ class NtpProgressDialog : DaggerDialogFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         isCancelable = false
 
         state = savedInstanceState?.getString("state", null)
@@ -73,18 +75,18 @@ class NtpProgressDialog : DaggerDialogFragment() {
             .toObservable(EventNtpStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ event: EventNtpStatus ->
-                if (_binding != null) {
-                    aapsLogger.debug(LTag.UI, "Status: " + event.status + " Percent: " + event.percent)
-                    binding.status.text = event.status
-                    binding.progressbar.progress = event.percent
-                    if (event.percent == 100) {
-                        SystemClock.sleep(100)
-                        dismiss()
-                    }
-                    state = event.status
-                    percent = event.percent
-                }
-            }, fabricPrivacy::logException)
+                           if (_binding != null) {
+                               aapsLogger.debug(LTag.UI, "Status: " + event.status + " Percent: " + event.percent)
+                               binding.status.text = event.status
+                               binding.progressbar.progress = event.percent
+                               if (event.percent == 100) {
+                                   SystemClock.sleep(100)
+                                   dismiss()
+                               }
+                               state = event.status
+                               percent = event.percent
+                           }
+                       }, fabricPrivacy::logException)
     }
 
     override fun onPause() {

@@ -1,12 +1,12 @@
 package info.nightscout.pump.danars.comm
 
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.ProfileUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ProfileUtil
 import javax.inject.Inject
 import kotlin.math.round
 

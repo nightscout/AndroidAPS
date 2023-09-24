@@ -1,5 +1,9 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.extensions.fromConstant
 import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.extensions.pureProfileFromJson
@@ -8,10 +12,6 @@ import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
 fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): JSONObject =

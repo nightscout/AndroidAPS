@@ -1,13 +1,12 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
+import app.aaps.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
-import info.nightscout.shared.utils.DateUtil
 import java.util.UUID
 
-class WizardElement(carbs: Carbs, dateUtil: DateUtil)
-    : BaseElement(carbs.timestamp, UUID.nameUUIDFromBytes(("AAPS-wizard" + carbs.timestamp).toByteArray()).toString(), dateUtil) {
+class WizardElement(carbs: Carbs, dateUtil: DateUtil) : BaseElement(carbs.timestamp, UUID.nameUUIDFromBytes(("AAPS-wizard" + carbs.timestamp).toByteArray()).toString(), dateUtil) {
 
     @Expose var units = "mg/dL"
     @Expose var carbInput: Double = 0.toDouble()

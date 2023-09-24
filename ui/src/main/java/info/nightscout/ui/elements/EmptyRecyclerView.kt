@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.shared.extensions.runOnUiThread
-import info.nightscout.shared.extensions.toVisibility
+import app.aaps.interfaces.extensions.runOnUiThread
+import app.aaps.interfaces.extensions.toVisibility
 
 class EmptyRecyclerView : RecyclerView {
 

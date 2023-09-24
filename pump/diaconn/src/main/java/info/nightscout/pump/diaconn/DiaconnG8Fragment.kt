@@ -8,30 +8,30 @@ import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.pump.Pump
+import app.aaps.interfaces.pump.WarnColors
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventExtendedBolusChange
+import app.aaps.interfaces.rx.events.EventInitializationChanged
+import app.aaps.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.interfaces.rx.events.EventQueueChanged
+import app.aaps.interfaces.rx.events.EventTempBasalChange
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.WarnColors
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.diaconn.activities.DiaconnG8HistoryActivity
 import info.nightscout.pump.diaconn.activities.DiaconnG8UserOptionsActivity
 import info.nightscout.pump.diaconn.databinding.DiaconnG8FragmentBinding
 import info.nightscout.pump.diaconn.events.EventDiaconnG8NewStatus
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventExtendedBolusChange
-import info.nightscout.rx.events.EventInitializationChanged
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.rx.events.EventTempBasalChange
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -119,9 +119,11 @@ class DiaconnG8Fragment : DaggerFragment() {
                                EventPumpStatusChanged.Status.CONNECTING   ->
                                    @Suppress("SetTextI18n")
                                    binding.btconnection.text = "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+
                                EventPumpStatusChanged.Status.CONNECTED    ->
                                    @Suppress("SetTextI18n")
                                    binding.btconnection.text = "{fa-bluetooth}"
+
                                EventPumpStatusChanged.Status.DISCONNECTED ->
                                    @Suppress("SetTextI18n")
                                    binding.btconnection.text = "{fa-bluetooth-b}"
@@ -160,7 +162,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.interfaces.R.string.minago, agoMin) + ")"
+            binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(app.aaps.interfaces.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
@@ -168,7 +170,11 @@ class DiaconnG8Fragment : DaggerFragment() {
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, pump.lastBolusAmount)
+                binding.lastbolus.text =
+                    dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(
+                        info.nightscout.core.ui.R.string.format_insulin_units,
+                        pump.lastBolusAmount
+                    )
             else
                 binding.lastbolus.text = ""
         }
@@ -185,7 +191,8 @@ class DiaconnG8Fragment : DaggerFragment() {
         warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25 + "}" + " (" + pump.systemRemainBattery + " %)"
         warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51.0, 26.0)
-        binding.firmware.text = rh.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." + pump.minorVersion.toString() + "\nCountry: " + pump.country.toString() + "\nProductType: " + pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
+        binding.firmware.text =
+            rh.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." + pump.minorVersion.toString() + "\nCountry: " + pump.country.toString() + "\nProductType: " + pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
         binding.basalstep.text = pump.basalStep.toString()
         binding.bolusstep.text = pump.bolusStep.toString()
         binding.serialNumber.text = pump.serialNo.toString()

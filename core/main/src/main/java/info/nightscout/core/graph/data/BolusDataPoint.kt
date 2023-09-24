@@ -2,11 +2,11 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.DefaultValueHelper
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.DecimalFormatter
 import info.nightscout.database.entities.Bolus
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.shared.interfaces.ResourceHelper
 
 class BolusDataPoint(
     val data: Bolus,

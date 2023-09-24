@@ -1,12 +1,12 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
 fun TemporaryTarget.Companion.fromJson(jsonObject: JSONObject, profileUtil: ProfileUtil): TemporaryTarget? {

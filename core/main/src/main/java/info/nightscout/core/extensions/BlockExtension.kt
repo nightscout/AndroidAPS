@@ -1,9 +1,9 @@
 package info.nightscout.core.extensions
 
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
 

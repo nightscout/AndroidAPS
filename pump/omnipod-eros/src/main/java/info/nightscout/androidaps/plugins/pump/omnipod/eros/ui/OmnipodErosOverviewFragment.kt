@@ -8,6 +8,21 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventDismissNotification
+import app.aaps.interfaces.rx.events.EventPreferenceChange
+import app.aaps.interfaces.rx.events.EventQueueChanged
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
@@ -35,21 +50,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventPreferenceChange
-import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
@@ -136,7 +136,10 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             disablePodActionButtons()
             commandQueue.customCommand(
                 CommandResumeDelivery(),
-                DisplayResultDialogCallback(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_resume_delivery), true).messageOnSuccess(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_confirmation_delivery_resumed))
+                DisplayResultDialogCallback(
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_resume_delivery),
+                    true
+                ).messageOnSuccess(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_confirmation_delivery_resumed))
             )
         }
 
@@ -243,7 +246,12 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 rileyLinkServiceState.isError && rileyLinkError != null   -> "{fa-bluetooth-b}   " + rh.gs(rileyLinkError.getResourceId(RileyLinkTargetDevice.Omnipod))
                 else                                                      -> "{fa-bluetooth-b}   " + rh.gs(resourceId)
             }
-        rileyLinkStatusBinding.rileyLinkStatus.setTextColor(rh.gac(context, if (rileyLinkServiceState.isError || rileyLinkError != null) info.nightscout.core.ui.R.attr.warningColor else info.nightscout.core.ui.R.attr.defaultTextColor))
+        rileyLinkStatusBinding.rileyLinkStatus.setTextColor(
+            rh.gac(
+                context,
+                if (rileyLinkServiceState.isError || rileyLinkError != null) info.nightscout.core.ui.R.attr.warningColor else info.nightscout.core.ui.R.attr.defaultTextColor
+            )
+        )
     }
 
     private fun updateOmnipodStatus() {
@@ -320,14 +328,20 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
             // base basal rate
             podInfoBinding.baseBasalRate.text = if (podStateManager.isPodActivationCompleted) {
-                rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
+                rh.gs(
+                    info.nightscout.core.ui.R.string.pump_base_basal_rate,
+                    omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now())))
+                )
             } else {
                 PLACEHOLDER
             }
 
             // total delivered
             podInfoBinding.totalDelivered.text = if (podStateManager.isPodActivationCompleted && podStateManager.totalInsulinDelivered != null) {
-                rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_total_delivered_value, podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS)
+                rh.gs(
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_total_delivered_value,
+                    podStateManager.totalInsulinDelivered - OmnipodConstants.POD_SETUP_UNITS
+                )
             } else {
                 PLACEHOLDER
             }
@@ -481,7 +495,14 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
                 var text: String
                 val textColor: Int
-                text = rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_temp_basal_value, amount, dateUtil.timeString(startTime.millis), minutesRunning, duration.standardMinutes)
+                text =
+                    rh.gs(
+                        info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_temp_basal_value,
+                        amount,
+                        dateUtil.timeString(startTime.millis),
+                        minutesRunning,
+                        duration.standardMinutes
+                    )
                 if (podStateManager.isTempBasalCertain) {
                     textColor = rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor)
                 } else {
@@ -629,7 +650,10 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             }
 
             seconds < 60 * 60      -> { // < 1 hour
-                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago, rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_minutes, minutes, minutes))
+                return rh.gs(
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
+                    rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_minutes, minutes, minutes)
+                )
             }
 
             seconds < 24 * 60 * 60 -> { // < 1 day
@@ -638,10 +662,17 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                     return rh.gs(
                         info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
                         rh.gs(
-                            info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_composite_time, rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hours, hours), rh.gq(
-                                info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft))
+                            info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_composite_time,
+                            rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hours, hours),
+                            rh.gq(
+                                info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft
+                            )
+                        )
                     )
-                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago, rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hours, hours))
+                return rh.gs(
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
+                    rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hours, hours)
+                )
             }
 
             else                   -> {
@@ -651,10 +682,17 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                     return rh.gs(
                         info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
                         rh.gs(
-                            info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_composite_time, rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_days, days, days), rh.gq(
-                                info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hoursLeft, hoursLeft))
+                            info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_composite_time,
+                            rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_days, days, days),
+                            rh.gq(
+                                info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hoursLeft, hoursLeft
+                            )
+                        )
                     )
-                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago, rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_days, days, days))
+                return rh.gs(
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
+                    rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_days, days, days)
+                )
             }
         }
     }
@@ -681,7 +719,11 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 }
                 actionOnSuccess?.run()
             } else {
-                displayErrorDialog(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning), rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment), withSoundOnError)
+                displayErrorDialog(
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning),
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon, errorMessagePrefix, result.comment),
+                    withSoundOnError
+                )
             }
         }
 

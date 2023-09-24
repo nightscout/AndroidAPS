@@ -8,12 +8,12 @@ import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.notifications.NotificationHolder
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.DaggerService
-import info.nightscout.interfaces.NotificationHolder
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import kotlin.math.ln
 import kotlin.math.pow
@@ -125,7 +125,8 @@ class AlarmSoundService : DaggerService() {
                 // Increase volume faster as time goes by
                 val delay = VOLUME_INCREASE_MIN_DELAY_MILLIS.coerceAtLeast(
                     VOLUME_INCREASE_BASE_DELAY_MILLIS -
-                    ((currentVolumeLevel - 1).toDouble().pow(VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT) * 1000).toLong())
+                        ((currentVolumeLevel - 1).toDouble().pow(VOLUME_INCREASE_DELAY_DECREMENT_EXPONENT) * 1000).toLong()
+                )
                 aapsLogger.debug(LTag.CORE, "Next notification volume increment in {}ms", delay)
                 increaseVolumeHandler.postDelayed(this, delay)
             }

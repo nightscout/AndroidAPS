@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import app.aaps.annotations.OpenForTesting
-import info.nightscout.interfaces.NotificationHolder
+import app.aaps.interfaces.notifications.NotificationHolder
 import javax.inject.Inject
 import javax.inject.Singleton
 

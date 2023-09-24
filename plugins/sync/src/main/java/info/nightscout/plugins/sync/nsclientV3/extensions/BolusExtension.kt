@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.interfaces.utils.T
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
-import info.nightscout.shared.utils.T
 import java.security.InvalidParameterException
 
 fun NSBolus.toBolus(): Bolus =

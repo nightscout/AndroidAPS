@@ -24,6 +24,58 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.aps.VariableSensitivityResult
+import app.aaps.interfaces.automation.Automation
+import app.aaps.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.extensions.runOnUiThread
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.extensions.toVisibilityKeepSpace
+import app.aaps.interfaces.iob.GlucoseStatusProvider
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.nsclient.NSSettingsStatus
+import app.aaps.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.interfaces.overview.OverviewMenus
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.profile.DefaultValueHelper
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventAcceptOpenLoopChange
+import app.aaps.interfaces.rx.events.EventBucketedDataCreated
+import app.aaps.interfaces.rx.events.EventEffectiveProfileSwitchChanged
+import app.aaps.interfaces.rx.events.EventExtendedBolusChange
+import app.aaps.interfaces.rx.events.EventMobileToWear
+import app.aaps.interfaces.rx.events.EventNewOpenLoopNotification
+import app.aaps.interfaces.rx.events.EventPreferenceChange
+import app.aaps.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.interfaces.rx.events.EventRefreshOverview
+import app.aaps.interfaces.rx.events.EventScale
+import app.aaps.interfaces.rx.events.EventTempBasalChange
+import app.aaps.interfaces.rx.events.EventTempTargetChange
+import app.aaps.interfaces.rx.events.EventUpdateOverviewCalcProgress
+import app.aaps.interfaces.rx.events.EventUpdateOverviewGraph
+import app.aaps.interfaces.rx.events.EventUpdateOverviewIobCob
+import app.aaps.interfaces.rx.events.EventUpdateOverviewSensitivity
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.source.DexcomBoyda
+import app.aaps.interfaces.source.XDripSource
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.TrendCalculator
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
@@ -43,31 +95,6 @@ import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.aps.VariableSensitivityResult
-import info.nightscout.interfaces.automation.Automation
-import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.iob.GlucoseStatusProvider
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.nsclient.NSSettingsStatus
-import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
-import info.nightscout.interfaces.overview.OverviewMenus
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.source.DexcomBoyda
-import info.nightscout.interfaces.source.XDripSource
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
 import info.nightscout.plugins.general.overview.graphData.GraphData
@@ -75,33 +102,6 @@ import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
 import info.nightscout.plugins.general.overview.ui.StatusLightHandler
 import info.nightscout.plugins.skins.SkinProvider
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventAcceptOpenLoopChange
-import info.nightscout.rx.events.EventBucketedDataCreated
-import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.rx.events.EventExtendedBolusChange
-import info.nightscout.rx.events.EventMobileToWear
-import info.nightscout.rx.events.EventNewOpenLoopNotification
-import info.nightscout.rx.events.EventPreferenceChange
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.rx.events.EventRefreshOverview
-import info.nightscout.rx.events.EventScale
-import info.nightscout.rx.events.EventTempBasalChange
-import info.nightscout.rx.events.EventTempTargetChange
-import info.nightscout.rx.events.EventUpdateOverviewCalcProgress
-import info.nightscout.rx.events.EventUpdateOverviewGraph
-import info.nightscout.rx.events.EventUpdateOverviewIobCob
-import info.nightscout.rx.events.EventUpdateOverviewSensitivity
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.shared.extensions.runOnUiThread
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.extensions.toVisibilityKeepSpace
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Locale
@@ -1089,7 +1089,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         _binding ?: return
         val lastAutosensData = overviewData.lastAutosensData(iobCobCalculator)
         if (config.NSCLIENT && sp.getBoolean(info.nightscout.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
-            !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()) {
+            !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()
+        ) {
             binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_swap_vert_black_48dp_green)
         } else {
             binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_x_swap_vert)

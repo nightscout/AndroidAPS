@@ -1,11 +1,11 @@
 package info.nightscout.pump.common.di
 
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.sharedPreferences.SP
 import dagger.Module
 import dagger.Provides
-import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.common.sync.PumpSyncStorage
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Singleton
 
 @Module

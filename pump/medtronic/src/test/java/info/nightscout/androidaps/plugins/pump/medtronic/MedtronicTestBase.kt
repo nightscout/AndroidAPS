@@ -1,5 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic
 
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -8,11 +12,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.Medtr
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.common.sync.PumpSyncStorage
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.mockito.Answers
 import org.mockito.Mock
 

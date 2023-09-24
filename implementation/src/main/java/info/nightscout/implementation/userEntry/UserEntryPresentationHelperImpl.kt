@@ -1,6 +1,14 @@
 package info.nightscout.implementation.userEntry
 
 import android.text.Spanned
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.userEntry.UserEntryPresentationHelper
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.Translator
 import dagger.Reusable
 import info.nightscout.core.main.R
 import info.nightscout.core.utils.HtmlHelper
@@ -9,14 +17,6 @@ import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.ColorGroup
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.Translator
-import info.nightscout.interfaces.userEntry.UserEntryPresentationHelper
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 
 @Reusable
@@ -170,8 +170,8 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         csvString(info.nightscout.core.ui.R.string.insulin_unit_shortname),
         csvString(info.nightscout.core.ui.R.string.profile_ins_units_per_hour),
         csvString(info.nightscout.core.ui.R.string.shortpercent),
-        csvString(info.nightscout.interfaces.R.string.shorthour),
-        csvString(info.nightscout.interfaces.R.string.shortminute),
+        csvString(app.aaps.interfaces.R.string.shorthour),
+        csvString(app.aaps.interfaces.R.string.shortminute),
         csvString(info.nightscout.core.ui.R.string.ue_none)
     ) + "\n"
 

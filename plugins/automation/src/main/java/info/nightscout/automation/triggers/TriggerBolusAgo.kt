@@ -1,6 +1,7 @@
 package info.nightscout.automation.triggers
 
 import android.widget.LinearLayout
+import app.aaps.interfaces.logging.LTag
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
@@ -13,7 +14,6 @@ import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.JsonHelper.safeGetString
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
-import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
@@ -83,7 +83,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
         LayoutBuilder()
             .add(StaticLabel(rh, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(info.nightscout.interfaces.R.string.unit_minutes), minutesAgo))
+            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(app.aaps.interfaces.R.string.unit_minutes), minutesAgo))
             .build(root)
     }
 }

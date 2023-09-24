@@ -1,5 +1,13 @@
 package info.nightscout.plugins.general.autotune
 
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.IobTotal
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.PureProfile
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.extensions.shiftBlock
@@ -11,15 +19,7 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.iob.IobTotal
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach

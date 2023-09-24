@@ -1,8 +1,8 @@
 package info.nightscout.core.iob
 
-import info.nightscout.interfaces.iob.CobInfo
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.shared.interfaces.ResourceHelper
+import app.aaps.interfaces.iob.CobInfo
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.DecimalFormatter
 
 fun CobInfo.generateCOBString(decimalFormatter: DecimalFormatter): String {
     var cobStringResult = "--g"

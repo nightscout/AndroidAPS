@@ -1,15 +1,15 @@
 package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.smsCommunicator.SmsCommunicator
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.core.utils.JsonHelper
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import org.json.JSONObject
 import javax.inject.Inject
 

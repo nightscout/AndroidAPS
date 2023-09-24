@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.watchfaces.utils
 
 import android.graphics.DashPathEffect
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.rx.weardata.EventData.SingleBg
+import app.aaps.interfaces.rx.weardata.EventData.TreatmentData.Basal
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.androidaps.R
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.rx.weardata.EventData.SingleBg
-import info.nightscout.rx.weardata.EventData.TreatmentData.Basal
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import lecho.lib.hellocharts.model.Axis
 import lecho.lib.hellocharts.model.AxisValue
 import lecho.lib.hellocharts.model.Line
@@ -280,7 +280,7 @@ class BgGraphBuilder(
     }
 
     private fun addBgReadingValues() {
-        for ((timeStamp, _, _, _,_, _, _, _, _, sgv) in bgDataList) {
+        for ((timeStamp, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
             if (timeStamp > startingTime) {
                 when {
                     sgv >= 450      -> highValues.add(PointValue(fuzz(timeStamp), 450.toFloat()))

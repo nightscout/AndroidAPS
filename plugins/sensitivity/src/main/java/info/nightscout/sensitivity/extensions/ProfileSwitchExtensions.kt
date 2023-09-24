@@ -1,7 +1,7 @@
 package info.nightscout.sensitivity.extensions
 
+import app.aaps.interfaces.utils.T
 import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.shared.utils.T
 
 fun List<ProfileSwitch>.isPSEvent5minBack(time: Long): Boolean {
     for (event in this) {

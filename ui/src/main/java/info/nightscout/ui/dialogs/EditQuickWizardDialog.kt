@@ -7,6 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.SafeParse
+import app.aaps.interfaces.utils.T
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
@@ -15,12 +21,6 @@ import info.nightscout.core.ui.extensions.setEnableForChildren
 import info.nightscout.core.ui.extensions.setSelection
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogEditQuickwizardBinding
 import info.nightscout.ui.events.EventQuickWizardChange

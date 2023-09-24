@@ -1,10 +1,10 @@
 package app.aaps.implementations
 
 import android.os.Build
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton

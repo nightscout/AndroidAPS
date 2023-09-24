@@ -1,22 +1,22 @@
 package info.nightscout.pump.medtrum.ui.viewmodel
 
 import androidx.lifecycle.LiveData
-import info.nightscout.pump.medtrum.code.EventType
-import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
-import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
-import info.nightscout.pump.medtrum.ui.event.UIEvent
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.queue.CommandQueue
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
+import info.nightscout.pump.medtrum.code.EventType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
+import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
+import info.nightscout.pump.medtrum.ui.event.UIEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -167,7 +167,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         val profile = profileFunction.getProfile()
         if (profile == null) {
             _eventHandler.postValue(UIEvent(EventType.PROFILE_NOT_SET))
-        } else if (medtrumPump.pumpSN == 0L){
+        } else if (medtrumPump.pumpSN == 0L) {
             _eventHandler.postValue(UIEvent(EventType.SERIAL_NOT_SET))
         } else {
             _eventHandler.postValue(UIEvent(EventType.CHANGE_PATCH_CLICKED))
@@ -179,7 +179,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         if (medtrumPump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection
             val agoMinutes = agoMilliseconds / 1000 / 60
-            _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.interfaces.R.string.minago, agoMinutes))
+            _lastConnectionMinAgo.postValue(rh.gs(app.aaps.interfaces.R.string.minago, agoMinutes))
         }
         if (medtrumPump.lastBolusTime != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastBolusTime

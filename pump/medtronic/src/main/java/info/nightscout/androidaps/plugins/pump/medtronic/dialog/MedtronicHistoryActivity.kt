@@ -11,12 +11,12 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.interfaces.resources.ResourceHelper
 import dagger.android.DaggerActivity
 import info.nightscout.androidaps.plugins.pump.medtronic.R
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class MedtronicHistoryActivity : DaggerActivity() {
@@ -145,8 +145,10 @@ class MedtronicHistoryActivity : DaggerActivity() {
         }
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder {
-            val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.medtronic_history_item,  //
-                viewGroup, false)
+            val v = LayoutInflater.from(viewGroup.context).inflate(
+                R.layout.medtronic_history_item,  //
+                viewGroup, false
+            )
             return HistoryViewHolder(v)
         }
 

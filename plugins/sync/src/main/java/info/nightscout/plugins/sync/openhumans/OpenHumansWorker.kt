@@ -3,10 +3,9 @@ package info.nightscout.plugins.sync.openhumans
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 class OpenHumansWorker(

@@ -1,5 +1,5 @@
 package info.nightscout.plugins.constraints.objectives.events
 
-import info.nightscout.rx.events.EventUpdateGui
+import app.aaps.interfaces.rx.events.EventUpdateGui
 
 class EventObjectivesUpdateGui : EventUpdateGui()

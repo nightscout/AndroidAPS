@@ -1,13 +1,13 @@
 package info.nightscout.automation.actions
 
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputTempTarget
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.database.impl.transactions.Transaction
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

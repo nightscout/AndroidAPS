@@ -12,6 +12,17 @@ import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.viewbinding.ViewBinding
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.extensions.toVisibilityKeepSpace
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventWearToMobile
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.rx.weardata.EventData.ActionResendData
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import com.ustwo.clockwise.common.WatchFaceTime
 import com.ustwo.clockwise.common.WatchMode
 import com.ustwo.clockwise.common.WatchShape
@@ -24,17 +35,6 @@ import info.nightscout.androidaps.heartrate.HeartRateListener
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventWearToMobile
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.rx.weardata.EventData.ActionResendData
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.extensions.toVisibilityKeepSpace
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -162,7 +162,8 @@ abstract class BaseWatchFace : WatchFace() {
         if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
             if (heartRateListener == null) {
                 heartRateListener = HeartRateListener(
-                    this, aapsLogger, aapsSchedulers).also { hrl -> disposable += hrl }
+                    this, aapsLogger, aapsSchedulers
+                ).also { hrl -> disposable += hrl }
             }
         } else {
             heartRateListener?.let { hrl ->
@@ -369,7 +370,7 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun setDateAndTime() {
-        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString()
+        binding.time?.text = if (binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString()
         binding.hour?.text = dateUtil.hourString()
         binding.minute?.text = dateUtil.minuteString()
         binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
@@ -385,7 +386,7 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     open fun setSecond() {
-        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString() + if (showSecond) ":" + dateUtil.secondString() else ""
+        binding.time?.text = if (binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString() + if (showSecond) ":" + dateUtil.secondString() else ""
         binding.second?.text = dateUtil.secondString()
     }
 

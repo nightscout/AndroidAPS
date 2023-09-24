@@ -1,17 +1,17 @@
 package info.nightscout.plugins.sync.nsclient
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.receivers.ReceiverStatusStore
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventChargingState
+import app.aaps.interfaces.rx.events.EventNetworkChange
+import app.aaps.interfaces.rx.events.EventPreferenceChange
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventChargingState
-import info.nightscout.rx.events.EventNetworkChange
-import info.nightscout.rx.events.EventPreferenceChange
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

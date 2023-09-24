@@ -1,15 +1,15 @@
 package info.nightscout.automation
 
+import app.aaps.interfaces.automation.AutomationEvent
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionDummy
 import info.nightscout.automation.actions.ActionStopProcessing
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDummy
-import info.nightscout.interfaces.automation.AutomationEvent
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -36,8 +36,8 @@ class AutomationEventObject(private val injector: HasAndroidInjector) : Automati
         injector.androidInjector().inject(this)
     }
 
-    override fun canRun() : Boolean = trigger.shouldRun()
-    override fun preconditionCanRun() : Boolean = getPreconditions().shouldRun()
+    override fun canRun(): Boolean = trigger.shouldRun()
+    override fun preconditionCanRun(): Boolean = getPreconditions().shouldRun()
 
     internal fun getPreconditions(): TriggerConnector {
         val trigger = TriggerConnector(injector, TriggerConnector.Type.AND)

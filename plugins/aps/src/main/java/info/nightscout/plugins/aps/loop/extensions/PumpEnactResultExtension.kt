@@ -1,17 +1,17 @@
 package info.nightscout.plugins.aps.loop.extensions
 
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.utils.Round
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.utils.Round
 import org.json.JSONObject
 
 fun PumpEnactResult.json(baseBasal: Double): JSONObject {
     val result = JSONObject()
     when {
-        bolusDelivered > 0     -> {
+        bolusDelivered > 0 -> {
             result.put("smb", bolusDelivered)
         }
 
-        isTempCancel           -> {
+        isTempCancel       -> {
             result.put("rate", 0)
             result.put("duration", 0)
         }

@@ -1,9 +1,9 @@
 package info.nightscout.plugins.sync.tidepool.comm
 
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.bus.RxBus
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolStatus
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

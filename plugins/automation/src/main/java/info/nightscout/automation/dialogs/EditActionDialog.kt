@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionDummy
 import info.nightscout.automation.databinding.AutomationDialogActionBinding
 import info.nightscout.automation.events.EventAutomationUpdateAction
-import info.nightscout.rx.bus.RxBus
 import org.json.JSONObject
 import javax.inject.Inject
 

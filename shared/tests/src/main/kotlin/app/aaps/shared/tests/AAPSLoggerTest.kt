@@ -1,7 +1,7 @@
 package app.aaps.shared.tests
 
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 
 /**
  * Created by adrian on 2019-12-27.

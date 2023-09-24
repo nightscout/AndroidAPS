@@ -14,10 +14,10 @@ import app.aaps.configuration.databinding.MaintenanceImportListItemBinding
 import app.aaps.configuration.maintenance.PrefsFileContract
 import app.aaps.configuration.maintenance.PrefsMetadataKeyImpl
 import app.aaps.configuration.maintenance.data.PrefsStatusImpl
+import app.aaps.interfaces.maintenance.PrefFileListProvider
+import app.aaps.interfaces.maintenance.PrefsFile
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.interfaces.maintenance.PrefFileListProvider
-import info.nightscout.interfaces.maintenance.PrefsFile
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {

@@ -1,17 +1,17 @@
 package info.nightscout.insulin
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.insulin.Insulin
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.HardLimits
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.extensions.putInt
 import info.nightscout.core.utils.extensions.storeInt
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.insulin.Insulin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton

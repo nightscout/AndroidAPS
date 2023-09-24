@@ -2,6 +2,7 @@ package info.nightscout.automation.triggers
 
 import android.location.Location
 import android.widget.LinearLayout
+import app.aaps.interfaces.logging.LTag
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
@@ -13,7 +14,6 @@ import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.core.utils.JsonHelper
-import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 import java.text.DecimalFormat
 

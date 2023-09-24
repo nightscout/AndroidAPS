@@ -5,6 +5,9 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.preference.PreferenceManager
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.bus.RxBus
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.comm.DataHandlerWear
@@ -12,9 +15,6 @@ import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
 import info.nightscout.androidaps.comm.ExceptionHandlerWear
 import info.nightscout.androidaps.di.DaggerWearComponent
 import info.nightscout.androidaps.events.EventWearPreferenceChange
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {

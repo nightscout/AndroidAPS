@@ -1,7 +1,7 @@
 package info.nightscout.core.utils
 
+import app.aaps.interfaces.utils.Round
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.interfaces.utils.Round
 import org.junit.jupiter.api.Test
 
 class RoundTest {

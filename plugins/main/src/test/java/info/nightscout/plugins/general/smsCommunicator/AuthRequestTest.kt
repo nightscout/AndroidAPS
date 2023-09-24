@@ -1,18 +1,18 @@
 package info.nightscout.plugins.general.smsCommunicator
 
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.smsCommunicator.Sms
+import app.aaps.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.smsCommunicator.Sms
-import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

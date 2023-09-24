@@ -4,17 +4,17 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.plugin.PluginDescription
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventPreferenceChange
+import app.aaps.interfaces.rx.events.EventThemeSwitch
+import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.R
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventPreferenceChange
-import info.nightscout.rx.events.EventThemeSwitch
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,11 +28,11 @@ class ThemeSwitcherPlugin @Inject constructor(
     private val rxBus: RxBus,
 ) : PluginBase(
     PluginDescription()
-                   .mainType(PluginType.GENERAL)
-                   .neverVisible(true)
-                   .alwaysEnabled(true)
-                   .showInList(false)
-                   .pluginName(R.string.theme_switcher),
+        .mainType(PluginType.GENERAL)
+        .neverVisible(true)
+        .alwaysEnabled(true)
+        .showInList(false)
+        .pluginName(R.string.theme_switcher),
     aapsLogger, rh, injector
 ) {
 

@@ -5,11 +5,11 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.collection.LongSparseArray
 import app.aaps.annotations.OpenForTesting
-import info.nightscout.interfaces.R
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import app.aaps.interfaces.R
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.SafeParse
+import app.aaps.interfaces.utils.T
 import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat

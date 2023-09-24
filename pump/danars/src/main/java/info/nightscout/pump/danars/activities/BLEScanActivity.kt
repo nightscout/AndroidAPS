@@ -20,16 +20,16 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import app.aaps.interfaces.pump.BlePreCheck
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.safeEnable
-import info.nightscout.interfaces.pump.BlePreCheck
 import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.pump.danars.events.EventDanaRSDeviceChange
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import java.util.regex.Pattern
 import javax.inject.Inject
 

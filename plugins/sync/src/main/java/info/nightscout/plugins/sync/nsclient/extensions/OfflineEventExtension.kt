@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
 fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =

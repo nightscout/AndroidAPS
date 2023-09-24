@@ -1,9 +1,9 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =

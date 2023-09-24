@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import preference.WearPreferenceActivity
 import javax.inject.Inject
 

@@ -1,7 +1,7 @@
 package info.nightscout.core.utils
 
+import app.aaps.interfaces.utils.T
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.shared.utils.T
 import org.junit.jupiter.api.Test
 import kotlin.math.abs
 

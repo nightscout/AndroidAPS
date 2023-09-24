@@ -3,41 +3,41 @@ package info.nightscout.plugins.aps.openAPSSMB
 import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.interfaces.aps.APS
+import app.aaps.interfaces.aps.AutosensResult
+import app.aaps.interfaces.aps.DetermineBasalAdapter
+import app.aaps.interfaces.aps.SMBDefaults
+import app.aaps.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.interfaces.constraints.Constraint
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.constraints.PluginConstraints
+import app.aaps.interfaces.iob.GlucoseStatusProvider
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.plugin.PluginDescription
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profiling.Profiler
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.stats.TddCalculator
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.HardLimits
+import app.aaps.interfaces.utils.Round
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.extensions.target
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.aps.APS
-import info.nightscout.interfaces.aps.AutosensResult
-import info.nightscout.interfaces.aps.DetermineBasalAdapter
-import info.nightscout.interfaces.aps.SMBDefaults
-import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.constraints.PluginConstraints
-import info.nightscout.interfaces.iob.GlucoseStatusProvider
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profiling.Profiler
-import info.nightscout.interfaces.stats.TddCalculator
-import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.events.EventResetOpenAPSGui
 import info.nightscout.plugins.aps.utils.ScriptReader
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
@@ -117,17 +117,17 @@ open class OpenAPSSMBPlugin @Inject constructor(
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
         if (profile == null) {
-            rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(info.nightscout.core.ui.R.string.no_profile_set)))
+            rxBus.send(EventResetOpenAPSGui(rh.gs(info.nightscout.core.ui.R.string.no_profile_set)))
             aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.no_profile_set))
             return
         }
         if (!isEnabled()) {
-            rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(R.string.openapsma_disabled)))
+            rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openapsma_disabled)))
             aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_disabled))
             return
         }
         if (glucoseStatus == null) {
-            rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(R.string.openapsma_no_glucose_data)))
+            rxBus.send(EventResetOpenAPSGui(rh.gs(R.string.openapsma_no_glucose_data)))
             aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_no_glucose_data))
             return
         }

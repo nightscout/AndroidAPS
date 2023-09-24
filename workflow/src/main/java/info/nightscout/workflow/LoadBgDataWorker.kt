@@ -3,18 +3,18 @@ package info.nightscout.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.interfaces.aps.AutosensDataStore
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventBucketedDataCreated
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.aps.AutosensDataStore
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventBucketedDataCreated
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -33,7 +33,6 @@ class LoadBgDataWorker(
         val iobCobCalculator: IobCobCalculator,
         val end: Long
     )
-
 
     private fun AutosensDataStore.loadBgData(to: Long, repository: AppRepository, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
         synchronized(dataLock) {

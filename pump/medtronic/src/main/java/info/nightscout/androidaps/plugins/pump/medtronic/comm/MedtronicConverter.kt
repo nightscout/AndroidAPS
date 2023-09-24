@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpConfigurationGroup
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.common.utils.ByteUtil
 import info.nightscout.pump.common.utils.StringUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDateTime
 import java.util.Locale

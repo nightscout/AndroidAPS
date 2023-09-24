@@ -1,7 +1,7 @@
 package info.nightscout.pump.common.defs
 
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.pump.common.R
-import info.nightscout.shared.interfaces.ResourceHelper
 import kotlin.streams.toList
 
 /**

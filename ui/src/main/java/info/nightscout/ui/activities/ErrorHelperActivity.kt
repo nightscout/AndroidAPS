@@ -1,10 +1,10 @@
 package info.nightscout.ui.activities
 
 import android.os.Bundle
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.alertDialogs.ErrorDialog
 import info.nightscout.ui.services.AlarmSoundService
 import io.reactivex.rxjava3.disposables.CompositeDisposable

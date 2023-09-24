@@ -1,5 +1,17 @@
 package info.nightscout.core.profile
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.Profile.ProfileValue
+import app.aaps.interfaces.profile.PureProfile
+import app.aaps.interfaces.pump.Pump
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.HardLimits
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.blockValueBySeconds
 import info.nightscout.core.extensions.highTargetBlockValueBySeconds
@@ -14,18 +26,6 @@ import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.Profile.ProfileValue
-import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -152,7 +152,13 @@ sealed class ProfileSealed(
         for (ic in icBlocks)
             if (!hardLimits.isInRange(ic.amount * 100.0 / percentage, hardLimits.minIC(), hardLimits.maxIC())) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.profile_carbs_ratio_value), ic.amount * 100.0 / percentage))
+                validityCheck.reasons.add(
+                    rh.gs(
+                        info.nightscout.core.ui.R.string.value_out_of_hard_limits,
+                        rh.gs(info.nightscout.core.ui.R.string.profile_carbs_ratio_value),
+                        ic.amount * 100.0 / percentage
+                    )
+                )
                 break
             }
         for (isf in isfBlocks)
@@ -222,8 +228,7 @@ sealed class ProfileSealed(
             if (getTargetHighMgdlTimeFromMidnight(seconds) != profile.getTargetHighMgdlTimeFromMidnight(seconds)) return false
         }
         if (dia != profile.dia) return false
-        if ((profile is EPS) && profileName != profile.value.originalProfileName) return false // handle profile name change too
-        return true
+        return !((profile is EPS) && profileName != profile.value.originalProfileName) // handle profile name change too
     }
 
     override val percentage: Int

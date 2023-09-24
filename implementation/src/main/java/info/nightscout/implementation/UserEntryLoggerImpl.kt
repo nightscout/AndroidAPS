@@ -1,6 +1,12 @@
 package info.nightscout.implementation
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.userEntry.UserEntryMapper
+import app.aaps.interfaces.userEntry.ValueWithUnitMapper
+import app.aaps.interfaces.utils.DateUtil
 import dagger.Reusable
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
@@ -8,12 +14,6 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.UserEntryTransaction
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.userEntry.UserEntryMapper
-import info.nightscout.interfaces.userEntry.ValueWithUnitMapper
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

@@ -3,12 +3,12 @@ package info.nightscout.core.graph
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import app.aaps.interfaces.insulin.Insulin
+import app.aaps.interfaces.utils.T
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.database.entities.Bolus
-import info.nightscout.interfaces.insulin.Insulin
-import info.nightscout.shared.utils.T
 import kotlin.math.floor
 
 class ActivityGraph : GraphView {

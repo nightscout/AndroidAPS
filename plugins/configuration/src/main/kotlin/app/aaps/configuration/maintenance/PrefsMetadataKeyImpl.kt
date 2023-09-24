@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import app.aaps.configuration.R
 import app.aaps.configuration.maintenance.data.PrefsFormat
-import info.nightscout.interfaces.maintenance.PrefsMetadataKey
+import app.aaps.interfaces.maintenance.PrefsMetadataKey
 
 enum class PrefsMetadataKeyImpl(override val key: String, @DrawableRes override val icon: Int, @StringRes override val label: Int) : PrefsMetadataKey {
 

@@ -1,5 +1,16 @@
 package info.nightscout.plugins.general.autotune
 
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.iob.Iob
+import app.aaps.interfaces.iob.IobTotal
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.Round
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.durationInMinutes
 import info.nightscout.core.extensions.toJson
@@ -14,19 +25,8 @@ import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.iob.Iob
-import info.nightscout.interfaces.iob.IobTotal
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.LocalInsulin
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -249,9 +249,10 @@ open class AutotuneIob @Inject constructor(
 
     // Add specific calculation for Autotune (reference localInsulin for Peak/dia)
     private fun Bolus.iobCalc(time: Long, localInsulin: LocalInsulin): Iob {
-        if (!isValid  || type == Bolus.Type.PRIMING ) return Iob()
+        if (!isValid || type == Bolus.Type.PRIMING) return Iob()
         return localInsulin.iobCalcForTreatment(this, time)
     }
+
     private fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
         val detailedLog = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_additional_log, false)

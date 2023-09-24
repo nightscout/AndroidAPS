@@ -1,16 +1,16 @@
 package info.nightscout.core.extensions
 
+import app.aaps.interfaces.aps.AutosensResult
+import app.aaps.interfaces.insulin.Insulin
+import app.aaps.interfaces.iob.IobTotal
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.T
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.interfaces.end
-import info.nightscout.interfaces.aps.AutosensResult
-import info.nightscout.interfaces.insulin.Insulin
-import info.nightscout.interfaces.iob.IobTotal
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min

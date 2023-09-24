@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.testing.mockers
 
-import info.nightscout.androidaps.data.RawDisplayData
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.rx.weardata.EventData.SingleBg
+import app.aaps.interfaces.utils.SafeParse.stringToDouble
 import info.nightscout.androidaps.WearTestBase
-import info.nightscout.shared.SafeParse.stringToDouble
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.rx.weardata.EventData.SingleBg
+import info.nightscout.androidaps.data.RawDisplayData
 
-class RawDataMocker() {
+class RawDataMocker {
 
     fun rawSgv(sgv: String?, m: Int, deltaString: String): RawDisplayData {
         val raw = RawDisplayData()

@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.danaRv2.comm
 
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.rx.events.EventRebuildTabs
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.rx.events.EventRebuildTabs
-import info.nightscout.rx.logging.LTag
 
 class MsgCheckValue_v2(
     injector: HasAndroidInjector

@@ -1,11 +1,11 @@
 package info.nightscout.automation.triggers
 
+import app.aaps.interfaces.db.GlucoseUnit
 import com.google.common.base.Optional
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.interfaces.GlucoseUnit
 import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions

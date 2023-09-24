@@ -2,6 +2,7 @@ package app.aaps.di
 
 import app.aaps.configuration.configBuilder.ConfigBuilderPlugin
 import app.aaps.configuration.maintenance.MaintenancePlugin
+import app.aaps.interfaces.plugin.PluginBase
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -19,7 +20,6 @@ import info.nightscout.insulin.InsulinLyumjevPlugin
 import info.nightscout.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.insulin.InsulinOrefUltraRapidActingPlugin
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin

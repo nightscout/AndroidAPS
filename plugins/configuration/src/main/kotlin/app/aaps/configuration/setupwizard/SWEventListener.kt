@@ -6,9 +6,9 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import app.aaps.configuration.setupwizard.elements.SWItem
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.events.EventStatus
 import dagger.android.HasAndroidInjector
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.events.EventStatus
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

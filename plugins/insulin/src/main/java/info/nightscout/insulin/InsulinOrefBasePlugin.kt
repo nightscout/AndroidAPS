@@ -1,22 +1,22 @@
 package info.nightscout.insulin
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.insulin.Insulin
+import app.aaps.interfaces.iob.Iob
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.plugin.PluginDescription
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.HardLimits
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InsulinConfiguration
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.insulin.Insulin
-import info.nightscout.interfaces.iob.Iob
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.T
 import kotlin.math.exp
 import kotlin.math.pow
 

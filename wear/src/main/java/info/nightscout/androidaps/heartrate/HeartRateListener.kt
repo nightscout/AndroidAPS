@@ -8,11 +8,11 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import androidx.annotation.VisibleForTesting
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.weardata.EventData
 import info.nightscout.androidaps.comm.IntentWearToMobile
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.rx.weardata.EventData
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReentrantLock
@@ -44,7 +44,7 @@ class HeartRateListener(
     private val aapsLogger: AAPSLogger,
     aapsSchedulers: AapsSchedulers,
     now: Long = System.currentTimeMillis(),
-) :  SensorEventListener, Disposable {
+) : SensorEventListener, Disposable {
 
     /** How often we send values to the phone. */
     private val samplingIntervalMillis = 60_000L
@@ -72,7 +72,8 @@ class HeartRateListener(
             }
         }
         schedule = aapsSchedulers.io.schedulePeriodicallyDirect(
-            ::send, samplingIntervalMillis, samplingIntervalMillis, TimeUnit.MILLISECONDS)
+            ::send, samplingIntervalMillis, samplingIntervalMillis, TimeUnit.MILLISECONDS
+        )
     }
 
     /**
@@ -82,7 +83,7 @@ class HeartRateListener(
     val currentHeartRateBpm get() = sampler.currentBpm?.roundToInt()
 
     @VisibleForTesting
-    var sendHeartRate: (EventData.ActionHeartRate)->Unit = { hr -> ctx.startService(IntentWearToMobile(ctx, hr)) }
+    var sendHeartRate: (EventData.ActionHeartRate) -> Unit = { hr -> ctx.startService(IntentWearToMobile(ctx, hr)) }
 
     override fun isDisposed() = schedule == null
 
@@ -133,18 +134,20 @@ class HeartRateListener(
     }
 
     private class Sampler(timestampMillis: Long) {
+
         private var startMillis: Long = timestampMillis
         private var lastEventMillis: Long = timestampMillis
+
         /** Number of heart beats sampled so far. */
         private var beats: Double = 0.0
+
         /** Time we could sample valid values during the current sampling interval. */
         private var activeMillis: Long = 0
         private val device = (Build.MANUFACTURER ?: "unknown") + " " + (Build.MODEL ?: "unknown")
         private val lock = ReentrantLock()
 
         var currentBpm: Double? = null
-            get() = field
-            private set(value) { field = value }
+            private set
 
         private fun Long.toMinute(): Double = this / 60_000.0
 

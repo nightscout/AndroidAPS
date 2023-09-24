@@ -1,11 +1,11 @@
 package info.nightscout.implementation.protection
 
 import androidx.fragment.app.FragmentActivity
+import app.aaps.interfaces.protection.PasswordCheck
+import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import dagger.Reusable
-import info.nightscout.interfaces.protection.PasswordCheck
-import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -27,22 +27,26 @@ class ProtectionCheckImpl @Inject constructor(
     private val pinsResourceIDs = listOf(
         info.nightscout.core.utils.R.string.key_settings_pin,
         info.nightscout.core.utils.R.string.key_application_pin,
-        info.nightscout.core.utils.R.string.key_bolus_pin)
+        info.nightscout.core.utils.R.string.key_bolus_pin
+    )
 
     private val protectionTypeResourceIDs = listOf(
         info.nightscout.core.utils.R.string.key_settings_protection,
         info.nightscout.core.utils.R.string.key_application_protection,
-        info.nightscout.core.utils.R.string.key_bolus_protection)
+        info.nightscout.core.utils.R.string.key_bolus_protection
+    )
 
     private val titlePassResourceIDs = listOf(
         info.nightscout.core.ui.R.string.settings_password,
         info.nightscout.core.ui.R.string.application_password,
-        info.nightscout.core.ui.R.string.bolus_password)
+        info.nightscout.core.ui.R.string.bolus_password
+    )
 
     private val titlePinResourceIDs = listOf(
         info.nightscout.core.ui.R.string.settings_pin,
         info.nightscout.core.ui.R.string.application_pin,
-        info.nightscout.core.ui.R.string.bolus_pin)
+        info.nightscout.core.ui.R.string.bolus_pin
+    )
 
     override fun isLocked(protection: ProtectionCheck.Protection): Boolean {
         if (activeSession(protection)) {
@@ -89,7 +93,13 @@ class ProtectionCheckImpl @Inject constructor(
                 BiometricCheck.biometricPrompt(activity, titlePassResourceIDs[protection.ordinal], { onOk(protection); ok?.run() }, cancel, fail, passwordCheck)
 
             ProtectionCheck.ProtectionType.MASTER_PASSWORD ->
-                passwordCheck.queryPassword(activity, info.nightscout.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { onOk(protection); ok?.run() }, { cancel?.run() }, { fail?.run() })
+                passwordCheck.queryPassword(
+                    activity,
+                    info.nightscout.core.ui.R.string.master_password,
+                    info.nightscout.core.utils.R.string.key_master_password,
+                    { onOk(protection); ok?.run() },
+                    { cancel?.run() },
+                    { fail?.run() })
 
             ProtectionCheck.ProtectionType.CUSTOM_PASSWORD ->
                 passwordCheck.queryPassword(

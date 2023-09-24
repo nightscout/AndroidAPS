@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.data
 
+import app.aaps.interfaces.rx.weardata.EventData
 import info.nightscout.androidaps.interaction.utils.Persistence
-import info.nightscout.rx.weardata.EventData
 
 /**
  * Holds bunch of data model variables and lists that arrive from phone app and are due to be
@@ -27,7 +27,8 @@ class RawDisplayData {
         sgv = 0.0,
         high = 0.0,
         low = 0.0,
-        color = 0)
+        color = 0
+    )
 
     // status bundle
     var status = EventData.Status(

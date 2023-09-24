@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PairingException
@@ -11,9 +14,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.Rand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
 import info.nightscout.core.utils.hexStringToByteArray
 import info.nightscout.core.utils.toHex
-import info.nightscout.interfaces.Config
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 
 internal class LTKExchanger(
     private val aapsLogger: AAPSLogger,
@@ -21,6 +21,7 @@ internal class LTKExchanger(
     private val msgIO: MessageIO,
     private val ids: Ids,
 ) {
+
     private val podAddress = Ids.notActivated()
     private val keyExchange = KeyExchange(aapsLogger, config, X25519KeyGenerator(), RandomByteGenerator())
     private var seq: Byte = 1

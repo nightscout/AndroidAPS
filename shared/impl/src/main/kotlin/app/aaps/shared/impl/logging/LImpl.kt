@@ -1,9 +1,9 @@
 package app.aaps.shared.impl.logging
 
-import info.nightscout.rx.interfaces.L
-import info.nightscout.rx.interfaces.LogElement
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
+import app.aaps.interfaces.logging.L
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.logging.LogElement
+import app.aaps.interfaces.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 

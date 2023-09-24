@@ -1,10 +1,10 @@
 package info.nightscout.pump.danars
 
+import app.aaps.interfaces.objects.Instantiator
+import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.danars.comm.DanaRSPacket
 import org.junit.jupiter.api.BeforeEach

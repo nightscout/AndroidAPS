@@ -1,16 +1,16 @@
 package info.nightscout.pump.danaR
 
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.objects.Instantiator
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import org.junit.jupiter.api.Assertions

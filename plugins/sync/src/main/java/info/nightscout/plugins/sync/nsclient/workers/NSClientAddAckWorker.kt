@@ -4,31 +4,31 @@ import android.content.Context
 import android.os.SystemClock
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.interfaces.nsclient.StoreDataForDb
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventNSClientNewLog
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.sync.DataSyncSelector
+import app.aaps.interfaces.sync.DataSyncSelector.PairBolus
+import app.aaps.interfaces.sync.DataSyncSelector.PairBolusCalculatorResult
+import app.aaps.interfaces.sync.DataSyncSelector.PairCarbs
+import app.aaps.interfaces.sync.DataSyncSelector.PairEffectiveProfileSwitch
+import app.aaps.interfaces.sync.DataSyncSelector.PairExtendedBolus
+import app.aaps.interfaces.sync.DataSyncSelector.PairFood
+import app.aaps.interfaces.sync.DataSyncSelector.PairGlucoseValue
+import app.aaps.interfaces.sync.DataSyncSelector.PairOfflineEvent
+import app.aaps.interfaces.sync.DataSyncSelector.PairProfileStore
+import app.aaps.interfaces.sync.DataSyncSelector.PairProfileSwitch
+import app.aaps.interfaces.sync.DataSyncSelector.PairTemporaryBasal
+import app.aaps.interfaces.sync.DataSyncSelector.PairTemporaryTarget
+import app.aaps.interfaces.sync.DataSyncSelector.PairTherapyEvent
 import info.nightscout.core.utils.notifyAll
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.nsclient.StoreDataForDb
-import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.sync.DataSyncSelector.PairBolus
-import info.nightscout.interfaces.sync.DataSyncSelector.PairBolusCalculatorResult
-import info.nightscout.interfaces.sync.DataSyncSelector.PairCarbs
-import info.nightscout.interfaces.sync.DataSyncSelector.PairEffectiveProfileSwitch
-import info.nightscout.interfaces.sync.DataSyncSelector.PairExtendedBolus
-import info.nightscout.interfaces.sync.DataSyncSelector.PairFood
-import info.nightscout.interfaces.sync.DataSyncSelector.PairGlucoseValue
-import info.nightscout.interfaces.sync.DataSyncSelector.PairOfflineEvent
-import info.nightscout.interfaces.sync.DataSyncSelector.PairProfileStore
-import info.nightscout.interfaces.sync.DataSyncSelector.PairProfileSwitch
-import info.nightscout.interfaces.sync.DataSyncSelector.PairTemporaryBasal
-import info.nightscout.interfaces.sync.DataSyncSelector.PairTemporaryTarget
-import info.nightscout.interfaces.sync.DataSyncSelector.PairTherapyEvent
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.acks.NSAddAck
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventNSClientNewLog
-import info.nightscout.shared.sharedPreferences.SP
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -56,7 +56,7 @@ class NSClientAddAckWorker(
         }
 
         when (ack.originalObject) {
-            is PairTemporaryTarget        -> {
+            is PairTemporaryTarget               -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -65,7 +65,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TemporaryTarget " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairGlucoseValue           -> {
+            is PairGlucoseValue                  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -74,7 +74,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked GlucoseValue " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairFood                   -> {
+            is PairFood                          -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -84,7 +84,7 @@ class NSClientAddAckWorker(
                 // Send new if waiting
             }
 
-            is PairTherapyEvent           -> {
+            is PairTherapyEvent                  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -93,7 +93,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TherapyEvent " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairBolus                  -> {
+            is PairBolus                         -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -102,7 +102,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked Bolus " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairCarbs                  -> {
+            is PairCarbs                         -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -111,7 +111,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked Carbs " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairBolusCalculatorResult  -> {
+            is PairBolusCalculatorResult         -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdBolusCalculatorResults.add(pair.value)
@@ -119,7 +119,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked BolusCalculatorResult " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairTemporaryBasal         -> {
+            is PairTemporaryBasal                -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -128,7 +128,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TemporaryBasal " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairExtendedBolus          -> {
+            is PairExtendedBolus                 -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -137,7 +137,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ExtendedBolus " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairProfileSwitch          -> {
+            is PairProfileSwitch                 -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -146,7 +146,7 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairEffectiveProfileSwitch -> {
+            is PairEffectiveProfileSwitch        -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true
@@ -164,13 +164,13 @@ class NSClientAddAckWorker(
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked DeviceStatus " + pair.value.interfaceIDs.nightscoutId))
             }
 
-            is PairProfileStore           -> {
+            is PairProfileStore                  -> {
                 val pair = ack.originalObject
                 pair.confirmed = true
                 rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ProfileStore " + ack.id))
             }
 
-            is PairOfflineEvent           -> {
+            is PairOfflineEvent                  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 pair.confirmed = true

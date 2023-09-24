@@ -2,11 +2,11 @@ package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.resources.ResourceHelper
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.triggers.Trigger
-import info.nightscout.rx.logging.AAPSLogger
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject

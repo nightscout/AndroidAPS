@@ -7,9 +7,9 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.automation.R
 import info.nightscout.core.ui.elements.NumberPicker
-import info.nightscout.shared.interfaces.ResourceHelper
 import java.text.DecimalFormat
 
 class InputDelta(private val rh: ResourceHelper) : Element {

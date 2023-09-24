@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.tidepool.messages
 
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.plugins.sync.R
-import info.nightscout.shared.sharedPreferences.SP
 import okhttp3.Credentials
 
 object AuthRequestMessage : BaseMessage() {

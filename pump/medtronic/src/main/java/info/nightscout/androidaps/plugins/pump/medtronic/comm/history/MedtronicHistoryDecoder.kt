@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
 
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.pump.common.utils.StringUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import org.apache.commons.lang3.StringUtils
 
 /**

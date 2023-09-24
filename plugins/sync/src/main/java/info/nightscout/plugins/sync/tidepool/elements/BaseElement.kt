@@ -1,17 +1,22 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
+import app.aaps.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
-import info.nightscout.shared.utils.DateUtil
 
 open class BaseElement(timestamp: Long, uuid: String, dateUtil: DateUtil) {
+
     @Expose
     var deviceTime: String = ""
+
     @Expose
     var time: String = ""
+
     @Expose
     var timezoneOffset: Int = 0
+
     @Expose
     var type: String? = null
+
     @Expose
     var origin: Origin? = null
 
@@ -22,6 +27,8 @@ open class BaseElement(timestamp: Long, uuid: String, dateUtil: DateUtil) {
         origin = Origin(uuid)
     }
 
-    inner class Origin internal constructor(@field:Expose
-                                            internal var id: String)
+    inner class Origin internal constructor(
+        @field:Expose
+        internal var id: String
+    )
 }

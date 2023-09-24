@@ -1,5 +1,10 @@
 package info.nightscout.implementation.db
 
+import app.aaps.interfaces.db.PersistenceLayer
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.queue.Callback
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.ValueWrapper
@@ -13,11 +18,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.database.impl.transactions.InsertOrUpdateBolusTransaction
 import info.nightscout.database.impl.transactions.InsertOrUpdateCarbsTransaction
-import info.nightscout.interfaces.db.PersistenceLayer
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

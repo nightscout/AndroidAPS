@@ -7,6 +7,17 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import app.aaps.interfaces.iob.GlucoseStatusProvider
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
@@ -16,17 +27,6 @@ import info.nightscout.automation.events.EventTriggerClone
 import info.nightscout.automation.events.EventTriggerRemove
 import info.nightscout.automation.services.LastLocationDataContainer
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.iob.GlucoseStatusProvider
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 import javax.inject.Inject
 

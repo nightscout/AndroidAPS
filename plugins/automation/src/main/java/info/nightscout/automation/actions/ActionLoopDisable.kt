@@ -1,20 +1,20 @@
 package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.configuration.ConfigBuilder
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventRefreshOverview
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventRefreshOverview
 import javax.inject.Inject
 
 class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {

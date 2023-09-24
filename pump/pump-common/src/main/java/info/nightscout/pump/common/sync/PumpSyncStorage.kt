@@ -1,13 +1,13 @@
 package info.nightscout.pump.common.sync
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.sharedPreferences.SP
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -2,9 +2,9 @@ package app.aaps.configuration.maintenance.data
 
 import androidx.annotation.DrawableRes
 import app.aaps.configuration.R
-import info.nightscout.interfaces.maintenance.PrefMetadata
-import info.nightscout.interfaces.maintenance.PrefsMetadataKey
-import info.nightscout.interfaces.maintenance.PrefsStatus
+import app.aaps.interfaces.maintenance.PrefMetadata
+import app.aaps.interfaces.maintenance.PrefsMetadataKey
+import app.aaps.interfaces.maintenance.PrefsStatus
 import kotlinx.parcelize.Parcelize
 import java.io.File
 

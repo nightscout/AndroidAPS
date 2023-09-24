@@ -11,6 +11,10 @@ import android.widget.ScrollView
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.R
@@ -19,10 +23,6 @@ import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolDoUpload
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolResetData
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

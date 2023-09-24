@@ -1,11 +1,10 @@
 package info.nightscout.plugins.aps.di
 
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.autotune.Autotune
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.interfaces.aps.APSResult
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.autotune.Autotune
 import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.plugins.aps.OpenAPSFragment
 import info.nightscout.plugins.aps.loop.LoopPlugin

@@ -5,22 +5,23 @@ import android.content.Context
 import android.os.Build
 import android.os.PowerManager
 import android.os.SystemClock
+import app.aaps.interfaces.androidPermissions.AndroidPermission
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventDismissBolusProgressIfRunning
+import app.aaps.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.interfaces.rx.events.EventQueueChanged
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.T
+import info.nightscout.core.ui.R
 import info.nightscout.core.utils.extensions.safeDisable
 import info.nightscout.core.utils.extensions.safeEnable
-import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.T
 
 class QueueThread internal constructor(
     private val queue: CommandQueue,
@@ -62,7 +63,7 @@ class QueueThread internal constructor(
                     }
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     rxBus.send(EventDismissBolusProgressIfRunning(null, null))
-                    rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.core.ui.R.string.connectiontimedout)))
+                    rxBus.send(EventPumpStatusChanged(rh.gs(R.string.connectiontimedout)))
                     aapsLogger.debug(LTag.PUMPQUEUE, "timed out")
                     pump.stopConnecting()
 

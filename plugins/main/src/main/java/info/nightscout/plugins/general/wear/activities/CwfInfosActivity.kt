@@ -6,29 +6,29 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.interfaces.rx.weardata.CUSTOM_VERSION
+import app.aaps.interfaces.rx.weardata.CwfMetadataKey
+import app.aaps.interfaces.rx.weardata.CwfMetadataMap
+import app.aaps.interfaces.rx.weardata.JsonKeyValues
+import app.aaps.interfaces.rx.weardata.JsonKeys
+import app.aaps.interfaces.rx.weardata.ResFileMap
+import app.aaps.interfaces.rx.weardata.ViewKeys
+import app.aaps.interfaces.rx.weardata.ZipWatchfaceFormat
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.CwfInfosActivityBinding
 import info.nightscout.plugins.databinding.CwfInfosActivityPrefItemBinding
 import info.nightscout.plugins.databinding.CwfInfosActivityViewItemBinding
 import info.nightscout.plugins.general.wear.WearPlugin
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventWearUpdateGui
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.rx.weardata.CUSTOM_VERSION
-import info.nightscout.rx.weardata.ResFileMap
-import info.nightscout.rx.weardata.CwfMetadataKey
-import info.nightscout.rx.weardata.CwfMetadataMap
-import info.nightscout.rx.weardata.JsonKeyValues
-import info.nightscout.rx.weardata.JsonKeys
-import info.nightscout.rx.weardata.ViewKeys
-import info.nightscout.rx.weardata.ZipWatchfaceFormat
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -93,7 +93,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
             metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]?.let { authorVersion ->
                 title = "${metadata[CwfMetadataKey.CWF_NAME]} ($authorVersion)"
             }
-            val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENTION}"} ?:""
+            val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENTION}" } ?: ""
             binding.filelistName.text = rh.gs(CwfMetadataKey.CWF_FILENAME.label, fileName)
             binding.author.text = rh.gs(CwfMetadataKey.CWF_AUTHOR.label, metadata[CwfMetadataKey.CWF_AUTHOR] ?: "")
             binding.createdAt.text = rh.gs(CwfMetadataKey.CWF_CREATED_AT.label, metadata[CwfMetadataKey.CWF_CREATED_AT] ?: "")

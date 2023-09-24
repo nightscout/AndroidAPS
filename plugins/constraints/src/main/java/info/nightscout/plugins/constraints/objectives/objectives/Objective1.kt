@@ -1,9 +1,9 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
+import app.aaps.interfaces.actions.Actions
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.plugin.PluginBase
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.actions.Actions
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.constraints.R
 import javax.inject.Inject
 

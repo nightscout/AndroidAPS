@@ -9,16 +9,17 @@ import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.HandlerThread
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.receivers.ReceiverStatusStore
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventNetworkChange
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.core.utils.receivers.StringUtils
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventNetworkChange
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class NetworkChangeReceiver : DaggerBroadcastReceiver() {
+
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore

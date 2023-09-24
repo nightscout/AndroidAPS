@@ -1,6 +1,15 @@
 package info.nightscout.automation
 
 import android.content.Context
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
@@ -9,15 +18,6 @@ import info.nightscout.automation.services.LocationServiceHelper
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

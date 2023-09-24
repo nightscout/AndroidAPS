@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaR.comm
 
+import app.aaps.interfaces.rx.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.danar.comm.MsgBolusProgress
-import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers

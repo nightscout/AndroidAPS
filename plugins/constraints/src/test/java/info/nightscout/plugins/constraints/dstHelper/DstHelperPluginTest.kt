@@ -1,13 +1,13 @@
 package info.nightscout.plugins.constraints.dstHelper
 
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

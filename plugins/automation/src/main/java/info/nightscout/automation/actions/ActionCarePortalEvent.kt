@@ -2,6 +2,14 @@ package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.interfaces.iob.GlucoseStatusProvider
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.elements.InputCarePortalMenu
 import info.nightscout.automation.elements.InputDuration
@@ -15,14 +23,6 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import info.nightscout.interfaces.iob.GlucoseStatusProvider
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject

@@ -1,6 +1,10 @@
 package info.nightscout.automation.actions
 
 import android.content.Context
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -9,10 +13,6 @@ import info.nightscout.automation.elements.InputString
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.database.impl.transactions.Transaction
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

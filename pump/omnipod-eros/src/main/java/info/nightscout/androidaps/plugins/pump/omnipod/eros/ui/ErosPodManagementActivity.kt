@@ -5,6 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventQueueChanged
+import app.aaps.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
@@ -26,15 +35,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivati
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -121,7 +121,11 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
                     if (!result.success) {
                         displayErrorDialog(
                             rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning),
-                            rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_play_test_beep), result.comment),
+                            rh.gs(
+                                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon,
+                                rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_play_test_beep),
+                                result.comment
+                            ),
                             false
                         )
                     }
@@ -138,7 +142,11 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
                     if (!result.success) {
                         displayErrorDialog(
                             rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning),
-                            rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(R.string.omnipod_eros_error_failed_to_read_pulse_log), result.comment),
+                            rh.gs(
+                                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon,
+                                rh.gs(R.string.omnipod_eros_error_failed_to_read_pulse_log),
+                                result.comment
+                            ),
                             false
                         )
                     }

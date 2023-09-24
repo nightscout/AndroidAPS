@@ -2,14 +2,14 @@ package info.nightscout.ui.activities
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.SafeParse
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.InstanceId
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivitySurveyBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile
@@ -86,25 +86,25 @@ class SurveyActivity : TranslatedDaggerAppCompatActivity() {
             val specificProfile = profileStore.getSpecificProfile(profileName)
 
             r.profileJson = specificProfile.toString()
-/*
-            val auth = FirebaseAuth.getInstance()
-            auth.signInAnonymously()
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        aapsLogger.debug(LTag.CORE, "signInAnonymously:success")
-                        //val user = auth.currentUser // do we need this, seems unused?
+            /*
+                        val auth = FirebaseAuth.getInstance()
+                        auth.signInAnonymously()
+                            .addOnCompleteListener(this) { task ->
+                                if (task.isSuccessful) {
+                                    aapsLogger.debug(LTag.CORE, "signInAnonymously:success")
+                                    //val user = auth.currentUser // do we need this, seems unused?
 
-                        val database = FirebaseDatabase.getInstance().reference
-                        database.child("survey").child(r.id).setValue(r)
-                    } else {
-                        aapsLogger.error("signInAnonymously:failure", task.exception!!)
-                        ToastUtils.warnToast(this, "Authentication failed.")
-                        //updateUI(null)
-                    }
+                                    val database = FirebaseDatabase.getInstance().reference
+                                    database.child("survey").child(r.id).setValue(r)
+                                } else {
+                                    aapsLogger.error("signInAnonymously:failure", task.exception!!)
+                                    ToastUtils.warnToast(this, "Authentication failed.")
+                                    //updateUI(null)
+                                }
 
-                    // ...
-                }
-  */
+                                // ...
+                            }
+              */
             finish()
         }
     }

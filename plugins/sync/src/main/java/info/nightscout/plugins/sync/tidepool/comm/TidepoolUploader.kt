@@ -3,8 +3,15 @@ package info.nightscout.plugins.sync.tidepool.comm
 import android.content.Context
 import android.os.PowerManager
 import android.os.SystemClock
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.interfaces.Config
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolStatus
@@ -13,13 +20,6 @@ import info.nightscout.plugins.sync.tidepool.messages.AuthRequestMessage
 import info.nightscout.plugins.sync.tidepool.messages.DatasetReplyMessage
 import info.nightscout.plugins.sync.tidepool.messages.OpenDatasetRequestMessage
 import info.nightscout.plugins.sync.tidepool.messages.UploadReplyMessage
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -220,7 +220,7 @@ class TidepoolUploader @Inject constructor(
             session.iterations++
             val chunk = uploadChunk.getNext(session)
             when {
-                chunk == null     -> {
+                chunk == null -> {
                     aapsLogger.error("Upload chunk is null, cannot proceed")
                     releaseWakeLock()
                 }
@@ -232,7 +232,7 @@ class TidepoolUploader @Inject constructor(
                     uploadNext()
                 }
 
-                else              -> {
+                else -> {
                     val body = chunk.toRequestBody("application/json".toMediaTypeOrNull())
 
                     rxBus.send(EventTidepoolStatus(("Uploading")))

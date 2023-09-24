@@ -8,6 +8,21 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import app.aaps.interfaces.configuration.Constants;
+import app.aaps.interfaces.logging.LTag;
+import app.aaps.interfaces.notifications.Notification;
+import app.aaps.interfaces.profile.Profile;
+import app.aaps.interfaces.profile.ProfileFunction;
+import app.aaps.interfaces.pump.BolusProgressData;
+import app.aaps.interfaces.pump.PumpEnactResult;
+import app.aaps.interfaces.pump.defs.PumpType;
+import app.aaps.interfaces.queue.Callback;
+import app.aaps.interfaces.queue.Command;
+import app.aaps.interfaces.queue.CommandQueue;
+import app.aaps.interfaces.rx.events.EventInitializationChanged;
+import app.aaps.interfaces.rx.events.EventOverviewBolusProgress;
+import app.aaps.interfaces.rx.events.EventProfileSwitchChanged;
+import app.aaps.interfaces.rx.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danar.DanaRPlugin;
 import info.nightscout.androidaps.danar.SerialIOThread;
@@ -39,22 +54,7 @@ import info.nightscout.androidaps.danar.comm.MsgStatus;
 import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
-import info.nightscout.interfaces.Constants;
-import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.profile.Profile;
-import info.nightscout.interfaces.profile.ProfileFunction;
-import info.nightscout.interfaces.pump.BolusProgressData;
-import info.nightscout.interfaces.pump.PumpEnactResult;
-import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.interfaces.queue.Callback;
-import info.nightscout.interfaces.queue.Command;
-import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.pump.dana.events.EventDanaRNewStatus;
-import info.nightscout.rx.events.EventInitializationChanged;
-import info.nightscout.rx.events.EventOverviewBolusProgress;
-import info.nightscout.rx.events.EventProfileSwitchChanged;
-import info.nightscout.rx.events.EventPumpStatusChanged;
-import info.nightscout.rx.logging.LTag;
 
 public class DanaRExecutionService extends AbstractDanaRExecutionService {
     @Inject DanaRPlugin danaRPlugin;

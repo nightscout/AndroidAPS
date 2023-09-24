@@ -1,10 +1,10 @@
 package info.nightscout.automation.actions
 
+import app.aaps.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.database.impl.transactions.Transaction
-import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

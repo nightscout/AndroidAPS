@@ -1,10 +1,10 @@
 package info.nightscout.plugins.general.autotune
 
 import app.aaps.annotations.OpenForTesting
-import info.nightscout.interfaces.logging.LoggerUtils
+import app.aaps.interfaces.logging.LoggerUtils
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONException
 import org.slf4j.LoggerFactory
 import java.io.BufferedInputStream

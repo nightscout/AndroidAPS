@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 import info.nightscout.androidaps.R
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import preference.WearPreferenceActivity
 import javax.inject.Inject
 
@@ -52,7 +52,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
-        grantResults: IntArray) {
+        grantResults: IntArray
+    ) {
         if (requestCode == BODY_SENSOR_PERMISSION_REQUEST_CODE) {
             if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
                 aapsLogger.info(LTag.WEAR, "Sensor permission for heart rate granted")
@@ -65,6 +66,7 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     }
 
     companion object {
+
         private const val BODY_SENSOR_PERMISSION_REQUEST_CODE = 1
     }
 }

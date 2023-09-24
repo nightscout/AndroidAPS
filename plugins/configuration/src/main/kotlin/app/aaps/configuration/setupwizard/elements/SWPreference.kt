@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import app.aaps.configuration.setupwizard.SWDefinition
+import app.aaps.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.ui.UiInteraction
 import javax.inject.Inject
 
 class SWPreference(injector: HasAndroidInjector, private val definition: SWDefinition) : SWItem(injector, Type.PREFERENCE) {

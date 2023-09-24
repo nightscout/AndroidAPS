@@ -1,8 +1,8 @@
 package info.nightscout.implementation.resources
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.ui.IconsProvider
 import info.nightscout.implementation.R
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.ui.IconsProvider
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,8 +11,8 @@ class IconsProviderImplementation @Inject constructor(private val config: Config
 
     override fun getIcon(): Int =
         when {
-            config.NSCLIENT2    -> info.nightscout.core.ui.R.mipmap.ic_blueowl
-            config.NSCLIENT1    -> info.nightscout.core.ui.R.mipmap.ic_yellowowl
+            config.NSCLIENT2   -> info.nightscout.core.ui.R.mipmap.ic_blueowl
+            config.NSCLIENT1   -> info.nightscout.core.ui.R.mipmap.ic_yellowowl
             config.PUMPCONTROL -> info.nightscout.core.ui.R.mipmap.ic_pumpcontrol
             else               -> info.nightscout.core.ui.R.mipmap.ic_launcher
         }

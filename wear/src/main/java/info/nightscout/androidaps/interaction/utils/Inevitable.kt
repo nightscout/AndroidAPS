@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.interaction.utils
 
 import android.os.SystemClock
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.utils.DateUtil
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton

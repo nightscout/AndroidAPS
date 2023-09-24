@@ -1,14 +1,14 @@
 package info.nightscout.plugins.general.actions
 
+import app.aaps.interfaces.actions.Actions
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.plugin.PluginDescription
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.resources.ResourceHelper
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.actions.Actions
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.R
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 

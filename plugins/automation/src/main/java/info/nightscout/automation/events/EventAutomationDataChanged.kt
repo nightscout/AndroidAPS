@@ -1,5 +1,5 @@
 package info.nightscout.automation.events
 
-import info.nightscout.rx.events.Event
+import app.aaps.interfaces.rx.events.Event
 
 class EventAutomationDataChanged : Event()

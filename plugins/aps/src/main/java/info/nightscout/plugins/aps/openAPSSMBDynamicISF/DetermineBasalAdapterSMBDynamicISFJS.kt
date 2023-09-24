@@ -1,29 +1,29 @@
 package info.nightscout.plugins.aps.openAPSSMBDynamicISF
 
+import app.aaps.interfaces.aps.DetermineBasalAdapter
+import app.aaps.interfaces.aps.SMBDefaults
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.GlucoseStatus
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.iob.IobTotal
+import app.aaps.interfaces.iob.MealData
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.Round
+import app.aaps.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.core.extensions.plannedRemainingMinutes
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.aps.DetermineBasalAdapter
-import info.nightscout.interfaces.aps.SMBDefaults
-import info.nightscout.interfaces.iob.GlucoseStatus
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.iob.IobTotal
-import info.nightscout.interfaces.iob.MealData
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.logger.LoggerCallback
 import info.nightscout.plugins.aps.openAPSSMB.DetermineBasalResultSMB
 import info.nightscout.plugins.aps.utils.ScriptReader
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -207,7 +207,10 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("lgsThreshold", profileUtil.convertToMgdlDetect(sp.getDouble(R.string.key_lgs_threshold, 65.0)))
 
         //mProfile.put("high_temptarget_raises_sensitivity", SP.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity));
-        this.profile.put("high_temptarget_raises_sensitivity", sp.getBoolean(info.nightscout.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity))
+        this.profile.put(
+            "high_temptarget_raises_sensitivity",
+            sp.getBoolean(info.nightscout.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)
+        )
         //mProfile.put("low_temptarget_lowers_sensitivity", SP.getBoolean(R.string.key_low_temptarget_lowers_sensitivity, SMBDefaults.low_temptarget_lowers_sensitivity));
         this.profile.put("low_temptarget_lowers_sensitivity", sp.getBoolean(info.nightscout.core.utils.R.string.key_low_temptarget_lowers_sensitivity, SMBDefaults.low_temptarget_lowers_sensitivity))
         this.profile.put("sensitivity_raises_target", sp.getBoolean(R.string.key_sensitivity_raises_target, SMBDefaults.sensitivity_raises_target))

@@ -1,9 +1,9 @@
 package info.nightscout.core.extensions
 
+import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.interfaces.GlucoseUnit
 import org.junit.jupiter.api.Test
 
 class TemporaryTargetExtensionKtTest : TestBaseWithProfile() {

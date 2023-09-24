@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.Profile.ProfileValue
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.Profile.ProfileValue
-import kotlin.test.assertFailsWith
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import kotlin.test.assertFailsWith
 
 class FunctionsTest {
 

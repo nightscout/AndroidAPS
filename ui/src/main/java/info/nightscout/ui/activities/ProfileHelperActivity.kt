@@ -6,6 +6,18 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.PureProfile
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventLocalProfileChanged
+import app.aaps.interfaces.stats.TddCalculator
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
 import info.nightscout.core.profile.ProfileSealed
@@ -15,18 +27,6 @@ import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.interfaces.stats.TddCalculator
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventLocalProfileChanged
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivityProfilehelperBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile
@@ -107,10 +107,10 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
 
         binding.profileType.setOnItemClickListener { _, _, _, _ ->
             when (binding.profileType.text.toString()) {
-                rh.gs(R.string.motol_default_profile) -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
-                rh.gs(R.string.dpv_default_profile)   -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
-                rh.gs(R.string.current_profile)       -> switchTab(tabSelected, ProfileType.CURRENT)
-                rh.gs(R.string.available_profile)                                  -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
+                rh.gs(R.string.motol_default_profile)                            -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
+                rh.gs(R.string.dpv_default_profile)                              -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
+                rh.gs(R.string.current_profile)                                  -> switchTab(tabSelected, ProfileType.CURRENT)
+                rh.gs(R.string.available_profile)                                -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
                 rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch) -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
             }
         }

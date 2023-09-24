@@ -1,6 +1,6 @@
 package info.nightscout.core.events
 
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.rx.events.Event
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.rx.events.Event
 
 class EventNewNotification(var notification: Notification) : Event()

@@ -1,11 +1,11 @@
 package info.nightscout.core.extensions
 
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun GlucoseValue.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =

@@ -1,5 +1,7 @@
 package info.nightscout.implementation
 
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.Translator
 import dagger.Reusable
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
@@ -7,8 +9,6 @@ import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.Translator
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 @Reusable
@@ -107,10 +107,10 @@ class TranslatorImpl @Inject internal constructor(
 
     override fun translate(units: ValueWithUnit?): String = when (units) {
         is ValueWithUnit.Gram        -> rh.gs(info.nightscout.core.ui.R.string.shortgram)
-        is ValueWithUnit.Hour        -> rh.gs(info.nightscout.interfaces.R.string.shorthour)
+        is ValueWithUnit.Hour        -> rh.gs(app.aaps.interfaces.R.string.shorthour)
         is ValueWithUnit.Insulin     -> rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
         is ValueWithUnit.Mgdl        -> rh.gs(info.nightscout.core.ui.R.string.mgdl)
-        is ValueWithUnit.Minute      -> rh.gs(info.nightscout.interfaces.R.string.shortminute)
+        is ValueWithUnit.Minute      -> rh.gs(app.aaps.interfaces.R.string.shortminute)
         is ValueWithUnit.Mmoll       -> rh.gs(info.nightscout.core.ui.R.string.mmol)
         is ValueWithUnit.Percent     -> rh.gs(info.nightscout.core.ui.R.string.shortpercent)
         is ValueWithUnit.UnitPerHour -> rh.gs(info.nightscout.core.ui.R.string.profile_ins_units_per_hour)
@@ -151,26 +151,26 @@ class TranslatorImpl @Inject internal constructor(
         TherapyEvent.Type.TEMPORARY_TARGET_CANCEL -> rh.gs(info.nightscout.core.ui.R.string.careportal_temporarytargetcancel)
         TherapyEvent.Type.APS_OFFLINE             -> rh.gs(info.nightscout.core.ui.R.string.careportal_openapsoffline)
         TherapyEvent.Type.NS_MBG                  -> rh.gs(info.nightscout.core.ui.R.string.careportal_mbg)
-/*
-        TherapyEvent.Type.TEMPORARY_BASAL         -> TODO()
-        TherapyEvent.Type.TUBE_CHANGE             -> TODO()
-        TherapyEvent.Type.FALLING_ASLEEP          -> TODO()
-        TherapyEvent.Type.BATTERY_EMPTY           -> TODO()
-        TherapyEvent.Type.RESERVOIR_EMPTY         -> TODO()
-        TherapyEvent.Type.OCCLUSION               -> TODO()
-        TherapyEvent.Type.PUMP_STOPPED            -> TODO()
-        TherapyEvent.Type.PUMP_STARTED            -> TODO()
-        TherapyEvent.Type.PUMP_PAUSED             -> TODO()
-        TherapyEvent.Type.WAKING_UP               -> TODO()
-        TherapyEvent.Type.SICKNESS                -> TODO()
-        TherapyEvent.Type.STRESS                  -> TODO()
-        TherapyEvent.Type.PRE_PERIOD              -> TODO()
-        TherapyEvent.Type.ALCOHOL                 -> TODO()
-        TherapyEvent.Type.CORTISONE               -> TODO()
-        TherapyEvent.Type.FEELING_LOW             -> TODO()
-        TherapyEvent.Type.FEELING_HIGH            -> TODO()
-        TherapyEvent.Type.LEAKING_INFUSION_SET    -> TODO()
- */
+        /*
+                TherapyEvent.Type.TEMPORARY_BASAL         -> TODO()
+                TherapyEvent.Type.TUBE_CHANGE             -> TODO()
+                TherapyEvent.Type.FALLING_ASLEEP          -> TODO()
+                TherapyEvent.Type.BATTERY_EMPTY           -> TODO()
+                TherapyEvent.Type.RESERVOIR_EMPTY         -> TODO()
+                TherapyEvent.Type.OCCLUSION               -> TODO()
+                TherapyEvent.Type.PUMP_STOPPED            -> TODO()
+                TherapyEvent.Type.PUMP_STARTED            -> TODO()
+                TherapyEvent.Type.PUMP_PAUSED             -> TODO()
+                TherapyEvent.Type.WAKING_UP               -> TODO()
+                TherapyEvent.Type.SICKNESS                -> TODO()
+                TherapyEvent.Type.STRESS                  -> TODO()
+                TherapyEvent.Type.PRE_PERIOD              -> TODO()
+                TherapyEvent.Type.ALCOHOL                 -> TODO()
+                TherapyEvent.Type.CORTISONE               -> TODO()
+                TherapyEvent.Type.FEELING_LOW             -> TODO()
+                TherapyEvent.Type.FEELING_HIGH            -> TODO()
+                TherapyEvent.Type.LEAKING_INFUSION_SET    -> TODO()
+         */
         TherapyEvent.Type.NONE                    -> rh.gs(info.nightscout.core.ui.R.string.unknown)
 
         else                                      -> rh.gs(info.nightscout.core.ui.R.string.unknown)

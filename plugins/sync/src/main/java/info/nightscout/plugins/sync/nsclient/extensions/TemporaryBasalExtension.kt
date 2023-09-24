@@ -1,13 +1,13 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TemporaryBasal.Type.Companion.fromString
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
 fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil): JSONObject? =

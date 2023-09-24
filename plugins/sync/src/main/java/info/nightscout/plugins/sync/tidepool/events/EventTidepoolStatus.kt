@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.tidepool.events
 
-import info.nightscout.rx.events.Event
+import app.aaps.interfaces.rx.events.Event
 import java.text.SimpleDateFormat
 import java.util.Locale
 

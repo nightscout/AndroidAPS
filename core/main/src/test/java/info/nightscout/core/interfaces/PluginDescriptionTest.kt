@@ -1,9 +1,9 @@
 package info.nightscout.core.interfaces
 
-import com.google.common.truth.Truth.assertThat
 import androidx.fragment.app.Fragment
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
+import app.aaps.interfaces.plugin.PluginDescription
+import app.aaps.interfaces.plugin.PluginType
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 class PluginDescriptionTest {

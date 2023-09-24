@@ -1,10 +1,13 @@
 package info.nightscout.plugins.general.autotune
 
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.MidnightTime
+import app.aaps.interfaces.utils.Round
+import app.aaps.interfaces.utils.T
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.interfaces.utils.MidnightTime
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.BGDatum
 import info.nightscout.plugins.general.autotune.data.CRDatum
@@ -12,9 +15,6 @@ import info.nightscout.plugins.general.autotune.data.DiaDeviation
 import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.data.PeakDeviation
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs

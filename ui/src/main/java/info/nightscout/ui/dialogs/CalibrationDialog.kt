@@ -4,6 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.GlucoseStatusProvider
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sync.XDripBroadcast
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -11,12 +17,6 @@ import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.XDripBroadcast
-import info.nightscout.interfaces.iob.GlucoseStatusProvider
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.ui.databinding.DialogCalibrationBinding
 import java.text.DecimalFormat
 import java.util.LinkedList

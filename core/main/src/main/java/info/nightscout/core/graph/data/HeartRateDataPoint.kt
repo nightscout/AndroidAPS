@@ -2,8 +2,8 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.database.entities.HeartRate
-import info.nightscout.shared.interfaces.ResourceHelper
 
 class HeartRateDataPoint(
     private val data: HeartRate,

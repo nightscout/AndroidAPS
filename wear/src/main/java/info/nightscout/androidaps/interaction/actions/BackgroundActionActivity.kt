@@ -2,14 +2,13 @@ package info.nightscout.androidaps.interaction.actions
 
 import android.os.Bundle
 import android.widget.Toast
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventWearToMobile
+import app.aaps.interfaces.rx.weardata.EventData
 import dagger.android.DaggerActivity
 import info.nightscout.androidaps.comm.DataLayerListenerServiceWear
-import info.nightscout.rx.events.EventWearToMobile
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-
-import info.nightscout.rx.weardata.EventData
 import javax.inject.Inject
 
 class BackgroundActionActivity : DaggerActivity() {

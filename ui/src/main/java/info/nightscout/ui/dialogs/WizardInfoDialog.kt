@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.DateUtil
 import com.google.gson.Gson
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogWizardinfoBinding
 import javax.inject.Inject

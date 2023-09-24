@@ -1,18 +1,21 @@
 package info.nightscout.core.data
 
+import app.aaps.interfaces.iob.Iob
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.interfaces.iob.Iob
 import org.junit.jupiter.api.Test
 
 class IobTest {
 
-    @Test fun plusTest() {
-        val a = Iob().iobContrib(1.0).activityContrib(2.0)
-        val b = Iob().iobContrib(3.0).activityContrib(4.0)
-        a.plus(b)
-        assertThat(a.iobContrib).isWithin(0.01).of(4.0)
-        assertThat(a.activityContrib).isWithin(0.01).of(6.0)
+    private fun Iob.iobContrib(iobContrib: Double): Iob {
+        this.iobContrib = iobContrib
+        return this
     }
+
+    private fun Iob.activityContrib(activityContrib: Double): Iob {
+        this.activityContrib = activityContrib
+        return this
+    }
+
 
     @Test fun equalTest() {
         val a1 = Iob().iobContrib(1.0).activityContrib(2.0)

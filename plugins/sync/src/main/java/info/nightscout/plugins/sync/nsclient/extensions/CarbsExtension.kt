@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =

@@ -1,19 +1,19 @@
 package info.nightscout.plugins.general.overview.notifications
 
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.nsclient.NSAlarm
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.nsclient.NSAlarm
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.R
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
-class NotificationWithAction constructor(
+class NotificationWithAction(
     injector: HasAndroidInjector
 ) : Notification() {
 

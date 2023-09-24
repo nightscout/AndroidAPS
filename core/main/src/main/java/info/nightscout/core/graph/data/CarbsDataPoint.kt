@@ -2,9 +2,9 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.Carbs
-import info.nightscout.shared.interfaces.ResourceHelper
 
 class CarbsDataPoint(
     val data: Carbs,

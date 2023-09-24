@@ -1,7 +1,7 @@
 package info.nightscout.core.wizard
 
+import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.UUID

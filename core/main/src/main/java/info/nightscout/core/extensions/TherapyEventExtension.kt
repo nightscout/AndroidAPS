@@ -1,8 +1,8 @@
 package info.nightscout.core.extensions
 
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.shared.utils.DateUtil
 
 fun TherapyEvent.isOlderThan(hours: Double, dateUtil: DateUtil): Boolean {
     return getHoursFromStart(dateUtil) > hours

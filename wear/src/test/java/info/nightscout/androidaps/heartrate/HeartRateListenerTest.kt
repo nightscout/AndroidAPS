@@ -3,10 +3,10 @@ package info.nightscout.androidaps.heartrate
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.weardata.EventData.ActionHeartRate
 import app.aaps.shared.tests.AAPSLoggerTest
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.weardata.EventData.ActionHeartRate
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
 import org.junit.jupiter.api.AfterEach

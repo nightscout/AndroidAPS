@@ -1,14 +1,14 @@
 package info.nightscout.pump.medtrum
 
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -118,7 +118,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val bolusCompleted = false
         val amount = 1.4
 
-        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0);
+        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
 
         // Call
         medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, amount)

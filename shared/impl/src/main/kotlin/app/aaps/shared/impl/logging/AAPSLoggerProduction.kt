@@ -1,8 +1,8 @@
 package app.aaps.shared.impl.logging
 
-import info.nightscout.rx.interfaces.L
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.L
+import app.aaps.interfaces.logging.LTag
 import org.slf4j.LoggerFactory
 
 /**

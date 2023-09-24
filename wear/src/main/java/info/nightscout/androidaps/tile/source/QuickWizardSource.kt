@@ -2,21 +2,20 @@ package info.nightscout.androidaps.tile.source
 
 import android.content.Context
 import android.content.res.Resources
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.tile.Action
 import info.nightscout.androidaps.tile.TileSource
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.rx.weardata.EventData
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class QuickWizardSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger): TileSource {
+class QuickWizardSource @Inject constructor(private val context: Context, private val sp: SP, private val aapsLogger: AAPSLogger) : TileSource {
 
     override fun getSelectedActions(): List<Action> {
         val quickList = mutableListOf<Action>()

@@ -1,18 +1,18 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.interfaces.objects.Instantiator
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.DeviceStatus
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
-import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
 import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

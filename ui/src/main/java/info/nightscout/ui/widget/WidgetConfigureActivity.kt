@@ -4,8 +4,8 @@ import android.appwidget.AppWidgetManager
 import android.content.Intent
 import android.os.Bundle
 import android.widget.SeekBar
+import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.DaggerActivity
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.databinding.WidgetConfigureBinding
 import javax.inject.Inject
 

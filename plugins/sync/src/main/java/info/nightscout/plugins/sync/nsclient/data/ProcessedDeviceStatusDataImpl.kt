@@ -1,19 +1,19 @@
 package info.nightscout.plugins.sync.nsclient.data
 
 import android.text.Spanned
+import app.aaps.interfaces.aps.APSResult
+import app.aaps.interfaces.nsclient.NSSettingsStatus
+import app.aaps.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.interfaces.objects.Instantiator
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.Round
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.JsonHelper
-import info.nightscout.interfaces.aps.APSResult
-import info.nightscout.interfaces.nsclient.NSSettingsStatus
-import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
-import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.sync.R
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -173,5 +173,14 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             }
             return HtmlHelper.fromHtml(string.toString())
         }
+
+    private fun ProcessedDeviceStatusData.Levels.toColor(): String =
+        when (level) {
+            ProcessedDeviceStatusData.Levels.INFO.level   -> "white"
+            ProcessedDeviceStatusData.Levels.WARN.level   -> "yellow"
+            ProcessedDeviceStatusData.Levels.URGENT.level -> "red"
+            else                                          -> "white"
+        }
+
 }
 

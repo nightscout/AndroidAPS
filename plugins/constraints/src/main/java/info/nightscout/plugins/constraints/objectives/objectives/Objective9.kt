@@ -1,8 +1,8 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.plugins.constraints.R
-import info.nightscout.shared.utils.T
 
 class Objective9(injector: HasAndroidInjector) : Objective(injector, "smb", R.string.objectives_smb_objective, R.string.objectives_smb_gate) {
 

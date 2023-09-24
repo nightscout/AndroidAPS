@@ -7,9 +7,9 @@ import android.view.Window
 import android.view.WindowManager
 import android.widget.Button
 import androidx.fragment.app.FragmentManager
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 

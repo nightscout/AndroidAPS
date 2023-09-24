@@ -1,8 +1,8 @@
 package info.nightscout.core.pump
 
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.shared.interfaces.ResourceHelper
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.DecimalFormatter
 
 fun PumpEnactResult.toHtml(rh: ResourceHelper, decimalFormatter: DecimalFormatter): String {
     var ret = "<b>" + rh.gs(info.nightscout.core.ui.R.string.success) + "</b>: " + success

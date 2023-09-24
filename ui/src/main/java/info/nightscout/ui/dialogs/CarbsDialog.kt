@@ -7,6 +7,27 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.automation.Automation
+import app.aaps.interfaces.configuration.Constants.CARBS_FAV1_DEFAULT
+import app.aaps.interfaces.configuration.Constants.CARBS_FAV2_DEFAULT
+import app.aaps.interfaces.configuration.Constants.CARBS_FAV3_DEFAULT
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.GlucoseStatusProvider
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.profile.DefaultValueHelper
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.interfaces.protection.ProtectionCheck.Protection.BOLUS
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.T
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
@@ -20,27 +41,6 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.interfaces.Constants.CARBS_FAV1_DEFAULT
-import info.nightscout.interfaces.Constants.CARBS_FAV2_DEFAULT
-import info.nightscout.interfaces.Constants.CARBS_FAV3_DEFAULT
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.automation.Automation
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.iob.GlucoseStatusProvider
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogCarbsBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -278,7 +278,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(info.nightscout.core.ui.R.string.alarminxmin, timeOffset).formatColor(context, rh, info.nightscout.core.ui.R.attr.infoColor))
         val duration = binding.duration.value.toInt()
         if (duration > 0)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + duration + rh.gs(info.nightscout.interfaces.R.string.shorthour))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + duration + rh.gs(app.aaps.interfaces.R.string.shorthour))
         if (carbsAfterConstraints > 0) {
             actions.add(
                 rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(

@@ -1,14 +1,14 @@
 package info.nightscout.plugins.sync.nsclient
 
+import app.aaps.interfaces.receivers.ReceiverStatusStore
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.events.EventChargingState
+import app.aaps.interfaces.rx.events.EventNetworkChange
+import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.sync.R
-import info.nightscout.rx.events.EventChargingState
-import info.nightscout.rx.events.EventNetworkChange
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

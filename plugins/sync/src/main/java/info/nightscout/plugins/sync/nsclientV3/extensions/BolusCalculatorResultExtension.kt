@@ -1,12 +1,12 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.interfaces.utils.T
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
-import info.nightscout.shared.utils.T
 
 fun NSBolusWizard.toBolusCalculatorResult(): BolusCalculatorResult? =
     try {

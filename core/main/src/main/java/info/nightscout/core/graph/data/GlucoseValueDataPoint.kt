@@ -2,11 +2,11 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
 
 class GlucoseValueDataPoint(
     val data: GlucoseValue,

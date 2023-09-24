@@ -1,7 +1,7 @@
 package info.nightscout.sensitivity.extensions
 
+import app.aaps.interfaces.utils.T
 import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.shared.utils.T
 
 fun List<TherapyEvent>.isTherapyEventEvent5minBack(time: Long): Boolean {
     for (event in this) {

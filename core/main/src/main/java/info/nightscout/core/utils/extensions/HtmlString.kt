@@ -3,7 +3,7 @@ package info.nightscout.core.utils.extensions
 import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
-import info.nightscout.shared.interfaces.ResourceHelper
+import app.aaps.interfaces.resources.ResourceHelper
 
 fun String.formatBold(): String =
     "<b>$this</b>"

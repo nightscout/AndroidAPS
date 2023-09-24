@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.sharedPreferences.SP
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.SafeParse
 import javax.inject.Inject
 import javax.inject.Singleton
 

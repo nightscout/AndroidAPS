@@ -1,19 +1,19 @@
 package info.nightscout.implementation.wizard
 
+import app.aaps.interfaces.aps.AutosensDataStore
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.constraints.Constraint
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.iob.IobTotal
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.pump.defs.PumpDescription
+import app.aaps.interfaces.queue.CommandQueue
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
-import info.nightscout.interfaces.aps.AutosensDataStore
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.iob.IobTotal
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.queue.CommandQueue
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito

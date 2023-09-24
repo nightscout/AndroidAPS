@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.interfaces.profile.DefaultValueHelper
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.resources.ResourceHelper
 
 class InMemoryGlucoseValueDataPoint(
     val data: InMemoryGlucoseValue,
@@ -19,7 +19,7 @@ class InMemoryGlucoseValueDataPoint(
 ) : DataPointWithLabelInterface {
 
     private fun valueToUnits(units: GlucoseUnit): Double =
-         if (units == GlucoseUnit.MGDL) data.recalculated else data.recalculated * Constants.MGDL_TO_MMOLL
+        if (units == GlucoseUnit.MGDL) data.recalculated else data.recalculated * Constants.MGDL_TO_MMOLL
 
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = valueToUnits(profileFunction.getUnits())

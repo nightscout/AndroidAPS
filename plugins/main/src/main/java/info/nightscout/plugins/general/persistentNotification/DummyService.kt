@@ -5,14 +5,14 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.notifications.NotificationHolder
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventAppExit
 import dagger.android.DaggerService
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.NotificationHolder
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventAppExit
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -45,13 +45,14 @@ class DummyService : DaggerService() {
         } catch (e: Exception) {
             startForeground(4711, Notification())
         }
-        disposable.add(rxBus
-            .toObservable(EventAppExit::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({
-                aapsLogger.debug(LTag.CORE, "EventAppExit received")
-                stopSelf()
-            }, fabricPrivacy::logException)
+        disposable.add(
+            rxBus
+                .toObservable(EventAppExit::class.java)
+                .observeOn(aapsSchedulers.io)
+                .subscribe({
+                               aapsLogger.debug(LTag.CORE, "EventAppExit received")
+                               stopSelf()
+                           }, fabricPrivacy::logException)
         )
     }
 

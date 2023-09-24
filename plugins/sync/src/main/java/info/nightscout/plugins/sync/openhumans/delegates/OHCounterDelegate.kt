@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.openhumans.delegates
 
-import info.nightscout.shared.sharedPreferences.SP
+import app.aaps.interfaces.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.reflect.KProperty
@@ -9,6 +9,7 @@ import kotlin.reflect.KProperty
 internal class OHCounterDelegate @Inject internal constructor(
     private val sp: SP
 ) {
+
     private var value = sp.getLong("openhumans_counter", 1)
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): Long = value

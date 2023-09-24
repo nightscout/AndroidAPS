@@ -1,8 +1,8 @@
 package info.nightscout.core.utils.extensions
 
 import androidx.annotation.StringRes
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
 import org.json.JSONObject
 
 fun JSONObject.putInt(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject =

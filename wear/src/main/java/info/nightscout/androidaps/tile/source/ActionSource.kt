@@ -2,15 +2,20 @@ package info.nightscout.androidaps.tile.source
 
 import android.content.Context
 import android.content.res.Resources
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.interaction.actions.*
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.androidaps.interaction.actions.BolusActivity
+import info.nightscout.androidaps.interaction.actions.CarbActivity
+import info.nightscout.androidaps.interaction.actions.ECarbActivity
+import info.nightscout.androidaps.interaction.actions.TempTargetActivity
+import info.nightscout.androidaps.interaction.actions.TreatmentActivity
+import info.nightscout.androidaps.interaction.actions.WizardActivity
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ActionSource @Inject constructor(context: Context, sp : SP, aapsLogger: AAPSLogger) : StaticTileSource(context, sp, aapsLogger) {
+class ActionSource @Inject constructor(context: Context, sp: SP, aapsLogger: AAPSLogger) : StaticTileSource(context, sp, aapsLogger) {
 
     override val preferencePrefix = "tile_action_"
 

@@ -9,6 +9,9 @@ import android.content.Intent
 import android.support.wearable.complications.ProviderUpdateRequester
 import android.widget.Toast
 import androidx.annotation.StringRes
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.ECarbActivity
@@ -19,10 +22,6 @@ import info.nightscout.androidaps.interaction.menus.StatusMenuActivity
 import info.nightscout.androidaps.interaction.utils.Constants
 import info.nightscout.androidaps.interaction.utils.DisplayFormat
 import info.nightscout.androidaps.interaction.utils.WearUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 /*
@@ -59,6 +58,7 @@ class ComplicationTapBroadcastReceiver : DaggerBroadcastReceiver() {
         when (action) {
             ComplicationAction.NONE                                         ->                 // do nothing
                 return
+
             ComplicationAction.WIZARD                                       -> intentOpen = Intent(context, WizardActivity::class.java)
             ComplicationAction.BOLUS                                        -> intentOpen = Intent(context, TreatmentActivity::class.java)
             ComplicationAction.E_CARB                                       -> intentOpen = Intent(context, ECarbActivity::class.java)
@@ -89,6 +89,7 @@ class ComplicationTapBroadcastReceiver : DaggerBroadcastReceiver() {
         return when (originalAction) {
             ComplicationAction.WARNING_OLD, ComplicationAction.WARNING_SYNC ->                 // warnings cannot be reconfigured by user
                 originalAction
+
             else                                                            -> when (userPrefAction) {
                 "menu"    -> ComplicationAction.MENU
                 "wizard"  -> ComplicationAction.WIZARD

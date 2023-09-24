@@ -1,21 +1,21 @@
 package info.nightscout.implementation.queue.commands
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.Command
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.Command
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 
-class CommandSetProfile constructor(
+class CommandSetProfile(
     injector: HasAndroidInjector,
     private val profile: Profile,
     private val hasNsId: Boolean,

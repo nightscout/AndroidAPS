@@ -5,26 +5,26 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.maintenance.ImportExportPrefs
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventMobileToWear
+import app.aaps.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.interfaces.rx.weardata.CwfData
+import app.aaps.interfaces.rx.weardata.CwfMetadataKey
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.rx.weardata.ResFileMap
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.WearFragmentBinding
 import info.nightscout.plugins.general.wear.activities.CwfInfosActivity
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventMobileToWear
-import info.nightscout.rx.events.EventWearUpdateGui
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.weardata.CwfData
-import info.nightscout.rx.weardata.ResFileMap
-import info.nightscout.rx.weardata.CwfMetadataKey
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -37,7 +37,7 @@ class WearFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var importExportPrefs: ImportExportPrefs
-    @Inject lateinit var sp:SP
+    @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
 
@@ -48,8 +48,10 @@ class WearFragment : DaggerFragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         _binding = WearFragmentBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -112,7 +114,7 @@ class WearFragment : DaggerFragment() {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CwfMetadataKey.CWF_NAME])
             binding.coverChart.setImageDrawable(it.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources))
             binding.infosCustom.visibility = View.VISIBLE
-        } ?:apply {
+        } ?: apply {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, "")
             binding.coverChart.setImageDrawable(null)
             binding.infosCustom.visibility = View.GONE

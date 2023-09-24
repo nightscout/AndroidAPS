@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.tidepool.messages
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import com.google.gson.annotations.Expose
-import info.nightscout.interfaces.Config
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import java.util.TimeZone
 
 class OpenDatasetRequestMessage(config: Config, dateUtil: DateUtil) : BaseMessage() {

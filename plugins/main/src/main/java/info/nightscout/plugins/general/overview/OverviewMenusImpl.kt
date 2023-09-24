@@ -10,18 +10,18 @@ import android.widget.ImageButton
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.overview.OverviewMenus
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventRefreshOverview
+import app.aaps.interfaces.rx.events.EventScale
+import app.aaps.interfaces.sharedPreferences.SP
 import com.google.gson.Gson
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.overview.OverviewMenus
 import info.nightscout.plugins.R
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventRefreshOverview
-import info.nightscout.rx.events.EventScale
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,19 +36,108 @@ class OverviewMenusImpl @Inject constructor(
     private val fabricPrivacy: FabricPrivacy
 ) : OverviewMenus {
 
-    enum class CharTypeData(@StringRes val nameId: Int, @AttrRes val attrId: Int, @AttrRes val attrTextId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int, val enabledByDefault: Boolean = false) {
-        PRE(R.string.overview_show_predictions, info.nightscout.core.ui.R.attr.predictionColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.prediction_shortname, enabledByDefault = true),
-        TREAT(R.string.overview_show_treatments, info.nightscout.core.ui.R.attr.cobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.treatments_shortname, enabledByDefault = true),
-        BAS(R.string.overview_show_basals, info.nightscout.core.ui.R.attr.basal, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.basal_shortname, enabledByDefault = true),
-        ABS(R.string.overview_show_abs_insulin, info.nightscout.core.ui.R.attr.iobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.abs_insulin_shortname),
-        IOB(R.string.overview_show_iob, info.nightscout.core.ui.R.attr.iobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = info.nightscout.core.ui.R.string.iob),
-        COB(R.string.overview_show_cob, info.nightscout.core.ui.R.attr.cobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = info.nightscout.core.ui.R.string.cob),
-        DEV(R.string.overview_show_deviations, info.nightscout.core.ui.R.attr.bgiColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.deviation_shortname),
+    enum class CharTypeData(
+        @StringRes val nameId: Int,
+        @AttrRes val attrId: Int,
+        @AttrRes val attrTextId: Int,
+        val primary: Boolean,
+        val secondary: Boolean,
+        @StringRes val shortnameId: Int,
+        val enabledByDefault: Boolean = false
+    ) {
+
+        PRE(
+            R.string.overview_show_predictions,
+            info.nightscout.core.ui.R.attr.predictionColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = true,
+            secondary = false,
+            shortnameId = R.string.prediction_shortname,
+            enabledByDefault = true
+        ),
+        TREAT(
+            R.string.overview_show_treatments,
+            info.nightscout.core.ui.R.attr.cobColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = true,
+            secondary = false,
+            shortnameId = R.string.treatments_shortname,
+            enabledByDefault = true
+        ),
+        BAS(
+            R.string.overview_show_basals,
+            info.nightscout.core.ui.R.attr.basal,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = true,
+            secondary = false,
+            shortnameId = R.string.basal_shortname,
+            enabledByDefault = true
+        ),
+        ABS(
+            R.string.overview_show_abs_insulin,
+            info.nightscout.core.ui.R.attr.iobColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = false,
+            secondary = true,
+            shortnameId = R.string.abs_insulin_shortname
+        ),
+        IOB(
+            R.string.overview_show_iob,
+            info.nightscout.core.ui.R.attr.iobColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = false,
+            secondary = true,
+            shortnameId = info.nightscout.core.ui.R.string.iob
+        ),
+        COB(
+            R.string.overview_show_cob,
+            info.nightscout.core.ui.R.attr.cobColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = false,
+            secondary = true,
+            shortnameId = info.nightscout.core.ui.R.string.cob
+        ),
+        DEV(
+            R.string.overview_show_deviations,
+            info.nightscout.core.ui.R.attr.bgiColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = false,
+            secondary = true,
+            shortnameId = R.string.deviation_shortname
+        ),
         BGI(R.string.overview_show_bgi, info.nightscout.core.ui.R.attr.bgiColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.bgi_shortname),
-        SEN(R.string.overview_show_sensitivity, info.nightscout.core.ui.R.attr.ratioColor, info.nightscout.core.ui.R.attr.menuTextColorInverse, primary = false, secondary = true, shortnameId = R.string.sensitivity_shortname),
-        ACT(R.string.overview_show_activity, info.nightscout.core.ui.R.attr.activityColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.activity_shortname),
-        DEVSLOPE(R.string.overview_show_deviation_slope, info.nightscout.core.ui.R.attr.devSlopePosColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.devslope_shortname),
-        HR(R.string.overview_show_heartRate, info.nightscout.core.ui.R.attr.heartRateColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.heartRate_shortname),
+        SEN(
+            R.string.overview_show_sensitivity,
+            info.nightscout.core.ui.R.attr.ratioColor,
+            info.nightscout.core.ui.R.attr.menuTextColorInverse,
+            primary = false,
+            secondary = true,
+            shortnameId = R.string.sensitivity_shortname
+        ),
+        ACT(
+            R.string.overview_show_activity,
+            info.nightscout.core.ui.R.attr.activityColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = true,
+            secondary = false,
+            shortnameId = R.string.activity_shortname
+        ),
+        DEVSLOPE(
+            R.string.overview_show_deviation_slope,
+            info.nightscout.core.ui.R.attr.devSlopePosColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = false,
+            secondary = true,
+            shortnameId = R.string.devslope_shortname
+        ),
+        HR(
+            R.string.overview_show_heartRate,
+            info.nightscout.core.ui.R.attr.heartRateColor,
+            info.nightscout.core.ui.R.attr.menuTextColor,
+            primary = false,
+            secondary = true,
+            shortnameId = R.string.heartRate_shortname
+        ),
     }
 
     companion object {

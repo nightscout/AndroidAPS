@@ -1,5 +1,5 @@
 package info.nightscout.plugins.general.smsCommunicator.events
 
-import info.nightscout.rx.events.EventUpdateGui
+import app.aaps.interfaces.rx.events.EventUpdateGui
 
 internal class EventSmsCommunicatorUpdateGui : EventUpdateGui()

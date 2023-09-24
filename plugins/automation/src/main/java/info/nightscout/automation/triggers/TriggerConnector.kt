@@ -7,14 +7,14 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.resources.ResourceHelper
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseOperationDialog
 import info.nightscout.core.ui.elements.VerticalTextView
 import info.nightscout.core.utils.JsonHelper.safeGetString
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONArray
 import org.json.JSONObject
 

@@ -11,6 +11,12 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.interfaces.logging.AAPSLogger;
+import app.aaps.interfaces.logging.LTag;
+import app.aaps.interfaces.resources.ResourceHelper;
+import app.aaps.interfaces.rx.bus.RxBus;
+import app.aaps.interfaces.rx.events.EventRefreshOverview;
+import app.aaps.interfaces.sharedPreferences.SP;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -34,12 +40,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.Riley
 import info.nightscout.pump.common.utils.ByteUtil;
 import info.nightscout.pump.common.utils.StringUtil;
 import info.nightscout.pump.common.utils.ThreadUtil;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.EventRefreshOverview;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
 
 /**
  * Created by geoff on 5/26/16.

@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.plugins.sync.nsclient.extensions.toMainUnit
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.utils.DateUtil
 import java.util.LinkedList
 import java.util.UUID
 

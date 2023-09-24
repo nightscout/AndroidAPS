@@ -11,13 +11,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
+import app.aaps.interfaces.protection.PasswordCheck
+import app.aaps.interfaces.sharedPreferences.SP
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Reusable
 import info.nightscout.core.main.R
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.CryptoUtil
-import info.nightscout.interfaces.protection.PasswordCheck
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 @Reusable
@@ -141,7 +141,8 @@ class PasswordCheckImpl @Inject constructor(
                 }
 
             }
-            .setNegativeButton(context.getString(info.nightscout.core.ui.R.string.cancel)
+            .setNegativeButton(
+                context.getString(info.nightscout.core.ui.R.string.cancel)
             ) { dialog, _ ->
                 val msg = if (pinInput) info.nightscout.core.ui.R.string.pin_not_changed else info.nightscout.core.ui.R.string.password_not_changed
                 ToastUtils.infoToast(context, msg)
@@ -192,7 +193,8 @@ class PasswordCheckImpl @Inject constructor(
             .setCancelable(false)
             .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
             .setPositiveButton(context.getString(info.nightscout.core.ui.R.string.ok)) { _, _ -> validatePassword() }
-            .setNegativeButton(context.getString(info.nightscout.core.ui.R.string.cancel)
+            .setNegativeButton(
+                context.getString(info.nightscout.core.ui.R.string.cancel)
             ) { dialog, _ ->
                 cancel?.invoke()
                 dialog.cancel()

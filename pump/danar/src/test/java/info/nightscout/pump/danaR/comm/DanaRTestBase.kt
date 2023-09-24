@@ -1,5 +1,12 @@
 package info.nightscout.pump.danaR.comm
 
+import app.aaps.interfaces.configuration.ConfigBuilder
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.objects.Instantiator
+import app.aaps.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -7,13 +14,6 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import org.junit.jupiter.api.BeforeEach

@@ -2,7 +2,7 @@ package info.nightscout.plugins.skins
 
 import android.view.View.GONE
 import android.view.ViewGroup
-import info.nightscout.interfaces.Config
+import app.aaps.interfaces.configuration.Config
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.ActionsFragmentBinding
 import info.nightscout.plugins.databinding.OverviewFragmentBinding

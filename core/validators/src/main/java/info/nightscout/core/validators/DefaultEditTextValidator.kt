@@ -5,6 +5,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.widget.EditText
+import app.aaps.interfaces.profile.ProfileUtil
 import com.google.android.material.textfield.TextInputLayout
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.validators.validators.AlphaNumericValidator
@@ -34,11 +35,11 @@ import info.nightscout.core.validators.validators.PinStrengthValidator
 import info.nightscout.core.validators.validators.RegexpValidator
 import info.nightscout.core.validators.validators.Validator
 import info.nightscout.core.validators.validators.WebUrlValidator
-import info.nightscout.shared.interfaces.ProfileUtil
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
 class DefaultEditTextValidator : EditTextValidator {
+
     private var mValidator: MultiValidator? = null
     private var testErrorString: String? = null
     private var emptyAllowed = false
@@ -136,61 +137,79 @@ class DefaultEditTextValidator : EditTextValidator {
         setEmptyErrorString(emptyErrorStringDef)
         mValidator = AndValidator()
         val toAdd: Validator =
-        when (testType) {
-            EditTextValidator.TEST_NOCHECK             -> DummyValidator()
-            EditTextValidator.TEST_ALPHA               -> AlphaValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_standard_letters_are_allowed) else testErrorString)
-            EditTextValidator.TEST_ALPHANUMERIC        -> AlphaNumericValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_this_field_cannot_contain_special_character) else testErrorString)
-            EditTextValidator.TEST_NUMERIC             -> NumericValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_allowed) else testErrorString)
-            EditTextValidator.TEST_NUMERIC_RANGE       -> NumericRangeValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_range_allowed, minNumber.toString(), maxNumber.toString()) else testErrorString, minNumber, maxNumber)
-            EditTextValidator.TEST_FLOAT_NUMERIC_RANGE -> FloatNumericRangeValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_range_allowed, floatminNumber.toString(), floatmaxNumber.toString()) else testErrorString, floatminNumber, floatmaxNumber)
-            EditTextValidator.TEST_REGEXP              -> RegexpValidator(testErrorString, customRegexp ?: "")
-            EditTextValidator.TEST_CREDITCARD          -> CreditCardValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_creditcard_number_not_valid) else testErrorString)
-            EditTextValidator.TEST_EMAIL               -> EmailValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_email_address_not_valid) else testErrorString)
-            EditTextValidator.TEST_PHONE               -> PhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
-            EditTextValidator.TEST_MULTI_PHONE         -> MultiPhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
-            EditTextValidator.TEST_PIN_STRENGTH        -> PinStrengthValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_pin_not_valid) else testErrorString)
-            EditTextValidator.TEST_DOMAINNAME          -> DomainValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_domain_not_valid) else testErrorString)
-            EditTextValidator.TEST_IPADDRESS           -> IpAddressValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_ip_not_valid) else testErrorString)
-            EditTextValidator.TEST_WEBURL              -> WebUrlValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_url_not_valid) else testErrorString)
-            EditTextValidator.TEST_HTTPS_URL           -> HttpsUrlValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_url_not_valid) else testErrorString)
-            EditTextValidator.TEST_PERSONNAME          -> PersonNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personname) else testErrorString)
-            EditTextValidator.TEST_PERSONFULLNAME      -> PersonFullNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personfullname) else testErrorString)
-            EditTextValidator.TEST_MIN_LENGTH          -> MinDigitLengthValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_not_a_minimum_length) else testErrorString, minLength)
-            EditTextValidator.TEST_BG_RANGE            -> BgRangeValidator(
-                if (TextUtils.isEmpty(testErrorString)) context.getString(
-                    R.string.error_only_numeric_digits_range_allowed,
-                    profileUtil.fromMgdlToUnits(minMgdl.toDouble()).toString(), profileUtil.fromMgdlToUnits(maxMgdl.toDouble()).toString()
-                ) else testErrorString, minMgdl, maxMgdl, profileUtil
-            )
+            when (testType) {
+                EditTextValidator.TEST_NOCHECK             -> DummyValidator()
+                EditTextValidator.TEST_ALPHA               -> AlphaValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_standard_letters_are_allowed) else testErrorString)
+                EditTextValidator.TEST_ALPHANUMERIC        -> AlphaNumericValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_this_field_cannot_contain_special_character) else testErrorString)
+                EditTextValidator.TEST_NUMERIC             -> NumericValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_allowed) else testErrorString)
+                EditTextValidator.TEST_NUMERIC_RANGE       -> NumericRangeValidator(
+                    if (TextUtils.isEmpty(testErrorString)) context.getString(
+                        R.string.error_only_numeric_digits_range_allowed,
+                        minNumber.toString(),
+                        maxNumber.toString()
+                    ) else testErrorString, minNumber, maxNumber
+                )
 
-            EditTextValidator.TEST_CUSTOM              -> {
-                // must specify the fully qualified class name & an error message
-                if (classType == null)
-                    throw RuntimeException("Trying to create a custom validator but no classType has been specified.")
-                if (TextUtils.isEmpty(testErrorString))
-                    throw RuntimeException(String.format("Trying to create a custom validator (%s) but no error string specified.", classType))
+                EditTextValidator.TEST_FLOAT_NUMERIC_RANGE -> FloatNumericRangeValidator(
+                    if (TextUtils.isEmpty(testErrorString)) context.getString(
+                        R.string.error_only_numeric_digits_range_allowed,
+                        floatminNumber.toString(),
+                        floatmaxNumber.toString()
+                    ) else testErrorString, floatminNumber, floatmaxNumber
+                )
 
-                val customValidatorClass: Class<out Validator> = try {
-                    this.javaClass.classLoader?.loadClass(classType)?.let {
-                        if (!Validator::class.java.isAssignableFrom(it)) {
-                            throw RuntimeException(String.format("Custom validator (%s) does not extend %s", classType, Validator::class.java.name))
-                        }
-                        @Suppress("Unchecked_Cast")
-                        it as Class<out Validator>
-                    }!!
-                } catch (e: ClassNotFoundException) {
-                    throw RuntimeException(String.format("Unable to load class for custom validator (%s).", classType))
+                EditTextValidator.TEST_REGEXP              -> RegexpValidator(testErrorString, customRegexp ?: "")
+                EditTextValidator.TEST_CREDITCARD          -> CreditCardValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_creditcard_number_not_valid) else testErrorString)
+                EditTextValidator.TEST_EMAIL               -> EmailValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_email_address_not_valid) else testErrorString)
+                EditTextValidator.TEST_PHONE               -> PhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
+                EditTextValidator.TEST_MULTI_PHONE         -> MultiPhoneValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_phone_not_valid) else testErrorString)
+                EditTextValidator.TEST_PIN_STRENGTH        -> PinStrengthValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_pin_not_valid) else testErrorString)
+                EditTextValidator.TEST_DOMAINNAME          -> DomainValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_domain_not_valid) else testErrorString)
+                EditTextValidator.TEST_IPADDRESS           -> IpAddressValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_ip_not_valid) else testErrorString)
+                EditTextValidator.TEST_WEBURL              -> WebUrlValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_url_not_valid) else testErrorString)
+                EditTextValidator.TEST_HTTPS_URL           -> HttpsUrlValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_url_not_valid) else testErrorString)
+                EditTextValidator.TEST_PERSONNAME          -> PersonNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personname) else testErrorString)
+                EditTextValidator.TEST_PERSONFULLNAME      -> PersonFullNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personfullname) else testErrorString)
+                EditTextValidator.TEST_MIN_LENGTH          -> MinDigitLengthValidator(
+                    if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_not_a_minimum_length) else testErrorString,
+                    minLength
+                )
+
+                EditTextValidator.TEST_BG_RANGE            -> BgRangeValidator(
+                    if (TextUtils.isEmpty(testErrorString)) context.getString(
+                        R.string.error_only_numeric_digits_range_allowed,
+                        profileUtil.fromMgdlToUnits(minMgdl.toDouble()).toString(), profileUtil.fromMgdlToUnits(maxMgdl.toDouble()).toString()
+                    ) else testErrorString, minMgdl, maxMgdl, profileUtil
+                )
+
+                EditTextValidator.TEST_CUSTOM              -> {
+                    // must specify the fully qualified class name & an error message
+                    if (classType == null)
+                        throw RuntimeException("Trying to create a custom validator but no classType has been specified.")
+                    if (TextUtils.isEmpty(testErrorString))
+                        throw RuntimeException(String.format("Trying to create a custom validator (%s) but no error string specified.", classType))
+
+                    val customValidatorClass: Class<out Validator> = try {
+                        this.javaClass.classLoader?.loadClass(classType)?.let {
+                            if (!Validator::class.java.isAssignableFrom(it)) {
+                                throw RuntimeException(String.format("Custom validator (%s) does not extend %s", classType, Validator::class.java.name))
+                            }
+                            @Suppress("Unchecked_Cast")
+                            it as Class<out Validator>
+                        }!!
+                    } catch (e: ClassNotFoundException) {
+                        throw RuntimeException(String.format("Unable to load class for custom validator (%s).", classType))
+                    }
+                    try {
+                        customValidatorClass.getConstructor(String::class.java).newInstance(testErrorString)
+                    } catch (e: Exception) {
+                        throw RuntimeException(String.format("Unable to construct custom validator (%s) with argument: %s", classType, testErrorString))
+                    }
                 }
-                try {
-                    customValidatorClass.getConstructor(String::class.java).newInstance(testErrorString)
-                } catch (e: Exception) {
-                    throw RuntimeException(String.format("Unable to construct custom validator (%s) with argument: %s", classType, testErrorString))
-                }
+
+                EditTextValidator.TEST_DATE                -> DateValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_date_not_valid) else testErrorString, customFormat)
+                else                                       -> DummyValidator()
             }
-
-            EditTextValidator.TEST_DATE                -> DateValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_date_not_valid) else testErrorString, customFormat)
-            else                                       -> DummyValidator()
-        }
         val tmpValidator: MultiValidator
         if (!emptyAllowed) { // If the xml tells us that this is a required field, we will add the EmptyValidator.
             tmpValidator = AndValidator()

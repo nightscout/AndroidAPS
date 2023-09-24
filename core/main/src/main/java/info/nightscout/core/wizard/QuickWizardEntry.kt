@@ -1,6 +1,16 @@
 package info.nightscout.core.wizard
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.db.PersistenceLayer
+import app.aaps.interfaces.iob.GlucoseStatusProvider
+import app.aaps.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
@@ -8,16 +18,6 @@ import info.nightscout.core.utils.JsonHelper.safeGetInt
 import info.nightscout.core.utils.JsonHelper.safeGetString
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.ValueWrapper
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.db.PersistenceLayer
-import info.nightscout.interfaces.iob.GlucoseStatusProvider
-import info.nightscout.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.UUID

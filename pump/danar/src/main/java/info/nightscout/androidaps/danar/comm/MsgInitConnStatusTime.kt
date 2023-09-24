@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.danar.comm
 
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.rx.events.EventRebuildTabs
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.rx.events.EventRebuildTabs
-import info.nightscout.rx.logging.LTag
 
 class MsgInitConnStatusTime(
     injector: HasAndroidInjector

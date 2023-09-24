@@ -11,10 +11,10 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import app.aaps.interfaces.pump.BlePreCheck
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.extensions.safeEnable
-import info.nightscout.interfaces.pump.BlePreCheck
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 

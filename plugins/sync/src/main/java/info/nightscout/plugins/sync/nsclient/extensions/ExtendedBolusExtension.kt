@@ -1,12 +1,12 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.extensions.toTemporaryBasal
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
 fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil): JSONObject? =

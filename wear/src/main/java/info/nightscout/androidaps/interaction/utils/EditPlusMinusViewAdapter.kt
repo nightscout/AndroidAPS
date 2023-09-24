@@ -3,15 +3,15 @@ package info.nightscout.androidaps.interaction.utils
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActionEditplusminBinding
 import info.nightscout.androidaps.databinding.ActionEditplusminMultiBinding
-import info.nightscout.androidaps.databinding.ActionEditplusminQuickleftyMultiBinding
 import info.nightscout.androidaps.databinding.ActionEditplusminQuickleftyBinding
+import info.nightscout.androidaps.databinding.ActionEditplusminQuickleftyMultiBinding
 import info.nightscout.androidaps.databinding.ActionEditplusminQuickrightyBinding
 import info.nightscout.androidaps.databinding.ActionEditplusminQuickrightyMultiBinding
 import info.nightscout.androidaps.databinding.ActionEditplusminViktoriaBinding
-import info.nightscout.shared.sharedPreferences.SP
 
 /**
  * EditPlusMinusViewAdapter binds both ActionEditplusminBinding variants shared attributes to one common view adapter.
@@ -32,6 +32,7 @@ class EditPlusMinusViewAdapter(
             throw IllegalArgumentException("Require at least on Binding parameter")
         }
     }
+
     private val errorMessage = "Missing require View Binding parameter"
     val editText =
         eD?.editText ?: eDP?.editText ?: eQL?.editText ?: eQLP?.editText ?: eQR?.editText ?: eQRP?.editText ?: eV?.editText

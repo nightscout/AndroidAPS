@@ -1,5 +1,8 @@
 package info.nightscout.automation
 
+import app.aaps.interfaces.aps.Loop
+import app.aaps.interfaces.configuration.ConfigBuilder
+import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -9,9 +12,6 @@ import info.nightscout.automation.actions.ActionStopProcessing
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerConnectorTest
 import info.nightscout.automation.triggers.TriggerDummy
-import info.nightscout.interfaces.ConfigBuilder
-import info.nightscout.interfaces.aps.Loop
-import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

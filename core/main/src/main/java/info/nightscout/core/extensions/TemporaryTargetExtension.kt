@@ -1,11 +1,11 @@
 package info.nightscout.core.extensions
 
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.DecimalFormatter
 import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
 import java.util.concurrent.TimeUnit
 
 fun TemporaryTarget.lowValueToUnitsToString(units: GlucoseUnit, decimalFormatter: DecimalFormatter): String =

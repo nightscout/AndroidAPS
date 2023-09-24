@@ -8,10 +8,10 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
+import app.aaps.interfaces.utils.SafeParse.stringToFloat
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivitySteampunkBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
-import info.nightscout.shared.SafeParse.stringToFloat
 import org.joda.time.TimeOfDay
 
 /**
@@ -141,7 +141,7 @@ class SteampunkWatchface : BaseWatchFace() {
         gridColor = ContextCompat.getColor(this, R.color.grey_steampunk)
         basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
         basalCenterColor = ContextCompat.getColor(this, R.color.basal_dark)
-        pointSize = if (sp.getInt(R.string.key_chart_time_frame, 3) < 3) 2  else 1
+        pointSize = if (sp.getInt(R.string.key_chart_time_frame, 3) < 3) 2 else 1
         setupCharts()
 
         invalidate()

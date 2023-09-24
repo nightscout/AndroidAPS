@@ -4,8 +4,8 @@ import android.graphics.Typeface
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.automation.triggers.Trigger
-import info.nightscout.shared.interfaces.ResourceHelper
 
 class StaticLabel(private val rh: ResourceHelper) : Element {
 

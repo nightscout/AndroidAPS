@@ -1,12 +1,12 @@
 package info.nightscout.implementation.profile
 
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.implementation.utils.DecimalFormatterImpl
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

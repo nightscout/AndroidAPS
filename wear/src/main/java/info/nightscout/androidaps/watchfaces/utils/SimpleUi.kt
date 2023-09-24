@@ -11,12 +11,12 @@ import android.graphics.Typeface
 import android.os.BatteryManager
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import com.ustwo.clockwise.common.WatchMode
 import com.ustwo.clockwise.wearable.WatchFace
 import info.nightscout.androidaps.R
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 
 class SimpleUi @Inject constructor(

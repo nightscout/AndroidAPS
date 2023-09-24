@@ -9,6 +9,25 @@ import androidx.core.text.toSpanned
 import app.aaps.configuration.R
 import app.aaps.configuration.databinding.MaintenanceFragmentBinding
 import app.aaps.configuration.maintenance.activities.LogSettingActivity
+import app.aaps.interfaces.db.PersistenceLayer
+import app.aaps.interfaces.extensions.runOnUiThread
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.maintenance.ImportExportPrefs
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.interfaces.protection.ProtectionCheck.Protection.PREFERENCES
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventPreferenceChange
+import app.aaps.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.interfaces.ui.UiInteraction
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -16,24 +35,6 @@ import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.interfaces.db.PersistenceLayer
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.maintenance.ImportExportPrefs
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.OwnDatabasePlugin
-import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFERENCES
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventPreferenceChange
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -105,7 +106,7 @@ class MaintenanceFragment : DaggerFragment() {
                                 onError = { aapsLogger.error("Error clearing databases", it) },
                                 onComplete = {
                                     rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_units)))
-                                    info.nightscout.shared.extensions.runOnUiThread { activity.recreate() }
+                                    runOnUiThread { activity.recreate() }
                                 }
                             )
                     uel.log(Action.RESET_DATABASES, Sources.Maintenance)

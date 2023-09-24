@@ -9,14 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.T
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.utils.T
 import info.nightscout.ui.databinding.DialogErrorBinding
 import javax.inject.Inject
 

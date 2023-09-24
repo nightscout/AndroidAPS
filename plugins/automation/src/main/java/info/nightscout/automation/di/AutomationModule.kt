@@ -1,5 +1,6 @@
 package info.nightscout.automation.di
 
+import app.aaps.interfaces.automation.Automation
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -49,7 +50,6 @@ import info.nightscout.automation.triggers.TriggerTempTargetValue
 import info.nightscout.automation.triggers.TriggerTime
 import info.nightscout.automation.triggers.TriggerTimeRange
 import info.nightscout.automation.triggers.TriggerWifiSsid
-import info.nightscout.interfaces.automation.Automation
 
 @Module(
     includes = [

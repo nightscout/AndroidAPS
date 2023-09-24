@@ -6,22 +6,34 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.pump.BolusProgressData
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.Command
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventAppExit
+import app.aaps.interfaces.rx.events.EventInitializationChanged
+import app.aaps.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.BolusProgressData
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.Command
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
@@ -58,18 +70,6 @@ import info.nightscout.pump.diaconn.packet.TempBasalSettingPacket
 import info.nightscout.pump.diaconn.packet.TimeInquirePacket
 import info.nightscout.pump.diaconn.packet.TimeSettingPacket
 import info.nightscout.pump.diaconn.pumplog.PumpLogUtil
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventAppExit
-import info.nightscout.rx.events.EventInitializationChanged
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.events.EventProfileSwitchChanged
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
@@ -509,7 +509,7 @@ class DiaconnG8Service : DaggerService() {
         if (diaconnG8Pump.isReadyToBolus) {
             var progressPecent = 0
             while (!diaconnG8Pump.bolusDone) {
-                if(diaconnG8Pump.isPumpVersionGe3_53) {
+                if (diaconnG8Pump.isPumpVersionGe3_53) {
                     progressPecent = diaconnG8Pump.bolusingInjProgress
                     //bolusingEvent.status = String.format(rh.gs(R.string.waitingforestimatedbolusend), progressPecent)
                     bolusingEvent.status = "볼러스 주입중 ${diaconnG8Pump.bolusingInjAmount}U / ${diaconnG8Pump.bolusingSetAmount}U (${progressPecent}%)"
@@ -535,10 +535,10 @@ class DiaconnG8Service : DaggerService() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
                 sendMessage(InjectionSnackInquirePacket(injector), 2000) // last bolus
                 // 볼러스 결과 보고패킷에서 처리함.
-                if(!diaconnG8Pump.isPumpVersionGe3_53) {
+                if (!diaconnG8Pump.isPumpVersionGe3_53) {
                     bolusingEvent.percent = 100
                 }
-                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.interfaces.R.string.disconnecting)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.interfaces.R.string.disconnecting)))
             }
         })
         return !start.failed
@@ -564,8 +564,8 @@ class DiaconnG8Service : DaggerService() {
 
         // temp state check
         sendMessage(TempBasalInquirePacket(injector))
-        val result : DiaconnG8Packet
-        if(diaconnG8Pump.isPumpVersionGe3_53) {
+        val result: DiaconnG8Packet
+        if (diaconnG8Pump.isPumpVersionGe3_53) {
             val tbrPacket = TempBasalSettingPacket(injector, 3, ((durationInHours * 60) / 15).toInt(), ((absoluteRate * 100) + 1000).toInt())
             sendMessage(tbrPacket, 100)
             result = tbrPacket
@@ -606,13 +606,13 @@ class DiaconnG8Service : DaggerService() {
         }
 
         // temp state check
-        val result:DiaconnG8Packet
+        val result: DiaconnG8Packet
         sendMessage(TempBasalInquirePacket(injector))
-        if(diaconnG8Pump.isPumpVersionGe3_53) {
+        if (diaconnG8Pump.isPumpVersionGe3_53) {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
             val tbrSettingPacket = TempBasalSettingPacket(injector, 3, 2, ((absoluteRate * 100) + 1000).toInt())
             sendMessage(tbrSettingPacket, 100)
-            result=tbrSettingPacket
+            result = tbrSettingPacket
             // otp process
             if (!processConfirm(tbrSettingPacket.msgType)) return false
             sendMessage(TempBasalInquirePacket(injector))
@@ -630,7 +630,7 @@ class DiaconnG8Service : DaggerService() {
             val tbInjectRate = absoluteRate * 100 + 1000
             val msgTBR = TempBasalSettingPacket(injector, 1, 2, tbInjectRate.toInt())
             sendMessage(msgTBR, 100)
-            result=msgTBR
+            result = msgTBR
             // otp process
             if (!processConfirm(msgTBR.msgType)) return false
         }

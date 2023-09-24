@@ -1,8 +1,8 @@
 package info.nightscout.core.iob
 
-import info.nightscout.interfaces.iob.IobTotal
-import info.nightscout.interfaces.utils.Round
-import info.nightscout.shared.utils.DateUtil
+import app.aaps.interfaces.iob.IobTotal
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.Round
 import org.json.JSONException
 import org.json.JSONObject
 

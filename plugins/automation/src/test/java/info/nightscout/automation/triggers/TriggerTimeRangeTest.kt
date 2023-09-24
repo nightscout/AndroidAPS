@@ -1,8 +1,8 @@
 package info.nightscout.automation.triggers
 
+import app.aaps.interfaces.utils.MidnightTime
 import com.google.common.base.Optional
 import info.nightscout.automation.R
-import info.nightscout.interfaces.utils.MidnightTime
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

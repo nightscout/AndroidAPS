@@ -1,17 +1,17 @@
 package info.nightscout.smoothing
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.plugin.PluginDescription
+import app.aaps.interfaces.plugin.PluginType
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.smoothing.Smoothing
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.smoothing.Smoothing
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs

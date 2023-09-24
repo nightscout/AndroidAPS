@@ -7,13 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import app.aaps.interfaces.rx.events.EventWearToMobile
+import app.aaps.interfaces.rx.weardata.EventData.ActionFillPreCheck
+import app.aaps.interfaces.utils.SafeParse.stringToDouble
 import info.nightscout.androidaps.R
-import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText
 import info.nightscout.androidaps.nondeprecated.GridPagerAdapterNonDeprecated
-import info.nightscout.shared.SafeParse.stringToDouble
-import info.nightscout.rx.weardata.EventData.ActionFillPreCheck
 import java.text.DecimalFormat
 
 class FillActivity : ViewSelectorActivity() {

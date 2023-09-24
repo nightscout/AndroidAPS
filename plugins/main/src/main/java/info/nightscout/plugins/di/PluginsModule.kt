@@ -1,10 +1,10 @@
 package info.nightscout.plugins.di
 
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.smsCommunicator.SmsCommunicator
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.plugins.general.persistentNotification.DummyService
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.wear.WearFragment
@@ -32,7 +32,6 @@ abstract class PluginsModule {
     @ContributesAndroidInjector abstract fun contributesWearFragment(): WearFragment
     @ContributesAndroidInjector abstract fun contributesDummyService(): DummyService
     @ContributesAndroidInjector abstract fun autosensDataObjectInjector(): AutosensDataObject
-
 
     @Module
     interface Bindings {

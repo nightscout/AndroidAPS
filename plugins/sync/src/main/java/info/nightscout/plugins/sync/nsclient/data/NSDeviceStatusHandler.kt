@@ -1,14 +1,14 @@
 package info.nightscout.plugins.sync.nsclient.data
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.JsonHelper
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 import javax.inject.Singleton
 

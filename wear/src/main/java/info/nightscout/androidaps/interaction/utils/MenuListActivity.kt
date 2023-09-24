@@ -1,23 +1,23 @@
 package info.nightscout.androidaps.interaction.utils
 
-import dagger.android.DaggerActivity
-import javax.inject.Inject
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.androidaps.interaction.utils.MenuListActivity.MenuAdapter.ItemViewHolder
 import android.os.Bundle
-import info.nightscout.androidaps.R
-import androidx.wear.widget.WearableLinearLayoutManager
-import androidx.wear.widget.CurvedTextView
-import android.widget.TextView
-import android.widget.RelativeLayout
-import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import androidx.wear.widget.CurvedTextView
+import androidx.wear.widget.WearableLinearLayoutManager
 import androidx.wear.widget.WearableLinearLayoutManager.LayoutCallback
 import androidx.wear.widget.WearableRecyclerView
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
+import dagger.android.DaggerActivity
+import info.nightscout.androidaps.R
+import info.nightscout.androidaps.interaction.utils.MenuListActivity.MenuAdapter.ItemViewHolder
+import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
 

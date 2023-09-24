@@ -1,13 +1,13 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.SET_TIME_ZONE
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 class SetTimeZonePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
@@ -27,8 +27,7 @@ class SetTimeZonePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
         aapsLogger.debug(LTag.PUMPCOMM, "Requested offset: $calcOffset minutes")
         // Workaround for bug where it fails to set timezone > GMT + 12
         // if offset is > 12 hours, subtract 24 hours
-        if (calcOffset > T.hours(12).mins()) 
-        {
+        if (calcOffset > T.hours(12).mins()) {
             calcOffset -= T.hours(24).mins().toInt()
             aapsLogger.debug(LTag.PUMPCOMM, "Modifying requested offset to: $calcOffset minutes")
         }

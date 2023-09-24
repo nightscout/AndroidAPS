@@ -1,9 +1,9 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.constraints.R
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")

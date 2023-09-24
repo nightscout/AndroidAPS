@@ -8,6 +8,36 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.androidPermissions.AndroidPermission
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.db.PersistenceLayer
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.Command
+import app.aaps.interfaces.queue.Command.CommandType
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.queue.CustomCommand
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventDismissBolusProgressIfRunning
+import app.aaps.interfaces.rx.events.EventDismissNotification
+import app.aaps.interfaces.rx.events.EventMobileToWear
+import app.aaps.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.events.EventNewNotification
@@ -41,35 +71,6 @@ import info.nightscout.implementation.queue.commands.CommandStopPump
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.implementation.queue.commands.CommandUpdateTime
-import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.db.PersistenceLayer
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.Command
-import info.nightscout.interfaces.queue.Command.CommandType
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventMobileToWear
-import info.nightscout.rx.events.EventProfileSwitchChanged
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.LinkedList
@@ -323,7 +324,7 @@ class CommandQueueImplementation @Inject constructor(
                 // Notify Wear about upcoming bolus
                 rxBus.send(
                     EventMobileToWear(
-                        info.nightscout.rx.weardata.EventData.BolusProgress(
+                        EventData.BolusProgress(
                             percent = 0,
                             status = rh.gs(info.nightscout.core.ui.R.string.goingtodeliver, detailedBolusInfo.insulin)
                         )

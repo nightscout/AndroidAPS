@@ -1,19 +1,19 @@
 package info.nightscout.plugins.sync.xdrip
 
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.sync.DataSyncSelector
+import app.aaps.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.interfaces.sync.XDripBroadcast
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import dagger.Lazy
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.XDripBroadcast
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
 import info.nightscout.plugins.sync.R
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 

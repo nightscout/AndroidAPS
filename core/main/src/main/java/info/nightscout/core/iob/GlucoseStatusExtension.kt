@@ -1,8 +1,8 @@
 package info.nightscout.core.iob
 
-import info.nightscout.interfaces.iob.GlucoseStatus
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.Round
+import app.aaps.interfaces.iob.GlucoseStatus
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.Round
 
 fun GlucoseStatus.log(decimalFormatter: DecimalFormatter): String = "Glucose: " + decimalFormatter.to0Decimal(glucose) + " mg/dl " +
     "Noise: " + decimalFormatter.to0Decimal(noise) + " " +

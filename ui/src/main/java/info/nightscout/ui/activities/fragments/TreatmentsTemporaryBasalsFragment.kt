@@ -14,6 +14,20 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.iob.IobTotal
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventTempBasalChange
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.T
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.extensions.iobCalc
 import info.nightscout.core.extensions.toStringFull
@@ -32,20 +46,6 @@ import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateExtendedBolusTransaction
 import info.nightscout.database.impl.transactions.InvalidateTemporaryBasalTransaction
-import info.nightscout.interfaces.iob.IobTotal
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventTempBasalChange
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
 import info.nightscout.ui.activities.fragments.TreatmentsTemporaryBasalsFragment.RecyclerViewAdapter.TempBasalsViewHolder
 import info.nightscout.ui.databinding.TreatmentsTempbasalsFragmentBinding
@@ -201,7 +201,12 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
             holder.binding.superBolusFlag.visibility = (tempBasal.type == TemporaryBasal.Type.SUPERBOLUS).toVisibility()
-            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.activeColor)) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
+            if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(
+                rh.gac(
+                    context,
+                    info.nightscout.core.ui.R.attr.activeColor
+                )
+            ) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.cbRemove.visibility = (tempBasal.isValid && actionHelper.isRemoving).toVisibility()
             if (actionHelper.isRemoving) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->

@@ -2,14 +2,15 @@ package info.nightscout.core.utils.fabric
 
 import android.os.Bundle
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.sharedPreferences.SP
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
 import info.nightscout.core.utils.R
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
@@ -98,7 +99,7 @@ class FabricPrivacy @Inject constructor(
         return sp.getBoolean(R.string.key_enable_fabric, true)
     }
 
-    fun logWearException(wearException: info.nightscout.rx.weardata.EventData.WearException) {
+    fun logWearException(wearException: EventData.WearException) {
         aapsLogger.debug(LTag.WEAR, "logWearException")
         FirebaseCrashlytics.getInstance().apply {
             setCustomKey("wear_exception", true)

@@ -4,6 +4,12 @@ import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import app.aaps.interfaces.aps.AutosensData
+import app.aaps.interfaces.aps.AutosensDataStore
+import app.aaps.interfaces.iob.CobInfo
+import app.aaps.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.iob.IobTotal
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -15,12 +21,6 @@ import info.nightscout.core.graph.data.Scale
 import info.nightscout.core.graph.data.ScaledDataPoint
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.interfaces.aps.AutosensData
-import info.nightscout.interfaces.aps.AutosensDataStore
-import info.nightscout.interfaces.iob.CobInfo
-import info.nightscout.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.iob.IobTotal
 
 interface OverviewData {
 

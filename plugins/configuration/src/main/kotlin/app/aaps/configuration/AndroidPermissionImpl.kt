@@ -14,14 +14,14 @@ import android.provider.Settings
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import app.aaps.configuration.activities.DaggerAppCompatActivityWithResult
+import app.aaps.interfaces.androidPermissions.AndroidPermission
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 

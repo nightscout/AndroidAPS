@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
+import app.aaps.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.databinding.AutomationDialogChooseActionBinding
 import info.nightscout.automation.events.EventAutomationAddAction
 import info.nightscout.automation.events.EventAutomationUpdateGui
-import info.nightscout.rx.bus.RxBus
 import javax.inject.Inject
 import kotlin.reflect.full.primaryConstructor
 

@@ -1,5 +1,13 @@
 package info.nightscout.plugins.sync.nsclientV3
 
+import app.aaps.interfaces.insulin.Insulin
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.nsclient.StoreDataForDb
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.pump.VirtualPump
+import app.aaps.interfaces.source.NSClientSource
+import app.aaps.interfaces.sync.DataSyncSelector
+import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
@@ -21,14 +29,6 @@ import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.insulin.Insulin
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.nsclient.StoreDataForDb
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.VirtualPump
-import info.nightscout.interfaces.source.NSClientSource
-import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate

@@ -6,12 +6,12 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.plugins.constraints.R
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -75,7 +75,8 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
     open fun specialActionEnabled(): Boolean = true
 
     @Suppress("unused")
-    open fun specialAction(activity: FragmentActivity, input: String) {}
+    open fun specialAction(activity: FragmentActivity, input: String) {
+    }
 
     abstract inner class Task(var objective: Objective, @StringRes val task: Int) {
 
@@ -185,5 +186,5 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
         }
     }
 
-   inner class Learned internal constructor(@StringRes var learned: Int)
+    inner class Learned internal constructor(@StringRes var learned: Int)
 }

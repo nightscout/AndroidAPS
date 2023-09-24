@@ -2,11 +2,11 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.Translator
 import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.Translator
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
 
 class TherapyEventDataPoint(
     val data: TherapyEvent,

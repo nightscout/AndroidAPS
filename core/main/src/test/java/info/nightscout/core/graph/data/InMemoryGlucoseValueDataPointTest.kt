@@ -2,15 +2,14 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Color
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.interfaces.profile.DefaultValueHelper
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.resources.ResourceHelper
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
 import org.junit.jupiter.api.BeforeEach
-
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock

@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.utils.DateUtil
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun BolusCalculatorResult.toJson(isAdd: Boolean, dateUtil: DateUtil, profileUtil: ProfileUtil): JSONObject =

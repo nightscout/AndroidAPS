@@ -1,18 +1,18 @@
 package info.nightscout.plugins.constraints.objectives
 
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.constraints.Objectives
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.constraints.Objectives
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.constraints.R
 import info.nightscout.plugins.constraints.objectives.objectives.Objective
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

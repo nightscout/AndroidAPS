@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.interaction.utils
 
 import app.aaps.annotations.OpenForTesting
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.rx.weardata.EventData.Companion.deserialize
-import info.nightscout.rx.weardata.EventData.SingleBg
-import info.nightscout.rx.weardata.EventData.TreatmentData
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.rx.weardata.EventData.Companion.deserialize
+import app.aaps.interfaces.rx.weardata.EventData.SingleBg
+import app.aaps.interfaces.rx.weardata.EventData.TreatmentData
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import javax.inject.Inject
 import javax.inject.Singleton
 

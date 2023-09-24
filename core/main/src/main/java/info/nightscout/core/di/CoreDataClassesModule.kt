@@ -1,10 +1,10 @@
 package info.nightscout.core.di
 
+import app.aaps.interfaces.pump.PumpEnactResult
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.core.wizard.QuickWizardEntry
-import info.nightscout.interfaces.pump.PumpEnactResult
 
 @Module
 @Suppress("unused")

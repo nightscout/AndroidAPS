@@ -1,8 +1,8 @@
 package info.nightscout.plugins.sync.tidepool.utils
 
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 

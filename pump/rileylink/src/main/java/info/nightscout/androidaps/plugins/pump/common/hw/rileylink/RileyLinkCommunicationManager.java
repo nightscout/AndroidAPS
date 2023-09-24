@@ -4,6 +4,11 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import app.aaps.interfaces.logging.AAPSLogger;
+import app.aaps.interfaces.logging.LTag;
+import app.aaps.interfaces.plugin.ActivePlugin;
+import app.aaps.interfaces.sharedPreferences.SP;
+import app.aaps.interfaces.utils.Round;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -19,13 +24,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
-import info.nightscout.interfaces.plugin.ActivePlugin;
-import info.nightscout.interfaces.utils.Round;
 import info.nightscout.pump.common.defs.PumpDeviceState;
 import info.nightscout.pump.common.utils.ByteUtil;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.sharedPreferences.SP;
 
 /**
  * This is abstract class for RileyLink Communication, this one needs to be extended by specific "Pump" class.
@@ -275,8 +275,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         for (int k = 0; k < results.trials.size(); k++) {
             FrequencyTrial one = results.trials.get(k);
 
-            stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", "" + k, ""
-                    + one.frequencyMHz, "" + one.averageRSSI + ", RSSIs =" + one.rssiList));
+            stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", String.valueOf(k), String.valueOf(one.frequencyMHz), one.averageRSSI + ", RSSIs =" + one.rssiList));
         }
 
         aapsLogger.info(LTag.PUMPBTCOMM, stringBuilder.toString());

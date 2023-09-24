@@ -1,9 +1,9 @@
 package info.nightscout.plugins.di
 
+import app.aaps.interfaces.overview.OverviewMenus
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.interfaces.overview.OverviewMenus
 import info.nightscout.plugins.general.overview.OverviewFragment
 import info.nightscout.plugins.general.overview.OverviewMenusImpl
 import info.nightscout.plugins.general.overview.graphData.GraphData

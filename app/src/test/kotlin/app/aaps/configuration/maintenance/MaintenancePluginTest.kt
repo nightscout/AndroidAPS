@@ -1,15 +1,15 @@
 package app.aaps.configuration.maintenance
 
 import android.content.Context
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.logging.LoggerUtils
+import app.aaps.interfaces.maintenance.PrefFileListProvider
+import app.aaps.interfaces.nsclient.NSSettingsStatus
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.logging.LoggerUtils
-import info.nightscout.interfaces.maintenance.PrefFileListProvider
-import info.nightscout.interfaces.nsclient.NSSettingsStatus
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

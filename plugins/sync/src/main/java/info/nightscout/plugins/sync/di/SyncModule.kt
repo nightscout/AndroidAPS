@@ -2,16 +2,16 @@ package info.nightscout.plugins.sync.di
 
 import android.content.Context
 import androidx.work.WorkManager
+import app.aaps.interfaces.nsclient.NSSettingsStatus
+import app.aaps.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.interfaces.nsclient.StoreDataForDb
+import app.aaps.interfaces.sync.DataSyncSelectorXdrip
+import app.aaps.interfaces.sync.XDripBroadcast
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.interfaces.XDripBroadcast
-import info.nightscout.interfaces.nsclient.NSSettingsStatus
-import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
-import info.nightscout.interfaces.nsclient.StoreDataForDb
-import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatusImpl
@@ -73,6 +73,7 @@ abstract class SyncModule {
         @Provides
         fun providesWorkManager(context: Context) = WorkManager.getInstance(context)
     }
+
     @Module
     interface Binding {
 

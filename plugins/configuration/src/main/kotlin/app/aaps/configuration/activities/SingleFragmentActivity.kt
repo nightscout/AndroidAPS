@@ -7,10 +7,10 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.core.view.MenuProvider
 import app.aaps.configuration.R
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
-import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.ui.UiInteraction
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.interfaces.ui.UiInteraction
 import javax.inject.Inject
 
 class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {

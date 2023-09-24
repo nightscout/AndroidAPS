@@ -1,16 +1,16 @@
 package app.aaps.shared.tests
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.pump.Pump
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.pump.defs.ManufacturerType
+import app.aaps.interfaces.pump.defs.PumpDescription
+import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.interfaces.utils.TimeChangeType
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.utils.TimeChangeType
 import org.json.JSONObject
 
 @Suppress("MemberVisibilityCanBePrivate")

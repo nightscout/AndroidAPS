@@ -1,9 +1,9 @@
 package info.nightscout.implementation.logging
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.interfaces.logging.LoggerUtils
+import app.aaps.interfaces.maintenance.PrefFileListProvider
 import dagger.Reusable
-import info.nightscout.interfaces.logging.LoggerUtils
-import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import javax.inject.Inject
 
 /**

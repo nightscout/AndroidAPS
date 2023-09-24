@@ -1,7 +1,7 @@
 package info.nightscout.automation.actions
 
+import app.aaps.interfaces.queue.Callback
 import info.nightscout.automation.R
-import info.nightscout.interfaces.queue.Callback
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

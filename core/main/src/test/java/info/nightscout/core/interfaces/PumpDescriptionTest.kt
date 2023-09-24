@@ -1,10 +1,10 @@
 package info.nightscout.core.interfaces
 
+import app.aaps.interfaces.pump.defs.PumpCapability
+import app.aaps.interfaces.pump.defs.PumpDescription
+import app.aaps.interfaces.pump.defs.PumpTempBasalType
+import app.aaps.interfaces.pump.defs.PumpType
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.interfaces.pump.defs.PumpCapability
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpTempBasalType
-import info.nightscout.interfaces.pump.defs.PumpType
 import org.junit.jupiter.api.Test
 
 class PumpDescriptionTest {

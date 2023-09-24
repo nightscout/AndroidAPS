@@ -1,8 +1,8 @@
 package app.aaps.shared.impl.logging
 
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.sharedPreferences.SP
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

@@ -1,5 +1,21 @@
 package info.nightscout.implementation
 
+import app.aaps.interfaces.alerts.LocalAlertUtils
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventDismissNotification
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.TherapyEvent
@@ -8,22 +24,6 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.LocalAlertUtils
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -65,7 +65,10 @@ class LocalAlertUtilsImpl @Inject constructor(
             if (sp.getBoolean(info.nightscout.core.utils.R.string.key_enable_pump_unreachable_alert, true)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated)
                 sp.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold())
-                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(info.nightscout.core.ui.R.string.pump_unreachable), Notification.URGENT).also { it.soundId = info.nightscout.core.ui.R.raw.alarm }))
+                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(info.nightscout.core.ui.R.string.pump_unreachable), Notification.URGENT).also {
+                    it.soundId =
+                        info.nightscout.core.ui.R.raw.alarm
+                }))
                 uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(info.nightscout.core.ui.R.string.pump_unreachable), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
                 if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_errors, true))
                     disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(rh.gs(info.nightscout.core.ui.R.string.pump_unreachable))).subscribe()

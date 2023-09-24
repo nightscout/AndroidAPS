@@ -1,14 +1,13 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.shared.utils.DateUtil
 import java.util.UUID
 
-class BasalElement(tbr: TemporaryBasal, profile: Profile, dateUtil: DateUtil)
-    : BaseElement(tbr.timestamp, UUID.nameUUIDFromBytes(("AAPS-basal" + tbr.timestamp).toByteArray()).toString(), dateUtil) {
+class BasalElement(tbr: TemporaryBasal, profile: Profile, dateUtil: DateUtil) : BaseElement(tbr.timestamp, UUID.nameUUIDFromBytes(("AAPS-basal" + tbr.timestamp).toByteArray()).toString(), dateUtil) {
 
     internal var timestamp: Long = 0 // not exposed
 

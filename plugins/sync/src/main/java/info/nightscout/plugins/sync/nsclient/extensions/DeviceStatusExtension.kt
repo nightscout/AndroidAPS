@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.database.entities.DeviceStatus
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =
@@ -17,7 +17,7 @@ fun DeviceStatus.toJson(dateUtil: DateUtil): JSONObject =
             })
             if (uploaderBattery != 0) it.put("uploaderBattery", uploaderBattery)
             if (isCharging != null) it.put("isCharging", isCharging)
-            configuration?.let { configuration ->  it.put("configuration", JSONObject(configuration)) }
+            configuration?.let { configuration -> it.put("configuration", JSONObject(configuration)) }
         }
 
 /*

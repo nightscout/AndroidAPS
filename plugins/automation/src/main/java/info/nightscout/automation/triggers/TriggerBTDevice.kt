@@ -7,6 +7,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.LinearLayout
 import androidx.core.app.ActivityCompat
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.events.EventBTChange
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.AutomationPlugin
@@ -17,8 +19,6 @@ import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.JsonHelper
-import info.nightscout.rx.events.EventBTChange
-import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
 import javax.inject.Inject
 

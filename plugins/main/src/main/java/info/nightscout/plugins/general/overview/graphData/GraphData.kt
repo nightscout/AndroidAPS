@@ -3,6 +3,12 @@ package info.nightscout.plugins.general.overview.graphData
 import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.profile.DefaultValueHelper
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.utils.Round
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -14,12 +20,6 @@ import info.nightscout.core.graph.data.EffectiveProfileSwitchDataPoint
 import info.nightscout.core.graph.data.GlucoseValueDataPoint
 import info.nightscout.core.graph.data.TimeAsXAxisLabelFormatter
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.Round
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max

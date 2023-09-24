@@ -2,6 +2,12 @@ package app.aaps.shared.impl.di
 
 import android.content.Context
 import androidx.preference.PreferenceManager
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.L
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
 import app.aaps.shared.impl.logging.AAPSLoggerProduction
 import app.aaps.shared.impl.logging.LImpl
 import app.aaps.shared.impl.rx.AapsSchedulersImpl
@@ -10,12 +16,6 @@ import app.aaps.shared.impl.sharedPreferences.SPImplementation
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.Module
 import dagger.Provides
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.interfaces.L
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import javax.inject.Singleton
 
 @Module(

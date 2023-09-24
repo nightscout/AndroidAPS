@@ -1,7 +1,7 @@
 package info.nightscout.core.data
 
+import app.aaps.interfaces.iob.MealData
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.interfaces.iob.MealData
 import org.junit.jupiter.api.Test
 
 class MealDataTest {

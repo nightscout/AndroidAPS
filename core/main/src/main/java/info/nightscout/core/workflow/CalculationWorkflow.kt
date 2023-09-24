@@ -1,8 +1,8 @@
 package info.nightscout.core.workflow
 
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.rx.events.Event
 import info.nightscout.core.graph.OverviewData
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.rx.events.Event
 
 interface CalculationWorkflow {
     companion object {

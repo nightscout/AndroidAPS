@@ -9,37 +9,37 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.pump.Dana
+import app.aaps.interfaces.pump.Pump
+import app.aaps.interfaces.pump.WarnColors
+import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventExtendedBolusChange
+import app.aaps.interfaces.rx.events.EventInitializationChanged
+import app.aaps.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.interfaces.rx.events.EventQueueChanged
+import app.aaps.interfaces.rx.events.EventTempBasalChange
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.userEntry.UserEntryMapper.Action
+import app.aaps.interfaces.userEntry.UserEntryMapper.Sources
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.T
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.Dana
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.WarnColors
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.userEntry.UserEntryMapper.Action
-import info.nightscout.interfaces.userEntry.UserEntryMapper.Sources
 import info.nightscout.pump.dana.activities.DanaHistoryActivity
 import info.nightscout.pump.dana.activities.DanaUserOptionsActivity
 import info.nightscout.pump.dana.databinding.DanarFragmentBinding
 import info.nightscout.pump.dana.events.EventDanaRNewStatus
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventExtendedBolusChange
-import info.nightscout.rx.events.EventInitializationChanged
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.rx.events.EventTempBasalChange
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -207,7 +207,7 @@ class DanaFragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.interfaces.R.string.minago, agoMin) + ")"
+            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(app.aaps.interfaces.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastConnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
@@ -215,7 +215,11 @@ class DanaFragment : DaggerFragment() {
             val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastBolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, pump.lastBolusAmount)
+                binding.lastBolus.text =
+                    dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(
+                        info.nightscout.core.ui.R.string.format_insulin_units,
+                        pump.lastBolusAmount
+                    )
             else
                 binding.lastBolus.text = ""
         }

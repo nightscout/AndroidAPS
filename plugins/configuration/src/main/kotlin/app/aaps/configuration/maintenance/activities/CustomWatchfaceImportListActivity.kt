@@ -10,27 +10,27 @@ import androidx.recyclerview.widget.RecyclerView
 import app.aaps.configuration.R
 import app.aaps.configuration.databinding.CustomWatchfaceImportListActivityBinding
 import app.aaps.configuration.databinding.CustomWatchfaceImportListItemBinding
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.maintenance.PrefFileListProvider
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventMobileDataToWear
+import app.aaps.interfaces.rx.weardata.CUSTOM_VERSION
+import app.aaps.interfaces.rx.weardata.CwfData
+import app.aaps.interfaces.rx.weardata.CwfMetadataKey.CWF_AUTHOR
+import app.aaps.interfaces.rx.weardata.CwfMetadataKey.CWF_AUTHOR_VERSION
+import app.aaps.interfaces.rx.weardata.CwfMetadataKey.CWF_CREATED_AT
+import app.aaps.interfaces.rx.weardata.CwfMetadataKey.CWF_FILENAME
+import app.aaps.interfaces.rx.weardata.CwfMetadataKey.CWF_NAME
+import app.aaps.interfaces.rx.weardata.CwfMetadataKey.CWF_VERSION
+import app.aaps.interfaces.rx.weardata.CwfMetadataMap
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.rx.weardata.ResFileMap
+import app.aaps.interfaces.rx.weardata.ZipWatchfaceFormat
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.interfaces.maintenance.PrefFileListProvider
-import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventMobileDataToWear
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.weardata.CUSTOM_VERSION
-import info.nightscout.rx.weardata.CwfData
-import info.nightscout.rx.weardata.CwfMetadataKey.CWF_AUTHOR
-import info.nightscout.rx.weardata.CwfMetadataKey.CWF_AUTHOR_VERSION
-import info.nightscout.rx.weardata.CwfMetadataKey.CWF_CREATED_AT
-import info.nightscout.rx.weardata.CwfMetadataKey.CWF_FILENAME
-import info.nightscout.rx.weardata.CwfMetadataKey.CWF_NAME
-import info.nightscout.rx.weardata.CwfMetadataKey.CWF_VERSION
-import info.nightscout.rx.weardata.CwfMetadataMap
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.rx.weardata.ResFileMap
-import info.nightscout.rx.weardata.ZipWatchfaceFormat
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
@@ -93,7 +93,7 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
             val drawable = customWatchfaceFile.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
             with(holder.customWatchfaceImportListItemBinding) {
                 val fileName = metadata[CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENTION}" } ?: ""
-                filelistName.text = rh.gs(info.nightscout.interfaces.R.string.metadata_wear_import_filename, fileName)
+                filelistName.text = rh.gs(app.aaps.interfaces.R.string.metadata_wear_import_filename, fileName)
                 filelistName.tag = customWatchfaceFile
                 customWatchface.setImageDrawable(drawable)
                 customName.text = rh.gs(CWF_NAME.label, metadata[CWF_NAME])

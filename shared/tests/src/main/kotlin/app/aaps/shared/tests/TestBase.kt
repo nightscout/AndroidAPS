@@ -1,10 +1,10 @@
 package app.aaps.shared.tests
 
 import android.annotation.SuppressLint
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.tests.rx.TestAapsSchedulers
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatcher

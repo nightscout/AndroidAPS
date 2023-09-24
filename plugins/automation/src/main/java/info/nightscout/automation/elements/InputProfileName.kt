@@ -6,8 +6,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.shared.interfaces.ResourceHelper
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.resources.ResourceHelper
 
 class InputProfileName(private val rh: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "", private val addActive: Boolean = false) : Element {
 

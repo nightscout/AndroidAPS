@@ -5,22 +5,36 @@ import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.core.app.NotificationManagerCompat
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventWearDataToMobile
+import app.aaps.interfaces.rx.events.EventWearToMobile
+import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.interfaces.sharedPreferences.SP
 import com.google.android.gms.tasks.Tasks
-import com.google.android.gms.wearable.*
+import com.google.android.gms.wearable.CapabilityClient
+import com.google.android.gms.wearable.CapabilityInfo
+import com.google.android.gms.wearable.DataEvent
+import com.google.android.gms.wearable.DataEventBuffer
+import com.google.android.gms.wearable.DataMap
+import com.google.android.gms.wearable.MessageEvent
+import com.google.android.gms.wearable.Node
+import com.google.android.gms.wearable.PutDataMapRequest
+import com.google.android.gms.wearable.Wearable
+import com.google.android.gms.wearable.WearableListenerService
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventWearDataToMobile
-import info.nightscout.rx.events.EventWearToMobile
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.rx.weardata.EventData
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
@@ -44,8 +58,9 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
     private val disposable = CompositeDisposable()
 
-    private val rxPath get() = getString(info.nightscout.interfaces.R.string.path_rx_bridge)
-    private val rxDataPath get() = getString(info.nightscout.interfaces.R.string.path_rx_data_bridge)
+    private val rxPath get() = getString(app.aaps.interfaces.R.string.path_rx_bridge)
+    private val rxDataPath get() = getString(app.aaps.interfaces.R.string.path_rx_data_bridge)
+
     @ExperimentalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -96,12 +111,13 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         }
         super.onDataChanged(dataEvents)
     }
+
     @ExperimentalSerializationApi
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
 
         when (messageEvent.path) {
-            rxPath -> {
+            rxPath     -> {
                 aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${String(messageEvent.data)}")
                 val command = EventData.deserialize(String(messageEvent.data))
                 rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
@@ -109,6 +125,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
                 transcriptionNodeId = messageEvent.sourceNodeId
                 aapsLogger.debug(LTag.WEAR, "Updated node: $transcriptionNodeId")
             }
+
             rxDataPath -> {
                 aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${messageEvent.data}")
                 val command = EventData.deserializeByte(messageEvent.data)

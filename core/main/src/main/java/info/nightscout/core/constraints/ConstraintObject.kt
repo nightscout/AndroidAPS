@@ -1,8 +1,8 @@
 package info.nightscout.core.constraints
 
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import app.aaps.interfaces.constraints.Constraint
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 
 class ConstraintObject<T : Comparable<T>>(private var value: T, private val aapsLogger: AAPSLogger) : Constraint<T> {
 

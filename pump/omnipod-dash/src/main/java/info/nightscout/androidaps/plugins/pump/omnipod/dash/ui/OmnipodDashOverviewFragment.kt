@@ -8,6 +8,22 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.notifications.Notification
+import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventDismissNotification
+import app.aaps.interfaces.rx.events.EventPreferenceChange
+import app.aaps.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.interfaces.rx.events.EventQueueChanged
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
@@ -27,22 +43,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.Omn
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventPreferenceChange
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
@@ -271,8 +271,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             when {
                 connectionSuccessPercentage < 70 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
                     info.nightscout.core.ui.R.attr.warningColor
+
                 connectionSuccessPercentage < 90 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
                     info.nightscout.core.ui.R.attr.omniYellowColor
+
                 else                                                                                              ->
                     info.nightscout.core.ui.R.attr.defaultTextColor
             }
@@ -342,8 +344,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     when {
                         !podStateManager.sameTimeZone ->
                             info.nightscout.core.ui.R.attr.omniMagentaColor
+
                         timeDeviationTooBig           ->
                             info.nightscout.core.ui.R.attr.omniYellowColor
+
                         else                          ->
                             info.nightscout.core.ui.R.attr.defaultTextColor
                     }
@@ -362,8 +366,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     when {
                         expiresAt != null && ZonedDateTime.now().isAfter(expiresAt)               ->
                             info.nightscout.core.ui.R.attr.warningColor
+
                         expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) ->
                             info.nightscout.core.ui.R.attr.omniYellowColor
+
                         else                                                                      ->
                             info.nightscout.core.ui.R.attr.defaultTextColor
                     }
@@ -448,18 +454,25 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val id = when (alert) {
             AlertType.LOW_RESERVOIR       ->
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_low_reservoir
+
             AlertType.EXPIRATION          ->
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_expiration_advisory
+
             AlertType.EXPIRATION_IMMINENT ->
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_expiration
+
             AlertType.USER_SET_EXPIRATION ->
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_expiration_advisory
+
             AlertType.AUTO_OFF            ->
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_shutdown_imminent
+
             AlertType.SUSPEND_IN_PROGRESS ->
                 R.string.omnipod_common_alert_delivery_suspended
+
             AlertType.SUSPEND_ENDED       ->
                 R.string.omnipod_common_alert_delivery_suspended
+
             else                          ->
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_unknown_alert
         }
@@ -527,8 +540,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             when {
                 !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
                     info.nightscout.core.ui.R.attr.warningColor
+
                 podStateManager.activeCommand != null                                                               ->
                     info.nightscout.core.ui.R.attr.omniYellowColor
+
                 else                                                                                                ->
                     info.nightscout.core.ui.R.attr.defaultTextColor
             }
@@ -676,7 +691,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-            uiInteraction.runAlarm(message, title, if (withSound) info.nightscout.core.ui.R.raw.boluserror else 0)
+        uiInteraction.runAlarm(message, title, if (withSound) info.nightscout.core.ui.R.raw.boluserror else 0)
     }
 
     private fun displayOkDialog(title: String, message: String) {

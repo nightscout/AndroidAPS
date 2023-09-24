@@ -4,7 +4,7 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import info.nightscout.shared.interfaces.ResourceHelper
+import app.aaps.interfaces.resources.ResourceHelper
 
 class LabelWithElement(
     private val rh: ResourceHelper,

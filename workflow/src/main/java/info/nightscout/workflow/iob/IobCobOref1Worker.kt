@@ -4,6 +4,24 @@ import android.content.Context
 import android.os.SystemClock
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.interfaces.aps.AutosensData
+import app.aaps.interfaces.aps.SMBDefaults
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.iob.IobCobCalculator
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.objects.Instantiator
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profiling.Profiler
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.Event
+import app.aaps.interfaces.rx.events.EventAutosensCalculationFinished
+import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.extensions.target
@@ -12,24 +30,6 @@ import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.aps.AutosensData
-import info.nightscout.interfaces.aps.SMBDefaults
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profiling.Profiler
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.Event
-import info.nightscout.rx.events.EventAutosensCalculationFinished
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -148,32 +148,32 @@ class IobCobOref1Worker(
                         aapsLogger.debug(LTag.AUTOSENS) { ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + hourAgoData.toString() }
                         var past = 1
 //                        try {
-                            while (past < 12) {
-                                val ad = autosensDataTable.valueAt(initialIndex + past)
-                                aapsLogger.debug(LTag.AUTOSENS) { ">>>>> past=" + past + " ad=" + ad?.toString() }
-                                /*
-                                                                if (ad == null) {
-                                                                    aapsLogger.debug(LTag.AUTOSENS, {autosensDataTable.toString()})
-                                                                    aapsLogger.debug(LTag.AUTOSENS, {bucketedData.toString()})
-                                                                    //aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                                                                    val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.send_logfiles), Notification.LOW)
-                                                                    rxBus.send(EventNewNotification(notification))
-                                                                    sp.putBoolean("log_AUTOSENS", true)
-                                                                    break
-                                                                }
-                                */
-                                // let it here crash on NPE to get more data as i cannot reproduce this bug
-                                val deviationSlope = (ad.avgDeviation - avgDeviation) / (ad.time - bgTime) * 1000 * 60 * 5
-                                if (ad.avgDeviation > maxDeviation) {
-                                    slopeFromMaxDeviation = min(0.0, deviationSlope)
-                                    maxDeviation = ad.avgDeviation
-                                }
-                                if (ad.avgDeviation < minDeviation) {
-                                    slopeFromMinDeviation = max(0.0, deviationSlope)
-                                    minDeviation = ad.avgDeviation
-                                }
-                                past++
+                        while (past < 12) {
+                            val ad = autosensDataTable.valueAt(initialIndex + past)
+                            aapsLogger.debug(LTag.AUTOSENS) { ">>>>> past=" + past + " ad=" + ad?.toString() }
+                            /*
+                                                            if (ad == null) {
+                                                                aapsLogger.debug(LTag.AUTOSENS, {autosensDataTable.toString()})
+                                                                aapsLogger.debug(LTag.AUTOSENS, {bucketedData.toString()})
+                                                                //aapsLogger.debug(LTag.AUTOSENS, iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
+                                                                val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.send_logfiles), Notification.LOW)
+                                                                rxBus.send(EventNewNotification(notification))
+                                                                sp.putBoolean("log_AUTOSENS", true)
+                                                                break
+                                                            }
+                            */
+                            // let it here crash on NPE to get more data as i cannot reproduce this bug
+                            val deviationSlope = (ad.avgDeviation - avgDeviation) / (ad.time - bgTime) * 1000 * 60 * 5
+                            if (ad.avgDeviation > maxDeviation) {
+                                slopeFromMaxDeviation = min(0.0, deviationSlope)
+                                maxDeviation = ad.avgDeviation
                             }
+                            if (ad.avgDeviation < minDeviation) {
+                                slopeFromMinDeviation = max(0.0, deviationSlope)
+                                minDeviation = ad.avgDeviation
+                            }
+                            past++
+                        }
                         // } catch (e: Exception) {
                         //     aapsLogger.error("Unhandled exception", e)
                         //     fabricPrivacy.logException(e)

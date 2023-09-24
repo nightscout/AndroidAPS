@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.os.SystemClock
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException
@@ -33,10 +35,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.createByteArray
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.getByteArrayFromUnsignedShort
 import info.nightscout.core.utils.DateTimeUtil
-import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.common.defs.PumpDeviceState
 import info.nightscout.pump.common.utils.ByteUtil
-import info.nightscout.rx.logging.LTag
 import org.joda.time.LocalDateTime
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -387,9 +387,9 @@ class MedtronicCommunicationManager  // This empty constructor must be kept, oth
 
     override fun createPumpMessageContent(type: RLMessageType): ByteArray {
         return when (type) {
-            RLMessageType.PowerOn -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.RFPowerOn, byteArrayOf(2, 1, receiverDeviceAwakeForMinutes.toByte()))
+            RLMessageType.PowerOn        -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.RFPowerOn, byteArrayOf(2, 1, receiverDeviceAwakeForMinutes.toByte()))
             RLMessageType.ReadSimpleData -> medtronicUtil.buildCommandPayload(rileyLinkServiceData, MedtronicCommandType.PumpModel, null)
-            else -> ByteArray(0)
+            else                         -> ByteArray(0)
         }
     }
 

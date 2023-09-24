@@ -1,8 +1,8 @@
 package app.aaps.configuration.setupwizard
 
 import app.aaps.configuration.setupwizard.elements.SWItem
+import app.aaps.interfaces.resources.ResourceHelper
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class SWScreen(val injector: HasAndroidInjector, private var header: Int) {

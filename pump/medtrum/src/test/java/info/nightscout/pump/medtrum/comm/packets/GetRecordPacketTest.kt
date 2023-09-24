@@ -1,12 +1,12 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.utils.T
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
-import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.medtrum.MedtrumTestBase
-import info.nightscout.shared.utils.T
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

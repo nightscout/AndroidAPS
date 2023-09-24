@@ -7,6 +7,30 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.interfaces.automation.Automation
+import app.aaps.interfaces.configuration.Config
+import app.aaps.interfaces.configuration.Constants.INSULIN_PLUS1_DEFAULT
+import app.aaps.interfaces.configuration.Constants.INSULIN_PLUS2_DEFAULT
+import app.aaps.interfaces.configuration.Constants.INSULIN_PLUS3_DEFAULT
+import app.aaps.interfaces.constraints.ConstraintsChecker
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.db.PersistenceLayer
+import app.aaps.interfaces.extensions.toVisibility
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.logging.UserEntryLogger
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.profile.DefaultValueHelper
+import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.interfaces.utils.SafeParse
+import app.aaps.interfaces.utils.T
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.constraints.ConstraintObject
@@ -19,30 +43,6 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants.INSULIN_PLUS1_DEFAULT
-import info.nightscout.interfaces.Constants.INSULIN_PLUS2_DEFAULT
-import info.nightscout.interfaces.Constants.INSULIN_PLUS3_DEFAULT
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.automation.Automation
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.db.PersistenceLayer
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.protection.ProtectionCheck
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogInsulinBinding
 import info.nightscout.ui.extensions.toSignedString
@@ -139,35 +139,35 @@ class InsulinDialog : DialogFragmentWithDate() {
                 .okcancel.ok, textWatcher
         )
 
-        val plus05Text = sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus05Text = sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus05.text = plus05Text
         binding.plus05.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT)
+                    + sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus10Text = sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus10Text = sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus10.text = plus10Text
         binding.plus10.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT)
+                    + sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus20Text = sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus20Text = sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus20.text = plus20Text
         binding.plus20.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT)
+                    + sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()

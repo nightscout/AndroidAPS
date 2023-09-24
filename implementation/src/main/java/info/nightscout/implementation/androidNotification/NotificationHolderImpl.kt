@@ -8,10 +8,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
-import info.nightscout.interfaces.NotificationHolder
-import info.nightscout.interfaces.ui.IconsProvider
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.shared.interfaces.ResourceHelper
+import app.aaps.interfaces.notifications.NotificationHolder
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.ui.IconsProvider
+import app.aaps.interfaces.ui.UiInteraction
 import javax.inject.Inject
 import javax.inject.Singleton
 

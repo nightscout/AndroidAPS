@@ -1,11 +1,11 @@
 package info.nightscout.implementation.pump
 
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.implementation.R
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

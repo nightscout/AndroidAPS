@@ -1,12 +1,12 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
+import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.interfaces.utils.DateUtil
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 
 fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =

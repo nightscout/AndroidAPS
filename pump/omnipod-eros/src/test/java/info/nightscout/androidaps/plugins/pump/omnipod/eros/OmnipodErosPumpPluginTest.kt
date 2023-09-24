@@ -1,5 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros
 
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.pump.PumpSync
+import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.rx.TestAapsSchedulers
 import dagger.android.AndroidInjector
@@ -8,15 +16,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.implementation.utils.DecimalFormatterImpl
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.pump.common.defs.TempBasalPair
-import info.nightscout.shared.interfaces.ResourceHelper
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider
 import org.junit.jupiter.api.Assertions

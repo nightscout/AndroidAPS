@@ -2,6 +2,11 @@ package info.nightscout.pump.danars.activities
 
 import android.os.Bundle
 import android.util.Base64
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -11,11 +16,6 @@ import info.nightscout.core.validators.EditTextValidator
 import info.nightscout.pump.danars.DanaRSPlugin
 import info.nightscout.pump.danars.databinding.DanarsEnterPinActivityBinding
 import info.nightscout.pump.danars.services.BLEComm
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -54,7 +54,8 @@ class EnterPinActivity : TranslatedDaggerAppCompatActivity() {
                 val result = checkPairingCheckSum(
                     binding.rsV3Pin1.text.toString().hexStringToByteArray(),
                     binding.rsV3Pin2.text.toString().substring(0..5).hexStringToByteArray(),
-                    binding.rsV3Pin2.text.toString().substring(6..7).hexStringToByteArray())
+                    binding.rsV3Pin2.text.toString().substring(6..7).hexStringToByteArray()
+                )
                 if (result) {
                     bleComm.finishV3Pairing()
                     finish()

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.skins
 
-import info.nightscout.interfaces.Config
+import app.aaps.interfaces.configuration.Config
 import info.nightscout.plugins.R
 import javax.inject.Inject
 import javax.inject.Singleton

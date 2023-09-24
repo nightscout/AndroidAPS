@@ -1,8 +1,8 @@
 package info.nightscout.automation.triggers
 
+import app.aaps.interfaces.utils.T
 import com.google.common.base.Optional
 import info.nightscout.automation.R
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

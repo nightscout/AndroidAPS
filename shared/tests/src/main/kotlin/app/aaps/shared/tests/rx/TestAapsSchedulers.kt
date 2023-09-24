@@ -1,6 +1,6 @@
 package app.aaps.shared.tests.rx
 
-import info.nightscout.rx.AapsSchedulers
+import app.aaps.interfaces.rx.AapsSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
 

@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication
 
+import app.aaps.interfaces.profile.Profile
+import app.aaps.interfaces.profile.Profile.ProfileValue
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.Profile.ProfileValue
-import kotlin.test.assertFailsWith
 import org.joda.time.Duration
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import kotlin.test.assertFailsWith
 
 internal class AapsOmnipodErosManagerTest {
 

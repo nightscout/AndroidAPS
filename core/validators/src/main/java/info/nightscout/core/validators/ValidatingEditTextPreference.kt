@@ -4,9 +4,9 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.interfaces.ProfileUtil
 import javax.inject.Inject
 
 class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : EditTextPreference(ctx, attrs, defStyleAttr, defStyleRes) {

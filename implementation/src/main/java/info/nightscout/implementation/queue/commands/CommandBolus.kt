@@ -1,15 +1,15 @@
 package info.nightscout.implementation.queue.commands
 
+import app.aaps.interfaces.logging.LTag
+import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.interfaces.pump.BolusProgressData
+import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.interfaces.queue.Callback
+import app.aaps.interfaces.queue.Command
+import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.interfaces.rx.events.EventDismissBolusProgressIfRunning
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.BolusProgressData
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.Command
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
-import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class CommandBolus(

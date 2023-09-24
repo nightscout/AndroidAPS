@@ -19,6 +19,13 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import app.aaps.interfaces.queue.Callback;
+import app.aaps.interfaces.queue.CommandQueue;
+import app.aaps.interfaces.resources.ResourceHelper;
+import app.aaps.interfaces.rx.AapsSchedulers;
+import app.aaps.interfaces.rx.bus.RxBus;
+import app.aaps.interfaces.utils.DateUtil;
+import app.aaps.interfaces.utils.DecimalFormatter;
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;
@@ -30,13 +37,6 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
 import info.nightscout.core.utils.fabric.FabricPrivacy;
-import info.nightscout.interfaces.queue.Callback;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.utils.DecimalFormatter;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.utils.DateUtil;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {
@@ -221,7 +221,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 string = info.nightscout.core.ui.R.string.connecting;
                 break;
             case CONNECTED:
-                string = info.nightscout.interfaces.R.string.connected;
+                string = app.aaps.interfaces.R.string.connected;
                 break;
             case RECOVERING:
                 string = R.string.recovering;

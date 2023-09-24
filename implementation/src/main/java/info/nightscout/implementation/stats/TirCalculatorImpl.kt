@@ -8,15 +8,15 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
+import app.aaps.interfaces.configuration.Constants
+import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.stats.TIR
+import app.aaps.interfaces.stats.TirCalculator
+import app.aaps.interfaces.utils.DateUtil
+import app.aaps.interfaces.utils.MidnightTime
+import app.aaps.interfaces.utils.T
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.stats.TIR
-import info.nightscout.interfaces.stats.TirCalculator
-import info.nightscout.interfaces.utils.MidnightTime
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 

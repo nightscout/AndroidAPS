@@ -1,8 +1,8 @@
 package info.nightscout.plugins.aps.logger
 
+import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.interfaces.logging.LTag
 import info.nightscout.plugins.aps.utils.StaticInjector
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import org.mozilla.javascript.ScriptableObject
 import javax.inject.Inject
 

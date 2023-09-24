@@ -1,10 +1,10 @@
 package info.nightscout.core.extensions
 
+import app.aaps.interfaces.utils.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.shared.utils.T
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 
