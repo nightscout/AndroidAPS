@@ -257,6 +257,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         displayInfo.put("height", displayMetrics.heightPixels)
         displayInfo.put("width", displayMetrics.widthPixels)
         displayInfo.put("density", displayMetrics.density)
+        @Suppress("DEPRECATION")
         displayInfo.put("scaledDensity", displayMetrics.scaledDensity)
         displayInfo.put("xdpi", displayMetrics.xdpi)
         displayInfo.put("ydpi", displayMetrics.ydpi)

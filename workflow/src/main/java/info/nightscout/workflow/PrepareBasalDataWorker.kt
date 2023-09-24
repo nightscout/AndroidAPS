@@ -127,6 +127,7 @@ class PrepareBasalDataWorker(
         data.overviewData.basalLineGraphSeries = LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
             it.setCustomPaint(Paint().also { paint ->
                 paint.style = Paint.Style.STROKE
+                @Suppress("DEPRECATION")
                 paint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
                 paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
                 paint.color = rh.gac(ctx, info.nightscout.core.ui.R.attr.basal)
@@ -135,6 +136,7 @@ class PrepareBasalDataWorker(
         data.overviewData.absoluteBasalGraphSeries = LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
             it.setCustomPaint(Paint().also { absolutePaint ->
                 absolutePaint.style = Paint.Style.STROKE
+                @Suppress("DEPRECATION")
                 absolutePaint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
                 absolutePaint.color = rh.gac(ctx, info.nightscout.core.ui.R.attr.basal)
             })
