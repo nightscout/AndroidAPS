@@ -4,8 +4,8 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import javax.inject.Inject;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;

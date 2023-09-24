@@ -1,8 +1,8 @@
+@file:Suppress("DEPRECATION")
+
 package info.nightscout.androidaps.tile
 
-import android.os.Build
 import androidx.annotation.DrawableRes
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.wear.tiles.ActionBuilders
 import androidx.wear.tiles.ColorBuilders.argb
@@ -35,9 +35,9 @@ import androidx.wear.tiles.TileBuilders.Tile
 import androidx.wear.tiles.TileService
 import androidx.wear.tiles.TimelineBuilders.Timeline
 import androidx.wear.tiles.TimelineBuilders.TimelineEntry
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.rx.weardata.EventData
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.common.util.concurrent.ListenableFuture
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
@@ -122,7 +122,6 @@ abstract class TileBase : TileService() {
         return source.getValidFor()
     }
 
-    @RequiresApi(Build.VERSION_CODES.N)
     override fun onResourcesRequest(
         requestParams: ResourcesRequest
     ): ListenableFuture<Resources> = serviceScope.future {

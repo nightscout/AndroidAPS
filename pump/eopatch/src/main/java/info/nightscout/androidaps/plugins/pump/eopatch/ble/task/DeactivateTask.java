@@ -5,8 +5,8 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.LTag;
-import app.aaps.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.DeActivation;

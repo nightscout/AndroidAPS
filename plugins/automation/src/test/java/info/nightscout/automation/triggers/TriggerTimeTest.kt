@@ -1,6 +1,6 @@
 package info.nightscout.automation.triggers
 
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.utils.T
 import com.google.common.base.Optional
 import info.nightscout.automation.R
 import org.json.JSONObject

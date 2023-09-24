@@ -5,14 +5,14 @@ import android.content.Intent
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.core.app.NotificationManagerCompat
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventWearDataToMobile
-import app.aaps.interfaces.rx.events.EventWearToMobile
-import app.aaps.interfaces.rx.weardata.EventData
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
+import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.CapabilityInfo
@@ -58,8 +58,8 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
     private val disposable = CompositeDisposable()
 
-    private val rxPath get() = getString(app.aaps.interfaces.R.string.path_rx_bridge)
-    private val rxDataPath get() = getString(app.aaps.interfaces.R.string.path_rx_data_bridge)
+    private val rxPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_bridge)
+    private val rxDataPath get() = getString(app.aaps.core.interfaces.R.string.path_rx_data_bridge)
 
     @ExperimentalSerializationApi
     override fun onCreate() {

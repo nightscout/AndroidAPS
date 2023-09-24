@@ -3,11 +3,11 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import app.aaps.core.main.events.EventNewNotification
-import app.aaps.interfaces.notifications.NotificationUserMessage
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.notifications.NotificationUserMessage
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString

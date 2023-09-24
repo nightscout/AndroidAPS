@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.plugins.constraints.R

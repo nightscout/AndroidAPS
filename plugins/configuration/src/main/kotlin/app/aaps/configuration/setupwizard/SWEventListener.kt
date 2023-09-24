@@ -6,8 +6,8 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import app.aaps.configuration.setupwizard.elements.SWItem
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.events.EventStatus
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.events.EventStatus
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

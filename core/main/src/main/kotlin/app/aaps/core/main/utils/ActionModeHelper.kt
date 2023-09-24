@@ -9,7 +9,7 @@ import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.main.R
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 
 class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity?, val fragment: Fragment?) {
 

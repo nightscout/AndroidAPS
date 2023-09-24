@@ -1,7 +1,7 @@
 package info.nightscout.automation.actions
 
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.queue.Callback
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.queue.Callback
 import info.nightscout.automation.elements.InputCarePortalMenu
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputString

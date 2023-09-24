@@ -2,10 +2,10 @@ package info.nightscout.androidaps.tile.source
 
 import android.content.Context
 import android.content.res.Resources
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.weardata.EventData
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.tile.Action

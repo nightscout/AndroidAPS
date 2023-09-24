@@ -1,7 +1,7 @@
 package info.nightscout.source
 
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

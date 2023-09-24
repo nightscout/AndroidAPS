@@ -5,7 +5,7 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.Patch;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.NoActivatedPatchException;

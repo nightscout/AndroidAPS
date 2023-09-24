@@ -1,7 +1,7 @@
 package app.aaps.shared.impl.logging
 
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

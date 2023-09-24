@@ -1,6 +1,6 @@
 package info.nightscout.plugins.constraints.objectives
 
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

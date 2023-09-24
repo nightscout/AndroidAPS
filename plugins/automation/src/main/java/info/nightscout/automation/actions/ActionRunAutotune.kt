@@ -2,14 +2,14 @@ package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
-import app.aaps.interfaces.autotune.Autotune
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.autotune.Autotune
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputProfileName

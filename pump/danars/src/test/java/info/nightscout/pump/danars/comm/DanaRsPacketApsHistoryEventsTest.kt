@@ -1,8 +1,8 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.interfaces.pump.DetailedBolusInfoStorage
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase

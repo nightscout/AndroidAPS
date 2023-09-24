@@ -25,9 +25,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
-import app.aaps.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.sharedPreferences.SP;
 import dagger.android.DaggerService;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;

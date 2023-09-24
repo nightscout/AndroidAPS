@@ -12,9 +12,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.widget.TextViewCompat
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.SafeParse.stringToDouble
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.SafeParse.stringToDouble
 import info.nightscout.core.ui.elements.NumberPicker
 import info.nightscout.core.ui.elements.SpinnerHelper
 import org.json.JSONArray

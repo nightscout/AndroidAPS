@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.pump.common.defs.TempBasalPair
 import info.nightscout.pump.common.utils.ByteUtil

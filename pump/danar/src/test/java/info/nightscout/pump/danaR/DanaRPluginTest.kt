@@ -1,12 +1,12 @@
 package info.nightscout.pump.danaR
 
 import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.interfaces.constraints.ConstraintsChecker
-import app.aaps.interfaces.objects.Instantiator
-import app.aaps.interfaces.plugin.PluginType
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.objects.Instantiator
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector

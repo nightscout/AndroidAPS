@@ -1,7 +1,7 @@
 package info.nightscout.plugins.aps.loop.extensions
 
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.utils.Round
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.utils.Round
 import org.json.JSONObject
 
 fun PumpEnactResult.json(baseBasal: Double): JSONObject {

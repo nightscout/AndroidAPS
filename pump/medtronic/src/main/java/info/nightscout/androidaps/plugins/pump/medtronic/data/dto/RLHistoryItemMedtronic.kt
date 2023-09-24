@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType

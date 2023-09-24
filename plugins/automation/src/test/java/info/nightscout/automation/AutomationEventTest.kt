@@ -1,8 +1,8 @@
 package info.nightscout.automation
 
-import app.aaps.interfaces.aps.Loop
-import app.aaps.interfaces.configuration.ConfigBuilder
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector

@@ -6,7 +6,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 
 class InputDropdownMenu(private val rh: ResourceHelper) : Element {
 

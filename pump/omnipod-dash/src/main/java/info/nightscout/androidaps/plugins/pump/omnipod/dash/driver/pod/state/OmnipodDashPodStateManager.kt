@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
-import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress

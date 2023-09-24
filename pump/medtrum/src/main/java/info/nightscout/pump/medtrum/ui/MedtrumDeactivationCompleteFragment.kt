@@ -3,8 +3,8 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumDeactivationCompleteBinding
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel

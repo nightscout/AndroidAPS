@@ -9,7 +9,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.navigation.fragment.findNavController
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonWizardBaseFragmentBinding

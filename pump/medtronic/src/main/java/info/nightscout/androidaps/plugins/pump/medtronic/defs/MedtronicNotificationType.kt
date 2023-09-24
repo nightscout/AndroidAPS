@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.defs
 
-import app.aaps.interfaces.notifications.Notification
+import app.aaps.core.interfaces.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.medtronic.R
 
 /**

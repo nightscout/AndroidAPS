@@ -1,15 +1,15 @@
 package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
-import app.aaps.interfaces.aps.Loop
-import app.aaps.interfaces.configuration.ConfigBuilder
-import app.aaps.interfaces.logging.UserEntryLogger
-import app.aaps.interfaces.plugin.PluginBase
-import app.aaps.interfaces.plugin.PluginType
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.database.entities.UserEntry

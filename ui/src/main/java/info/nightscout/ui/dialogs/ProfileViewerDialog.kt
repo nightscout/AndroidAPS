@@ -11,18 +11,18 @@ import app.aaps.core.main.R
 import app.aaps.core.main.extensions.getCustomizedName
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.extensions.toVisibility
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.DecimalFormatter
-import app.aaps.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.core.utils.HtmlHelper
@@ -138,7 +138,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             profile?.let { profile1 ->
                 profile2?.let { profile2 ->
                     binding.units.text = profileFunction.getUnits().asText
-                    binding.dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), rh.gs(app.aaps.interfaces.R.string.shorthour)))
+                    binding.dia.text = HtmlHelper.fromHtml(formatColors("", profile1.dia, profile2.dia, DecimalFormat("0.00"), rh.gs(app.aaps.core.interfaces.R.string.shorthour)))
                     val profileNames = profileName!!.split("\n").toTypedArray()
                     binding.activeProfile.text = HtmlHelper.fromHtml(formatColors(profileNames[0], profileNames[1]))
                     binding.date.text = date

@@ -5,7 +5,7 @@ package info.nightscout.androidaps.complications
 import android.app.PendingIntent
 import android.support.wearable.complications.ComplicationData
 import android.support.wearable.complications.ComplicationText
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.interaction.utils.DisplayFormat
 import info.nightscout.androidaps.interaction.utils.SmallestDoubleString

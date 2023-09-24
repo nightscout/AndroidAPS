@@ -5,11 +5,11 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.widget.Toast
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.pump.common.R
 
 abstract class PumpBLESelectorAbstract(

@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros
 
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.pump.defs.PumpType
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.rx.TestAapsSchedulers
 import dagger.android.AndroidInjector

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.EventType

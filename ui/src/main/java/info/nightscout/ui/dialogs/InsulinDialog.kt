@@ -9,30 +9,30 @@ import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.utils.extensions.formatColor
-import app.aaps.interfaces.automation.Automation
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.configuration.Constants.INSULIN_PLUS1_DEFAULT
-import app.aaps.interfaces.configuration.Constants.INSULIN_PLUS2_DEFAULT
-import app.aaps.interfaces.configuration.Constants.INSULIN_PLUS3_DEFAULT
-import app.aaps.interfaces.constraints.ConstraintsChecker
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.db.PersistenceLayer
-import app.aaps.interfaces.extensions.toVisibility
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.logging.UserEntryLogger
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.protection.ProtectionCheck
-import app.aaps.interfaces.pump.DetailedBolusInfo
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.DecimalFormatter
-import app.aaps.interfaces.utils.SafeParse
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.Constants.INSULIN_PLUS1_DEFAULT
+import app.aaps.core.interfaces.configuration.Constants.INSULIN_PLUS2_DEFAULT
+import app.aaps.core.interfaces.configuration.Constants.INSULIN_PLUS3_DEFAULT
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.T
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -139,35 +139,35 @@ class InsulinDialog : DialogFragmentWithDate() {
                 .okcancel.ok, textWatcher
         )
 
-        val plus05Text = sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus05Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus05.text = plus05Text
         binding.plus05.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT)
+                    + sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus10Text = sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus10Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus10.text = plus10Text
         binding.plus10.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT)
+                    + sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus20Text = sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus20Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus20.text = plus20Text
         binding.plus20.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(app.aaps.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT)
+                    + sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()

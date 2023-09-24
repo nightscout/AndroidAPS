@@ -2,7 +2,7 @@ package info.nightscout.plugins.aps.loop
 
 import android.content.Context
 import android.content.Intent
-import app.aaps.interfaces.aps.Loop
+import app.aaps.core.interfaces.aps.Loop
 import dagger.android.DaggerBroadcastReceiver
 import javax.inject.Inject
 

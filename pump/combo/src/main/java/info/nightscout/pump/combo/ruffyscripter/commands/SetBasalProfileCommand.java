@@ -12,8 +12,8 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.pump.combo.ruffyscripter.PumpState;
 

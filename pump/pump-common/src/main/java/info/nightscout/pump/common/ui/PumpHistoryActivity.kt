@@ -11,9 +11,9 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.common.R
 import info.nightscout.pump.common.databinding.PumpHistoryActivityBinding

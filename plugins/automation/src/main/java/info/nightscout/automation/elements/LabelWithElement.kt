@@ -4,7 +4,7 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 
 class LabelWithElement(
     private val rh: ResourceHelper,

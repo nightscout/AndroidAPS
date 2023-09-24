@@ -9,8 +9,8 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.wear.widget.CurvedTextView
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.DaggerActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.nondeprecated.DotsPageIndicatorNonDeprecated

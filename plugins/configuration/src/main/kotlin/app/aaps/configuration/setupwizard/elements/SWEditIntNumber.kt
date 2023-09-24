@@ -6,7 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
-import app.aaps.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.elements.NumberPicker
 import java.text.DecimalFormat

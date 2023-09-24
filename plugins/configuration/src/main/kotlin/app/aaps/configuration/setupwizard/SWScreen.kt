@@ -1,7 +1,7 @@
 package app.aaps.configuration.setupwizard
 
 import app.aaps.configuration.setupwizard.elements.SWItem
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 

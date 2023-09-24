@@ -1,8 +1,8 @@
 package app.aaps.core.main.wizard
 
-import app.aaps.interfaces.aps.Loop
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

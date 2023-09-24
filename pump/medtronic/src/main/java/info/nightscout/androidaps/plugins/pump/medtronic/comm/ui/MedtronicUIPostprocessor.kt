@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO

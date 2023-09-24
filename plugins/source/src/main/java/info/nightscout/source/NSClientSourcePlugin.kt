@@ -1,13 +1,13 @@
 package info.nightscout.source
 
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.plugin.PluginBase
-import app.aaps.interfaces.plugin.PluginDescription
-import app.aaps.interfaces.plugin.PluginType
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.source.BgSource
-import app.aaps.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.interfaces.source.NSClientSource
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.GlucoseValue
 import javax.inject.Inject

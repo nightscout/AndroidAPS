@@ -4,7 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Binder
 import android.os.IBinder
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency

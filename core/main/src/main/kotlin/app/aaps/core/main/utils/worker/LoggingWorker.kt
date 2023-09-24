@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

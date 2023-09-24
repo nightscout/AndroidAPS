@@ -1,6 +1,6 @@
 package info.nightscout.automation.di
 
-import app.aaps.interfaces.automation.Automation
+import app.aaps.core.interfaces.automation.Automation
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

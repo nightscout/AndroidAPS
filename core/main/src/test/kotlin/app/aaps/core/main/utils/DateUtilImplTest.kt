@@ -1,8 +1,8 @@
 package app.aaps.core.main.utils
 
 import android.content.Context
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.T
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -88,7 +88,7 @@ class DateUtilImplTest : TestBase() {
     }
     */
     @Test fun timeFrameStringTest() {
-        `when`(rh.gs(app.aaps.interfaces.R.string.shorthour)).thenReturn("h")
+        `when`(rh.gs(app.aaps.core.interfaces.R.string.shorthour)).thenReturn("h")
         assertThat(DateUtilImpl(context).timeFrameString(T.hours(1).msecs() + T.mins(1).msecs(), rh)).isEqualTo("(1h 1')")
     }
 }

@@ -1,15 +1,15 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.pump.DetailedBolusInfo
-import app.aaps.interfaces.pump.DetailedBolusInfoStorage
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.pump.TemporaryBasalStorage
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.pump.dana.DanaPump

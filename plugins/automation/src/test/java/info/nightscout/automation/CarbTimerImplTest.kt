@@ -2,15 +2,15 @@ package info.nightscout.automation
 
 import android.content.Context
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.aps.Loop
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.constraints.ConstraintsChecker
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector

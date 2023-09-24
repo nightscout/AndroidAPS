@@ -1,6 +1,6 @@
 package app.aaps.configuration.maintenance.formats
 
-import app.aaps.interfaces.storage.Storage
+import app.aaps.core.interfaces.storage.Storage
 import java.io.File
 
 class SingleStringStorage(var contents: String) : Storage {

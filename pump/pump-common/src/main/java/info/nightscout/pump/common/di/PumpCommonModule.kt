@@ -1,8 +1,8 @@
 package info.nightscout.pump.common.di
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.Module
 import dagger.Provides
 import info.nightscout.pump.common.sync.PumpSyncStorage

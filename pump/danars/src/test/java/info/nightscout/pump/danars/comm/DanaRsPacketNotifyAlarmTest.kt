@@ -1,6 +1,6 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpSync
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase

@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import java.util.Collections;
 
-import app.aaps.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.SetupPodCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.VersionResponse;

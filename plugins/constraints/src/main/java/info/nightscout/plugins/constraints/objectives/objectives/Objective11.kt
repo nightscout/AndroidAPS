@@ -1,6 +1,6 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.plugins.constraints.R
 

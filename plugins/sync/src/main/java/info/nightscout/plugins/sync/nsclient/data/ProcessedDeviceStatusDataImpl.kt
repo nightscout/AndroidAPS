@@ -1,15 +1,15 @@
 package info.nightscout.plugins.sync.nsclient.data
 
 import android.text.Spanned
-import app.aaps.interfaces.aps.APSResult
-import app.aaps.interfaces.nsclient.NSSettingsStatus
-import app.aaps.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.interfaces.objects.Instantiator
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.Round
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.nsclient.NSSettingsStatus
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.objects.Instantiator
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.JsonHelper

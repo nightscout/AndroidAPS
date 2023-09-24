@@ -1,6 +1,6 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.utils.T
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock

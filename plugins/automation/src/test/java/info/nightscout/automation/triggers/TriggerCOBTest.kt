@@ -1,6 +1,6 @@
 package info.nightscout.automation.triggers
 
-import app.aaps.interfaces.iob.CobInfo
+import app.aaps.core.interfaces.iob.CobInfo
 import com.google.common.base.Optional
 import info.nightscout.automation.elements.Comparator
 import org.json.JSONObject

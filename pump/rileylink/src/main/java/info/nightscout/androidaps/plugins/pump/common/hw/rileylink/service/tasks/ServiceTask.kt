@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 
-import app.aaps.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import javax.inject.Inject

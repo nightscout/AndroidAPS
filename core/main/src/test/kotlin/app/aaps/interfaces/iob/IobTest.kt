@@ -1,4 +1,4 @@
-package app.aaps.interfaces.iob
+package app.aaps.core.interfaces.iob
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

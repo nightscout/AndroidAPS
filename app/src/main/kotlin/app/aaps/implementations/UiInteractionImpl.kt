@@ -12,10 +12,10 @@ import app.aaps.activities.MyPreferenceFragment
 import app.aaps.activities.PreferencesActivity
 import app.aaps.configuration.activities.SingleFragmentActivity
 import app.aaps.core.main.events.EventNewNotification
-import app.aaps.interfaces.notifications.Notification
-import app.aaps.interfaces.nsclient.NSAlarm
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.nsclient.NSAlarm
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.core.ui.toast.ToastUtils

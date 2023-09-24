@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivation.viewmodel.action
 
 import androidx.annotation.StringRes
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.notifications.Notification
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod

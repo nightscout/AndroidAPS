@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 
 interface IPreference<T : Any> {

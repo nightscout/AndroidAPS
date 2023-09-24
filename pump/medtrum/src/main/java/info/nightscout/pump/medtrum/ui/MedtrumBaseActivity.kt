@@ -7,7 +7,7 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.medtrum.di.MedtrumPluginQualifier
 import io.reactivex.rxjava3.disposables.CompositeDisposable

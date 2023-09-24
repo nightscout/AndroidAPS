@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.interaction.menus
 
 import android.os.Bundle
-import app.aaps.interfaces.rx.events.EventWearToMobile
-import app.aaps.interfaces.rx.weardata.EventData.ActionLoopStatus
-import app.aaps.interfaces.rx.weardata.EventData.ActionPumpStatus
-import app.aaps.interfaces.rx.weardata.EventData.ActionTddStatus
+import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.EventData.ActionLoopStatus
+import app.aaps.core.interfaces.rx.weardata.EventData.ActionPumpStatus
+import app.aaps.core.interfaces.rx.weardata.EventData.ActionTddStatus
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.utils.MenuListActivity
 

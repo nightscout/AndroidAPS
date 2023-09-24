@@ -1,10 +1,10 @@
 package info.nightscout.implementation.overview
 
-import app.aaps.interfaces.aps.AutosensDataStore
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.utils.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.ValueWrapper

@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.utils.DateUtil
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import info.nightscout.core.utils.JsonHelper

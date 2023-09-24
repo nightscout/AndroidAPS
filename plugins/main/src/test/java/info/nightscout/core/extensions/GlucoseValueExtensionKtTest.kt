@@ -3,8 +3,8 @@ package info.nightscout.core.extensions
 import app.aaps.core.main.R
 import app.aaps.core.main.extensions.directionToIcon
 import app.aaps.core.main.extensions.valueToUnits
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.GlucoseValue

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.testing.mockers
 
-import app.aaps.interfaces.rx.weardata.EventData
-import app.aaps.interfaces.rx.weardata.EventData.SingleBg
-import app.aaps.interfaces.utils.SafeParse.stringToDouble
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
+import app.aaps.core.interfaces.utils.SafeParse.stringToDouble
 import info.nightscout.androidaps.WearTestBase
 import info.nightscout.androidaps.data.RawDisplayData
 

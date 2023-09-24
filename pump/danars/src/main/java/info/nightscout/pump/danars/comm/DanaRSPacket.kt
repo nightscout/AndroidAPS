@@ -1,8 +1,8 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import org.joda.time.DateTime

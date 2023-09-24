@@ -2,14 +2,14 @@ package info.nightscout.plugins.constraints.bgQualityCheck
 
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.aps.AutosensDataStore
-import app.aaps.interfaces.bgQualityCheck.BgQualityCheck
-import app.aaps.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
+import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

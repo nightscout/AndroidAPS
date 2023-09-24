@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclient.acks
 
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.Event
 import io.socket.client.Ack
 import org.json.JSONObject
 

@@ -1,6 +1,6 @@
 package info.nightscout.pump.dana
 
-import app.aaps.interfaces.objects.Instantiator
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

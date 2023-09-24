@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmProcess

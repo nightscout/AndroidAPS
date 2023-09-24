@@ -7,8 +7,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.LinearLayout
 import androidx.core.app.ActivityCompat
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.events.EventBTChange
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.events.EventBTChange
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.AutomationPlugin

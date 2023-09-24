@@ -1,11 +1,11 @@
 package info.nightscout.automation.actions
 
 import android.content.Context
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector

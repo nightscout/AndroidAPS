@@ -1,10 +1,10 @@
 package info.nightscout.pump.diaconn.packet
 
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.pump.defs.PumpDescription
-import app.aaps.interfaces.pump.defs.PumpType
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R

@@ -1,6 +1,6 @@
 package info.nightscout.automation.actions
 
-import app.aaps.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.Callback
 import dagger.android.HasAndroidInjector
 
 // Used for instantiation of other actions only

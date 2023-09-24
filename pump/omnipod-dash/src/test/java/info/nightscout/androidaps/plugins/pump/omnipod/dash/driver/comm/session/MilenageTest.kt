@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
-import app.aaps.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.shared.tests.AAPSLoggerTest
 import app.aaps.shared.tests.TestBase
 import info.nightscout.core.utils.toHex

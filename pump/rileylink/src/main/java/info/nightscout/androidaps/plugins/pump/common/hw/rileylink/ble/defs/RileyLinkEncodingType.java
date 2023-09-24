@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs;
 import java.util.HashMap;
 import java.util.Map;
 
-import app.aaps.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.resources.ResourceHelper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 
 public enum RileyLinkEncodingType {

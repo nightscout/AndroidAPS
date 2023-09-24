@@ -1,7 +1,7 @@
 package info.nightscout.implementation.utils
 
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

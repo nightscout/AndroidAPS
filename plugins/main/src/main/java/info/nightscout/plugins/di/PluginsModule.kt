@@ -1,7 +1,7 @@
 package info.nightscout.plugins.di
 
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

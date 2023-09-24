@@ -3,8 +3,8 @@ package info.nightscout.ui.tabs
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import app.aaps.interfaces.plugin.PluginBase
-import app.aaps.interfaces.plugin.PluginFragment
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginFragment
 
 class TabPageAdapter(private val activity: AppCompatActivity) : FragmentStateAdapter(activity) {
 

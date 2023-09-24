@@ -1,8 +1,8 @@
 package info.nightscout.implementation.logging
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.interfaces.logging.LoggerUtils
-import app.aaps.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import dagger.Reusable
 import javax.inject.Inject
 

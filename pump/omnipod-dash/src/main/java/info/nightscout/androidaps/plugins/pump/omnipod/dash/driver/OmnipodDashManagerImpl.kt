@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver
 
 import android.os.SystemClock
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.utils.Round
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.utils.Round
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.OmnipodDashBleManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEvent
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.DeactivateCommand

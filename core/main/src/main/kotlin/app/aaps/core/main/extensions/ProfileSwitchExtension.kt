@@ -1,12 +1,12 @@
 package app.aaps.core.main.extensions
 
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.profile.PureProfile
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.DecimalFormatter
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.profile.PureProfile
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.ProfileSwitch
 import org.json.JSONObject

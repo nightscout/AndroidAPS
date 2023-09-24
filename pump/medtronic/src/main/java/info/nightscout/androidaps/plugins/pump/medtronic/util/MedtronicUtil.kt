@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.util
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventDismissNotification
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.ui.UiInteraction
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange

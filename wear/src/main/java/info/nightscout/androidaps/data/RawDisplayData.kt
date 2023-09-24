@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.data
 
-import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.rx.weardata.EventData
 import info.nightscout.androidaps.interaction.utils.Persistence
 
 /**

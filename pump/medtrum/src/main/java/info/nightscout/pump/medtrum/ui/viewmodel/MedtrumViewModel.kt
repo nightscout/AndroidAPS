@@ -3,10 +3,10 @@ package info.nightscout.pump.medtrum.ui.viewmodel
 import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R

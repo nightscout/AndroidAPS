@@ -1,8 +1,8 @@
 package info.nightscout.implementation.profile
 
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.GlucoseValue

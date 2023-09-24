@@ -1,8 +1,8 @@
 package info.nightscout.pump.common.utils
 
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.profile.Profile.ProfileValue
-import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
+import app.aaps.core.interfaces.pump.defs.PumpType
 import java.util.Locale
 
 object ProfileUtil {

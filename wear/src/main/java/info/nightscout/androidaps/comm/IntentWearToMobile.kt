@@ -3,7 +3,7 @@ package info.nightscout.androidaps.comm
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.rx.weardata.EventData
 
 class IntentWearToMobile(context: Context, command: String) : Intent(context, DataLayerListenerServiceWear::class.java) {
     init {

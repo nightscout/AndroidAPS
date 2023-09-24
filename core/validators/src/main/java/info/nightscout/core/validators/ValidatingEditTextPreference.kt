@@ -4,8 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 

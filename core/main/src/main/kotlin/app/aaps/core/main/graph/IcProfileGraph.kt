@@ -2,8 +2,8 @@ package app.aaps.core.main.graph
 
 import android.content.Context
 import android.util.AttributeSet
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.utils.Round
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.utils.Round
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint

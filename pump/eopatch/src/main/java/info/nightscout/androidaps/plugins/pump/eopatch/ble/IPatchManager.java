@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble;
 
 
-import app.aaps.interfaces.pump.DetailedBolusInfo;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle;

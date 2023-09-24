@@ -22,8 +22,8 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.comm.ManufacturerData
 import info.nightscout.pump.medtrum.comm.ReadDataPacket

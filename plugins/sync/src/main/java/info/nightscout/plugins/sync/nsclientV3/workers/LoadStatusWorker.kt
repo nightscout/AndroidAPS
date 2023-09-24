@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventNSClientNewLog
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import kotlinx.coroutines.Dispatchers

@@ -12,8 +12,8 @@ import androidx.wear.widget.CurvedTextView
 import androidx.wear.widget.WearableLinearLayoutManager
 import androidx.wear.widget.WearableLinearLayoutManager.LayoutCallback
 import androidx.wear.widget.WearableRecyclerView
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.DaggerActivity
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.utils.MenuListActivity.MenuAdapter.ItemViewHolder

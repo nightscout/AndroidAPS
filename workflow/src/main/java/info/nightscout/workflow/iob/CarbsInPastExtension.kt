@@ -1,13 +1,13 @@
 package info.nightscout.workflow.iob
 
-import app.aaps.interfaces.aps.AutosensData
-import app.aaps.interfaces.aps.SMBDefaults
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.aps.SMBDefaults
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.database.entities.Carbs
 
 fun fromCarbs(t: Carbs, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunction, aapsLogger: AAPSLogger, dateUtil: DateUtil, sp: SP): AutosensData.CarbsInPast {

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.database.entities.DeviceStatus
 import org.json.JSONObject
 

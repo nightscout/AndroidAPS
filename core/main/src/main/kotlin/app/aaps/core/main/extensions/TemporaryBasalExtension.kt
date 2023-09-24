@@ -1,12 +1,12 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.interfaces.aps.AutosensResult
-import app.aaps.interfaces.insulin.Insulin
-import app.aaps.interfaces.iob.IobTotal
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.DecimalFormatter
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.aps.AutosensResult
+import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.interfaces.end

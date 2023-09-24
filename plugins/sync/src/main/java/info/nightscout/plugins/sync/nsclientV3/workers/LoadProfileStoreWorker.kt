@@ -4,11 +4,11 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.interfaces.sync.NsClient
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
+import app.aaps.core.interfaces.sync.NsClient
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor

@@ -1,7 +1,7 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.database.entities.TherapyEvent
 
 fun TherapyEvent.isOlderThan(hours: Double, dateUtil: DateUtil): Boolean {

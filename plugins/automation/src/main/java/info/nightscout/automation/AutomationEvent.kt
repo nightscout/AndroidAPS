@@ -1,9 +1,9 @@
 package info.nightscout.automation
 
-import app.aaps.interfaces.automation.AutomationEvent
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.automation.AutomationEvent
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionDummy

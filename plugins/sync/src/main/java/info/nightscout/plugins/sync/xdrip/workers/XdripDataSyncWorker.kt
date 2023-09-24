@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventXdripNewLog
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventXdripNewLog
 import info.nightscout.plugins.sync.xdrip.DataSyncSelectorXdripImpl
 import info.nightscout.plugins.sync.xdrip.events.EventXdripUpdateGUI
 import kotlinx.coroutines.Dispatchers

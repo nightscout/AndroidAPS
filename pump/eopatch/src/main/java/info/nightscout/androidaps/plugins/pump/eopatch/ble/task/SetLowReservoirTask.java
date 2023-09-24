@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.SetLowReservoirLevelAndExpireAlert;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;

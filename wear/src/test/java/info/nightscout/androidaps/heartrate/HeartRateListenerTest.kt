@@ -3,8 +3,8 @@ package info.nightscout.androidaps.heartrate
 import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.weardata.EventData.ActionHeartRate
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.weardata.EventData.ActionHeartRate
 import app.aaps.shared.tests.AAPSLoggerTest
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Scheduler

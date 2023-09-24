@@ -15,10 +15,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.SystemClock
 import androidx.core.content.ContextCompat
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.GattAttributes

@@ -1,10 +1,10 @@
 package info.nightscout.ui.defaultProfile
 
 import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.profile.PureProfile
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.profile.PureProfile
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONObject

@@ -14,14 +14,14 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.wear.tiles.TileService
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventWearDataToMobile
-import app.aaps.interfaces.rx.events.EventWearToMobile
-import app.aaps.interfaces.rx.weardata.EventData
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
+import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.android.gms.wearable.WearableListenerService
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.WatchfaceConfigurationActivity
@@ -163,8 +163,8 @@ class DataHandlerWear @Inject constructor(
                 sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
                 sp.putInt(R.string.key_treatments_safety_max_carbs, it.maxCarbs)
                 sp.putDouble(R.string.key_treatments_safety_max_bolus, it.maxBolus)
-                sp.putDouble(app.aaps.interfaces.R.string.key_insulin_button_increment_1, it.insulinButtonIncrement1)
-                sp.putDouble(app.aaps.interfaces.R.string.key_insulin_button_increment_2, it.insulinButtonIncrement2)
+                sp.putDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1, it.insulinButtonIncrement1)
+                sp.putDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2, it.insulinButtonIncrement2)
                 sp.putInt(R.string.key_carbs_button_increment_1, it.carbsButtonIncrement1)
                 sp.putInt(R.string.key_carbs_button_increment_2, it.carbsButtonIncrement2)
             }

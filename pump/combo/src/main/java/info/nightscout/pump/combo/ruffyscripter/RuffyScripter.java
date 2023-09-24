@@ -28,8 +28,8 @@ import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.data.ComboErrorUtil;
 import info.nightscout.pump.combo.ruffyscripter.commands.BolusCommand;
 import info.nightscout.pump.combo.ruffyscripter.commands.CancelTbrCommand;

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.openhumans.delegates
 
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.reflect.KProperty

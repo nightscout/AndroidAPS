@@ -1,6 +1,6 @@
 package app.aaps.core.main.wizard
 
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONObject

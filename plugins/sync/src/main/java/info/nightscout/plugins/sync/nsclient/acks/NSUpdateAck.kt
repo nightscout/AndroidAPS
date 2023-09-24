@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclient.acks
 
 import androidx.work.OneTimeWorkRequest
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.Event
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.plugins.sync.nsclient.workers.NSClientUpdateRemoveAckWorker

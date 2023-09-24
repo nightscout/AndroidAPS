@@ -11,12 +11,12 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
-import app.aaps.interfaces.resources.ResourceHelper;
-import app.aaps.interfaces.rx.bus.RxBus;
-import app.aaps.interfaces.rx.events.EventRefreshOverview;
-import app.aaps.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
+import app.aaps.core.interfaces.sharedPreferences.SP;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;

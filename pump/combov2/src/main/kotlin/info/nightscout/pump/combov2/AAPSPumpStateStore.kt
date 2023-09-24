@@ -1,6 +1,6 @@
 package info.nightscout.pump.combov2
 
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.comboctl.base.BluetoothAddress
 import info.nightscout.comboctl.base.CurrentTbrState
 import info.nightscout.comboctl.base.InvariantPumpData

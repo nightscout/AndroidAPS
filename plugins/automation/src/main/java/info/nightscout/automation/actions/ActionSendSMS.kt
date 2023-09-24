@@ -1,9 +1,9 @@
 package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString

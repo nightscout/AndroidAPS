@@ -5,10 +5,10 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
-import app.aaps.interfaces.queue.CommandQueue;
-import app.aaps.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.FetchAlarmTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.InternalSuspendedTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ReadBolusFinishTimeTask;

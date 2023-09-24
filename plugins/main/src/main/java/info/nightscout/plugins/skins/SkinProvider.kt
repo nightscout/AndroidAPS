@@ -1,6 +1,6 @@
 package info.nightscout.plugins.skins
 
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.plugins.R
 import info.nightscout.plugins.di.SkinsModule
 import java.util.Collections

@@ -1,6 +1,6 @@
 package info.nightscout.implementation.pump
 
-import app.aaps.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

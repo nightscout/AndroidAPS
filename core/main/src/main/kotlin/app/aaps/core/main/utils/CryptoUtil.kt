@@ -1,6 +1,6 @@
 package app.aaps.core.main.utils
 
-import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.AAPSLogger
 import info.nightscout.core.utils.toHex
 import org.spongycastle.util.encoders.Base64
 import java.nio.ByteBuffer

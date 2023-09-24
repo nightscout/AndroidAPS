@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
 import android.os.SystemClock
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.pump.DetailedBolusInfo
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.Round
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.Round
 import com.google.gson.Gson
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R

@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import app.aaps.interfaces.rx.events.EventWearToMobile
-import app.aaps.interfaces.rx.weardata.EventData.ActionBolusPreCheck
-import app.aaps.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.EventData.ActionBolusPreCheck
+import app.aaps.core.interfaces.utils.SafeParse
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText
@@ -35,8 +35,8 @@ class BolusActivity : ViewSelectorActivity() {
         override fun getColumnCount(arg0: Int): Int = 2
         override fun getRowCount(): Int = 1
 
-        val increment1 = (sp.getDouble(app.aaps.interfaces.R.string.key_insulin_button_increment_1, 0.5) * 10).roundToInt() / 10.0
-        val increment2 = (sp.getDouble(app.aaps.interfaces.R.string.key_insulin_button_increment_2, 1.0) * 10).roundToInt() / 10.0
+        val increment1 = (sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1, 0.5) * 10).roundToInt() / 10.0
+        val increment2 = (sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2, 1.0) * 10).roundToInt() / 10.0
         val stepValues = listOf(0.1, increment1, increment2)
 
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {

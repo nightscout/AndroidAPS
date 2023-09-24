@@ -1,6 +1,6 @@
 package info.nightscout.pump.virtual.di
 
-import app.aaps.interfaces.pump.VirtualPump
+import app.aaps.core.interfaces.pump.VirtualPump
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

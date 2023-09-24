@@ -32,8 +32,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import app.aaps.interfaces.pump.BlePreCheck;
-import app.aaps.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.pump.BlePreCheck;
+import app.aaps.core.interfaces.pump.PumpSync;
 import dagger.android.support.DaggerAppCompatActivity;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;

@@ -1,6 +1,6 @@
 package info.nightscout.implementation.profile
 
-import app.aaps.interfaces.profile.PureProfile
+import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

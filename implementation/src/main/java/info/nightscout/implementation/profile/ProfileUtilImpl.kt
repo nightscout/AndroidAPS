@@ -1,9 +1,9 @@
 package info.nightscout.implementation.profile
 
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import javax.inject.Inject
 import javax.inject.Singleton
 

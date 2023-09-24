@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data
 
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.UiInteraction
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken

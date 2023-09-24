@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data
 
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 
 sealed class Record
 

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetLOT;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetModelName;

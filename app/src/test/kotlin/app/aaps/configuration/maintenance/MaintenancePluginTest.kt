@@ -1,12 +1,12 @@
 package app.aaps.configuration.maintenance
 
 import android.content.Context
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.logging.LoggerUtils
-import app.aaps.interfaces.maintenance.PrefFileListProvider
-import app.aaps.interfaces.nsclient.NSSettingsStatus
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.nsclient.NSSettingsStatus
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector

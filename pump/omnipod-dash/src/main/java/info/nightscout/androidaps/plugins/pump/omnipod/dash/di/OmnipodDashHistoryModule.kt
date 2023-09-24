@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.di
 
 import android.content.Context
-import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.AAPSLogger
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable

@@ -1,8 +1,8 @@
 package info.nightscout.plugins.general.autotune
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.interfaces.logging.LoggerUtils
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.LoggerUtils
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import org.json.JSONException

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetGlobalTime;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetTemperature;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetVoltageLevelB4Priming;

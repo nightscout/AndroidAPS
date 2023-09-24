@@ -1,5 +1,5 @@
 package info.nightscout.pump.diaconn.events
 
-import app.aaps.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.Event
 
 class EventDiaconnG8NewStatus : Event()

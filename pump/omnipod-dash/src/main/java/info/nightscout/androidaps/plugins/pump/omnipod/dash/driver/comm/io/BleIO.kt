@@ -5,8 +5,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationError
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.WriteConfirmationSuccess

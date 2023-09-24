@@ -3,8 +3,8 @@ package info.nightscout.androidaps.interaction
 import android.os.Bundle
 import android.view.ViewGroup
 import androidx.wear.tiles.TileService
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.tile.ActionsTileService
 import info.nightscout.androidaps.tile.TempTargetTileService

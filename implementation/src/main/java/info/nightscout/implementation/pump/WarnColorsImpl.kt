@@ -2,9 +2,9 @@ package info.nightscout.implementation.pump
 
 import android.widget.TextView
 import app.aaps.core.main.extensions.isOlderThan
-import app.aaps.interfaces.pump.WarnColors
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.pump.WarnColors
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.database.entities.TherapyEvent
 import javax.inject.Inject
 import javax.inject.Singleton

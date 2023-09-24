@@ -9,7 +9,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityDigitalstyleBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace

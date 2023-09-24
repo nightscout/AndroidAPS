@@ -1,6 +1,6 @@
 package info.nightscout.implementation.storage
 
-import app.aaps.interfaces.storage.Storage
+import app.aaps.core.interfaces.storage.Storage
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton

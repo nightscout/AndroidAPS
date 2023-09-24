@@ -1,6 +1,6 @@
 package info.nightscout.plugins.skins
 
-import app.aaps.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.Config
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
 import javax.inject.Inject

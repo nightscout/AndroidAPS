@@ -1,4 +1,4 @@
-package app.aaps.interfaces.utils
+package app.aaps.core.interfaces.utils
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

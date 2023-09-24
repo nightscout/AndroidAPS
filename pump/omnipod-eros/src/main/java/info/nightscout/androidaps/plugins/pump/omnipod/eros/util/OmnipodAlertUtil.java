@@ -5,7 +5,7 @@ import org.joda.time.Duration;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.sharedPreferences.SP;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
 

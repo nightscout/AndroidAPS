@@ -3,10 +3,10 @@ package info.nightscout.ui.activities
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.extensions.toVisibility
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.resources.ResourceHelper
 import com.google.android.material.tabs.TabLayout
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.ui.R

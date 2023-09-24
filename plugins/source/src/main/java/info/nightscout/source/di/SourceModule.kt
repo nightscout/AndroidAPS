@@ -1,8 +1,8 @@
 package info.nightscout.source.di
 
-import app.aaps.interfaces.source.DexcomBoyda
-import app.aaps.interfaces.source.NSClientSource
-import app.aaps.interfaces.source.XDripSource
+import app.aaps.core.interfaces.source.DexcomBoyda
+import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.source.XDripSource
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

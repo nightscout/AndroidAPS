@@ -2,10 +2,10 @@ package info.nightscout.plugins.general.smsCommunicator.otp
 
 import android.util.Base64
 import app.aaps.annotations.OpenForTesting
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import com.eatthepath.otp.HmacOneTimePasswordGenerator
 import com.google.common.io.BaseEncoding
 import info.nightscout.plugins.R

@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
 
 class InMemoryGlucoseValueDataPoint(
     val data: InMemoryGlucoseValue,

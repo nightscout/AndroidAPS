@@ -10,9 +10,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.extensions.toVisibility
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.AutomationEventObject
 import info.nightscout.automation.AutomationPlugin

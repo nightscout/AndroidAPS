@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclient.data
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.sdk.interfaces.RunningConfiguration

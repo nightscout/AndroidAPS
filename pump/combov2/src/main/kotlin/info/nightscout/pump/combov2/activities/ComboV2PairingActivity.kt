@@ -17,9 +17,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.PAIRING_PIN_SIZE
 import info.nightscout.comboctl.base.PairingPIN

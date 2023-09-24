@@ -2,11 +2,11 @@ package info.nightscout.ui.activities
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.SafeParse
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.InstanceId

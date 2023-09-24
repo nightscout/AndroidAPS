@@ -2,10 +2,10 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DecimalFormatter
 import info.nightscout.database.entities.Bolus
 
 class BolusDataPoint(

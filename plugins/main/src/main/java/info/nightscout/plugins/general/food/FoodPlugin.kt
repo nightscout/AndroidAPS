@@ -1,10 +1,10 @@
 package info.nightscout.plugins.general.food
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.plugin.PluginBase
-import app.aaps.interfaces.plugin.PluginDescription
-import app.aaps.interfaces.plugin.PluginType
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.resources.ResourceHelper
 import dagger.android.HasAndroidInjector
 import info.nightscout.plugins.R
 import javax.inject.Inject

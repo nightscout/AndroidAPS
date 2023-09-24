@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 
 import android.content.Context
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.pump.defs.ManufacturerType
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.Round
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.Round
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil

@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic
 
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector

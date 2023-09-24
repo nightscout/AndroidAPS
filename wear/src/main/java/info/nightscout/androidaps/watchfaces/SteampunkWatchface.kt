@@ -8,7 +8,7 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
-import app.aaps.interfaces.utils.SafeParse.stringToFloat
+import app.aaps.core.interfaces.utils.SafeParse.stringToFloat
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivitySteampunkBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.general.autotune.data
 
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject

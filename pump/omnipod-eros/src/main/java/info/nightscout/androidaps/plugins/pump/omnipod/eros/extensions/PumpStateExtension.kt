@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions
 
-import app.aaps.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.PumpSync
 import kotlin.math.ceil
 import kotlin.math.max
 

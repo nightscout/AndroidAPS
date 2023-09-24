@@ -11,8 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.ruffyscripter.BolusProgressReporter;
 import info.nightscout.pump.combo.ruffyscripter.PumpWarningCodes;
 import info.nightscout.pump.combo.ruffyscripter.RuffyScripter;

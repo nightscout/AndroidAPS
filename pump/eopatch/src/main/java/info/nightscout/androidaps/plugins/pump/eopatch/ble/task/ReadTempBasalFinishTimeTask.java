@@ -6,7 +6,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalFinishTimeGet;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TempBasalFinishTimeResponse;
 import io.reactivex.rxjava3.core.Single;

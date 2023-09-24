@@ -1,8 +1,8 @@
 package app.aaps.core.main.constraints
 
-import app.aaps.interfaces.constraints.Constraint
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 
 class ConstraintObject<T : Comparable<T>>(private var value: T, private val aapsLogger: AAPSLogger) : Constraint<T> {
 

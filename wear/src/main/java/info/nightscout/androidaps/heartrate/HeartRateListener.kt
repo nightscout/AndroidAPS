@@ -8,10 +8,10 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Build
 import androidx.annotation.VisibleForTesting
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.weardata.EventData
 import info.nightscout.androidaps.comm.IntentWearToMobile
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.concurrent.TimeUnit

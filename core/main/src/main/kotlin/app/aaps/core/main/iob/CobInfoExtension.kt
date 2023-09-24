@@ -1,8 +1,8 @@
 package app.aaps.core.main.iob
 
-import app.aaps.interfaces.iob.CobInfo
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.iob.CobInfo
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DecimalFormatter
 
 fun CobInfo.generateCOBString(decimalFormatter: DecimalFormatter): String {
     var cobStringResult = "--g"

@@ -20,9 +20,9 @@ import androidx.lifecycle.MutableLiveData;
 
 import javax.inject.Inject;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
-import app.aaps.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.resources.ResourceHelper;
 import dagger.android.DaggerService;
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ConfirmAlertMessage;

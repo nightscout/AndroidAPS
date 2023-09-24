@@ -1,7 +1,7 @@
 package info.nightscout.interfaces.pump
 
 import app.aaps.core.main.pump.toHtml
-import app.aaps.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

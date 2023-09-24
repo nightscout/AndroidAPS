@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.viewmodel.action
 
 import androidx.annotation.StringRes
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress

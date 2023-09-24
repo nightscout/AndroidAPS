@@ -14,9 +14,9 @@ import app.aaps.configuration.databinding.MaintenanceImportListItemBinding
 import app.aaps.configuration.maintenance.PrefsFileContract
 import app.aaps.configuration.maintenance.PrefsMetadataKeyImpl
 import app.aaps.configuration.maintenance.data.PrefsStatusImpl
-import app.aaps.interfaces.maintenance.PrefFileListProvider
-import app.aaps.interfaces.maintenance.PrefsFile
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.PrefsFile
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import javax.inject.Inject
 

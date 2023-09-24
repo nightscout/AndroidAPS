@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager
 
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FirmwareVersion
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus

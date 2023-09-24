@@ -1,6 +1,6 @@
 package info.nightscout.automation.actions
 
-import app.aaps.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction

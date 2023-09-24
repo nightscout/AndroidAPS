@@ -1,6 +1,6 @@
 package info.nightscout.pump.diaconn.packet
 
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import javax.inject.Inject

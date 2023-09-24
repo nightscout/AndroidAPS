@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interaction.utils
 
 import android.content.Context
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.interaction.utils.Pair.Companion.create

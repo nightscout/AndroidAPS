@@ -7,32 +7,32 @@ import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.constraints.ConstraintsChecker
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.notifications.Notification
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.pump.BolusProgressData
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.queue.Command
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventAppExit
-import app.aaps.interfaces.rx.events.EventInitializationChanged
-import app.aaps.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.interfaces.rx.events.EventProfileSwitchChanged
-import app.aaps.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.BolusProgressData
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.Command
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppExit
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.dana.DanaPump
@@ -347,7 +347,7 @@ class DanaRSService : DaggerService() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
                 sendMessage(DanaRSPacketBolusGetStepBolusInformation(injector)) // last bolus
                 bolusingEvent.percent = 100
-                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.interfaces.R.string.disconnecting)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)))
             }
         })
         return !start.failed

@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog

@@ -10,10 +10,10 @@ import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.graph.data.ScaledDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers

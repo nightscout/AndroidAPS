@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.BusyException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotSendCommandException

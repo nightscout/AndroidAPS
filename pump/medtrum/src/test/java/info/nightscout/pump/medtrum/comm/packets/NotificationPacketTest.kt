@@ -1,6 +1,6 @@
 package info.nightscout.pump.medtrum.comm.packets
 
-import app.aaps.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase

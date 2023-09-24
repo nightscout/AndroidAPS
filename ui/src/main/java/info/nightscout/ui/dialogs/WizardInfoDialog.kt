@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import com.google.gson.Gson
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.database.entities.BolusCalculatorResult

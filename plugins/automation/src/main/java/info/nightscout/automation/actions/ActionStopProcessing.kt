@@ -1,8 +1,8 @@
 package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R

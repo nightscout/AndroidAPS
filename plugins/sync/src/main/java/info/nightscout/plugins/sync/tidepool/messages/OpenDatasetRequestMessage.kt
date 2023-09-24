@@ -1,8 +1,8 @@
 package info.nightscout.plugins.sync.tidepool.messages
 
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import com.google.gson.annotations.Expose
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
 import java.util.TimeZone

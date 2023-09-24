@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys

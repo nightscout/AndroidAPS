@@ -1,7 +1,7 @@
 package info.nightscout.implementation.resources
 
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.ui.IconsProvider
 import info.nightscout.implementation.R
 import javax.inject.Inject
 import javax.inject.Singleton

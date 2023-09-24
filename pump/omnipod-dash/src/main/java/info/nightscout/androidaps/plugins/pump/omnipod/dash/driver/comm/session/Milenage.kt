@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
 import android.annotation.SuppressLint
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.core.utils.toHex
 import org.spongycastle.util.encoders.Hex
 import java.security.SecureRandom

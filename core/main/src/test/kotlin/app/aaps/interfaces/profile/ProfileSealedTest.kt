@@ -1,14 +1,14 @@
-package app.aaps.interfaces.profile
+package app.aaps.core.interfaces.profile
 
 import android.content.Context
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.HardLimitsMock
 import app.aaps.shared.tests.TestBase

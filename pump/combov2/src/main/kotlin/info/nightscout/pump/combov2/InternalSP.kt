@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.SafeParse
 
 // This is a copy of the AAPS SPImplementation. We keep this to be able
 // to set up a custom internal SP store for the Combo pump state.

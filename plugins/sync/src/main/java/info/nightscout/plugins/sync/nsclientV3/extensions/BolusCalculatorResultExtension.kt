@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.utils.T
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import info.nightscout.database.entities.BolusCalculatorResult

@@ -9,9 +9,9 @@ import android.content.Intent
 import android.support.wearable.complications.ProviderUpdateRequester
 import android.widget.Toast
 import androidx.annotation.StringRes
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.ECarbActivity

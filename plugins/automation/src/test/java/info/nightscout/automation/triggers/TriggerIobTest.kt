@@ -1,6 +1,6 @@
 package info.nightscout.automation.triggers
 
-import app.aaps.interfaces.iob.IobTotal
+import app.aaps.core.interfaces.iob.IobTotal
 import com.google.common.base.Optional
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator

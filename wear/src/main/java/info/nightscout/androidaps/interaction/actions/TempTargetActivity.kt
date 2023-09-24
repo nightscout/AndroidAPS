@@ -7,9 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import app.aaps.interfaces.rx.events.EventWearToMobile
-import app.aaps.interfaces.rx.weardata.EventData.ActionTempTargetPreCheck
-import app.aaps.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.EventData.ActionTempTargetPreCheck
+import app.aaps.core.interfaces.utils.SafeParse
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText

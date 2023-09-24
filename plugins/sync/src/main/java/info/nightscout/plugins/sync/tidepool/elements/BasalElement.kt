@@ -1,8 +1,8 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
 import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
 import info.nightscout.database.entities.TemporaryBasal
 import java.util.UUID

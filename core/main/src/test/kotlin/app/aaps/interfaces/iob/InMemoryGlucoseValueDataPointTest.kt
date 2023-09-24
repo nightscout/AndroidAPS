@@ -1,12 +1,12 @@
-package app.aaps.interfaces.iob
+package app.aaps.core.interfaces.iob
 
 import android.content.Context
 import android.graphics.Color
 import app.aaps.core.main.graph.data.InMemoryGlucoseValueDataPoint
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.GlucoseValue
 import org.junit.jupiter.api.BeforeEach

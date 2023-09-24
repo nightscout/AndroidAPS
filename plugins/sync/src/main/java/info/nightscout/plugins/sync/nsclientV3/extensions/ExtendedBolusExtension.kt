@@ -1,8 +1,8 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.main.extensions.toTemporaryBasal
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.EventType

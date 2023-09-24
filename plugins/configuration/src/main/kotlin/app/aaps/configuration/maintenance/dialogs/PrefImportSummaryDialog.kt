@@ -19,7 +19,7 @@ import androidx.appcompat.view.ContextThemeWrapper
 import app.aaps.configuration.R
 import app.aaps.configuration.maintenance.data.Prefs
 import app.aaps.configuration.maintenance.data.PrefsStatusImpl
-import app.aaps.interfaces.extensions.runOnUiThread
+import app.aaps.core.interfaces.extensions.runOnUiThread
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import info.nightscout.core.ui.toast.ToastUtils
 import java.util.LinkedList
@@ -57,8 +57,8 @@ object PrefImportSummaryDialog {
             (rowLayout.findViewById<View>(R.id.summary_icon) as ImageView).setImageResource(metaKey.icon)
             (rowLayout.findViewById<View>(R.id.status_icon) as ImageView).setImageResource(metaEntry.status.icon)
 
-            if (metaEntry.status == PrefsStatusImpl.WARN) label.setTextColor(themedCtx.getColor(app.aaps.interfaces.R.color.metadataTextWarning))
-            else if (metaEntry.status == PrefsStatusImpl.ERROR) label.setTextColor(themedCtx.getColor(app.aaps.interfaces.R.color.metadataTextError))
+            if (metaEntry.status == PrefsStatusImpl.WARN) label.setTextColor(themedCtx.getColor(app.aaps.core.interfaces.R.color.metadataTextWarning))
+            else if (metaEntry.status == PrefsStatusImpl.ERROR) label.setTextColor(themedCtx.getColor(app.aaps.core.interfaces.R.color.metadataTextError))
 
             if (metaEntry.info != null) {
                 details.add("<b>${context.getString(metaKey.label)}</b>: ${metaEntry.value}<br/><i style=\"color:silver\">${metaEntry.info}</i>")

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.tidepool.messages
 
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.plugins.sync.R
 import okhttp3.Credentials
 

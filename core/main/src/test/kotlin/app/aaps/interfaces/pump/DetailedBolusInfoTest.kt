@@ -1,4 +1,4 @@
-package app.aaps.interfaces.pump
+package app.aaps.core.interfaces.pump
 
 import android.content.Context
 import app.aaps.shared.tests.TestBase

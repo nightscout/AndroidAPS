@@ -1,8 +1,8 @@
 package app.aaps.core.main.workflow
 
 import app.aaps.core.main.graph.OverviewData
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.rx.events.Event
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.rx.events.Event
 
 interface CalculationWorkflow {
     companion object {

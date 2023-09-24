@@ -1,12 +1,12 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
-import app.aaps.interfaces.aps.Loop
-import app.aaps.interfaces.db.PersistenceLayer
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.plugin.PluginBase
-import app.aaps.interfaces.pump.VirtualPump
-import app.aaps.interfaces.sync.Tidepool
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.pump.VirtualPump
+import app.aaps.core.interfaces.sync.Tidepool
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.ValueWrapper
 import info.nightscout.plugins.constraints.R

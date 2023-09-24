@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BasalStatus

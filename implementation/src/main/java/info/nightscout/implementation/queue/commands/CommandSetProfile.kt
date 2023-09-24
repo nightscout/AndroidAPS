@@ -1,15 +1,15 @@
 package info.nightscout.implementation.queue.commands
 
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.queue.Command
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.Command
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository

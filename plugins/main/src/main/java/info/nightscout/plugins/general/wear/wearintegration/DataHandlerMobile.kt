@@ -13,43 +13,43 @@ import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
-import app.aaps.interfaces.aps.Loop
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.constraints.ConstraintsChecker
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.db.PersistenceLayer
-import app.aaps.interfaces.iob.GlucoseStatusProvider
-import app.aaps.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.logging.UserEntryLogger
-import app.aaps.interfaces.maintenance.ImportExportPrefs
-import app.aaps.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.plugin.PluginBase
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.pump.DetailedBolusInfo
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.receivers.ReceiverStatusStore
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventMobileToWear
-import app.aaps.interfaces.rx.events.EventWearUpdateGui
-import app.aaps.interfaces.rx.weardata.EventData
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.DecimalFormatter
-import app.aaps.interfaces.utils.HardLimits
-import app.aaps.interfaces.utils.T
-import app.aaps.interfaces.utils.TrendCalculator
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
+import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.TrendCalculator
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.database.ValueWrapper
@@ -750,8 +750,8 @@ class DataHandlerMobile @Inject constructor(
                     bolusPercentage = sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100),
                     maxCarbs = sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 48),
                     maxBolus = sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0),
-                    insulinButtonIncrement1 = sp.getDouble(app.aaps.interfaces.R.string.key_insulin_button_increment_1, Constants.INSULIN_PLUS1_DEFAULT),
-                    insulinButtonIncrement2 = sp.getDouble(app.aaps.interfaces.R.string.key_insulin_button_increment_2, Constants.INSULIN_PLUS2_DEFAULT),
+                    insulinButtonIncrement1 = sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1, Constants.INSULIN_PLUS1_DEFAULT),
+                    insulinButtonIncrement2 = sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2, Constants.INSULIN_PLUS2_DEFAULT),
                     carbsButtonIncrement1 = sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_1, Constants.CARBS_FAV1_DEFAULT),
                     carbsButtonIncrement2 = sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_2, Constants.CARBS_FAV2_DEFAULT)
                 )

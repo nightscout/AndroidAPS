@@ -1,16 +1,16 @@
 package info.nightscout.sensitivity
 
-import app.aaps.interfaces.aps.AutosensDataStore
-import app.aaps.interfaces.aps.AutosensResult
-import app.aaps.interfaces.aps.Sensitivity
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.plugin.PluginBase
-import app.aaps.interfaces.plugin.PluginDescription
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.Round
-import app.aaps.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.AutosensResult
+import app.aaps.core.interfaces.aps.Sensitivity
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
 import kotlin.math.max
 import kotlin.math.min

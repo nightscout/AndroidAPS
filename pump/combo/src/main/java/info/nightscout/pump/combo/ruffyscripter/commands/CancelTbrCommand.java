@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.pump.combo.ruffyscripter.PumpWarningCodes;
 

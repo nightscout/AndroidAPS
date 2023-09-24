@@ -6,9 +6,9 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.stats.DexcomTIR
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.stats.DexcomTIR
 import info.nightscout.implementation.R
 import java.util.Calendar
 import kotlin.math.pow

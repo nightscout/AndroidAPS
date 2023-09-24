@@ -1,15 +1,15 @@
 package info.nightscout.plugins.general.smsCommunicator
 
 import android.os.SystemClock
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.smsCommunicator.Sms
-import app.aaps.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword

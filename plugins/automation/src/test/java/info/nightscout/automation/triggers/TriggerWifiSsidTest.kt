@@ -1,6 +1,6 @@
 package info.nightscout.automation.triggers
 
-import app.aaps.interfaces.rx.events.EventNetworkChange
+import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import com.google.common.base.Optional
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator

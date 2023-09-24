@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
 
 open class BaseElement(timestamp: Long, uuid: String, dateUtil: DateUtil) {

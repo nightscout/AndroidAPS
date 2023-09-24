@@ -9,9 +9,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentManager
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.MidnightTime
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import info.nightscout.automation.R

@@ -3,8 +3,8 @@ package info.nightscout.androidaps.interaction.utils
 import android.content.Context
 import android.os.PowerManager
 import app.aaps.annotations.OpenForTesting
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import kotlinx.datetime.Clock
 import javax.inject.Inject
 import javax.inject.Singleton

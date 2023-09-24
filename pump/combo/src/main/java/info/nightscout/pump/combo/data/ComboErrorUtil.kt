@@ -1,6 +1,6 @@
 package info.nightscout.pump.combo.data
 
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.pump.combo.R
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -5,11 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.smsCommunicator.Sms
-import app.aaps.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.smsCommunicator.Sms
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.plugins.databinding.SmscommunicatorFragmentBinding

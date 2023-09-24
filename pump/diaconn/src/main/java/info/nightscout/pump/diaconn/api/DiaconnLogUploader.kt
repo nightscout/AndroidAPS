@@ -1,7 +1,7 @@
 package info.nightscout.pump.diaconn.api
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication
 
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.profile.Profile.ProfileValue
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import org.joda.time.Duration
 import org.junit.jupiter.api.Assertions

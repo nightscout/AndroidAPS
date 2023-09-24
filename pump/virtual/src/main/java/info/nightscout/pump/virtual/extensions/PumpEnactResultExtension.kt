@@ -1,7 +1,7 @@
 package info.nightscout.pump.virtual.extensions
 
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.resources.ResourceHelper
 
 fun PumpEnactResult.toText(rh: ResourceHelper): String {
     var ret = rh.gs(info.nightscout.core.ui.R.string.success) + ": " + success

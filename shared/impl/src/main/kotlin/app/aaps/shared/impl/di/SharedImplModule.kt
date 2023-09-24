@@ -2,12 +2,12 @@ package app.aaps.shared.impl.di
 
 import android.content.Context
 import androidx.preference.PreferenceManager
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.L
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.impl.logging.AAPSLoggerProduction
 import app.aaps.shared.impl.logging.LImpl
 import app.aaps.shared.impl.rx.AapsSchedulersImpl

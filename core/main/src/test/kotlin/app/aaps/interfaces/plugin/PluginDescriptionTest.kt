@@ -1,4 +1,4 @@
-package app.aaps.interfaces.plugin
+package app.aaps.core.interfaces.plugin
 
 import androidx.fragment.app.Fragment
 import com.google.common.truth.Truth.assertThat

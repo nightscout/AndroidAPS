@@ -2,8 +2,8 @@ package info.nightscout.androidaps
 
 import android.content.Context
 import android.content.SharedPreferences
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import info.nightscout.androidaps.interaction.utils.Constants
 import info.nightscout.androidaps.interaction.utils.Persistence

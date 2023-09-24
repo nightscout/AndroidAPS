@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionDummy

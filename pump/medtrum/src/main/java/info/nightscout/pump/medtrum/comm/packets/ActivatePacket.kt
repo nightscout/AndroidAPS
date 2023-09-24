@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.stats.TddCalculator
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.stats.TddCalculator
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.BasalType

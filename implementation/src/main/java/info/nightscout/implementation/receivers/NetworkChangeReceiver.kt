@@ -9,11 +9,11 @@ import android.net.wifi.SupplicantState
 import android.net.wifi.WifiManager
 import android.os.Handler
 import android.os.HandlerThread
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.receivers.ReceiverStatusStore
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventNetworkChange
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.core.utils.receivers.StringUtils
 import javax.inject.Inject

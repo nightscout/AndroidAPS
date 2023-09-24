@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.automation.R
 import info.nightscout.core.ui.elements.NumberPicker
 import java.text.DecimalFormat

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action
 
-import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.OmnipodMessage
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.AssignAddressCommand

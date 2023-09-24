@@ -5,9 +5,9 @@ import android.content.Intent
 import android.provider.Telephony
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.receivers.Intents
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.receivers.Intents
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.core.utils.extensions.copyDouble
 import info.nightscout.core.utils.extensions.copyLong

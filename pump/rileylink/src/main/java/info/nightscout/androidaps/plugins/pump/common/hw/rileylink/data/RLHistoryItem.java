@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data;
 
 import org.joda.time.LocalDateTime;
 
-import app.aaps.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.resources.ResourceHelper;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice;

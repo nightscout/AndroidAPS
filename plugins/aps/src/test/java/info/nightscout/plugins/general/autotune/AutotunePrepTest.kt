@@ -2,14 +2,14 @@ package info.nightscout.plugins.general.autotune
 
 import app.aaps.core.main.extensions.shiftBlock
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.iob.IobTotal
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.profile.PureProfile
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.PureProfile
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.core.utils.JsonHelper

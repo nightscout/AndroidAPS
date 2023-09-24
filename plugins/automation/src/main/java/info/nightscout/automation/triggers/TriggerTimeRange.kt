@@ -1,8 +1,8 @@
 package info.nightscout.automation.triggers
 
 import android.widget.LinearLayout
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.utils.MidnightTime
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.MidnightTime
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R

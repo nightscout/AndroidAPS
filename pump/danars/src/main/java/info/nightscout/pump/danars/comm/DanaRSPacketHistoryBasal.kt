@@ -1,6 +1,6 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 

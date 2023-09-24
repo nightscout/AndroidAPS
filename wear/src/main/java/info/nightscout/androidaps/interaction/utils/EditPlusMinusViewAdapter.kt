@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interaction.utils
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActionEditplusminBinding
 import info.nightscout.androidaps.databinding.ActionEditplusminMultiBinding

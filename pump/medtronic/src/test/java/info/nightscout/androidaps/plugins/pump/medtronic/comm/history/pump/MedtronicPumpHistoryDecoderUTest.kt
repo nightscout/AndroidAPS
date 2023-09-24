@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.UiInteraction
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType

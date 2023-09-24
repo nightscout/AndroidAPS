@@ -1,7 +1,7 @@
 package info.nightscout.core.validators.validators
 
 import android.widget.EditText
-import app.aaps.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.SafeParse
 
 /**
  * A validator that returns true only if the input field contains only numbers

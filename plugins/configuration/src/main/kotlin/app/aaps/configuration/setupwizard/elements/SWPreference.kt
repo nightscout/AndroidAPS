@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import app.aaps.configuration.setupwizard.SWDefinition
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 

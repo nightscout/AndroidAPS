@@ -8,11 +8,11 @@ import app.aaps.core.main.extensions.target
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
-import app.aaps.interfaces.aps.Loop
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.core.utils.receivers.DataWorkerStorage

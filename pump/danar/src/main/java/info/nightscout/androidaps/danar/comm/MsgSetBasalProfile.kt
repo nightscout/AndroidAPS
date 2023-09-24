@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.danar.comm
 
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.notifications.Notification
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
 import dagger.android.HasAndroidInjector
 
 class MsgSetBasalProfile(

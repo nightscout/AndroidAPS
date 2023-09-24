@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.notifications.Notification;
-import app.aaps.interfaces.rx.bus.RxBus;
-import app.aaps.interfaces.rx.events.EventDismissNotification;
-import app.aaps.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventDismissNotification;
+import app.aaps.core.interfaces.sharedPreferences.SP;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.OmnipodErosStorageKeys;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosActiveAlertsChanged;

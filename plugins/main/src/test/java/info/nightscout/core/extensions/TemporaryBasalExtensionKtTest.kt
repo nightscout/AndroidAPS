@@ -1,12 +1,12 @@
 package info.nightscout.core.extensions
 
 import app.aaps.core.main.extensions.iobCalc
-import app.aaps.interfaces.aps.AutosensResult
-import app.aaps.interfaces.aps.SMBDefaults
-import app.aaps.interfaces.insulin.Insulin
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.aps.AutosensResult
+import app.aaps.core.interfaces.aps.SMBDefaults
+import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TemporaryBasal

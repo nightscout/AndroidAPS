@@ -1,6 +1,6 @@
 package info.nightscout.pump.danaR.comm
 
-import app.aaps.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import info.nightscout.androidaps.danar.comm.MsgBolusProgress
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

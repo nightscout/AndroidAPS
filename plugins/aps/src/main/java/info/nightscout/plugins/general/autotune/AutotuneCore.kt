@@ -1,7 +1,7 @@
 package info.nightscout.plugins.general.autotune
 
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.Round
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.Round
 import info.nightscout.core.utils.Percentile
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.LocalInsulin

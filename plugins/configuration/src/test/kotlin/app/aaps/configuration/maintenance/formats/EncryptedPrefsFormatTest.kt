@@ -6,8 +6,8 @@ import app.aaps.configuration.maintenance.data.Prefs
 import app.aaps.configuration.maintenance.data.PrefsFormat
 import app.aaps.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.core.main.utils.CryptoUtil
-import app.aaps.interfaces.maintenance.PrefMetadata
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.maintenance.PrefMetadata
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.TruthJUnit.assume
 import org.junit.jupiter.api.Assertions

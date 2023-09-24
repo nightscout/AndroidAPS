@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsShared.events
 
 import android.content.Context
-import app.aaps.interfaces.rx.events.EventStatus
+import app.aaps.core.interfaces.rx.events.EventStatus
 
 class EventNSClientStatus(var text: String) : EventStatus() {
 

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.utils
 
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.androidaps.insight.R
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertCategory

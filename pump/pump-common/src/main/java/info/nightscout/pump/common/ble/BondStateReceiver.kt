@@ -4,11 +4,11 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.core.utils.extensions.safeGetParcelableExtra

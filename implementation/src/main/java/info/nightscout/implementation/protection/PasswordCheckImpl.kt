@@ -13,8 +13,8 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import app.aaps.core.main.R
 import app.aaps.core.main.utils.CryptoUtil
-import app.aaps.interfaces.protection.PasswordCheck
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Reusable
 import info.nightscout.core.ui.toast.ToastUtils

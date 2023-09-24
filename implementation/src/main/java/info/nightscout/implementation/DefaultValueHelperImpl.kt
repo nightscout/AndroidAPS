@@ -1,11 +1,11 @@
 package info.nightscout.implementation
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 

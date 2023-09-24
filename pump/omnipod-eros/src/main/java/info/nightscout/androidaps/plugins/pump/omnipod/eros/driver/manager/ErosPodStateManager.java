@@ -19,8 +19,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoDetailedStatus;

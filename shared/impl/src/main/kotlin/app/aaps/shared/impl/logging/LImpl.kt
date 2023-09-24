@@ -1,9 +1,9 @@
 package app.aaps.shared.impl.logging
 
-import app.aaps.interfaces.logging.L
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.logging.LogElement
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.L
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.LogElement
+import app.aaps.core.interfaces.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 

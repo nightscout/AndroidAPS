@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 
 class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Compare.EXISTS) : Element {
 

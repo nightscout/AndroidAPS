@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.danaRv2.comm
 
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.pump.defs.PumpType
-import app.aaps.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.pump.dana.DanaPump

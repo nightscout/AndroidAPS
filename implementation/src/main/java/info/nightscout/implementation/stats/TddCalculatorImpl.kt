@@ -9,16 +9,16 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.util.size
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.stats.TddCalculator
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.MidnightTime
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.stats.TddCalculator
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TotalDailyDose
@@ -164,7 +164,7 @@ class TddCalculatorImpl @Inject constructor(
             }
             todayTdd?.let {
                 layout.addView(TextView(context).apply {
-                    text = rh.gs(app.aaps.interfaces.R.string.today)
+                    text = rh.gs(app.aaps.core.interfaces.R.string.today)
                     setTypeface(typeface, Typeface.BOLD)
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)

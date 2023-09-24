@@ -1,7 +1,7 @@
 package info.nightscout.automation.triggers
 
-import app.aaps.interfaces.aps.AutosensDataStore
-import app.aaps.interfaces.receivers.ReceiverStatusStore
+import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector

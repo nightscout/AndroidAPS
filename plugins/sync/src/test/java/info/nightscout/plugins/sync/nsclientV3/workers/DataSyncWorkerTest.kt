@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.work.ListenableWorker.Result.Success
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.sync.NsClient
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

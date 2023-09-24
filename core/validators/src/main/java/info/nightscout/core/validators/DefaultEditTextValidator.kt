@@ -5,7 +5,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.widget.EditText
-import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.profile.ProfileUtil
 import com.google.android.material.textfield.TextInputLayout
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.validators.validators.AlphaNumericValidator

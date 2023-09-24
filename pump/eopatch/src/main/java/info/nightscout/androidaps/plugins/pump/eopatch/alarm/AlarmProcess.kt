@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A002
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A003

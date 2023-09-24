@@ -1,8 +1,8 @@
 package app.aaps.core.main.iob
 
-import app.aaps.interfaces.iob.IobTotal
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.Round
+import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.Round
 import org.json.JSONException
 import org.json.JSONObject
 

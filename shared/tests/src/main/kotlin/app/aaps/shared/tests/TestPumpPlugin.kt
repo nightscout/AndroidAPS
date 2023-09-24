@@ -1,15 +1,15 @@
 package app.aaps.shared.tests
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.pump.DetailedBolusInfo
-import app.aaps.interfaces.pump.Pump
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.pump.defs.ManufacturerType
-import app.aaps.interfaces.pump.defs.PumpDescription
-import app.aaps.interfaces.pump.defs.PumpType
-import app.aaps.interfaces.utils.TimeChangeType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.utils.TimeChangeType
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 

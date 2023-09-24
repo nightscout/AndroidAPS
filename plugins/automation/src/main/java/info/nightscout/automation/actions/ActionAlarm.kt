@@ -3,11 +3,11 @@ package info.nightscout.automation.actions
 import android.content.Context
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType

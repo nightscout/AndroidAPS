@@ -1,10 +1,10 @@
 package info.nightscout.plugins.general.autotune
 
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.MidnightTime
-import app.aaps.interfaces.utils.Round
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.GlucoseValue

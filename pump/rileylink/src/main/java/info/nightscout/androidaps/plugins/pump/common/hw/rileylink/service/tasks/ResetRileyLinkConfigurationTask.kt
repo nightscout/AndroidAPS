@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventRefreshButtonState
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventRefreshButtonState
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy
 import javax.inject.Inject

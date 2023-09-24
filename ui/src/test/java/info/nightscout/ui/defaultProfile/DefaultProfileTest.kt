@@ -1,7 +1,7 @@
 package info.nightscout.ui.defaultProfile
 
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

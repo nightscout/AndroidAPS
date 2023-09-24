@@ -33,11 +33,11 @@ import javax.crypto.KeyAgreement;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
-import app.aaps.interfaces.pump.DetailedBolusInfo;
-import app.aaps.interfaces.rx.AapsSchedulers;
-import app.aaps.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.sharedPreferences.SP;
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ActivateTask;

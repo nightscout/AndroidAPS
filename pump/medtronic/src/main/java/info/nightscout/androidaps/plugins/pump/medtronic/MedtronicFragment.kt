@@ -9,23 +9,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.pump.WarnColors
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventExtendedBolusChange
-import app.aaps.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.interfaces.rx.events.EventQueueChanged
-import app.aaps.interfaces.rx.events.EventRefreshButtonState
-import app.aaps.interfaces.rx.events.EventTempBasalChange
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.WarnColors
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventQueueChanged
+import app.aaps.core.interfaces.rx.events.EventRefreshButtonState
+import app.aaps.core.interfaces.rx.events.EventTempBasalChange
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
@@ -275,7 +275,7 @@ class MedtronicFragment : DaggerFragment() {
             } else if (medtronicPumpStatus.lastConnection + 30 * 60 * 1000 < System.currentTimeMillis()) {
 
                 if (min < 60) {
-                    binding.lastConnection.text = rh.gs(app.aaps.interfaces.R.string.minago, min)
+                    binding.lastConnection.text = rh.gs(app.aaps.core.interfaces.R.string.minago, min)
                 } else if (min < 1440) {
                     val h = (min / 60).toInt()
                     binding.lastConnection.text = (rh.gq(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.plurals.duration_hours, h, h) + " "

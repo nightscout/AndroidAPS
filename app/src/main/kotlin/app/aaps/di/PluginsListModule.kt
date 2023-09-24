@@ -2,7 +2,7 @@ package app.aaps.di
 
 import app.aaps.configuration.configBuilder.ConfigBuilderPlugin
 import app.aaps.configuration.maintenance.MaintenancePlugin
-import app.aaps.interfaces.plugin.PluginBase
+import app.aaps.core.interfaces.plugin.PluginBase
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey

@@ -15,11 +15,11 @@ import android.support.wearable.complications.ComplicationProviderService
 import android.support.wearable.complications.ComplicationText
 import android.support.wearable.complications.ProviderUpdateRequester
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventWearToMobile
-import app.aaps.interfaces.rx.weardata.EventData.ActionResendData
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventWearToMobile
+import app.aaps.core.interfaces.rx.weardata.EventData.ActionResendData
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.comm.DataLayerListenerServiceWear.Companion.INTENT_NEW_DATA

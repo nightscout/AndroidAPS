@@ -1,10 +1,10 @@
 package info.nightscout.implementation.protection
 
 import androidx.fragment.app.FragmentActivity
-import app.aaps.interfaces.protection.PasswordCheck
-import app.aaps.interfaces.protection.ProtectionCheck
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.Reusable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

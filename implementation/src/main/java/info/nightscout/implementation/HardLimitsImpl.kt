@@ -2,11 +2,11 @@ package info.nightscout.implementation
 
 import android.content.Context
 import app.aaps.annotations.OpenForTesting
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.HardLimits
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable

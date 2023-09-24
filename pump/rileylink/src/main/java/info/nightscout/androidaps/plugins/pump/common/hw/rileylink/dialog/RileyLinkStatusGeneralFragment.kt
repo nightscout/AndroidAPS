@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileylinkStatusGeneralBinding

@@ -9,8 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
 import dagger.android.support.DaggerFragment
 import info.nightscout.comboctl.base.NullDisplayFrame
 import info.nightscout.comboctl.parser.BatteryState
@@ -253,7 +253,7 @@ class ComboV2Fragment : DaggerFragment() {
             }
 
             in 60..(30 * 60) -> {
-                binding.combov2LastConnection.text = rh.gs(app.aaps.interfaces.R.string.minago, secondsPassed / 60)
+                binding.combov2LastConnection.text = rh.gs(app.aaps.core.interfaces.R.string.minago, secondsPassed / 60)
                 binding.combov2LastConnection.setTextColor(Color.WHITE)
             }
 
@@ -280,7 +280,7 @@ class ComboV2Fragment : DaggerFragment() {
                 rh.gs(R.string.combov2_less_than_one_minute_ago)
 
             else     ->
-                rh.gs(app.aaps.interfaces.R.string.minago, secondsPassed / 60)
+                rh.gs(app.aaps.core.interfaces.R.string.minago, secondsPassed / 60)
         }
 
         binding.combov2LastBolus.text =

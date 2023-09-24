@@ -1,15 +1,15 @@
 package info.nightscout.plugins.sync.nsclient
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventNSClientNewLog
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.source.NSClientSource
-import app.aaps.interfaces.sync.DataSyncSelector
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.sync.DataSyncSelector
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.waitMillis
 import info.nightscout.database.impl.AppRepository

@@ -1,9 +1,9 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.pump.dana.DanaPump

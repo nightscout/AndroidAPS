@@ -1,10 +1,10 @@
 package info.nightscout.automation.actions
 
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.logging.UserEntryLogger
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.database.entities.UserEntry

@@ -1,8 +1,8 @@
 package app.aaps.shared.tests
 
 import android.annotation.SuppressLint
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import app.aaps.shared.tests.rx.TestAapsSchedulers
 import org.junit.jupiter.api.BeforeEach

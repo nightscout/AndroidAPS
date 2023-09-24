@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BolusStart;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.ComboBolusStart;

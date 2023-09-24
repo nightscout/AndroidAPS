@@ -1,12 +1,12 @@
 package info.nightscout.plugins.constraints.objectives
 
 import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.constraints.Objectives
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.Objectives
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

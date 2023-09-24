@@ -1,10 +1,10 @@
 package app.aaps.core.main.extensions
 
 import app.aaps.core.main.R
-import app.aaps.interfaces.configuration.Constants
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.database.entities.GlucoseValue
 import org.json.JSONObject
 

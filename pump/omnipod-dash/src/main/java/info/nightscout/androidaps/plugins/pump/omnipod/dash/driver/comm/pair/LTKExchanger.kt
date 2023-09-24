@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
-import app.aaps.interfaces.configuration.Config
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.MessageIOException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.PairingException

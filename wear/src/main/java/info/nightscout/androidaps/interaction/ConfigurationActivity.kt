@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
 import preference.WearPreferenceActivity

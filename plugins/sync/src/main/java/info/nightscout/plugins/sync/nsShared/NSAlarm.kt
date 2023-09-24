@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsShared
 
-import app.aaps.interfaces.nsclient.NSAlarm
+import app.aaps.core.interfaces.nsclient.NSAlarm
 import info.nightscout.core.utils.JsonHelper
 import org.json.JSONObject
 

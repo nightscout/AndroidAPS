@@ -11,9 +11,9 @@ import android.graphics.Typeface
 import android.os.BatteryManager
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
-import app.aaps.interfaces.rx.weardata.EventData
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import com.ustwo.clockwise.common.WatchMode
 import com.ustwo.clockwise.wearable.WatchFace
 import info.nightscout.androidaps.R

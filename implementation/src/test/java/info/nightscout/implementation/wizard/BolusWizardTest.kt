@@ -1,14 +1,14 @@
 package info.nightscout.implementation.wizard
 
 import app.aaps.core.main.wizard.BolusWizard
-import app.aaps.interfaces.aps.AutosensDataStore
-import app.aaps.interfaces.aps.Loop
-import app.aaps.interfaces.constraints.Constraint
-import app.aaps.interfaces.constraints.ConstraintsChecker
-import app.aaps.interfaces.iob.IobTotal
-import app.aaps.interfaces.profile.Profile
-import app.aaps.interfaces.pump.defs.PumpDescription
-import app.aaps.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

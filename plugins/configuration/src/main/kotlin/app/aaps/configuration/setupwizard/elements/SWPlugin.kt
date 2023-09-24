@@ -5,11 +5,11 @@ import androidx.annotation.StringRes
 import app.aaps.configuration.configBuilder.events.EventConfigBuilderUpdateGui
 import app.aaps.configuration.setupwizard.SWDefinition
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.configuration.ConfigBuilder
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.plugin.PluginType
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

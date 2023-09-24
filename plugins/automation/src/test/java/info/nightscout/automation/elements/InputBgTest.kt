@@ -1,6 +1,6 @@
 package info.nightscout.automation.elements
 
-import app.aaps.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.db.GlucoseUnit
 import info.nightscout.automation.triggers.TriggerTestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

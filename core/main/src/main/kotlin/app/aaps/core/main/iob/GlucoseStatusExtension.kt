@@ -1,8 +1,8 @@
 package app.aaps.core.main.iob
 
-import app.aaps.interfaces.iob.GlucoseStatus
-import app.aaps.interfaces.utils.DecimalFormatter
-import app.aaps.interfaces.utils.Round
+import app.aaps.core.interfaces.iob.GlucoseStatus
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
 
 fun GlucoseStatus.log(decimalFormatter: DecimalFormatter): String = "Glucose: " + decimalFormatter.to0Decimal(glucose) + " mg/dl " +
     "Noise: " + decimalFormatter.to0Decimal(noise) + " " +

@@ -8,10 +8,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
-import app.aaps.interfaces.notifications.NotificationHolder
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.ui.IconsProvider
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.ui.IconsProvider
+import app.aaps.core.interfaces.ui.UiInteraction
 import javax.inject.Inject
 import javax.inject.Singleton
 

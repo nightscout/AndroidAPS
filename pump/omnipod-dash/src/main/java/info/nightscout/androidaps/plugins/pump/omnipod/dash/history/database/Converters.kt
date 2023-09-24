@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database
 
 import androidx.room.TypeConverter
-import app.aaps.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.Profile
 import com.google.gson.GsonBuilder
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.BolusType

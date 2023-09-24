@@ -1,8 +1,8 @@
 package info.nightscout.plugins.constraints.objectives
 
 import android.os.SystemClock
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.utils.DateUtil
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress

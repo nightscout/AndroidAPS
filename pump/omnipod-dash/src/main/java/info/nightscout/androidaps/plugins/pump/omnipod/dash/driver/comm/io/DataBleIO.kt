@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io
 
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCharacteristic
-import app.aaps.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.AAPSLogger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
 import java.util.concurrent.BlockingQueue
 

@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.main.extensions.fromConstant
-import app.aaps.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.ProfileSwitch

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InterfaceIDs

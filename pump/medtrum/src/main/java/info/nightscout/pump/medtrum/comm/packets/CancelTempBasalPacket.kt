@@ -1,6 +1,6 @@
 package info.nightscout.pump.medtrum.comm.packets
 
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.BasalType

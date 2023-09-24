@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandAbort
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandCTS

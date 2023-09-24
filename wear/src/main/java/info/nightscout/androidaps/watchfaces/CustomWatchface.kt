@@ -28,22 +28,22 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
 import androidx.viewbinding.ViewBinding
-import app.aaps.interfaces.extensions.toVisibility
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.rx.weardata.CUSTOM_VERSION
-import app.aaps.interfaces.rx.weardata.CwfData
-import app.aaps.interfaces.rx.weardata.CwfMetadataKey
-import app.aaps.interfaces.rx.weardata.CwfMetadataMap
-import app.aaps.interfaces.rx.weardata.CwfResDataMap
-import app.aaps.interfaces.rx.weardata.EventData
-import app.aaps.interfaces.rx.weardata.JsonKeyValues
-import app.aaps.interfaces.rx.weardata.JsonKeys
-import app.aaps.interfaces.rx.weardata.JsonKeys.*
-import app.aaps.interfaces.rx.weardata.ResData
-import app.aaps.interfaces.rx.weardata.ResFileMap
-import app.aaps.interfaces.rx.weardata.ResFormat
-import app.aaps.interfaces.rx.weardata.ViewKeys
-import app.aaps.interfaces.rx.weardata.ZipWatchfaceFormat
+import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
+import app.aaps.core.interfaces.rx.weardata.CwfData
+import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
+import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
+import app.aaps.core.interfaces.rx.weardata.CwfResDataMap
+import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.rx.weardata.JsonKeyValues
+import app.aaps.core.interfaces.rx.weardata.JsonKeys
+import app.aaps.core.interfaces.rx.weardata.JsonKeys.*
+import app.aaps.core.interfaces.rx.weardata.ResData
+import app.aaps.core.interfaces.rx.weardata.ResFileMap
+import app.aaps.core.interfaces.rx.weardata.ResFormat
+import app.aaps.core.interfaces.rx.weardata.ViewKeys
+import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityCustomBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
@@ -211,13 +211,13 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
         val metadata = JSONObject()
-            .put(CwfMetadataKey.CWF_NAME.key, getString(app.aaps.interfaces.R.string.wear_default_watchface))
-            .put(CwfMetadataKey.CWF_FILENAME.key, getString(app.aaps.interfaces.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_NAME.key, getString(app.aaps.core.interfaces.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_FILENAME.key, getString(app.aaps.core.interfaces.R.string.wear_default_watchface))
             .put(CwfMetadataKey.CWF_AUTHOR.key, "Philoul")
             .put(CwfMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
             .put(CwfMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
             .put(CwfMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
-            .put(CwfMetadataKey.CWF_COMMENT.key, getString(app.aaps.interfaces.R.string.default_custom_watchface_comment))
+            .put(CwfMetadataKey.CWF_COMMENT.key, getString(app.aaps.core.interfaces.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put(METADATA.key, metadata)
             .put(HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))

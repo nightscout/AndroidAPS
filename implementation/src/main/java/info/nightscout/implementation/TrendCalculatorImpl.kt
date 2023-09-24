@@ -1,10 +1,10 @@
 package info.nightscout.implementation
 
-import app.aaps.interfaces.aps.AutosensDataStore
-import app.aaps.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.T
-import app.aaps.interfaces.utils.TrendCalculator
+import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.TrendCalculator
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import javax.inject.Inject

@@ -2,7 +2,7 @@ package info.nightscout.implementation.lifecycle
 
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import app.aaps.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.ProtectionCheck
 import javax.inject.Inject
 
 class ProcessLifecycleListener @Inject constructor(private val protectionCheck: ProtectionCheck) : DefaultLifecycleObserver {

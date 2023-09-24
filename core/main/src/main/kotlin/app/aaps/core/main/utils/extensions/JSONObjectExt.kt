@@ -1,8 +1,8 @@
 package app.aaps.core.main.utils.extensions
 
 import androidx.annotation.StringRes
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import org.json.JSONObject
 
 fun JSONObject.putInt(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject =

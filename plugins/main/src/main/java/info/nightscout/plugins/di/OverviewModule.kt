@@ -1,6 +1,6 @@
 package info.nightscout.plugins.di
 
-import app.aaps.interfaces.overview.OverviewMenus
+import app.aaps.core.interfaces.overview.OverviewMenus
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector

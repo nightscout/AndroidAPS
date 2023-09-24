@@ -11,9 +11,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
-import app.aaps.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.BolusAction;

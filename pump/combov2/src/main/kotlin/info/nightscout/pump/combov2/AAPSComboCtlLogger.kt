@@ -1,8 +1,8 @@
 package info.nightscout.pump.combov2
 
 import android.util.Log
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.comboctl.base.LogLevel
 import info.nightscout.comboctl.base.LoggerBackend as ComboCtlLoggerBackend
 

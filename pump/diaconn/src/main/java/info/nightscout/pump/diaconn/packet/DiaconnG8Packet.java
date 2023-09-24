@@ -5,9 +5,9 @@ import java.nio.ByteOrder;
 
 import javax.inject.Inject;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
-import app.aaps.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.utils.DateUtil;
 import dagger.android.HasAndroidInjector;
 
 public class DiaconnG8Packet {

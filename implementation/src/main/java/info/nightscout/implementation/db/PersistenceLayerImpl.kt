@@ -1,10 +1,10 @@
 package info.nightscout.implementation.db
 
-import app.aaps.interfaces.db.PersistenceLayer
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.pump.PumpEnactResult
-import app.aaps.interfaces.queue.Callback
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.ValueWrapper

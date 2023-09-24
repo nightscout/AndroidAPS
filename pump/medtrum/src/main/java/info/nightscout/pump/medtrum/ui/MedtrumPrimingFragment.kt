@@ -3,9 +3,9 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R

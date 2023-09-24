@@ -10,8 +10,8 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import java.util.Calendar;
 import java.util.Date;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpAlert;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpHistory;

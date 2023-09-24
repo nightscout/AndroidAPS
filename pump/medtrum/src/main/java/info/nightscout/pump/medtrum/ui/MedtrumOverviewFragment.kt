@@ -3,10 +3,10 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.protection.ProtectionCheck
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R

@@ -12,11 +12,11 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.profile.Profile.ProfileValue
-import app.aaps.interfaces.pump.defs.PumpType
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory

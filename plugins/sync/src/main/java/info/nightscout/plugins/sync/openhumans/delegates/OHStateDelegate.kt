@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.openhumans.delegates
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.plugins.sync.openhumans.OpenHumansState
 import javax.inject.Inject
 import javax.inject.Singleton

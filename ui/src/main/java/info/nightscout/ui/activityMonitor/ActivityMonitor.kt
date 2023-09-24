@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.SafeParse
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.ui.R
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -102,7 +102,7 @@ class ActivityMonitor @Inject constructor(
                             row.gravity = Gravity.CENTER_HORIZONTAL
                             row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = activity })
                             row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = duration })
-                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; text = rh.gs(app.aaps.interfaces.R.string.in_days, days.toDouble()) })
+                            row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 }; text = rh.gs(app.aaps.core.interfaces.R.string.in_days, days.toDouble()) })
                         }
                     )
                 }

@@ -10,30 +10,30 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.extensions.toVisibility
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.logging.UserEntryLogger
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.pump.Dana
-import app.aaps.interfaces.pump.Pump
-import app.aaps.interfaces.pump.WarnColors
-import app.aaps.interfaces.pump.defs.PumpType
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.rx.AapsSchedulers
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventExtendedBolusChange
-import app.aaps.interfaces.rx.events.EventInitializationChanged
-import app.aaps.interfaces.rx.events.EventPumpStatusChanged
-import app.aaps.interfaces.rx.events.EventQueueChanged
-import app.aaps.interfaces.rx.events.EventTempBasalChange
-import app.aaps.interfaces.sharedPreferences.SP
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.userEntry.UserEntryMapper.Action
-import app.aaps.interfaces.userEntry.UserEntryMapper.Sources
-import app.aaps.interfaces.utils.DateUtil
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.Dana
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.WarnColors
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventQueueChanged
+import app.aaps.core.interfaces.rx.events.EventTempBasalChange
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.userEntry.UserEntryMapper.Action
+import app.aaps.core.interfaces.userEntry.UserEntryMapper.Sources
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.pump.dana.activities.DanaHistoryActivity
@@ -207,7 +207,7 @@ class DanaFragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(app.aaps.interfaces.R.string.minago, agoMin) + ")"
+            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(app.aaps.core.interfaces.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastConnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {

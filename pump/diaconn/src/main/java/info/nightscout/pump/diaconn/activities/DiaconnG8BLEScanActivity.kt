@@ -23,9 +23,9 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
-import app.aaps.interfaces.pump.BlePreCheck
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.safeEnable

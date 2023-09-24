@@ -2,8 +2,8 @@ package info.nightscout.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.profile.ProfileFunction
 import info.nightscout.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 

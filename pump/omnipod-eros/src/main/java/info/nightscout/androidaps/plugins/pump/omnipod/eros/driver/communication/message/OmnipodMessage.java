@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-import app.aaps.interfaces.logging.AAPSLogger;
-import app.aaps.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryType;

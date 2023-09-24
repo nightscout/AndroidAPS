@@ -1,7 +1,7 @@
 package info.nightscout.automation.triggers
 
 import android.widget.LinearLayout
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.LTag
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
@@ -83,7 +83,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
         LayoutBuilder()
             .add(StaticLabel(rh, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(app.aaps.interfaces.R.string.unit_minutes), minutesAgo))
+            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(app.aaps.core.interfaces.R.string.unit_minutes), minutesAgo))
             .build(root)
     }
 }

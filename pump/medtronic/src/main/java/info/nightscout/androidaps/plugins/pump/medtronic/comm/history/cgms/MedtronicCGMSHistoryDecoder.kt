@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms
 
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType.Companion.getByCode

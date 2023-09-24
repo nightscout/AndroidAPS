@@ -1,8 +1,8 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
-import app.aaps.interfaces.aps.ApsMode
-import app.aaps.interfaces.constraints.ConstraintsChecker
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.plugins.constraints.R
 import javax.inject.Inject

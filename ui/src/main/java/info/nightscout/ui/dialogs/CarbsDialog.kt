@@ -9,27 +9,27 @@ import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.utils.extensions.formatColor
-import app.aaps.interfaces.automation.Automation
-import app.aaps.interfaces.configuration.Constants.CARBS_FAV1_DEFAULT
-import app.aaps.interfaces.configuration.Constants.CARBS_FAV2_DEFAULT
-import app.aaps.interfaces.configuration.Constants.CARBS_FAV3_DEFAULT
-import app.aaps.interfaces.constraints.ConstraintsChecker
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.iob.GlucoseStatusProvider
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.logging.UserEntryLogger
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.profile.ProfileUtil
-import app.aaps.interfaces.protection.ProtectionCheck
-import app.aaps.interfaces.protection.ProtectionCheck.Protection.BOLUS
-import app.aaps.interfaces.pump.DetailedBolusInfo
-import app.aaps.interfaces.queue.Callback
-import app.aaps.interfaces.queue.CommandQueue
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.ui.UiInteraction
-import app.aaps.interfaces.utils.DecimalFormatter
-import app.aaps.interfaces.utils.T
+import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.configuration.Constants.CARBS_FAV1_DEFAULT
+import app.aaps.core.interfaces.configuration.Constants.CARBS_FAV2_DEFAULT
+import app.aaps.core.interfaces.configuration.Constants.CARBS_FAV3_DEFAULT
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.GlucoseStatusProvider
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.protection.ProtectionCheck.Protection.BOLUS
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.T
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -278,7 +278,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(info.nightscout.core.ui.R.string.alarminxmin, timeOffset).formatColor(context, rh, info.nightscout.core.ui.R.attr.infoColor))
         val duration = binding.duration.value.toInt()
         if (duration > 0)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + duration + rh.gs(app.aaps.interfaces.R.string.shorthour))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + duration + rh.gs(app.aaps.core.interfaces.R.string.shorthour))
         if (carbsAfterConstraints > 0) {
             actions.add(
                 rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(

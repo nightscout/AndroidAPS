@@ -1,10 +1,10 @@
 package app.aaps.implementations
 
-import app.aaps.interfaces.aps.APSResult
-import app.aaps.interfaces.aps.AutosensData
-import app.aaps.interfaces.objects.Instantiator
-import app.aaps.interfaces.profile.ProfileStore
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.aps.APSResult
+import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.core.interfaces.objects.Instantiator
+import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import info.nightscout.implementation.profile.ProfileStoreObject

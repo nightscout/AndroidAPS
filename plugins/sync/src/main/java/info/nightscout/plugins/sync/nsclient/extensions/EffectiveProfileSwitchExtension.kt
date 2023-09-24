@@ -2,8 +2,8 @@ package info.nightscout.plugins.sync.nsclient.extensions
 
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.interfaces.db.GlucoseUnit
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs

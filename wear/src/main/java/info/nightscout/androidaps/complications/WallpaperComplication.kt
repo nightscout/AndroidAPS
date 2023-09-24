@@ -9,7 +9,7 @@ import android.graphics.drawable.Icon
 import android.support.wearable.complications.ComplicationData
 import android.util.DisplayMetrics
 import android.view.WindowManager
-import app.aaps.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.data.RawDisplayData
 import java.io.IOException
 

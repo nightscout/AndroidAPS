@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions
 
-import app.aaps.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import com.google.gson.Gson
 
 fun DetailedBolusInfo.toJsonString(): String = Gson().toJson(this)

@@ -3,8 +3,8 @@ package app.aaps.receivers
 import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
-import app.aaps.interfaces.rx.bus.RxBus
-import app.aaps.interfaces.rx.events.EventBTChange
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventBTChange
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.core.utils.extensions.safeGetParcelableExtra
 import javax.inject.Inject

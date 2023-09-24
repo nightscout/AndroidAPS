@@ -5,8 +5,8 @@ import android.content.Context
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.implementation.R
 
@@ -69,7 +69,7 @@ fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, days: Int, i
             row.gravity = Gravity.CENTER_HORIZONTAL
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text =
-                "%02d".format(days) + " " + rh.gs(app.aaps.interfaces.R.string.days)
+                "%02d".format(days) + " " + rh.gs(app.aaps.core.interfaces.R.string.days)
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text =

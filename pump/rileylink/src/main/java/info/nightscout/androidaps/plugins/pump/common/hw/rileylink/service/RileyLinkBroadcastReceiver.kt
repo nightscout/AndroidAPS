@@ -7,10 +7,10 @@ import android.content.IntentFilter
 import android.os.Handler
 import android.os.HandlerThread
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import app.aaps.interfaces.logging.AAPSLogger
-import app.aaps.interfaces.logging.LTag
-import app.aaps.interfaces.plugin.ActivePlugin
-import app.aaps.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.DaggerBroadcastReceiver
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst

@@ -1,14 +1,14 @@
 package info.nightscout.plugins.sync.nsclientV3
 
 import app.aaps.core.main.extensions.fromConstant
-import app.aaps.interfaces.insulin.Insulin
-import app.aaps.interfaces.logging.UserEntryLogger
-import app.aaps.interfaces.nsclient.StoreDataForDb
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.pump.VirtualPump
-import app.aaps.interfaces.source.NSClientSource
-import app.aaps.interfaces.sync.DataSyncSelector
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.nsclient.StoreDataForDb
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.VirtualPump
+import app.aaps.core.interfaces.source.NSClientSource
+import app.aaps.core.interfaces.sync.DataSyncSelector
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector

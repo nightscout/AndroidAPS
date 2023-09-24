@@ -1,7 +1,7 @@
 package info.nightscout.pump.danars
 
-import app.aaps.interfaces.objects.Instantiator
-import app.aaps.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.objects.Instantiator
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector

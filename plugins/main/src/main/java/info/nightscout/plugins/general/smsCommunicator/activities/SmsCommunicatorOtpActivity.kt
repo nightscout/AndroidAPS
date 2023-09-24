@@ -11,9 +11,9 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
 import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.interfaces.logging.UserEntryLogger
-import app.aaps.interfaces.resources.ResourceHelper
-import app.aaps.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity

@@ -1,8 +1,8 @@
 package info.nightscout.pump.common.sync
 
-import app.aaps.interfaces.pump.DetailedBolusInfo
-import app.aaps.interfaces.pump.PumpSync
-import app.aaps.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.PumpType
 
 // data class PumpDbEntry constructor(var temporaryId: Long,
 //                                    var date: Long,

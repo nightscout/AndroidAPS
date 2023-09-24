@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.events
 
 import android.content.Context
-import app.aaps.interfaces.rx.events.EventStatus
+import app.aaps.core.interfaces.rx.events.EventStatus
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice

@@ -8,10 +8,10 @@ import app.aaps.core.main.graph.data.DataPointWithLabelInterface
 import app.aaps.core.main.graph.data.InMemoryGlucoseValueDataPoint
 import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.interfaces.iob.IobCobCalculator
-import app.aaps.interfaces.profile.DefaultValueHelper
-import app.aaps.interfaces.profile.ProfileFunction
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

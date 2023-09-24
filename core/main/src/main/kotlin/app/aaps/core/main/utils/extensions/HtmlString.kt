@@ -3,7 +3,7 @@ package app.aaps.core.main.utils.extensions
 import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
-import app.aaps.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
 
 fun String.formatBold(): String =
     "<b>$this</b>"
