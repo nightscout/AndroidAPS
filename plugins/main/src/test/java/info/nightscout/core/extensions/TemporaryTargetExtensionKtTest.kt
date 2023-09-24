@@ -1,9 +1,9 @@
 package info.nightscout.core.extensions
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.interfaces.GlucoseUnit
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class TemporaryTargetExtensionKtTest : TestBaseWithProfile() {
@@ -25,18 +25,18 @@ class TemporaryTargetExtensionKtTest : TestBaseWithProfile() {
 
     @Test
     fun lowValueToUnitsToString() {
-        Assertions.assertEquals("110", temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MGDL, decimalFormatter))
-        Assertions.assertEquals("6.1", temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MMOL, decimalFormatter))
+        assertThat(temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MGDL, decimalFormatter)).isEqualTo("110")
+        assertThat(temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MMOL, decimalFormatter)).isEqualTo("6.1")
     }
 
     @Test
     fun highValueToUnitsToString() {
-        Assertions.assertEquals("120", temporaryTarget.highValueToUnitsToString(GlucoseUnit.MGDL, decimalFormatter))
-        Assertions.assertEquals("6.7", temporaryTarget.highValueToUnitsToString(GlucoseUnit.MMOL, decimalFormatter))
+        assertThat(temporaryTarget.highValueToUnitsToString(GlucoseUnit.MGDL, decimalFormatter)).isEqualTo("120")
+        assertThat(temporaryTarget.highValueToUnitsToString(GlucoseUnit.MMOL, decimalFormatter)).isEqualTo("6.7")
     }
 
     @Test
     fun target() {
-        Assertions.assertEquals(115.0, temporaryTarget.target())
+        assertThat(temporaryTarget.target()).isEqualTo(115.0)
     }
 }
