@@ -2,6 +2,17 @@ package info.nightscout.plugins.general.wear.wearintegration
 
 import android.app.NotificationManager
 import android.content.Context
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.toStringShort
+import app.aaps.core.main.extensions.valueToUnits
+import app.aaps.core.main.graph.data.GlucoseValueDataPoint
+import app.aaps.core.main.iob.generateCOBString
+import app.aaps.core.main.iob.round
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.main.wizard.BolusWizard
+import app.aaps.core.main.wizard.QuickWizard
+import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.configuration.Constants
@@ -40,18 +51,7 @@ import app.aaps.interfaces.utils.HardLimits
 import app.aaps.interfaces.utils.T
 import app.aaps.interfaces.utils.TrendCalculator
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.extensions.convertedToAbsolute
-import info.nightscout.core.extensions.toStringShort
-import info.nightscout.core.extensions.valueToUnits
-import info.nightscout.core.graph.data.GlucoseValueDataPoint
-import info.nightscout.core.iob.generateCOBString
-import info.nightscout.core.iob.round
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.wizard.BolusWizard
-import info.nightscout.core.wizard.QuickWizard
-import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult

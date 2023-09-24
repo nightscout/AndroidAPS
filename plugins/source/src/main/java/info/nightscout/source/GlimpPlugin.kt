@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.plugin.PluginBase
@@ -12,7 +13,6 @@ import app.aaps.interfaces.plugin.PluginType
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.source.BgSource
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
@@ -31,7 +31,7 @@ class GlimpPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_glimp)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_glimp)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.glimp)
         .description(R.string.description_source_glimp),

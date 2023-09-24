@@ -7,6 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.core.main.R
+import app.aaps.core.main.extensions.getCustomizedName
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.plugin.ActivePlugin
@@ -21,10 +25,6 @@ import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.HardLimits
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.extensions.getCustomizedName
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.main.R
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository

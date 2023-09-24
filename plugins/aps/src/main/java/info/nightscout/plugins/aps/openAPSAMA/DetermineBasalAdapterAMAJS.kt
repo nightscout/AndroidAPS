@@ -1,5 +1,8 @@
 package info.nightscout.plugins.aps.openAPSAMA
 
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.getPassedDurationToTimeInMinutes
+import app.aaps.core.main.extensions.plannedRemainingMinutes
 import app.aaps.interfaces.aps.DetermineBasalAdapter
 import app.aaps.interfaces.aps.SMBDefaults
 import app.aaps.interfaces.constraints.ConstraintsChecker
@@ -14,9 +17,6 @@ import app.aaps.interfaces.profile.Profile
 import app.aaps.interfaces.profile.ProfileFunction
 import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.convertedToAbsolute
-import info.nightscout.core.extensions.getPassedDurationToTimeInMinutes
-import info.nightscout.core.extensions.plannedRemainingMinutes
 import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.logger.LoggerCallback

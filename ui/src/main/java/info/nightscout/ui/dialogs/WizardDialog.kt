@@ -16,6 +16,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.extensions.valueToUnits
+import app.aaps.core.main.iob.round
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.extensions.formatColor
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.db.GlucoseUnit
@@ -41,15 +48,8 @@ import app.aaps.interfaces.utils.SafeParse
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.extensions.valueToUnits
-import info.nightscout.core.iob.round
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.extensions.formatColor
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.ui.R
@@ -518,7 +518,7 @@ class WizardDialog : DaggerDialogFragment() {
                 val insulinText =
                     if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                         .formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(
+                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(app.aaps.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(
                     context, rh, info.nightscout.core.ui.R.attr
                         .carbsColor
                 ) else ""

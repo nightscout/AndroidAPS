@@ -6,6 +6,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
 import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.nsclient.StoreDataForDb
 import app.aaps.interfaces.receivers.ReceiverStatusStore
@@ -19,7 +20,6 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.embedments.InterfaceIDs

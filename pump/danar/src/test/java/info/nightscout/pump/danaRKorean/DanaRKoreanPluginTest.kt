@@ -1,5 +1,6 @@
 package info.nightscout.pump.danaRKorean
 
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.objects.Instantiator
 import app.aaps.interfaces.plugin.PluginType
@@ -10,7 +11,6 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import org.junit.jupiter.api.Assertions

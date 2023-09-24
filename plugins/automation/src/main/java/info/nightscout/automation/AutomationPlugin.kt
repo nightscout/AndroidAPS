@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.automation.Automation
 import app.aaps.interfaces.automation.AutomationEvent
@@ -66,7 +67,6 @@ import info.nightscout.automation.triggers.TriggerTime
 import info.nightscout.automation.triggers.TriggerTimeRange
 import info.nightscout.automation.triggers.TriggerWifiSsid
 import info.nightscout.automation.ui.TimerUtil
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONArray
@@ -99,7 +99,7 @@ class AutomationPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutomationFragment::class.qualifiedName)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_automation)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_automation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
         .showInList(config.APS)

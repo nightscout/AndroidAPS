@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.text.format.DateFormat
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.constraints.PluginConstraints
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -32,7 +33,6 @@ import app.aaps.interfaces.utils.DecimalFormatter
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.common.data.PumpStatus
 import info.nightscout.pump.common.defs.PumpDriverState
 import info.nightscout.pump.common.sync.PumpDbEntryCarbs

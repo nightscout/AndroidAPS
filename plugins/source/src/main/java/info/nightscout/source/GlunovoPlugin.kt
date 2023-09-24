@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -17,7 +18,6 @@ import app.aaps.interfaces.source.BgSource
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
@@ -44,7 +44,7 @@ class GlunovoPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_glunovo)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_glunovo)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.glunovo)
         .shortName(R.string.glunovo)

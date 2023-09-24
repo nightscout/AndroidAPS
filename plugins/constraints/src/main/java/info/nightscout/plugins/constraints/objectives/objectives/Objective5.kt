@@ -1,9 +1,9 @@
 package info.nightscout.plugins.constraints.objectives.objectives
 
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.plugins.constraints.R
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import javax.inject.Inject

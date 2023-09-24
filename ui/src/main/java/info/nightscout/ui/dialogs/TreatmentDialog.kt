@@ -7,6 +7,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.db.PersistenceLayer
@@ -23,11 +25,9 @@ import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.SafeParse
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
@@ -158,7 +158,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
         }
         if (carbsAfterConstraints > 0) {
             actions.add(
-                rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraints).formatColor(
+                rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.main.R.string.format_carbs, carbsAfterConstraints).formatColor(
                     context, rh, info.nightscout
                         .core.ui.R.attr.carbsColor
                 )

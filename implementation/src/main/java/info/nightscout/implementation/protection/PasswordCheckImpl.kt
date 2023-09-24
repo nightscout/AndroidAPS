@@ -11,13 +11,13 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
+import app.aaps.core.main.R
+import app.aaps.core.main.utils.CryptoUtil
 import app.aaps.interfaces.protection.PasswordCheck
 import app.aaps.interfaces.sharedPreferences.SP
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Reusable
-import info.nightscout.core.main.R
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.CryptoUtil
 import javax.inject.Inject
 
 @Reusable

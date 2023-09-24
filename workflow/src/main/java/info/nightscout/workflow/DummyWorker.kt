@@ -2,7 +2,7 @@ package info.nightscout.workflow
 
 import android.content.Context
 import androidx.work.WorkerParameters
-import info.nightscout.core.utils.worker.LoggingWorker
+import app.aaps.core.main.utils.worker.LoggingWorker
 import kotlinx.coroutines.Dispatchers
 
 class DummyWorker(

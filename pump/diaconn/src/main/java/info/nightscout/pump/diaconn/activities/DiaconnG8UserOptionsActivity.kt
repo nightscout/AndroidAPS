@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.plugin.ActivePlugin
@@ -15,7 +16,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.ui.UiInteraction
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.databinding.DiaconnG8UserOptionsActivityBinding

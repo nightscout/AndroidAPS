@@ -10,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.UserEntryLogger
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.smsCommunicator.SmsCommunicator
@@ -18,7 +19,6 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.plugins.R

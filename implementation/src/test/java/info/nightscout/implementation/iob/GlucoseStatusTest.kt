@@ -1,5 +1,7 @@
 package info.nightscout.implementation.iob
 
+import app.aaps.core.main.iob.asRounded
+import app.aaps.core.main.iob.log
 import app.aaps.interfaces.aps.AutosensDataStore
 import app.aaps.interfaces.iob.GlucoseStatus
 import app.aaps.interfaces.iob.InMemoryGlucoseValue
@@ -7,8 +9,6 @@ import app.aaps.interfaces.iob.IobCobCalculator
 import app.aaps.interfaces.utils.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.core.iob.asRounded
-import info.nightscout.core.iob.log
 import info.nightscout.database.entities.GlucoseValue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

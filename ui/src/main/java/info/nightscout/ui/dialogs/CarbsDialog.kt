@@ -7,6 +7,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.interfaces.automation.Automation
 import app.aaps.interfaces.configuration.Constants.CARBS_FAV1_DEFAULT
 import app.aaps.interfaces.configuration.Constants.CARBS_FAV2_DEFAULT
@@ -30,11 +32,9 @@ import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.T
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -284,7 +284,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(
                     context,
                     info.nightscout.core.ui.R.attr.carbsColor
-                ) + "'>" + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraints) + "</font>"
+                ) + "'>" + rh.gs(app.aaps.core.main.R.string.format_carbs, carbsAfterConstraints) + "</font>"
             )
             if (carbsAfterConstraints != carbs)
                 actions.add("<font color='" + rh.gac(context, info.nightscout.core.ui.R.attr.warningColor) + "'>" + rh.gs(R.string.carbs_constraint_applied) + "</font>")

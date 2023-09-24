@@ -1,5 +1,7 @@
 package info.nightscout.insulin
 
+import app.aaps.core.main.utils.extensions.putInt
+import app.aaps.core.main.utils.extensions.storeInt
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.insulin.Insulin
 import app.aaps.interfaces.logging.AAPSLogger
@@ -10,8 +12,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.interfaces.utils.HardLimits
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.extensions.putInt
-import info.nightscout.core.utils.extensions.storeInt
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -12,6 +12,10 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
+import app.aaps.core.main.extensions.directionToIcon
+import app.aaps.core.main.graph.OverviewData
+import app.aaps.core.main.iob.displayText
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.aps.VariableSensitivityResult
 import app.aaps.interfaces.configuration.Config
@@ -33,10 +37,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.TrendCalculator
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.directionToIcon
-import info.nightscout.core.graph.OverviewData
-import info.nightscout.core.iob.displayText
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.ui.R
 import java.util.Locale
@@ -260,9 +260,9 @@ class Widget : AppWidgetProvider() {
 
     private fun updateSensitivity(views: RemoteViews) {
         if (constraintChecker.isAutosensModeEnabled().value())
-            views.setImageViewResource(R.id.sensitivity_icon, info.nightscout.core.main.R.drawable.ic_swap_vert_black_48dp_green)
+            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_swap_vert_black_48dp_green)
         else
-            views.setImageViewResource(R.id.sensitivity_icon, info.nightscout.core.main.R.drawable.ic_x_swap_vert)
+            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_x_swap_vert)
         views.setTextViewText(R.id.sensitivity, overviewData.lastAutosensData(iobCobCalculator)?.let { autosensData ->
             String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
         } ?: "")

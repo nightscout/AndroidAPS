@@ -1,5 +1,6 @@
 package info.nightscout.implementation.di
 
+import app.aaps.core.main.graph.OverviewData
 import app.aaps.interfaces.alerts.LocalAlertUtils
 import app.aaps.interfaces.db.PersistenceLayer
 import app.aaps.interfaces.iob.GlucoseStatusProvider
@@ -34,7 +35,6 @@ import app.aaps.interfaces.utils.TrendCalculator
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.core.graph.OverviewData
 import info.nightscout.implementation.DefaultValueHelperImpl
 import info.nightscout.implementation.HardLimitsImpl
 import info.nightscout.implementation.LocalAlertUtilsImpl

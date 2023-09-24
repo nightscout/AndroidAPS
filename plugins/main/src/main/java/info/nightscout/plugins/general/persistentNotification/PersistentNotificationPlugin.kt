@@ -6,6 +6,10 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
+import app.aaps.core.main.extensions.toStringShort
+import app.aaps.core.main.iob.generateCOBString
+import app.aaps.core.main.iob.round
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.iob.GlucoseStatusProvider
 import app.aaps.interfaces.iob.IobCobCalculator
@@ -27,10 +31,6 @@ import app.aaps.interfaces.rx.events.EventRefreshOverview
 import app.aaps.interfaces.ui.IconsProvider
 import app.aaps.interfaces.utils.DecimalFormatter
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.toStringShort
-import info.nightscout.core.iob.generateCOBString
-import info.nightscout.core.iob.round
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

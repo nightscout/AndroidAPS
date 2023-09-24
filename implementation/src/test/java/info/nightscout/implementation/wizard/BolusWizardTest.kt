@@ -1,5 +1,6 @@
 package info.nightscout.implementation.wizard
 
+import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.interfaces.aps.AutosensDataStore
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.constraints.Constraint
@@ -12,7 +13,6 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

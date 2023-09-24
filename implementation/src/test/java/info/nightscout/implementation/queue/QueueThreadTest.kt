@@ -2,6 +2,7 @@ package info.nightscout.implementation.queue
 
 import android.content.Context
 import android.os.PowerManager
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.androidPermissions.AndroidPermission
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.db.PersistenceLayer
@@ -14,7 +15,6 @@ import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import org.junit.jupiter.api.BeforeEach

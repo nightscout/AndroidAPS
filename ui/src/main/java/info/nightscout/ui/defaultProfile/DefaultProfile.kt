@@ -1,11 +1,11 @@
 package info.nightscout.ui.defaultProfile
 
+import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.profile.ProfileUtil
 import app.aaps.interfaces.profile.PureProfile
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.Round
-import info.nightscout.core.extensions.pureProfileFromJson
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale

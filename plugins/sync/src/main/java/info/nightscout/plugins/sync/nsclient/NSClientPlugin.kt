@@ -8,6 +8,8 @@ import android.os.IBinder
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
+import app.aaps.core.main.extensions.toJson
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.logging.AAPSLogger
@@ -33,8 +35,6 @@ import app.aaps.interfaces.sync.Sync
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.toJson
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus

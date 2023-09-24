@@ -1,5 +1,6 @@
 package info.nightscout.core.extensions
 
+import app.aaps.core.main.extensions.iobCalc
 import app.aaps.interfaces.insulin.Insulin
 import app.aaps.interfaces.profile.ProfileFunction
 import app.aaps.interfaces.ui.UiInteraction

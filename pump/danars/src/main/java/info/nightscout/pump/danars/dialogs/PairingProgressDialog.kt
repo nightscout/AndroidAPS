@@ -9,11 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.danars.activities.PairingHelperActivity
 import info.nightscout.pump.danars.databinding.DanarsPairingProgressDialogBinding
 import info.nightscout.pump.danars.events.EventDanaRSPairingSuccess

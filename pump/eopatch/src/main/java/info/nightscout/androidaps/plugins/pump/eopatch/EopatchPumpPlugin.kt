@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.notifications.Notification
@@ -39,7 +40,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.kotlin.plusAssign

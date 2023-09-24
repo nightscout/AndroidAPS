@@ -1,12 +1,12 @@
 package info.nightscout.pump.medtrum
 
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.pump.DetailedBolusInfo
 import app.aaps.interfaces.pump.PumpSync
 import app.aaps.interfaces.pump.defs.PumpType
 import app.aaps.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.interfaces.utils.T
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import org.json.JSONObject

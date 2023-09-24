@@ -2,6 +2,7 @@ package info.nightscout.pump.danars.activities
 
 import android.os.Bundle
 import android.util.Base64
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
@@ -9,7 +10,6 @@ import app.aaps.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.interfaces.sharedPreferences.SP
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.hexStringToByteArray
 import info.nightscout.core.validators.DefaultEditTextValidator
 import info.nightscout.core.validators.EditTextValidator

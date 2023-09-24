@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -20,7 +21,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry

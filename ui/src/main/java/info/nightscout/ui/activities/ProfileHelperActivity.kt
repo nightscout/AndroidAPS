@@ -6,6 +6,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.plugin.ActivePlugin
 import app.aaps.interfaces.profile.ProfileFunction
@@ -20,11 +22,9 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.ui.R

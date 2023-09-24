@@ -7,6 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
+import app.aaps.core.main.extensions.toStringMedium
+import app.aaps.core.main.extensions.toStringShort
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.extensions.toVisibility
@@ -32,12 +35,9 @@ import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.extensions.toStringMedium
-import info.nightscout.core.extensions.toStringShort
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.SingleClickButton
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -276,7 +276,7 @@ class ActionsFragment : DaggerFragment() {
         val isPatchPump = pump.pumpDescription.isPatchPump
         binding.status.apply {
             cannulaOrPatch.text = if (cannulaOrPatch.text.isEmpty()) "" else if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
-            val imageResource = if (isPatchPump) info.nightscout.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
+            val imageResource = if (isPatchPump) app.aaps.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
             cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
             cannulaUsageLabel.visibility = isPatchPump.not().toVisibility()

@@ -15,6 +15,9 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.main.extensions.iobCalc
+import app.aaps.core.main.utils.ActionModeHelper
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.logging.AAPSLogger
@@ -31,11 +34,8 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import com.google.gson.Gson
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.extensions.iobCalc
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.ActionModeHelper
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -266,7 +266,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             holder.binding.carbsLayout.visibility = (ml.carbs != null && (ml.carbs.isValid || showInvalidated)).toVisibility()
             ml.carbs?.let { carbs ->
                 holder.binding.carbsTime.text = dateUtil.timeString(carbs.timestamp)
-                holder.binding.carbs.text = rh.gs(info.nightscout.core.main.R.string.format_carbs, carbs.amount.toInt())
+                holder.binding.carbs.text = rh.gs(app.aaps.core.main.R.string.format_carbs, carbs.amount.toInt())
                 holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
                 holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.carbsPump.visibility = carbs.interfaceIDs.isPumpHistory().toVisibility()
@@ -419,7 +419,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                     rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
             val carbs = mealLink.carbs
             if (carbs != null)
-                return rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbs.amount.toInt()) + "\n" +
+                return rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.main.R.string.format_carbs, carbs.amount.toInt()) + "\n" +
                     rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(carbs.timestamp)
         }
         return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())

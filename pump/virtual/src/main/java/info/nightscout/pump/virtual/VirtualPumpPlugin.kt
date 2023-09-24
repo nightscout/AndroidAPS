@@ -3,6 +3,10 @@ package info.nightscout.pump.virtual
 import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.plannedRemainingMinutes
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.db.PersistenceLayer
 import app.aaps.interfaces.iob.IobCobCalculator
@@ -35,10 +39,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import app.aaps.interfaces.utils.TimeChangeType
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.extensions.convertedToAbsolute
-import info.nightscout.core.extensions.plannedRemainingMinutes
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.pump.virtual.extensions.toText
@@ -71,7 +71,7 @@ open class VirtualPumpPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(VirtualPumpFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_virtual_pump)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_virtual_pump)
         .pluginName(info.nightscout.core.ui.R.string.virtual_pump)
         .shortName(R.string.virtual_pump_shortname)
         .preferencesId(R.xml.pref_virtual_pump)

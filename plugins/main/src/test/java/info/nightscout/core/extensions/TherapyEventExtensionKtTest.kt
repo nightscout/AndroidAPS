@@ -1,5 +1,6 @@
 package info.nightscout.core.extensions
 
+import app.aaps.core.main.extensions.isOlderThan
 import app.aaps.interfaces.utils.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

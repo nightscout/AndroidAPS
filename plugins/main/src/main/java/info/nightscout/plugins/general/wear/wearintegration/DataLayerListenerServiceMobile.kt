@@ -3,6 +3,7 @@ package info.nightscout.plugins.general.wear.wearintegration
 import android.os.Binder
 import android.os.Handler
 import android.os.HandlerThread
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.iob.IobCobCalculator
@@ -30,7 +31,6 @@ import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import dagger.android.AndroidInjection
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.wear.WearPlugin

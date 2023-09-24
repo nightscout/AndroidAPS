@@ -2,6 +2,7 @@ package info.nightscout.pump.dana.activities
 
 import android.content.Context
 import android.os.Bundle
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -15,7 +16,6 @@ import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.rx.events.EventInitializationChanged
 import app.aaps.interfaces.ui.UiInteraction
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.databinding.DanarUserOptionsActivityBinding

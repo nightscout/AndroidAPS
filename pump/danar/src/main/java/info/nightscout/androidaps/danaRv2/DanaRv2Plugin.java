@@ -12,6 +12,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.annotations.OpenForTesting;
+import app.aaps.core.main.constraints.ConstraintObject;
+import app.aaps.core.main.utils.fabric.FabricPrivacy;
 import app.aaps.interfaces.constraints.ConstraintsChecker;
 import app.aaps.interfaces.logging.AAPSLogger;
 import app.aaps.interfaces.logging.LTag;
@@ -39,8 +41,6 @@ import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
-import info.nightscout.core.constraints.ConstraintObject;
-import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.database.DanaHistoryDatabase;
 

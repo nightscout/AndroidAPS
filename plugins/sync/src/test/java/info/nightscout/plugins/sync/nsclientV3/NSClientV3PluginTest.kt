@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3
 
+import app.aaps.core.main.extensions.fromConstant
 import app.aaps.interfaces.insulin.Insulin
 import app.aaps.interfaces.logging.UserEntryLogger
 import app.aaps.interfaces.nsclient.StoreDataForDb
@@ -12,7 +13,6 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.fromConstant
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs

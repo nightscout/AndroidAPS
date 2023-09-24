@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
 import androidx.preference.Preference
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.notifications.Notification
@@ -66,7 +67,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.isSame
 import info.nightscout.core.utils.DateTimeUtil
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.common.data.PumpStatus
 import info.nightscout.pump.common.defs.PumpDriverState
 import info.nightscout.pump.common.sync.PumpDbEntryTBR

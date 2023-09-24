@@ -19,6 +19,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import app.aaps.core.main.utils.fabric.FabricPrivacy;
 import app.aaps.interfaces.queue.Callback;
 import app.aaps.interfaces.queue.CommandQueue;
 import app.aaps.interfaces.resources.ResourceHelper;
@@ -36,7 +37,6 @@ import info.nightscout.androidaps.plugins.pump.insight.descriptors.CartridgeStat
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.TotalDailyDose;
 import info.nightscout.androidaps.plugins.pump.insight.events.EventLocalInsightUpdateGUI;
-import info.nightscout.core.utils.fabric.FabricPrivacy;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 public class LocalInsightFragment extends DaggerFragment implements View.OnClickListener {

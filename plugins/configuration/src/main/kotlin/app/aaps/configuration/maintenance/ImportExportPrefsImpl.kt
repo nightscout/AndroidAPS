@@ -27,6 +27,7 @@ import app.aaps.configuration.maintenance.data.PrefsFormat
 import app.aaps.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.configuration.maintenance.dialogs.PrefImportSummaryDialog
 import app.aaps.configuration.maintenance.formats.EncryptedPrefsFormat
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.interfaces.androidPermissions.AndroidPermission
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.db.PersistenceLayer
@@ -58,7 +59,6 @@ import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
 import info.nightscout.core.ui.dialogs.WarningDialog
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.widget.TextView
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.UserEntryLogger
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.rx.AapsSchedulers
@@ -13,7 +14,6 @@ import app.aaps.interfaces.stats.TddCalculator
 import app.aaps.interfaces.stats.TirCalculator
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.impl.AppRepository

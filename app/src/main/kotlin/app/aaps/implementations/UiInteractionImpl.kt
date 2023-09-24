@@ -11,13 +11,13 @@ import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.MyPreferenceFragment
 import app.aaps.activities.PreferencesActivity
 import app.aaps.configuration.activities.SingleFragmentActivity
+import app.aaps.core.main.events.EventNewNotification
 import app.aaps.interfaces.notifications.Notification
 import app.aaps.interfaces.nsclient.NSAlarm
 import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.ui.activities.BolusProgressHelperActivity

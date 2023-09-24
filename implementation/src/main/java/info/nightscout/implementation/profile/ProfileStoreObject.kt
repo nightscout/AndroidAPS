@@ -1,6 +1,8 @@
 package info.nightscout.implementation.profile
 
 import androidx.collection.ArrayMap
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.plugin.ActivePlugin
@@ -11,8 +13,6 @@ import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.HardLimits
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.JsonHelper
 import org.json.JSONException
 import org.json.JSONObject

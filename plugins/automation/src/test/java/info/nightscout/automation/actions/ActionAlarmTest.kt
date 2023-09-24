@@ -63,7 +63,7 @@ class ActionAlarmTest : TestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp, sut.icon())
+        Assertions.assertEquals(app.aaps.core.main.R.drawable.ic_access_alarm_24dp, sut.icon())
     }
 
     @Test fun doActionTest() {

@@ -2,6 +2,7 @@ package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.main.extensions.friendlyDescription
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.logging.LTag
@@ -20,7 +21,6 @@ import info.nightscout.automation.elements.InputTempTarget
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerTempTarget
-import info.nightscout.core.extensions.friendlyDescription
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.JsonHelper.safeGetDouble
 import info.nightscout.database.entities.TemporaryTarget
@@ -55,7 +55,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.starttemptarget
     override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
-    @DrawableRes override fun icon(): Int = info.nightscout.core.main.R.drawable.ic_temptarget_high
+    @DrawableRes override fun icon(): Int = app.aaps.core.main.R.drawable.ic_temptarget_high
 
     override fun doAction(callback: Callback) {
         disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(tt()))

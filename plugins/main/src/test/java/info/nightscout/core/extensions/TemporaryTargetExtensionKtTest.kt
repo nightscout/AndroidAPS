@@ -1,5 +1,8 @@
 package info.nightscout.core.extensions
 
+import app.aaps.core.main.extensions.highValueToUnitsToString
+import app.aaps.core.main.extensions.lowValueToUnitsToString
+import app.aaps.core.main.extensions.target
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

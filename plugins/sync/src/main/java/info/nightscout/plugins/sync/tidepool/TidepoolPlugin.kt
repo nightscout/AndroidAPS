@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Spanned
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -24,7 +25,6 @@ import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate

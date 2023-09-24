@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import androidx.annotation.AttrRes
 import androidx.annotation.StringRes
 import androidx.appcompat.widget.PopupMenu
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.logging.AAPSLogger
@@ -20,7 +21,6 @@ import app.aaps.interfaces.rx.events.EventRefreshOverview
 import app.aaps.interfaces.rx.events.EventScale
 import app.aaps.interfaces.sharedPreferences.SP
 import com.google.gson.Gson
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.R
 import javax.inject.Inject
 import javax.inject.Singleton

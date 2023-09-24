@@ -1,10 +1,10 @@
 package info.nightscout.pump.danars.comm
 
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.pump.dana.DanaPump
 import javax.inject.Inject
 

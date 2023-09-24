@@ -19,7 +19,7 @@ class FoodPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(FoodFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_food)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_food)
         .pluginName(R.string.food)
         .shortName(R.string.food_short)
         .description(R.string.description_food),

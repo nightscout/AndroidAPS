@@ -74,7 +74,7 @@ class TriggerBgTest : TriggerTestBase() {
 
     @Test
     fun iconTest() {
-        Assertions.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_cp_bgcheck), TriggerBg(injector).icon())
+        Assertions.assertEquals(Optional.of(app.aaps.core.main.R.drawable.ic_cp_bgcheck), TriggerBg(injector).icon())
     }
 
     private fun generateOneCurrentRecordBgData(): MutableList<InMemoryGlucoseValue> {

@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaRKorean.comm
 
+import app.aaps.core.main.constraints.ConstraintObject
 import info.nightscout.androidaps.danaRKorean.comm.MessageHashTableRKorean
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.pump.danaR.comm.DanaRTestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

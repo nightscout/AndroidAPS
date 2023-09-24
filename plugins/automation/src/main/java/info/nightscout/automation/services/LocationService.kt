@@ -14,6 +14,7 @@ import android.os.Binder
 import android.os.Bundle
 import android.os.IBinder
 import androidx.core.app.ActivityCompat
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.notifications.NotificationHolder
@@ -26,7 +27,6 @@ import com.google.android.gms.location.LocationServices
 import dagger.android.DaggerService
 import info.nightscout.automation.R
 import info.nightscout.automation.events.EventLocationChange
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 

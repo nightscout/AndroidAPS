@@ -2,6 +2,7 @@ package app.aaps.di
 
 import android.content.Context
 import app.aaps.MainApp
+import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.implementations.ConfigImpl
 import app.aaps.implementations.InstantiatorImpl
 import app.aaps.implementations.UiInteractionImpl
@@ -15,7 +16,6 @@ import dagger.Lazy
 import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.workflow.CalculationWorkflow
 
 @Suppress("unused")
 @Module(

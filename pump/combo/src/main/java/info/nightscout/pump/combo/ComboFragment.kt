@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.queue.Callback
 import app.aaps.interfaces.queue.CommandQueue
 import app.aaps.interfaces.resources.ResourceHelper
@@ -15,7 +16,6 @@ import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.rx.events.EventQueueChanged
 import app.aaps.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.combo.data.ComboErrorUtil
 import info.nightscout.pump.combo.data.ComboErrorUtil.DisplayType
 import info.nightscout.pump.combo.databinding.CombopumpFragmentBinding

@@ -20,6 +20,8 @@ import app.aaps.configuration.setupwizard.elements.SWInfoText
 import app.aaps.configuration.setupwizard.elements.SWPlugin
 import app.aaps.configuration.setupwizard.elements.SWPreference
 import app.aaps.configuration.setupwizard.elements.SWRadioButton
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.CryptoUtil
 import app.aaps.interfaces.androidPermissions.AndroidPermission
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
@@ -45,8 +47,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.interfaces.utils.HardLimits
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.isRunningTest
 import javax.inject.Inject
 import javax.inject.Singleton

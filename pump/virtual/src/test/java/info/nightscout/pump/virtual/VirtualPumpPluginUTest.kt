@@ -1,5 +1,6 @@
 package info.nightscout.pump.virtual
 
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.db.PersistenceLayer
 import app.aaps.interfaces.iob.IobCobCalculator
@@ -13,7 +14,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

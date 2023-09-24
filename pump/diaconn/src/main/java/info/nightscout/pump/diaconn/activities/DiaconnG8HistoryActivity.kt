@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.plugin.ActivePlugin
 import app.aaps.interfaces.profile.ProfileFunction
 import app.aaps.interfaces.queue.Callback
@@ -21,7 +22,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.T
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.common.RecordTypes
 import info.nightscout.pump.diaconn.database.DiaconnHistoryRecord

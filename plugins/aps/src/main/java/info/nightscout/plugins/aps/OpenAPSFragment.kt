@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.AutosensResult
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -22,7 +23,6 @@ import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.aps.databinding.OpenapsFragmentBinding
 import info.nightscout.plugins.aps.events.EventOpenAPSUpdateGui
 import info.nightscout.plugins.aps.events.EventResetOpenAPSGui

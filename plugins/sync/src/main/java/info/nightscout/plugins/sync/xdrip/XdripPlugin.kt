@@ -10,6 +10,10 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import app.aaps.core.main.extensions.toStringShort
+import app.aaps.core.main.iob.generateCOBString
+import app.aaps.core.main.iob.round
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.db.GlucoseUnit
@@ -41,12 +45,8 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.toStringShort
-import info.nightscout.core.iob.generateCOBString
-import info.nightscout.core.iob.round
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.extensions.toJson
 import info.nightscout.plugins.sync.xdrip.events.EventXdripUpdateGUI
@@ -86,7 +86,7 @@ class XdripPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(XdripFragment::class.java.name)
-        .pluginIcon((info.nightscout.core.main.R.drawable.ic_blooddrop_48))
+        .pluginIcon((app.aaps.core.main.R.drawable.ic_blooddrop_48))
         .pluginName(R.string.xdrip)
         .shortName(R.string.xdrip_shortname)
         .preferencesId(R.xml.pref_xdrip)

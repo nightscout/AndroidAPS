@@ -2,6 +2,9 @@ package info.nightscout.plugins.profile
 
 import androidx.fragment.app.FragmentActivity
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.extensions.blockFromJsonArray
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.db.GlucoseUnit
@@ -28,9 +31,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.HardLimits
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.blockFromJsonArray
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.JsonHelper
@@ -63,7 +63,7 @@ class ProfilePlugin @Inject constructor(
         .mainType(PluginType.PROFILE)
         .fragmentClass(ProfileFragment::class.java.name)
         .enableByDefault(true)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_local_profile)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_local_profile)
         .pluginName(R.string.localprofile)
         .shortName(R.string.localprofile_shortname)
         .description(R.string.description_profile_local)

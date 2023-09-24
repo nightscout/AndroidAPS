@@ -10,6 +10,12 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.iob.generateCOBString
+import app.aaps.core.main.iob.round
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.interfaces.aps.ApsMode
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
@@ -47,13 +53,7 @@ import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.SafeParse
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.iob.generateCOBString
-import info.nightscout.core.iob.round
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
@@ -112,7 +112,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(SmsCommunicatorFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_sms)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_sms)
         .pluginName(R.string.smscommunicator)
         .shortName(R.string.smscommunicator_shortname)
         .preferencesId(R.xml.pref_smscommunicator)

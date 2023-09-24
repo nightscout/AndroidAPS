@@ -3,6 +3,7 @@ package info.nightscout.source
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.plugin.PluginBase
@@ -13,7 +14,6 @@ import app.aaps.interfaces.source.BgSource
 import app.aaps.interfaces.utils.DateUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
@@ -34,7 +34,7 @@ class EversensePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_eversense)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_eversense)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.eversense)
         .shortName(R.string.eversense_shortname)

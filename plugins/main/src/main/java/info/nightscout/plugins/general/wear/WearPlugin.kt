@@ -1,6 +1,7 @@
 package info.nightscout.plugins.general.wear
 
 import android.content.Context
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.plugin.PluginBase
 import app.aaps.interfaces.plugin.PluginDescription
@@ -21,7 +22,6 @@ import app.aaps.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.interfaces.rx.weardata.EventData
 import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.wear.wearintegration.DataHandlerMobile
 import info.nightscout.plugins.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
@@ -47,7 +47,7 @@ class WearPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(WearFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_watch)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
         .pluginName(info.nightscout.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)
         .preferencesId(R.xml.pref_wear)

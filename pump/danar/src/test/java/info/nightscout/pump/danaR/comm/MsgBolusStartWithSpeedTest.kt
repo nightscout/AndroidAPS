@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaR.comm
 
+import app.aaps.core.main.constraints.ConstraintObject
 import info.nightscout.androidaps.danar.comm.MsgBolusStartWithSpeed
-import info.nightscout.core.constraints.ConstraintObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito

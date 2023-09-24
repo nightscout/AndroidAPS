@@ -1,6 +1,7 @@
 package info.nightscout.implementation.userEntry
 
 import android.text.Spanned
+import app.aaps.core.main.R
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.profile.ProfileUtil
@@ -10,7 +11,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.Translator
 import dagger.Reusable
-import info.nightscout.core.main.R
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action

@@ -66,6 +66,6 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp), TriggerTimeRange(injector).icon())
+        Assertions.assertEquals(Optional.of(app.aaps.core.main.R.drawable.ic_access_alarm_24dp), TriggerTimeRange(injector).icon())
     }
 }

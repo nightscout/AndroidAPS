@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
@@ -15,7 +16,6 @@ import info.nightscout.automation.events.EventTriggerRemove
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDummy
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject

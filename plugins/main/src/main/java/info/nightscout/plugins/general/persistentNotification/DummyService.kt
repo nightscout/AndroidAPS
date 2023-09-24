@@ -5,6 +5,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.notifications.NotificationHolder
@@ -12,7 +13,6 @@ import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.rx.events.EventAppExit
 import dagger.android.DaggerService
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 

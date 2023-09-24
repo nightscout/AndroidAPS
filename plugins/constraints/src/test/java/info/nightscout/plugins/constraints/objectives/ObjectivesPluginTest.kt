@@ -1,5 +1,6 @@
 package info.nightscout.plugins.constraints.objectives
 
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.constraints.Objectives
 import app.aaps.interfaces.plugin.ActivePlugin
@@ -10,7 +11,6 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.plugins.constraints.R
 import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import org.junit.jupiter.api.BeforeEach

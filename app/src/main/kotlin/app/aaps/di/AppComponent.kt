@@ -2,6 +2,7 @@ package app.aaps.di
 
 import app.aaps.MainApp
 import app.aaps.configuration.di.ConfigurationModule
+import app.aaps.core.main.di.CoreModule
 import app.aaps.shared.impl.di.SharedImplModule
 import dagger.BindsInstance
 import dagger.Component
@@ -16,7 +17,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.automation.di.AutomationModule
-import info.nightscout.core.di.CoreModule
 import info.nightscout.core.validators.di.ValidatorsModule
 import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.implementation.di.ImplementationModule

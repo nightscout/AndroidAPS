@@ -1,5 +1,6 @@
 package info.nightscout.automation.actions
 
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.ConfigBuilder
 import app.aaps.interfaces.constraints.Constraint
@@ -19,7 +20,6 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.triggers.Trigger
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.impl.AppRepository
 import org.junit.jupiter.api.BeforeEach

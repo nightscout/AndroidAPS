@@ -8,6 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.androidPermissions.AndroidPermission
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.constraints.Constraint
@@ -58,7 +59,6 @@ import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.combov2.activities.ComboV2PairingActivity

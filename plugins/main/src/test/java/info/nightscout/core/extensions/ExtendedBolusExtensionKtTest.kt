@@ -1,5 +1,8 @@
 package info.nightscout.core.extensions
 
+import app.aaps.core.main.extensions.iobCalc
+import app.aaps.core.main.extensions.isInProgress
+import app.aaps.core.main.extensions.toTemporaryBasal
 import app.aaps.interfaces.aps.AutosensResult
 import app.aaps.interfaces.aps.SMBDefaults
 import app.aaps.interfaces.insulin.Insulin

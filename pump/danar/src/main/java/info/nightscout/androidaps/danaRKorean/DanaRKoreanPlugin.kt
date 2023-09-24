@@ -6,6 +6,8 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -32,8 +34,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import io.reactivex.rxjava3.kotlin.plusAssign

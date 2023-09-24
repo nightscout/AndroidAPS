@@ -3,6 +3,11 @@ package info.nightscout.plugins.general.overview.graphData
 import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
+import app.aaps.core.main.graph.OverviewData
+import app.aaps.core.main.graph.data.BolusDataPoint
+import app.aaps.core.main.graph.data.EffectiveProfileSwitchDataPoint
+import app.aaps.core.main.graph.data.GlucoseValueDataPoint
+import app.aaps.core.main.graph.data.TimeAsXAxisLabelFormatter
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.profile.DefaultValueHelper
@@ -14,11 +19,6 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.graph.OverviewData
-import info.nightscout.core.graph.data.BolusDataPoint
-import info.nightscout.core.graph.data.EffectiveProfileSwitchDataPoint
-import info.nightscout.core.graph.data.GlucoseValueDataPoint
-import info.nightscout.core.graph.data.TimeAsXAxisLabelFormatter
 import info.nightscout.core.ui.toast.ToastUtils
 import javax.inject.Inject
 import kotlin.math.abs
@@ -63,10 +63,10 @@ class GraphData(
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
         val inRangeAreaDataPoints = arrayOf(
-            info.nightscout.core.graph.data.DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
-            info.nightscout.core.graph.data.DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
+            app.aaps.core.main.graph.data.DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
+            app.aaps.core.main.graph.data.DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
         )
-        addSeries(info.nightscout.core.graph.data.AreaGraphSeries(inRangeAreaDataPoints).also {
+        addSeries(app.aaps.core.main.graph.data.AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
             it.backgroundColor = rh.gac(graph.context, info.nightscout.core.ui.R.attr.inRangeBackground)

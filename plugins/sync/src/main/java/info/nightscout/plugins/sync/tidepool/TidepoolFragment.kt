@@ -11,12 +11,12 @@ import android.widget.ScrollView
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.databinding.TidepoolFragmentBinding
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader

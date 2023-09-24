@@ -7,6 +7,8 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.interfaces.automation.Automation
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.configuration.Constants.INSULIN_PLUS1_DEFAULT
@@ -33,11 +35,9 @@ import app.aaps.interfaces.utils.SafeParse
 import app.aaps.interfaces.utils.T
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit

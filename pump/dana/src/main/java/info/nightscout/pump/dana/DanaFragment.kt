@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -35,7 +36,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.dana.activities.DanaHistoryActivity
 import info.nightscout.pump.dana.activities.DanaUserOptionsActivity
 import info.nightscout.pump.dana.databinding.DanarFragmentBinding

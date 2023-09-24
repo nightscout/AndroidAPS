@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.viewmodel.action
 
 import androidx.annotation.StringRes
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.notifications.Notification
@@ -26,7 +27,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.Resolve
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.I8n
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.queue.Callback
 import app.aaps.interfaces.queue.CommandQueue
@@ -21,7 +22,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

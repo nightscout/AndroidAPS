@@ -9,12 +9,12 @@ import app.aaps.configuration.maintenance.data.PrefMetadataMap
 import app.aaps.configuration.maintenance.data.Prefs
 import app.aaps.configuration.maintenance.data.PrefsFormat
 import app.aaps.configuration.maintenance.data.PrefsStatusImpl
+import app.aaps.core.main.utils.CryptoUtil
 import app.aaps.interfaces.maintenance.PrefMetadata
 import app.aaps.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.interfaces.maintenance.PrefsStatus
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.storage.Storage
-import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.core.utils.hexStringToByteArray
 import info.nightscout.core.utils.toHex
 import org.json.JSONException

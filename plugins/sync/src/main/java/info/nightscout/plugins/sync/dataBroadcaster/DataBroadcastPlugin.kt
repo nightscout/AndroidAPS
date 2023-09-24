@@ -4,6 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ResolveInfo
 import android.os.Bundle
+import app.aaps.core.main.extensions.durationInMinutes
+import app.aaps.core.main.extensions.toStringFull
+import app.aaps.core.main.iob.round
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.iob.GlucoseStatusProvider
@@ -30,10 +34,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.durationInMinutes
-import info.nightscout.core.extensions.toStringFull
-import info.nightscout.core.iob.round
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

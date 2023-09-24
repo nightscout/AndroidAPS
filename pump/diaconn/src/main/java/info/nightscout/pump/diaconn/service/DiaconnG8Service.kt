@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -33,7 +34,6 @@ import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.interfaces.utils.DateUtil
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R

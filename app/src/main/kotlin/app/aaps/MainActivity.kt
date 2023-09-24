@@ -34,6 +34,8 @@ import app.aaps.activities.PreferencesActivity
 import app.aaps.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.configuration.activities.SingleFragmentActivity
 import app.aaps.configuration.setupwizard.SetupWizardActivity
+import app.aaps.core.main.utils.CryptoUtil
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.androidPermissions.AndroidPermission
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
@@ -65,8 +67,6 @@ import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.CryptoUtil
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.isRunningRealPumpTest
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources

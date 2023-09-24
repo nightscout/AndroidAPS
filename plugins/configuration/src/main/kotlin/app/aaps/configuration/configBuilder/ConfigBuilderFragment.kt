@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import app.aaps.configuration.R
 import app.aaps.configuration.configBuilder.events.EventConfigBuilderUpdateGui
 import app.aaps.configuration.databinding.ConfigbuilderFragmentBinding
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.configuration.ConfigBuilder
 import app.aaps.interfaces.extensions.toVisibility
@@ -18,7 +19,6 @@ import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.ui.UiInteraction
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

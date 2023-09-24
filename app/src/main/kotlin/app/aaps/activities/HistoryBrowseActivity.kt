@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import app.aaps.core.main.events.EventIobCalculationProgress
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.extensions.toVisibilityKeepSpace
@@ -30,10 +33,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
-import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.plugins.general.overview.graphData.GraphData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

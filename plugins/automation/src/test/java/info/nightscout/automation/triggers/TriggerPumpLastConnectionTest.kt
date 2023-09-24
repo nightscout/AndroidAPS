@@ -53,7 +53,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_remove), TriggerPumpLastConnection(injector).icon())
+        Assertions.assertEquals(Optional.of(app.aaps.core.main.R.drawable.ic_remove), TriggerPumpLastConnection(injector).icon())
     }
 
     @Test fun friendlyNameTest() {

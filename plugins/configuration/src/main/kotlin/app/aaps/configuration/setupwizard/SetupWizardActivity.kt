@@ -13,6 +13,7 @@ import app.aaps.configuration.R
 import app.aaps.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.configuration.databinding.ActivitySetupwizardBinding
 import app.aaps.configuration.setupwizard.elements.SWItem
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.events.EventProfileStoreChanged
 import app.aaps.interfaces.rx.events.EventProfileSwitchChanged
@@ -25,7 +26,6 @@ import app.aaps.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.locale.LocaleHelper.update
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

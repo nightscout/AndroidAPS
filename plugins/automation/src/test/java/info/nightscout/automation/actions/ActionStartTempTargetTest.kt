@@ -38,7 +38,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(info.nightscout.core.main.R.drawable.ic_temptarget_high, sut.icon())
+        Assertions.assertEquals(app.aaps.core.main.R.drawable.ic_temptarget_high, sut.icon())
     }
 
     @Test fun doActionTest() {

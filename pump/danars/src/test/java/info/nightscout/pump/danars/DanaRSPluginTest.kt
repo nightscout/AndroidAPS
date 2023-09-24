@@ -1,5 +1,6 @@
 package info.nightscout.pump.danars
 
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.plugin.PluginType
 import app.aaps.interfaces.pump.DetailedBolusInfoStorage
@@ -7,7 +8,6 @@ import app.aaps.interfaces.pump.PumpSync
 import app.aaps.interfaces.pump.TemporaryBasalStorage
 import app.aaps.interfaces.queue.CommandQueue
 import dagger.android.AndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

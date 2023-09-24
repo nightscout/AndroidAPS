@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.main.utils.fabric.FabricPrivacy;
 import app.aaps.interfaces.logging.AAPSLogger;
 import app.aaps.interfaces.logging.LTag;
 import app.aaps.interfaces.notifications.Notification;
@@ -109,7 +110,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOvervi
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.core.utils.DateTimeUtil;
-import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.pump.common.defs.TempBasalPair;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 

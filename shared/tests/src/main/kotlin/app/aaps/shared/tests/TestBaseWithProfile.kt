@@ -1,6 +1,9 @@
 package app.aaps.shared.tests
 
 import android.content.Context
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.iob.IobCobCalculator
@@ -16,9 +19,6 @@ import app.aaps.interfaces.utils.HardLimits
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.implementation.profile.ProfileStoreObject

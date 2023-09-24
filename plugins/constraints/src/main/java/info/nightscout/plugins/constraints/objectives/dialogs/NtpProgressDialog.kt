@@ -5,6 +5,7 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.resources.ResourceHelper
@@ -12,7 +13,6 @@ import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.rx.events.EventNtpStatus
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.constraints.databinding.DialogNtpProgressBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

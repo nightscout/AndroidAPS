@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.core.main.wizard.QuickWizard
+import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.sharedPreferences.SP
@@ -19,8 +21,6 @@ import dagger.android.support.DaggerDialogFragment
 import info.nightscout.core.ui.extensions.selectedItemPosition
 import info.nightscout.core.ui.extensions.setEnableForChildren
 import info.nightscout.core.ui.extensions.setSelection
-import info.nightscout.core.wizard.QuickWizard
-import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogEditQuickwizardBinding
 import info.nightscout.ui.events.EventQuickWizardChange

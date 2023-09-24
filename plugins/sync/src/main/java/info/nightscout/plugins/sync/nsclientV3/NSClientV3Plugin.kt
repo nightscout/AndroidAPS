@@ -12,6 +12,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.logging.AAPSLogger
@@ -50,7 +51,6 @@ import app.aaps.interfaces.utils.T
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
 import info.nightscout.database.impl.AppRepository

@@ -1,6 +1,7 @@
 package info.nightscout.automation
 
 import android.content.Context
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.constraints.ConstraintsChecker
@@ -17,7 +18,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.automation.services.LocationServiceHelper
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.automation.ui.TimerUtil
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

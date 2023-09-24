@@ -1,5 +1,6 @@
 package info.nightscout.implementation
 
+import app.aaps.core.main.events.EventNewNotification
 import app.aaps.interfaces.alerts.LocalAlertUtils
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.configuration.Constants
@@ -16,7 +17,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry.Action

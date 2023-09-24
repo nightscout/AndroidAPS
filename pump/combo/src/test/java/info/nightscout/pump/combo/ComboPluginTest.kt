@@ -1,6 +1,7 @@
 package info.nightscout.pump.combo
 
 import android.content.Context
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.plugin.PluginType
 import app.aaps.interfaces.profile.ProfileFunction
 import app.aaps.interfaces.pump.PumpEnactResult
@@ -13,7 +14,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.pump.combo.ruffyscripter.history.Bolus
 import org.junit.jupiter.api.Assertions

@@ -3,6 +3,7 @@ package info.nightscout.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.interfaces.aps.AutosensDataStore
 import app.aaps.interfaces.iob.IobCobCalculator
 import app.aaps.interfaces.logging.AAPSLogger
@@ -13,7 +14,6 @@ import app.aaps.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

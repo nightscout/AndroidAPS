@@ -22,6 +22,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.main.utils.ActionModeHelper
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.logging.UserEntryLogger
 import app.aaps.interfaces.resources.ResourceHelper
@@ -39,9 +41,7 @@ import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.core.ui.dragHelpers.OnStartDragListener
 import info.nightscout.core.ui.dragHelpers.SimpleItemTouchHelperCallback
-import info.nightscout.core.utils.ActionModeHelper
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import io.reactivex.rxjava3.disposables.CompositeDisposable

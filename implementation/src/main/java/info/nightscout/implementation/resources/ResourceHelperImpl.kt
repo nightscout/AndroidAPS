@@ -18,10 +18,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.resources.ResourceHelper
 import info.nightscout.core.ui.getThemeColor
 import info.nightscout.core.ui.locale.LocaleHelper
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import java.util.Locale
 import javax.inject.Inject
 

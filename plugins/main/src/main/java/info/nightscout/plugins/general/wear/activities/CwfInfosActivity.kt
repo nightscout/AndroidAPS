@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.resources.ResourceHelper
@@ -23,7 +24,6 @@ import app.aaps.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.CwfInfosActivityBinding
 import info.nightscout.plugins.databinding.CwfInfosActivityPrefItemBinding

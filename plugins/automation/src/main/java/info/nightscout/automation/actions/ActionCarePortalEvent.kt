@@ -2,6 +2,7 @@ package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.main.extensions.fromConstant
 import app.aaps.interfaces.iob.GlucoseStatusProvider
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.logging.UserEntryLogger
@@ -16,7 +17,6 @@ import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.core.extensions.fromConstant
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry

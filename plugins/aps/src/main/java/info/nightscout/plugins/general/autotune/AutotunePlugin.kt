@@ -3,6 +3,8 @@
 package info.nightscout.plugins.general.autotune
 
 import android.view.View
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.autotune.Autotune
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.insulin.Insulin
@@ -24,8 +26,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.MidnightTime
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.elements.WeekDay
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.UserEntry
@@ -68,7 +68,7 @@ class AutotunePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutotuneFragment::class.qualifiedName)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_autotune)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_autotune)
         .pluginName(info.nightscout.core.ui.R.string.autotune)
         .shortName(info.nightscout.core.ui.R.string.autotune_shortname)
         .preferencesId(R.xml.pref_autotune)

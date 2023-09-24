@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 
 import android.content.Context
 import android.content.Intent
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.notifications.Notification
@@ -29,7 +30,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable

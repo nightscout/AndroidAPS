@@ -1,9 +1,9 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.plugins.sync.nsclient.extensions.fromConstant

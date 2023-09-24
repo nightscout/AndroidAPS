@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.logging.UserEntryLogger
@@ -19,11 +21,9 @@ import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.SafeParse
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit

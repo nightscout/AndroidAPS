@@ -60,7 +60,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.triggerHeartRateDesc, rh.gs(comparator.value.stringRes), heartRate.value)
 
-    override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.main.R.drawable.ic_cp_heart_rate)
+    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.main.R.drawable.ic_cp_heart_rate)
 
     override fun duplicate(): Trigger {
         return TriggerHeartRate(injector).also { o ->

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.maintenance.ImportExportPrefs
@@ -21,7 +22,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.WearFragmentBinding
 import info.nightscout.plugins.general.wear.activities.CwfInfosActivity

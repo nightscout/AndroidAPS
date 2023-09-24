@@ -1,5 +1,8 @@
 package app.aaps.activities
 
+import app.aaps.core.main.graph.OverviewData
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.plugin.ActivePlugin
 import app.aaps.interfaces.profile.DefaultValueHelper
@@ -11,9 +14,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.graph.OverviewData
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin

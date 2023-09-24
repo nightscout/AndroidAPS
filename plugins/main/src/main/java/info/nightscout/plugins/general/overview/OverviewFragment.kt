@@ -24,6 +24,13 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.extensions.directionToIcon
+import app.aaps.core.main.graph.OverviewData
+import app.aaps.core.main.iob.displayText
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.aps.VariableSensitivityResult
 import app.aaps.interfaces.automation.Automation
@@ -79,18 +86,11 @@ import app.aaps.interfaces.utils.TrendCalculator
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.extensions.directionToIcon
-import info.nightscout.core.graph.OverviewData
-import info.nightscout.core.iob.displayText
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.SingleClickButton
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.JsonHelper
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.interfaces.end
@@ -543,7 +543,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
                 binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
                 val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG)
-                binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(info.nightscout.core.main.R.string.format_carbs, quickWizardEntry.carbs()) +
+                binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(app.aaps.core.main.R.string.format_carbs, quickWizardEntry.carbs()) +
                     " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                 if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
             } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
@@ -590,7 +590,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
                 binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.cgmDexColor))
             } else if (xDripIsBgSource) {
-                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(info.nightscout.core.main.R.drawable.ic_xdrip), null, null)
+                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(app.aaps.core.main.R.drawable.ic_xdrip), null, null)
                 for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
                     drawable?.mutate()
                     drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, info.nightscout.core.ui.R.attr.cgmXdripColor), PorterDuff.Mode.SRC_IN)
@@ -688,7 +688,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     }
 
                     (loop as PluginBase).isEnabled() && closedLoopEnabled.value()               -> {
-                        binding.infoLayout.apsMode.setImageResource(info.nightscout.core.main.R.drawable.ic_loop_closed)
+                        binding.infoLayout.apsMode.setImageResource(app.aaps.core.main.R.drawable.ic_loop_closed)
                         apsModeSetA11yLabel(info.nightscout.core.ui.R.string.closedloop)
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
@@ -891,7 +891,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val pump = activePlugin.activePump
         val isPatchPump = pump.pumpDescription.isPatchPump
         binding.statusLightsLayout.apply {
-            cannulaOrPatch.setImageResource(if (isPatchPump) info.nightscout.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
+            cannulaOrPatch.setImageResource(if (isPatchPump) app.aaps.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
             cannulaOrPatch.contentDescription = rh.gs(if (isPatchPump) R.string.statuslights_patch_pump_age else R.string.statuslights_cannula_age)
             insulinAge.visibility = isPatchPump.not().toVisibility()
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
@@ -1091,9 +1091,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (config.NSCLIENT && sp.getBoolean(info.nightscout.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
             !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()
         ) {
-            binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_swap_vert_black_48dp_green)
+            binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.main.R.drawable.ic_swap_vert_black_48dp_green)
         } else {
-            binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_x_swap_vert)
+            binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.main.R.drawable.ic_x_swap_vert)
         }
 
         binding.infoLayout.sensitivity.text =

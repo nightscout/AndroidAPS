@@ -43,7 +43,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(info.nightscout.core.main.R.drawable.ic_cp_note, sut.icon())
+        Assertions.assertEquals(app.aaps.core.main.R.drawable.ic_cp_note, sut.icon())
     }
 
     @Test fun doActionTest() {

@@ -8,6 +8,11 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.getCustomizedName
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.androidPermissions.AndroidPermission
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.constraints.ConstraintsChecker
@@ -39,12 +44,7 @@ import app.aaps.interfaces.ui.UiInteraction
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.extensions.getCustomizedName
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ProfileSwitch

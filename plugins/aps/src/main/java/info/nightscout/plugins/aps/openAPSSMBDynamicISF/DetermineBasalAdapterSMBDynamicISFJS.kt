@@ -1,5 +1,8 @@
 package info.nightscout.plugins.aps.openAPSSMBDynamicISF
 
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.getPassedDurationToTimeInMinutes
+import app.aaps.core.main.extensions.plannedRemainingMinutes
 import app.aaps.interfaces.aps.DetermineBasalAdapter
 import app.aaps.interfaces.aps.SMBDefaults
 import app.aaps.interfaces.db.GlucoseUnit
@@ -17,9 +20,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.utils.Round
 import app.aaps.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.convertedToAbsolute
-import info.nightscout.core.extensions.getPassedDurationToTimeInMinutes
-import info.nightscout.core.extensions.plannedRemainingMinutes
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.logger.LoggerCallback
 import info.nightscout.plugins.aps.openAPSSMB.DetermineBasalResultSMB

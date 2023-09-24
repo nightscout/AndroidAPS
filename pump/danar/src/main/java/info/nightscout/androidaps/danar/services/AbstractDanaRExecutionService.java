@@ -20,6 +20,7 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
+import app.aaps.core.main.utils.fabric.FabricPrivacy;
 import app.aaps.interfaces.logging.AAPSLogger;
 import app.aaps.interfaces.logging.LTag;
 import app.aaps.interfaces.notifications.Notification;
@@ -55,7 +56,6 @@ import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
 import info.nightscout.core.ui.toast.ToastUtils;
-import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.comm.RecordTypes;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;

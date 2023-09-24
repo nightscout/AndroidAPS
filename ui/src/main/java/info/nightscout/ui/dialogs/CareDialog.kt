@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
+import app.aaps.core.main.extensions.fromConstant
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.iob.GlucoseStatusProvider
@@ -21,7 +22,6 @@ import app.aaps.interfaces.utils.T
 import app.aaps.interfaces.utils.Translator
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.fromConstant
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.TherapyEvent
@@ -90,13 +90,13 @@ class CareDialog : DialogFragmentWithDate() {
 
         binding.icon.setImageResource(
             when (options) {
-                UiInteraction.EventType.BGCHECK        -> info.nightscout.core.main.R.drawable.ic_cp_bgcheck
-                UiInteraction.EventType.SENSOR_INSERT  -> info.nightscout.core.main.R.drawable.ic_cp_cgm_insert
-                UiInteraction.EventType.BATTERY_CHANGE -> info.nightscout.core.main.R.drawable.ic_cp_pump_battery
-                UiInteraction.EventType.NOTE           -> info.nightscout.core.main.R.drawable.ic_cp_note
-                UiInteraction.EventType.EXERCISE       -> info.nightscout.core.main.R.drawable.ic_cp_exercise
-                UiInteraction.EventType.QUESTION       -> info.nightscout.core.main.R.drawable.ic_cp_question
-                UiInteraction.EventType.ANNOUNCEMENT   -> info.nightscout.core.main.R.drawable.ic_cp_announcement
+                UiInteraction.EventType.BGCHECK        -> app.aaps.core.main.R.drawable.ic_cp_bgcheck
+                UiInteraction.EventType.SENSOR_INSERT  -> app.aaps.core.main.R.drawable.ic_cp_cgm_insert
+                UiInteraction.EventType.BATTERY_CHANGE -> app.aaps.core.main.R.drawable.ic_cp_pump_battery
+                UiInteraction.EventType.NOTE           -> app.aaps.core.main.R.drawable.ic_cp_note
+                UiInteraction.EventType.EXERCISE       -> app.aaps.core.main.R.drawable.ic_cp_exercise
+                UiInteraction.EventType.QUESTION       -> app.aaps.core.main.R.drawable.ic_cp_question
+                UiInteraction.EventType.ANNOUNCEMENT   -> app.aaps.core.main.R.drawable.ic_cp_announcement
             }
         )
         binding.title.text = rh.gs(

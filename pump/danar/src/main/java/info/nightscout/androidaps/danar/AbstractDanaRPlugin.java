@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import app.aaps.core.main.constraints.ConstraintObject;
 import app.aaps.interfaces.constraints.Constraint;
 import app.aaps.interfaces.constraints.ConstraintsChecker;
 import app.aaps.interfaces.constraints.PluginConstraints;
@@ -37,7 +38,6 @@ import app.aaps.interfaces.utils.DecimalFormatter;
 import app.aaps.interfaces.utils.Round;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.core.constraints.ConstraintObject;
 import info.nightscout.pump.dana.DanaFragment;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.comm.RecordTypes;

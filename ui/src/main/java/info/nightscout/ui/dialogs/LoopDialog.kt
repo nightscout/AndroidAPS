@@ -10,6 +10,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.ApsMode
 import app.aaps.interfaces.aps.Loop
 import app.aaps.interfaces.configuration.ConfigBuilder
@@ -38,10 +40,8 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit

@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.main.extensions.fromConstant
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -22,9 +24,7 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.fromConstant
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry.Action
@@ -51,7 +51,7 @@ class DexcomPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_dexcom_g6)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_dexcom_g6)
         .preferencesId(R.xml.pref_dexcom)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)

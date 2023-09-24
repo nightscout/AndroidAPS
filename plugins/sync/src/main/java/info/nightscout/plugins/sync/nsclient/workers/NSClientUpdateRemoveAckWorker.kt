@@ -3,6 +3,7 @@ package info.nightscout.plugins.sync.nsclient.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.interfaces.rx.AapsSchedulers
 import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.rx.events.EventNSClientNewLog
@@ -20,7 +21,6 @@ import app.aaps.interfaces.sync.DataSyncSelector.PairTemporaryTarget
 import app.aaps.interfaces.sync.DataSyncSelector.PairTherapyEvent
 import info.nightscout.core.utils.notifyAll
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.sync.nsclient.acks.NSUpdateAck
 import kotlinx.coroutines.Dispatchers

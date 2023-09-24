@@ -53,7 +53,7 @@ fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, dateUtil: Da
             if (includeCarbs)
                 row.addView(TextView(context).apply {
                     gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 5 }; text = rh.gs(
-                    info.nightscout.core.main.R.string.format_carbs, carbs
+                    app.aaps.core.main.R.string.format_carbs, carbs
                         .toInt()
                 )
                 })
@@ -87,7 +87,7 @@ fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, days: Int, i
             if (includeCarbs)
                 row.addView(TextView(context).apply {
                     gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 5 }; text = rh.gs(
-                    info.nightscout.core.main.R.string.format_carbs, carbs
+                    app.aaps.core.main.R.string.format_carbs, carbs
                         .toInt()
                 )
                 })

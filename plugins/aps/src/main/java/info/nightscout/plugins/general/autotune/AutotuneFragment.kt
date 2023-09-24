@@ -17,6 +17,8 @@ import android.widget.ArrayAdapter
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.extensions.runOnUiThread
@@ -39,10 +41,8 @@ import app.aaps.interfaces.utils.Round
 import app.aaps.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.elements.WeekDay
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.plugins.aps.R

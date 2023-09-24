@@ -2,6 +2,7 @@ package info.nightscout.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.main.events.EventNewNotification
 import app.aaps.interfaces.notifications.NotificationUserMessage
 import app.aaps.interfaces.pump.PumpEnactResult
 import app.aaps.interfaces.queue.Callback
@@ -12,7 +13,6 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction

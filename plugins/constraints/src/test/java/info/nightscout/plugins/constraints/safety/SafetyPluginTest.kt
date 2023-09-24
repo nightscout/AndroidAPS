@@ -1,5 +1,6 @@
 package info.nightscout.plugins.constraints.safety
 
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.interfaces.aps.ApsMode
 import app.aaps.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.interfaces.constraints.Constraint
@@ -15,7 +16,6 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin

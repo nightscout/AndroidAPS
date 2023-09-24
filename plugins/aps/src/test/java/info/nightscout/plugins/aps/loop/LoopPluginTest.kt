@@ -2,6 +2,7 @@ package info.nightscout.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.ApsMode
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.constraints.ConstraintsChecker
@@ -21,7 +22,6 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sdk.interfaces.RunningConfiguration

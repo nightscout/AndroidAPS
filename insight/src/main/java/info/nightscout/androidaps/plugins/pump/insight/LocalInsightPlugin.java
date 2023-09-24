@@ -26,6 +26,7 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.main.events.EventNewNotification;
 import app.aaps.interfaces.configuration.Config;
 import app.aaps.interfaces.constraints.Constraint;
 import app.aaps.interfaces.constraints.PluginConstraints;
@@ -131,7 +132,6 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_erro
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.NoActiveTBRToCanceLException;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ParameterBlockUtil;
-import info.nightscout.core.events.EventNewNotification;
 
 @Singleton
 public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight, PluginConstraints, OwnDatabasePlugin,

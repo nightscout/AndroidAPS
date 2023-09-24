@@ -6,6 +6,8 @@ import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.extensions.toStringFull
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.iob.IobCobCalculator
 import app.aaps.interfaces.profile.ProfileFunction
 import app.aaps.interfaces.pump.defs.DoseStepSize
@@ -20,8 +22,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.T
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.extensions.toStringFull
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.virtual.databinding.VirtualPumpFragmentBinding
 import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.plugin.ActivePlugin
 import app.aaps.interfaces.profile.ProfileFunction
@@ -29,7 +30,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.interfaces.utils.SafeParse
 import app.aaps.interfaces.utils.T
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.ui.databinding.ActivityTddStatsBinding

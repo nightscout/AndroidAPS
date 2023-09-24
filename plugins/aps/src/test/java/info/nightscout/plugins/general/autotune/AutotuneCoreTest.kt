@@ -1,12 +1,12 @@
 package info.nightscout.plugins.general.autotune
 
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.profile.PureProfile
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock

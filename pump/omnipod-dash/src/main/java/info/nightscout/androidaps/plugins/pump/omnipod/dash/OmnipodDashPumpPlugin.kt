@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
 import app.aaps.interfaces.notifications.Notification
@@ -73,7 +74,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOvervi
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
 import info.nightscout.core.utils.DateTimeUtil
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable

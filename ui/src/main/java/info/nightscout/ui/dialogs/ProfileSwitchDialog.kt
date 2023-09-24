@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.extensions.toVisibility
@@ -23,7 +24,6 @@ import app.aaps.interfaces.rx.bus.RxBus
 import app.aaps.interfaces.utils.HardLimits
 import app.aaps.interfaces.utils.T
 import com.google.common.base.Joiner
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper

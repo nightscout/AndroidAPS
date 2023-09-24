@@ -1,11 +1,11 @@
 package info.nightscout.interfaces.pump
 
+import app.aaps.core.main.pump.toHtml
 import app.aaps.interfaces.pump.PumpEnactResult
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.pump.toHtml
 import info.nightscout.plugins.aps.loop.extensions.json
 import info.nightscout.pump.virtual.extensions.toText
 import org.json.JSONObject

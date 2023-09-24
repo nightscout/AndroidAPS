@@ -13,6 +13,13 @@ import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.convertedToPercent
+import app.aaps.core.main.extensions.plannedRemainingMinutes
+import app.aaps.core.main.iob.json
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.APSResult
 import app.aaps.interfaces.aps.ApsMode
 import app.aaps.interfaces.aps.Loop
@@ -56,13 +63,6 @@ import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.HardLimits
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.extensions.convertedToAbsolute
-import info.nightscout.core.extensions.convertedToPercent
-import info.nightscout.core.extensions.plannedRemainingMinutes
-import info.nightscout.core.iob.json
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.OfflineEvent
@@ -111,7 +111,7 @@ class LoopPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.LOOP)
         .fragmentClass(LoopFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_loop_closed_white)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_loop_closed_white)
         .pluginName(info.nightscout.core.ui.R.string.loop)
         .shortName(R.string.loop_shortname)
         .preferencesId(R.xml.pref_loop)
@@ -340,15 +340,15 @@ class LoopPlugin @Inject constructor(
                                 val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction5m.putExtra("ignoreDuration", 5)
                                 val pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-                                val actionIgnore5m = NotificationCompat.Action(info.nightscout.core.main.R.drawable.ic_notif_aaps, rh.gs(R.string.ignore5m, "Ignore 5m"), pendingIntent5m)
+                                val actionIgnore5m = NotificationCompat.Action(app.aaps.core.main.R.drawable.ic_notif_aaps, rh.gs(R.string.ignore5m, "Ignore 5m"), pendingIntent5m)
                                 val intentAction15m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction15m.putExtra("ignoreDuration", 15)
                                 val pendingIntent15m = PendingIntent.getBroadcast(context, 1, intentAction15m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-                                val actionIgnore15m = NotificationCompat.Action(info.nightscout.core.main.R.drawable.ic_notif_aaps, rh.gs(R.string.ignore15m, "Ignore 15m"), pendingIntent15m)
+                                val actionIgnore15m = NotificationCompat.Action(app.aaps.core.main.R.drawable.ic_notif_aaps, rh.gs(R.string.ignore15m, "Ignore 15m"), pendingIntent15m)
                                 val intentAction30m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction30m.putExtra("ignoreDuration", 30)
                                 val pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
-                                val actionIgnore30m = NotificationCompat.Action(info.nightscout.core.main.R.drawable.ic_notif_aaps, rh.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m)
+                                val actionIgnore30m = NotificationCompat.Action(app.aaps.core.main.R.drawable.ic_notif_aaps, rh.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m)
                                 val builder = NotificationCompat.Builder(context, CHANNEL_ID)
                                 builder.setSmallIcon(info.nightscout.core.ui.R.drawable.notif_icon)
                                     .setContentTitle(rh.gs(R.string.carbs_suggestion))

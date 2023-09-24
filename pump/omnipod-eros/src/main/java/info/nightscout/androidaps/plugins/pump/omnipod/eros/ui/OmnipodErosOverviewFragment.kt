@@ -8,6 +8,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.notifications.Notification
 import app.aaps.interfaces.plugin.ActivePlugin
@@ -49,7 +50,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.Comman
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils

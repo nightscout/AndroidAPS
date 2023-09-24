@@ -10,6 +10,8 @@ import android.os.IBinder
 import android.os.PowerManager
 import android.os.SystemClock
 import androidx.work.OneTimeWorkRequest
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -30,10 +32,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.JsonHelper.safeGetString
 import info.nightscout.core.utils.JsonHelper.safeGetStringAllowNull
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.sync.R

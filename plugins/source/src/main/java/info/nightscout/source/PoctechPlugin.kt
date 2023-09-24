@@ -3,6 +3,7 @@ package info.nightscout.source
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.interfaces.configuration.Constants
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.logging.AAPSLogger
@@ -14,7 +15,6 @@ import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.source.BgSource
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.JsonHelper.safeGetString
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
@@ -34,7 +34,7 @@ class PoctechPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_poctech)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_poctech)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.poctech)
         .description(R.string.description_source_poctech),

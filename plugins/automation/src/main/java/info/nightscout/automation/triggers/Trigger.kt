@@ -122,7 +122,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            setImageResource(info.nightscout.core.main.R.drawable.ic_add)
+            setImageResource(app.aaps.core.main.R.drawable.ic_add)
             contentDescription = rh.gs(R.string.add_short)
             setOnClickListener {
                 scanForActivity(context)?.supportFragmentManager?.let {
@@ -144,7 +144,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            setImageResource(info.nightscout.core.main.R.drawable.ic_remove)
+            setImageResource(app.aaps.core.main.R.drawable.ic_remove)
             contentDescription = rh.gs(R.string.delete_short)
             setOnClickListener {
                 rxBus.send(EventTriggerRemove(trigger))
@@ -158,7 +158,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 gravity = Gravity.CENTER
             }
             layoutParams = params
-            setImageResource(info.nightscout.core.main.R.drawable.ic_clone)
+            setImageResource(app.aaps.core.main.R.drawable.ic_clone)
             contentDescription = rh.gs(R.string.copy_short)
             setOnClickListener {
                 rxBus.send(EventTriggerClone(trigger))

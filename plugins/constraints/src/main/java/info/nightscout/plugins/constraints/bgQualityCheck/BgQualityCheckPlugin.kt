@@ -1,6 +1,7 @@
 package info.nightscout.plugins.constraints.bgQualityCheck
 
 import androidx.annotation.DrawableRes
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.interfaces.constraints.Constraint
 import app.aaps.interfaces.constraints.PluginConstraints
@@ -18,7 +19,6 @@ import app.aaps.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.interfaces.utils.DateUtil
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.constraints.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

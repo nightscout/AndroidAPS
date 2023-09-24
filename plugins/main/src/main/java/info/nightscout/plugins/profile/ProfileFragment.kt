@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.db.GlucoseUnit
 import app.aaps.interfaces.extensions.toVisibility
 import app.aaps.interfaces.logging.AAPSLogger
@@ -28,9 +30,7 @@ import app.aaps.interfaces.utils.HardLimits
 import app.aaps.interfaces.utils.SafeParse
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.plugins.R

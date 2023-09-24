@@ -29,7 +29,6 @@ class BondStateReceiver(
     @Inject lateinit var rxBus: RxBus
 
     var gson = Gson()
-    var applicationContext: Context? = null
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)

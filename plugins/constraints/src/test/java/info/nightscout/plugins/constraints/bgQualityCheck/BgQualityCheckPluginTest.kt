@@ -1,5 +1,7 @@
 package info.nightscout.plugins.constraints.bgQualityCheck
 
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.aps.AutosensDataStore
 import app.aaps.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.interfaces.iob.InMemoryGlucoseValue
@@ -12,8 +14,6 @@ import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.plugins.constraints.R
 import org.junit.jupiter.api.BeforeEach

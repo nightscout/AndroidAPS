@@ -11,6 +11,8 @@ import android.text.format.DateFormat
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.logging.AAPSLogger
 import app.aaps.interfaces.logging.LTag
@@ -45,10 +47,8 @@ import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.T
 import app.aaps.interfaces.utils.TimeChangeType
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.services.MedtrumService

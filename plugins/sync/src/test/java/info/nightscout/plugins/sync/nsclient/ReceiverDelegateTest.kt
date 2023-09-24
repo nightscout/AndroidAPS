@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sync.nsclient
 
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.receivers.ReceiverStatusStore
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.rx.events.EventChargingState
@@ -7,7 +8,6 @@ import app.aaps.interfaces.rx.events.EventNetworkChange
 import app.aaps.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.R
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

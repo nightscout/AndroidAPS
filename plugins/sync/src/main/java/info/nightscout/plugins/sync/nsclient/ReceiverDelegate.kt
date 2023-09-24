@@ -1,6 +1,7 @@
 package info.nightscout.plugins.sync.nsclient
 
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.receivers.ReceiverStatusStore
 import app.aaps.interfaces.resources.ResourceHelper
 import app.aaps.interfaces.rx.AapsSchedulers
@@ -9,7 +10,6 @@ import app.aaps.interfaces.rx.events.EventChargingState
 import app.aaps.interfaces.rx.events.EventNetworkChange
 import app.aaps.interfaces.rx.events.EventPreferenceChange
 import app.aaps.interfaces.sharedPreferences.SP
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -23,7 +23,7 @@ class NSClientSourcePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.main.R.drawable.ic_nsclient_bg)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_nsclient_bg)
         .pluginName(R.string.ns_client_bg)
         .shortName(R.string.ns_client_bg_short)
         .description(R.string.description_source_ns_client)

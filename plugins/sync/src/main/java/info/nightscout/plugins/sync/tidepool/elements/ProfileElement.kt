@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.interfaces.profile.Profile
 import app.aaps.interfaces.profile.ProfileUtil
 import app.aaps.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
-import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
 import java.util.UUID

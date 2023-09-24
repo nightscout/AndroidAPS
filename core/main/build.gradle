@@ -38,5 +38,5 @@ dependencies {
 }
 
 android {
-    namespace 'info.nightscout.core.main'
+    namespace 'app.aaps.core.main'
 }

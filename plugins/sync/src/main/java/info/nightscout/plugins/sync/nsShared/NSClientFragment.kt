@@ -16,6 +16,7 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.configuration.Config
 import app.aaps.interfaces.db.PersistenceLayer
 import app.aaps.interfaces.logging.AAPSLogger
@@ -33,7 +34,6 @@ import app.aaps.interfaces.sharedPreferences.SP
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.databinding.NsClientFragmentBinding

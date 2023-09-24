@@ -8,6 +8,8 @@ import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.interfaces.constraints.Constraint
 import app.aaps.interfaces.constraints.ConstraintsChecker
 import app.aaps.interfaces.constraints.PluginConstraints
@@ -47,9 +49,7 @@ import app.aaps.interfaces.utils.DecimalFormatter
 import app.aaps.interfaces.utils.Round
 import app.aaps.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.pump.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.pump.diaconn.service.DiaconnG8Service
