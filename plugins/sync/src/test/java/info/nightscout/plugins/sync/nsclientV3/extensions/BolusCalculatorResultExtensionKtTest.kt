@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
@@ -53,7 +53,7 @@ internal class BolusCalculatorResultExtensionKtTest {
         )
 
         val bolus2 = (bolus.toNSBolusWizard().convertToRemoteAndBack() as NSBolusWizard).toBolusCalculatorResult()!!
-        Assertions.assertTrue(bolus.contentEqualsTo(bolus2))
-        Assertions.assertTrue(bolus.interfaceIdsEqualsTo(bolus2))
+        assertThat(bolus.contentEqualsTo(bolus2)).isTrue()
+        assertThat(bolus.interfaceIdsEqualsTo(bolus2)).isTrue()
     }
 }
