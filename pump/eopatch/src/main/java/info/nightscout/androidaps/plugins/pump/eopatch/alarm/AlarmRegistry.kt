@@ -125,10 +125,11 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     private fun registerOsAlarm(alarmCode: AlarmCode, triggerTime: Long): Maybe<AlarmCode> {
         return Maybe.fromCallable {
             cancelOsAlarmInternal(alarmCode)
-            val pendingIntent = createPendingIntent(alarmCode, 0)
-            aapsLogger.debug("[${alarmCode}] OS Alarm added. ${dateUtil.toISOString(triggerTime)}")
-            mOsAlarmManager.setAlarmClock(AlarmClockInfo(triggerTime, pendingIntent), pendingIntent)
-            alarmCode
+            createPendingIntent(alarmCode, 0)?.let { pendingIntent ->
+                aapsLogger.debug("[${alarmCode}] OS Alarm added. ${dateUtil.toISOString(triggerTime)}")
+                mOsAlarmManager.setAlarmClock(AlarmClockInfo(triggerTime, pendingIntent), pendingIntent)
+                alarmCode
+            }
         }
     }
 

@@ -40,7 +40,7 @@ public class InsightPairingInformationActivity extends DaggerAppCompatActivity {
             } else {
                 serialNumber.setText(connectionService.getPumpSystemIdentification().getSerialNumber());
                 manufacturingDate.setText(connectionService.getPumpSystemIdentification().getManufacturingDate());
-                systemIdAppendix.setText(connectionService.getPumpSystemIdentification().getSystemIdAppendix() + "");
+                systemIdAppendix.setText(String.valueOf(connectionService.getPumpSystemIdentification().getSystemIdAppendix()));
                 releaseSWVersion.setText(connectionService.getPumpFirmwareVersions().getReleaseSWVersion());
                 uiProcSWVersion.setText(connectionService.getPumpFirmwareVersions().getUiProcSWVersion());
                 pcProcSWVersion.setText(connectionService.getPumpFirmwareVersions().getPcProcSWVersion());

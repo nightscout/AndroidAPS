@@ -53,7 +53,7 @@ class TreatmentsActivity : TranslatedDaggerAppCompatActivity() {
                     5    -> TreatmentsCareportalFragment::class.java
                     else -> TreatmentsUserEntryFragment::class.java
                 }
-                setFragment(fragment.newInstance())
+                setFragment(fragment.getDeclaredConstructor().newInstance())
                 supportActionBar?.title = tab.contentDescription
             }
 
