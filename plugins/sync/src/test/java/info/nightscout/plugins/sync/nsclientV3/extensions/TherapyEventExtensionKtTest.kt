@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
@@ -32,8 +32,8 @@ internal class TherapyEventExtensionKtTest : TestBaseWithProfile() {
         )
 
         var therapyEvent2 = (therapyEvent.toNSTherapyEvent().convertToRemoteAndBack() as NSTherapyEvent).toTherapyEvent()
-        Assertions.assertTrue(therapyEvent.contentEqualsTo(therapyEvent2))
-        Assertions.assertTrue(therapyEvent.interfaceIdsEqualsTo(therapyEvent2))
+        assertThat(therapyEvent.contentEqualsTo(therapyEvent2)).isTrue()
+        assertThat(therapyEvent.interfaceIdsEqualsTo(therapyEvent2)).isTrue()
 
 
         therapyEvent = TherapyEvent(
@@ -55,8 +55,8 @@ internal class TherapyEventExtensionKtTest : TestBaseWithProfile() {
         )
 
         therapyEvent2 = (therapyEvent.toNSTherapyEvent().convertToRemoteAndBack() as NSTherapyEvent).toTherapyEvent()
-        Assertions.assertTrue(therapyEvent.contentEqualsTo(therapyEvent2))
-        Assertions.assertTrue(therapyEvent.interfaceIdsEqualsTo(therapyEvent2))
+        assertThat(therapyEvent.contentEqualsTo(therapyEvent2)).isTrue()
+        assertThat(therapyEvent.interfaceIdsEqualsTo(therapyEvent2)).isTrue()
 
         therapyEvent = TherapyEvent(
             timestamp = 10000,
@@ -77,7 +77,7 @@ internal class TherapyEventExtensionKtTest : TestBaseWithProfile() {
         )
 
         therapyEvent2 = (therapyEvent.toNSTherapyEvent().convertToRemoteAndBack() as NSTherapyEvent).toTherapyEvent()
-        Assertions.assertTrue(therapyEvent.contentEqualsTo(therapyEvent2))
-        Assertions.assertTrue(therapyEvent.interfaceIdsEqualsTo(therapyEvent2))
+        assertThat(therapyEvent.contentEqualsTo(therapyEvent2)).isTrue()
+        assertThat(therapyEvent.interfaceIdsEqualsTo(therapyEvent2)).isTrue()
     }
 }
