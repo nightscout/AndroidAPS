@@ -3,8 +3,8 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.sdk.localmodel.treatment.NSBolus
-import info.nightscout.sdk.mapper.convertToRemoteAndBack
+import app.aaps.core.nssdk.localmodel.treatment.NSBolus
+import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 
 import org.junit.jupiter.api.Test
 

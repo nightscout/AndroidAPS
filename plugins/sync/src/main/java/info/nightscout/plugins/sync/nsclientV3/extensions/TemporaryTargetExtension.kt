@@ -3,9 +3,9 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 import app.aaps.core.interfaces.utils.T
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.sdk.localmodel.entry.NsUnits
-import info.nightscout.sdk.localmodel.treatment.EventType
-import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
+import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import app.aaps.core.nssdk.localmodel.treatment.EventType
+import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import java.security.InvalidParameterException
 
 fun NSTemporaryTarget.toTemporaryTarget(): TemporaryTarget =

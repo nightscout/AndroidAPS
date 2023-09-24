@@ -5,8 +5,8 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.T
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.sdk.localmodel.treatment.EventType
-import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
+import app.aaps.core.nssdk.localmodel.treatment.EventType
+import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import java.security.InvalidParameterException
 
 fun NSTemporaryBasal.toTemporaryBasal(): TemporaryBasal =

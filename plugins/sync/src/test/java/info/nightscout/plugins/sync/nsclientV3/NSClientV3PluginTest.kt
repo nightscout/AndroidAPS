@@ -34,8 +34,8 @@ import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
-import info.nightscout.sdk.interfaces.NSAndroidClient
-import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
+import app.aaps.core.nssdk.interfaces.NSAndroidClient
+import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

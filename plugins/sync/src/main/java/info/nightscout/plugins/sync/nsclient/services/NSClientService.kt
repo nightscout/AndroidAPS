@@ -51,7 +51,7 @@ import info.nightscout.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.workers.NSClientAddUpdateWorker
 import info.nightscout.plugins.sync.nsclient.workers.NSClientMbgWorker
-import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
+import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.socket.client.IO

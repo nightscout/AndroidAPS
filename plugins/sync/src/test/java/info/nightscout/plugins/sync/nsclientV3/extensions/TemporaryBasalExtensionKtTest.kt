@@ -4,8 +4,8 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
-import info.nightscout.sdk.mapper.convertToRemoteAndBack
+import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
+import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")

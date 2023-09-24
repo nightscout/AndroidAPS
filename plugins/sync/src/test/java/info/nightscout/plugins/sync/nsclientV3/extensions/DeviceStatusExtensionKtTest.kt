@@ -11,8 +11,8 @@ import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
-import info.nightscout.sdk.interfaces.RunningConfiguration
-import info.nightscout.sdk.mapper.convertToRemoteAndBack
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

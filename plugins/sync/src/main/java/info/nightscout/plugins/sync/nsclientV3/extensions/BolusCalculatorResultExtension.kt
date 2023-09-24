@@ -4,9 +4,9 @@ import app.aaps.core.interfaces.utils.T
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.sdk.localmodel.entry.NsUnits
-import info.nightscout.sdk.localmodel.treatment.EventType
-import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
+import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import app.aaps.core.nssdk.localmodel.treatment.EventType
+import app.aaps.core.nssdk.localmodel.treatment.NSBolusWizard
 
 fun NSBolusWizard.toBolusCalculatorResult(): BolusCalculatorResult? =
     try {

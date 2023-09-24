@@ -12,8 +12,8 @@ import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.sdk.interfaces.NSAndroidClient
-import info.nightscout.sdk.localmodel.treatment.NSTreatment
+import app.aaps.core.nssdk.interfaces.NSAndroidClient
+import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlin.math.max

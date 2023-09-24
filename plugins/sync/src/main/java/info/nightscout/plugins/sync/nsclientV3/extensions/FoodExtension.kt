@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.sdk.localmodel.food.NSFood
+import app.aaps.core.nssdk.localmodel.food.NSFood
 
 fun NSFood.toFood(): Food =
     Food(

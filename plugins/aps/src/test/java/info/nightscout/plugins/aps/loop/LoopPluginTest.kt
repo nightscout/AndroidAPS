@@ -24,7 +24,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.sdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

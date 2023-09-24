@@ -13,7 +13,7 @@ import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.sdk.interfaces.NSAndroidClient
+import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONObject
 import javax.inject.Inject

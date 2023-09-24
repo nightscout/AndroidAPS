@@ -3,8 +3,8 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
-import info.nightscout.sdk.mapper.convertToRemoteAndBack
+import app.aaps.core.nssdk.localmodel.treatment.NSOfflineEvent
+import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")

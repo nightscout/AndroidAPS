@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.sdk.localmodel.food.NSFood
+import app.aaps.core.nssdk.localmodel.food.NSFood
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

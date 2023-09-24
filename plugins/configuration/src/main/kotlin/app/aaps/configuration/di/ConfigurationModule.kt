@@ -19,7 +19,7 @@ import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.sdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
 
 @Module(
     includes = [

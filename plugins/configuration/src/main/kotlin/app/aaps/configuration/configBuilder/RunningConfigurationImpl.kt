@@ -18,8 +18,8 @@ import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.ui.UiInteraction
-import info.nightscout.sdk.interfaces.RunningConfiguration
-import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject

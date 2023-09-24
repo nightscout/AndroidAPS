@@ -75,7 +75,7 @@ import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncement
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.plugins.aps.loop.extensions.json
-import info.nightscout.sdk.interfaces.RunningConfiguration
+import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject

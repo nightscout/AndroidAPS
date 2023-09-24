@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.utils.T
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
-import info.nightscout.sdk.localmodel.treatment.EventType
-import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
+import app.aaps.core.nssdk.localmodel.treatment.EventType
+import app.aaps.core.nssdk.localmodel.treatment.NSEffectiveProfileSwitch
 import java.security.InvalidParameterException
 
 fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): EffectiveProfileSwitch? {
