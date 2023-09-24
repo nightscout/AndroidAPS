@@ -7,6 +7,7 @@ import androidx.work.WorkContinuation
 import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -33,7 +34,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -111,7 +111,7 @@ internal class LoadBgWorkerTest : TestBase() {
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
 
         val result = sut.doWorkAndLog()
-        Assertions.assertTrue(result is ListenableWorker.Result.Failure)
+        assertThat(result).isInstanceOf(ListenableWorker.Result.Failure::class.java)
     }
 
     @Test
@@ -121,8 +121,8 @@ internal class LoadBgWorkerTest : TestBase() {
         Mockito.`when`(sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_cgm, false)).thenReturn(false)
 
         val result = sut.doWorkAndLog()
-        Assertions.assertTrue(result is ListenableWorker.Result.Success)
-        Assertions.assertTrue(result.outputData.getString("Result") == "Load not enabled")
+        assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
+        assertThat(result.outputData.getString("Result")).isEqualTo("Load not enabled")
     }
 
     @Test
@@ -136,8 +136,8 @@ internal class LoadBgWorkerTest : TestBase() {
         Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
         val result = sut.doWorkAndLog()
-        Assertions.assertEquals(now - 1000, nsClientV3Plugin.lastLoadedSrvModified.collections.entries)
-        Assertions.assertTrue(result is ListenableWorker.Result.Success)
+        assertThat(nsClientV3Plugin.lastLoadedSrvModified.collections.entries).isEqualTo(now - 1000)
+        assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
     }
 
     @Test
@@ -165,7 +165,7 @@ internal class LoadBgWorkerTest : TestBase() {
         Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, listOf(glucoseValue.toNSSvgV3())))
 
         val result = sut.doWorkAndLog()
-        Assertions.assertTrue(result is ListenableWorker.Result.Success)
+        assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
     }
 
     @Test
@@ -179,7 +179,7 @@ internal class LoadBgWorkerTest : TestBase() {
         Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
         val result = sut.doWorkAndLog()
-        Assertions.assertEquals(now - 1000, nsClientV3Plugin.lastLoadedSrvModified.collections.entries)
-        Assertions.assertTrue(result is ListenableWorker.Result.Success)
+        assertThat(nsClientV3Plugin.lastLoadedSrvModified.collections.entries).isEqualTo(now - 1000)
+        assertThat(result).isInstanceOf(ListenableWorker.Result.Success::class.java)
     }
 }
