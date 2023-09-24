@@ -2,8 +2,8 @@ package info.nightscout.plugins.general.smsCommunicator
 
 import android.telephony.SmsMessage
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.interfaces.smsCommunicator.Sms
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -15,32 +15,32 @@ class SmsTest : TestBase() {
         `when`(smsMessage.originatingAddress).thenReturn("aNumber")
         `when`(smsMessage.messageBody).thenReturn("aBody")
         var sms = Sms(smsMessage)
-        Assertions.assertEquals(sms.phoneNumber, "aNumber")
-        Assertions.assertEquals(sms.text, "aBody")
-        Assertions.assertTrue(sms.received)
+        assertThat(sms.phoneNumber).isEqualTo("aNumber")
+        assertThat(sms.text).isEqualTo("aBody")
+        assertThat(sms.received).isTrue()
         sms = Sms("aNumber", "aBody")
-        Assertions.assertEquals(sms.phoneNumber, "aNumber")
-        Assertions.assertEquals(sms.text, "aBody")
-        Assertions.assertTrue(sms.sent)
+        assertThat(sms.phoneNumber).isEqualTo("aNumber")
+        assertThat(sms.text).isEqualTo("aBody")
+        assertThat(sms.sent).isTrue()
         sms = Sms("aNumber", "U")
-        Assertions.assertEquals(sms.phoneNumber, "aNumber")
-        Assertions.assertEquals(sms.text, "U")
-        Assertions.assertTrue(sms.sent)
-        Assertions.assertEquals(sms.toString(), "SMS from aNumber: U")
+        assertThat(sms.phoneNumber).isEqualTo("aNumber")
+        assertThat(sms.text).isEqualTo("U")
+        assertThat(sms.sent).isTrue()
+        assertThat(sms.toString()).isEqualTo("SMS from aNumber: U")
 
         // copy constructor #1
         val sms2 = Sms(sms)
-        Assertions.assertEquals(sms2.phoneNumber, "aNumber")
-        Assertions.assertEquals(sms2.text, "U")
-        Assertions.assertTrue(sms2.sent)
-        Assertions.assertEquals(sms2.toString(), "SMS from aNumber: U")
+        assertThat(sms2.phoneNumber).isEqualTo("aNumber")
+        assertThat(sms2.text).isEqualTo("U")
+        assertThat(sms2.sent).isTrue()
+        assertThat(sms2.toString()).isEqualTo("SMS from aNumber: U")
 
         // copy constructor #2
         val sms3 = Sms(sms, "different")
-        Assertions.assertEquals(sms3.phoneNumber, "different")
-        Assertions.assertEquals(sms3.text, "U")
-        Assertions.assertTrue(sms3.sent)
-        Assertions.assertEquals(sms3.toString(), "SMS from different: U")
+        assertThat(sms3.phoneNumber).isEqualTo("different")
+        assertThat(sms3.text).isEqualTo("U")
+        assertThat(sms3.sent).isTrue()
+        assertThat(sms3.toString()).isEqualTo("SMS from different: U")
 
     }
 }
