@@ -1,32 +1,44 @@
 package info.nightscout.plugins.sync.tidepool.comm
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.plugins.sync.tidepool.messages.AuthReplyMessage
 import info.nightscout.plugins.sync.tidepool.messages.DatasetReplyMessage
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SessionTest {
 
+    private val session = Session("", "", null)
+
     @Test
-    fun populateBody() {
-        val session = Session("", "", null)
-        Assertions.assertNull(session.authReply)
+    fun emptySession() {
+        assertThat(session.authReply).isNull()
+        assertThat(session.datasetReply).isNull()
+    }
 
-        // test authReply
+    @Test
+    fun authReply() {
         val authReplyMessage = AuthReplyMessage()
+
         session.populateBody(authReplyMessage)
-        Assertions.assertEquals(authReplyMessage, session.authReply)
 
-        // test datasetReply
+        assertThat(session.authReply).isEqualTo(authReplyMessage)
+    }
+
+    @Test
+    fun datasetReply() {
         val datasetReplyMessage = DatasetReplyMessage()
-        Assertions.assertNull(session.datasetReply)
-        session.populateBody(datasetReplyMessage)
-        Assertions.assertEquals(datasetReplyMessage, session.datasetReply)
 
-        // test datasetReply as array
-        val list: List<DatasetReplyMessage> = listOf(datasetReplyMessage)
-        session.datasetReply = null
-        session.populateBody(list)
-        Assertions.assertEquals(datasetReplyMessage, session.datasetReply)
+        session.populateBody(datasetReplyMessage)
+
+        assertThat(session.datasetReply).isEqualTo(datasetReplyMessage)
+    }
+
+    @Test
+    fun datasetReply_asList() {
+        val datasetReplyMessage = DatasetReplyMessage()
+
+        session.populateBody(listOf(datasetReplyMessage))
+
+        assertThat(session.datasetReply).isEqualTo(datasetReplyMessage)
     }
 }
