@@ -1,28 +1,20 @@
-package info.nightscout.core.graph.data;
+package info.nightscout.core.graph.data
 
-import com.jjoe64.graphview.DefaultLabelFormatter;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import com.jjoe64.graphview.DefaultLabelFormatter
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 /**
  * Created by mike on 09.06.2016.
  */
-public class TimeAsXAxisLabelFormatter extends DefaultLabelFormatter {
+class TimeAsXAxisLabelFormatter(private val format: String) : DefaultLabelFormatter() {
 
-    protected final String mFormat;
-
-    public TimeAsXAxisLabelFormatter(String format) {
-        mFormat = format;
-    }
-
-    @Override
-    public String formatLabel(double value, boolean isValueX) {
+    override fun formatLabel(value: Double, isValueX: Boolean): String =
         if (isValueX) {
             // format as date
-            DateFormat dateFormat = new SimpleDateFormat(mFormat, Locale.getDefault());
-            return dateFormat.format((long) value);
+            val dateFormat: DateFormat = SimpleDateFormat(format, Locale.getDefault())
+            dateFormat.format(value.toLong())
         } else {
             try {
                 // unknown reason for crashing on this
@@ -33,11 +25,9 @@ public class TimeAsXAxisLabelFormatter extends DefaultLabelFormatter {
                 //                com.jjoe64.graphview.GridLabelRenderer.drawVerticalSteps (GridLabelRenderer.java:1057)
                 //                com.jjoe64.graphview.GridLabelRenderer.draw (GridLabelRenderer.java:866)
                 //                com.jjoe64.graphview.GraphView.onDraw (GraphView.java:296)
-                //noinspection ConstantConditions
-                return super.formatLabel(value, isValueX);
-            } catch (Exception ignored) {
-                return "";
+                super.formatLabel(value, false)
+            } catch (ignored: Exception) {
+                ""
             }
         }
-    }
 }
