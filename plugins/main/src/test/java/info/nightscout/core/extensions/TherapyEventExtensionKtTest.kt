@@ -1,10 +1,10 @@
 package info.nightscout.core.extensions
 
 import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.shared.utils.T
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 
@@ -30,8 +30,8 @@ class TherapyEventExtensionKtTest : TestBaseWithProfile() {
             )
         )
         Mockito.`when`(dateUtil.now()).thenReturn(now + T.mins(30).msecs())
-        Assertions.assertFalse(therapyEvent.isOlderThan(1.0, dateUtil))
+        assertThat(therapyEvent.isOlderThan(1.0, dateUtil)).isFalse()
         Mockito.`when`(dateUtil.now()).thenReturn(now + T.hours(2).msecs())
-        Assertions.assertTrue(therapyEvent.isOlderThan(1.0, dateUtil))
+        assertThat(therapyEvent.isOlderThan(1.0, dateUtil)).isTrue()
     }
 }
