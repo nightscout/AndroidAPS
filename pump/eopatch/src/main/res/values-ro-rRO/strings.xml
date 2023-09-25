@@ -1,12 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="eopatch">EOPatch2</string>
+    <string name="eopatch_shortname">EOP2</string>
+    <string name="eopatch_pump_description">Integrare cu pompă pentru EOPatch2 / GlucoMen Day</string>
     <string name="category_alerts">Alerte</string>
+    <string name="low_reservoir">Alarme de rezervor aproape gol</string>
+    <string name="patch_expiration_reminders">Memento de expirare patch</string>
+    <string name="patch_buzzer_reminders">Memento audio patch</string>
+    <string name="time_format_a_h_mm">h:mm a</string>
+    <string name="eopatch_ble_status">Stare BLE</string>
+    <string name="eopatch_serial_number">Număr serial</string>
+    <string name="eopatch_lot_number">Număr Lot</string>
+    <string name="eopatch_wakeup_time">Data trezirii &amp; timp</string>
+    <string name="eopatch_expiration_time">Data expirării</string>
     <string name="eopatch_status">Stare</string>
     <string name="eopatch_base_basal_rate">Rată bazală implicită</string>
     <string name="eopatch_temp_basal_rate">Rată bazală temporară</string>
     <string name="eopatch_total_delivered">Total livrat</string>
+    <string name="invalid_basal_rate">Bazala profilului este mai mică de 0,05 U/oră. EOPatch are un pas minim de injectare de 0.05U. Vă rugăm să încercaţi din nou după ce aţi setat profilul mai mult decât pasul minim de injectare.</string>
+    <string name="no_profile_selected">Niciun profil selectat. Vă rugăm să selectați un profil și să încercați din nou.</string>
     <string name="symbol_day">zi</string>
+    <string name="symbol_plus">+</string>
+    <string name="symbol_minus">-</string>
+    <string name="time_30min">30 min</string>
     <string name="patch_finish">Finalizare</string>
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_step_desc_2">2.</string>
