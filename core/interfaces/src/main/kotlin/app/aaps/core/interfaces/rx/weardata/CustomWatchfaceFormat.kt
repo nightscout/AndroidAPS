@@ -134,6 +134,7 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
 
 typealias CwfResDataMap = MutableMap<String, ResData>
 typealias CwfMetadataMap = MutableMap<CwfMetadataKey, String>
+fun CwfResDataMap.isEquals(dataMap: CwfResDataMap) = (this.size == dataMap.size) && this.all { (key, resData) -> dataMap[key]?.value.contentEquals(resData.value) == true }
 
 @Serializable
 data class CwfData(val json: String, var metadata: CwfMetadataMap, val resDatas: CwfResDataMap)
