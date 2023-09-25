@@ -21,12 +21,12 @@ import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.implementation.utils.DecimalFormatterImpl
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler

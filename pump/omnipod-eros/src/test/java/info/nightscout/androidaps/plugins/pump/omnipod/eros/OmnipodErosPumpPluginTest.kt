@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.rx.TestAapsSchedulers
 import dagger.android.AndroidInjector
@@ -15,7 +16,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
-import info.nightscout.implementation.utils.DecimalFormatterImpl
 import info.nightscout.pump.common.defs.TempBasalPair
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider

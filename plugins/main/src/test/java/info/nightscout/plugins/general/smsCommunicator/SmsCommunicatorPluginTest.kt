@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.database.entities.GlucoseValue
+import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
@@ -30,7 +31,6 @@ import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAny
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.database.impl.transactions.Transaction
-import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult

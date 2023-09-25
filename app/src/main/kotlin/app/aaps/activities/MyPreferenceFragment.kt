@@ -31,6 +31,8 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.implementation.plugin.PluginStore
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
@@ -40,8 +42,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.automation.AutomationPlugin
-import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
