@@ -1,6 +1,8 @@
-package app.aaps.core.interfaces.plugin
+package app.aaps.core.interfaces.pump.defs
 
 import androidx.fragment.app.Fragment
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 

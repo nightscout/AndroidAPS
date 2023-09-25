@@ -1,8 +1,7 @@
-package app.aaps.core.interfaces.profile
+package app.aaps.core.main.profile
 
 import android.content.Context
 import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
