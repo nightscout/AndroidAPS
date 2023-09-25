@@ -16,7 +16,7 @@
             android:summary="@string/patient_age_summary"
             android:title="@string/patient_type" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="3"
             android:inputType="numberDecimal"
             android:key="@string/key_treatmentssafety_maxbolus"
@@ -25,7 +25,7 @@
             validate:floatminNumber="0.1"
             validate:testType="floatNumericRange" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="48"
             android:inputType="number"
             android:key="@string/key_treatmentssafety_maxcarbs"

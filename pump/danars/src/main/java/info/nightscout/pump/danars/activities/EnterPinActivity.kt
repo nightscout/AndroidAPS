@@ -11,8 +11,8 @@ import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.hexStringToByteArray
-import info.nightscout.core.validators.DefaultEditTextValidator
-import info.nightscout.core.validators.EditTextValidator
+import app.aaps.core.validators.DefaultEditTextValidator
+import app.aaps.core.validators.EditTextValidator
 import info.nightscout.pump.danars.DanaRSPlugin
 import info.nightscout.pump.danars.databinding.DanarsEnterPinActivityBinding
 import info.nightscout.pump.danars.services.BLEComm
@@ -41,12 +41,12 @@ class EnterPinActivity : TranslatedDaggerAppCompatActivity() {
         setContentView(binding.root)
 
         val p1 = DefaultEditTextValidator(binding.rsV3Pin1, this)
-            .setTestErrorString(rh.gs(info.nightscout.core.validators.R.string.error_mustbe12hexadidits), this)
-            .setCustomRegexp(rh.gs(info.nightscout.core.validators.R.string.twelvehexanumber), this)
+            .setTestErrorString(rh.gs(app.aaps.core.validators.R.string.error_mustbe12hexadidits), this)
+            .setCustomRegexp(rh.gs(app.aaps.core.validators.R.string.twelvehexanumber), this)
             .setTestType(EditTextValidator.TEST_REGEXP, this)
         val p2 = DefaultEditTextValidator(binding.rsV3Pin2, this)
-            .setTestErrorString(rh.gs(info.nightscout.core.validators.R.string.error_mustbe8hexadidits), this)
-            .setCustomRegexp(rh.gs(info.nightscout.core.validators.R.string.eighthexanumber), this)
+            .setTestErrorString(rh.gs(app.aaps.core.validators.R.string.error_mustbe8hexadidits), this)
+            .setCustomRegexp(rh.gs(app.aaps.core.validators.R.string.eighthexanumber), this)
             .setTestType(EditTextValidator.TEST_REGEXP, this)
 
         binding.okcancel.ok.setOnClickListener {

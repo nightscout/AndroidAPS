@@ -265,7 +265,7 @@ class TransportLayerTest {
             // Wait until an exception is thrown in the packet receiver
             // and we get notified about it.
             waitingForExceptionJob.join()
-            System.err.println(
+            println(
                 "Exception thrown by in packet receiver (this exception was expected by the test): $expectedError"
             )
             assertNotNull(expectedError)
@@ -285,7 +285,7 @@ class TransportLayerTest {
                 // other create*PacketInfo function.
                 tpLayerIO.send(TransportLayer.createRequestPairingConnectionPacketInfo())
             }
-            System.err.println(
+            println(
                 "Exception thrown by send() call (this exception was expected by the test): $exceptionThrownBySendCall"
             )
             assertIs<TransportLayer.ErrorResponseException>(exceptionThrownBySendCall.cause)
@@ -293,7 +293,7 @@ class TransportLayerTest {
             val exceptionThrownByReceiveCall = assertFailsWith<TransportLayer.PacketReceiverException> {
                 tpLayerIO.receive()
             }
-            System.err.println(
+            println(
                 "Exception thrown by receive() call (this exception was expected by the test): $exceptionThrownByReceiveCall"
             )
             assertIs<TransportLayer.ErrorResponseException>(exceptionThrownByReceiveCall.cause)

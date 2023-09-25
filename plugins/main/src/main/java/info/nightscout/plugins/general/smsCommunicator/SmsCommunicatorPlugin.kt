@@ -54,7 +54,7 @@ import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.validators.ValidatingEditTextPreference
+import app.aaps.core.validators.ValidatingEditTextPreference
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action

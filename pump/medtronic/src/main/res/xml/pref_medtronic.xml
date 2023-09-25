@@ -8,7 +8,7 @@
         android:title="@string/medtronic_name"
         app:initialExpandedChildrenCount="0">
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="000000"
             android:key="@string/key_medtronic_serial"
             android:selectAllOnFocus="true"
@@ -33,7 +33,7 @@
             android:selectable="true"
             android:title="@string/medtronic_pump_frequency" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="35"
             android:digits="0123456789."
             android:inputType="number"
@@ -45,7 +45,7 @@
             validate:minNumber="1"
             validate:testType="numericRange" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="25"
             android:digits="0123456789."
             android:inputType="number"

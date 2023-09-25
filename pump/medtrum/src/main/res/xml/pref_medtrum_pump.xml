@@ -27,7 +27,7 @@
             android:entries="@array/alarmSettings"
             android:entryValues="@array/alarmSettingsValues" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="25"
             android:inputType="number"
             android:key="@string/key_hourly_max_insulin"
@@ -37,7 +37,7 @@
             validate:minNumber="10"
             validate:testType="numericRange" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="80"
             android:inputType="number"
             android:key="@string/key_daily_max_insulin"

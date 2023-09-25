@@ -72,7 +72,7 @@ class StderrLoggerBackend : LoggerBackend {
             (if (throwable != null) "  (${throwable::class.qualifiedName}: \"${throwable.message}\")" else "") +
             (if (message != null) "  $message" else "")
 
-        System.err.println(fullMessage)
+        println(fullMessage)
     }
 }
 

@@ -34,7 +34,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import dagger.android.HasAndroidInjector
 import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.core.validators.ValidatingEditTextPreference
+import app.aaps.core.validators.ValidatingEditTextPreference
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.NotificationWithAction

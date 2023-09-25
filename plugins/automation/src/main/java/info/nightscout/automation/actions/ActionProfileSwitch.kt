@@ -39,7 +39,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.validators.R.string.error_field_must_not_be_empty)).run()
+            callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.validators.R.string.error_field_must_not_be_empty)).run()
             return
         }
         if (profileFunction.getProfile() == null) {

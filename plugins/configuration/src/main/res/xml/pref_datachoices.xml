@@ -13,7 +13,7 @@
             android:summary="@string/allow_automated_crash_reporting"
             android:title="@string/fabric_upload" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:dialogMessage="@string/summary_email_for_crash_report"
             android:inputType="text"
             android:key="@string/key_email_for_crash_report"

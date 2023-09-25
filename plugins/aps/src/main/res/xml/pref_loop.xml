@@ -15,7 +15,7 @@
             android:key="@string/key_aps_mode"
             android:title="@string/aps_mode_title" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="20"
             android:dialogMessage="@string/loop_open_mode_min_change_summary"
             android:digits="0123456789"

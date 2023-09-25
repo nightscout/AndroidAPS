@@ -71,7 +71,7 @@
             android:key="@string/key_omnipod_common_expiration_reminder_enabled"
             android:title="@string/omnipod_common_preferences_expiration_reminder_enabled" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="9"
             android:dependency="@string/key_omnipod_common_expiration_reminder_enabled"
             android:digits="0123456789"
@@ -87,7 +87,7 @@
             android:key="@string/key_omnipod_common_low_reservoir_alert_enabled"
             android:title="@string/omnipod_common_preferences_low_reservoir_alert_enabled" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="20"
             android:dependency="@string/key_omnipod_common_low_reservoir_alert_enabled"
             android:digits="0123456789"

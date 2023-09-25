@@ -8,7 +8,7 @@
         android:title="@string/smscommunicator"
         app:initialExpandedChildrenCount="0">
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:key="@string/key_smscommunicator_allowednumbers"
             android:summary="@string/smscommunicator_allowednumbers_summary"
             android:title="@string/smscommunicator_allowednumbers"
@@ -19,7 +19,7 @@
             android:key="@string/key_smscommunicator_remote_commands_allowed"
             android:title="@string/smscommunicator_remote_commands_allowed" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="15"
             android:key="@string/key_smscommunicator_remote_bolus_min_distance"
             android:summary="@string/smscommunicator_remote_bolus_min_distance_summary"
@@ -28,7 +28,7 @@
             validate:minNumber="3"
             validate:testType="numericRange" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:dependency="@string/key_smscommunicator_remote_commands_allowed"
             android:key="@string/key_smscommunicator_otp_password"
             android:summary="@string/smscommunicator_otp_pin_summary"

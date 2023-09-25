@@ -9,7 +9,7 @@
         android:title="@string/absorption_settings_title"
         app:initialExpandedChildrenCount="0">
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="6"
             android:dialogMessage="@string/absorption_max_time_summary"
             android:digits="0123456789.,"
@@ -22,7 +22,7 @@
             validate:minNumber="4"
             validate:testType="numericRange" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="24"
             android:dialogMessage="@string/openapsama_autosens_period_summary"
             android:digits="0123456789"
@@ -40,7 +40,7 @@
             android:key="absorption_aaps_advanced"
             android:title="@string/advanced_settings_title">
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="1.2"
                 android:dialogMessage="@string/openapsama_autosens_max_summary"
                 android:digits="0123456789.,"
@@ -54,7 +54,7 @@
                 validate:floatminNumber="0.5"
                 validate:testType="floatNumericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0.7"
                 android:dialogMessage="@string/openapsama_autosens_min_summary"
                 android:inputType="numberDecimal"

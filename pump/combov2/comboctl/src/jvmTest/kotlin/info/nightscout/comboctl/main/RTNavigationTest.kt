@@ -69,7 +69,7 @@ class RTNavigationTest {
         init {
             mainScope.launch {
                 while (true) {
-                    System.err.println("Emitting test screen $currentParsedScreen")
+                    println("Emitting test screen $currentParsedScreen")
                     parsedScreenChannel.send(currentParsedScreen)
                     delay(100)
                     if (automaticallyAdvanceScreens) {
@@ -145,7 +145,7 @@ class RTNavigationTest {
         override suspend fun shortPressButton(button: RTNavigationButton) {
             // Simulate the consequences of user interaction by moving to the next screen.
             currentParsedScreen = testParsedScreenListIter.next()
-            System.err.println("Moved to next screen $currentParsedScreen after short button press")
+            println("Moved to next screen $currentParsedScreen after short button press")
             shortPressedRTButtons.add(button)
         }
     }

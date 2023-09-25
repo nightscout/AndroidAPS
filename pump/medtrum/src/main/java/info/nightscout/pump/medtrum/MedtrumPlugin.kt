@@ -49,7 +49,7 @@ import app.aaps.core.interfaces.utils.TimeChangeType
 import dagger.android.HasAndroidInjector
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.core.validators.ValidatingEditTextPreference
+import app.aaps.core.validators.ValidatingEditTextPreference
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
