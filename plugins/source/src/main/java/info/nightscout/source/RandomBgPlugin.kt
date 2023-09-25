@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.utils.isRunningTest
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.isRunningTest
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction

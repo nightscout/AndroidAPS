@@ -1,13 +1,13 @@
 package info.nightscout.plugins.general.autotune
 
-import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.utils.JsonHelper
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.plugins.general.autotune.data.ATProfile

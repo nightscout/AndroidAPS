@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
 
+import app.aaps.core.utils.DateTimeUtil
 import com.google.gson.annotations.Expose
-import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.pump.common.utils.ByteUtil
 import info.nightscout.pump.common.utils.StringUtil
 

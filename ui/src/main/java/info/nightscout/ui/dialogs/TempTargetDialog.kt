@@ -16,11 +16,11 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import com.google.common.base.Joiner
-import com.google.common.collect.Lists
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.HtmlHelper
+import app.aaps.core.utils.HtmlHelper
+import com.google.common.base.Joiner
+import com.google.common.collect.Lists
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry

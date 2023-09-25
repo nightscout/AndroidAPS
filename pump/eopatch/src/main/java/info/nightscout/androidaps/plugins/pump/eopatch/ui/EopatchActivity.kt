@@ -9,6 +9,7 @@ import android.view.MotionEvent
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.utils.extensions.safeGetSerializableExtra
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
@@ -18,7 +19,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.extension.replaceFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel
-import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 
 class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
     private var mPatchCommCheckDialog: Dialog? = null

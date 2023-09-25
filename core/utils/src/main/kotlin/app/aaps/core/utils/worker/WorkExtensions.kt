@@ -1,4 +1,4 @@
-package info.nightscout.core.utils.worker
+package app.aaps.core.utils.worker
 
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation

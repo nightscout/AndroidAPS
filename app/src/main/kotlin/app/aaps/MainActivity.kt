@@ -34,8 +34,6 @@ import app.aaps.activities.PreferencesActivity
 import app.aaps.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.configuration.activities.SingleFragmentActivity
 import app.aaps.configuration.setupwizard.SetupWizardActivity
-import app.aaps.core.main.utils.CryptoUtil
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -55,6 +53,13 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.main.utils.CryptoUtil
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.ui.UIRunnable
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.locale.LocaleHelper
+import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.utils.isRunningRealPumpTest
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -63,11 +68,6 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import app.aaps.core.ui.UIRunnable
-import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.isRunningRealPumpTest
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin

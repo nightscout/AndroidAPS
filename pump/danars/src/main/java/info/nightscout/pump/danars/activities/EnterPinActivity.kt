@@ -2,15 +2,15 @@ package info.nightscout.pump.danars.activities
 
 import android.os.Bundle
 import android.util.Base64
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.hexStringToByteArray
+import app.aaps.core.utils.hexStringToByteArray
 import info.nightscout.core.validators.DefaultEditTextValidator
 import info.nightscout.core.validators.EditTextValidator
 import info.nightscout.pump.danars.DanaRSPlugin

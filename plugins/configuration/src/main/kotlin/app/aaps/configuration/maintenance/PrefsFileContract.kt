@@ -6,7 +6,7 @@ import androidx.activity.result.contract.ActivityResultContract
 import androidx.fragment.app.FragmentActivity
 import app.aaps.configuration.maintenance.activities.PrefImportListActivity
 import app.aaps.core.interfaces.maintenance.PrefsFile
-import info.nightscout.core.utils.extensions.safeGetParcelableExtra
+import app.aaps.core.utils.extensions.safeGetParcelableExtra
 
 class PrefsFileContract : ActivityResultContract<Void?, PrefsFile?>() {
 

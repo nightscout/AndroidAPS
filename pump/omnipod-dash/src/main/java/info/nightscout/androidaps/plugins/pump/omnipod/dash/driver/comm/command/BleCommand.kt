@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command
 
-import info.nightscout.core.utils.toHex
+import app.aaps.core.utils.toHex
 import java.nio.ByteBuffer
 
 object BleCommandRTS : BleCommand(BleCommandType.RTS)

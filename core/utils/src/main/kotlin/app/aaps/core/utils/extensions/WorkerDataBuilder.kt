@@ -1,4 +1,4 @@
-package info.nightscout.core.utils.extensions
+package app.aaps.core.utils.extensions
 
 import android.os.Bundle
 import androidx.work.Data

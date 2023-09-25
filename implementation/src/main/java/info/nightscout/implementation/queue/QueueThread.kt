@@ -20,8 +20,8 @@ import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.ui.R
-import info.nightscout.core.utils.extensions.safeDisable
-import info.nightscout.core.utils.extensions.safeEnable
+import app.aaps.core.utils.extensions.safeDisable
+import app.aaps.core.utils.extensions.safeEnable
 
 class QueueThread internal constructor(
     private val queue: CommandQueue,

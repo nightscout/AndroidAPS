@@ -1,12 +1,5 @@
 package app.aaps.core.main.profile
 
-import app.aaps.core.main.events.EventNewNotification
-import app.aaps.core.main.extensions.blockValueBySeconds
-import app.aaps.core.main.extensions.highTargetBlockValueBySeconds
-import app.aaps.core.main.extensions.lowTargetBlockValueBySeconds
-import app.aaps.core.main.extensions.shiftBlock
-import app.aaps.core.main.extensions.shiftTargetBlock
-import app.aaps.core.main.extensions.targetBlockValueBySeconds
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.notifications.Notification
@@ -19,7 +12,14 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.core.utils.MidnightUtils
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.blockValueBySeconds
+import app.aaps.core.main.extensions.highTargetBlockValueBySeconds
+import app.aaps.core.main.extensions.lowTargetBlockValueBySeconds
+import app.aaps.core.main.extensions.shiftBlock
+import app.aaps.core.main.extensions.shiftTargetBlock
+import app.aaps.core.main.extensions.targetBlockValueBySeconds
+import app.aaps.core.utils.MidnightUtils
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.data.Block

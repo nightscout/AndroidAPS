@@ -3,8 +3,6 @@ package info.nightscout.plugins.aps.openAPSSMB
 import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.extensions.target
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
@@ -31,8 +29,10 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.extensions.target
+import app.aaps.core.utils.MidnightUtils
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.aps.R

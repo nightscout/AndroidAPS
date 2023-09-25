@@ -30,11 +30,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.utils.notifyAll
+import app.aaps.core.utils.waitMillis
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.notifyAll
-import info.nightscout.core.utils.waitMillis
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.danars.activities.EnterPinActivity

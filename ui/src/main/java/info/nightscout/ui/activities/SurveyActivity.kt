@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.InstanceId
+import app.aaps.core.utils.fabric.InstanceId
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivitySurveyBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile

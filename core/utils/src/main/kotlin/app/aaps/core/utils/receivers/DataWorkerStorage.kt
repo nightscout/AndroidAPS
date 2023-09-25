@@ -1,4 +1,4 @@
-package info.nightscout.core.utils.receivers
+package app.aaps.core.utils.receivers
 
 import android.content.Context
 import android.os.Bundle

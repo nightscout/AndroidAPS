@@ -1,7 +1,7 @@
 package app.aaps.pump.common.utils
 
+import app.aaps.core.utils.DateTimeUtil
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.core.utils.DateTimeUtil
 import org.junit.jupiter.api.Test
 
 internal class DateTimeUtilUTest {

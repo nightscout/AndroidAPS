@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandAbort
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandCTS
@@ -21,7 +22,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataB
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
-import info.nightscout.core.utils.toHex
 
 sealed class MessageSendResult
 object MessageSendSuccess : MessageSendResult()

@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventNSClientRestart
 import app.aaps.core.interfaces.utils.DateUtil
-import info.nightscout.core.utils.receivers.DataWorkerStorage
+import app.aaps.core.utils.receivers.DataWorkerStorage
 import info.nightscout.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.plugins.sync.nsclient.workers.NSClientAddAckWorker
 import io.socket.client.Ack

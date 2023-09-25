@@ -1,4 +1,4 @@
-package info.nightscout.core.utils
+package app.aaps.core.utils
 
 import org.json.JSONException
 import org.json.JSONObject

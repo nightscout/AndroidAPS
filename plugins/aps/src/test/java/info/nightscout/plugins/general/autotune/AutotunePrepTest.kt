@@ -1,7 +1,5 @@
 package info.nightscout.plugins.general.autotune
 
-import app.aaps.core.main.extensions.shiftBlock
-import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -10,9 +8,11 @@ import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.extensions.shiftBlock
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.utils.JsonHelper
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.GlucoseValue

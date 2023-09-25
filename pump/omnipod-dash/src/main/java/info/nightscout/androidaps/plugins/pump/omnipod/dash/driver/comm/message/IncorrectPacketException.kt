@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
-import info.nightscout.core.utils.toHex
+import app.aaps.core.utils.toHex
 
 class IncorrectPacketException(
     val payload: ByteArray,

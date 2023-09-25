@@ -3,13 +3,13 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.utils.JsonHelper
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDateTime
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.core.utils.JsonHelper
 import org.json.JSONObject
 
 class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {

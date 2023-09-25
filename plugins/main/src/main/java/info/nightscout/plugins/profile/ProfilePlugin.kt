@@ -2,9 +2,6 @@ package info.nightscout.plugins.profile
 
 import androidx.fragment.app.FragmentActivity
 import app.aaps.annotations.OpenForTesting
-import app.aaps.core.main.extensions.blockFromJsonArray
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.db.GlucoseUnit
@@ -30,10 +27,13 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
-import dagger.android.HasAndroidInjector
+import app.aaps.core.main.extensions.blockFromJsonArray
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.JsonHelper
+import app.aaps.core.utils.JsonHelper
+import dagger.android.HasAndroidInjector
 import info.nightscout.plugins.R
 import org.json.JSONArray
 import org.json.JSONException

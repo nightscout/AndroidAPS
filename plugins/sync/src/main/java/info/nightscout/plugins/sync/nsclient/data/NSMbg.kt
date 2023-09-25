@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclient.data
 
-import info.nightscout.core.utils.JsonHelper
+import app.aaps.core.utils.JsonHelper
 import org.json.JSONObject
 
 class NSMbg(val json: JSONObject) {

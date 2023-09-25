@@ -1,8 +1,6 @@
 package app.aaps.core.main.wizard
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.core.main.extensions.valueToUnits
-import app.aaps.core.main.iob.round
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -13,10 +11,12 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.extensions.valueToUnits
+import app.aaps.core.main.iob.round
+import app.aaps.core.utils.JsonHelper.safeGetInt
+import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.core.utils.MidnightUtils
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.JsonHelper.safeGetInt
-import info.nightscout.core.utils.JsonHelper.safeGetString
-import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.ValueWrapper
 import org.json.JSONException
 import org.json.JSONObject

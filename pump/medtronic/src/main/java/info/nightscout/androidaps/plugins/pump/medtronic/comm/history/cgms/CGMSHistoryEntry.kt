@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms
 
+import app.aaps.core.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry
-import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.pump.common.utils.ByteUtil
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.LocalDateTime

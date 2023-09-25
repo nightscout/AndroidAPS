@@ -3,8 +3,6 @@
 package info.nightscout.plugins.general.autotune
 
 import android.view.View
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
@@ -25,9 +23,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.T
-import dagger.android.HasAndroidInjector
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.ui.elements.WeekDay
-import info.nightscout.core.utils.JsonHelper
+import app.aaps.core.utils.JsonHelper
+import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.plugins.aps.R

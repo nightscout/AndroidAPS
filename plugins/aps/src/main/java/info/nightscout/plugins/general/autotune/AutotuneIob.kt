@@ -1,10 +1,5 @@
 package info.nightscout.plugins.general.autotune
 
-import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.core.main.extensions.durationInMinutes
-import app.aaps.core.main.extensions.toJson
-import app.aaps.core.main.extensions.toTemporaryBasal
-import app.aaps.core.main.iob.round
 import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.iob.Iob
 import app.aaps.core.interfaces.iob.IobTotal
@@ -16,7 +11,12 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.core.utils.MidnightUtils
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.durationInMinutes
+import app.aaps.core.main.extensions.toJson
+import app.aaps.core.main.extensions.toTemporaryBasal
+import app.aaps.core.main.iob.round
+import app.aaps.core.utils.MidnightUtils
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.ExtendedBolus

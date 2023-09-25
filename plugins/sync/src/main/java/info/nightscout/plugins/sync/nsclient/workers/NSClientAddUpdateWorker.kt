@@ -3,7 +3,6 @@ package info.nightscout.plugins.sync.nsclient.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -13,8 +12,9 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import info.nightscout.core.utils.JsonHelper
-import info.nightscout.core.utils.receivers.DataWorkerStorage
+import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs

@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
-import info.nightscout.core.utils.JsonHelper
+import app.aaps.core.utils.JsonHelper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue

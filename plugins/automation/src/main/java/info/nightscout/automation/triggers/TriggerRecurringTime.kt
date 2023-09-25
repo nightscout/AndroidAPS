@@ -3,6 +3,9 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.ui.elements.WeekDay
+import app.aaps.core.utils.JsonHelper
+import app.aaps.core.utils.MidnightUtils
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
@@ -10,9 +13,6 @@ import info.nightscout.automation.elements.InputTime
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import app.aaps.core.ui.elements.WeekDay
-import info.nightscout.core.utils.JsonHelper
-import info.nightscout.core.utils.MidnightUtils
 import org.json.JSONObject
 import java.util.Calendar
 import java.util.Objects

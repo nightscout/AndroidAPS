@@ -9,9 +9,9 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.core.utils.extensions.safeGetParcelableExtra
 import info.nightscout.pump.common.events.EventPumpConnectionParametersChanged
 import javax.inject.Inject
 

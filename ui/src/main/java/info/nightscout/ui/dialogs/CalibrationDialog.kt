@@ -10,10 +10,10 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.utils.HtmlHelper
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit

@@ -13,9 +13,9 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.utils.MidnightUtils
+import app.aaps.core.utils.Percentile
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.MidnightUtils
-import info.nightscout.core.utils.Percentile
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.sensitivity.extensions.isPSEvent5minBack

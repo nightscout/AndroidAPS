@@ -1,7 +1,6 @@
 package app.aaps.core.utils
 
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.core.utils.JsonHelper
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
 

@@ -12,9 +12,6 @@ import android.view.ViewGroup
 import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.pump.toHtml
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -24,9 +21,12 @@ import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.pump.toHtml
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.utils.HtmlHelper
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.databinding.LoopFragmentBinding
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui

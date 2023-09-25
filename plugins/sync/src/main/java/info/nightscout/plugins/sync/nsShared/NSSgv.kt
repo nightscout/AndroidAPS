@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsShared
 
 import app.aaps.core.interfaces.nsclient.NSSgv
-import info.nightscout.core.utils.JsonHelper
+import app.aaps.core.utils.JsonHelper
 import org.json.JSONObject
 
 /**

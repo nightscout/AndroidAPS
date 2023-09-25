@@ -2,9 +2,9 @@ package info.nightscout.plugins.sync.nsclient.extensions
 
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.utils.JsonHelper
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
-import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.BolusCalculatorResult
 import org.json.JSONObject
 

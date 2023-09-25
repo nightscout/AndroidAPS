@@ -3,10 +3,6 @@ package info.nightscout.pump.virtual
 import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import app.aaps.core.main.events.EventNewNotification
-import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.core.main.extensions.plannedRemainingMinutes
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -38,8 +34,12 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TimeChangeType
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.plannedRemainingMinutes
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.utils.fabric.InstanceId
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.pump.virtual.extensions.toText
 import io.reactivex.rxjava3.disposables.CompositeDisposable

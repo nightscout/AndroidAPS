@@ -5,8 +5,8 @@ import android.content.Context
 import android.content.Intent
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventBTChange
+import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.core.utils.extensions.safeGetParcelableExtra
 import javax.inject.Inject
 
 class BTReceiver : DaggerBroadcastReceiver() {

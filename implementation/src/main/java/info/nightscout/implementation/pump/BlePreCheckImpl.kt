@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.extensions.safeEnable
+import app.aaps.core.utils.extensions.safeEnable
 import javax.inject.Inject
 import javax.inject.Singleton
 

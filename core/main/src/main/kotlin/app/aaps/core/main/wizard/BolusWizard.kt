@@ -2,11 +2,6 @@ package app.aaps.core.main.wizard
 
 import android.content.Context
 import android.text.Spanned
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.extensions.highValueToUnitsToString
-import app.aaps.core.main.extensions.lowValueToUnitsToString
-import app.aaps.core.main.iob.round
-import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
@@ -36,10 +31,15 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.extensions.highValueToUnitsToString
+import app.aaps.core.main.extensions.lowValueToUnitsToString
+import app.aaps.core.main.iob.round
+import app.aaps.core.main.utils.extensions.formatColor
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.utils.HtmlHelper
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget

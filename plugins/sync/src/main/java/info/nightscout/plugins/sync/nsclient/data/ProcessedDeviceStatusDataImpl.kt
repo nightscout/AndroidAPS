@@ -10,9 +10,9 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.utils.HtmlHelper
+import app.aaps.core.utils.JsonHelper
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.HtmlHelper
-import info.nightscout.core.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import javax.inject.Inject
 import javax.inject.Singleton

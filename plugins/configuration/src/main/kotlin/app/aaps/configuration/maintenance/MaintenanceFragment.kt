@@ -9,8 +9,6 @@ import androidx.core.text.toSpanned
 import app.aaps.configuration.R
 import app.aaps.configuration.databinding.MaintenanceFragmentBinding
 import app.aaps.configuration.maintenance.activities.LogSettingActivity
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.extensions.toVisibility
@@ -30,9 +28,11 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.ui.UiInteraction
-import dagger.android.support.DaggerFragment
+import app.aaps.core.main.graph.OverviewData
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.HtmlHelper
+import app.aaps.core.utils.HtmlHelper
+import dagger.android.support.DaggerFragment
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import io.reactivex.rxjava3.core.Completable

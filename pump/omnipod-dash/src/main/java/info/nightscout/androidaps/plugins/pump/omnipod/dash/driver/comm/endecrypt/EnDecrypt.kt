@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecry
 
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
-import info.nightscout.core.utils.toHex
 import org.spongycastle.crypto.engines.AESEngine
 import org.spongycastle.crypto.modes.CCMBlockCipher
 import org.spongycastle.crypto.params.AEADParameters

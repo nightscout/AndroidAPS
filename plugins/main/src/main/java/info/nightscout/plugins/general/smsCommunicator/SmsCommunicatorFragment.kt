@@ -4,14 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.utils.HtmlHelper
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.plugins.databinding.SmscommunicatorFragmentBinding
 import info.nightscout.plugins.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import io.reactivex.rxjava3.disposables.CompositeDisposable

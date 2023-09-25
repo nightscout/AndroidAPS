@@ -22,10 +22,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
-import dagger.android.HasAndroidInjector
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.notifyAll
-import info.nightscout.core.utils.waitMillis
+import app.aaps.core.utils.notifyAll
+import app.aaps.core.utils.waitMillis
+import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.packet.BatteryWarningReportPacket

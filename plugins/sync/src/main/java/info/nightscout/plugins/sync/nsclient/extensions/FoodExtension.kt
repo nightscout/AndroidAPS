@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
-import info.nightscout.core.utils.JsonHelper
+import app.aaps.core.utils.JsonHelper
 import info.nightscout.database.entities.Food
 import org.json.JSONObject
 

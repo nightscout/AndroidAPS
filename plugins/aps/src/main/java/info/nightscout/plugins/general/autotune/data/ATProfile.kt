@@ -1,8 +1,5 @@
 package info.nightscout.plugins.general.autotune.data
 
-import app.aaps.core.main.extensions.blockValueBySeconds
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.insulin.Insulin
@@ -21,8 +18,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.extensions.blockValueBySeconds
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.utils.MidnightUtils
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.data.Block
 import org.json.JSONArray
 import org.json.JSONException

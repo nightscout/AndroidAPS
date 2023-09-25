@@ -3,14 +3,14 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.utils.JsonHelper.safeGetInt
+import app.aaps.core.utils.MidnightUtils
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputTimeRange
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.core.utils.JsonHelper.safeGetInt
-import info.nightscout.core.utils.MidnightUtils
 import org.json.JSONObject
 
 // Trigger for time range ( from 10:00AM till 13:00PM )

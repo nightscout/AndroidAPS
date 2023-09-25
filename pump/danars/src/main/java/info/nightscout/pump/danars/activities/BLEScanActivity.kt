@@ -26,7 +26,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.extensions.safeEnable
+import app.aaps.core.utils.extensions.safeEnable
 import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.pump.danars.events.EventDanaRSDeviceChange

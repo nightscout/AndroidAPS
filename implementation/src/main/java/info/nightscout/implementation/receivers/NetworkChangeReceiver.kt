@@ -14,8 +14,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNetworkChange
+import app.aaps.core.utils.receivers.StringUtils
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.core.utils.receivers.StringUtils
 import javax.inject.Inject
 
 class NetworkChangeReceiver : DaggerBroadcastReceiver() {

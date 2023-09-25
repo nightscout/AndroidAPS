@@ -1,8 +1,6 @@
 package info.nightscout.plugins.aps
 
 import android.text.Spanned
-import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -17,9 +15,11 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import dagger.android.HasAndroidInjector
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.ui.R
-import info.nightscout.core.utils.HtmlHelper
+import app.aaps.core.utils.HtmlHelper
+import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.GlucoseValue
 import org.json.JSONException
 import org.json.JSONObject

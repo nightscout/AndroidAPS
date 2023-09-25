@@ -2,9 +2,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activat
 
 import android.os.Bundle
 import androidx.annotation.IdRes
+import app.aaps.core.utils.extensions.safeGetSerializableExtra
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.activity.OmnipodWizardActivityBase
-import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 
 abstract class PodActivationWizardActivity : OmnipodWizardActivityBase() {
     companion object {

@@ -9,12 +9,12 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.ui.elements.VerticalTextView
+import app.aaps.core.utils.JsonHelper.safeGetString
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseOperationDialog
-import app.aaps.core.ui.elements.VerticalTextView
-import info.nightscout.core.utils.JsonHelper.safeGetString
 import org.json.JSONArray
 import org.json.JSONObject
 

@@ -13,10 +13,10 @@ import androidx.fragment.app.FragmentManager
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.utils.MidnightUtils
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import info.nightscout.automation.R
-import info.nightscout.core.utils.MidnightUtils
 import java.util.Calendar
 
 class InputTimeRange(private val rh: ResourceHelper, private val dateUtil: DateUtil) : Element {

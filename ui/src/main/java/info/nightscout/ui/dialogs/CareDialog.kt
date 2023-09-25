@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -20,10 +19,11 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.main.extensions.fromConstant
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.utils.HtmlHelper
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
