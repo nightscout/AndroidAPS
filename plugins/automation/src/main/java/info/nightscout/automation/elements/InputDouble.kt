@@ -2,7 +2,7 @@ package info.nightscout.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import info.nightscout.core.ui.elements.NumberPicker
+import app.aaps.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
 class InputDouble() : Element {
@@ -32,7 +32,7 @@ class InputDouble() : Element {
 
     override fun addToLayout(root: LinearLayout) {
         numberPicker = NumberPicker(root.context, null).also {
-            it.setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(info.nightscout.core.ui.R.id.ok))
+            it.setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(app.aaps.core.ui.R.id.ok))
             it.setOnValueChangedListener { v: Double -> value = v }
             it.gravity = Gravity.CENTER_HORIZONTAL
         }

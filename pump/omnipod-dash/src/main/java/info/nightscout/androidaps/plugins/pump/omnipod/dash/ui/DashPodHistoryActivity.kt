@@ -25,7 +25,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.History
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.pump.common.utils.ProfileUtil
@@ -177,7 +177,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
 
         historyTypeSpinner = findViewById(R.id.omnipod_historytype)
         typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(rh))
-        val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, info.nightscout.core.ui.R.layout.spinner_centered, typeListFull!!)
+        val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, app.aaps.core.ui.R.layout.spinner_centered, typeListFull!!)
         historyTypeSpinner?.run {
             adapter = spinnerAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -236,7 +236,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
         private fun setTextViewColor(checkResult: Boolean, textview: TextView, record: HistoryRecord) {
             if (checkResult && !record.isSuccess()) {
                 // Record says not success
-                textview.setTextColor(rh.gac(textview.context, info.nightscout.core.ui.R.attr.omniYellowColor))
+                textview.setTextColor(rh.gac(textview.context, app.aaps.core.ui.R.attr.omniYellowColor))
                 return
             }
             // On success set color
@@ -250,23 +250,23 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
                 OmnipodCommandType.SUSPEND_DELIVERY,
                 OmnipodCommandType.RESUME_DELIVERY,
                 OmnipodCommandType.SET_BASAL_PROFILE   -> {
-                    info.nightscout.core.ui.R.attr.omniCyanColor
+                    app.aaps.core.ui.R.attr.omniCyanColor
                 }
                 // User action
                 OmnipodCommandType.PLAY_TEST_BEEP,
                 OmnipodCommandType.ACKNOWLEDGE_ALERTS,
                 OmnipodCommandType.CANCEL_BOLUS        -> {
-                    info.nightscout.core.ui.R.attr.omniCyanColor
+                    app.aaps.core.ui.R.attr.omniCyanColor
                 }
                 // Insulin treatment
                 OmnipodCommandType.SET_BOLUS,
                 OmnipodCommandType.SET_TEMPORARY_BASAL -> {
-                    info.nightscout.core.ui.R.attr.defaultTextColor
+                    app.aaps.core.ui.R.attr.defaultTextColor
                 }
 
                 else                                   ->
                     // Other
-                    info.nightscout.core.ui.R.attr.omniGrayColor
+                    app.aaps.core.ui.R.attr.omniGrayColor
             }
             textview.setTextColor(rh.gac(textview.context, textColorAttr))
         }

@@ -48,7 +48,7 @@ class NotificationHolderImpl @Inject constructor(
             .setCategory(NotificationCompat.CATEGORY_STATUS)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
-            .setContentTitle(rh.gs(info.nightscout.core.ui.R.string.loading))
+            .setContentTitle(rh.gs(app.aaps.core.ui.R.string.loading))
             .setContentIntent(openAppIntent(context))
             .build()
             .also {

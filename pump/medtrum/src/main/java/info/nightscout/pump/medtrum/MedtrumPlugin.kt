@@ -47,8 +47,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TimeChangeType
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.services.MedtrumService
@@ -82,7 +82,7 @@ import kotlin.math.abs
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(MedtrumOverviewFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_medtrum_128)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_medtrum_128)
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(R.xml.pref_medtrum_pump)
@@ -275,7 +275,7 @@ import kotlin.math.abs
             if (medtrumService != null) {
                 aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
                 val success = medtrumService?.connect(reason) ?: false
-                if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)
+                if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported_or_not_paired)
             }
         }
     }
@@ -310,10 +310,10 @@ import kotlin.math.abs
 
         return if (medtrumService?.updateBasalsInPump(profile) == true) {
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
             PumpEnactResult(injector).success(true).enacted(true)
         } else {
-            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
             PumpEnactResult(injector)
         }
     }
@@ -369,7 +369,7 @@ import kotlin.math.abs
             val result = PumpEnactResult(injector)
             result.success = false
             result.bolusDelivered = 0.0
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }

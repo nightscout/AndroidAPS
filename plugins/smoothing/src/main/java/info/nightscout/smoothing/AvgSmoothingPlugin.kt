@@ -25,7 +25,7 @@ class AvgSmoothingPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_timeline_24)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_timeline_24)
         .pluginName(R.string.avg_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_avg_smoothing),

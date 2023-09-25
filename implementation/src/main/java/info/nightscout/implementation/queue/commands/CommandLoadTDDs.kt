@@ -22,11 +22,11 @@ class CommandLoadTDDs(
         callback?.result(r)?.run()
     }
 
-    override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.load_tdds)
+    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.load_tdds)
 
     override fun log(): String = "LOAD TDDs"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
     }
 }

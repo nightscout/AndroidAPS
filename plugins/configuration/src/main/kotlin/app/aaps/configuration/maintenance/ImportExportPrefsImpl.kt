@@ -55,10 +55,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
-import info.nightscout.core.ui.dialogs.WarningDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.TwoMessagesAlertDialog
+import app.aaps.core.ui.dialogs.WarningDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -142,7 +142,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
         // name provided (hopefully) by user
         val patientName = sp.getString(info.nightscout.core.utils.R.string.key_patient_name, "")
-        val defaultPatientName = rh.gs(info.nightscout.core.ui.R.string.patient_name_default)
+        val defaultPatientName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
 
         // name we detect from OS
         val systemName = n1 ?: n2 ?: n3 ?: n4 ?: n5 ?: n6 ?: defaultPatientName
@@ -150,7 +150,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, info.nightscout.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { password ->
+        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { password ->
             then(password)
         }, {
                                         ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -207,7 +207,7 @@ class ImportExportPrefsImpl @Inject constructor(
         TwoMessagesAlertDialog.showAlert(
             activity, rh.gs(R.string.import_setting),
             rh.gs(R.string.import_from) + " " + fileToImport.name + " ?",
-            rh.gs(info.nightscout.core.ui.R.string.password_preferences_decrypt_prompt), {
+            rh.gs(app.aaps.core.ui.R.string.password_preferences_decrypt_prompt), {
                 askForMasterPass(activity, R.string.preferences_import_canceled, then)
             }, null, R.drawable.ic_header_import
         )

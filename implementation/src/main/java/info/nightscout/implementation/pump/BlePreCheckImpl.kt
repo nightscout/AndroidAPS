@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.extensions.safeEnable
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -32,7 +32,7 @@ class BlePreCheckImpl @Inject constructor(
 
     override fun prerequisitesCheck(activity: AppCompatActivity): Boolean {
         if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.message), rh.gs(info.nightscout.core.ui.R.string.ble_not_supported))
+            OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.message), rh.gs(app.aaps.core.ui.R.string.ble_not_supported))
             return false
         } else {
             // Use this check to determine whether BLE is supported on the device. Then
@@ -56,7 +56,7 @@ class BlePreCheckImpl @Inject constructor(
             // displays a dialog requesting user permission to enable Bluetooth.
             bluetoothAdapter?.safeEnable(3000)
             if (bluetoothAdapter?.isEnabled != true) {
-                OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.message), rh.gs(info.nightscout.core.ui.R.string.ble_not_enabled))
+                OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.message), rh.gs(app.aaps.core.ui.R.string.ble_not_enabled))
                 return false
             } else {
                 // Will request that GPS be enabled for devices running Marshmallow or newer.
@@ -95,7 +95,7 @@ class BlePreCheckImpl @Inject constructor(
         }
 
         // Shamelessly borrowed from http://stackoverflow.com/a/10311877/868533
-        OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.location_not_found_title), rh.gs(info.nightscout.core.ui.R.string.location_not_found_message), Runnable {
+        OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.location_not_found_title), rh.gs(app.aaps.core.ui.R.string.location_not_found_message), Runnable {
             activity.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         })
     }

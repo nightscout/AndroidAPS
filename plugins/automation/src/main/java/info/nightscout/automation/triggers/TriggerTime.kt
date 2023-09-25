@@ -50,7 +50,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.time
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.time
 
     override fun friendlyDescription(): String =
         rh.gs(R.string.atspecifiedtime, dateUtil.dateAndTimeString(time.value))
@@ -61,7 +61,7 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, info.nightscout.core.ui.R.string.time, this))
+            .add(StaticLabel(rh, app.aaps.core.ui.R.string.time, this))
             .add(time)
             .build(root)
     }

@@ -16,7 +16,7 @@ import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
-import info.nightscout.core.ui.elements.WeekDay
+import app.aaps.core.ui.elements.WeekDay
 import info.nightscout.core.utils.JsonHelper
 import org.json.JSONObject
 import javax.inject.Inject
@@ -34,25 +34,25 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
     private val days = InputWeekDay().also { it.setAll(true) }
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.autotune_run
-    override fun shortDescription(): String = resourceHelper.gs(info.nightscout.core.ui.R.string.autotune_profile_name, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.autotune_run
+    override fun shortDescription(): String = resourceHelper.gs(app.aaps.core.ui.R.string.autotune_profile_name, inputProfileName.value)
+    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
         val autoSwitch = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_auto, false)
-        val profileName = if (inputProfileName.value == rh.gs(info.nightscout.core.ui.R.string.active)) "" else inputProfileName.value
-        var message = if (autoSwitch) info.nightscout.core.ui.R.string.autotune_run_with_autoswitch else info.nightscout.core.ui.R.string.autotune_run_without_autoswitch
+        val profileName = if (inputProfileName.value == rh.gs(app.aaps.core.ui.R.string.active)) "" else inputProfileName.value
+        var message = if (autoSwitch) app.aaps.core.ui.R.string.autotune_run_with_autoswitch else app.aaps.core.ui.R.string.autotune_run_without_autoswitch
         Thread {
             if (!autotunePlugin.calculationRunning) {
                 autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
                 autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName, days.weekdays)
                 if (!autotunePlugin.lastRunSuccess) {
-                    message = info.nightscout.core.ui.R.string.autotune_run_with_error
+                    message = app.aaps.core.ui.R.string.autotune_run_with_error
                     aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
                 }
                 callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
             } else {
-                message = info.nightscout.core.ui.R.string.autotune_run_cancelled
+                message = app.aaps.core.ui.R.string.autotune_run_cancelled
                 aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
                 callback.result(PumpEnactResult(injector).success(false).comment(message)).run()
             }
@@ -65,8 +65,8 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
             defaultValue = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5)
         daysBack.value = defaultValue
         LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.autotune_select_profile), "", inputProfileName))
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.autotune_tune_days), "", daysBack))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.autotune_select_profile), "", inputProfileName))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.autotune_tune_days), "", daysBack))
             .add(days)
             .build(root)
     }

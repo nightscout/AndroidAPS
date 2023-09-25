@@ -149,9 +149,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(rateConstraint)
         val percentageConstraint = ConstraintObject(0, aapsLogger)
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(percentageConstraint)
-        `when`(rh.gs(info.nightscout.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.format_insulin_units)).thenReturn("%1\$.2f U")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
+        `when`(rh.gs(app.aaps.core.ui.R.string.connectiontimedout)).thenReturn("Connection timed out")
+        `when`(rh.gs(app.aaps.core.ui.R.string.format_insulin_units)).thenReturn("%1\$.2f U")
+        `when`(rh.gs(app.aaps.core.ui.R.string.goingtodeliver)).thenReturn("Going to deliver %1\$.2f U")
     }
 
     @Test

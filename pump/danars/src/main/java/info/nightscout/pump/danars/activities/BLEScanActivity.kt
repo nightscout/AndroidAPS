@@ -24,8 +24,8 @@ import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.safeEnable
 import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.databinding.DanarsBlescannerActivityBinding
@@ -74,7 +74,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
             bluetoothAdapter?.safeEnable()
             startScan()
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
         }
     }
 
@@ -92,7 +92,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
             } catch (ignore: IllegalStateException) {
             } // ignore BT not on
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
         }
 
     private fun stopScan() =
@@ -102,7 +102,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
             } catch (ignore: IllegalStateException) {
             } // ignore BT not on
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
         }
 
     @SuppressLint("MissingPermission")
@@ -163,7 +163,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
                     item.device.createBond()
                     rxBus.send(EventDanaRSDeviceChange())
                 } else {
-                    ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+                    ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
                 }
                 finish()
             }

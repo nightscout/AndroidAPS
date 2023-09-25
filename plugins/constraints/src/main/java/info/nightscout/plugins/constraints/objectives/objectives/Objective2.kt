@@ -215,7 +215,7 @@ class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.s
                 .option(Option(R.string.wrongcarbs_donothing, false))
         )
         tasks.add(
-            ExamTask(this, info.nightscout.core.ui.R.string.iob_label, R.string.blank, "iob")
+            ExamTask(this, app.aaps.core.ui.R.string.iob_label, R.string.blank, "iob")
                 .option(Option(R.string.iob_value, true))
                 .option(Option(R.string.iob_hightemp, false))
                 .option(Option(R.string.iob_negiob, true))
@@ -270,8 +270,8 @@ class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.s
         )
         tasks.add(
             ExamTask(this, R.string.other_medication_label, R.string.other_medication_text, "otherMedicationWarning")
-                .option(Option(info.nightscout.core.ui.R.string.yes, true))
-                .option(Option(info.nightscout.core.ui.R.string.no, false))
+                .option(Option(app.aaps.core.ui.R.string.yes, true))
+                .option(Option(app.aaps.core.ui.R.string.no, false))
         )
         for (task in tasks) (task as ExamTask).options.shuffle()
 

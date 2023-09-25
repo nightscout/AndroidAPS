@@ -36,7 +36,7 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.core.ui.locale.LocaleHelper
+import app.aaps.core.ui.locale.LocaleHelper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.impl.AppRepository
@@ -138,7 +138,7 @@ class MainApp : DaggerApplication() {
                                 InsertIfNewByTimestampTherapyEventTransaction(
                                     timestamp = dateUtil.now(),
                                     type = TherapyEvent.Type.NOTE,
-                                    note = rh.get().gs(info.nightscout.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                                    note = rh.get().gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
                                     glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
                                 )
                             )
@@ -201,7 +201,7 @@ class MainApp : DaggerApplication() {
         // set values for different builds
         if (!sp.contains(R.string.key_ns_alarms)) sp.putBoolean(R.string.key_ns_alarms, config.NSCLIENT)
         if (!sp.contains(R.string.key_ns_announcements)) sp.putBoolean(R.string.key_ns_announcements, config.NSCLIENT)
-        if (!sp.contains(info.nightscout.core.ui.R.string.key_language)) sp.putString(info.nightscout.core.ui.R.string.key_language, "default")
+        if (!sp.contains(app.aaps.core.ui.R.string.key_language)) sp.putString(app.aaps.core.ui.R.string.key_language, "default")
         // 3.1.0
         if (sp.contains("ns_wifionly")) {
             if (sp.getBoolean("ns_wifionly", false)) {

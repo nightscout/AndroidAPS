@@ -145,7 +145,7 @@ class TddCalculatorImpl @Inject constructor(
         return TableLayout(context).also { layout ->
             layout.layoutParams = TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             layout.addView(TextView(context).apply {
-                text = rh.gs(info.nightscout.core.ui.R.string.tdd)
+                text = rh.gs(app.aaps.core.ui.R.string.tdd)
                 setTypeface(typeface, Typeface.BOLD)
                 gravity = Gravity.CENTER_HORIZONTAL
                 setTextAppearance(android.R.style.TextAppearance_Material_Medium)
@@ -155,7 +155,7 @@ class TddCalculatorImpl @Inject constructor(
             averageTdd?.let { averageTdd ->
                 layout.addView(TextView(context).apply {
                     layoutParams = lp
-                    text = rh.gs(info.nightscout.core.ui.R.string.average)
+                    text = rh.gs(app.aaps.core.ui.R.string.average)
                     setTypeface(typeface, Typeface.BOLD)
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)

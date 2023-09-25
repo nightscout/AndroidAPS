@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.common.RecordTypes
 import info.nightscout.pump.diaconn.database.DiaconnHistoryRecord
@@ -75,7 +75,7 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
         binding = DiaconnG8HistoryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(info.nightscout.core.ui.R.string.pump_history)
+        title = rh.gs(app.aaps.core.ui.R.string.pump_history)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -93,7 +93,7 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
         typeList.add(TypeList(RecordTypes.RECORD_TYPE_DAILY, rh.gs(R.string.diaconn_g8_history_dailyinsulin)))
         typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.diaconn_g8_history_refill)))
         typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.diaconn_g8_history_suspend)))
-        binding.typeList.setAdapter(ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, typeList))
+        binding.typeList.setAdapter(ArrayAdapter(this, app.aaps.core.ui.R.layout.spinner_centered, typeList))
 
         binding.reload.setOnClickListener {
             val selected = typeList.firstOrNull { it.name == binding.typeList.text.toString() } ?: return@setOnClickListener
@@ -158,9 +158,9 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY   -> {
-                    holder.dailyBasal.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBasal)
-                    holder.dailyBolus.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBolus)
-                    holder.dailyTotal.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+                    holder.dailyBasal.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBasal)
+                    holder.dailyBolus.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus)
+                    holder.dailyTotal.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
                     holder.time.text = dateUtil.dateString(record.timestamp)
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.GONE

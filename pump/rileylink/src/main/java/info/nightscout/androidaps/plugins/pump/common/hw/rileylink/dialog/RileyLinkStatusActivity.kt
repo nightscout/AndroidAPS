@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import com.google.android.material.tabs.TabLayoutMediator
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileylinkStatusBinding
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import javax.inject.Inject
 
 class RileyLinkStatusActivity : TranslatedDaggerAppCompatActivity() {

@@ -25,8 +25,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.pump.common.R
 import info.nightscout.pump.common.databinding.PumpBleConfigActivityBinding
 import info.nightscout.pump.common.driver.PumpDriverConfigurationCapable

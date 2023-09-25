@@ -29,8 +29,8 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.resumeloop
-    override fun shortDescription(): String = rh.gs(info.nightscout.core.ui.R.string.resumeloop)
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.resumeloop
+    override fun shortDescription(): String = rh.gs(app.aaps.core.ui.R.string.resumeloop)
     @DrawableRes override fun icon(): Int = R.drawable.ic_replay_24dp
 
     val disposable = CompositeDisposable()
@@ -45,7 +45,7 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
                            })
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
             uel.log(UserEntry.Action.RESUME, Sources.Automation, title)
-            callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended)).run()
         }

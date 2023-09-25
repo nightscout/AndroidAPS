@@ -10,7 +10,7 @@ import info.nightscout.automation.elements.InputTime
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.core.ui.elements.WeekDay
+import app.aaps.core.ui.elements.WeekDay
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.core.utils.MidnightUtils
 import org.json.JSONObject

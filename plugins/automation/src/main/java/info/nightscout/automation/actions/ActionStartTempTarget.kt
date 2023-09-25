@@ -69,18 +69,18 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                                ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
                            )
-                           callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
+                           callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                           callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.error)).run()
+                           callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.error)).run()
                        })
     }
 
     override fun generateDialog(root: LinearLayout) {
-        val unitResId = if (value.units == GlucoseUnit.MGDL) info.nightscout.core.ui.R.string.mgdl else info.nightscout.core.ui.R.string.mmol
+        val unitResId = if (value.units == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.mgdl else app.aaps.core.ui.R.string.mmol
         LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.temporary_target) + "\n[" + rh.gs(unitResId) + "]", "", value))
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.temporary_target) + "\n[" + rh.gs(unitResId) + "]", "", value))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.duration_min_label), "", duration))
             .build(root)
     }
 

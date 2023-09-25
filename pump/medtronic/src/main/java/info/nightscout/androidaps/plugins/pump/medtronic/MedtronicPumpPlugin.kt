@@ -112,7 +112,7 @@ class MedtronicPumpPlugin @Inject constructor(
     PluginDescription() //
         .mainType(PluginType.PUMP) //
         .fragmentClass(MedtronicFragment::class.java.name) //
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_veo_128)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_veo_128)
         .pluginName(R.string.medtronic_name) //
         .shortName(R.string.medtronic_name_short) //
         .preferencesId(R.xml.pref_medtronic)
@@ -172,7 +172,7 @@ class MedtronicPumpPlugin @Inject constructor(
         super.updatePreferenceSummary(pref)
         if (pref.key == rh.gs(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.string.key_rileylink_mac_address)) {
             val value = sp.getStringOrNull(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.string.key_rileylink_mac_address, null)
-            pref.summary = value ?: rh.gs(info.nightscout.core.ui.R.string.not_set_short)
+            pref.summary = value ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
         }
     }
 
@@ -643,7 +643,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread {
                         SystemClock.sleep(2000)
-                        uiInteraction.runAlarm(rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), info.nightscout.core.ui.R.raw.boluserror)
+                        uiInteraction.runAlarm(rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), app.aaps.core.ui.R.raw.boluserror)
                     }.start()
                 }
                 val now = System.currentTimeMillis()
@@ -1171,13 +1171,13 @@ class MedtronicPumpPlugin @Inject constructor(
     private val customActionWakeUpAndTune = CustomAction(
         R.string.medtronic_custom_action_wake_and_tune,
         MedtronicCustomActionType.WakeUpAndTune,
-        info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
+        app.aaps.core.ui.R.drawable.ic_actions_profileswitch
     )
     private val customActionClearBolusBlock = CustomAction(
-        R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock, info.nightscout.core.ui.R.drawable.ic_actions_profileswitch, false
+        R.string.medtronic_custom_action_clear_bolus_block, MedtronicCustomActionType.ClearBolusBlock, app.aaps.core.ui.R.drawable.ic_actions_profileswitch, false
     )
     private val customActionResetRLConfig = CustomAction(
-        R.string.medtronic_custom_action_reset_rileylink, MedtronicCustomActionType.ResetRileyLinkConfiguration, info.nightscout.core.ui.R.drawable.ic_actions_profileswitch, true
+        R.string.medtronic_custom_action_reset_rileylink, MedtronicCustomActionType.ResetRileyLinkConfiguration, app.aaps.core.ui.R.drawable.ic_actions_profileswitch, true
     )
 
     override fun getCustomActions(): List<CustomAction>? {
@@ -1197,7 +1197,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 if (rileyLinkMedtronicService?.verifyConfiguration() == true) {
                     serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
                 } else {
-                    uiInteraction.runAlarm(rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), info.nightscout.core.ui.R.raw.boluserror)
+                    uiInteraction.runAlarm(rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), app.aaps.core.ui.R.raw.boluserror)
                 }
             }
 

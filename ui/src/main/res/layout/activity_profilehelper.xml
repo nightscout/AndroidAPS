@@ -71,7 +71,7 @@
                         android:text="@string/age"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <info.nightscout.core.ui.elements.NumberPicker
+                    <app.aaps.core.ui.elements.NumberPicker
                         android:id="@+id/age"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
@@ -96,7 +96,7 @@
                         android:text="@string/tdd_total"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <info.nightscout.core.ui.elements.NumberPicker
+                    <app.aaps.core.ui.elements.NumberPicker
                         android:id="@+id/tdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
@@ -120,7 +120,7 @@
                         android:text="@string/weight_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <info.nightscout.core.ui.elements.NumberPicker
+                    <app.aaps.core.ui.elements.NumberPicker
                         android:id="@+id/weight"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
@@ -143,7 +143,7 @@
                         android:text="@string/basal_pct_from_tdd_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                    <info.nightscout.core.ui.elements.NumberPicker
+                    <app.aaps.core.ui.elements.NumberPicker
                         android:id="@+id/basal_pct_from_tdd"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
@@ -160,7 +160,7 @@
                 android:layout_marginStart="10dp"
                 android:orientation="vertical" />
 
-            <info.nightscout.core.ui.elements.SingleClickButton
+            <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/copy_to_local_profile"
                 style="@style/GrayButton"
                 android:layout_width="match_parent"
@@ -234,7 +234,7 @@
 
         </LinearLayout>
 
-        <info.nightscout.core.ui.elements.SingleClickButton
+        <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/compare_profiles"
             style="@style/GrayButton"
             android:layout_width="match_parent"

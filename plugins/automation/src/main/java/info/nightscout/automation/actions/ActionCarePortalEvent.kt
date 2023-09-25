@@ -48,7 +48,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
         cpEvent = InputCarePortalMenu(rh, actionCPEvent.cpEvent.value)
     }
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.careportal
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.careportal
     override fun shortDescription(): String = rh.gs(cpEvent.value.stringResWithValue, note.value)
 
     @DrawableRes override fun icon(): Int = cpEvent.value.drawableRes
@@ -110,8 +110,8 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
             .add(cpEvent)
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.duration_min_label), "", duration))
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.notes_label), "", note))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.notes_label), "", note))
             .build(root)
     }
 

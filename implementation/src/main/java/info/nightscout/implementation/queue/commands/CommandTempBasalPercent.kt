@@ -32,11 +32,11 @@ class CommandTempBasalPercent(
         callback?.result(r)?.run()
     }
 
-    override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.temp_basal_percent, percent, durationInMinutes)
+    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.temp_basal_percent, percent, durationInMinutes)
 
     override fun log(): String = "TEMP BASAL $percent% $durationInMinutes min"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
     }
 }

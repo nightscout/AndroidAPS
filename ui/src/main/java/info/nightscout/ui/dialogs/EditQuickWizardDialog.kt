@@ -18,9 +18,9 @@ import app.aaps.core.interfaces.utils.T
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.ui.extensions.selectedItemPosition
-import info.nightscout.core.ui.extensions.setEnableForChildren
-import info.nightscout.core.ui.extensions.setSelection
+import app.aaps.core.ui.extensions.selectedItemPosition
+import app.aaps.core.ui.extensions.setEnableForChildren
+import app.aaps.core.ui.extensions.setSelection
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogEditQuickwizardBinding
 import info.nightscout.ui.events.EventQuickWizardChange

@@ -20,13 +20,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <info.nightscout.core.ui.elements.NumberPicker
+        <app.aaps.core.ui.elements.NumberPicker
             android:id="@+id/timelistedit_edit1"
             android:layout_width="130dp"
             android:layout_height="40dp"
             android:layout_marginEnd="5dp" />
 
-        <info.nightscout.core.ui.elements.NumberPicker
+        <app.aaps.core.ui.elements.NumberPicker
             android:id="@+id/timelistedit_edit2"
             android:layout_width="130dp"
             android:layout_height="40dp" />

@@ -47,7 +47,7 @@ class TirImpl(override val date: Long, override val lowThreshold: Double, overri
                 header.gravity = Gravity.CENTER_HORIZONTAL
                 header.addView(TextView(context).apply {
                     gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0; weight = 1f }; text =
-                    rh.gs(info.nightscout.core.ui.R.string.date)
+                    rh.gs(app.aaps.core.ui.R.string.date)
                 })
                 header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1; weight = 1f }; text = rh.gs(R.string.below) })
                 header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2; weight = 1f }; text = rh.gs(R.string.in_range) })
@@ -63,15 +63,15 @@ class TirImpl(override val date: Long, override val lowThreshold: Double, overri
             row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text = dateUtil.dateStringShort(date) })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text =
-                rh.gs(info.nightscout.core.ui.R.string.formatPercent, belowPct())
+                rh.gs(app.aaps.core.ui.R.string.formatPercent, belowPct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text =
-                rh.gs(info.nightscout.core.ui.R.string.formatPercent, inRangePct())
+                rh.gs(app.aaps.core.ui.R.string.formatPercent, inRangePct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text =
-                rh.gs(info.nightscout.core.ui.R.string.formatPercent, abovePct())
+                rh.gs(app.aaps.core.ui.R.string.formatPercent, abovePct())
             })
         }
 
@@ -87,15 +87,15 @@ class TirImpl(override val date: Long, override val lowThreshold: Double, overri
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text =
-                rh.gs(info.nightscout.core.ui.R.string.formatPercent, belowPct())
+                rh.gs(app.aaps.core.ui.R.string.formatPercent, belowPct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text =
-                rh.gs(info.nightscout.core.ui.R.string.formatPercent, inRangePct())
+                rh.gs(app.aaps.core.ui.R.string.formatPercent, inRangePct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text =
-                rh.gs(info.nightscout.core.ui.R.string.formatPercent, abovePct())
+                rh.gs(app.aaps.core.ui.R.string.formatPercent, abovePct())
             })
         }
 }

@@ -21,7 +21,7 @@ import app.aaps.configuration.maintenance.data.Prefs
 import app.aaps.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import java.util.LinkedList
 
 object PrefImportSummaryDialog {
@@ -29,8 +29,8 @@ object PrefImportSummaryDialog {
     @SuppressLint("InflateParams")
     fun showSummary(context: Context, importOk: Boolean, importPossible: Boolean, prefs: Prefs, ok: (() -> Unit)?, cancel: (() -> Unit)? = null) {
 
-        @StyleRes val theme: Int = if (importOk) info.nightscout.core.ui.R.style.DialogTheme else {
-            if (importPossible) info.nightscout.core.ui.R.style.AppThemeWarningDialog else info.nightscout.core.ui.R.style.AppThemeErrorDialog
+        @StyleRes val theme: Int = if (importOk) app.aaps.core.ui.R.style.DialogTheme else {
+            if (importPossible) app.aaps.core.ui.R.style.AppThemeWarningDialog else app.aaps.core.ui.R.style.AppThemeErrorDialog
         }
 
         @StringRes val messageRes: Int = if (importOk) R.string.check_preferences_before_import else {
@@ -38,7 +38,7 @@ object PrefImportSummaryDialog {
         }
 
         @DrawableRes val headerIcon: Int = if (importOk) R.drawable.ic_header_import else {
-            if (importPossible) info.nightscout.core.ui.R.drawable.ic_header_warning else R.drawable.ic_header_error
+            if (importPossible) app.aaps.core.ui.R.drawable.ic_header_warning else R.drawable.ic_header_error
         }
 
         val themedCtx = ContextThemeWrapper(context, theme)
@@ -92,13 +92,13 @@ object PrefImportSummaryDialog {
                 webView.setBackgroundColor(Color.TRANSPARENT)
                 webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
 
-                MaterialAlertDialogBuilder(context, info.nightscout.core.ui.R.style.DialogTheme)
+                MaterialAlertDialogBuilder(context, app.aaps.core.ui.R.style.DialogTheme)
                     .setCustomTitle(
-                        info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(
+                        app.aaps.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(
                             context,
                             context.getString(R.string.check_preferences_details_title),
                             R.drawable.ic_header_log,
-                            info.nightscout.core.ui.R.style.AppTheme
+                            app.aaps.core.ui.R.style.AppTheme
                         )
                     )
                     .setView(detailsLayout)
@@ -111,7 +111,7 @@ object PrefImportSummaryDialog {
 
         val builder = MaterialAlertDialogBuilder(context, theme)
             .setMessage(context.getString(messageRes))
-            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(R.string.import_setting), headerIcon, theme))
+            .setCustomTitle(app.aaps.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(R.string.import_setting), headerIcon, theme))
             .setView(innerLayout)
             .setNegativeButton(android.R.string.cancel) { dialog: DialogInterface, _: Int ->
                 dialog.dismiss()

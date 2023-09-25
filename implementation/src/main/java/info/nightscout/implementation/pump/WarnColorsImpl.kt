@@ -17,9 +17,9 @@ import javax.inject.Singleton
         view?.setTextColor(
             rh.gac(
                 view.context, when {
-                    value >= urgentLevel -> info.nightscout.core.ui.R.attr.urgentColor
-                    value >= warnLevel   -> info.nightscout.core.ui.R.attr.warnColor
-                    else                 -> info.nightscout.core.ui.R.attr.defaultTextColor
+                    value >= urgentLevel -> app.aaps.core.ui.R.attr.urgentColor
+                    value >= warnLevel   -> app.aaps.core.ui.R.attr.warnColor
+                    else                 -> app.aaps.core.ui.R.attr.defaultTextColor
                 }
             )
         )
@@ -29,9 +29,9 @@ import javax.inject.Singleton
         view?.setTextColor(
             rh.gac(
                 view.context, when {
-                    value <= urgentLevel -> info.nightscout.core.ui.R.attr.urgentColor
-                    value <= warnLevel   -> info.nightscout.core.ui.R.attr.warnColor
-                    else                 -> info.nightscout.core.ui.R.attr.defaultTextColor
+                    value <= urgentLevel -> app.aaps.core.ui.R.attr.urgentColor
+                    value <= warnLevel   -> app.aaps.core.ui.R.attr.warnColor
+                    else                 -> app.aaps.core.ui.R.attr.defaultTextColor
                 }
             )
         )
@@ -41,9 +41,9 @@ import javax.inject.Singleton
         view?.setTextColor(
             rh.gac(
                 view.context, when {
-                    therapyEvent.isOlderThan(urgentThreshold, dateUtil) -> info.nightscout.core.ui.R.attr.lowColor
-                    therapyEvent.isOlderThan(warnThreshold, dateUtil)   -> info.nightscout.core.ui.R.attr.highColor
-                    else                                                -> info.nightscout.core.ui.R.attr.defaultTextColor
+                    therapyEvent.isOlderThan(urgentThreshold, dateUtil) -> app.aaps.core.ui.R.attr.lowColor
+                    therapyEvent.isOlderThan(warnThreshold, dateUtil)   -> app.aaps.core.ui.R.attr.highColor
+                    else                                                -> app.aaps.core.ui.R.attr.defaultTextColor
                 }
             )
         )

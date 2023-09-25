@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileFunction
-import info.nightscout.core.ui.elements.NumberPicker
+import app.aaps.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
 class InputTempTarget(profileFunction: ProfileFunction) : Element {
@@ -41,7 +41,7 @@ class InputTempTarget(profileFunction: ProfileFunction) : Element {
         }
         root.addView(
             NumberPicker(root.context, null).also {
-                it.setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(info.nightscout.core.ui.R.id.ok))
+                it.setParams(value, minValue, maxValue, step, decimalFormat, true, root.findViewById(app.aaps.core.ui.R.id.ok))
                 it.setOnValueChangedListener { v: Double -> value = v }
                 it.gravity = Gravity.CENTER_HORIZONTAL
 

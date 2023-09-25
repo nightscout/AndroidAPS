@@ -15,7 +15,7 @@ import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.di.AuthUrl
 import info.nightscout.plugins.sync.di.ViewModelFactory

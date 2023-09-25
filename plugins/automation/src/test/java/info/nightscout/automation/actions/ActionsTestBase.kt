@@ -178,7 +178,7 @@ ActionsTestBase : TestBaseWithProfile() {
         `when`(activePlugin.activeProfileSource).thenReturn(profilePlugin)
         `when`(profilePlugin.profile).thenReturn(getValidProfileStore())
 
-        `when`(context.getString(info.nightscout.core.ui.R.string.ok)).thenReturn("OK")
-        `when`(context.getString(info.nightscout.core.ui.R.string.error)).thenReturn("Error")
+        `when`(context.getString(app.aaps.core.ui.R.string.ok)).thenReturn("OK")
+        `when`(context.getString(app.aaps.core.ui.R.string.error)).thenReturn("Error")
     }
 }

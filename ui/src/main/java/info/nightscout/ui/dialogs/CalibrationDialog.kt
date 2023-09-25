@@ -12,7 +12,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -66,7 +66,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
                 savedInstanceState?.getDouble("bg")
                     ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok
             )
-        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)
+        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         binding.bgLabel.labelFor = binding.bg.editTextId
     }
 
@@ -78,20 +78,20 @@ class CalibrationDialog : DialogFragmentWithDate() {
     override fun submit(): Boolean {
         if (_binding == null) return false
         val units = profileUtil.units
-        val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)
+        val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val actions: LinkedList<String?> = LinkedList()
         val bg = binding.bg.value
-        actions.add(rh.gs(info.nightscout.core.ui.R.string.bg_label) + ": " + profileUtil.stringInCurrentUnitsDetect(bg) + " " + unitLabel)
+        actions.add(rh.gs(app.aaps.core.ui.R.string.bg_label) + ": " + profileUtil.stringInCurrentUnitsDetect(bg) + " " + unitLabel)
         if (bg > 0) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     uel.log(Action.CALIBRATION, Sources.CalibrationDialog, ValueWithUnit.fromGlucoseUnit(bg, units.asText))
                     xDripBroadcast.sendCalibration(bg)
                 })
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.calibration), rh.gs(info.nightscout.core.ui.R.string.no_action_selected))
+                OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.calibration), rh.gs(app.aaps.core.ui.R.string.no_action_selected))
             }
         return true
     }

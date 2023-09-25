@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.Reusable
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import javax.inject.Inject
 
 @Reusable
@@ -41,7 +41,7 @@ class PasswordCheckImpl @Inject constructor(
             return
         }
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = MaterialAlertDialogBuilder(context, info.nightscout.core.ui.R.style.DialogTheme)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(context, app.aaps.core.ui.R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
 
         val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
@@ -49,7 +49,7 @@ class PasswordCheckImpl @Inject constructor(
 
         userInput2.visibility = View.GONE
         if (pinInput) {
-            userInput.setHint(info.nightscout.core.ui.R.string.pin_hint)
+            userInput.setHint(app.aaps.core.ui.R.string.pin_hint)
             userInput.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
         }
         val autoFillHintPasswordKind = context.getString(preference)
@@ -64,7 +64,7 @@ class PasswordCheckImpl @Inject constructor(
                 ok?.invoke(enteredPassword)
                 return true
             }
-            val msg = if (pinInput) info.nightscout.core.ui.R.string.wrongpin else info.nightscout.core.ui.R.string.wrongpassword
+            val msg = if (pinInput) app.aaps.core.ui.R.string.wrongpin else app.aaps.core.ui.R.string.wrongpassword
             ToastUtils.errorToast(context, context.getString(msg))
             fail?.invoke()
             return false
@@ -72,9 +72,9 @@ class PasswordCheckImpl @Inject constructor(
 
         alertDialogBuilder
             .setCancelable(false)
-            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
-            .setPositiveButton(context.getString(info.nightscout.core.ui.R.string.ok)) { _, _ -> validatePassword() }
-            .setNegativeButton(context.getString(info.nightscout.core.ui.R.string.cancel)) { dialog, _ ->
+            .setCustomTitle(app.aaps.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
+            .setPositiveButton(context.getString(app.aaps.core.ui.R.string.ok)) { _, _ -> validatePassword() }
+            .setNegativeButton(context.getString(app.aaps.core.ui.R.string.cancel)) { dialog, _ ->
                 cancel?.invoke()
                 dialog.cancel()
             }
@@ -98,7 +98,7 @@ class PasswordCheckImpl @Inject constructor(
     @SuppressLint("InflateParams")
     override fun setPassword(context: Context, @StringRes labelId: Int, @StringRes preference: Int, ok: ((String) -> Unit)?, cancel: (() -> Unit)?, clear: (() -> Unit)?, pinInput: Boolean) {
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = MaterialAlertDialogBuilder(context, info.nightscout.core.ui.R.style.DialogTheme)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(context, app.aaps.core.ui.R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
 
         val userInput = promptsView.findViewById<View>(R.id.password_prompt_pass) as EditText
@@ -106,8 +106,8 @@ class PasswordCheckImpl @Inject constructor(
         if (pinInput) {
             userInput.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
             userInput2.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_PASSWORD
-            userInput.setHint(info.nightscout.core.ui.R.string.pin_hint)
-            userInput2.setHint(info.nightscout.core.ui.R.string.pin_hint)
+            userInput.setHint(app.aaps.core.ui.R.string.pin_hint)
+            userInput2.setHint(app.aaps.core.ui.R.string.pin_hint)
         }
         val autoFillHintPasswordKind = context.getString(preference)
         userInput.setAutofillHints(AUTOFILL_HINT_NEW_PASSWORD, "aaps_${autoFillHintPasswordKind}")
@@ -115,26 +115,26 @@ class PasswordCheckImpl @Inject constructor(
 
         alertDialogBuilder
             .setCancelable(false)
-            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
-            .setPositiveButton(context.getString(info.nightscout.core.ui.R.string.ok)) { _, _ ->
+            .setCustomTitle(app.aaps.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
+            .setPositiveButton(context.getString(app.aaps.core.ui.R.string.ok)) { _, _ ->
                 val enteredPassword = userInput.text.toString()
                 val enteredPassword2 = userInput2.text.toString()
                 if (enteredPassword != enteredPassword2) {
-                    val msg = if (pinInput) info.nightscout.core.ui.R.string.pin_dont_match else info.nightscout.core.ui.R.string.passwords_dont_match
+                    val msg = if (pinInput) app.aaps.core.ui.R.string.pin_dont_match else app.aaps.core.ui.R.string.passwords_dont_match
                     ToastUtils.errorToast(context, context.getString(msg))
                 } else if (enteredPassword.isNotEmpty()) {
                     sp.putString(preference, cryptoUtil.hashPassword(enteredPassword))
-                    val msg = if (pinInput) info.nightscout.core.ui.R.string.pin_set else info.nightscout.core.ui.R.string.password_set
+                    val msg = if (pinInput) app.aaps.core.ui.R.string.pin_set else app.aaps.core.ui.R.string.password_set
                     ToastUtils.okToast(context, context.getString(msg))
                     ok?.invoke(enteredPassword)
                 } else {
                     if (sp.contains(preference)) {
                         sp.remove(preference)
-                        val msg = if (pinInput) info.nightscout.core.ui.R.string.pin_cleared else info.nightscout.core.ui.R.string.password_cleared
-                        ToastUtils.graphicalToast(context, context.getString(msg), info.nightscout.core.ui.R.drawable.ic_toast_delete_confirm)
+                        val msg = if (pinInput) app.aaps.core.ui.R.string.pin_cleared else app.aaps.core.ui.R.string.password_cleared
+                        ToastUtils.graphicalToast(context, context.getString(msg), app.aaps.core.ui.R.drawable.ic_toast_delete_confirm)
                         clear?.invoke()
                     } else {
-                        val msg = if (pinInput) info.nightscout.core.ui.R.string.pin_not_changed else info.nightscout.core.ui.R.string.password_not_changed
+                        val msg = if (pinInput) app.aaps.core.ui.R.string.pin_not_changed else app.aaps.core.ui.R.string.password_not_changed
                         ToastUtils.warnToast(context, context.getString(msg))
                         cancel?.invoke()
                     }
@@ -142,9 +142,9 @@ class PasswordCheckImpl @Inject constructor(
 
             }
             .setNegativeButton(
-                context.getString(info.nightscout.core.ui.R.string.cancel)
+                context.getString(app.aaps.core.ui.R.string.cancel)
             ) { dialog, _ ->
-                val msg = if (pinInput) info.nightscout.core.ui.R.string.pin_not_changed else info.nightscout.core.ui.R.string.password_not_changed
+                val msg = if (pinInput) app.aaps.core.ui.R.string.pin_not_changed else app.aaps.core.ui.R.string.password_not_changed
                 ToastUtils.infoToast(context, msg)
                 cancel?.invoke()
                 dialog.cancel()
@@ -165,7 +165,7 @@ class PasswordCheckImpl @Inject constructor(
     ) {
 
         val promptsView = LayoutInflater.from(context).inflate(R.layout.passwordprompt, null)
-        val alertDialogBuilder = MaterialAlertDialogBuilder(context, info.nightscout.core.ui.R.style.DialogTheme)
+        val alertDialogBuilder = MaterialAlertDialogBuilder(context, app.aaps.core.ui.R.style.DialogTheme)
         alertDialogBuilder.setView(promptsView)
         passwordExplanation?.let { alertDialogBuilder.setMessage(it) }
 
@@ -191,10 +191,10 @@ class PasswordCheckImpl @Inject constructor(
 
         alertDialogBuilder
             .setCancelable(false)
-            .setCustomTitle(info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
-            .setPositiveButton(context.getString(info.nightscout.core.ui.R.string.ok)) { _, _ -> validatePassword() }
+            .setCustomTitle(app.aaps.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(context, context.getString(labelId), R.drawable.ic_header_key))
+            .setPositiveButton(context.getString(app.aaps.core.ui.R.string.ok)) { _, _ -> validatePassword() }
             .setNegativeButton(
-                context.getString(info.nightscout.core.ui.R.string.cancel)
+                context.getString(app.aaps.core.ui.R.string.cancel)
             ) { dialog, _ ->
                 cancel?.invoke()
                 dialog.cancel()

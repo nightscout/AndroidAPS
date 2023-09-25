@@ -21,18 +21,18 @@ class InputCarePortalMenu(private val rh: ResourceHelper) : Element {
 
         @get:StringRes val stringResWithValue: Int
             get() = when (this) {
-                NOTE         -> info.nightscout.core.ui.R.string.careportal_note_message
-                EXERCISE     -> info.nightscout.core.ui.R.string.careportal_exercise_message
-                QUESTION     -> info.nightscout.core.ui.R.string.careportal_question_message
-                ANNOUNCEMENT -> info.nightscout.core.ui.R.string.careportal_announcement_message
+                NOTE         -> app.aaps.core.ui.R.string.careportal_note_message
+                EXERCISE     -> app.aaps.core.ui.R.string.careportal_exercise_message
+                QUESTION     -> app.aaps.core.ui.R.string.careportal_question_message
+                ANNOUNCEMENT -> app.aaps.core.ui.R.string.careportal_announcement_message
             }
 
         @get:StringRes val stringRes: Int
             get() = when (this) {
-                NOTE         -> info.nightscout.core.ui.R.string.careportal_note
-                EXERCISE     -> info.nightscout.core.ui.R.string.careportal_exercise
-                QUESTION     -> info.nightscout.core.ui.R.string.careportal_question
-                ANNOUNCEMENT -> info.nightscout.core.ui.R.string.careportal_announcement
+                NOTE         -> app.aaps.core.ui.R.string.careportal_note
+                EXERCISE     -> app.aaps.core.ui.R.string.careportal_exercise
+                QUESTION     -> app.aaps.core.ui.R.string.careportal_question
+                ANNOUNCEMENT -> app.aaps.core.ui.R.string.careportal_announcement
             }
         @get:DrawableRes val drawableRes: Int
             get() = when (this) {
@@ -63,7 +63,7 @@ class InputCarePortalMenu(private val rh: ResourceHelper) : Element {
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, info.nightscout.core.ui.R.layout.spinner_centered, EventType.labels(rh)).apply {
+                adapter = ArrayAdapter(root.context, app.aaps.core.ui.R.layout.spinner_centered, EventType.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {

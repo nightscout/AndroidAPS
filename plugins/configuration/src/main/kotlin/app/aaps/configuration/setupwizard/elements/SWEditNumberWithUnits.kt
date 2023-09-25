@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.elements.NumberPicker
+import app.aaps.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 import javax.inject.Inject
 

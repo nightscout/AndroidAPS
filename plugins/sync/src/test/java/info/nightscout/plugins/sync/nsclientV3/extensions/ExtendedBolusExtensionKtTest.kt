@@ -49,7 +49,7 @@ internal class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
 
         val converted = extendedBolus.toNSExtendedBolus(validProfile)
         assertIs<NSTemporaryBasal>(converted)
-        assertThat((converted as NSTemporaryBasal).extendedEmulated).isNotNull()
+        assertThat(converted.extendedEmulated).isNotNull()
         val convertedBack = converted.convertToRemoteAndBack()
         assertIs<NSExtendedBolus>(convertedBack)
 

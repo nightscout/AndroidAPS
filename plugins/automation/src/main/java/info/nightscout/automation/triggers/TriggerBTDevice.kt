@@ -17,7 +17,7 @@ import info.nightscout.automation.elements.ComparatorConnect
 import info.nightscout.automation.elements.InputDropdownMenu
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.JsonHelper
 import org.json.JSONObject
 import javax.inject.Inject
@@ -61,7 +61,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.btdevicecompared, btDevice.value, rh.gs(comparator.value.stringRes))
 
-    override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.ui.R.drawable.ic_bluetooth_white_48dp)
+    override fun icon(): Optional<Int> = Optional.of(app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp)
 
     override fun duplicate(): Trigger = TriggerBTDevice(injector, this)
 
@@ -81,7 +81,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.bondedDevices?.forEach { s.add(it.name) }
         } else {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
         }
         return s
     }

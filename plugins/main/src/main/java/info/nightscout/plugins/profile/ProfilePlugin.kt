@@ -31,8 +31,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.plugins.R
 import org.json.JSONArray
@@ -93,7 +93,7 @@ class ProfilePlugin @Inject constructor(
         val pumpDescription = activePlugin.activePump.pumpDescription
         with(profiles[currentProfileIndex]) {
             if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) {
-                ToastUtils.errorToast(activity, rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.profile_dia), dia))
+                ToastUtils.errorToast(activity, rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.profile_dia), dia))
                 return false
             }
             if (name.isEmpty()) {

@@ -2,8 +2,8 @@ package info.nightscout.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import info.nightscout.core.ui.elements.MinutesNumberPicker
-import info.nightscout.core.ui.elements.NumberPicker
+import app.aaps.core.ui.elements.MinutesNumberPicker
+import app.aaps.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
 class InputDuration(
@@ -19,13 +19,13 @@ class InputDuration(
         val numberPicker: NumberPicker
         if (unit == TimeUnit.MINUTES) {
             numberPicker = MinutesNumberPicker(root.context, null)
-            numberPicker.setParams(value.toDouble(), 5.0, 24 * 60.0, 10.0, DecimalFormat("0"), false, root.findViewById(info.nightscout.core.ui.R.id.ok))
+            numberPicker.setParams(value.toDouble(), 5.0, 24 * 60.0, 10.0, DecimalFormat("0"), false, root.findViewById(app.aaps.core.ui.R.id.ok))
         } else if (unit == TimeUnit.DAYS) {
             numberPicker = MinutesNumberPicker(root.context, null)
-            numberPicker.setParams(value.toDouble(), 1.0, 30.0, 1.0, DecimalFormat("0"), false, root.findViewById(info.nightscout.core.ui.R.id.ok))
+            numberPicker.setParams(value.toDouble(), 1.0, 30.0, 1.0, DecimalFormat("0"), false, root.findViewById(app.aaps.core.ui.R.id.ok))
         } else {
             numberPicker = NumberPicker(root.context, null)
-            numberPicker.setParams(value.toDouble(), 1.0, 24.0, 1.0, DecimalFormat("0"), false, root.findViewById(info.nightscout.core.ui.R.id.ok))
+            numberPicker.setParams(value.toDouble(), 1.0, 24.0, 1.0, DecimalFormat("0"), false, root.findViewById(app.aaps.core.ui.R.id.ok))
         }
         numberPicker.setOnValueChangedListener { value: Double -> this.value = value.toInt() }
         numberPicker.gravity = Gravity.CENTER_HORIZONTAL

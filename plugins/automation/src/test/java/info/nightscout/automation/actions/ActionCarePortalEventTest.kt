@@ -21,7 +21,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
         `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AAPS")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
+        `when`(rh.gs(app.aaps.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
         `when`(dateUtil.now()).thenReturn(0)
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         `when`(repository.runTransactionForResult(anyObject<Transaction<InsertIfNewByTimestampTherapyEventTransaction.TransactionResult>>()))
@@ -35,7 +35,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(info.nightscout.core.ui.R.string.careportal, sut.friendlyName())
+        Assertions.assertEquals(app.aaps.core.ui.R.string.careportal, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {

@@ -1,5 +1,5 @@
 package info.nightscout.automation.elements
 
-import info.nightscout.core.ui.elements.WeekDay
+import app.aaps.core.ui.elements.WeekDay
 
 class InputWeekDay : WeekDay(), Element

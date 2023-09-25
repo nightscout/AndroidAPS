@@ -34,8 +34,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
@@ -184,19 +184,19 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempBasal.timestamp, rh) else ""
             if (tempBasal.isInProgress) {
                 holder.binding.time.text = dateUtil.timeString(tempBasal.timestamp)
-                holder.binding.time.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.activeColor))
+                holder.binding.time.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.activeColor))
             } else {
                 holder.binding.time.text = dateUtil.timeRangeString(tempBasal.timestamp, tempBasal.end)
                 holder.binding.time.setTextColor(holder.binding.duration.currentTextColor)
             }
-            holder.binding.duration.text = rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(tempBasal.duration).mins())
-            if (tempBasal.isAbsolute) holder.binding.rate.text = rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, tempBasal.rate)
-            else holder.binding.rate.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, tempBasal.rate.toInt())
+            holder.binding.duration.text = rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(tempBasal.duration).mins())
+            if (tempBasal.isAbsolute) holder.binding.rate.text = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, tempBasal.rate)
+            else holder.binding.rate.text = rh.gs(app.aaps.core.ui.R.string.format_percent, tempBasal.rate.toInt())
             val now = dateUtil.now()
             var iob = IobTotal(now)
             val profile = profileFunction.getProfile(now)
             if (profile != null) iob = tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)
-            holder.binding.iob.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, iob.basaliob)
+            holder.binding.iob.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, iob.basaliob)
             holder.binding.extendedFlag.visibility = (tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED).toVisibility()
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()
@@ -204,7 +204,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
             if (abs(iob.basaliob) > 0.01) holder.binding.iob.setTextColor(
                 rh.gac(
                     context,
-                    info.nightscout.core.ui.R.attr.activeColor
+                    app.aaps.core.ui.R.attr.activeColor
                 )
             ) else holder.binding.iob.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.cbRemove.visibility = (tempBasal.isValid && actionHelper.isRemoving).toVisibility()
@@ -270,22 +270,22 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
             val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
             val profile = profileFunction.getProfile(dateUtil.now())
             if (profile != null)
-                return "${if (isFakeExtended) rh.gs(info.nightscout.core.ui.R.string.extended_bolus) else rh.gs(info.nightscout.core.ui.R.string.tempbasal_label)}: ${
+                return "${if (isFakeExtended) rh.gs(app.aaps.core.ui.R.string.extended_bolus) else rh.gs(app.aaps.core.ui.R.string.tempbasal_label)}: ${
                     tempBasal.toStringFull(
                         profile,
                         dateUtil,
                         decimalFormatter
                     )
                 }\n" +
-                    "${rh.gs(info.nightscout.core.ui.R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"
+                    "${rh.gs(app.aaps.core.ui.R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"
         }
-        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<TemporaryBasal>) {
         if (selectedItems.size() > 0)
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+                OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                     selectedItems.forEach { _, tempBasal ->
                         var extendedBolus: ExtendedBolus? = null
                         val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED

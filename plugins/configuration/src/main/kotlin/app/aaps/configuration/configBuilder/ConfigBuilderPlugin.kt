@@ -42,7 +42,7 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
@@ -69,7 +69,7 @@ class ConfigBuilderPlugin @Inject constructor(
         .showInList(true)
         .alwaysEnabled(true)
         .alwaysVisible(false)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_cogs)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_cogs)
         .pluginName(R.string.config_builder)
         .shortName(R.string.config_builder_shortname)
         .description(R.string.description_config_builder),
@@ -154,7 +154,7 @@ class ConfigBuilderPlugin @Inject constructor(
 
     // Ask when switching to physical pump plugin
     fun switchAllowed(changedPlugin: PluginBase, newState: Boolean, activity: FragmentActivity?, type: PluginType) {
-        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != rh.gs(info.nightscout.core.ui.R.string.virtual_pump))
+        if (changedPlugin.getType() == PluginType.PUMP && changedPlugin.name != rh.gs(app.aaps.core.ui.R.string.virtual_pump))
             confirmPumpPluginActivation(changedPlugin, newState, activity, type)
         else if (changedPlugin.getType() == PluginType.PUMP) {
             performPluginSwitch(changedPlugin, newState, type)

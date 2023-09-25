@@ -83,7 +83,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         binding.btconnection.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             diaconnG8Pump.lastConnection = 0
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.clicked_connect_to_pump), null)
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.clicked_connect_to_pump), null)
         }
     }
 
@@ -172,7 +172,7 @@ class DiaconnG8Fragment : DaggerFragment() {
             // max 6h back
                 binding.lastbolus.text =
                     dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(
-                        info.nightscout.core.ui.R.string.format_insulin_units,
+                        app.aaps.core.ui.R.string.format_insulin_units,
                         pump.lastBolusAmount
                     )
             else
@@ -181,13 +181,13 @@ class DiaconnG8Fragment : DaggerFragment() {
 
         val todayInsulinAmount = (pump.todayBaseAmount + pump.todaySnackAmount + pump.todayMealAmount)
         val todayInsulinLimitAmount = (pump.maxBasal.toInt() * 24) + pump.maxBolusePerDay.toInt()
-        binding.dailyunits.text = rh.gs(info.nightscout.core.ui.R.string.reservoir_value, todayInsulinAmount, todayInsulinLimitAmount)
+        binding.dailyunits.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, todayInsulinAmount, todayInsulinLimitAmount)
         warnColors.setColor(binding.dailyunits, todayInsulinAmount, todayInsulinLimitAmount * 0.75, todayInsulinLimitAmount * 0.9)
-        binding.basabasalrate.text = pump.baseInjAmount.toString() + " / " + rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, plugin.baseBasalRate)
+        binding.basabasalrate.text = pump.baseInjAmount.toString() + " / " + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, plugin.baseBasalRate)
 
         binding.tempbasal.text = diaconnG8Pump.temporaryBasalToString()
         binding.extendedbolus.text = diaconnG8Pump.extendedBolusToString()
-        binding.reservoir.text = rh.gs(info.nightscout.core.ui.R.string.reservoir_value, pump.systemRemainInsulin, 307)
+        binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, pump.systemRemainInsulin, 307)
         warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25 + "}" + " (" + pump.systemRemainBattery + " %)"
         warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51.0, 26.0)

@@ -69,7 +69,7 @@ class NSClientPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_nightscout_syncs)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
         .pluginName(R.string.ns_client)
         .shortName(R.string.ns_client_short_name)
         .preferencesId(R.xml.pref_ns_client)

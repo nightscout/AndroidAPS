@@ -10,8 +10,8 @@ import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.AlarmDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
-import info.nightscout.core.ui.R
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.R
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 

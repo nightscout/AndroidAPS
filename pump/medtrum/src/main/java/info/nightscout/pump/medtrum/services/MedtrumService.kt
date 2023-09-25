@@ -242,9 +242,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
             medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo?.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo?.id ?: 0)
             if (detailedBolusInfo?.bolusType == DetailedBolusInfo.BolusType.SMB) {
-                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)))
             } else {
-                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.core.ui.R.string.bolus_u_min, detailedBolusInfo?.insulin ?: 0.0)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.bolus_u_min, detailedBolusInfo?.insulin ?: 0.0)))
             }
             waitForBolusProgress()
         }
@@ -256,7 +256,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             aapsLogger.debug(LTag.PUMPCOMM, "Pump time updated")
             uiInteraction.addNotification(
                 Notification.INSIGHT_DATE_TIME_UPDATED, // :---)
-                rh.gs(info.nightscout.core.ui.R.string.pump_time_updated),
+                rh.gs(app.aaps.core.ui.R.string.pump_time_updated),
                 Notification.INFO,
             )
         } else {
@@ -659,10 +659,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     Notification.PUMP_ERROR,
                     rh.gs(R.string.pump_error, alarmState?.let { medtrumPump.alarmStateToString(it) }),
                     Notification.URGENT,
-                    info.nightscout.core.ui.R.raw.alarm
+                    app.aaps.core.ui.R.raw.alarm
                 )
                 // Get pump status, use readStatus here as for loadEvents() we cannot be sure callback is executed
-                commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), object : Callback() {
+                commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), object : Callback() {
                     override fun run() {
                         // Make sure a 0 temp is set
                         medtrumPump.setFakeTBRIfNotSet()

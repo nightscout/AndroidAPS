@@ -47,7 +47,7 @@ class NotificationWithAction(
                 id = NS_ALARM
                 level = NORMAL
                 text = nsAlarm.title()
-                soundId = info.nightscout.core.ui.R.raw.alarm
+                soundId = app.aaps.core.ui.R.raw.alarm
             }
 
             2 -> {
@@ -57,7 +57,7 @@ class NotificationWithAction(
                 soundId = R.raw.urgentalarm
             }
         }
-        buttonText = info.nightscout.core.ui.R.string.snooze
+        buttonText = app.aaps.core.ui.R.string.snooze
         action = Runnable {
             activePlugin.activeNsClient?.handleClearAlarm(nsAlarm, 60 * 60 * 1000L)
             // Adding current time to snooze if we got staleData

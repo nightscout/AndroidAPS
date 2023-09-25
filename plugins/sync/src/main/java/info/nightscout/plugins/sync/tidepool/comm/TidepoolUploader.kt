@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolStatus

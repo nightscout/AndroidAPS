@@ -13,7 +13,7 @@ import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseOperationDialog
-import info.nightscout.core.ui.elements.VerticalTextView
+import app.aaps.core.ui.elements.VerticalTextView
 import info.nightscout.core.utils.JsonHelper.safeGetString
 import org.json.JSONArray
 import org.json.JSONObject
@@ -37,7 +37,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
             get() = when (this) {
                 OR -> R.string.or
                 XOR -> R.string.xor
-                AND -> info.nightscout.core.ui.R.string.and
+                AND -> app.aaps.core.ui.R.string.and
             }
 
         companion object {
@@ -164,7 +164,7 @@ class TriggerConnector(injector: HasAndroidInjector) : Trigger(injector) {
             text = rh.gs(connectorType.stringRes)
             gravity = gravity or Gravity.CENTER_VERTICAL
             setTypeface(typeface, Typeface.BOLD)
-            setBackgroundColor(rh.gac(context, info.nightscout.core.ui.R.attr.automationOverlayColor))
+            setBackgroundColor(rh.gac(context, app.aaps.core.ui.R.attr.automationOverlayColor))
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.MATCH_PARENT).also { ll ->
                 ll.setMargins(rh.dpToPx(3), rh.dpToPx(3), rh.dpToPx(3), rh.dpToPx(3))
             }

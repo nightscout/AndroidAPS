@@ -148,23 +148,23 @@ class DexcomTirImpl : DexcomTIR {
             row.gravity = Gravity.CENTER_HORIZONTAL
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text =
-                context.getString(info.nightscout.core.ui.R.string.formatPercent, veryLowPct())
+                context.getString(app.aaps.core.ui.R.string.formatPercent, veryLowPct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text =
-                context.getString(info.nightscout.core.ui.R.string.formatPercent, lowPct())
+                context.getString(app.aaps.core.ui.R.string.formatPercent, lowPct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text =
-                context.getString(info.nightscout.core.ui.R.string.formatPercent, inRangePct())
+                context.getString(app.aaps.core.ui.R.string.formatPercent, inRangePct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text =
-                context.getString(info.nightscout.core.ui.R.string.formatPercent, highPct())
+                context.getString(app.aaps.core.ui.R.string.formatPercent, highPct())
             })
             row.addView(TextView(context).apply {
                 gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4 }; text =
-                context.getString(info.nightscout.core.ui.R.string.formatPercent, veryHighPct())
+                context.getString(app.aaps.core.ui.R.string.formatPercent, veryHighPct())
             })
         }
 }

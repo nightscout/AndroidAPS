@@ -95,7 +95,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
             .add(StaticLabel(rh, R.string.location, this))
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.name_short), "", name))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.name_short), "", name))
             .add(LabelWithElement(rh, rh.gs(R.string.latitude_short), "", latitude))
             .add(LabelWithElement(rh, rh.gs(R.string.longitude_short), "", longitude))
             .add(LabelWithElement(rh, rh.gs(R.string.distance_short), "", distance))

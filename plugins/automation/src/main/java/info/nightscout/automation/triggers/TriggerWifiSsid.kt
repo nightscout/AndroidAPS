@@ -69,7 +69,7 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.ns_wifi_ssids
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.ns_wifi_ssids
 
     override fun friendlyDescription(): String =
         rh.gs(R.string.wifissidcompared, rh.gs(comparator.value.stringRes), ssid.value)
@@ -80,9 +80,9 @@ class TriggerWifiSsid(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, info.nightscout.core.ui.R.string.ns_wifi_ssids, this))
+            .add(StaticLabel(rh, app.aaps.core.ui.R.string.ns_wifi_ssids, this))
             .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.ns_wifi_ssids) + ": ", "", ssid))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.ns_wifi_ssids) + ": ", "", ssid))
             .build(root)
     }
 }

@@ -38,7 +38,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.T
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.OfflineEvent
@@ -320,47 +320,47 @@ class BolusWizard @Inject constructor(
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
             actions.add(
-                rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, insulinAfterConstraints).formatColor
-                    (context, rh, info.nightscout.core.ui.R.attr.bolusColor) + pct
+                rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, insulinAfterConstraints).formatColor
+                    (context, rh, app.aaps.core.ui.R.attr.bolusColor) + pct
             )
         }
         if (carbs > 0 && !advisor) {
             var timeShift = ""
             if (carbTime > 0) {
-                timeShift += " (+" + rh.gs(info.nightscout.core.ui.R.string.mins, carbTime) + ")"
+                timeShift += " (+" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
             } else if (carbTime < 0) {
-                timeShift += " (" + rh.gs(info.nightscout.core.ui.R.string.mins, carbTime) + ")"
+                timeShift += " (" + rh.gs(app.aaps.core.ui.R.string.mins, carbTime) + ")"
             }
             actions.add(
-                rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_carbs, carbs)
-                    .formatColor(context, rh, info.nightscout.core.ui.R.attr.carbsColor) + timeShift
+                rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs)
+                    .formatColor(context, rh, app.aaps.core.ui.R.attr.carbsColor) + timeShift
             )
         }
         if (insulinFromCOB > 0) {
             actions.add(
-                rh.gs(info.nightscout.core.ui.R.string.cobvsiob) + ": " + rh.gs(
-                    info.nightscout.core.ui.R.string.formatsignedinsulinunits,
+                rh.gs(app.aaps.core.ui.R.string.cobvsiob) + ": " + rh.gs(
+                    app.aaps.core.ui.R.string.formatsignedinsulinunits,
                     insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG
                 ).formatColor(
-                    context, rh, info.nightscout.core.ui.R.attr
+                    context, rh, app.aaps.core.ui.R.attr
                         .cobAlertColor
                 )
             )
             val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
-                actions.add(rh.gs(info.nightscout.core.ui.R.string.slowabsorptiondetected, rh.gac(context, info.nightscout.core.ui.R.attr.cobAlertColor), (absorptionRate * 100).toInt()))
+                actions.add(rh.gs(app.aaps.core.ui.R.string.slowabsorptiondetected, rh.gac(context, app.aaps.core.ui.R.attr.cobAlertColor), (absorptionRate * 100).toInt()))
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
             actions.add(
-                rh.gs(info.nightscout.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints)
-                    .formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor)
+                rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints)
+                    .formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
             )
         if (config.NSCLIENT && insulinAfterConstraints > 0)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.alarminxmin, carbTime).formatColor(context, rh, info.nightscout.core.ui.R.attr.infoColor))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
         if (advisor)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.advisoralarm).formatColor(context, rh, info.nightscout.core.ui.R.attr.infoColor))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.advisoralarm).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
 
         return HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))
     }
@@ -376,21 +376,21 @@ class BolusWizard @Inject constructor(
                 automation.removeAutomationEventBolusReminder()
             if (carbs > 0.0)
                 automation.removeAutomationEventEatReminder()
-            if (sp.getBoolean(info.nightscout.core.ui.R.string.key_usebolusadvisor, false) && profileUtil.convertToMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
-                OKDialog.showYesNoCancel(ctx, rh.gs(info.nightscout.core.ui.R.string.bolus_advisor), rh.gs(info.nightscout.core.ui.R.string.bolus_advisor_message),
+            if (sp.getBoolean(app.aaps.core.ui.R.string.key_usebolusadvisor, false) && profileUtil.convertToMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
+                OKDialog.showYesNoCancel(ctx, rh.gs(app.aaps.core.ui.R.string.bolus_advisor), rh.gs(app.aaps.core.ui.R.string.bolus_advisor_message),
                                          { bolusAdvisorProcessing(ctx) },
                                          { commonProcessing(ctx) }
                 )
             else
                 commonProcessing(ctx)
         } else {
-            OKDialog.show(ctx, rh.gs(info.nightscout.core.ui.R.string.boluswizard), rh.gs(info.nightscout.core.ui.R.string.no_action_selected))
+            OKDialog.show(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), rh.gs(app.aaps.core.ui.R.string.no_action_selected))
         }
     }
 
     private fun bolusAdvisorProcessing(ctx: Context) {
         val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = true)
-        OKDialog.showConfirmation(ctx, rh.gs(info.nightscout.core.ui.R.string.boluswizard), confirmMessage, {
+        OKDialog.showConfirmation(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
                 eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
                 insulin = insulinAfterConstraints
@@ -412,7 +412,7 @@ class BolusWizard @Inject constructor(
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
                             if (!result.success) {
-                                uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
+                                uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                             } else
                                 automation.scheduleAutomationEventEatReminder()
                         }
@@ -423,24 +423,24 @@ class BolusWizard @Inject constructor(
     }
 
     fun explainShort(): String {
-        var message = rh.gs(info.nightscout.core.ui.R.string.wizard_explain_calc, ic, sens)
-        message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_carbs, insulinFromCarbs)
+        var message = rh.gs(app.aaps.core.ui.R.string.wizard_explain_calc, ic, sens)
+        message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_carbs, insulinFromCarbs)
         if (useTT && tempTarget != null) {
             val tt = if (tempTarget?.lowTarget == tempTarget?.highTarget) tempTarget?.lowValueToUnitsToString(profile.units, decimalFormatter)
             else rh.gs(
-                info.nightscout.core.ui.R.string.wizard_explain_tt_to,
+                app.aaps.core.ui.R.string.wizard_explain_tt_to,
                 tempTarget?.lowValueToUnitsToString(profile.units, decimalFormatter),
                 tempTarget?.highValueToUnitsToString(profile.units, decimalFormatter)
             )
-            message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_tt, tt)
+            message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_tt, tt)
         }
-        if (useCob) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_cob, cob, insulinFromCOB)
-        if (useBg) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_bg, insulinFromBG)
-        if (includeBolusIOB) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_iob, insulinFromBolusIOB + insulinFromBasalIOB)
-        if (useTrend) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_trend, insulinFromTrend)
-        if (useSuperBolus) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_superbolus, insulinFromSuperBolus)
+        if (useCob) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_cob, cob, insulinFromCOB)
+        if (useBg) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_bg, insulinFromBG)
+        if (includeBolusIOB) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_iob, insulinFromBolusIOB + insulinFromBasalIOB)
+        if (useTrend) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_trend, insulinFromTrend)
+        if (useSuperBolus) message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_superbolus, insulinFromSuperBolus)
         if (percentageCorrection != 100) {
-            message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_percent, totalBeforePercentageAdjustment, percentageCorrection, calculatedTotalInsulin)
+            message += "\n" + rh.gs(app.aaps.core.ui.R.string.wizard_explain_percent, totalBeforePercentageAdjustment, percentageCorrection, calculatedTotalInsulin)
         }
         return message
     }
@@ -450,7 +450,7 @@ class BolusWizard @Inject constructor(
         val pump = activePlugin.activePump
 
         val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = false)
-        OKDialog.showConfirmation(ctx, rh.gs(info.nightscout.core.ui.R.string.boluswizard), confirmMessage, {
+        OKDialog.showConfirmation(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
                     uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
@@ -463,7 +463,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
                                 }
                             }
                         })
@@ -471,7 +471,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
                                 }
                             }
                         })
@@ -502,7 +502,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                                 }
                             }
                         })

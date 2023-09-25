@@ -83,7 +83,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.core.ui.elements.MinutesNumberPicker
+            <app.aaps.core.ui.elements.MinutesNumberPicker
                 android:id="@+id/time"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
@@ -119,7 +119,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.core.ui.elements.NumberPicker
+            <app.aaps.core.ui.elements.NumberPicker
                 android:id="@+id/amount"
                 android:layout_width="130dp"
                 android:layout_height="40dp"

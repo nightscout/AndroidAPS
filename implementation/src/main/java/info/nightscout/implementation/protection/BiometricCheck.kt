@@ -19,8 +19,8 @@ import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.protection.PasswordCheck
-import info.nightscout.core.ui.R
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.R
+import app.aaps.core.ui.toast.ToastUtils
 import java.util.concurrent.Executors
 
 object BiometricCheck {

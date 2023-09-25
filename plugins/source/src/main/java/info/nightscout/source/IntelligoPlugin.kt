@@ -47,7 +47,7 @@ class IntelligoPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_intelligo)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_intelligo)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.intelligo)
         .shortName(R.string.intelligo)

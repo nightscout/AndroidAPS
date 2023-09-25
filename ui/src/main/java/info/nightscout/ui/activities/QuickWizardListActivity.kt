@@ -26,11 +26,11 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.dragHelpers.ItemTouchHelperAdapter
-import info.nightscout.core.ui.dragHelpers.OnStartDragListener
-import info.nightscout.core.ui.dragHelpers.SimpleItemTouchHelperCallback
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dragHelpers.ItemTouchHelperAdapter
+import app.aaps.core.ui.dragHelpers.OnStartDragListener
+import app.aaps.core.ui.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivityQuickwizardListBinding
 import info.nightscout.ui.databinding.QuickwizardListItemBinding
@@ -139,7 +139,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true
 
-        title = rh.gs(info.nightscout.core.ui.R.string.quickwizard)
+        title = rh.gs(app.aaps.core.ui.R.string.quickwizard)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -182,7 +182,7 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
     }
 
     private fun removeSelected(selectedItems: SparseArray<QuickWizardEntry>) {
-        OKDialog.showConfirmation(this, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+        OKDialog.showConfirmation(this, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
             selectedItems.forEach { _, item ->
                 quickWizard.remove(item.position)
                 rxBus.send(EventQuickWizardChange())
@@ -194,10 +194,10 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
     private fun getConfirmationText(selectedItems: SparseArray<QuickWizardEntry>): String {
         if (selectedItems.size() == 1) {
             val entry = selectedItems.valueAt(0)
-            return "${rh.gs(info.nightscout.core.ui.R.string.remove_button)} ${entry.buttonText()} ${rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs())}\n" +
+            return "${rh.gs(app.aaps.core.ui.R.string.remove_button)} ${entry.buttonText()} ${rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs())}\n" +
                 "${dateUtil.timeString(entry.validFromDate())} - ${dateUtil.timeString(entry.validToDate())}"
         }
-        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
 }

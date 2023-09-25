@@ -32,7 +32,7 @@ import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -149,7 +149,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
                 val previous = glucoseValues[position - 1]
                 val diff = previous.timestamp - glucoseValue.timestamp
                 if (diff < T.secs(20).msecs())
-                    holder.binding.root.setBackgroundColor(rh.gac(context, info.nightscout.core.ui.R.attr.bgsourceError))
+                    holder.binding.root.setBackgroundColor(rh.gac(context, app.aaps.core.ui.R.attr.bgsourceError))
             }
 
             holder.binding.root.setOnLongClickListener {
@@ -186,12 +186,12 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
             val glucoseValue = selectedItems.valueAt(0)
             return dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + profileUtil.fromMgdlToUnits(glucoseValue.value)
         }
-        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<GlucoseValue>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, glucoseValue ->
                     val source = when ((activePlugin.activeBgSource as PluginBase).pluginDescription.pluginName) {
                         R.string.dexcom_app_patched -> Sources.Dexcom

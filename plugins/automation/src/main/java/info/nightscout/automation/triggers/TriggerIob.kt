@@ -56,7 +56,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.iob
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.iob
 
     override fun friendlyDescription(): String =
         rh.gs(R.string.iobcompared, rh.gs(comparator.value.stringRes), insulin.value)
@@ -67,7 +67,7 @@ class TriggerIob(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, info.nightscout.core.ui.R.string.iob, this))
+            .add(StaticLabel(rh, app.aaps.core.ui.R.string.iob, this))
             .add(comparator)
             .add(LabelWithElement(rh, rh.gs(R.string.iob_u), "", insulin))
             .build(root)

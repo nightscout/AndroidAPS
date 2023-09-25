@@ -12,8 +12,8 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.stats.TirCalculator
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.impl.AppRepository
@@ -51,8 +51,8 @@ class StatsActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
-        binding.tdds.addView(TextView(this).apply { text = getString(info.nightscout.core.ui.R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
-        binding.tir.addView(TextView(this).apply { text = getString(info.nightscout.core.ui.R.string.tir) + ": " + rh.gs(R.string.calculation_in_progress) })
+        binding.tdds.addView(TextView(this).apply { text = getString(app.aaps.core.ui.R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
+        binding.tir.addView(TextView(this).apply { text = getString(app.aaps.core.ui.R.string.tir) + ": " + rh.gs(R.string.calculation_in_progress) })
         binding.activity.addView(TextView(this).apply { text = getString(R.string.activity_monitor) + ": " + rh.gs(R.string.calculation_in_progress) })
 
         disposable += Single.fromCallable { tddCalculator.stats(this) }

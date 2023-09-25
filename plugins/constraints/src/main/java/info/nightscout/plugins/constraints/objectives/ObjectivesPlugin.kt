@@ -49,8 +49,8 @@ class ObjectivesPlugin @Inject constructor(
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
         .alwaysEnabled(config.APS)
         .showInList(config.APS)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_graduation)
-        .pluginName(info.nightscout.core.ui.R.string.objectives)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_graduation)
+        .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)
         .description(R.string.description_objectives),
     aapsLogger, rh, injector

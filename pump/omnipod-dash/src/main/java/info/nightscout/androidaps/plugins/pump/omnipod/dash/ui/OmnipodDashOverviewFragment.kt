@@ -41,8 +41,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import info.nightscout.core.ui.UIRunnable
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.UIRunnable
+import app.aaps.core.ui.dialogs.OKDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
@@ -270,13 +270,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             context,
             when {
                 connectionSuccessPercentage < 70 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
-                    info.nightscout.core.ui.R.attr.warningColor
+                    app.aaps.core.ui.R.attr.warningColor
 
                 connectionSuccessPercentage < 90 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
-                    info.nightscout.core.ui.R.attr.omniYellowColor
+                    app.aaps.core.ui.R.attr.omniYellowColor
 
                 else                                                                                              ->
-                    info.nightscout.core.ui.R.attr.defaultTextColor
+                    app.aaps.core.ui.R.attr.defaultTextColor
             }
         )
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.setTextColor(connectionStatsColor)
@@ -300,11 +300,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.firmwareVersion.text = PLACEHOLDER
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
-            podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.baseBasalRate.text = PLACEHOLDER
             podInfoBinding.totalDelivered.text = PLACEHOLDER
             podInfoBinding.reservoir.text = PLACEHOLDER
-            podInfoBinding.reservoir.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.reservoir.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         } else {
             podInfoBinding.uniqueId.text = podStateManager.uniqueId.toString()
@@ -343,13 +343,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     context,
                     when {
                         !podStateManager.sameTimeZone ->
-                            info.nightscout.core.ui.R.attr.omniMagentaColor
+                            app.aaps.core.ui.R.attr.omniMagentaColor
 
                         timeDeviationTooBig           ->
-                            info.nightscout.core.ui.R.attr.omniYellowColor
+                            app.aaps.core.ui.R.attr.omniYellowColor
 
                         else                          ->
-                            info.nightscout.core.ui.R.attr.defaultTextColor
+                            app.aaps.core.ui.R.attr.defaultTextColor
                     }
                 )
             )
@@ -365,13 +365,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     context,
                     when {
                         expiresAt != null && ZonedDateTime.now().isAfter(expiresAt)               ->
-                            info.nightscout.core.ui.R.attr.warningColor
+                            app.aaps.core.ui.R.attr.warningColor
 
                         expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) ->
-                            info.nightscout.core.ui.R.attr.omniYellowColor
+                            app.aaps.core.ui.R.attr.omniYellowColor
 
                         else                                                                      ->
-                            info.nightscout.core.ui.R.attr.defaultTextColor
+                            app.aaps.core.ui.R.attr.defaultTextColor
                     }
                 )
             )
@@ -390,7 +390,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.baseBasalRate.text =
                 if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
                     rh.gs(
-                        info.nightscout.core.ui.R.string.pump_base_basal_rate,
+                        app.aaps.core.ui.R.string.pump_base_basal_rate,
                         omnipodDashPumpPlugin.model()
                             .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
                     )
@@ -413,7 +413,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             if (podStateManager.pulsesRemaining == null) {
                 podInfoBinding.reservoir.text =
                     rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_reservoir_value_over50)
-                podInfoBinding.reservoir.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+                podInfoBinding.reservoir.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             } else {
                 // TODO
                 // val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
@@ -428,9 +428,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     rh.gac(
                         context,
                         if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
-                            info.nightscout.core.ui.R.attr.warningColor
+                            app.aaps.core.ui.R.attr.warningColor
                         } else {
-                            info.nightscout.core.ui.R.attr.defaultTextColor
+                            app.aaps.core.ui.R.attr.defaultTextColor
                         }
                     )
                 )
@@ -443,10 +443,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         if (errors.size == 0) {
             podInfoBinding.errors.text = PLACEHOLDER
-            podInfoBinding.errors.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {
             podInfoBinding.errors.text = StringUtils.join(errors, System.lineSeparator())
-            podInfoBinding.errors.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
+            podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.warningColor))
         }
     }
 
@@ -492,14 +492,14 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 rh.gac(
                     context,
                     if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().toMillis())) {
-                        info.nightscout.core.ui.R.attr.warningColor
+                        app.aaps.core.ui.R.attr.warningColor
                     } else {
-                        info.nightscout.core.ui.R.attr.defaultTextColor
+                        app.aaps.core.ui.R.attr.defaultTextColor
                     }
                 )
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
-            podInfoBinding.lastConnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.lastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.lastConnection.text = PLACEHOLDER
         }
     }
@@ -539,13 +539,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             context,
             when {
                 !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
-                    info.nightscout.core.ui.R.attr.warningColor
+                    app.aaps.core.ui.R.attr.warningColor
 
                 podStateManager.activeCommand != null                                                               ->
-                    info.nightscout.core.ui.R.attr.omniYellowColor
+                    app.aaps.core.ui.R.attr.omniYellowColor
 
                 else                                                                                                ->
-                    info.nightscout.core.ui.R.attr.defaultTextColor
+                    app.aaps.core.ui.R.attr.defaultTextColor
             }
         )
         podInfoBinding.podStatus.setTextColor(podStatusColor)
@@ -553,18 +553,18 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateLastBolus() {
 
-        var textColorAttr = info.nightscout.core.ui.R.attr.defaultTextColor
+        var textColorAttr = app.aaps.core.ui.R.attr.defaultTextColor
         podStateManager.activeCommand?.let {
             val requestedBolus = it.requestedBolus
             if (requestedBolus != null) {
                 var text = rh.gs(
                     info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_last_bolus_value,
                     omnipodDashPumpPlugin.model().determineCorrectBolusSize(requestedBolus),
-                    rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname),
+                    rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
                     readableDuration(Duration.ofMillis(SystemClock.elapsedRealtime() - it.createdRealtime))
                 )
                 text += " (uncertain) "
-                textColorAttr = info.nightscout.core.ui.R.attr.warningColor
+                textColorAttr = app.aaps.core.ui.R.attr.warningColor
                 podInfoBinding.lastBolus.text = text
                 podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
                 return
@@ -580,11 +580,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             val text = rh.gs(
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_last_bolus_value,
                 omnipodDashPumpPlugin.model().determineCorrectBolusSize(bolusSize),
-                rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname),
+                rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
                 readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
             )
             if (!it.deliveryComplete) {
-                textColorAttr = info.nightscout.core.ui.R.attr.omniYellowColor
+                textColorAttr = app.aaps.core.ui.R.attr.omniYellowColor
             }
             podInfoBinding.lastBolus.text = text
             podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
@@ -691,7 +691,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-        uiInteraction.runAlarm(message, title, if (withSound) info.nightscout.core.ui.R.raw.boluserror else 0)
+        uiInteraction.runAlarm(message, title, if (withSound) app.aaps.core.ui.R.raw.boluserror else 0)
     }
 
     private fun displayOkDialog(title: String, message: String) {

@@ -60,7 +60,7 @@ class TidepoolFragment : DaggerFragment(), MenuProvider {
     }
 
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
-        menu.add(Menu.FIRST, ID_MENU_LOGIN, 0, rh.gs(info.nightscout.core.ui.R.string.login)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
+        menu.add(Menu.FIRST, ID_MENU_LOGIN, 0, rh.gs(app.aaps.core.ui.R.string.login)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_SEND_NOW, 0, rh.gs(R.string.upload_now)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_REMOVE_ALL, 0, rh.gs(R.string.remove_all)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_FULL_SYNC, 0, rh.gs(R.string.full_sync)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)

@@ -137,7 +137,7 @@ class PersistentNotificationPlugin @Inject constructor(
                     line1aa += "$line1."
                 }
             } else {
-                line1aa = rh.gs(info.nightscout.core.ui.R.string.missed_bg_readings)
+                line1aa = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
                 line1 = line1aa
             }
             val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
@@ -149,15 +149,15 @@ class PersistentNotificationPlugin @Inject constructor(
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             line2 =
-                rh.gs(info.nightscout.core.ui.R.string.treatments_iob_label_string) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + rh.gs(
-                    info.nightscout.core.ui.R
+                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + rh.gs(
+                    app.aaps.core.ui.R
                         .string.cob
                 ) + ": " + iobCobCalculator.getCobInfo(
                     "PersistentNotificationPlugin"
                 ).generateCOBString(decimalFormatter)
             val line2aa =
-                rh.gs(info.nightscout.core.ui.R.string.treatments_iob_label_string) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + rh.gs(
-                    info.nightscout.core.ui.R
+                rh.gs(app.aaps.core.ui.R.string.treatments_iob_label_string) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + rh.gs(
+                    app.aaps.core.ui.R
                         .string.cob
                 ) + ": " + iobCobCalculator.getCobInfo(
                     "PersistentNotificationPlugin"
@@ -200,7 +200,7 @@ class PersistentNotificationPlugin @Inject constructor(
             unreadConversationBuilder.addMessage(line3aa)
             /// End Android Auto
         } else {
-            line1 = rh.gs(info.nightscout.core.ui.R.string.no_profile_set)
+            line1 = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
         }
         val builder = NotificationCompat.Builder(context, notificationHolder.channelID)
         builder.setOngoing(true)

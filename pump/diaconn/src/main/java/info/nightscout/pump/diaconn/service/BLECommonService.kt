@@ -23,7 +23,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.notifyAll
 import info.nightscout.core.utils.waitMillis
 import info.nightscout.pump.diaconn.DiaconnG8Pump
@@ -91,7 +91,7 @@ class BLECommonService @Inject internal constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }
@@ -357,20 +357,20 @@ class BLECommonService @Inject internal constructor(
             if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), info.nightscout.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), app.aaps.core.ui.R.raw.boluserror)
                 return
             }
             // battery warning report
             if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), info.nightscout.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), app.aaps.core.ui.R.raw.boluserror)
                 return
             }
 
             // insulin lack warning report
             if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), info.nightscout.core.ui.R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), app.aaps.core.ui.R.raw.boluserror)
                 return
             }
 

@@ -121,9 +121,9 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
             val hours = floor(duration.toDouble() / T.hours(1).msecs()).toInt()
             val minutes = floor(duration.toDouble() / T.mins(1).msecs()).toInt()
             return when {
-                days > 0  -> rh.gq(info.nightscout.core.ui.R.plurals.days, days, days)
-                hours > 0 -> rh.gq(info.nightscout.core.ui.R.plurals.hours, hours, hours)
-                else      -> rh.gq(info.nightscout.core.ui.R.plurals.minutes, minutes, minutes)
+                days > 0  -> rh.gq(app.aaps.core.ui.R.plurals.days, days, days)
+                hours > 0 -> rh.gq(app.aaps.core.ui.R.plurals.hours, hours, hours)
+                else      -> rh.gq(app.aaps.core.ui.R.plurals.minutes, minutes, minutes)
             }
         }
     }

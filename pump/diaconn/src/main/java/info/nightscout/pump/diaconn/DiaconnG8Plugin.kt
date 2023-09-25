@@ -49,7 +49,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.pump.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.pump.diaconn.service.DiaconnG8Service
@@ -86,7 +86,7 @@ class DiaconnG8Plugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DiaconnG8Fragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_diaconn_g8)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_diaconn_g8)
         .pluginName(R.string.diaconn_g8_pump)
         .shortName(R.string.diaconn_g8_pump_shortname)
         .preferencesId(R.xml.pref_diaconn)
@@ -145,14 +145,14 @@ class DiaconnG8Plugin @Inject constructor(
         mDeviceAddress = sp.getString(R.string.key_diaconn_g8_address, "")
         mDeviceName = sp.getString(R.string.key_diaconn_g8_name, "")
         diaconnG8Pump.reset()
-        commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), null)
+        commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
     }
 
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Diaconn G8 connect from: $reason")
         if (diaconnG8Service != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = diaconnG8Service?.connect(reason, mDeviceAddress) ?: false
-            if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported)
+            if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported)
         }
     }
 
@@ -187,22 +187,22 @@ class DiaconnG8Plugin @Inject constructor(
 
     // Constraints interface
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        absoluteRate.setIfSmaller(diaconnG8Pump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, diaconnG8Pump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        absoluteRate.setIfSmaller(diaconnG8Pump.maxBasal, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, diaconnG8Pump.maxBasal, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
         return absoluteRate
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(0, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        percentRate.setIfGreater(0, rh.gs(app.aaps.core.ui.R.string.limitingpercentrate, 0, rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)), this)
         percentRate.setIfSmaller(
             pumpDescription.maxTempPercent,
-            rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.pumplimit)),
+            rh.gs(app.aaps.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(app.aaps.core.ui.R.string.pumplimit)),
             this
         )
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfSmaller(diaconnG8Pump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, diaconnG8Pump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        insulin.setIfSmaller(diaconnG8Pump.maxBolus, rh.gs(app.aaps.core.ui.R.string.limitingbolus, diaconnG8Pump.maxBolus, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
         return insulin
     }
 
@@ -223,20 +223,20 @@ class DiaconnG8Plugin @Inject constructor(
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         val result = PumpEnactResult(injector)
         if (!isInitialized()) {
-            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set)
+            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
             return result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         }
         return if (diaconnG8Service?.updateBasalsInPump(profile) != true) {
-            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile)
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
             result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
             result.success = true
             result.enacted = true
             result.comment = "OK"
@@ -289,14 +289,14 @@ class DiaconnG8Plugin @Inject constructor(
             if (result.success) result.enacted = true
             if (!result.success) {
                 setErrorMsg(diaconnG8Pump.resultErrorCode, result)
-            } else result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result
         } else {
             val result = PumpEnactResult(injector)
             result.success = false
             result.bolusDelivered = 0.0
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }
@@ -362,7 +362,7 @@ class DiaconnG8Plugin @Inject constructor(
             if (connectionOK && diaconnG8Pump.isTempBasalInProgress && diaconnG8Pump.tempBasalAbsoluteRate == absoluteAfterConstrain) {
                 result.enacted = true
                 result.success = true
-                result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+                result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
                 result.isTempCancel = false
                 result.duration = diaconnG8Pump.tempBasalRemainingMin
                 result.absolute = diaconnG8Pump.tempBasalAbsoluteRate
@@ -374,7 +374,7 @@ class DiaconnG8Plugin @Inject constructor(
 
         result.enacted = false
         result.success = false
-        result.comment = rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error)
+        result.comment = rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error)
         aapsLogger.error("setTempBasalAbsolute: Failed to set temp basal")
         return result
     }
@@ -405,7 +405,7 @@ class DiaconnG8Plugin @Inject constructor(
         if (diaconnG8Pump.isExtendedInProgress && abs(diaconnG8Pump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
             result.success = true
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             result.duration = diaconnG8Pump.extendedBolusRemainingMinutes
             result.absolute = diaconnG8Pump.extendedBolusAbsoluteRate
             result.isPercent = false
@@ -419,7 +419,7 @@ class DiaconnG8Plugin @Inject constructor(
         if (connectionOK) {
             result.enacted = true
             result.success = true
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             result.isTempCancel = false
             result.duration = diaconnG8Pump.extendedBolusRemainingMinutes
             result.absolute = diaconnG8Pump.extendedBolusAbsoluteRate
@@ -449,7 +449,7 @@ class DiaconnG8Plugin @Inject constructor(
             result.success = true
             result.enacted = false
             result.isTempCancel = true
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
         }
         return result
@@ -469,7 +469,7 @@ class DiaconnG8Plugin @Inject constructor(
         } else {
             result.success = true
             result.enacted = false
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
         }
         return result

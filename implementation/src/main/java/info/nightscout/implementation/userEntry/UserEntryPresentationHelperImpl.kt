@@ -29,16 +29,16 @@ class UserEntryPresentationHelperImpl @Inject constructor(
 ) : UserEntryPresentationHelper {
 
     override fun colorId(colorGroup: ColorGroup): Int = when (colorGroup) {
-        ColorGroup.InsulinTreatment -> info.nightscout.core.ui.R.color.iob
-        ColorGroup.BasalTreatment   -> info.nightscout.core.ui.R.color.basal
-        ColorGroup.CarbTreatment    -> info.nightscout.core.ui.R.color.carbs
-        ColorGroup.TT               -> info.nightscout.core.ui.R.color.tempTargetConfirmation
-        ColorGroup.Profile          -> info.nightscout.core.ui.R.color.white
-        ColorGroup.Loop             -> info.nightscout.core.ui.R.color.loopClosed
-        ColorGroup.Careportal       -> info.nightscout.core.ui.R.color.high
-        ColorGroup.Pump             -> info.nightscout.core.ui.R.color.loopDisconnected
-        ColorGroup.Aaps             -> info.nightscout.core.ui.R.color.defaultText
-        else                        -> info.nightscout.core.ui.R.color.defaultText
+        ColorGroup.InsulinTreatment -> app.aaps.core.ui.R.color.iob
+        ColorGroup.BasalTreatment   -> app.aaps.core.ui.R.color.basal
+        ColorGroup.CarbTreatment    -> app.aaps.core.ui.R.color.carbs
+        ColorGroup.TT               -> app.aaps.core.ui.R.color.tempTargetConfirmation
+        ColorGroup.Profile          -> app.aaps.core.ui.R.color.white
+        ColorGroup.Loop             -> app.aaps.core.ui.R.color.loopClosed
+        ColorGroup.Careportal       -> app.aaps.core.ui.R.color.high
+        ColorGroup.Pump             -> app.aaps.core.ui.R.color.loopDisconnected
+        ColorGroup.Aaps             -> app.aaps.core.ui.R.color.defaultText
+        else                        -> app.aaps.core.ui.R.color.defaultText
     }
 
     override fun iconId(source: Sources): Int = when (source) {
@@ -49,7 +49,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.QuickWizard         -> R.drawable.ic_quick_wizard
         Sources.ExtendedBolusDialog -> R.drawable.ic_actions_start_extended_bolus
         Sources.TTDialog            -> R.drawable.ic_temptarget_high
-        Sources.ProfileSwitchDialog -> info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
+        Sources.ProfileSwitchDialog -> app.aaps.core.ui.R.drawable.ic_actions_profileswitch
         Sources.LoopDialog          -> R.drawable.ic_loop_closed
         Sources.TempBasalDialog     -> R.drawable.ic_actions_start_temp_basal
         Sources.CalibrationDialog   -> R.drawable.ic_calibration
@@ -74,30 +74,30 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.PocTech             -> R.drawable.ic_poctech
         Sources.Tomato              -> R.drawable.ic_sensor
         Sources.Glunovo             -> R.drawable.ic_glunovo
-        Sources.Intelligo           -> info.nightscout.core.ui.R.drawable.ic_intelligo
+        Sources.Intelligo           -> app.aaps.core.ui.R.drawable.ic_intelligo
         Sources.Xdrip               -> R.drawable.ic_blooddrop_48
         Sources.LocalProfile        -> R.drawable.ic_local_profile
         Sources.Loop                -> R.drawable.ic_loop_closed_white
-        Sources.Maintenance         -> info.nightscout.core.ui.R.drawable.ic_maintenance
-        Sources.NSClient            -> info.nightscout.core.ui.R.drawable.ic_nightscout_syncs
+        Sources.Maintenance         -> app.aaps.core.ui.R.drawable.ic_maintenance
+        Sources.NSClient            -> app.aaps.core.ui.R.drawable.ic_nightscout_syncs
         Sources.NSProfile           -> R.drawable.ic_nightscout_profile
-        Sources.Objectives          -> info.nightscout.core.ui.R.drawable.ic_graduation
-        Sources.Pump                -> info.nightscout.core.ui.R.drawable.ic_generic_icon
-        Sources.Dana                -> info.nightscout.core.ui.R.drawable.ic_danars_128
-        Sources.DanaR               -> info.nightscout.core.ui.R.drawable.ic_danars_128
-        Sources.DanaRC              -> info.nightscout.core.ui.R.drawable.ic_danars_128
-        Sources.DanaRv2             -> info.nightscout.core.ui.R.drawable.ic_danars_128
-        Sources.DanaRS              -> info.nightscout.core.ui.R.drawable.ic_danars_128
-        Sources.DanaI               -> info.nightscout.core.ui.R.drawable.ic_danai_128
-        Sources.DiaconnG8           -> info.nightscout.core.ui.R.drawable.ic_diaconn_g8
-        Sources.Insight             -> info.nightscout.core.ui.R.drawable.ic_insight_128
-        Sources.Combo               -> info.nightscout.core.ui.R.drawable.ic_combo_128
-        Sources.Medtronic           -> info.nightscout.core.ui.R.drawable.ic_veo_128
+        Sources.Objectives          -> app.aaps.core.ui.R.drawable.ic_graduation
+        Sources.Pump                -> app.aaps.core.ui.R.drawable.ic_generic_icon
+        Sources.Dana                -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaR               -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaRC              -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaRv2             -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaRS              -> app.aaps.core.ui.R.drawable.ic_danars_128
+        Sources.DanaI               -> app.aaps.core.ui.R.drawable.ic_danai_128
+        Sources.DiaconnG8           -> app.aaps.core.ui.R.drawable.ic_diaconn_g8
+        Sources.Insight             -> app.aaps.core.ui.R.drawable.ic_insight_128
+        Sources.Combo               -> app.aaps.core.ui.R.drawable.ic_combo_128
+        Sources.Medtronic           -> app.aaps.core.ui.R.drawable.ic_veo_128
         Sources.Omnipod             -> R.drawable.ic_patch_pump_outline
         Sources.OmnipodEros         -> R.drawable.ic_patch_pump_outline
         Sources.OmnipodDash         -> R.drawable.ic_patch_pump_outline
-        Sources.EOPatch2            -> info.nightscout.core.ui.R.drawable.ic_eopatch2_128
-        Sources.Medtrum             -> info.nightscout.core.ui.R.drawable.ic_medtrum_128
+        Sources.EOPatch2            -> app.aaps.core.ui.R.drawable.ic_eopatch2_128
+        Sources.Medtrum             -> app.aaps.core.ui.R.drawable.ic_medtrum_128
         Sources.MDI                 -> R.drawable.ic_ict
         Sources.VirtualPump         -> R.drawable.ic_virtual_pump
         Sources.SMS                 -> R.drawable.ic_sms
@@ -105,10 +105,10 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Wear                -> R.drawable.ic_watch
         Sources.Food                -> R.drawable.ic_food
         Sources.Stats               -> R.drawable.ic_cp_stats
-        Sources.ConfigBuilder       -> info.nightscout.core.ui.R.drawable.ic_cogs
-        Sources.Overview            -> info.nightscout.core.ui.R.drawable.ic_home
+        Sources.ConfigBuilder       -> app.aaps.core.ui.R.drawable.ic_cogs
+        Sources.Overview            -> app.aaps.core.ui.R.drawable.ic_home
         Sources.Aaps                -> R.drawable.ic_aaps
-        Sources.Unknown             -> info.nightscout.core.ui.R.drawable.ic_generic_icon
+        Sources.Unknown             -> app.aaps.core.ui.R.drawable.ic_generic_icon
     }
 
     override fun actionToColoredString(action: Action): Spanned = when (action) {
@@ -137,13 +137,13 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         is ValueWithUnit.Timestamp             -> dateUtil.dateAndTimeAndSecondsString(valueWithUnit.value)
 
         is ValueWithUnit.Mgdl                  -> {
-            if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueWithUnit.value) + rh.gs(info.nightscout.core.ui.R.string.mgdl)
-            else decimalFormatter.to1Decimal(valueWithUnit.value * Constants.MGDL_TO_MMOLL) + rh.gs(info.nightscout.core.ui.R.string.mmol)
+            if (profileUtil.units == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueWithUnit.value) + rh.gs(app.aaps.core.ui.R.string.mgdl)
+            else decimalFormatter.to1Decimal(valueWithUnit.value * Constants.MGDL_TO_MMOLL) + rh.gs(app.aaps.core.ui.R.string.mmol)
         }
 
         is ValueWithUnit.Mmoll                 -> {
-            if (profileUtil.units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(valueWithUnit.value) + rh.gs(info.nightscout.core.ui.R.string.mmol)
-            else decimalFormatter.to0Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + rh.gs(info.nightscout.core.ui.R.string.mgdl)
+            if (profileUtil.units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(valueWithUnit.value) + rh.gs(app.aaps.core.ui.R.string.mmol)
+            else decimalFormatter.to0Decimal(valueWithUnit.value * Constants.MMOLL_TO_MGDL) + rh.gs(app.aaps.core.ui.R.string.mgdl)
         }
 
         ValueWithUnit.UNKNOWN                  -> ""
@@ -155,24 +155,24 @@ class UserEntryPresentationHelperImpl @Inject constructor(
     }
 
     private fun getCsvHeader() = rh.gs(
-        info.nightscout.core.ui.R.string.ue_csv_header,
-        csvString(info.nightscout.core.ui.R.string.ue_timestamp),
-        csvString(info.nightscout.core.ui.R.string.date),
-        csvString(info.nightscout.core.ui.R.string.ue_utc_offset),
-        csvString(info.nightscout.core.ui.R.string.ue_action),
-        csvString(info.nightscout.core.ui.R.string.event_type),
-        csvString(info.nightscout.core.ui.R.string.ue_source),
-        csvString(info.nightscout.core.ui.R.string.careportal_note),
-        csvString(info.nightscout.core.ui.R.string.ue_string),
-        csvString(info.nightscout.core.ui.R.string.event_time_label),
-        csvString(if (profileUtil.units == GlucoseUnit.MGDL) info.nightscout.core.ui.R.string.mgdl else info.nightscout.core.ui.R.string.mmol),
-        csvString(info.nightscout.core.ui.R.string.shortgram),
-        csvString(info.nightscout.core.ui.R.string.insulin_unit_shortname),
-        csvString(info.nightscout.core.ui.R.string.profile_ins_units_per_hour),
-        csvString(info.nightscout.core.ui.R.string.shortpercent),
+        app.aaps.core.ui.R.string.ue_csv_header,
+        csvString(app.aaps.core.ui.R.string.ue_timestamp),
+        csvString(app.aaps.core.ui.R.string.date),
+        csvString(app.aaps.core.ui.R.string.ue_utc_offset),
+        csvString(app.aaps.core.ui.R.string.ue_action),
+        csvString(app.aaps.core.ui.R.string.event_type),
+        csvString(app.aaps.core.ui.R.string.ue_source),
+        csvString(app.aaps.core.ui.R.string.careportal_note),
+        csvString(app.aaps.core.ui.R.string.ue_string),
+        csvString(app.aaps.core.ui.R.string.event_time_label),
+        csvString(if (profileUtil.units == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.mgdl else app.aaps.core.ui.R.string.mmol),
+        csvString(app.aaps.core.ui.R.string.shortgram),
+        csvString(app.aaps.core.ui.R.string.insulin_unit_shortname),
+        csvString(app.aaps.core.ui.R.string.profile_ins_units_per_hour),
+        csvString(app.aaps.core.ui.R.string.shortpercent),
         csvString(app.aaps.core.interfaces.R.string.shorthour),
         csvString(app.aaps.core.interfaces.R.string.shortminute),
-        csvString(info.nightscout.core.ui.R.string.ue_none)
+        csvString(app.aaps.core.ui.R.string.ue_none)
     ) + "\n"
 
     private fun getCsvEntry(entry: UserEntry): String {

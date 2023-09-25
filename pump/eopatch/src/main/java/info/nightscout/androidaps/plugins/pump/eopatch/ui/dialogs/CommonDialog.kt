@@ -22,7 +22,7 @@ class CommonDialog : DaggerDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
-            val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it).apply {
+            val builder = app.aaps.core.ui.dialogs.AlertDialogHelper.Builder(it).apply {
                 if (title != 0) setTitle(title)
                 if (message != 0) setMessage(message)
                 setPositiveButton(positiveBtn,

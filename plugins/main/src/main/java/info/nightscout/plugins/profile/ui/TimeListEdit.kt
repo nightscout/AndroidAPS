@@ -15,8 +15,8 @@ import androidx.core.widget.TextViewCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse.stringToDouble
-import info.nightscout.core.ui.elements.NumberPicker
-import info.nightscout.core.ui.elements.SpinnerHelper
+import app.aaps.core.ui.elements.NumberPicker
+import app.aaps.core.ui.elements.SpinnerHelper
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -257,7 +257,7 @@ class TimeListEdit(
         }
         val adapter = SpinnerAdapter(
             context,
-            info.nightscout.core.ui.R.layout.spinner_centered, timeList, timeListValues
+            app.aaps.core.ui.R.layout.spinner_centered, timeList, timeListValues
         )
         spinner.adapter = adapter
         spinner.setSelection(posInList, false)

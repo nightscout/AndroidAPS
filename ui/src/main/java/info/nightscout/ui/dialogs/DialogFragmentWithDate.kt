@@ -77,12 +77,12 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         eventTimeOriginal = savedInstanceState?.getLong("eventTimeOriginal") ?: dateUtil.nowWithoutMilliseconds()
         eventTime = savedInstanceState?.getLong("eventTime") ?: eventTimeOriginal
 
-        eventDateView = view.findViewById(info.nightscout.core.ui.R.id.eventdate) as TextView?
+        eventDateView = view.findViewById(app.aaps.core.ui.R.id.eventdate) as TextView?
         eventDateView?.text = dateUtil.dateString(eventTime)
         eventDateView?.setOnClickListener {
             val selection = dateUtil.timeStampToUtcDateMillis(eventTime)
             MaterialDatePicker.Builder.datePicker()
-                .setTheme(info.nightscout.core.ui.R.style.DatePicker)
+                .setTheme(app.aaps.core.ui.R.style.DatePicker)
                 .setSelection(selection)
                 .build()
                 .apply {
@@ -96,7 +96,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 .show(parentFragmentManager, "event_time_date_picker")
         }
 
-        eventTimeView = view.findViewById(info.nightscout.core.ui.R.id.eventtime) as TextView?
+        eventTimeView = view.findViewById(app.aaps.core.ui.R.id.eventtime) as TextView?
         eventTimeView?.text = dateUtil.timeString(eventTime)
         eventTimeView?.setOnClickListener {
             val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
@@ -105,7 +105,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 .setTimeFormat(clockFormat)
                 .setHour(cal.get(Calendar.HOUR_OF_DAY))
                 .setMinute(cal.get(Calendar.MINUTE))
-                .setTheme(info.nightscout.core.ui.R.style.TimePicker)
+                .setTheme(app.aaps.core.ui.R.style.TimePicker)
                 .build()
             timePicker.addOnPositiveButtonClickListener {
                 // Randomize seconds to prevent creating record of the same time, if user choose time manually
@@ -116,10 +116,10 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
             timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
 
-        (view.findViewById(info.nightscout.core.ui.R.id.notes_layout) as View?)?.visibility =
+        (view.findViewById(app.aaps.core.ui.R.id.notes_layout) as View?)?.visibility =
             sp.getBoolean(info.nightscout.core.utils.R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
-        (view.findViewById(info.nightscout.core.ui.R.id.ok) as Button?)?.setOnClickListener {
+        (view.findViewById(app.aaps.core.ui.R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked.get()) {
                     aapsLogger.warn(LTag.UI, "guarding: ok already clicked for dialog: ${this.javaClass.simpleName}")
@@ -135,7 +135,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
                 }
             }
         }
-        (view.findViewById(info.nightscout.core.ui.R.id.cancel) as Button?)?.setOnClickListener {
+        (view.findViewById(app.aaps.core.ui.R.id.cancel) as Button?)?.setOnClickListener {
             aapsLogger.debug(LTag.APS, "Cancel pressed for dialog: ${this.javaClass.simpleName}")
             dismiss()
         }

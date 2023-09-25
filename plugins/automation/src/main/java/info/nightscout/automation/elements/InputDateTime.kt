@@ -39,7 +39,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                         setOnClickListener {
                             getFragmentManager(root.context)?.let { fm ->
                                 MaterialDatePicker.Builder.datePicker()
-                                    .setTheme(info.nightscout.core.ui.R.style.DatePicker)
+                                    .setTheme(app.aaps.core.ui.R.style.DatePicker)
                                     .setSelection(dateUtil.timeStampToUtcDateMillis(value))
                                     .build()
                                     .apply {
@@ -61,7 +61,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                                 val cal = Calendar.getInstance().apply { timeInMillis = value }
                                 val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
                                 val timePicker = MaterialTimePicker.Builder()
-                                    .setTheme(info.nightscout.core.ui.R.style.TimePicker)
+                                    .setTheme(app.aaps.core.ui.R.style.TimePicker)
                                     .setTimeFormat(clockFormat)
                                     .setHour(cal.get(Calendar.HOUR_OF_DAY))
                                     .setMinute(cal.get(Calendar.MINUTE))

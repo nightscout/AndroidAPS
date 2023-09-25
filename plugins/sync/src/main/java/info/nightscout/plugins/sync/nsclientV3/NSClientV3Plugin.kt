@@ -132,7 +132,7 @@ class NSClientV3Plugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_nightscout_syncs)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_nightscout_syncs)
         .pluginName(R.string.ns_client_v3)
         .shortName(R.string.ns_client_v3_short_name)
         .preferencesId(R.xml.pref_ns_client_v3)
@@ -156,16 +156,16 @@ class NSClientV3Plugin @Inject constructor(
     override val status
         get() =
             when {
-                sp.getBoolean(R.string.key_ns_paused, false)                                           -> rh.gs(info.nightscout.core.ui.R.string.paused)
+                sp.getBoolean(R.string.key_ns_paused, false)                                           -> rh.gs(app.aaps.core.ui.R.string.paused)
                 isAllowed.not()                                                                        -> blockingReason
                 sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && wsConnected  -> "WS: " + rh.gs(app.aaps.core.interfaces.R.string.connected)
                 sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && !wsConnected -> "WS: " + rh.gs(R.string.not_connected)
-                lastOperationError != null                                                             -> rh.gs(info.nightscout.core.ui.R.string.error)
+                lastOperationError != null                                                             -> rh.gs(app.aaps.core.ui.R.string.error)
                 nsAndroidClient?.lastStatus == null                                                    -> rh.gs(R.string.not_connected)
                 workIsRunning()                                                                        -> rh.gs(R.string.working)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                          -> rh.gs(app.aaps.core.interfaces.R.string.connected)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                          -> rh.gs(R.string.read_only)
-                else                                                                                   -> rh.gs(info.nightscout.core.ui.R.string.unknown)
+                else                                                                                   -> rh.gs(app.aaps.core.ui.R.string.unknown)
             }
     var lastOperationError: String? = null
 

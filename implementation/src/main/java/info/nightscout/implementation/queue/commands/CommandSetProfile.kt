@@ -42,15 +42,15 @@ class CommandSetProfile(
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
         if (profileSwitch is ValueWrapper.Existing && r.enacted && hasNsId && !config.NSCLIENT) {
             if (smsCommunicator.isEnabled())
-                smsCommunicator.sendNotificationToAllNumbers(rh.gs(info.nightscout.core.ui.R.string.profile_set_ok))
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(app.aaps.core.ui.R.string.profile_set_ok))
         }
     }
 
-    override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.set_profile)
+    override fun status(): String = rh.gs(app.aaps.core.ui.R.string.set_profile)
 
     override fun log(): String = "SET PROFILE"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.connectiontimedout))?.run()
     }
 }

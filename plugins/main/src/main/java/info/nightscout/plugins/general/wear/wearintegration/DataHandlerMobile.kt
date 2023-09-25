@@ -51,7 +51,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TrendCalculator
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
@@ -338,7 +338,7 @@ class DataHandlerMobile @Inject constructor(
             message = "OLD DATA - "
             //if pump is not busy: try to fetch data
             if (activePump.isBusy()) {
-                message += rh.gs(info.nightscout.core.ui.R.string.pump_busy)
+                message += rh.gs(app.aaps.core.ui.R.string.pump_busy)
             } else {
                 message += rh.gs(R.string.pump_fetching_data)
                 commandQueue.loadTDDs(object : Callback() {
@@ -353,7 +353,7 @@ class DataHandlerMobile @Inject constructor(
                         rxBus.send(
                             EventMobileToWear(
                                 EventData.ConfirmAction(
-                                    rh.gs(info.nightscout.core.ui.R.string.tdd),
+                                    rh.gs(app.aaps.core.ui.R.string.tdd),
                                     reloadMessage,
                                     returnCommand = null
                                 )
@@ -368,7 +368,7 @@ class DataHandlerMobile @Inject constructor(
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
-                    rh.gs(info.nightscout.core.ui.R.string.tdd),
+                    rh.gs(app.aaps.core.ui.R.string.tdd),
                     message,
                     returnCommand = null
                 )
@@ -379,30 +379,30 @@ class DataHandlerMobile @Inject constructor(
     private fun handleWizardPreCheck(command: EventData.ActionWizardPreCheck) {
         val pump = activePlugin.activePump
         if (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_pump_not_available))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
             return
         }
         val carbsBeforeConstraints = command.carbs
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbsBeforeConstraints, aapsLogger)).value()
         if (carbsAfterConstraints - carbsBeforeConstraints != 0) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_carbs_constraint))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_carbs_constraint))
             return
         }
         val percentage = command.percentage
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
         if (profile == null) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_active_profile))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_active_profile))
             return
         }
         val bgReading = iobCobCalculator.ads.actualBg()
         if (bgReading == null) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_actual_bg))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg))
             return
         }
         val cobInfo = iobCobCalculator.getCobInfo("Wizard wear")
         if (cobInfo.displayCob == null) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_cob))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_cob))
             return
         }
         val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
@@ -429,7 +429,7 @@ class DataHandlerMobile @Inject constructor(
         val insulinAfterConstraints = bolusWizard.insulinAfterConstraints
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
         if (abs(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin) >= minStep) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_constraint_bolus_size, bolusWizard.calculatedTotalInsulin))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_constraint_bolus_size, bolusWizard.calculatedTotalInsulin))
             return
         }
         if (bolusWizard.calculatedTotalInsulin <= 0 && bolusWizard.carbs <= 0) {
@@ -442,7 +442,7 @@ class DataHandlerMobile @Inject constructor(
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
-                    rh.gs(info.nightscout.core.ui.R.string.confirm).uppercase(), message,
+                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
                     returnCommand = EventData.ActionWizardConfirmed(bolusWizard.timeStamp)
                 )
             )
@@ -460,21 +460,21 @@ class DataHandlerMobile @Inject constructor(
             return
         }
         if (actualBg == null) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_actual_bg))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_actual_bg))
             return
         }
         if (profile == null) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_active_profile))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_active_profile))
             return
         }
         val cobInfo = iobCobCalculator.getCobInfo("QuickWizard wear")
         if (cobInfo.displayCob == null) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_cob))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_cob))
             return
         }
         val pump = activePlugin.activePump
         if (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_pump_not_available))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
             return
         }
 
@@ -482,13 +482,13 @@ class DataHandlerMobile @Inject constructor(
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
         if (carbsAfterConstraints != quickWizardEntry.carbs()) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_carbs_constraint))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_carbs_constraint))
             return
         }
         val insulinAfterConstraints = wizard.insulinAfterConstraints
         val minStep = pump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints)
         if (abs(insulinAfterConstraints - wizard.calculatedTotalInsulin) >= minStep) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_constraint_bolus_size, wizard.calculatedTotalInsulin))
             return
         }
 
@@ -498,7 +498,7 @@ class DataHandlerMobile @Inject constructor(
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
-                    rh.gs(info.nightscout.core.ui.R.string.confirm).uppercase(), message,
+                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
                     returnCommand = EventData.ActionBolusConfirmed(insulinAfterConstraints, carbsAfterConstraints)
                 )
             )
@@ -510,18 +510,18 @@ class DataHandlerMobile @Inject constructor(
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
         val pump = activePlugin.activePump
         if (insulinAfterConstraints > 0 && (!pump.isInitialized() || pump.isSuspended() || loop.isDisconnected)) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_pump_not_available))
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_pump_not_available))
             return
         }
         var message = ""
-        message += rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short) + "\n"
-        message += rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short)
+        message += rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short) + "\n"
+        message += rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short)
         if (insulinAfterConstraints - command.insulin != 0.0 || carbsAfterConstraints - command.carbs != 0)
-            message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
+            message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
-                    rh.gs(info.nightscout.core.ui.R.string.confirm).uppercase(), message,
+                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
                     returnCommand = EventData.ActionBolusConfirmed(insulinAfterConstraints, carbsAfterConstraints)
                 )
             )
@@ -531,11 +531,11 @@ class DataHandlerMobile @Inject constructor(
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {
         val startTimeStamp = System.currentTimeMillis() + T.mins(command.carbsTimeShift.toLong()).msecs()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(command.carbs, aapsLogger)).value()
-        var message = rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short) +
-            "\n" + rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
-            "\n" + rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + command.duration + rh.gs(R.string.hour_short)
+        var message = rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short) +
+            "\n" + rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
+            "\n" + rh.gs(app.aaps.core.ui.R.string.duration) + ": " + command.duration + rh.gs(R.string.hour_short)
         if (carbsAfterConstraints - command.carbs != 0) {
-            message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
+            message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
         }
         if (carbsAfterConstraints <= 0) {
             sendError("Carbs = 0! No action taken!")
@@ -544,7 +544,7 @@ class DataHandlerMobile @Inject constructor(
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
-                    rh.gs(info.nightscout.core.ui.R.string.confirm).uppercase(), message,
+                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
                     returnCommand = EventData.ActionECarbsConfirmed(carbsAfterConstraints, startTimeStamp, command.duration)
                 )
             )
@@ -559,12 +559,12 @@ class DataHandlerMobile @Inject constructor(
             else -> return
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
-        var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
-        if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
+        var message = rh.gs(app.aaps.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
+        if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
-                    rh.gs(info.nightscout.core.ui.R.string.confirm).uppercase(), message,
+                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
                     returnCommand = EventData.ActionFillConfirmed(insulinAfterConstraints)
                 )
             )
@@ -573,12 +573,12 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(command.insulin, aapsLogger)).value()
-        var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
-        if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
+        var message = rh.gs(app.aaps.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
+        if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
-                    rh.gs(info.nightscout.core.ui.R.string.confirm).uppercase(), message,
+                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
                     returnCommand = EventData.ActionFillConfirmed(insulinAfterConstraints)
                 )
             )
@@ -604,16 +604,16 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(R.string.no_active_profile))
         }
         if (command.percentage < Constants.CPP_MIN_PERCENTAGE || command.percentage > Constants.CPP_MAX_PERCENTAGE) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.valueoutofrange, "Profile-Percentage"))
+            sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Percentage"))
         }
         if (command.timeShift < 0 || command.timeShift > 23) {
-            sendError(rh.gs(info.nightscout.core.ui.R.string.valueoutofrange, "Profile-Timeshift"))
+            sendError(rh.gs(app.aaps.core.ui.R.string.valueoutofrange, "Profile-Timeshift"))
         }
         val message = rh.gs(R.string.profile_message, command.timeShift, command.percentage)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
-                    rh.gs(info.nightscout.core.ui.R.string.confirm).uppercase(), message,
+                    rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
                     returnCommand = EventData.ActionProfileSwitchConfirmed(command.timeShift, command.percentage)
                 )
             )
@@ -621,14 +621,14 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleTempTargetPreCheck(action: EventData.ActionTempTargetPreCheck) {
-        val title = rh.gs(info.nightscout.core.ui.R.string.confirm).uppercase()
+        val title = rh.gs(app.aaps.core.ui.R.string.confirm).uppercase()
         var message = ""
         val presetIsMGDL = profileFunction.getUnits() == GlucoseUnit.MGDL
         when (action.command) {
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_ACTIVITY -> {
                 val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
                 val activityTT = defaultValueHelper.determineActivityTT()
-                val reason = rh.gs(info.nightscout.core.ui.R.string.activity)
+                val reason = rh.gs(app.aaps.core.ui.R.string.activity)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
                 rxBus.send(
                     EventMobileToWear(
@@ -643,7 +643,7 @@ class DataHandlerMobile @Inject constructor(
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO     -> {
                 val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
                 val hypoTT = defaultValueHelper.determineHypoTT()
-                val reason = rh.gs(info.nightscout.core.ui.R.string.hypo)
+                val reason = rh.gs(app.aaps.core.ui.R.string.hypo)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
                 rxBus.send(
                     EventMobileToWear(
@@ -658,7 +658,7 @@ class DataHandlerMobile @Inject constructor(
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_EATING   -> {
                 val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
                 val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
-                val reason = rh.gs(info.nightscout.core.ui.R.string.eatingsoon)
+                val reason = rh.gs(app.aaps.core.ui.R.string.eatingsoon)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
                 rxBus.send(
                     EventMobileToWear(
@@ -897,7 +897,7 @@ class DataHandlerMobile @Inject constructor(
 
     private fun sendStatus() {
         val profile = profileFunction.getProfile()
-        var status = rh.gs(info.nightscout.core.ui.R.string.noprofile)
+        var status = rh.gs(app.aaps.core.ui.R.string.noprofile)
         var iobSum = ""
         var iobDetail = ""
         var cobString = ""
@@ -911,7 +911,7 @@ class DataHandlerMobile @Inject constructor(
             cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString(decimalFormatter)
             currentBasal =
                 iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(decimalFormatter) ?: rh.gs(
-                    info.nightscout.core.ui.R.string.pump_base_basal_rate, profile
+                    app.aaps.core.ui.R.string.pump_base_basal_rate, profile
                         .getBasal()
                 )
 
@@ -1022,13 +1022,13 @@ class DataHandlerMobile @Inject constructor(
             val usedAPS = activePlugin.activeAPS
             val result = usedAPS.lastAPSResult ?: return rh.gs(R.string.last_aps_result_na)
             ret += if (!result.isChangeRequested) {
-                rh.gs(info.nightscout.core.ui.R.string.nochangerequested) + "\n"
+                rh.gs(app.aaps.core.ui.R.string.nochangerequested) + "\n"
             } else if (result.rate == 0.0 && result.duration == 0) {
-                rh.gs(info.nightscout.core.ui.R.string.cancel_temp) + "\n"
+                rh.gs(app.aaps.core.ui.R.string.cancel_temp) + "\n"
             } else {
                 rh.gs(R.string.rate_duration, result.rate, result.rate / activePlugin.activePump.baseBasalRate * 100, result.duration) + "\n"
             }
-            ret += "\n" + rh.gs(info.nightscout.core.ui.R.string.reason) + ": " + result.reason
+            ret += "\n" + rh.gs(app.aaps.core.ui.R.string.reason) + ": " + result.reason
             return ret
         }
 
@@ -1136,7 +1136,7 @@ class DataHandlerMobile @Inject constructor(
 
     private fun generateStatusString(profile: Profile?): String {
         var status = ""
-        profile ?: return rh.gs(info.nightscout.core.ui.R.string.noprofile)
+        profile ?: return rh.gs(app.aaps.core.ui.R.string.noprofile)
         if (!loop.isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
         return status
     }
@@ -1199,7 +1199,7 @@ class DataHandlerMobile @Inject constructor(
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success)
-                        sendError(rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
+                        sendError(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
                 }
             })
             bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
@@ -1216,7 +1216,7 @@ class DataHandlerMobile @Inject constructor(
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    sendError(rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
+                    sendError(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
                 }
             }
         })
@@ -1246,7 +1246,7 @@ class DataHandlerMobile @Inject constructor(
     }
 
     @Synchronized private fun sendError(errorMessage: String) {
-        rxBus.send(EventMobileToWear(EventData.ConfirmAction(rh.gs(info.nightscout.core.ui.R.string.error), errorMessage, returnCommand = EventData.Error(dateUtil.now())))) // ignore return path
+        rxBus.send(EventMobileToWear(EventData.ConfirmAction(rh.gs(app.aaps.core.ui.R.string.error), errorMessage, returnCommand = EventData.Error(dateUtil.now())))) // ignore return path
     }
 
     /** Stores heart rate events coming from the Wear device. */

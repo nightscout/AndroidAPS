@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.Translator
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
@@ -57,7 +57,7 @@ class CareDialog : DialogFragmentWithDate() {
     private var valuesWithUnit = mutableListOf<ValueWithUnit?>()
 
     @StringRes
-    private var event: Int = info.nightscout.core.ui.R.string.none
+    private var event: Int = app.aaps.core.ui.R.string.none
 
     private var _binding: DialogCareBinding? = null
 
@@ -84,7 +84,7 @@ class CareDialog : DialogFragmentWithDate() {
         super.onViewCreated(view, savedInstanceState)
 
         (savedInstanceState ?: arguments)?.let {
-            event = it.getInt("event", info.nightscout.core.ui.R.string.error)
+            event = it.getInt("event", app.aaps.core.ui.R.string.error)
             options = UiInteraction.EventType.values()[it.getInt("options", 0)]
         }
 
@@ -101,13 +101,13 @@ class CareDialog : DialogFragmentWithDate() {
         )
         binding.title.text = rh.gs(
             when (options) {
-                UiInteraction.EventType.BGCHECK        -> info.nightscout.core.ui.R.string.careportal_bgcheck
-                UiInteraction.EventType.SENSOR_INSERT  -> info.nightscout.core.ui.R.string.cgm_sensor_insert
-                UiInteraction.EventType.BATTERY_CHANGE -> info.nightscout.core.ui.R.string.pump_battery_change
-                UiInteraction.EventType.NOTE           -> info.nightscout.core.ui.R.string.careportal_note
-                UiInteraction.EventType.EXERCISE       -> info.nightscout.core.ui.R.string.careportal_exercise
-                UiInteraction.EventType.QUESTION       -> info.nightscout.core.ui.R.string.careportal_question
-                UiInteraction.EventType.ANNOUNCEMENT   -> info.nightscout.core.ui.R.string.careportal_announcement
+                UiInteraction.EventType.BGCHECK        -> app.aaps.core.ui.R.string.careportal_bgcheck
+                UiInteraction.EventType.SENSOR_INSERT  -> app.aaps.core.ui.R.string.cgm_sensor_insert
+                UiInteraction.EventType.BATTERY_CHANGE -> app.aaps.core.ui.R.string.pump_battery_change
+                UiInteraction.EventType.NOTE           -> app.aaps.core.ui.R.string.careportal_note
+                UiInteraction.EventType.EXERCISE       -> app.aaps.core.ui.R.string.careportal_exercise
+                UiInteraction.EventType.QUESTION       -> app.aaps.core.ui.R.string.careportal_question
+                UiInteraction.EventType.ANNOUNCEMENT   -> app.aaps.core.ui.R.string.careportal_announcement
             }
         )
 
@@ -142,13 +142,13 @@ class CareDialog : DialogFragmentWithDate() {
         }
 
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
-            binding.bgUnits.text = rh.gs(info.nightscout.core.ui.R.string.mmol)
+            binding.bgUnits.text = rh.gs(app.aaps.core.ui.R.string.mmol)
             binding.bg.setParams(
                 savedInstanceState?.getDouble("bg")
                     ?: bg, 2.0, 30.0, 0.1, DecimalFormat("0.0"), false, binding.okcancel.ok, bgTextWatcher
             )
         } else {
-            binding.bgUnits.text = rh.gs(info.nightscout.core.ui.R.string.mgdl)
+            binding.bgUnits.text = rh.gs(app.aaps.core.ui.R.string.mgdl)
             binding.bg.setParams(
                 savedInstanceState?.getDouble("bg")
                     ?: bg, 36.0, 500.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, bgTextWatcher
@@ -171,7 +171,7 @@ class CareDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         val enteredBy = sp.getString("careportal_enteredby", "AndroidAPS")
-        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) info.nightscout.core.ui.R.string.mgdl else info.nightscout.core.ui.R.string.mmol
+        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.mgdl else app.aaps.core.ui.R.string.mmol
 
         eventTime -= eventTime % 1000
 
@@ -198,24 +198,24 @@ class CareDialog : DialogFragmentWithDate() {
                     else                     -> TherapyEvent.MeterType.MANUAL
                 }
             actions.add(rh.gs(R.string.glucose_type) + ": " + translator.translate(meterType))
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.bg_label) + ": " + profileUtil.stringInCurrentUnitsDetect(binding.bg.value) + " " + rh.gs(unitResId))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.bg_label) + ": " + profileUtil.stringInCurrentUnitsDetect(binding.bg.value) + " " + rh.gs(unitResId))
             therapyEvent.glucoseType = meterType
             therapyEvent.glucose = binding.bg.value
             valuesWithUnit.add(ValueWithUnit.fromGlucoseUnit(binding.bg.value, profileFunction.getUnits().asText))
             valuesWithUnit.add(ValueWithUnit.TherapyEventMeterType(meterType))
         }
         if (options == UiInteraction.EventType.NOTE || options == UiInteraction.EventType.EXERCISE) {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration_label) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, binding.duration.value.toInt()))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.duration_label) + ": " + rh.gs(app.aaps.core.ui.R.string.format_mins, binding.duration.value.toInt()))
             therapyEvent.duration = T.mins(binding.duration.value.toLong()).msecs()
             valuesWithUnit.add(ValueWithUnit.Minute(binding.duration.value.toInt()).takeIf { !binding.duration.value.equals(0.0) })
         }
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty()) {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.notes_label) + ": " + notes)
+            actions.add(rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + notes)
             therapyEvent.note = notes
         }
 
-        if (eventTimeChanged) actions.add(rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+        if (eventTimeChanged) actions.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         therapyEvent.enteredBy = enteredBy
 

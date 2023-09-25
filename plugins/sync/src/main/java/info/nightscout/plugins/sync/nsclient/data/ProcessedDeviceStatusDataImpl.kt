@@ -38,8 +38,8 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
 
         //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
         val string = StringBuilder()
-            .append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
-            .append(rh.gs(info.nightscout.core.ui.R.string.pump))
+            .append("<span style=\"color:${rh.gac(app.aaps.core.ui.R.attr.nsTitleColor)}\">")
+            .append(rh.gs(app.aaps.core.ui.R.string.pump))
             .append(": </span>")
 
         val pumpData = pumpData ?: return HtmlHelper.fromHtml(string.toString())
@@ -57,7 +57,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             else                                                                                                                   -> ProcessedDeviceStatusData.Levels.INFO
         }
         string.append("<span style=\"color:${level.toColor()}\">")
-        // val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
+        // val insulinUnit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
         // val fields = nsSettingsStatus.pumpExtendedSettingsFields()
         // Removed here. Same value is in StatusLights
         // if (pumpData.reservoirDisplayOverride != "") string.append(pumpData.reservoirDisplayOverride).append("$insulinUnit ")
@@ -95,7 +95,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override val openApsStatus: Spanned
         get() {
             val string = StringBuilder()
-                .append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
+                .append("<span style=\"color:${rh.gac(app.aaps.core.ui.R.attr.nsTitleColor)}\">")
                 .append(rh.gs(R.string.openaps_short))
                 .append(": </span>")
 
@@ -138,7 +138,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
         get() {
             var isCharging = false
             val string = StringBuilder()
-            string.append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
+            string.append("<span style=\"color:${rh.gac(app.aaps.core.ui.R.attr.nsTitleColor)}\">")
             string.append(rh.gs(R.string.uploader_short))
             string.append(": </span>")
             val iterator: Iterator<*> = uploaderMap.entries.iterator()

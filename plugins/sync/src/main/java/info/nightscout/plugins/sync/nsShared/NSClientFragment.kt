@@ -32,7 +32,7 @@ import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.rx.events.EventNSClientRestart
 import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.plugins.sync.R
@@ -145,7 +145,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                     OKDialog.showConfirmation(
                         context, rh.gs(R.string.ns_client), rh.gs(R.string.full_sync_comment),
                         Runnable {
-                            OKDialog.showConfirmation(requireContext(), rh.gs(R.string.ns_client), rh.gs(info.nightscout.core.ui.R.string.cleanup_db_confirm_sync), Runnable {
+                            OKDialog.showConfirmation(requireContext(), rh.gs(R.string.ns_client), rh.gs(app.aaps.core.ui.R.string.cleanup_db_confirm_sync), Runnable {
                                 disposable += Completable.fromAction { result = persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true) }
                                     .subscribeOn(aapsSchedulers.io)
                                     .observeOn(aapsSchedulers.main)
@@ -155,8 +155,8 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                                             if (result.isNotEmpty())
                                                 OKDialog.show(
                                                     requireContext(),
-                                                    rh.gs(info.nightscout.core.ui.R.string.result),
-                                                    HtmlHelper.fromHtml("<b>" + rh.gs(info.nightscout.core.ui.R.string.cleared_entries) + "</b><br>" + result)
+                                                    rh.gs(app.aaps.core.ui.R.string.result),
+                                                    HtmlHelper.fromHtml("<b>" + rh.gs(app.aaps.core.ui.R.string.cleared_entries) + "</b><br>" + result)
                                                         .toSpanned()
                                                 )
                                             aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
@@ -222,7 +222,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     private fun updateQueue() {
         val size = nsClientPlugin?.dataSyncSelector?.queueSize() ?: 0L
-        _binding?.queue?.text = if (size >= 0) size.toString() else rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
+        _binding?.queue?.text = if (size >= 0) size.toString() else rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
     }
 
     private fun updateStatus() {

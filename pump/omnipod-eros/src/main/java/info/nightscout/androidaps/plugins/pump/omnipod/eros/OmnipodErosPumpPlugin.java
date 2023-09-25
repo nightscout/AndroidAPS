@@ -192,7 +192,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodErosOverviewFragment.class.getName()) //
-                        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_pod_128)
+                        .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
                         .pluginName(R.string.omnipod_eros_name) //
                         .shortName(R.string.omnipod_eros_name_short) //
                         .preferencesId(R.xml.omnipod_eros_preferences) //
@@ -417,7 +417,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS");
-                uiInteraction.addNotificationWithSound(Notification.OMNIPOD_UNKNOWN_TBR, rh.gs(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), Notification.NORMAL, info.nightscout.core.ui.R.raw.boluserror);
+                uiInteraction.addNotificationWithSound(Notification.OMNIPOD_UNKNOWN_TBR, rh.gs(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), Notification.NORMAL, app.aaps.core.ui.R.raw.boluserror);
             }
         } else if (!podStateManager.isTempBasalRunning() && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded");
@@ -665,7 +665,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             // neither carbs nor bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
             return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d)
-                    .comment(info.nightscout.core.ui.R.string.invalid_input);
+                    .comment(app.aaps.core.ui.R.string.invalid_input);
         } else if (detailedBolusInfo.insulin > 0) {
             // bolus needed, ask pump to deliver it
             return deliverBolus(detailedBolusInfo);

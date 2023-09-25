@@ -20,8 +20,8 @@ import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -89,7 +89,7 @@ class AndroidPermissionImpl @Inject constructor(
             if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS))
                 activePlugin.activeOverview.addNotification(
                     id = Notification.PERMISSION_SMS,
-                    text = rh.gs(info.nightscout.core.ui.R.string.smscommunicator_missingsmspermission),
+                    text = rh.gs(app.aaps.core.ui.R.string.smscommunicator_missingsmspermission),
                     level = Notification.URGENT,
                     actionButtonId = R.string.request
                 ) {
@@ -110,7 +110,7 @@ class AndroidPermissionImpl @Inject constructor(
             if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN))
                 activePlugin.activeOverview.addNotification(
                     id = Notification.PERMISSION_BT,
-                    text = rh.gs(info.nightscout.core.ui.R.string.need_connect_permission),
+                    text = rh.gs(app.aaps.core.ui.R.string.need_connect_permission),
                     level = Notification.URGENT,
                     actionButtonId = R.string.request
                 ) { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }

@@ -1,7 +1,7 @@
 package info.nightscout.ui.activities
 
 import android.os.Bundle
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.ui.dialogs.BolusProgressDialog
 
 class BolusProgressHelperActivity : TranslatedDaggerAppCompatActivity() {

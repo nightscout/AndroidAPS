@@ -49,7 +49,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils
@@ -123,7 +123,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                     context?.let { context ->
                         protectionCheck.queryProtection(
                             activity, ProtectionCheck.Protection.PREFERENCES,
-                            info.nightscout.core.ui.UIRunnable { startActivity(Intent(context, ErosPodManagementActivity::class.java)) }
+                            app.aaps.core.ui.UIRunnable { startActivity(Intent(context, ErosPodManagementActivity::class.java)) }
                         )
                     }
                 }
@@ -249,7 +249,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         rileyLinkStatusBinding.rileyLinkStatus.setTextColor(
             rh.gac(
                 context,
-                if (rileyLinkServiceState.isError || rileyLinkError != null) info.nightscout.core.ui.R.attr.warningColor else info.nightscout.core.ui.R.attr.defaultTextColor
+                if (rileyLinkServiceState.isError || rileyLinkError != null) app.aaps.core.ui.R.attr.warningColor else app.aaps.core.ui.R.attr.defaultTextColor
             )
         )
     }
@@ -279,11 +279,11 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             podInfoBinding.firmwareVersion.text = PLACEHOLDER
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
-            podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.baseBasalRate.text = PLACEHOLDER
             podInfoBinding.totalDelivered.text = PLACEHOLDER
             podInfoBinding.reservoir.text = PLACEHOLDER
-            podInfoBinding.reservoir.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.reservoir.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         } else {
             podInfoBinding.uniqueId.text = podStateManager.address.toString()
@@ -296,25 +296,25 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 rh.gac(
                     context,
                     if (podStateManager.timeDeviatesMoreThan(OmnipodConstants.TIME_DEVIATION_THRESHOLD)) {
-                        info.nightscout.core.ui.R.attr.warningColor
+                        app.aaps.core.ui.R.attr.warningColor
                     } else {
-                        info.nightscout.core.ui.R.attr.defaultTextColor
+                        app.aaps.core.ui.R.attr.defaultTextColor
                     }
                 )
             )
             val expiresAt = podStateManager.expiresAt
             if (expiresAt == null) {
                 podInfoBinding.podExpiryDate.text = PLACEHOLDER
-                podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+                podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             } else {
                 podInfoBinding.podExpiryDate.text = readableZonedTime(expiresAt)
                 podInfoBinding.podExpiryDate.setTextColor(
                     rh.gac(
                         context,
                         if (DateTime.now().isAfter(expiresAt)) {
-                            info.nightscout.core.ui.R.attr.warningColor
+                            app.aaps.core.ui.R.attr.warningColor
                         } else {
-                            info.nightscout.core.ui.R.attr.defaultTextColor
+                            app.aaps.core.ui.R.attr.defaultTextColor
                         }
                     )
                 )
@@ -329,7 +329,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             // base basal rate
             podInfoBinding.baseBasalRate.text = if (podStateManager.isPodActivationCompleted) {
                 rh.gs(
-                    info.nightscout.core.ui.R.string.pump_base_basal_rate,
+                    app.aaps.core.ui.R.string.pump_base_basal_rate,
                     omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now())))
                 )
             } else {
@@ -349,7 +349,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             // reservoir
             if (podStateManager.reservoirLevel == null) {
                 podInfoBinding.reservoir.text = rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_reservoir_value_over50)
-                podInfoBinding.reservoir.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+                podInfoBinding.reservoir.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             } else {
                 val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
                     ?: OmnipodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD).toDouble()
@@ -359,9 +359,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                     rh.gac(
                         context,
                         if (podStateManager.reservoirLevel < lowReservoirThreshold) {
-                            info.nightscout.core.ui.R.attr.warningColor
+                            app.aaps.core.ui.R.attr.warningColor
                         } else {
-                            info.nightscout.core.ui.R.attr.defaultTextColor
+                            app.aaps.core.ui.R.attr.defaultTextColor
                         }
                     )
                 )
@@ -376,10 +376,10 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         if (errors.size == 0) {
             podInfoBinding.errors.text = PLACEHOLDER
-            podInfoBinding.errors.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {
             podInfoBinding.errors.text = StringUtils.join(errors, System.lineSeparator())
-            podInfoBinding.errors.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
+            podInfoBinding.errors.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.warningColor))
         }
     }
 
@@ -390,14 +390,14 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 rh.gac(
                     context,
                     if (omnipodErosPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().millis)) {
-                        info.nightscout.core.ui.R.attr.warningColor
+                        app.aaps.core.ui.R.attr.warningColor
                     } else {
-                        info.nightscout.core.ui.R.attr.defaultTextColor
+                        app.aaps.core.ui.R.attr.defaultTextColor
                     }
                 )
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
-            podInfoBinding.lastConnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.lastConnection.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
             podInfoBinding.lastConnection.text = if (podStateManager.hasPodState() && podStateManager.lastSuccessfulCommunication != null) {
                 readableDuration(podStateManager.lastSuccessfulCommunication)
             } else {
@@ -445,9 +445,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             rh.gac(
                 context,
                 if (!podStateManager.isPodActivationCompleted || podStateManager.isPodDead || podStateManager.isSuspended || (podStateManager.isPodRunning && !podStateManager.isBasalCertain)) {
-                    info.nightscout.core.ui.R.attr.warningColor
+                    app.aaps.core.ui.R.attr.warningColor
                 } else {
-                    info.nightscout.core.ui.R.attr.defaultTextColor
+                    app.aaps.core.ui.R.attr.defaultTextColor
                 }
             )
         podInfoBinding.podStatus.setTextColor(podStatusColor)
@@ -459,14 +459,14 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                 rh.gs(
                     info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_last_bolus_value,
                     omnipodErosPumpPlugin.model().determineCorrectBolusSize(podStateManager.lastBolusAmount),
-                    rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname),
+                    rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
                     readableDuration(podStateManager.lastBolusStartTime)
                 )
             val textColor: Int
             if (podStateManager.isLastBolusCertain) {
-                textColor = rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor)
+                textColor = rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
             } else {
-                textColor = rh.gac(context, info.nightscout.core.ui.R.attr.warningColor)
+                textColor = rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
                 text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
             }
 
@@ -475,7 +475,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
         } else {
             podInfoBinding.lastBolus.text = PLACEHOLDER
-            podInfoBinding.lastBolus.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            podInfoBinding.lastBolus.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor))
         }
     }
 
@@ -483,7 +483,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
         if (podStateManager.isPodActivationCompleted && podStateManager.isTempBasalRunning) {
             if (!podStateManager.hasTempBasal()) {
                 podInfoBinding.tempBasal.text = "???"
-                podInfoBinding.tempBasal.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
+                podInfoBinding.tempBasal.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.warningColor))
             } else {
                 val now = DateTime.now()
 
@@ -504,9 +504,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
                         duration.standardMinutes
                     )
                 if (podStateManager.isTempBasalCertain) {
-                    textColor = rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor)
+                    textColor = rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
                 } else {
-                    textColor = rh.gac(context, info.nightscout.core.ui.R.attr.warningColor)
+                    textColor = rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
                     text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
                 }
 
@@ -518,9 +518,9 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
             val textColor: Int
 
             if (!podStateManager.isPodActivationCompleted || podStateManager.isTempBasalCertain) {
-                textColor = rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor)
+                textColor = rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
             } else {
-                textColor = rh.gac(context, info.nightscout.core.ui.R.attr.warningColor)
+                textColor = rh.gac(context, app.aaps.core.ui.R.attr.warningColor)
                 text += " (" + rh.gs(R.string.omnipod_eros_uncertain) + ")"
             }
 
@@ -601,7 +601,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     private fun displayNotConfiguredDialog() {
         context?.let {
-            info.nightscout.core.ui.UIRunnable {
+            app.aaps.core.ui.UIRunnable {
                 OKDialog.show(
                     it, rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning),
                     rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null
@@ -611,12 +611,12 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-        uiInteraction.runAlarm(message, title, if (withSound) info.nightscout.core.ui.R.raw.boluserror else 0)
+        uiInteraction.runAlarm(message, title, if (withSound) app.aaps.core.ui.R.raw.boluserror else 0)
     }
 
     private fun displayOkDialog(title: String, message: String) {
         context?.let {
-            info.nightscout.core.ui.UIRunnable {
+            app.aaps.core.ui.UIRunnable {
                 OKDialog.show(it, title, message, null)
             }.run()
         }

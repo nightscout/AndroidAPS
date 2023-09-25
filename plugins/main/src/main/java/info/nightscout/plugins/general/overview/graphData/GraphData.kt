@@ -19,7 +19,7 @@ import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -69,7 +69,7 @@ class GraphData(
         addSeries(app.aaps.core.main.graph.data.AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = rh.gac(graph.context, info.nightscout.core.ui.R.attr.inRangeBackground)
+            it.backgroundColor = rh.gac(graph.context, app.aaps.core.ui.R.attr.inRangeBackground)
         })
     }
 
@@ -219,7 +219,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 2f
                 paint.pathEffect = DashPathEffect(floatArrayOf(10f, 20f), 0f)
-                paint.color = rh.gac(graph.context, info.nightscout.core.ui.R.attr.dotLineColor)
+                paint.color = rh.gac(graph.context, app.aaps.core.ui.R.attr.dotLineColor)
             })
         })
     }

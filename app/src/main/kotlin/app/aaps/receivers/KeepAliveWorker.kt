@@ -187,10 +187,10 @@ class KeepAliveWorker(
             rxBus.send(EventProfileSwitchChanged())
         } else if (isStatusOutdated && !pump.isBusy()) {
             lastReadStatus = now
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.keepalive_status_outdated), null)
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_status_outdated), null)
         } else if (isBasalOutdated && !pump.isBusy()) {
             lastReadStatus = now
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.keepalive_basal_outdated), null)
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.keepalive_basal_outdated), null)
         }
     }
 }

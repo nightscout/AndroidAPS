@@ -35,8 +35,8 @@ import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
@@ -97,7 +97,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         val maxInsulin = constraintChecker.getMaxBolusAllowed().value()
         if (abs(binding.time.value.toInt()) > 12 * 60) {
             binding.time.value = 0.0
-            ToastUtils.warnToast(context, info.nightscout.core.ui.R.string.constraint_applied)
+            ToastUtils.warnToast(context, app.aaps.core.ui.R.string.constraint_applied)
         }
         if (binding.amount.value > maxInsulin) {
             binding.amount.value = 0.0
@@ -141,7 +141,7 @@ class InsulinDialog : DialogFragmentWithDate() {
 
         val plus05Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus05.text = plus05Text
-        binding.plus05.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus05Text
+        binding.plus05.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
@@ -152,7 +152,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         }
         val plus10Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus10.text = plus10Text
-        binding.plus10.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus10Text
+        binding.plus10.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
@@ -163,7 +163,7 @@ class InsulinDialog : DialogFragmentWithDate() {
         }
         val plus20Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus20.text = plus20Text
-        binding.plus20.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus20Text
+        binding.plus20.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
@@ -194,20 +194,20 @@ class InsulinDialog : DialogFragmentWithDate() {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         val actions: LinkedList<String?> = LinkedList()
         val units = profileFunction.getUnits()
-        val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)
+        val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val recordOnlyChecked = binding.recordOnly.isChecked
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
 
         if (insulinAfterConstraints > 0) {
             actions.add(
-                rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump.pumpDescription.bolusStep)
-                    .formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor)
+                rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump.pumpDescription.bolusStep)
+                    .formatColor(context, rh, app.aaps.core.ui.R.attr.bolusColor)
             )
             if (recordOnlyChecked)
-                actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
+                actions.add(rh.gs(app.aaps.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
                 actions.add(
-                    rh.gs(info.nightscout.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor)
+                    rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                 )
         }
         val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
@@ -215,24 +215,24 @@ class InsulinDialog : DialogFragmentWithDate() {
         if (eatingSoonChecked)
             actions.add(
                 rh.gs(R.string.temp_target_short) + ": " + (decimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(
-                    info.nightscout.core.ui.R.string.format_mins,
+                    app.aaps.core.ui.R.string.format_mins,
                     eatingSoonTTDuration
                 ) + ")")
-                    .formatColor(context, rh, info.nightscout.core.ui.R.attr.tempTargetConfirmation)
+                    .formatColor(context, rh, app.aaps.core.ui.R.attr.tempTargetConfirmation)
             )
 
         val timeOffset = binding.time.value.toInt()
         val time = dateUtil.now() + T.mins(timeOffset.toLong()).msecs()
         if (timeOffset != 0)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(time))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(time))
 
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.notes_label) + ": " + notes)
+            actions.add(rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + notes)
 
         if (insulinAfterConstraints > 0 || eatingSoonChecked) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
                         uel.log(
                             UserEntry.Action.TT, UserEntry.Sources.InsulinDialog,
@@ -265,8 +265,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
                             uel.log(UserEntry.Action.BOLUS, UserEntry.Sources.InsulinDialog,
-                                    rh.gs(info.nightscout.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else "",
-                                    ValueWithUnit.SimpleString(rh.gsNotLocalised(info.nightscout.core.ui.R.string.record)),
+                                    rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else "",
+                                    ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.record)),
                                     ValueWithUnit.Insulin(insulinAfterConstraints),
                                     ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 })
                             persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
@@ -281,7 +281,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
+                                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                                     } else {
                                         automation.removeAutomationEventBolusReminder()
                                     }
@@ -293,7 +293,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.bolus), rh.gs(info.nightscout.core.ui.R.string.no_action_selected))
+                OKDialog.show(activity, rh.gs(app.aaps.core.ui.R.string.bolus), rh.gs(app.aaps.core.ui.R.string.no_action_selected))
             }
         return true
     }

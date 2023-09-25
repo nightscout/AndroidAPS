@@ -134,7 +134,7 @@ class PrepareTreatmentsDataWorker(
         data.overviewData.heartRateGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>(
             repository.getHeartRatesFromTimeToTime(fromTime, endTime)
                 .map { hr -> HeartRateDataPoint(hr, rh) }
-                .toTypedArray()).apply { color = rh.gac(null, info.nightscout.core.ui.R.attr.heartRateColor) }
+                .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.heartRateColor) }
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
         return Result.success()

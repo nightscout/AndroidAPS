@@ -31,7 +31,7 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.ui.UiInteraction
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -116,7 +116,7 @@ class MaintenanceFragment : DaggerFragment() {
         binding.cleanupDb.setOnClickListener {
             activity?.let { activity ->
                 var result = ""
-                OKDialog.showConfirmation(activity, rh.gs(R.string.maintenance), rh.gs(info.nightscout.core.ui.R.string.cleanup_db_confirm), Runnable {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.maintenance), rh.gs(app.aaps.core.ui.R.string.cleanup_db_confirm), Runnable {
                     disposable += Completable.fromAction { result = persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true) }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -126,8 +126,8 @@ class MaintenanceFragment : DaggerFragment() {
                                 if (result.isNotEmpty())
                                     OKDialog.show(
                                         activity,
-                                        rh.gs(info.nightscout.core.ui.R.string.result),
-                                        HtmlHelper.fromHtml("<b>" + rh.gs(info.nightscout.core.ui.R.string.cleared_entries) + "</b><br>" + result)
+                                        rh.gs(app.aaps.core.ui.R.string.result),
+                                        HtmlHelper.fromHtml("<b>" + rh.gs(app.aaps.core.ui.R.string.cleared_entries) + "</b><br>" + result)
                                             .toSpanned()
                                     )
                                 aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
@@ -154,7 +154,7 @@ class MaintenanceFragment : DaggerFragment() {
         binding.navLogsettings.setOnClickListener { startActivity(Intent(activity, LogSettingActivity::class.java)) }
         binding.exportCsv.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.ue_export_to_csv) + "?") {
+                OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.ue_export_to_csv) + "?") {
                     uel.log(Action.EXPORT_CSV, Sources.Maintenance)
                     importExportPrefs.exportUserEntriesCsv(activity)
                 }

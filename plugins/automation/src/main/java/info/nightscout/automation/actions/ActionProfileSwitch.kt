@@ -32,7 +32,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
         val activeProfileName = profileFunction.getProfileName()
@@ -44,7 +44,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         }
         if (profileFunction.getProfile() == null) {
             aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.noprofile)).run()
+            callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.noprofile)).run()
             return
         }
         if (inputProfileName.value == activeProfileName) {
@@ -55,7 +55,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         val profileStore = activePlugin.activeProfileSource.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
-            callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.notexists)).run()
+            callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.notexists)).run()
             return
         }
         uel.log(
@@ -64,7 +64,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             ValueWithUnit.Percent(100)
         )
         val result = profileFunction.createProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, dateUtil.now())
-        callback.result(PumpEnactResult(injector).success(result).comment(info.nightscout.core.ui.R.string.ok)).run()
+        callback.result(PumpEnactResult(injector).success(result).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun generateDialog(root: LinearLayout) {

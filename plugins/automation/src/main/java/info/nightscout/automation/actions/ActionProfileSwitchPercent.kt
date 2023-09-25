@@ -33,9 +33,9 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
         if (duration.value == 0) rh.gs(R.string.startprofileforever, pct.value.toInt())
-        else rh.gs(info.nightscout.core.ui.R.string.startprofile, pct.value.toInt(), duration.value)
+        else rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value)
 
-    @DrawableRes override fun icon(): Int = info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch
 
     init {
         precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
@@ -46,21 +46,21 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
             uel.log(
                 UserEntry.Action.PROFILE_SWITCH,
                 Sources.Automation,
-                title + ": " + rh.gs(info.nightscout.core.ui.R.string.startprofile, pct.value.toInt(), duration.value),
+                title + ": " + rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value),
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)
             )
-            callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.ok)).run()
+            callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.ok)).run()
         }
     }
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
             .add(LabelWithElement(rh, rh.gs(R.string.percent_u), "", pct))
-            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.duration_min_label), "", duration))
             .build(root)
     }
 

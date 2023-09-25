@@ -178,7 +178,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         val store = JSONObject()
         val tunedProfile = if (circadian) circadianProfile else profile
         if (profileName.isEmpty())
-            profileName = rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name)
+            profileName = rh.gs(app.aaps.core.ui.R.string.autotune_tunedprofile_name)
         try {
             store.put(profileName, tunedProfile.toPureNsJson(dateUtil))
             json.put("defaultProfile", profileName)

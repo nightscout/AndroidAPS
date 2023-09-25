@@ -36,9 +36,9 @@ class InMemoryGlucoseValueDataPoint(
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
         val color = when {
-            valueToUnits(units) < lowLine  -> rh.gac(context, info.nightscout.core.ui.R.attr.bgLow)
-            valueToUnits(units) > highLine -> rh.gac(context, info.nightscout.core.ui.R.attr.highColor)
-            else                           -> rh.gac(context, info.nightscout.core.ui.R.attr.bgInRange)
+            valueToUnits(units) < lowLine  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
+            valueToUnits(units) > highLine -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)
+            else                           -> rh.gac(context, app.aaps.core.ui.R.attr.bgInRange)
         }
         return if (data.filledGap) ColorUtils.setAlphaComponent(color, 128) else color
     }

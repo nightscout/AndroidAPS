@@ -27,7 +27,7 @@ class MsgSetSingleBasalProfile(
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result")
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
         }
     }
 }

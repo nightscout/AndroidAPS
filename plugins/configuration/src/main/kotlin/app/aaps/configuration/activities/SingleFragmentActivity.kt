@@ -23,7 +23,7 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(info.nightscout.core.ui.R.style.AppTheme)
+        setTheme(app.aaps.core.ui.R.style.AppTheme)
         setContentView(R.layout.activity_single_fragment)
         plugin = activePlugin.getPluginsList()[intent.getIntExtra("plugin", -1)]
         title = plugin?.name

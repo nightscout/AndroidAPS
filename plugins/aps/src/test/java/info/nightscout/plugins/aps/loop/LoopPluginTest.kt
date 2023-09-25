@@ -67,7 +67,7 @@ class LoopPluginTest : TestBase() {
 
     @Test
     fun testPluginInterface() {
-        `when`(rh.gs(info.nightscout.core.ui.R.string.loop)).thenReturn("Loop")
+        `when`(rh.gs(app.aaps.core.ui.R.string.loop)).thenReturn("Loop")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.loop_shortname)).thenReturn("LOOP")
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()

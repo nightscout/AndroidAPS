@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistor
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup.Companion.getTranslatedList
 import info.nightscout.pump.common.defs.TempBasalPair
@@ -109,7 +109,7 @@ class ErosPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
         recyclerView?.adapter = recyclerViewAdapter
         statusView?.visibility = View.GONE
         typeListFull = getTypeList(getTranslatedList(rh))
-        historyTypeSpinner?.adapter = ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, typeListFull)
+        historyTypeSpinner?.adapter = ArrayAdapter(this, app.aaps.core.ui.R.layout.spinner_centered, typeListFull)
         historyTypeSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                 if (manualChange) return

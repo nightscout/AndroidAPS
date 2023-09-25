@@ -35,9 +35,9 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.UIRunnable
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.elements.SingleClickButton
+import app.aaps.core.ui.UIRunnable
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.elements.SingleClickButton
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -114,7 +114,7 @@ class ActionsFragment : DaggerFragment() {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                     OKDialog.showConfirmation(
-                        activity, rh.gs(info.nightscout.core.ui.R.string.extended_bolus), rh.gs(R.string.ebstopsloop),
+                        activity, rh.gs(app.aaps.core.ui.R.string.extended_bolus), rh.gs(R.string.ebstopsloop),
                         Runnable {
                             uiInteraction.runExtendedBolusDialog(childFragmentManager)
                         }, null
@@ -128,7 +128,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.extendedbolusdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.extendedbolusdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                         }
                     }
                 })
@@ -148,7 +148,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
                         }
                     }
                 })
@@ -162,25 +162,25 @@ class ActionsFragment : DaggerFragment() {
         binding.historyBrowser.setOnClickListener { startActivity(Intent(context, uiInteraction.historyBrowseActivity)) }
         binding.tddStats.setOnClickListener { startActivity(Intent(context, uiInteraction.tddStatsActivity)) }
         binding.bgCheck.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BGCHECK, info.nightscout.core.ui.R.string.careportal_bgcheck)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BGCHECK, app.aaps.core.ui.R.string.careportal_bgcheck)
         }
         binding.cgmSensorInsert.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.SENSOR_INSERT, info.nightscout.core.ui.R.string.cgm_sensor_insert)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.SENSOR_INSERT, app.aaps.core.ui.R.string.cgm_sensor_insert)
         }
         binding.pumpBatteryChange.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BATTERY_CHANGE, info.nightscout.core.ui.R.string.pump_battery_change)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BATTERY_CHANGE, app.aaps.core.ui.R.string.pump_battery_change)
         }
         binding.note.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.NOTE, info.nightscout.core.ui.R.string.careportal_note)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.NOTE, app.aaps.core.ui.R.string.careportal_note)
         }
         binding.exercise.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.EXERCISE, info.nightscout.core.ui.R.string.careportal_exercise)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.EXERCISE, app.aaps.core.ui.R.string.careportal_exercise)
         }
         binding.question.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.QUESTION, info.nightscout.core.ui.R.string.careportal_question)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.QUESTION, app.aaps.core.ui.R.string.careportal_question)
         }
         binding.announcement.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.ANNOUNCEMENT, info.nightscout.core.ui.R.string.careportal_announcement)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.ANNOUNCEMENT, app.aaps.core.ui.R.string.careportal_announcement)
         }
 
         sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseactions, true)
@@ -245,7 +245,7 @@ class ActionsFragment : DaggerFragment() {
                 binding.extendedBolus.visibility = View.GONE
                 binding.extendedBolusCancel.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.extendedBolusCancel.text = rh.gs(info.nightscout.core.ui.R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil, decimalFormatter)
+                binding.extendedBolusCancel.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil, decimalFormatter)
             } else {
                 binding.extendedBolus.visibility = View.VISIBLE
                 binding.extendedBolusCancel.visibility = View.GONE
@@ -261,7 +261,7 @@ class ActionsFragment : DaggerFragment() {
                 binding.setTempBasal.visibility = View.GONE
                 binding.cancelTempBasal.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.cancelTempBasal.text = rh.gs(info.nightscout.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(decimalFormatter)
+                binding.cancelTempBasal.text = rh.gs(app.aaps.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(decimalFormatter)
             } else {
                 binding.setTempBasal.visibility = View.VISIBLE
                 binding.cancelTempBasal.visibility = View.GONE
@@ -309,7 +309,7 @@ class ActionsFragment : DaggerFragment() {
         for (customAction in customActions) {
             if (!customAction.isEnabled) continue
 
-            val btn = SingleClickButton(currentContext, null, info.nightscout.core.ui.R.attr.customBtnStyle)
+            val btn = SingleClickButton(currentContext, null, app.aaps.core.ui.R.attr.customBtnStyle)
             btn.text = rh.gs(customAction.name)
 
             val layoutParams = LinearLayout.LayoutParams(

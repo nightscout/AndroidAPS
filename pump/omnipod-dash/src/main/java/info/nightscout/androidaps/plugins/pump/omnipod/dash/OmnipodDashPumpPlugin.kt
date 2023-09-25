@@ -129,7 +129,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         private val pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
             .fragmentClass(OmnipodDashOverviewFragment::class.java.name)
-            .pluginIcon(info.nightscout.core.ui.R.drawable.ic_pod_128)
+            .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
             .pluginName(R.string.omnipod_dash_name)
             .shortName(R.string.omnipod_dash_name_short)
             .preferencesId(R.xml.omnipod_dash_preferences)
@@ -193,7 +193,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         Notification.OMNIPOD_POD_SUSPENDED,
                         rh.gs(R.string.insulin_delivery_suspended),
                         Notification.NORMAL,
-                        info.nightscout.core.ui.R.raw.boluserror
+                        app.aaps.core.ui.R.raw.boluserror
                     )
                 } else {
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
@@ -371,7 +371,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                             Notification.OMNIPOD_POD_FAULT,
                             it.toString(),
                             Notification.URGENT,
-                            info.nightscout.core.ui.R.raw.boluserror
+                            app.aaps.core.ui.R.raw.boluserror
                         )
                     }
                     pumpSync.insertAnnouncement(
@@ -426,14 +426,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.failed_to_set_the_new_basal_profile),
                     Notification.URGENT,
-                    info.nightscout.core.ui.R.raw.boluserror
+                    app.aaps.core.ui.R.raw.boluserror
                 )
             } else {
                 showNotification(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.setting_basal_profile_might_have_failed),
                     Notification.URGENT,
-                    info.nightscout.core.ui.R.raw.boluserror
+                    app.aaps.core.ui.R.raw.boluserror
                 )
             }
             Completable.error(java.lang.IllegalStateException("Command not confirmed"))
@@ -465,7 +465,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 notifyOnUnconfirmed(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.suspend_delivery_is_unconfirmed),
-                    info.nightscout.core.ui.R.raw.boluserror,
+                    app.aaps.core.ui.R.raw.boluserror,
                 )
             }
     }
@@ -629,11 +629,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         Notification.OMNIPOD_UNCERTAIN_SMB,
                         "Unable to verify whether SMB bolus ($requestedBolusAmount U) succeeded. " +
                             "<b>Refresh pod status to confirm or deny this command.",
-                        info.nightscout.core.ui.R.raw.boluserror
+                        app.aaps.core.ui.R.raw.boluserror
                     )
                 } else {
                     if (podStateManager.activeCommand != null) {
-                        val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
+                        val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
                         showErrorDialog(rh.gs(R.string.bolus_delivery_status_uncertain), sound)
                     }
                 }
@@ -847,7 +847,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             notifyOnUnconfirmed(
                 Notification.OMNIPOD_TBR_ALERTS,
                 rh.gs(R.string.setting_temp_basal_might_have_basal_failed),
-                info.nightscout.core.ui.R.raw.boluserror,
+                app.aaps.core.ui.R.raw.boluserror,
             )
         }.toPumpEnactResultImpl()
 
@@ -905,7 +905,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     notifyOnUnconfirmed(
                         Notification.OMNIPOD_TBR_ALERTS,
                         rh.gs(R.string.cancelling_temp_basal_might_have_failed),
-                        info.nightscout.core.ui.R.raw.boluserror,
+                        app.aaps.core.ui.R.raw.boluserror,
                     )
                 }
             }
@@ -960,7 +960,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             notifyOnUnconfirmed(
                 Notification.OMNIPOD_TBR_ALERTS,
                 rh.gs(R.string.cancel_temp_basal_result_is_uncertain),
-                info.nightscout.core.ui.R.raw.boluserror, // TODO: add setting for this
+                app.aaps.core.ui.R.raw.boluserror, // TODO: add setting for this
             )
         }.toPumpEnactResultImpl()
     }
@@ -1187,7 +1187,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 notifyOnUnconfirmed(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.unconfirmed_resumedelivery_command_please_refresh_pod_status),
-                    info.nightscout.core.ui.R.raw.boluserror
+                    app.aaps.core.ui.R.raw.boluserror
                 )
             }.toPumpEnactResultImpl()
         } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active") // TODO i18n
@@ -1545,7 +1545,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (tbr != null && podStateManager.deliveryStatus?.basalActive() == true) {
             aapsLogger.error(LTag.PUMP, "AAPS expected a TBR running but pump has no TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
             // Alert user
-            val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
+            val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
             showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
             // Sync stopped basal with AAPS
             val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -1559,7 +1559,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         } else if (tbr == null && podStateManager.deliveryStatus?.tempBasalActive() == true) {
             aapsLogger.error(LTag.PUMP, "AAPS expected no TBR running but pump has a TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
             // Alert user
-            val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
+            val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
             showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
             // If this is reached is reached there is probably a something wrong with the time (maybe it has changed?).
             // No way to calculate the TBR end time and update pumpSync properly.
@@ -1574,7 +1574,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun showErrorDialog(message: String, sound: Int) {
-        uiInteraction.runAlarm(message, rh.gs(info.nightscout.core.ui.R.string.error), sound)
+        uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound)
     }
 
     private fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {

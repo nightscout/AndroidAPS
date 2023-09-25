@@ -25,6 +25,6 @@ class EffectiveProfileSwitchDataPoint(
     override val size = 2f
     override val paintStyle: Paint.Style = Paint.Style.FILL // not used
     override fun color(context: Context?): Int {
-        return rh.gac(context, info.nightscout.core.ui.R.attr.profileSwitchColor)
+        return rh.gac(context, app.aaps.core.ui.R.attr.profileSwitchColor)
     }
 }

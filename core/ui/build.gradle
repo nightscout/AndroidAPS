@@ -8,7 +8,7 @@ apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/android_module_dependencies.gradle"
 
 android {
-    namespace 'info.nightscout.core.ui'
+    namespace 'app.aaps.core.ui'
 
     buildFeatures {
         viewBinding true

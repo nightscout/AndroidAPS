@@ -11,8 +11,8 @@ class StaticLabelTest : TriggerTestBase() {
     @Test fun constructor() {
         var sl = StaticLabel(rh, "any", TriggerDummy(injector))
         Assertions.assertEquals("any", sl.label)
-        `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
-        sl = StaticLabel(rh, info.nightscout.core.ui.R.string.pumplimit, TriggerDummy(injector))
+        `when`(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
+        sl = StaticLabel(rh, app.aaps.core.ui.R.string.pumplimit, TriggerDummy(injector))
         Assertions.assertEquals("pump limit", sl.label)
     }
 }

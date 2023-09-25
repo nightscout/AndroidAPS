@@ -197,13 +197,13 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
                 result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(),
                         danaPump.getBolusStartErrorCode()));
             else
-                result.comment(info.nightscout.core.ui.R.string.ok);
+                result.comment(app.aaps.core.ui.R.string.ok);
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
             // remove carbs because it's get from history separately
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(false).bolusDelivered(0d).comment(info.nightscout.core.ui.R.string.invalid_input);
+            result.success(false).bolusDelivered(0d).comment(app.aaps.core.ui.R.string.invalid_input);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
         }
@@ -292,14 +292,14 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getAapsLogger()), profile).value();
         if (percent < 0) {
-            result.isTempCancel(false).enacted(false).success(false).comment(info.nightscout.core.ui.R.string.invalid_input);
+            result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input);
             aapsLogger.error("setTempBasalPercent: Invalid input");
             return result;
         }
         if (percent > getPumpDescription().getMaxTempPercent())
             percent = getPumpDescription().getMaxTempPercent();
         if (danaPump.isTempBasalInProgress() && danaPump.getTempBasalPercent() == percent && danaPump.getTempBasalRemainingMin() > 4 && !enforceNew) {
-            result.enacted(false).success(true).isTempCancel(false).comment(info.nightscout.core.ui.R.string.ok).duration(pump.getTempBasalRemainingMin()).percent(pump.getTempBasalPercent()).isPercent(true);
+            result.enacted(false).success(true).isTempCancel(false).comment(app.aaps.core.ui.R.string.ok).duration(pump.getTempBasalRemainingMin()).percent(pump.getTempBasalPercent()).isPercent(true);
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: Correct value already set");
             return result;
         }
@@ -312,11 +312,11 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             connectionOK = sExecutionService.tempBasal(percent, durationInHours);
         }
         if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
-            result.enacted(true).success(true).comment(info.nightscout.core.ui.R.string.ok).isTempCancel(false).duration(pump.getTempBasalRemainingMin()).percent(pump.getTempBasalPercent()).isPercent(true);
+            result.enacted(true).success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(false).duration(pump.getTempBasalRemainingMin()).percent(pump.getTempBasalPercent()).isPercent(true);
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: OK");
             return result;
         }
-        result.enacted(false).success(false).comment(info.nightscout.core.ui.R.string.temp_basal_delivery_error);
+        result.enacted(false).success(false).comment(app.aaps.core.ui.R.string.temp_basal_delivery_error);
         aapsLogger.error("setTempBasalPercent: Failed to set temp basal");
         return result;
     }
@@ -326,7 +326,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         boolean connectionOK = sExecutionService.highTempBasal(percent, durationInMinutes);
         if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
-            result.enacted(true).success(true).comment(info.nightscout.core.ui.R.string.ok).isTempCancel(false).duration(pump.getTempBasalRemainingMin()).percent(pump.getTempBasalPercent()).isPercent(true);
+            result.enacted(true).success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(false).duration(pump.getTempBasalRemainingMin()).percent(pump.getTempBasalPercent()).isPercent(true);
             aapsLogger.debug(LTag.PUMP, "setHighTempBasalPercent: OK");
             return result;
         }
@@ -342,7 +342,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             sExecutionService.tempBasalStop();
             result.success(true).enacted(true).isTempCancel(true);
         } else {
-            result.success(true).isTempCancel(true).comment(info.nightscout.core.ui.R.string.ok);
+            result.success(true).isTempCancel(true).comment(app.aaps.core.ui.R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");
         }
         return result;
@@ -360,7 +360,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < pumpDescription.getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
-                    .comment(info.nightscout.core.ui.R.string.ok)
+                    .comment(app.aaps.core.ui.R.string.ok)
                     .duration(pump.getExtendedBolusRemainingMinutes())
                     .absolute(pump.getExtendedBolusAbsoluteRate())
                     .isPercent(false)
@@ -372,7 +372,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         if (connectionOK && pump.isExtendedInProgress() && Math.abs(pump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(true)
                     .success(true)
-                    .comment(info.nightscout.core.ui.R.string.ok)
+                    .comment(app.aaps.core.ui.R.string.ok)
                     .isTempCancel(false)
                     .duration(pump.getExtendedBolusRemainingMinutes())
                     .absolute(pump.getExtendedBolusAbsoluteRate())
@@ -394,7 +394,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             sExecutionService.extendedBolusStop();
             result.enacted(true).success(!danaPump.isExtendedInProgress()).isTempCancel(true);
         } else {
-            result.success(true).enacted(false).comment(info.nightscout.core.ui.R.string.ok);
+            result.success(true).enacted(false).comment(app.aaps.core.ui.R.string.ok);
             getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
         }
         return result;

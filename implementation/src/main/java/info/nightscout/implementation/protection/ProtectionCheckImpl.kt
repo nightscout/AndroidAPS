@@ -37,15 +37,15 @@ class ProtectionCheckImpl @Inject constructor(
     )
 
     private val titlePassResourceIDs = listOf(
-        info.nightscout.core.ui.R.string.settings_password,
-        info.nightscout.core.ui.R.string.application_password,
-        info.nightscout.core.ui.R.string.bolus_password
+        app.aaps.core.ui.R.string.settings_password,
+        app.aaps.core.ui.R.string.application_password,
+        app.aaps.core.ui.R.string.bolus_password
     )
 
     private val titlePinResourceIDs = listOf(
-        info.nightscout.core.ui.R.string.settings_pin,
-        info.nightscout.core.ui.R.string.application_pin,
-        info.nightscout.core.ui.R.string.bolus_pin
+        app.aaps.core.ui.R.string.settings_pin,
+        app.aaps.core.ui.R.string.application_pin,
+        app.aaps.core.ui.R.string.bolus_pin
     )
 
     override fun isLocked(protection: ProtectionCheck.Protection): Boolean {
@@ -95,7 +95,7 @@ class ProtectionCheckImpl @Inject constructor(
             ProtectionCheck.ProtectionType.MASTER_PASSWORD ->
                 passwordCheck.queryPassword(
                     activity,
-                    info.nightscout.core.ui.R.string.master_password,
+                    app.aaps.core.ui.R.string.master_password,
                     info.nightscout.core.utils.R.string.key_master_password,
                     { onOk(protection); ok?.run() },
                     { cancel?.run() },

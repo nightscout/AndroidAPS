@@ -613,7 +613,7 @@
         android:orientation="horizontal"
         android:paddingEnd="4dp">
 
-        <info.nightscout.core.ui.elements.SingleClickButton
+        <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/combo_refresh_button"
             style="@style/GrayButton"
             android:layout_width="0dp"

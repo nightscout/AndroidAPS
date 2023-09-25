@@ -340,7 +340,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                     }
                 }
             } else {
-                commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.bolus_ok), null);
+                commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok), null);
             }
         }
         return !start.getFailed();

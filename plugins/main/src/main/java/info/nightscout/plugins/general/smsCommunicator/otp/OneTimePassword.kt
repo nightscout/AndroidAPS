@@ -36,7 +36,7 @@ class OneTimePassword @Inject constructor(
      * Name of master device (target of OTP)
      */
     fun name(): String {
-        val defaultUserName = rh.gs(info.nightscout.core.ui.R.string.patient_name_default)
+        val defaultUserName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
         var userName = sp.getString(info.nightscout.core.utils.R.string.key_patient_name, defaultUserName).replace(":", "").trim()
         if (userName.isEmpty())
             userName = defaultUserName

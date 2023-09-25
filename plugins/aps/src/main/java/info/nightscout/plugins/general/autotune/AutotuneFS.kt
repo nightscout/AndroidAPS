@@ -96,7 +96,7 @@ class AutotuneFS @Inject constructor(
     fun exportTunedProfile(tunedProfile: ATProfile) {
         createAutotunefile(TUNEDPROFILE + formatDate(tunedProfile.from) + ".json", tunedProfile.profileToOrefJSON())
         try {
-            createAutotunefile(rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profileToOrefJSON(), true)
+            createAutotunefile(rh.gs(app.aaps.core.ui.R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profileToOrefJSON(), true)
         } catch (e: JSONException) {
         }
     }

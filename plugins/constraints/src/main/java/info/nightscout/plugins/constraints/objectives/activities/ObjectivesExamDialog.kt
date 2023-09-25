@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.plugins.constraints.R
 import info.nightscout.plugins.constraints.databinding.ObjectivesExamFragmentBinding
 import info.nightscout.plugins.constraints.objectives.events.EventObjectivesUpdateGui

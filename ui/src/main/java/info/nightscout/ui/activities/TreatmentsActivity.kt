@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import com.google.android.material.tabs.TabLayout
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.ui.R
 import info.nightscout.ui.activities.fragments.TreatmentsBolusCarbsFragment
 import info.nightscout.ui.activities.fragments.TreatmentsCareportalFragment

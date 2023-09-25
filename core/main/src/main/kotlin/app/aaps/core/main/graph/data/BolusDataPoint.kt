@@ -29,9 +29,9 @@ class BolusDataPoint(
         get() = if (data.type == Bolus.Type.SMB) PointsWithLabelGraphSeries.Shape.SMB else PointsWithLabelGraphSeries.Shape.BOLUS
 
     override fun color(context: Context?): Int =
-        if (data.type == Bolus.Type.SMB) rh.gac(context, info.nightscout.core.ui.R.attr.smbColor)
-        else if (data.isValid) rh.gac(context, info.nightscout.core.ui.R.attr.bolusDataPointColor)
-        else rh.gac(context, info.nightscout.core.ui.R.attr.alarmColor)
+        if (data.type == Bolus.Type.SMB) rh.gac(context, app.aaps.core.ui.R.attr.smbColor)
+        else if (data.isValid) rh.gac(context, app.aaps.core.ui.R.attr.bolusDataPointColor)
+        else rh.gac(context, app.aaps.core.ui.R.attr.alarmColor)
 
     override fun setY(y: Double) {
         yValue = y

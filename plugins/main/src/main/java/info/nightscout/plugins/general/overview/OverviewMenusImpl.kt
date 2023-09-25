@@ -48,8 +48,8 @@ class OverviewMenusImpl @Inject constructor(
 
         PRE(
             R.string.overview_show_predictions,
-            info.nightscout.core.ui.R.attr.predictionColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.predictionColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = true,
             secondary = false,
             shortnameId = R.string.prediction_shortname,
@@ -57,8 +57,8 @@ class OverviewMenusImpl @Inject constructor(
         ),
         TREAT(
             R.string.overview_show_treatments,
-            info.nightscout.core.ui.R.attr.cobColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.cobColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = true,
             secondary = false,
             shortnameId = R.string.treatments_shortname,
@@ -66,8 +66,8 @@ class OverviewMenusImpl @Inject constructor(
         ),
         BAS(
             R.string.overview_show_basals,
-            info.nightscout.core.ui.R.attr.basal,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.basal,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = true,
             secondary = false,
             shortnameId = R.string.basal_shortname,
@@ -75,65 +75,65 @@ class OverviewMenusImpl @Inject constructor(
         ),
         ABS(
             R.string.overview_show_abs_insulin,
-            info.nightscout.core.ui.R.attr.iobColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.iobColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = false,
             secondary = true,
             shortnameId = R.string.abs_insulin_shortname
         ),
         IOB(
             R.string.overview_show_iob,
-            info.nightscout.core.ui.R.attr.iobColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.iobColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = false,
             secondary = true,
-            shortnameId = info.nightscout.core.ui.R.string.iob
+            shortnameId = app.aaps.core.ui.R.string.iob
         ),
         COB(
             R.string.overview_show_cob,
-            info.nightscout.core.ui.R.attr.cobColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.cobColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = false,
             secondary = true,
-            shortnameId = info.nightscout.core.ui.R.string.cob
+            shortnameId = app.aaps.core.ui.R.string.cob
         ),
         DEV(
             R.string.overview_show_deviations,
-            info.nightscout.core.ui.R.attr.bgiColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.bgiColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = false,
             secondary = true,
             shortnameId = R.string.deviation_shortname
         ),
-        BGI(R.string.overview_show_bgi, info.nightscout.core.ui.R.attr.bgiColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.bgi_shortname),
+        BGI(R.string.overview_show_bgi, app.aaps.core.ui.R.attr.bgiColor, app.aaps.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.bgi_shortname),
         SEN(
             R.string.overview_show_sensitivity,
-            info.nightscout.core.ui.R.attr.ratioColor,
-            info.nightscout.core.ui.R.attr.menuTextColorInverse,
+            app.aaps.core.ui.R.attr.ratioColor,
+            app.aaps.core.ui.R.attr.menuTextColorInverse,
             primary = false,
             secondary = true,
             shortnameId = R.string.sensitivity_shortname
         ),
         ACT(
             R.string.overview_show_activity,
-            info.nightscout.core.ui.R.attr.activityColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.activityColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = true,
             secondary = false,
             shortnameId = R.string.activity_shortname
         ),
         DEVSLOPE(
             R.string.overview_show_deviation_slope,
-            info.nightscout.core.ui.R.attr.devSlopePosColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.devSlopePosColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = false,
             secondary = true,
             shortnameId = R.string.devslope_shortname
         ),
         HR(
             R.string.overview_show_heartRate,
-            info.nightscout.core.ui.R.attr.heartRateColor,
-            info.nightscout.core.ui.R.attr.menuTextColor,
+            app.aaps.core.ui.R.attr.heartRateColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
             primary = false,
             secondary = true,
             shortnameId = R.string.heartRate_shortname

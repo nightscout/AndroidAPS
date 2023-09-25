@@ -61,7 +61,7 @@ class InputTimeRange(private val rh: ResourceHelper, private val dateUtil: DateU
                     })
                 addView(TextView(root.context).apply {
                     @Suppress("SetTextI18n")
-                    text = rh.gs(info.nightscout.core.ui.R.string.and) + "      " + dateUtil.timeString(toMills(end))
+                    text = rh.gs(app.aaps.core.ui.R.string.and) + "      " + dateUtil.timeString(toMills(end))
                     setPadding(px, px, px, px)
                     setOnClickListener {
                         getFragmentManager(root.context)?.let { fm ->

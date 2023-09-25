@@ -30,7 +30,7 @@ class MsgInitConnStatusTime_k(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingKoreanDanaDriver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_driver_change), null) // force new connection
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
             return
         }
         val time = dateTimeSecFromBuff(bytes, 0)

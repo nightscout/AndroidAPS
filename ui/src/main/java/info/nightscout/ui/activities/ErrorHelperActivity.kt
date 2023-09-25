@@ -2,7 +2,7 @@ package info.nightscout.ui.activities
 
 import android.os.Bundle
 import app.aaps.core.interfaces.sharedPreferences.SP
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.ui.alertDialogs.ErrorDialog
@@ -24,7 +24,7 @@ class ErrorHelperActivity : TranslatedDaggerAppCompatActivity() {
         val errorDialog = ErrorDialog()
         errorDialog.helperActivity = this
         errorDialog.status = intent.getStringExtra(AlarmSoundService.STATUS) ?: ""
-        errorDialog.sound = intent.getIntExtra(AlarmSoundService.SOUND_ID, info.nightscout.core.ui.R.raw.error)
+        errorDialog.sound = intent.getIntExtra(AlarmSoundService.SOUND_ID, app.aaps.core.ui.R.raw.error)
         errorDialog.title = intent.getStringExtra(AlarmSoundService.TITLE) ?: ""
         errorDialog.show(supportFragmentManager, "Error")
 

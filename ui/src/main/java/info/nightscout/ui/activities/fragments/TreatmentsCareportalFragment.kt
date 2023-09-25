@@ -29,8 +29,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.Translator
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -88,9 +88,9 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
 
     private fun removeStartedEvents() {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.careportal), rh.gs(R.string.careportal_remove_started_events), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.careportal), rh.gs(R.string.careportal_remove_started_events), Runnable {
                 uel.log(Action.RESTART_EVENTS_REMOVED, Sources.Treatments)
-                disposable += repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(rh.gs(info.nightscout.core.ui.R.string.androidaps_start)))
+                disposable += repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(rh.gs(app.aaps.core.ui.R.string.androidaps_start)))
                     .subscribe(
                         { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
                         { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
@@ -220,16 +220,16 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<TherapyEvent>): String {
         if (selectedItems.size() == 1) {
             val therapyEvent = selectedItems.valueAt(0)
-            return rh.gs(info.nightscout.core.ui.R.string.event_type) + ": " + translator.translate(therapyEvent.type) + "\n" +
-                rh.gs(info.nightscout.core.ui.R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
-                rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
+            return rh.gs(app.aaps.core.ui.R.string.event_type) + ": " + translator.translate(therapyEvent.type) + "\n" +
+                rh.gs(app.aaps.core.ui.R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
+                rh.gs(app.aaps.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
         }
-        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<TherapyEvent>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, therapyEvent ->
                     uel.log(
                         Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note,

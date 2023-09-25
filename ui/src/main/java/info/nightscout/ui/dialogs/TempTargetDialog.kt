@@ -18,8 +18,8 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import com.google.common.base.Joiner
 import com.google.common.collect.Lists
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.TemporaryTarget
@@ -92,7 +92,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
             )
 
         val units = profileUtil.units
-        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)
+        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
 
         // temp target
         context?.let { context ->
@@ -102,12 +102,12 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 binding.targetCancel.visibility = View.GONE
 
             reasonList = Lists.newArrayList(
-                rh.gs(info.nightscout.core.ui.R.string.manual),
-                rh.gs(info.nightscout.core.ui.R.string.eatingsoon),
-                rh.gs(info.nightscout.core.ui.R.string.activity),
-                rh.gs(info.nightscout.core.ui.R.string.hypo)
+                rh.gs(app.aaps.core.ui.R.string.manual),
+                rh.gs(app.aaps.core.ui.R.string.eatingsoon),
+                rh.gs(app.aaps.core.ui.R.string.activity),
+                rh.gs(app.aaps.core.ui.R.string.hypo)
             )
-            binding.reasonList.setAdapter(ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, reasonList))
+            binding.reasonList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, reasonList))
 
             binding.targetCancel.setOnClickListener { binding.duration.value = 0.0; shortClick(it) }
             binding.eatingSoon.setOnClickListener { shortClick(it) }
@@ -141,19 +141,19 @@ class TempTargetDialog : DialogFragmentWithDate() {
             R.id.eating_soon -> {
                 binding.temptarget.value = defaultValueHelper.determineEatingSoonTT()
                 binding.duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
-                binding.reasonList.setText(rh.gs(info.nightscout.core.ui.R.string.eatingsoon), false)
+                binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.eatingsoon), false)
             }
 
             R.id.activity    -> {
                 binding.temptarget.value = defaultValueHelper.determineActivityTT()
                 binding.duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
-                binding.reasonList.setText(rh.gs(info.nightscout.core.ui.R.string.activity), false)
+                binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.activity), false)
             }
 
             R.id.hypo        -> {
                 binding.temptarget.value = defaultValueHelper.determineHypoTT()
                 binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
-                binding.reasonList.setText(rh.gs(info.nightscout.core.ui.R.string.hypo), false)
+                binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.hypo), false)
             }
         }
     }
@@ -168,49 +168,49 @@ class TempTargetDialog : DialogFragmentWithDate() {
         if (_binding == null) return false
         val actions: LinkedList<String> = LinkedList()
         var reason = binding.reasonList.text.toString()
-        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) info.nightscout.core.ui.R.string.mgdl else info.nightscout.core.ui.R.string.mmol
+        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) app.aaps.core.ui.R.string.mgdl else app.aaps.core.ui.R.string.mmol
         val target = binding.temptarget.value
         val duration = binding.duration.value.toInt()
         if (target != 0.0 && duration != 0) {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.reason) + ": " + reason)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.target_label) + ": " + profileUtil.stringInCurrentUnitsDetect(target) + " " + rh.gs(unitResId))
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, duration))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.reason) + ": " + reason)
+            actions.add(rh.gs(app.aaps.core.ui.R.string.target_label) + ": " + profileUtil.stringInCurrentUnitsDetect(target) + " " + rh.gs(unitResId))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.duration) + ": " + rh.gs(app.aaps.core.ui.R.string.format_mins, duration))
         } else {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.stoptemptarget))
-            reason = rh.gs(info.nightscout.core.ui.R.string.stoptemptarget)
+            actions.add(rh.gs(app.aaps.core.ui.R.string.stoptemptarget))
+            reason = rh.gs(app.aaps.core.ui.R.string.stoptemptarget)
         }
         if (eventTimeChanged)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+            actions.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.temporary_target), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.temporary_target), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val units = profileFunction.getUnits()
                 when (reason) {
-                    rh.gs(info.nightscout.core.ui.R.string.eatingsoon) -> uel.log(
+                    rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.EATING_SOON
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(info.nightscout.core.ui.R.string.activity) -> uel.log(
+                    rh.gs(app.aaps.core.ui.R.string.activity) -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.ACTIVITY
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(info.nightscout.core.ui.R.string.hypo) -> uel.log(
+                    rh.gs(app.aaps.core.ui.R.string.hypo) -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.HYPOGLYCEMIA
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(info.nightscout.core.ui.R.string.manual) -> uel.log(
+                    rh.gs(app.aaps.core.ui.R.string.manual) -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.CUSTOM
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(info.nightscout.core.ui.R.string.stoptemptarget) -> uel.log(
+                    rh.gs(app.aaps.core.ui.R.string.stoptemptarget) -> uel.log(
                         UserEntry.Action.CANCEL_TT,
                         UserEntry.Sources.TTDialog,
                         ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
@@ -228,9 +228,9 @@ class TempTargetDialog : DialogFragmentWithDate() {
                             timestamp = eventTime,
                             duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                             reason = when (reason) {
-                                rh.gs(info.nightscout.core.ui.R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
-                                rh.gs(info.nightscout.core.ui.R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
-                                rh.gs(info.nightscout.core.ui.R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
+                                rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
+                                rh.gs(app.aaps.core.ui.R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
+                                rh.gs(app.aaps.core.ui.R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
                                 else                                               -> TemporaryTarget.Reason.CUSTOM
                             },
                             lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),

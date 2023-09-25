@@ -32,7 +32,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
                 return activePlugin.firstActiveSync?.hasWritePermission == true || tidepoolPlugin?.hasWritePermission == true
             }
         })
-        tasks.add(object : Task(this, info.nightscout.core.ui.R.string.virtualpump_uploadstatus_title) {
+        tasks.add(object : Task(this, app.aaps.core.ui.R.string.virtualpump_uploadstatus_title) {
             override fun isCompleted(): Boolean {
                 return sp.getBoolean(info.nightscout.core.utils.R.string.key_virtual_pump_upload_status, false) || tidepoolPlugin?.hasWritePermission == true
             }
@@ -64,7 +64,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
                 return (usedAPS as PluginBase).isEnabled()
             }
         })
-        tasks.add(object : Task(this, info.nightscout.core.ui.R.string.activate_profile) {
+        tasks.add(object : Task(this, app.aaps.core.ui.R.string.activate_profile) {
             override fun isCompleted(): Boolean {
                 return persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
             }

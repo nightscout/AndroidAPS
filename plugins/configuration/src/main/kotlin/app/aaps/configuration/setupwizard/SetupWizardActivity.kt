@@ -24,8 +24,8 @@ import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.locale.LocaleHelper.update
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.locale.LocaleHelper.update
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

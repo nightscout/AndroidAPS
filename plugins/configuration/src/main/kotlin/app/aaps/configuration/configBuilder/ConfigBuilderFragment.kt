@@ -95,7 +95,7 @@ class ConfigBuilderFragment : DaggerFragment() {
         )
         if (config.APS || config.PUMPCONTROL || config.isEngineeringMode())
             configBuilder.createViewsForPlugins(
-                title = info.nightscout.core.ui.R.string.configbuilder_insulin,
+                title = app.aaps.core.ui.R.string.configbuilder_insulin,
                 description = R.string.configbuilder_insulin_description,
                 pluginType = PluginType.INSULIN,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN),
@@ -162,7 +162,7 @@ class ConfigBuilderFragment : DaggerFragment() {
                 parent = binding.categories
             )
             configBuilder.createViewsForPlugins(
-                title = info.nightscout.core.ui.R.string.constraints,
+                title = app.aaps.core.ui.R.string.constraints,
                 description = R.string.configbuilder_constraints_description,
                 pluginType = PluginType.CONSTRAINTS,
                 plugins = activePlugin.getSpecificPluginsVisibleInList(PluginType.CONSTRAINTS),

@@ -55,7 +55,7 @@ import info.nightscout.androidaps.danar.comm.MsgHistoryRefill;
 import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
-import info.nightscout.core.ui.toast.ToastUtils;
+import app.aaps.core.ui.toast.ToastUtils;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.comm.RecordTypes;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
@@ -222,7 +222,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), info.nightscout.pump.dana.R.string.devicenotfound);
             }
         } else {
-            ToastUtils.INSTANCE.errorToast(context, info.nightscout.core.ui.R.string.need_connect_permission);
+            ToastUtils.INSTANCE.errorToast(context, app.aaps.core.ui.R.string.need_connect_permission);
         }
     }
 

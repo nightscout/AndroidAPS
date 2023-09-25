@@ -40,8 +40,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
@@ -201,7 +201,7 @@ class LoopDialog : DaggerDialogFragment() {
             loop.isSuspended                                       -> {
                 binding.overviewLoop.visibility = View.GONE
                 binding.overviewSuspend.visibility = View.VISIBLE
-                binding.overviewSuspendHeader.text = rh.gs(info.nightscout.core.ui.R.string.resumeloop)
+                binding.overviewSuspendHeader.text = rh.gs(app.aaps.core.ui.R.string.resumeloop)
                 binding.overviewSuspendButtons.visibility = View.VISIBLE
                 binding.overviewResume.visibility = View.VISIBLE
                 binding.overviewPump.visibility = View.GONE
@@ -238,7 +238,7 @@ class LoopDialog : DaggerDialogFragment() {
                     }
                 }
                 binding.overviewSuspend.visibility = View.VISIBLE
-                binding.overviewSuspendHeader.text = rh.gs(info.nightscout.core.ui.R.string.suspendloop)
+                binding.overviewSuspendHeader.text = rh.gs(app.aaps.core.ui.R.string.suspendloop)
                 binding.overviewSuspendButtons.visibility = View.VISIBLE
                 binding.overviewResume.visibility = View.GONE
 
@@ -254,11 +254,11 @@ class LoopDialog : DaggerDialogFragment() {
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
         when (v.id) {
-            R.id.overview_closeloop      -> description = rh.gs(info.nightscout.core.ui.R.string.closedloop)
-            R.id.overview_lgsloop        -> description = rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)
-            R.id.overview_openloop       -> description = rh.gs(info.nightscout.core.ui.R.string.openloop)
-            R.id.overview_disable        -> description = rh.gs(info.nightscout.core.ui.R.string.disableloop)
-            R.id.overview_enable         -> description = rh.gs(info.nightscout.core.ui.R.string.enableloop)
+            R.id.overview_closeloop      -> description = rh.gs(app.aaps.core.ui.R.string.closedloop)
+            R.id.overview_lgsloop        -> description = rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)
+            R.id.overview_openloop       -> description = rh.gs(app.aaps.core.ui.R.string.openloop)
+            R.id.overview_disable        -> description = rh.gs(app.aaps.core.ui.R.string.disableloop)
+            R.id.overview_enable         -> description = rh.gs(app.aaps.core.ui.R.string.enableloop)
             R.id.overview_resume         -> description = rh.gs(R.string.resume)
             R.id.overview_reconnect      -> description = rh.gs(R.string.reconnect)
             R.id.overview_suspend_1h     -> description = rh.gs(R.string.suspendloopfor1h)
@@ -272,7 +272,7 @@ class LoopDialog : DaggerDialogFragment() {
             R.id.overview_disconnect_3h  -> description = rh.gs(R.string.disconnectpumpfor3h)
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.confirm), description, Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.confirm), description, Runnable {
                 onClick(v)
             })
         }
@@ -284,21 +284,21 @@ class LoopDialog : DaggerDialogFragment() {
             R.id.overview_closeloop                       -> {
                 uel.log(UserEntry.Action.CLOSED_LOOP_MODE, UserEntry.Sources.LoopDialog)
                 sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
-                rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.closedloop)))
+                rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop                         -> {
                 uel.log(UserEntry.Action.LGS_LOOP_MODE, UserEntry.Sources.LoopDialog)
                 sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
-                rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)))
+                rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop                        -> {
                 uel.log(UserEntry.Action.OPEN_LOOP_MODE, UserEntry.Sources.LoopDialog)
                 sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)
-                rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)))
+                rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 return true
             }
 
@@ -311,7 +311,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ToastUtils.errorToast(ctx, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error))
+                            ToastUtils.errorToast(ctx, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error))
                         }
                     }
                 })
@@ -352,7 +352,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
                         }
                     }
                 })

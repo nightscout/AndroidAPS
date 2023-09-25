@@ -33,7 +33,7 @@ import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.impl.rx.bus.RxBusImpl
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
@@ -66,7 +66,7 @@ class OverviewPlugin @Inject constructor(
         .fragmentClass(OverviewFragment::class.qualifiedName)
         .alwaysVisible(true)
         .alwaysEnabled(true)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_home)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_home)
         .pluginName(R.string.overview)
         .shortName(R.string.overview_shortname)
         .preferencesId(R.xml.pref_overview)

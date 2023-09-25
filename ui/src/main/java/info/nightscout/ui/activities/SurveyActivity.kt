@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivitySurveyBinding
@@ -34,7 +34,7 @@ class SurveyActivity : TranslatedDaggerAppCompatActivity() {
 
         val profileStore = activePlugin.activeProfileSource.profile
         val profileList = profileStore?.getProfileList() ?: return
-        binding.spinner.adapter = ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, profileList)
+        binding.spinner.adapter = ArrayAdapter(this, app.aaps.core.ui.R.layout.spinner_centered, profileList)
 
         binding.profile.setOnClickListener {
             val age = SafeParse.stringToInt(binding.age.text.toString())

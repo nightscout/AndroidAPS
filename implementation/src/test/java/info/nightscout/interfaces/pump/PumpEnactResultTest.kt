@@ -26,16 +26,16 @@ class PumpEnactResultTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun mock() {
-        `when`(rh.gs(info.nightscout.core.ui.R.string.success)).thenReturn("Success")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.enacted)).thenReturn("Enacted")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.comment)).thenReturn("Comment")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.configbuilder_insulin)).thenReturn("Insulin")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.smb_shortname)).thenReturn("SMB")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)).thenReturn("U")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.cancel_temp)).thenReturn("Cancel temp basal")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.duration)).thenReturn("Duration")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.percent)).thenReturn("Percent")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.absolute)).thenReturn("Absolute")
+        `when`(rh.gs(app.aaps.core.ui.R.string.success)).thenReturn("Success")
+        `when`(rh.gs(app.aaps.core.ui.R.string.enacted)).thenReturn("Enacted")
+        `when`(rh.gs(app.aaps.core.ui.R.string.comment)).thenReturn("Comment")
+        `when`(rh.gs(app.aaps.core.ui.R.string.configbuilder_insulin)).thenReturn("Insulin")
+        `when`(rh.gs(app.aaps.core.ui.R.string.smb_shortname)).thenReturn("SMB")
+        `when`(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)).thenReturn("U")
+        `when`(rh.gs(app.aaps.core.ui.R.string.cancel_temp)).thenReturn("Cancel temp basal")
+        `when`(rh.gs(app.aaps.core.ui.R.string.duration)).thenReturn("Duration")
+        `when`(rh.gs(app.aaps.core.ui.R.string.percent)).thenReturn("Percent")
+        `when`(rh.gs(app.aaps.core.ui.R.string.absolute)).thenReturn("Absolute")
     }
 
     @Test fun successTest() {

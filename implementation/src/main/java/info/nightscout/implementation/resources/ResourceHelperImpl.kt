@@ -20,8 +20,8 @@ import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.resources.ResourceHelper
-import info.nightscout.core.ui.getThemeColor
-import info.nightscout.core.ui.locale.LocaleHelper
+import app.aaps.core.ui.getThemeColor
+import app.aaps.core.ui.locale.LocaleHelper
 import java.util.Locale
 import javax.inject.Inject
 
@@ -93,13 +93,13 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
         return (dp * scale + 0.5f).toInt()
     }
 
-    override fun shortTextMode(): Boolean = !gb(info.nightscout.core.ui.R.bool.isTablet)
+    override fun shortTextMode(): Boolean = !gb(app.aaps.core.ui.R.bool.isTablet)
 
     override fun gac(context: Context?, attributeId: Int): Int =
-        (ContextThemeWrapper(context ?: this.context, info.nightscout.core.ui.R.style.AppTheme)).getThemeColor(attributeId)
+        (ContextThemeWrapper(context ?: this.context, app.aaps.core.ui.R.style.AppTheme)).getThemeColor(attributeId)
 
     override fun gac(attributeId: Int): Int =
-        ContextThemeWrapper(this.context, info.nightscout.core.ui.R.style.AppTheme).getThemeColor(attributeId)
+        ContextThemeWrapper(this.context, app.aaps.core.ui.R.style.AppTheme).getThemeColor(attributeId)
 
     override fun getThemedCtx(context: Context): Context {
         val res: Resources = context.resources

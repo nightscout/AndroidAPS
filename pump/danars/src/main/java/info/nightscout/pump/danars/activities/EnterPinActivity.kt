@@ -8,8 +8,8 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.hexStringToByteArray
 import info.nightscout.core.validators.DefaultEditTextValidator
 import info.nightscout.core.validators.EditTextValidator
@@ -59,7 +59,7 @@ class EnterPinActivity : TranslatedDaggerAppCompatActivity() {
                 if (result) {
                     bleComm.finishV3Pairing()
                     finish()
-                } else OKDialog.show(this, rh.gs(info.nightscout.core.ui.R.string.error), rh.gs(info.nightscout.core.ui.R.string.invalid_input))
+                } else OKDialog.show(this, rh.gs(app.aaps.core.ui.R.string.error), rh.gs(app.aaps.core.ui.R.string.invalid_input))
             }
         }
         binding.okcancel.cancel.setOnClickListener { finish() }

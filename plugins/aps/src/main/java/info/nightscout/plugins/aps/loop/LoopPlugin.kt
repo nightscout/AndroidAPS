@@ -112,7 +112,7 @@ class LoopPlugin @Inject constructor(
         .mainType(PluginType.LOOP)
         .fragmentClass(LoopFragment::class.java.name)
         .pluginIcon(app.aaps.core.main.R.drawable.ic_loop_closed_white)
-        .pluginName(info.nightscout.core.ui.R.string.loop)
+        .pluginName(app.aaps.core.ui.R.string.loop)
         .shortName(R.string.loop_shortname)
         .preferencesId(R.xml.pref_loop)
         .enableByDefault(config.APS)
@@ -230,7 +230,7 @@ class LoopPlugin @Inject constructor(
             val loopEnabled = constraintChecker.isLoopInvocationAllowed()
             if (!loopEnabled.value()) {
                 val message = """
-                    ${rh.gs(info.nightscout.core.ui.R.string.loop_disabled)}
+                    ${rh.gs(app.aaps.core.ui.R.string.loop_disabled)}
                     ${loopEnabled.getReasons()}
                     """.trimIndent()
                 aapsLogger.debug(LTag.APS, message)
@@ -242,14 +242,14 @@ class LoopPlugin @Inject constructor(
             if (!isEnabled(PluginType.LOOP)) return
             val profile = profileFunction.getProfile()
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
-                aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.no_profile_set))
-                rxBus.send(EventLoopSetLastRunGui(rh.gs(info.nightscout.core.ui.R.string.no_profile_set)))
+                aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.no_profile_set))
+                rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.no_profile_set)))
                 return
             }
 
             if (!isEmptyQueue()) {
-                aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.pump_busy))
-                rxBus.send(EventLoopSetLastRunGui(rh.gs(info.nightscout.core.ui.R.string.pump_busy)))
+                aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.pump_busy))
+                rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.pump_busy)))
                 return
             }
 
@@ -303,13 +303,13 @@ class LoopPlugin @Inject constructor(
                 buildAndStoreDeviceStatus()
 
                 if (isSuspended) {
-                    aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.loopsuspended))
-                    rxBus.send(EventLoopSetLastRunGui(rh.gs(info.nightscout.core.ui.R.string.loopsuspended)))
+                    aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.loopsuspended))
+                    rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.loopsuspended)))
                     return
                 }
                 if (pump.isSuspended()) {
-                    aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.pumpsuspended))
-                    rxBus.send(EventLoopSetLastRunGui(rh.gs(info.nightscout.core.ui.R.string.pumpsuspended)))
+                    aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
+                    rxBus.send(EventLoopSetLastRunGui(rh.gs(app.aaps.core.ui.R.string.pumpsuspended)))
                     return
                 }
                 closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
@@ -324,7 +324,7 @@ class LoopPlugin @Inject constructor(
                             if (sp.getBoolean(
                                     info.nightscout.core.utils.R.string.key_enable_carbs_required_alert_local,
                                     true
-                                ) && !sp.getBoolean(info.nightscout.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
+                                ) && !sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
                             ) {
                                 val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
                                 rxBus.send(EventNewNotification(carbReqLocal))
@@ -335,7 +335,7 @@ class LoopPlugin @Inject constructor(
                             if (sp.getBoolean(
                                     info.nightscout.core.utils.R.string.key_enable_carbs_required_alert_local,
                                     true
-                                ) && sp.getBoolean(info.nightscout.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
+                                ) && sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
                             ) {
                                 val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction5m.putExtra("ignoreDuration", 5)
@@ -350,7 +350,7 @@ class LoopPlugin @Inject constructor(
                                 val pendingIntent30m = PendingIntent.getBroadcast(context, 1, intentAction30m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
                                 val actionIgnore30m = NotificationCompat.Action(app.aaps.core.main.R.drawable.ic_notif_aaps, rh.gs(R.string.ignore30m, "Ignore 30m"), pendingIntent30m)
                                 val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                                builder.setSmallIcon(info.nightscout.core.ui.R.drawable.notif_icon)
+                                builder.setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
                                     .setContentTitle(rh.gs(R.string.carbs_suggestion))
                                     .setContentText(resultAfterConstraints.carbsRequiredText)
                                     .setAutoCancel(true)
@@ -366,14 +366,14 @@ class LoopPlugin @Inject constructor(
                                 // mId allows you to update the notification later on.
                                 mNotificationManager.notify(Constants.notificationID, builder.build())
                                 uel.log(
-                                    Action.CAREPORTAL, Sources.Loop, rh.gs(info.nightscout.core.ui.R.string.carbsreq, resultAfterConstraints.carbsReq, resultAfterConstraints.carbsReqWithin),
+                                    Action.CAREPORTAL, Sources.Loop, rh.gs(app.aaps.core.ui.R.string.carbsreq, resultAfterConstraints.carbsReq, resultAfterConstraints.carbsReqWithin),
                                     ValueWithUnit.Gram(resultAfterConstraints.carbsReq),
                                     ValueWithUnit.Minute(resultAfterConstraints.carbsReqWithin)
                                 )
                                 rxBus.send(EventNewOpenLoopNotification())
 
                                 //only send to wear if Native notifications are turned off
-                                if (!sp.getBoolean(info.nightscout.core.ui.R.string.key_raise_notifications_as_android_notifications, true)) {
+                                if (!sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)) {
                                     // Send to Wear
                                     sendToWear()
                                 }
@@ -435,7 +435,7 @@ class LoopPlugin @Inject constructor(
                 } else {
                     if (resultAfterConstraints.isChangeRequested && allowNotification) {
                         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-                        builder.setSmallIcon(info.nightscout.core.ui.R.drawable.notif_icon)
+                        builder.setSmallIcon(app.aaps.core.ui.R.drawable.notif_icon)
                             .setContentTitle(rh.gs(R.string.open_loop_new_suggestion))
                             .setContentText(resultAfterConstraints.toString())
                             .setAutoCancel(true)
@@ -535,7 +535,7 @@ class LoopPlugin @Inject constructor(
      */
     private fun applyTBRRequest(request: APSResult, profile: Profile, callback: Callback?) {
         if (!request.isTempBasalRequested) {
-            callback?.result(PumpEnactResult(injector).enacted(false).success(true).comment(info.nightscout.core.ui.R.string.nochangerequested))?.run()
+            callback?.result(PumpEnactResult(injector).enacted(false).success(true).comment(app.aaps.core.ui.R.string.nochangerequested))?.run()
             return
         }
         val pump = activePlugin.activePump
@@ -545,8 +545,8 @@ class LoopPlugin @Inject constructor(
             return
         }
         if (pump.isSuspended()) {
-            aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(info.nightscout.core.ui.R.string.pumpsuspended))
-            callback?.result(PumpEnactResult(injector).comment(info.nightscout.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
+            aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
+            callback?.result(PumpEnactResult(injector).comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
@@ -586,7 +586,7 @@ class LoopPlugin @Inject constructor(
                 callback?.result(
                     PumpEnactResult(injector).percent(request.percent)
                         .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
-                        .comment(info.nightscout.core.ui.R.string.let_temp_basal_run)
+                        .comment(app.aaps.core.ui.R.string.let_temp_basal_run)
                 )?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: tempBasalPercent()")
@@ -609,7 +609,7 @@ class LoopPlugin @Inject constructor(
                 callback?.result(
                     PumpEnactResult(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
                         .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
-                        .comment(info.nightscout.core.ui.R.string.let_temp_basal_run)
+                        .comment(app.aaps.core.ui.R.string.let_temp_basal_run)
                 )?.run()
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()")
@@ -645,8 +645,8 @@ class LoopPlugin @Inject constructor(
             return
         }
         if (pump.isSuspended()) {
-            aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(info.nightscout.core.ui.R.string.pumpsuspended))
-            callback?.result(PumpEnactResult(injector).comment(info.nightscout.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
+            aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
+            callback?.result(PumpEnactResult(injector).comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applySMBRequest: $request")
@@ -681,7 +681,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
                     }
                 }
             })
@@ -689,7 +689,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.tempBasalPercent(0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
                     }
                 }
             })
@@ -698,7 +698,7 @@ class LoopPlugin @Inject constructor(
             commandQueue.cancelExtended(object : Callback() {
                 override fun run() {
                     if (!result.success) {
-                        uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.extendedbolusdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
+                        uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.extendedbolusdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
                     }
                 }
             })
@@ -716,7 +716,7 @@ class LoopPlugin @Inject constructor(
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error), app.aaps.core.ui.R.raw.boluserror)
                 }
             }
         })

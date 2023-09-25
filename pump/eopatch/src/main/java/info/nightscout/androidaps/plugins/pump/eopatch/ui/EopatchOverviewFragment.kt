@@ -17,7 +17,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchOverviewBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -95,7 +95,7 @@ class EopatchOverviewFragment : EoBaseFragment<FragmentEopatchOverviewBinding>()
     private fun suspend() {
         binding.viewmodel?.apply {
             activity?.let {
-                val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it)
+                val builder = app.aaps.core.ui.dialogs.AlertDialogHelper.Builder(it)
                 val msg = getSuspendDialogText()
 
                 val dialog = builder.setTitle(R.string.string_suspend)
@@ -114,7 +114,7 @@ class EopatchOverviewFragment : EoBaseFragment<FragmentEopatchOverviewBinding>()
     private fun resume() {
         binding.viewmodel?.apply {
             activity?.let {
-                val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it)
+                val builder = app.aaps.core.ui.dialogs.AlertDialogHelper.Builder(it)
                 val dialog = builder.setTitle(R.string.string_resume_insulin_delivery_title)
                     .setMessage(R.string.string_resume_insulin_delivery_message)
                     .setPositiveButton(R.string.confirm) { _, _ ->
@@ -135,7 +135,7 @@ class EopatchOverviewFragment : EoBaseFragment<FragmentEopatchOverviewBinding>()
     private fun openPauseTimePicker() {
         binding.viewmodel?.apply {
             activity?.let {
-                val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it)
+                val builder = app.aaps.core.ui.dialogs.AlertDialogHelper.Builder(it)
                 val listArr = requireContext().resources.getStringArray(R.array.suspend_duration_array)
                 var select = 0
                 val dialog = builder.setTitle(R.string.string_suspend_time_insulin_delivery_title)

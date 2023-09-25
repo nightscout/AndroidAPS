@@ -17,7 +17,7 @@ import app.aaps.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.resources.ResourceHelper
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import javax.inject.Inject
 
 class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
@@ -84,7 +84,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
 
                 prefFile.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.let {
                     metaVariantFormat.text = it.value
-                    val colorAttr = if (it.status == PrefsStatusImpl.OK) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
+                    val colorAttr = if (it.status == PrefsStatusImpl.OK) app.aaps.core.ui.R.attr.metadataTextOkColor else app.aaps.core.ui.R.attr.metadataTextWarningColor
                     metaVariantFormat.setTextColor(rh.gac(metaVariantFormat.context, colorAttr))
                 }
 
@@ -94,7 +94,7 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
 
                 prefFile.metadata[PrefsMetadataKeyImpl.AAPS_VERSION]?.let {
                     metaAppVersion.text = it.value
-                    val colorAttr = if (it.status == PrefsStatusImpl.OK) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
+                    val colorAttr = if (it.status == PrefsStatusImpl.OK) app.aaps.core.ui.R.attr.metadataTextOkColor else app.aaps.core.ui.R.attr.metadataTextWarningColor
                     metaAppVersion.setTextColor(rh.gac(metaVariantFormat.context, colorAttr))
                 }
 

@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.R
+import app.aaps.core.ui.R
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.entities.GlucoseValue
 import org.json.JSONException

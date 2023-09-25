@@ -81,8 +81,8 @@ class ActivityMonitor @Inject constructor(
                     val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
                     row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
                     row.gravity = Gravity.CENTER_HORIZONTAL
-                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = rh.gs(info.nightscout.core.ui.R.string.activity) })
-                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = rh.gs(info.nightscout.core.ui.R.string.duration) })
+                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 0 }; text = rh.gs(app.aaps.core.ui.R.string.activity) })
+                    row.addView(TextView(context).apply { layoutParams = lp.apply { column = 1 }; text = rh.gs(app.aaps.core.ui.R.string.duration) })
                     row.addView(TextView(context).apply { layoutParams = lp.apply { column = 2 } })
                 }
             )

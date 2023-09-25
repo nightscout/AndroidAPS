@@ -24,7 +24,7 @@ import info.nightscout.automation.events.EventAutomationDataChanged
 import info.nightscout.automation.events.EventAutomationUpdateAction
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.events.EventAutomationUpdateTrigger
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

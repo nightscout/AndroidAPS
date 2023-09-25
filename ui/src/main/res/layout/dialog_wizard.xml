@@ -65,7 +65,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.core.ui.elements.NumberPicker
+                <app.aaps.core.ui.elements.NumberPicker
                     android:id="@+id/bg_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -99,7 +99,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Small"
                     android:textStyle="bold" />
 
-                <info.nightscout.core.ui.elements.NumberPicker
+                <app.aaps.core.ui.elements.NumberPicker
                     android:id="@+id/carbs_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -154,7 +154,7 @@
 
                 </LinearLayout>
 
-                <info.nightscout.core.ui.elements.NumberPicker
+                <app.aaps.core.ui.elements.NumberPicker
                     android:id="@+id/correction_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
@@ -353,7 +353,7 @@
                     android:layoutDirection="rtl"
                     android:padding="2dp" />
 
-                <info.nightscout.core.ui.elements.NumberPicker
+                <app.aaps.core.ui.elements.NumberPicker
                     android:id="@+id/carb_time_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"

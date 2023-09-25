@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.JsonHelper
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
@@ -249,7 +249,7 @@ class NSSettingsStatusImpl @Inject constructor(
             uel.log(Action.NS_SETTINGS_COPIED, UserEntry.Sources.NSClient)
         }
 
-        if (context != null) OKDialog.showConfirmation(context, rh.gs(info.nightscout.core.ui.R.string.statuslights), rh.gs(R.string.copy_existing_values), action)
+        if (context != null) OKDialog.showConfirmation(context, rh.gs(app.aaps.core.ui.R.string.statuslights), rh.gs(R.string.copy_existing_values), action)
         else action.run()
     }
 }

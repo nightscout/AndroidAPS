@@ -33,7 +33,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.plugins.general.overview.graphData.GraphData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -113,7 +113,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding.date.setOnClickListener {
             MaterialDatePicker.Builder.datePicker()
                 .setSelection(dateUtil.timeStampToUtcDateMillis(historyBrowserData.overviewData.fromTime))
-                .setTheme(info.nightscout.core.ui.R.style.DatePicker)
+                .setTheme(app.aaps.core.ui.R.style.DatePicker)
                 .build()
                 .apply {
                     addOnPositiveButtonClickListener { selection ->
@@ -133,7 +133,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             windowManager.defaultDisplay.getMetrics(dm)
 
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, info.nightscout.core.ui.R.attr.graphGrid)
+        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, app.aaps.core.ui.R.attr.graphGrid)
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
@@ -214,12 +214,12 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
 
                 val graph = GraphView(this)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(100)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = rh.gac(info.nightscout.core.ui.R.attr.graphGrid)
+                graph.gridLabelRenderer?.gridColor = rh.gac(app.aaps.core.ui.R.attr.graphGrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = rh.gac(this, info.nightscout.core.ui.R.attr.viewPortBackgroundColor)
+                graph.viewport.backgroundColor = rh.gac(this, app.aaps.core.ui.R.attr.viewPortBackgroundColor)
                 relativeLayout.addView(graph)
 
                 val label = TextView(this)

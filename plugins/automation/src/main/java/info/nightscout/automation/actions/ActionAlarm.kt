@@ -32,7 +32,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
         this.text = InputString(text)
     }
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.alarm
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.alarm
     override fun shortDescription(): String = rh.gs(R.string.alarm_message, text.value)
     @DrawableRes override fun icon(): Int = app.aaps.core.main.R.drawable.ic_access_alarm_24dp
 
@@ -41,7 +41,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(config.appName))
-        callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
+        callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun toJSON(): String {

@@ -88,7 +88,7 @@ class StatusLightHandler @Inject constructor(
             )
         }
 
-        val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
+        val insulinUnit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
         if (pump.pumpDescription.isPatchPump) {
             handlePatchReservoirLevel(
                 reservoirLevel,
@@ -120,8 +120,8 @@ class StatusLightHandler @Inject constructor(
             if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
                 handleLevel(batteryLevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
             } else {
-                batteryLevel?.text = rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
-                batteryLevel?.setTextColor(rh.gac(batteryLevel.context, info.nightscout.core.ui.R.attr.defaultTextColor))
+                batteryLevel?.text = rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+                batteryLevel?.setTextColor(rh.gac(batteryLevel.context, app.aaps.core.ui.R.attr.defaultTextColor))
             }
         }
     }
@@ -134,7 +134,7 @@ class StatusLightHandler @Inject constructor(
             warnColors.setColorByAge(view, therapyEvent.value, warn, urgent)
             view?.text = therapyEvent.value.age(rh.shortTextMode(), rh, dateUtil)
         } else {
-            view?.text = if (rh.shortTextMode()) "-" else rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
+            view?.text = if (rh.shortTextMode()) "-" else rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
         }
     }
 
@@ -155,7 +155,7 @@ class StatusLightHandler @Inject constructor(
     ) {
         if (level >= maxReading) {
             view?.text = decimalFormatter.to0Decimal(maxReading, units)
-            view?.setTextColor(rh.gac(view.context, info.nightscout.core.ui.R.attr.defaultTextColor))
+            view?.setTextColor(rh.gac(view.context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
         }

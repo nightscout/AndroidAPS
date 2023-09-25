@@ -116,12 +116,12 @@ class PrepareBasalDataWorker(
         // create series
         data.overviewData.baseBasalGraphSeries = LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = rh.gac(ctx, info.nightscout.core.ui.R.attr.baseBasalColor)
+            it.backgroundColor = rh.gac(ctx, app.aaps.core.ui.R.attr.baseBasalColor)
             it.thickness = 0
         }
         data.overviewData.tempBasalGraphSeries = LineGraphSeries(Array(tempBasalArray.size) { i -> tempBasalArray[i] }).also {
             it.isDrawBackground = true
-            it.backgroundColor = rh.gac(ctx, info.nightscout.core.ui.R.attr.tempBasalColor)
+            it.backgroundColor = rh.gac(ctx, app.aaps.core.ui.R.attr.tempBasalColor)
             it.thickness = 0
         }
         data.overviewData.basalLineGraphSeries = LineGraphSeries(Array(basalLineArray.size) { i -> basalLineArray[i] }).also {
@@ -130,7 +130,7 @@ class PrepareBasalDataWorker(
                 @Suppress("DEPRECATION")
                 paint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
                 paint.pathEffect = DashPathEffect(floatArrayOf(2f, 4f), 0f)
-                paint.color = rh.gac(ctx, info.nightscout.core.ui.R.attr.basal)
+                paint.color = rh.gac(ctx, app.aaps.core.ui.R.attr.basal)
             })
         }
         data.overviewData.absoluteBasalGraphSeries = LineGraphSeries(Array(absoluteBasalLineArray.size) { i -> absoluteBasalLineArray[i] }).also {
@@ -138,7 +138,7 @@ class PrepareBasalDataWorker(
                 absolutePaint.style = Paint.Style.STROKE
                 @Suppress("DEPRECATION")
                 absolutePaint.strokeWidth = rh.getDisplayMetrics().scaledDensity * 2
-                absolutePaint.color = rh.gac(ctx, info.nightscout.core.ui.R.attr.basal)
+                absolutePaint.color = rh.gac(ctx, app.aaps.core.ui.R.attr.basal)
             })
         }
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, 100, null))

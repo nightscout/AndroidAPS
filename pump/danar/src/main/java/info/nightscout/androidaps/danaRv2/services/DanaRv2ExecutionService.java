@@ -193,7 +193,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 if (Math.abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds - large difference");
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.largetimediff), rh.gs(info.nightscout.pump.dana.R.string.largetimedifftitle), info.nightscout.core.ui.R.raw.error);
+                    uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.largetimediff), rh.gs(info.nightscout.pump.dana.R.string.largetimedifftitle), app.aaps.core.ui.R.raw.error);
 
                     //deinitialize pump
                     danaPump.reset();
@@ -348,7 +348,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             danaPump.readHistoryFrom = Math.min(danaPump.readHistoryFrom, carbtime - T.Companion.mins(1).msecs());
             if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.getFailed())
-                uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.carbs_store_error), rh.gs(info.nightscout.core.ui.R.string.error), info.nightscout.core.ui.R.raw.boluserror);
+                uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.carbs_store_error), rh.gs(app.aaps.core.ui.R.string.error), app.aaps.core.ui.R.raw.boluserror);
         }
 
         final long bolusStart = System.currentTimeMillis();

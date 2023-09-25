@@ -28,7 +28,7 @@ class StaticLabel(private val rh: ResourceHelper) : Element {
             LinearLayout(root.context).apply {
                 orientation = LinearLayout.HORIZONTAL
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                setBackgroundColor(rh.gac(context, info.nightscout.core.ui.R.attr.automationBackgroundColor))
+                setBackgroundColor(rh.gac(context, app.aaps.core.ui.R.attr.automationBackgroundColor))
                 addView(
                     TextView(root.context).apply {
                         text = label

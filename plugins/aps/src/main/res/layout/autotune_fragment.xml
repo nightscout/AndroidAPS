@@ -86,7 +86,7 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
-                        <info.nightscout.core.ui.elements.NumberPicker
+                        <app.aaps.core.ui.elements.NumberPicker
                             android:id="@+id/tune_days"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

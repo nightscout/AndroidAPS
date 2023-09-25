@@ -23,8 +23,8 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     private val disposable = CompositeDisposable()
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.stoptemptarget
-    override fun shortDescription(): String = rh.gs(info.nightscout.core.ui.R.string.stoptemptarget)
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.stoptemptarget
+    override fun shortDescription(): String = rh.gs(app.aaps.core.ui.R.string.stoptemptarget)
     override fun icon(): Int = R.drawable.ic_stop_24dp
 
     override fun doAction(callback: Callback) {
@@ -35,7 +35,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                        })
-        callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
+        callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun isValid(): Boolean = true

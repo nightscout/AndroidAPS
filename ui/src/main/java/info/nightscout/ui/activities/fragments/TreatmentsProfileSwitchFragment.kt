@@ -37,8 +37,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
@@ -173,10 +173,10 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
             holder.binding.date.visibility = newDay.toVisibility()
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(profileSwitch.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeString(profileSwitch.timestamp)
-            holder.binding.duration.text = rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
+            holder.binding.duration.text = rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text =
                 if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName(decimalFormatter) else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
-            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.activeColor))
+            if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.activeColor))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.clone.tag = profileSwitch
             holder.binding.name.tag = profileSwitch
@@ -211,8 +211,8 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                         val profileSealed = it.tag as ProfileSealed
                         OKDialog.showConfirmation(
                             activity,
-                            rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch),
-                            rh.gs(info.nightscout.core.ui.R.string.copytolocalprofile) + "\n" + profileSwitch.getCustomizedName(decimalFormatter) + "\n" + dateUtil.dateAndTimeString(profileSwitch.timestamp),
+                            rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
+                            rh.gs(app.aaps.core.ui.R.string.copytolocalprofile) + "\n" + profileSwitch.getCustomizedName(decimalFormatter) + "\n" + dateUtil.dateAndTimeString(profileSwitch.timestamp),
                             Runnable {
                                 uel.log(
                                     Action.PROFILE_SWITCH_CLONED, Sources.Treatments,
@@ -291,16 +291,16 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<ProfileSealed>): String {
         if (selectedItems.size() == 1) {
             val profileSwitch = selectedItems.valueAt(0)
-            return rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch) + ": " + profileSwitch.profileName + "\n" + rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(
+            return rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch) + ": " + profileSwitch.profileName + "\n" + rh.gs(app.aaps.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(
                 profileSwitch.timestamp
             )
         }
-        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<ProfileSealed>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, profileSwitch ->
                     uel.log(
                         Action.PROFILE_SWITCH_REMOVED, Sources.Treatments, profileSwitch.profileName,

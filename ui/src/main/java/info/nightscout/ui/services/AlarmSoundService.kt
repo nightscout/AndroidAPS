@@ -26,7 +26,7 @@ class AlarmSoundService : DaggerService() {
     @Inject lateinit var sp: SP
 
     private var player: MediaPlayer? = null
-    private var resourceId = info.nightscout.core.ui.R.raw.error
+    private var resourceId = app.aaps.core.ui.R.raw.error
 
     companion object {
 
@@ -73,7 +73,7 @@ class AlarmSoundService : DaggerService() {
 
         player?.let { if (it.isPlaying) it.stop() }
 
-        if (intent?.hasExtra(SOUND_ID) == true) resourceId = intent.getIntExtra(SOUND_ID, info.nightscout.core.ui.R.raw.error)
+        if (intent?.hasExtra(SOUND_ID) == true) resourceId = intent.getIntExtra(SOUND_ID, app.aaps.core.ui.R.raw.error)
         player = MediaPlayer()
         try {
             val afd = rh.openRawResourceFd(resourceId) ?: return START_NOT_STICKY

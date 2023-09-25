@@ -63,7 +63,7 @@ class Comparator(private val rh: ResourceHelper) : Element {
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, info.nightscout.core.ui.R.layout.spinner_centered, Compare.labels(rh)).apply {
+                adapter = ArrayAdapter(root.context, app.aaps.core.ui.R.layout.spinner_centered, Compare.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {

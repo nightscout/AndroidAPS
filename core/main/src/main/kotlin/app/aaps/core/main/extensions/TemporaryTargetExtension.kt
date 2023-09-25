@@ -22,4 +22,4 @@ fun TemporaryTarget.target(): Double =
 fun TemporaryTarget.friendlyDescription(units: GlucoseUnit, rh: ResourceHelper, profileUtil: ProfileUtil): String =
     profileUtil.toTargetRangeString(lowTarget, highTarget, GlucoseUnit.MGDL, units) +
         units.asText +
-        "@" + rh.gs(info.nightscout.core.ui.R.string.format_mins, TimeUnit.MILLISECONDS.toMinutes(duration)) + "(" + reason.text + ")"
+        "@" + rh.gs(app.aaps.core.ui.R.string.format_mins, TimeUnit.MILLISECONDS.toMinutes(duration)) + "(" + reason.text + ")"

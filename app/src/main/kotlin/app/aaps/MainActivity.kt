@@ -63,10 +63,10 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.core.ui.UIRunnable
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.locale.LocaleHelper
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.UIRunnable
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.locale.LocaleHelper
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.isRunningRealPumpTest
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -212,16 +212,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         message += "${rh.gs(app.aaps.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
                         if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.configuration.R.string.engineering_mode_enabled)}"
                         if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
-                        if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(info.nightscout.core.ui.R.string.fabric_upload_disabled)}"
-                        message += rh.gs(info.nightscout.core.ui.R.string.about_link_urls)
+                        if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
+                        message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
                         val messageSpanned = SpannableString(message)
                         Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                        MaterialAlertDialogBuilder(this@MainActivity, info.nightscout.core.ui.R.style.DialogTheme)
+                        MaterialAlertDialogBuilder(this@MainActivity, app.aaps.core.ui.R.style.DialogTheme)
                             .setTitle(rh.gs(R.string.app_name) + " " + BuildConfig.VERSION)
                             .setIcon(iconsProvider.getIcon())
                             .setMessage(messageSpanned)
-                            .setPositiveButton(rh.gs(info.nightscout.core.ui.R.string.ok), null)
-                            .setNeutralButton(rh.gs(info.nightscout.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
+                            .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok), null)
+                            .setNeutralButton(rh.gs(app.aaps.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
                                 startActivity(
                                     Intent(
                                         Intent.ACTION_VIEW,
@@ -356,7 +356,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 if (p.menuIcon != -1) {
                     menuItem.setIcon(p.menuIcon)
                 } else {
-                    menuItem.setIcon(info.nightscout.core.ui.R.drawable.ic_settings)
+                    menuItem.setIcon(app.aaps.core.ui.R.drawable.ic_settings)
                 }
                 menuItem.setOnMenuItemClickListener {
                     startActivity(
@@ -377,7 +377,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         if (sp.getBoolean(info.nightscout.plugins.R.string.key_short_tabtitles, false)) {
             binding.tabsNormal.visibility = View.GONE
             binding.tabsCompact.visibility = View.VISIBLE
-            binding.toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(info.nightscout.core.ui.R.dimen.compact_height).toInt())
+            binding.toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(app.aaps.core.ui.R.dimen.compact_height).toInt())
             TabLayoutMediator(binding.tabsCompact, binding.mainPager) { tab, position ->
                 tab.text = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(position).nameShort
             }.attach()
@@ -416,7 +416,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     private fun setDisabledMenuItemColorPluginPreferences() {
         if (pluginPreferencesMenuItem?.isEnabled == false) {
             val spanString = SpannableString(this.menu?.findItem(R.id.nav_plugin_preferences)?.title.toString())
-            spanString.setSpan(ForegroundColorSpan(rh.gac(info.nightscout.core.ui.R.attr.disabledTextColor)), 0, spanString.length, 0)
+            spanString.setSpan(ForegroundColorSpan(rh.gac(app.aaps.core.ui.R.attr.disabledTextColor)), 0, spanString.length, 0)
             this.menu?.findItem(R.id.nav_plugin_preferences)?.title = spanString
         }
     }
@@ -458,7 +458,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .replace(".org/", ":")
             .replace(".net/", ":")
         fabricPrivacy.firebaseAnalytics.setUserProperty("Mode", BuildConfig.APPLICATION_ID + "-" + closedLoopEnabled)
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Language", sp.getString(info.nightscout.core.ui.R.string.key_language, Locale.getDefault().language))
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Language", sp.getString(app.aaps.core.ui.R.string.key_language, Locale.getDefault().language))
         fabricPrivacy.firebaseAnalytics.setUserProperty("Version", BuildConfig.VERSION)
         fabricPrivacy.firebaseAnalytics.setUserProperty("HEAD", BuildConfig.HEAD)
         fabricPrivacy.firebaseAnalytics.setUserProperty("Remote", remote)
@@ -492,7 +492,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             val sn = activePlugin.activePump.serialNumber()
             sp.putString(info.nightscout.core.utils.R.string.key_master_password, cryptoUtil.hashPassword(sn))
             passwordReset.delete()
-            ToastUtils.okToast(context, context.getString(info.nightscout.core.ui.R.string.password_set))
+            ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
         }
     }
 }

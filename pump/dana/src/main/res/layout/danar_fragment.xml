@@ -660,7 +660,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <info.nightscout.core.ui.elements.SingleClickButton
+        <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/view_profile"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
@@ -673,7 +673,7 @@
             android:text="@string/view_profile"
             app:iconPadding="-4dp" />
 
-        <info.nightscout.core.ui.elements.SingleClickButton
+        <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/history"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
@@ -687,7 +687,7 @@
             app:iconPadding="-4dp"
             tools:ignore="TooManyViews" />
 
-        <info.nightscout.core.ui.elements.SingleClickButton
+        <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/stats"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"
@@ -700,7 +700,7 @@
             android:text="@string/stats"
             app:iconPadding="-4dp" />
 
-        <info.nightscout.core.ui.elements.SingleClickButton
+        <app.aaps.core.ui.elements.SingleClickButton
             android:id="@+id/user_options"
             style="@style/ButtonSmallFontStyle"
             android:layout_width="match_parent"

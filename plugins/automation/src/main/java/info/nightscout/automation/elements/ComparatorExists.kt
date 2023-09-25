@@ -16,8 +16,8 @@ class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Comp
 
         @get:StringRes val stringRes: Int
             get() = when (this) {
-                EXISTS -> info.nightscout.core.ui.R.string.exists
-                NOT_EXISTS -> info.nightscout.core.ui.R.string.notexists
+                EXISTS -> app.aaps.core.ui.R.string.exists
+                NOT_EXISTS -> app.aaps.core.ui.R.string.notexists
             }
 
         companion object {
@@ -33,7 +33,7 @@ class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Comp
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, info.nightscout.core.ui.R.layout.spinner_centered, Compare.labels(rh)).apply {
+                adapter = ArrayAdapter(root.context, app.aaps.core.ui.R.layout.spinner_centered, Compare.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {

@@ -29,7 +29,7 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.ui.databinding.ActivityTddStatsBinding
@@ -70,7 +70,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         binding = ActivityTddStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(info.nightscout.core.ui.R.string.tdd)
+        title = rh.gs(app.aaps.core.ui.R.string.tdd)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -96,27 +96,27 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         // add stats headers to tables
         binding.mainTable.addView(
             TableRow(this).also { trHead ->
-                trHead.setBackgroundColor(rh.gac(this, info.nightscout.core.ui.R.attr.tddHeaderBackground))
+                trHead.setBackgroundColor(rh.gac(this, app.aaps.core.ui.R.attr.tddHeaderBackground))
                 trHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 trHead.addView(TextView(this).also { labelDate ->
-                    labelDate.text = rh.gs(info.nightscout.core.ui.R.string.date)
-                    labelDate.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelDate.text = rh.gs(app.aaps.core.ui.R.string.date)
+                    labelDate.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
                 trHead.addView(TextView(this).also { labelBasalRate ->
-                    labelBasalRate.text = rh.gs(info.nightscout.core.ui.R.string.basalrate)
-                    labelBasalRate.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelBasalRate.text = rh.gs(app.aaps.core.ui.R.string.basalrate)
+                    labelBasalRate.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
                 trHead.addView(TextView(this).also { labelBolus ->
-                    labelBolus.text = rh.gs(info.nightscout.core.ui.R.string.bolus)
-                    labelBolus.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelBolus.text = rh.gs(app.aaps.core.ui.R.string.bolus)
+                    labelBolus.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
                 trHead.addView(TextView(this).also { labelTdd ->
-                    labelTdd.text = rh.gs(info.nightscout.core.ui.R.string.tdd)
-                    labelTdd.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelTdd.text = rh.gs(app.aaps.core.ui.R.string.tdd)
+                    labelTdd.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
                 trHead.addView(TextView(this).also { labelRatio ->
-                    labelRatio.text = rh.gs(info.nightscout.core.ui.R.string.ratio)
-                    labelRatio.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelRatio.text = rh.gs(app.aaps.core.ui.R.string.ratio)
+                    labelRatio.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
@@ -124,19 +124,19 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         // cumulative table
         binding.cumulativeTable.addView(
             TableRow(this).also { ctrHead ->
-                ctrHead.setBackgroundColor(rh.gac(this, info.nightscout.core.ui.R.attr.tddHeaderBackground))
+                ctrHead.setBackgroundColor(rh.gac(this, app.aaps.core.ui.R.attr.tddHeaderBackground))
                 ctrHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 ctrHead.addView(TextView(this).also { labelCumAmountDays ->
-                    labelCumAmountDays.text = rh.gs(info.nightscout.core.ui.R.string.amount_days)
-                    labelCumAmountDays.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelCumAmountDays.text = rh.gs(app.aaps.core.ui.R.string.amount_days)
+                    labelCumAmountDays.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
                 ctrHead.addView(TextView(this).also { labelCumTdd ->
-                    labelCumTdd.text = rh.gs(info.nightscout.core.ui.R.string.tdd)
-                    labelCumTdd.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelCumTdd.text = rh.gs(app.aaps.core.ui.R.string.tdd)
+                    labelCumTdd.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
                 ctrHead.addView(TextView(this).also { labelCumRatio ->
-                    labelCumRatio.text = rh.gs(info.nightscout.core.ui.R.string.ratio)
-                    labelCumRatio.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelCumRatio.text = rh.gs(app.aaps.core.ui.R.string.ratio)
+                    labelCumRatio.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
@@ -144,19 +144,19 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         // exponential table
         binding.expweightTable.addView(
             TableRow(this).also { etrHead ->
-                etrHead.setBackgroundColor(rh.gac(this, info.nightscout.core.ui.R.attr.tddHeaderBackground))
+                etrHead.setBackgroundColor(rh.gac(this, app.aaps.core.ui.R.attr.tddHeaderBackground))
                 etrHead.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 etrHead.addView(TextView(this).also { labelExpWeight ->
-                    labelExpWeight.text = rh.gs(info.nightscout.core.ui.R.string.weight)
-                    labelExpWeight.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelExpWeight.text = rh.gs(app.aaps.core.ui.R.string.weight)
+                    labelExpWeight.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
                 etrHead.addView(TextView(this).also { labelExpTdd ->
-                    labelExpTdd.text = rh.gs(info.nightscout.core.ui.R.string.tdd)
-                    labelExpTdd.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelExpTdd.text = rh.gs(app.aaps.core.ui.R.string.tdd)
+                    labelExpTdd.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
                 etrHead.addView(TextView(this).also { labelExpRatio ->
-                    labelExpRatio.text = rh.gs(info.nightscout.core.ui.R.string.ratio)
-                    labelExpRatio.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                    labelExpRatio.text = rh.gs(app.aaps.core.ui.R.string.ratio)
+                    labelExpRatio.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                 })
             }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
         )
@@ -165,7 +165,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
             binding.reload.visibility = View.GONE
             binding.connectionStatus.visibility = View.VISIBLE
             binding.message.visibility = View.VISIBLE
-            binding.message.text = rh.gs(info.nightscout.core.ui.R.string.warning_Message)
+            binding.message.text = rh.gs(app.aaps.core.ui.R.string.warning_Message)
             commandQueue.loadTDDs(object : Callback() {
                 override fun run() {
                     loadDataFromDB()
@@ -295,9 +295,9 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
                 // Create the table row
                 binding.mainTable.addView(
                     TableRow(this@TDDStatsActivity).also { tr ->
-                        if (i % 2 != 0) tr.setBackgroundColor(rh.gac(this, info.nightscout.core.ui.R.attr.tddHeaderBackground))
+                        if (i % 2 != 0) tr.setBackgroundColor(rh.gac(this, app.aaps.core.ui.R.attr.tddHeaderBackground))
                         if (dummies.contains(record))
-                            tr.setBackgroundColor(rh.gac(this, info.nightscout.core.ui.R.attr.dummyBackground))
+                            tr.setBackgroundColor(rh.gac(this, app.aaps.core.ui.R.attr.dummyBackground))
 
                         tr.id = 100 + i
                         tr.layoutParams = TableLayout.LayoutParams(
@@ -309,27 +309,27 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
                         tr.addView(TextView(this@TDDStatsActivity).also { labelDATE ->
                             labelDATE.id = 200 + i
                             labelDATE.text = df1.format(Date(record.timestamp))
-                            labelDATE.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                            labelDATE.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBASAL ->
                             labelBASAL.id = 300 + i
-                            labelBASAL.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.basalAmount)
-                            labelBASAL.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                            labelBASAL.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.basalAmount)
+                            labelBASAL.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelBOLUS ->
                             labelBOLUS.id = 400 + i
-                            labelBOLUS.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.bolusAmount)
-                            labelBOLUS.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                            labelBOLUS.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.bolusAmount)
+                            labelBOLUS.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelTDD ->
                             labelTDD.id = 500 + i
-                            labelTDD.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, tdd)
-                            labelTDD.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                            labelTDD.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd)
+                            labelTDD.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                         })
                         tr.addView(TextView(this@TDDStatsActivity).also { labelRATIO ->
                             labelRATIO.id = 600 + i
                             labelRATIO.text = (100 * tdd / magicNumber).roundToInt().toString() + "%"
-                            labelRATIO.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                            labelRATIO.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                         })
                     }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 )
@@ -348,7 +348,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
                 // Create the cumulative table row
                 binding.cumulativeTable.addView(
                     TableRow(this@TDDStatsActivity).also { ctr ->
-                        if (i % 2 == 0) ctr.setBackgroundColor(rh.gac(this, info.nightscout.core.ui.R.attr.tddHeaderBackground))
+                        if (i % 2 == 0) ctr.setBackgroundColor(rh.gac(this, app.aaps.core.ui.R.attr.tddHeaderBackground))
                         ctr.id = 700 + i
                         ctr.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
 
@@ -356,27 +356,27 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelDAYS ->
                             labelDAYS.id = 800 + i
                             labelDAYS.text = i.toString()
-                            labelDAYS.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                            labelDAYS.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                         })
 
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelCUMTDD ->
                             labelCUMTDD.id = 900 + i
-                            labelCUMTDD.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, sum / i)
-                            labelCUMTDD.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                            labelCUMTDD.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, sum / i)
+                            labelCUMTDD.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                         })
 
                         ctr.addView(TextView(this@TDDStatsActivity).also { labelCUMRATIO ->
                             labelCUMRATIO.id = 1000 + i
                             labelCUMRATIO.text = (100 * sum / i / magicNumber).roundToInt().toString() + "%"
-                            labelCUMRATIO.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                            labelCUMRATIO.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                         })
                     }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
                 )
             }
             if (isOldData(historyList) && activePlugin.activePump.pumpDescription.needsManualTDDLoad) {
                 binding.message.visibility = View.VISIBLE
-                binding.message.text = rh.gs(info.nightscout.core.ui.R.string.olddata_Message)
-            } else binding.mainTable.setBackgroundColor(rh.gac(this, info.nightscout.core.ui.R.attr.mainTableBackground))
+                binding.message.text = rh.gs(app.aaps.core.ui.R.string.olddata_Message)
+            } else binding.mainTable.setBackgroundColor(rh.gac(this, app.aaps.core.ui.R.attr.mainTableBackground))
             if (historyList.isNotEmpty() && df1.format(Date(historyList[0].timestamp)) == df1.format(Date())) {
                 //Today should not be included
                 historyList.removeAt(0)
@@ -400,7 +400,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
             // Create the exponential table row
             binding.expweightTable.addView(
                 TableRow(this@TDDStatsActivity).also { etr ->
-                    if (i % 2 != 0) etr.setBackgroundColor(rh.gac(this, info.nightscout.core.ui.R.attr.tddHeaderBackground))
+                    if (i % 2 != 0) etr.setBackgroundColor(rh.gac(this, app.aaps.core.ui.R.attr.tddHeaderBackground))
                     etr.id = 1100 + i
                     etr.layoutParams = TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
 
@@ -408,16 +408,16 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
                     etr.addView(TextView(this@TDDStatsActivity).also { labelWEIGHT ->
                         labelWEIGHT.id = 1200 + i
                         labelWEIGHT.text = "0.3\n0.5\n0.7"
-                        labelWEIGHT.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                        labelWEIGHT.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                     })
                     etr.addView(TextView(this@TDDStatsActivity).also { labelEXPTDD ->
                         labelEXPTDD.id = 1300 + i
                         labelEXPTDD.text = """
-                ${rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, weighted03)}
-                ${rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, weighted05)}
-                ${rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, weighted07)}
+                ${rh.gs(app.aaps.core.ui.R.string.format_insulin_units, weighted03)}
+                ${rh.gs(app.aaps.core.ui.R.string.format_insulin_units, weighted05)}
+                ${rh.gs(app.aaps.core.ui.R.string.format_insulin_units, weighted07)}
                 """.trimIndent()
-                        labelEXPTDD.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                        labelEXPTDD.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                     })
                     etr.addView(TextView(this@TDDStatsActivity).also { labelEXPRATIO ->
                         labelEXPRATIO.id = 1400 + i
@@ -426,7 +426,7 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
                 ${(100 * weighted05 / magicNumber).roundToInt()}%
                 ${(100 * weighted07 / magicNumber).roundToInt()}%
                 """.trimIndent()
-                        labelEXPRATIO.setTextColor(rh.gac(this, info.nightscout.core.ui.R.attr.defaultTextColor))
+                        labelEXPRATIO.setTextColor(rh.gac(this, app.aaps.core.ui.R.attr.defaultTextColor))
                     })
                 }, TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT)
             )

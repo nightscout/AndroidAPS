@@ -48,7 +48,7 @@ import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
@@ -204,7 +204,7 @@ class WizardDialog : DaggerDialogFragment() {
                 binding.okcancel.ok,
                 textWatcher
             )
-            binding.correctionUnit.text = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
+            binding.correctionUnit.text = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
         }
         binding.carbTimeInput.setParams(
             savedInstanceState?.getDouble("carb_time_input")
@@ -212,7 +212,7 @@ class WizardDialog : DaggerDialogFragment() {
         )
         handler.post { initDialog() }
         calculatedPercentage = sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
-        binding.percentUsed.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100))
+        binding.percentUsed.text = rh.gs(app.aaps.core.ui.R.string.format_percent, sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100))
         binding.percentUsed.visibility = (sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100) != 100 || usePercentage).toVisibility()
         // ok button
         binding.okcancel.ok.setOnClickListener {
@@ -264,7 +264,7 @@ class WizardDialog : DaggerDialogFragment() {
         binding.correctionPercent.setOnCheckedChangeListener { _, isChecked ->
             run {
                 sp.putBoolean(rh.gs(R.string.key_wizard_correction_percent), isChecked)
-                binding.correctionUnit.text = if (isChecked) "%" else rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
+                binding.correctionUnit.text = if (isChecked) "%" else rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
                 usePercentage = binding.correctionPercent.isChecked
                 if (usePercentage) {
                     binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
@@ -373,7 +373,7 @@ class WizardDialog : DaggerDialogFragment() {
         val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
 
         if (profile == null || profileStore == null) {
-            ToastUtils.errorToast(ctx, info.nightscout.core.ui.R.string.noprofile)
+            ToastUtils.errorToast(ctx, app.aaps.core.ui.R.string.noprofile)
             dismiss()
             return
         }
@@ -392,9 +392,9 @@ class WizardDialog : DaggerDialogFragment() {
             }
 
             val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
-            profileList.add(0, rh.gs(info.nightscout.core.ui.R.string.active))
+            profileList.add(0, rh.gs(app.aaps.core.ui.R.string.active))
             context?.let { context ->
-                binding.profileList.setAdapter(ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, profileList))
+                binding.profileList.setAdapter(ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, profileList))
                 binding.profileList.setText(profileList[0], false)
             }
 
@@ -407,7 +407,7 @@ class WizardDialog : DaggerDialogFragment() {
 
             binding.ttCheckbox.isEnabled = tempTarget is ValueWrapper.Existing
             binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
-            binding.iobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, -bolusIob.iob - basalIob.basaliob)
+            binding.iobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, -bolusIob.iob - basalIob.basaliob)
 
             calculateInsulin()
         }
@@ -418,7 +418,7 @@ class WizardDialog : DaggerDialogFragment() {
         val profileStore = activePlugin.activeProfileSource.profile ?: return // not initialized yet
         var profileName = binding.profileList.text.toString()
         val specificProfile: Profile?
-        if (profileName == rh.gs(info.nightscout.core.ui.R.string.active)) {
+        if (profileName == rh.gs(app.aaps.core.ui.R.string.active)) {
             specificProfile = profileFunction.getProfile()
             profileName = profileFunction.getProfileName()
         } else
@@ -482,18 +482,18 @@ class WizardDialog : DaggerDialogFragment() {
 
         wizard?.let { wizard ->
             binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(profileUtil.convertToMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
-            binding.bgInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromBG)
+            binding.bgInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.insulinFromBG)
 
             binding.carbs.text = rh.gs(R.string.format_carbs_ic, carbs.toDouble(), wizard.ic)
-            binding.carbsInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCarbs)
+            binding.carbsInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.insulinFromCarbs)
 
-            binding.iobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
+            binding.iobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
 
-            binding.correctionInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCorrection)
+            binding.correctionInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.insulinFromCorrection)
 
             // Superbolus
             binding.sb.text = if (binding.sbCheckbox.isChecked) rh.gs(R.string.two_hours) else ""
-            binding.sbInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromSuperBolus)
+            binding.sbInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.insulinFromSuperBolus)
 
             // Trend
             if (binding.bgTrendCheckbox.isChecked && wizard.glucoseStatus != null) {
@@ -503,12 +503,12 @@ class WizardDialog : DaggerDialogFragment() {
             } else {
                 binding.bgTrend.text = ""
             }
-            binding.bgTrendInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromTrend)
+            binding.bgTrendInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.insulinFromTrend)
 
             // COB
             if (binding.cobCheckbox.isChecked) {
                 binding.cob.text = rh.gs(R.string.format_cob_ic, cob, wizard.ic)
-                binding.cobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCOB)
+                binding.cobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.insulinFromCOB)
             } else {
                 binding.cob.text = ""
                 binding.cobInsulin.text = ""
@@ -516,19 +516,19 @@ class WizardDialog : DaggerDialogFragment() {
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
                 val insulinText =
-                    if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
-                        .formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
+                    if (wizard.calculatedTotalInsulin > 0.0) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
+                        .formatColor(context, rh, app.aaps.core.ui.R.attr.bolusColor) else ""
                 val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(app.aaps.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(
-                    context, rh, info.nightscout.core.ui.R.attr
+                    context, rh, app.aaps.core.ui.R.attr
                         .carbsColor
                 ) else ""
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))
                 binding.okcancel.ok.visibility = View.VISIBLE
             } else {
-                binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt()).formatColor(context, rh, info.nightscout.core.ui.R.attr.carbsColor))
+                binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.missing_carbs, wizard.carbsEquivalent.toInt()).formatColor(context, rh, app.aaps.core.ui.R.attr.carbsColor))
                 binding.okcancel.ok.visibility = View.INVISIBLE
             }
-            binding.percentUsed.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, wizard.percentageCorrection)
+            binding.percentUsed.text = rh.gs(app.aaps.core.ui.R.string.format_percent, wizard.percentageCorrection)
             calculatedPercentage = wizard.calculatedPercentage
             calculatedCorrection = wizard.calculatedCorrection
         }

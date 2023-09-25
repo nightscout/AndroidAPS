@@ -5,7 +5,7 @@ import android.content.Intent
 import android.provider.AlarmClock
 import app.aaps.annotations.OpenForTesting
 import info.nightscout.automation.R
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import javax.inject.Inject
 import javax.inject.Singleton
 

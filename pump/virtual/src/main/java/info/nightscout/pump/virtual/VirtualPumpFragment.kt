@@ -94,13 +94,13 @@ class VirtualPumpFragment : DaggerFragment() {
     private fun updateGui() {
         if (_binding == null) return
         val profile = profileFunction.getProfile() ?: return
-        binding.baseBasalRate.text = rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, virtualPumpPlugin.baseBasalRate)
+        binding.baseBasalRate.text = rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, virtualPumpPlugin.baseBasalRate)
         binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil, decimalFormatter)
             ?: ""
         binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter)
             ?: ""
-        binding.battery.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, virtualPumpPlugin.batteryPercent)
-        binding.reservoir.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, virtualPumpPlugin.reservoirInUnits.toDouble())
+        binding.battery.text = rh.gs(app.aaps.core.ui.R.string.format_percent, virtualPumpPlugin.batteryPercent)
+        binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, virtualPumpPlugin.reservoirInUnits.toDouble())
 
         virtualPumpPlugin.refreshConfiguration()
         val pumpType = virtualPumpPlugin.pumpType

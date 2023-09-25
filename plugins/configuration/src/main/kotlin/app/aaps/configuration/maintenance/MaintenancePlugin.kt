@@ -45,7 +45,7 @@ class MaintenancePlugin @Inject constructor(
         .fragmentClass(MaintenanceFragment::class.java.name)
         .alwaysVisible(false)
         .alwaysEnabled(true)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_maintenance)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_maintenance)
         .pluginName(R.string.maintenance)
         .shortName(R.string.maintenance_shortname)
         .preferencesId(R.xml.pref_maintenance)

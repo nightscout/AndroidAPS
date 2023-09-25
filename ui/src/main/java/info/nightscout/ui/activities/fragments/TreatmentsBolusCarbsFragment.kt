@@ -34,8 +34,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import com.google.gson.Gson
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -226,24 +226,24 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             holder.binding.bolusLayout.visibility = (ml.bolus != null && (ml.bolus.isValid || showInvalidated)).toVisibility()
             ml.bolus?.let { bolus ->
                 holder.binding.bolusTime.text = dateUtil.timeString(bolus.timestamp)
-                holder.binding.insulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, bolus.amount)
+                holder.binding.insulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolus.amount)
                 holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = bolus.interfaceIDs.isPumpHistory().toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 if (iob.iobContrib > 0.01) {
-                    holder.binding.iob.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.activeColor))
-                    holder.binding.iob.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, iob.iobContrib)
+                    holder.binding.iob.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.activeColor))
+                    holder.binding.iob.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, iob.iobContrib)
                     holder.binding.iobLabel.visibility = View.VISIBLE
                     holder.binding.iob.visibility = View.VISIBLE
                 } else {
-                    holder.binding.iob.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, 0.0)
+                    holder.binding.iob.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, 0.0)
                     holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
                     holder.binding.iobLabel.visibility = View.GONE
                     holder.binding.iob.visibility = View.GONE
                 }
                 if (bolus.timestamp > dateUtil.now())
-                    holder.binding.date.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.scheduledColor)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
+                    holder.binding.date.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.scheduledColor)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
                         Bolus.Type.SMB     -> "SMB"
@@ -267,7 +267,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             ml.carbs?.let { carbs ->
                 holder.binding.carbsTime.text = dateUtil.timeString(carbs.timestamp)
                 holder.binding.carbs.text = rh.gs(app.aaps.core.main.R.string.format_carbs, carbs.amount.toInt())
-                holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
+                holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
                 holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.carbsPump.visibility = carbs.interfaceIDs.isPumpHistory().toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()
@@ -357,7 +357,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
 
     private fun deleteFutureTreatments() {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.overview_treatment_label), rh.gs(info.nightscout.core.ui.R.string.delete_future_treatments) + "?", Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.overview_treatment_label), rh.gs(app.aaps.core.ui.R.string.delete_future_treatments) + "?", Runnable {
                 uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
                 disposable += repository
                     .getBolusesDataFromTime(dateUtil.now(), false)
@@ -415,19 +415,19 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             val mealLink = selectedItems.valueAt(0)
             val bolus = mealLink.bolus
             if (bolus != null)
-                return rh.gs(info.nightscout.core.ui.R.string.configbuilder_insulin) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, bolus.amount) + "\n" +
-                    rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
+                return rh.gs(app.aaps.core.ui.R.string.configbuilder_insulin) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolus.amount) + "\n" +
+                    rh.gs(app.aaps.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
             val carbs = mealLink.carbs
             if (carbs != null)
-                return rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.main.R.string.format_carbs, carbs.amount.toInt()) + "\n" +
-                    rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(carbs.timestamp)
+                return rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.main.R.string.format_carbs, carbs.amount.toInt()) + "\n" +
+                    rh.gs(app.aaps.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(carbs.timestamp)
         }
-        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<MealLink>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, ml ->
                     ml.bolus?.let { bolus ->
                         uel.log(

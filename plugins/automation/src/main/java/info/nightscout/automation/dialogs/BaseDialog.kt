@@ -37,7 +37,7 @@ abstract class BaseDialog : DaggerDialogFragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        (view.findViewById(info.nightscout.core.ui.R.id.ok) as Button?)?.setOnClickListener {
+        (view.findViewById(app.aaps.core.ui.R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {
                 if (okClicked.get()) {
                     aapsLogger.warn(LTag.UI, "guarding: ok already clicked for dialog: ${this.javaClass.simpleName}")
@@ -53,7 +53,7 @@ abstract class BaseDialog : DaggerDialogFragment() {
                 }
             }
         }
-        (view.findViewById(info.nightscout.core.ui.R.id.cancel) as Button?)?.setOnClickListener {
+        (view.findViewById(app.aaps.core.ui.R.id.cancel) as Button?)?.setOnClickListener {
             aapsLogger.debug(LTag.UI, "Cancel pressed for dialog: ${this.javaClass.simpleName}")
             dismiss()
         }

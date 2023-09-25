@@ -40,7 +40,7 @@ class SensitivityAAPSPlugin @Inject constructor(
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_generic_icon)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_generic_icon)
         .pluginName(R.string.sensitivity_aaps)
         .shortName(R.string.sensitivity_shortname)
         .preferencesId(R.xml.pref_absorption_aaps)

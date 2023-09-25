@@ -76,7 +76,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.glucose
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.glucose
 
     override fun friendlyDescription(): String {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
@@ -91,7 +91,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, info.nightscout.core.ui.R.string.glucose, this))
+            .add(StaticLabel(rh, app.aaps.core.ui.R.string.glucose, this))
             .add(comparator)
             .add(LabelWithElement(rh, rh.gs(R.string.glucose_u, bg.units), "", bg))
             .build(root)

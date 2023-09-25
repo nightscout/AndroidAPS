@@ -32,15 +32,15 @@ class TrendCalculatorImpl @Inject constructor(
 
     override fun getTrendDescription(glucoseValue: GlucoseValue?): String =
         when (getTrendArrow(glucoseValue)) {
-            GlucoseValue.TrendArrow.DOUBLE_DOWN     -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_double_down)
-            GlucoseValue.TrendArrow.SINGLE_DOWN     -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_single_down)
-            GlucoseValue.TrendArrow.FORTY_FIVE_DOWN -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_forty_five_down)
-            GlucoseValue.TrendArrow.FLAT            -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_flat)
-            GlucoseValue.TrendArrow.FORTY_FIVE_UP   -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_forty_five_up)
-            GlucoseValue.TrendArrow.SINGLE_UP       -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_single_up)
-            GlucoseValue.TrendArrow.DOUBLE_UP       -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_double_up)
-            GlucoseValue.TrendArrow.NONE            -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_none)
-            else                                    -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_unknown)
+            GlucoseValue.TrendArrow.DOUBLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_double_down)
+            GlucoseValue.TrendArrow.SINGLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_single_down)
+            GlucoseValue.TrendArrow.FORTY_FIVE_DOWN -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_forty_five_down)
+            GlucoseValue.TrendArrow.FLAT            -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_flat)
+            GlucoseValue.TrendArrow.FORTY_FIVE_UP   -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_forty_five_up)
+            GlucoseValue.TrendArrow.SINGLE_UP       -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_single_up)
+            GlucoseValue.TrendArrow.DOUBLE_UP       -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_double_up)
+            GlucoseValue.TrendArrow.NONE            -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_none)
+            else                                    -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_unknown)
         }
 
     private fun calculateDirection(glucoseValue: InMemoryGlucoseValue): GlucoseValue.TrendArrow {
@@ -85,15 +85,15 @@ class TrendCalculatorImpl @Inject constructor(
 
     override fun getTrendDescription(autosensDataStore: AutosensDataStore): String {
         return when (getTrendArrow(autosensDataStore)) {
-            GlucoseValue.TrendArrow.DOUBLE_DOWN     -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_double_down)
-            GlucoseValue.TrendArrow.SINGLE_DOWN     -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_single_down)
-            GlucoseValue.TrendArrow.FORTY_FIVE_DOWN -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_forty_five_down)
-            GlucoseValue.TrendArrow.FLAT            -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_flat)
-            GlucoseValue.TrendArrow.FORTY_FIVE_UP   -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_forty_five_up)
-            GlucoseValue.TrendArrow.SINGLE_UP       -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_single_up)
-            GlucoseValue.TrendArrow.DOUBLE_UP       -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_double_up)
-            GlucoseValue.TrendArrow.NONE            -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_none)
-            else                                    -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_unknown)
+            GlucoseValue.TrendArrow.DOUBLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_double_down)
+            GlucoseValue.TrendArrow.SINGLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_single_down)
+            GlucoseValue.TrendArrow.FORTY_FIVE_DOWN -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_forty_five_down)
+            GlucoseValue.TrendArrow.FLAT            -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_flat)
+            GlucoseValue.TrendArrow.FORTY_FIVE_UP   -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_forty_five_up)
+            GlucoseValue.TrendArrow.SINGLE_UP       -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_single_up)
+            GlucoseValue.TrendArrow.DOUBLE_UP       -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_double_up)
+            GlucoseValue.TrendArrow.NONE            -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_none)
+            else                                    -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_unknown)
         }
     }
 

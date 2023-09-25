@@ -15,7 +15,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.ui.UiInteraction
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.databinding.DanarUserOptionsActivityBinding
@@ -162,7 +162,7 @@ class DanaUserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), info.nightscout.core.ui.R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), app.aaps.core.ui.R.raw.boluserror)
                 }
             }
         })

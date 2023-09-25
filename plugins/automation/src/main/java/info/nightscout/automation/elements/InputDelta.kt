@@ -9,7 +9,7 @@ import android.widget.Spinner
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.automation.R
-import info.nightscout.core.ui.elements.NumberPicker
+import app.aaps.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
 class InputDelta(private val rh: ResourceHelper) : Element {
@@ -64,7 +64,7 @@ class InputDelta(private val rh: ResourceHelper) : Element {
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, info.nightscout.core.ui.R.layout.spinner_centered, DeltaType.labels(rh)).apply {
+                adapter = ArrayAdapter(root.context, app.aaps.core.ui.R.layout.spinner_centered, DeltaType.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {

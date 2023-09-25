@@ -24,7 +24,7 @@ import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.comm.ManufacturerData
 import info.nightscout.pump.medtrum.comm.ReadDataPacket
 import info.nightscout.pump.medtrum.comm.WriteCommandPackets
@@ -95,7 +95,7 @@ class BLEComm @Inject internal constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permissions")
             return false
         }
@@ -124,7 +124,7 @@ class BLEComm @Inject internal constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }

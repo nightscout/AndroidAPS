@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.resources.ResourceHelper
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumActivateCompleteBinding
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel

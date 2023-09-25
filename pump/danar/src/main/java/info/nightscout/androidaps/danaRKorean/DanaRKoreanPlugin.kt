@@ -167,7 +167,7 @@ class DanaRKoreanPlugin @Inject constructor(
                     t.insulin,
                     danaPump.bolusStartErrorCode
                 )
-            ) else result.comment(info.nightscout.core.ui.R.string.ok)
+            ) else result.comment(app.aaps.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             detailedBolusInfo.insulin = t.insulin
             detailedBolusInfo.timestamp = dateUtil.now()
@@ -182,7 +182,7 @@ class DanaRKoreanPlugin @Inject constructor(
             result
         } else {
             val result = PumpEnactResult(injector)
-            result.success(false).bolusDelivered(0.0).comment(info.nightscout.core.ui.R.string.invalid_input)
+            result.success(false).bolusDelivered(0.0).comment(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }
@@ -308,7 +308,7 @@ class DanaRKoreanPlugin @Inject constructor(
             return cancelExtendedBolus()
         }
         val result = PumpEnactResult(injector)
-        result.success(true).enacted(false).comment(info.nightscout.core.ui.R.string.ok).isTempCancel(true)
+        result.success(true).enacted(false).comment(app.aaps.core.ui.R.string.ok).isTempCancel(true)
         return result
     }
 
@@ -328,7 +328,7 @@ class DanaRKoreanPlugin @Inject constructor(
                 result.success(true).enacted(true).isTempCancel(true)
             } else result.success(false).enacted(false).isTempCancel(true)
         } else {
-            result.success(true).isTempCancel(true).comment(info.nightscout.core.ui.R.string.ok)
+            result.success(true).isTempCancel(true).comment(app.aaps.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
         }
         return result

@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.WearFragmentBinding
 import info.nightscout.plugins.general.wear.activities.CwfInfosActivity

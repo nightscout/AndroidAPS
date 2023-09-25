@@ -14,8 +14,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
@@ -159,7 +159,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), info.nightscout.core.ui.R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), app.aaps.core.ui.R.raw.boluserror)
                 }
             }
         })
@@ -172,7 +172,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_vibrate))
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_silent))
         context.let { context ->
-            val adapterCategories = ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, categories)
+            val adapterCategories = ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, categories)
             binding.beepAndAlarm.adapter = adapterCategories
         }
     }
@@ -183,7 +183,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_middle))
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_high))
         context.let { context ->
-            val adapterCategories = ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, categories)
+            val adapterCategories = ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, categories)
             binding.alarmIntesity.adapter = adapterCategories
         }
     }

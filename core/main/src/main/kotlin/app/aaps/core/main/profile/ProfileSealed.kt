@@ -112,21 +112,21 @@ sealed class ProfileSealed(
                     if (sendNotifications && config.APS) {
                         val notification = Notification(
                             Notification.BASAL_PROFILE_NOT_ALIGNED_TO_HOURS,
-                            rh.gs(info.nightscout.core.ui.R.string.basalprofilenotaligned, from),
+                            rh.gs(app.aaps.core.ui.R.string.basalprofilenotaligned, from),
                             Notification.NORMAL
                         )
                         rxBus.send(EventNewNotification(notification))
                     }
                     validityCheck.isValid = false
                     validityCheck.reasons.add(
-                        rh.gs(info.nightscout.core.ui.R.string.basalprofilenotaligned, from)
+                        rh.gs(app.aaps.core.ui.R.string.basalprofilenotaligned, from)
                     )
                     break
                 }
             }
             if (!hardLimits.isInRange(basalAmount, 0.01, hardLimits.maxBasal())) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.basal_value), basalAmount))
+                validityCheck.reasons.add(rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.basal_value), basalAmount))
                 break
             }
             // Check for minimal basal value
@@ -134,28 +134,28 @@ sealed class ProfileSealed(
                 basal.amount = description.basalMinimumRate
                 if (sendNotifications) sendBelowMinimumNotification(from, rxBus, rh)
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(info.nightscout.core.ui.R.string.minimalbasalvaluereplaced, from))
+                validityCheck.reasons.add(rh.gs(app.aaps.core.ui.R.string.minimalbasalvaluereplaced, from))
                 break
             } else if (basalAmount > description.basalMaximumRate) {
                 basal.amount = description.basalMaximumRate
                 if (sendNotifications) sendAboveMaximumNotification(from, rxBus, rh)
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(info.nightscout.core.ui.R.string.maximumbasalvaluereplaced, from))
+                validityCheck.reasons.add(rh.gs(app.aaps.core.ui.R.string.maximumbasalvaluereplaced, from))
                 break
             }
         }
 
         if (!hardLimits.isInRange(dia, hardLimits.minDia(), hardLimits.maxDia())) {
             validityCheck.isValid = false
-            validityCheck.reasons.add(rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.profile_dia), dia))
+            validityCheck.reasons.add(rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.profile_dia), dia))
         }
         for (ic in icBlocks)
             if (!hardLimits.isInRange(ic.amount * 100.0 / percentage, hardLimits.minIC(), hardLimits.maxIC())) {
                 validityCheck.isValid = false
                 validityCheck.reasons.add(
                     rh.gs(
-                        info.nightscout.core.ui.R.string.value_out_of_hard_limits,
-                        rh.gs(info.nightscout.core.ui.R.string.profile_carbs_ratio_value),
+                        app.aaps.core.ui.R.string.value_out_of_hard_limits,
+                        rh.gs(app.aaps.core.ui.R.string.profile_carbs_ratio_value),
                         ic.amount * 100.0 / percentage
                     )
                 )
@@ -166,8 +166,8 @@ sealed class ProfileSealed(
                 validityCheck.isValid = false
                 validityCheck.reasons.add(
                     rh.gs(
-                        info.nightscout.core.ui.R.string.value_out_of_hard_limits,
-                        rh.gs(info.nightscout.core.ui.R.string.profile_sensitivity_value),
+                        app.aaps.core.ui.R.string.value_out_of_hard_limits,
+                        rh.gs(app.aaps.core.ui.R.string.profile_sensitivity_value),
                         isf.amount * 100.0 / percentage
                     )
                 )
@@ -181,7 +181,7 @@ sealed class ProfileSealed(
                 )
             ) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.profile_low_target), target.lowTarget))
+                validityCheck.reasons.add(rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.profile_low_target), target.lowTarget))
                 break
             }
             if (!hardLimits.isInRange(
@@ -191,7 +191,7 @@ sealed class ProfileSealed(
                 )
             ) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.profile_high_target), target.highTarget))
+                validityCheck.reasons.add(rh.gs(app.aaps.core.ui.R.string.value_out_of_hard_limits, rh.gs(app.aaps.core.ui.R.string.profile_high_target), target.highTarget))
                 break
             }
         }
@@ -199,11 +199,11 @@ sealed class ProfileSealed(
     }
 
     protected open fun sendBelowMinimumNotification(from: String, rxBus: RxBus, rh: ResourceHelper) {
-        rxBus.send(EventNewNotification(Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, rh.gs(info.nightscout.core.ui.R.string.minimalbasalvaluereplaced, from), Notification.NORMAL)))
+        rxBus.send(EventNewNotification(Notification(Notification.MINIMAL_BASAL_VALUE_REPLACED, rh.gs(app.aaps.core.ui.R.string.minimalbasalvaluereplaced, from), Notification.NORMAL)))
     }
 
     protected open fun sendAboveMaximumNotification(from: String, rxBus: RxBus, rh: ResourceHelper) {
-        rxBus.send(EventNewNotification(Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, rh.gs(info.nightscout.core.ui.R.string.maximumbasalvaluereplaced, from), Notification.NORMAL)))
+        rxBus.send(EventNewNotification(Notification(Notification.MAXIMUM_BASAL_VALUE_REPLACED, rh.gs(app.aaps.core.ui.R.string.maximumbasalvaluereplaced, from), Notification.NORMAL)))
     }
 
     override val units: GlucoseUnit
@@ -255,13 +255,13 @@ sealed class ProfileSealed(
     override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
 
     override fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(info.nightscout.core.ui.R.string.profile_carbs_per_unit), dateUtil)
+        getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit), dateUtil)
 
     override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + rh.gs(info.nightscout.core.ui.R.string.profile_per_unit), dateUtil)
+        getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + rh.gs(app.aaps.core.ui.R.string.profile_per_unit), dateUtil)
 
     override fun getBasalList(rh: ResourceHelper, dateUtil: DateUtil): String =
-        getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), rh.gs(info.nightscout.core.ui.R.string.profile_ins_units_per_hour), dateUtil)
+        getValuesList(basalBlocks, percentage / 100.0, DecimalFormat("0.00"), rh.gs(app.aaps.core.ui.R.string.profile_ins_units_per_hour), dateUtil)
 
     override fun getTargetList(rh: ResourceHelper, dateUtil: DateUtil): String = getTargetValuesList(targetBlocks, DecimalFormat("0.0"), units.asText, dateUtil)
 

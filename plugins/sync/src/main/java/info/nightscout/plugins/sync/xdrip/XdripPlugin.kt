@@ -45,7 +45,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.extensions.toJson
@@ -174,7 +174,7 @@ class XdripPlugin @Inject constructor(
             }
             return HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", info.nightscout.core.ui.R.raw.error)
+            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", app.aaps.core.ui.R.raw.error)
         }
         return HtmlHelper.fromHtml("")
     }
@@ -245,7 +245,7 @@ class XdripPlugin @Inject constructor(
         //IOB
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-        status.append(decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)).append(rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname))
+        status.append(decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)).append(rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname))
         if (sp.getBoolean(R.string.key_xdrip_status_detailed_iob, true))
             status.append("(")
                 .append(decimalFormatter.to2Decimal(bolusIob.iob))

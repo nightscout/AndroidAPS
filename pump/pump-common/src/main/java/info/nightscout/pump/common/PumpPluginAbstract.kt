@@ -307,7 +307,7 @@ abstract class PumpPluginAbstract protected constructor(
             if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input")
-                PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).comment(info.nightscout.core.ui.R.string.invalid_input)
+                PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).comment(app.aaps.core.ui.R.string.invalid_input)
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)

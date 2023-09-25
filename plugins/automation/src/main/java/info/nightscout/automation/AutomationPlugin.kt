@@ -226,19 +226,19 @@ class AutomationPlugin @Inject constructor(
         var commonEventsEnabled = true
         if (loop.isSuspended || !(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
-            executionLog.add(rh.gs(info.nightscout.core.ui.R.string.loopisdisabled))
+            executionLog.add(rh.gs(app.aaps.core.ui.R.string.loopisdisabled))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
         if (loop.isDisconnected || !(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop disconnected")
-            executionLog.add(rh.gs(info.nightscout.core.ui.R.string.disconnected))
+            executionLog.add(rh.gs(app.aaps.core.ui.R.string.disconnected))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
         if (activePlugin.activePump.isSuspended()) {
             aapsLogger.debug(LTag.AUTOMATION, "Pump suspended")
-            executionLog.add(rh.gs(info.nightscout.core.ui.R.string.waitingforpump))
+            executionLog.add(rh.gs(app.aaps.core.ui.R.string.waitingforpump))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
@@ -425,7 +425,7 @@ class AutomationPlugin @Inject constructor(
      */
     override fun scheduleAutomationEventEatReminder() {
         val event = AutomationEventObject(injector).apply {
-            title = rh.gs(info.nightscout.core.ui.R.string.bolus_advisor)
+            title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -482,14 +482,14 @@ class AutomationPlugin @Inject constructor(
      */
     override fun removeAutomationEventEatReminder() {
         val event = AutomationEventObject(injector).apply {
-            title = rh.gs(info.nightscout.core.ui.R.string.bolus_advisor)
+            title = rh.gs(app.aaps.core.ui.R.string.bolus_advisor)
         }
         removeIfExists(event)
     }
 
     override fun scheduleAutomationEventBolusReminder() {
         val event = AutomationEventObject(injector).apply {
-            title = rh.gs(info.nightscout.core.ui.R.string.bolus_reminder)
+            title = rh.gs(app.aaps.core.ui.R.string.bolus_reminder)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -512,7 +512,7 @@ class AutomationPlugin @Inject constructor(
 
     override fun removeAutomationEventBolusReminder() {
         val event = AutomationEventObject(injector).apply {
-            title = rh.gs(info.nightscout.core.ui.R.string.bolus_reminder)
+            title = rh.gs(app.aaps.core.ui.R.string.bolus_reminder)
         }
         removeIfExists(event)
     }

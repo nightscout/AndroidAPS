@@ -71,7 +71,7 @@ class ProfileFunctionImpl @Inject constructor(
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
 
     private fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
-        var profileName = rh.gs(info.nightscout.core.ui.R.string.no_profile_set)
+        var profileName = rh.gs(app.aaps.core.ui.R.string.no_profile_set)
 
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
         if (profileSwitch is ValueWrapper.Existing) {
@@ -181,7 +181,7 @@ class ProfileFunctionImpl @Inject constructor(
         val profileStore = activePlugin.activeProfileSource.profile ?: return false
         val ps = buildProfileSwitch(profileStore, profile.profileName, durationInMinutes, percentage, 0, dateUtil.now()) ?: return false
         val validity = ProfileSealed.PS(ps).isValid(
-            rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch),
+            rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch),
             activePlugin.activePump,
             config,
             rh,

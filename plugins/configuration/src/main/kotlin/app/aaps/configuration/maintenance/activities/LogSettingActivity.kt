@@ -10,7 +10,7 @@ import app.aaps.configuration.databinding.ActivityLogsettingBinding
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LogElement
 import app.aaps.core.interfaces.resources.ResourceHelper
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import javax.inject.Inject
 
 class LogSettingActivity : TranslatedDaggerAppCompatActivity() {

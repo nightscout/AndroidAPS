@@ -25,8 +25,8 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.disableloop
-    override fun shortDescription(): String = rh.gs(info.nightscout.core.ui.R.string.disableloop)
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.disableloop
+    override fun shortDescription(): String = rh.gs(app.aaps.core.ui.R.string.disableloop)
     @DrawableRes override fun icon(): Int = R.drawable.ic_stop_24dp
 
     override fun doAction(callback: Callback) {

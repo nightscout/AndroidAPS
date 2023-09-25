@@ -41,7 +41,7 @@
                 android:padding="10dip"
                 app:columnCount="2">
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/profile_switch"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -56,7 +56,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="0" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/temp_target"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -71,7 +71,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="0" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/set_temp_basal"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -86,7 +86,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="1" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/cancel_temp_basal"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -102,7 +102,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="1" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/extended_bolus"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -117,7 +117,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="1" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/extended_bolus_cancel"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -188,7 +188,7 @@
                 android:padding="10dip"
                 app:columnCount="2">
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/bg_check"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -203,7 +203,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="2" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/fill"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -218,7 +218,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="2" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/cgm_sensor_insert"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -233,7 +233,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="3" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/pump_battery_change"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -248,7 +248,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="3" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/note"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -263,7 +263,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="4" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/exercise"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -278,7 +278,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="4" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/announcement"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -293,7 +293,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="5" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/question"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -341,7 +341,7 @@
                 android:padding="10dip"
                 app:columnCount="2">
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/history_browser"
                     style="@style/GrayButton"
                     android:layout_width="0dp"
@@ -356,7 +356,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="6" />
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/tdd_stats"
                     style="@style/GrayButton"
                     android:layout_width="0dp"

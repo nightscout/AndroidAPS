@@ -51,7 +51,7 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun friendlyNameTest() {
-        Assertions.assertEquals(info.nightscout.core.ui.R.string.time, TriggerTime(injector).friendlyName())
+        Assertions.assertEquals(app.aaps.core.ui.R.string.time, TriggerTime(injector).friendlyName())
     }
 
     @Test

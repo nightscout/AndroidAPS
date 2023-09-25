@@ -30,7 +30,7 @@ public class ExceptionTranslator {
     static {
         TABLE.put(ConnectionFailedException.class, R.string.connection_failed);
         TABLE.put(ConnectionLostException.class, R.string.connection_lost);
-        TABLE.put(DisconnectedException.class, info.nightscout.core.ui.R.string.disconnected);
+        TABLE.put(DisconnectedException.class, app.aaps.core.ui.R.string.disconnected);
         TABLE.put(SatlPairingRejectedException.class, R.string.pairing_rejected);
         TABLE.put(SocketCreationFailedException.class, R.string.socket_creation_failed);
         TABLE.put(TimeoutException.class, R.string.timeout);

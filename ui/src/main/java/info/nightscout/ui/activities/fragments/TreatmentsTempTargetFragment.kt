@@ -35,8 +35,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.Translator
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action
@@ -165,14 +165,14 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
             holder.binding.date.visibility = newDay.toVisibility()
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempTarget.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end)
-            holder.binding.duration.text = rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(tempTarget.duration).mins())
+            holder.binding.duration.text = rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units, decimalFormatter)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units, decimalFormatter)
             holder.binding.reason.text = translator.translate(tempTarget.reason)
             holder.binding.time.setTextColor(
                 when {
-                    tempTarget.id == currentlyActiveTarget?.id -> rh.gac(context, info.nightscout.core.ui.R.attr.activeColor)
-                    tempTarget.timestamp > dateUtil.now()      -> rh.gac(context, info.nightscout.core.ui.R.attr.scheduledColor)
+                    tempTarget.id == currentlyActiveTarget?.id -> rh.gac(context, app.aaps.core.ui.R.attr.activeColor)
+                    tempTarget.timestamp > dateUtil.now()      -> rh.gac(context, app.aaps.core.ui.R.attr.scheduledColor)
                     else                                       -> holder.binding.reasonColon.currentTextColor
                 }
             )
@@ -224,15 +224,15 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<TemporaryTarget>): String {
         if (selectedItems.size() == 1) {
             val tempTarget = selectedItems.valueAt(0)
-            return "${rh.gs(info.nightscout.core.ui.R.string.temporary_target)}: ${tempTarget.friendlyDescription(profileUtil.units, rh, profileUtil)}\n" +
+            return "${rh.gs(app.aaps.core.ui.R.string.temporary_target)}: ${tempTarget.friendlyDescription(profileUtil.units, rh, profileUtil)}\n" +
                 dateUtil.dateAndTimeString(tempTarget.timestamp)
         }
-        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<TemporaryTarget>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, tempTarget ->
                     uel.log(
                         Action.TT_REMOVED, Sources.Treatments,

@@ -23,8 +23,8 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
 
-    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.enableloop
-    override fun shortDescription(): String = rh.gs(info.nightscout.core.ui.R.string.enableloop)
+    override fun friendlyName(): Int = app.aaps.core.ui.R.string.enableloop
+    override fun shortDescription(): String = rh.gs(app.aaps.core.ui.R.string.enableloop)
     @DrawableRes override fun icon(): Int = R.drawable.ic_play_circle_outline_24dp
 
     override fun doAction(callback: Callback) {
@@ -33,7 +33,7 @@ class ActionLoopEnable(injector: HasAndroidInjector) : Action(injector) {
             configBuilder.storeSettings("ActionLoopEnable")
             rxBus.send(EventRefreshOverview("ActionLoopEnable"))
             uel.log(UserEntry.Action.LOOP_ENABLED, Sources.Automation, title)
-            callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyenabled)).run()
         }

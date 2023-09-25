@@ -30,7 +30,7 @@ import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import javax.inject.Inject
 
 class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
@@ -104,11 +104,11 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
                 author.text = rh.gs(CWF_AUTHOR.label, metadata[CWF_AUTHOR] ?: "")
                 createdAt.text = rh.gs(CWF_CREATED_AT.label, metadata[CWF_CREATED_AT] ?: "")
                 cwfVersion.text = rh.gs(CWF_VERSION.label, metadata[CWF_VERSION] ?: "")
-                val colorAttr = if (checkCustomVersion(metadata)) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
+                val colorAttr = if (checkCustomVersion(metadata)) app.aaps.core.ui.R.attr.metadataTextOkColor else app.aaps.core.ui.R.attr.metadataTextWarningColor
                 cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
                 val prefExisting = metadata.keys.any { it.isPref }
                 val prefSetting = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
-                val prefColor = if (prefSetting) info.nightscout.core.ui.R.attr.metadataTextWarningColor else info.nightscout.core.ui.R.attr.importListFileNameColor
+                val prefColor = if (prefSetting) app.aaps.core.ui.R.attr.metadataTextWarningColor else app.aaps.core.ui.R.attr.importListFileNameColor
                 prefWarning.visibility = (prefExisting && prefSetting).toVisibility()
                 prefInfo.visibility = (prefExisting && !prefSetting).toVisibility()
                 cwfPrefNumber.text = "${metadata.count { it.key.isPref }}"

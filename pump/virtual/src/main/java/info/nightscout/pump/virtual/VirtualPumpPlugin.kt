@@ -72,7 +72,7 @@ open class VirtualPumpPlugin @Inject constructor(
         .mainType(PluginType.PUMP)
         .fragmentClass(VirtualPumpFragment::class.java.name)
         .pluginIcon(app.aaps.core.main.R.drawable.ic_virtual_pump)
-        .pluginName(info.nightscout.core.ui.R.string.virtual_pump)
+        .pluginName(app.aaps.core.ui.R.string.virtual_pump)
         .shortName(R.string.virtual_pump_shortname)
         .preferencesId(R.xml.pref_virtual_pump)
         .description(R.string.description_pump_virtual)
@@ -160,7 +160,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         lastDataTime = System.currentTimeMillis()
-        rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)))
+        rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)))
         // Do nothing here. we are using database profile
         return PumpEnactResult(injector).success(true).enacted(true)
     }
@@ -185,13 +185,13 @@ open class VirtualPumpPlugin @Inject constructor(
             .success(true)
             .bolusDelivered(detailedBolusInfo.insulin)
             .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-            .comment(rh.gs(info.nightscout.core.ui.R.string.virtualpump_resultok))
+            .comment(rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok))
         val bolusingEvent = EventOverviewBolusProgress
         bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
         var delivering = 0.0
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200)
-            bolusingEvent.status = rh.gs(info.nightscout.core.ui.R.string.bolus_delivering, delivering)
+            bolusingEvent.status = rh.gs(app.aaps.core.ui.R.string.bolus_delivering, delivering)
             bolusingEvent.percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
             rxBus.send(bolusingEvent)
             delivering += 0.1
@@ -199,10 +199,10 @@ open class VirtualPumpPlugin @Inject constructor(
                 return PumpEnactResult(injector)
                     .success(false)
                     .enacted(false)
-                    .comment(rh.gs(info.nightscout.core.ui.R.string.stop))
+                    .comment(rh.gs(app.aaps.core.ui.R.string.stop))
         }
         SystemClock.sleep(200)
-        bolusingEvent.status = rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin)
+        bolusingEvent.status = rh.gs(app.aaps.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin)
         bolusingEvent.percent = 100
         rxBus.send(bolusingEvent)
         SystemClock.sleep(1000)
@@ -233,7 +233,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isTempCancel = false
         result.absolute = absoluteRate
         result.duration = durationInMinutes
-        result.comment = rh.gs(info.nightscout.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
             rate = absoluteRate,
@@ -258,7 +258,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.isPercent = true
         result.isTempCancel = false
         result.duration = durationInMinutes
-        result.comment = rh.gs(info.nightscout.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
         pumpSync.syncTemporaryBasalWithPumpId(
             timestamp = dateUtil.now(),
             rate = percent.toDouble(),
@@ -283,7 +283,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.bolusDelivered = insulin
         result.isTempCancel = false
         result.duration = durationInMinutes
-        result.comment = rh.gs(info.nightscout.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
         pumpSync.syncExtendedBolusWithPumpId(
             timestamp = dateUtil.now(),
             amount = insulin,
@@ -303,7 +303,7 @@ open class VirtualPumpPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         result.success = true
         result.isTempCancel = true
-        result.comment = rh.gs(info.nightscout.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
         if (pumpSync.expectedPumpState().temporaryBasal != null) {
             result.enacted = true
             pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -332,7 +332,7 @@ open class VirtualPumpPlugin @Inject constructor(
         result.success = true
         result.enacted = true
         result.isTempCancel = true
-        result.comment = rh.gs(info.nightscout.core.ui.R.string.virtualpump_resultok)
+        result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
         aapsLogger.debug(LTag.PUMP, "Canceling extended bolus: ${result.toText(rh)}")
         rxBus.send(EventVirtualPumpUpdateGui())
         lastDataTime = System.currentTimeMillis()

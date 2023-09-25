@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogAlarmBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
-import info.nightscout.core.ui.R
+import app.aaps.core.ui.R
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 

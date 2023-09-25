@@ -16,8 +16,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import dagger.android.support.DaggerAppCompatActivity
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.locale.LocaleHelper
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.locale.LocaleHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
