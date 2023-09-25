@@ -24,7 +24,7 @@ object BundleMock {
         }
         val bundle = Mockito.mock(Bundle::class.java)
         Mockito.doAnswer { map.size }.`when`(bundle).size()
-        Mockito.doAnswer { map.isEmpty() }.`when`(bundle).isEmpty()
+        Mockito.doAnswer { map.isEmpty() }.`when`(bundle).isEmpty
         Mockito.doAnswer {
             map.clear()
             null
@@ -36,7 +36,7 @@ object BundleMock {
             null
         }.`when`(bundle).remove(ArgumentMatchers.anyString())
         Mockito.doAnswer { map.keys }.`when`(bundle).keySet()
-        Mockito.doAnswer { BundleMock::class.java.getSimpleName() + "{map=" + map.toString() + "}" }.`when`(bundle).toString()
+        Mockito.doAnswer { BundleMock::class.java.simpleName + "{map=" + map.toString() + "}" }.`when`(bundle).toString()
         Mockito.doAnswer(put).`when`(bundle).putBoolean(ArgumentMatchers.anyString(), ArgumentMatchers.anyBoolean())
         Mockito.`when`(bundle.getBoolean(ArgumentMatchers.anyString())).thenAnswer(get)
         Mockito.`when`(bundle.getBoolean(ArgumentMatchers.anyString(), ArgumentMatchers.anyBoolean())).thenAnswer(getOrDefault)

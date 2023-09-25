@@ -2,11 +2,11 @@ package app.aaps.core.interfaces.pump
 
 import android.content.Context
 import app.aaps.core.interfaces.pump.defs.PumpType
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 
 class DetailedBolusInfo {
 

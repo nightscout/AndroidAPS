@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.daos.delegated
 
+import app.aaps.database.entities.VersionChange
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.VersionChangeDao
-import info.nightscout.database.entities.VersionChange
-import info.nightscout.database.entities.interfaces.DBEntry
 
 internal class DelegatedVersionChangeDao(changes: MutableList<DBEntry>, private val dao: VersionChangeDao) : DelegatedDao(changes), VersionChangeDao by dao {
 

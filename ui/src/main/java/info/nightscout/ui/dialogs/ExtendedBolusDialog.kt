@@ -20,10 +20,10 @@ import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.ValueWithUnit
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogExtendedbolusBinding
 import java.text.DecimalFormat

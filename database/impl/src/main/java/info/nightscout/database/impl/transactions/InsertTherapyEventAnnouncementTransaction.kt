@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 
 class InsertTherapyEventAnnouncementTransaction(
     val therapyEvent: TherapyEvent
@@ -20,7 +20,8 @@ class InsertTherapyEventAnnouncementTransaction(
                 interfaceIDs_backing = InterfaceIDs(
                     pumpId = pumpId,
                     pumpType = pumpType,
-                    pumpSerial = pumpSerial)
+                    pumpSerial = pumpSerial
+                )
             )
         )
 

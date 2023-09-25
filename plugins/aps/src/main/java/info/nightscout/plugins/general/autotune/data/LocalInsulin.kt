@@ -1,7 +1,7 @@
 package info.nightscout.plugins.general.autotune.data
 
 import app.aaps.core.interfaces.iob.Iob
-import info.nightscout.database.entities.Bolus
+import app.aaps.database.entities.Bolus
 import kotlin.math.exp
 import kotlin.math.pow
 

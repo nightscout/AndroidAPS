@@ -3,11 +3,11 @@ package app.aaps.core.interfaces.userEntry
 import android.text.Spanned
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.ColorGroup
-import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.database.entities.ValueWithUnit
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.ColorGroup
+import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
 
 interface UserEntryPresentationHelper {
 

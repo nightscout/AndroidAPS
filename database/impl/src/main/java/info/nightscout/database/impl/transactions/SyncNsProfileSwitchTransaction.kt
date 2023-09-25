@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.ProfileSwitch
+import app.aaps.database.entities.ProfileSwitch
 
 /**
  * Sync the ProfileSwitch from NS

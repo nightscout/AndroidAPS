@@ -27,8 +27,8 @@ import app.aaps.core.main.extensions.target
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.database.ValueWrapper
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar

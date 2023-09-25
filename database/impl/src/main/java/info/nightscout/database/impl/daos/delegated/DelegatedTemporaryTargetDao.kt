@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.daos.delegated
 
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.TemporaryTargetDao
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.interfaces.DBEntry
 
 internal class DelegatedTemporaryTargetDao(changes: MutableList<DBEntry>, private val dao: TemporaryTargetDao) : DelegatedDao(changes), TemporaryTargetDao by dao {
 

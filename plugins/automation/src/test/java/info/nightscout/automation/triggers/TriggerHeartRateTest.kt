@@ -1,8 +1,8 @@
 package info.nightscout.automation.triggers
 
+import app.aaps.database.entities.HeartRate
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
-import info.nightscout.database.entities.HeartRate
 import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions

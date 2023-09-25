@@ -3,12 +3,12 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 import app.aaps.core.nssdk.localmodel.treatment.NSExtendedBolus
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.embedments.InterfaceIDs
-import kotlin.test.assertIs
 import org.junit.jupiter.api.Test
+import kotlin.test.assertIs
 
 @Suppress("SpellCheckingInspection")
 internal class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {

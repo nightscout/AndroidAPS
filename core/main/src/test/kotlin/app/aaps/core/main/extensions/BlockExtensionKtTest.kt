@@ -1,10 +1,10 @@
 package app.aaps.core.main.extensions
 
 import app.aaps.core.interfaces.utils.T
+import app.aaps.database.entities.data.Block
+import app.aaps.database.entities.data.TargetBlock
+import app.aaps.database.entities.data.checkSanity
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.data.Block
-import info.nightscout.database.entities.data.TargetBlock
-import info.nightscout.database.entities.data.checkSanity
 import org.junit.jupiter.api.Test
 
 class BlockExtensionKtTest {

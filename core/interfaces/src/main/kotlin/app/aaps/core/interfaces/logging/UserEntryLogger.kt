@@ -2,10 +2,10 @@ package app.aaps.core.interfaces.logging
 
 import app.aaps.core.interfaces.userEntry.UserEntryMapper
 import app.aaps.core.interfaces.userEntry.ValueWithUnitMapper
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.database.entities.ValueWithUnit
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
 
 interface UserEntryLogger {
 

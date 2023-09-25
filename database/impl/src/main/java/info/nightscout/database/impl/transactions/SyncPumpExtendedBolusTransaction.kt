@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.interfaces.end
 
 /**
  * Creates or updates the extended bolus from pump synchronization

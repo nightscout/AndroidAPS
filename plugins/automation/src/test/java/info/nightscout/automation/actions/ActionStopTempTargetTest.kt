@@ -1,8 +1,8 @@
 package info.nightscout.automation.actions
 
 import app.aaps.core.interfaces.queue.Callback
+import app.aaps.database.entities.TemporaryTarget
 import info.nightscout.automation.R
-import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.database.impl.transactions.Transaction
 import io.reactivex.rxjava3.core.Single

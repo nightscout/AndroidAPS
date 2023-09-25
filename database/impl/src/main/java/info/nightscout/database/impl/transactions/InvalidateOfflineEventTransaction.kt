@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.OfflineEvent
+import app.aaps.database.entities.OfflineEvent
 
 class InvalidateOfflineEventTransaction(val id: Long) : Transaction<InvalidateOfflineEventTransaction.TransactionResult>() {
 

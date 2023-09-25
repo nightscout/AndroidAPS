@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Food
+import app.aaps.database.entities.Food
 
 /**
  * Inserts or updates the Food

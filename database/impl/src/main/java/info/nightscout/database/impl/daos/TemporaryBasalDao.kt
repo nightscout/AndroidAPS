@@ -2,9 +2,9 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.TABLE_TEMPORARY_BASALS
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.TABLE_TEMPORARY_BASALS
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.embedments.InterfaceIDs
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

@@ -9,7 +9,7 @@ import android.widget.Spinner
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.resources.ResourceHelper
-import info.nightscout.database.entities.TherapyEvent
+import app.aaps.database.entities.TherapyEvent
 
 class InputCarePortalMenu(private val rh: ResourceHelper) : Element {
 

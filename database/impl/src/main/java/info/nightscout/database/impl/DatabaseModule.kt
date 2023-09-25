@@ -6,9 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase.Callback
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import app.aaps.database.entities.TABLE_HEART_RATE
 import dagger.Module
 import dagger.Provides
-import info.nightscout.database.entities.TABLE_HEART_RATE
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -54,7 +54,7 @@ open class DatabaseModule {
         database.execSQL("DROP INDEX IF EXISTS `index_offlineEvents_end`")
     }
 
-    private val migration20to21 = object : Migration(20,21) {
+    private val migration20to21 = object : Migration(20, 21) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("DROP TABLE IF EXISTS offlineEvents")
             database.execSQL("CREATE TABLE IF NOT EXISTS `offlineEvents` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `timestamp` INTEGER NOT NULL, `utcOffset` INTEGER NOT NULL, `reason` TEXT NOT NULL, `duration` INTEGER NOT NULL, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER, FOREIGN KEY(`referenceId`) REFERENCES `offlineEvents`(`id`) ON UPDATE NO ACTION ON DELETE NO ACTION )")
@@ -68,7 +68,7 @@ open class DatabaseModule {
         }
     }
 
-    private val migration21to22 = object : Migration(21,22) {
+    private val migration21to22 = object : Migration(21, 22) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("ALTER TABLE `carbs` ADD COLUMN `notes` TEXT")
             database.execSQL("ALTER TABLE `boluses` ADD COLUMN `notes` TEXT")
@@ -77,7 +77,7 @@ open class DatabaseModule {
         }
     }
 
-    private val migration22to23 = object : Migration(22,23) {
+    private val migration22to23 = object : Migration(22, 23) {
         override fun migrate(database: SupportSQLiteDatabase) {
             database.execSQL("ALTER TABLE `deviceStatus` ADD COLUMN `isCharging` INTEGER")
             // Custom indexes must be dropped on migration to pass room schema checking after upgrade

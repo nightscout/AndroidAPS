@@ -31,9 +31,9 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.Food
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.transactions.TransactionGlucoseValue
+import app.aaps.database.entities.Food
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.transactions.TransactionGlucoseValue
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.extensions.fromJson
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolus

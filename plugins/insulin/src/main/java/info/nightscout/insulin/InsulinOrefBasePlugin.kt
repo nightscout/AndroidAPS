@@ -14,9 +14,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.T
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.embedments.InsulinConfiguration
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.embedments.InsulinConfiguration
 import kotlin.math.exp
 import kotlin.math.pow
 

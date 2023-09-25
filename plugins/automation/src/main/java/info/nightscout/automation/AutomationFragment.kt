@@ -34,6 +34,8 @@ import app.aaps.core.ui.dragHelpers.ItemTouchHelperAdapter
 import app.aaps.core.ui.dragHelpers.OnStartDragListener
 import app.aaps.core.ui.dragHelpers.SimpleItemTouchHelperCallback
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.automation.databinding.AutomationEventItemBinding
@@ -42,8 +44,6 @@ import info.nightscout.automation.dialogs.EditEventDialog
 import info.nightscout.automation.events.EventAutomationDataChanged
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.triggers.TriggerConnector
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

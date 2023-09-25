@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.daos.delegated
 
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.TherapyEventDao
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.interfaces.DBEntry
 
 internal class DelegatedTherapyEventDao(changes: MutableList<DBEntry>, private val dao: TherapyEventDao) : DelegatedDao(changes), TherapyEventDao by dao {
 

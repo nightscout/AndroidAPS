@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.sync.Tidepool
+import app.aaps.database.ValueWrapper
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.ValueWrapper
 import info.nightscout.plugins.constraints.R
 import javax.inject.Inject
 

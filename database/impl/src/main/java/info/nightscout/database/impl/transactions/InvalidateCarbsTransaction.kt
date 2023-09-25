@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Carbs
+import app.aaps.database.entities.Carbs
 
 class InvalidateCarbsTransaction(val id: Long) : Transaction<InvalidateCarbsTransaction.TransactionResult>() {
 

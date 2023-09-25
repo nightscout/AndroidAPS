@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.embedments.InterfaceIDs
 
 /**
  * Creates or updates the Carbs
@@ -18,12 +18,12 @@ class InsertOrUpdateCarbsTransaction(
         interfaceIDs_backing: InterfaceIDs? = null
     ) : this(
         Carbs(
-        timestamp = timestamp,
-        amount = amount,
-        duration = duration,
-        notes = notes,
-        interfaceIDs_backing = interfaceIDs_backing
-    )
+            timestamp = timestamp,
+            amount = amount,
+            duration = duration,
+            notes = notes,
+            interfaceIDs_backing = interfaceIDs_backing
+        )
     )
 
     override fun run(): TransactionResult {

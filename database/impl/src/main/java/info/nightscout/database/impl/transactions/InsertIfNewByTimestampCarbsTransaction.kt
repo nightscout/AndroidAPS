@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.embedments.InterfaceIDs
 
 /**
  * Creates Carbs if record doesn't exist
@@ -17,11 +17,11 @@ class InsertIfNewByTimestampCarbsTransaction(
         interfaceIDs_backing: InterfaceIDs? = null
     ) : this(
         Carbs(
-        timestamp = timestamp,
-        amount = amount,
-        duration = duration,
-        interfaceIDs_backing = interfaceIDs_backing
-    )
+            timestamp = timestamp,
+            amount = amount,
+            duration = duration,
+            interfaceIDs_backing = interfaceIDs_backing
+        )
     )
 
     override fun run(): TransactionResult {

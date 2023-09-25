@@ -27,9 +27,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.Sync
+import app.aaps.database.entities.data.Block
+import app.aaps.database.entities.interfaces.TraceableDBEntry
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.data.Block
-import info.nightscout.database.entities.interfaces.TraceableDBEntry
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.openhumans.delegates.OHAppIDDelegate

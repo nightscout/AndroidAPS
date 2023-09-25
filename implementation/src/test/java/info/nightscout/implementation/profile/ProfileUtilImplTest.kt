@@ -3,9 +3,9 @@ package info.nightscout.implementation.profile
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.implementation.utils.DecimalFormatterImpl
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

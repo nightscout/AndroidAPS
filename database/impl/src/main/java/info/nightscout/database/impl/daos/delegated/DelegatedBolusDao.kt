@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.daos.delegated
 
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.BolusDao
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.interfaces.DBEntry
 
 internal class DelegatedBolusDao(changes: MutableList<DBEntry>, private val dao: BolusDao) : DelegatedDao(changes), BolusDao by dao {
 

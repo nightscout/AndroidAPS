@@ -1,13 +1,13 @@
 package info.nightscout.core.extensions
 
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.core.main.R
 import app.aaps.core.main.extensions.directionToIcon
 import app.aaps.core.main.extensions.valueToUnits
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.GlucoseValue
 import org.junit.jupiter.api.Test
 
 class GlucoseValueExtensionKtTest : TestBaseWithProfile() {

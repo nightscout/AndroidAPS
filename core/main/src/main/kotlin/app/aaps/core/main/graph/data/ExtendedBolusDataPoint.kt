@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import info.nightscout.database.entities.ExtendedBolus
+import app.aaps.database.entities.ExtendedBolus
 
 class ExtendedBolusDataPoint(
     val data: ExtendedBolus,

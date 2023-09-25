@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.interfaces.end
 import kotlin.math.roundToInt
 
 class CutCarbsTransaction(val id: Long, val end: Long) : Transaction<CutCarbsTransaction.TransactionResult>() {

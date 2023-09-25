@@ -5,8 +5,8 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.aps.BasalData
 import app.aaps.core.interfaces.profile.Profile
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.TemporaryBasal
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.TemporaryBasal
 import org.json.JSONArray
 
 interface IobCobCalculator {

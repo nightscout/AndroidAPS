@@ -1,6 +1,5 @@
 package info.nightscout.automation.actions
 
-import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Constraint
@@ -16,11 +15,12 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.database.entities.OfflineEvent
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.triggers.Trigger
-import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.impl.AppRepository
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock

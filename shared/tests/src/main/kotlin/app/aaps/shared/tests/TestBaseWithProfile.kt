@@ -1,9 +1,6 @@
 package app.aaps.shared.tests
 
 import android.content.Context
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -16,11 +13,14 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.EffectiveProfileSwitch
-import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.implementation.profile.ProfileStoreObject
 import info.nightscout.implementation.profile.ProfileUtilImpl
 import info.nightscout.implementation.utils.DecimalFormatterImpl

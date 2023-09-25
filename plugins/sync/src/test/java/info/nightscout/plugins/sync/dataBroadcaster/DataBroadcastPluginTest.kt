@@ -13,13 +13,13 @@ import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.TemporaryBasal
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.TemporaryBasal
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

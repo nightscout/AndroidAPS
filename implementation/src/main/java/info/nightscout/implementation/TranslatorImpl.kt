@@ -2,13 +2,13 @@ package info.nightscout.implementation
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
 import dagger.Reusable
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.database.entities.ValueWithUnit
 import javax.inject.Inject
 
 @Reusable

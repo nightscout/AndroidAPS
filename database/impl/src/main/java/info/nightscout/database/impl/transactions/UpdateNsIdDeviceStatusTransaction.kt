@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.DeviceStatus
+import app.aaps.database.entities.DeviceStatus
 
 class UpdateNsIdDeviceStatusTransaction(private val deviceStatuses: List<DeviceStatus>) : Transaction<UpdateNsIdDeviceStatusTransaction.TransactionResult>() {
 

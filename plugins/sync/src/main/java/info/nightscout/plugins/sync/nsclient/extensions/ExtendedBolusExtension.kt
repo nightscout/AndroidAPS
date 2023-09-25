@@ -5,8 +5,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.extensions.toTemporaryBasal
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
 fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil): JSONObject? =
@@ -22,7 +23,7 @@ fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
-        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.COMBO_BOLUS.text)
+        .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration)
         .put("splitNow", 0)

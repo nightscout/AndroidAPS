@@ -1,8 +1,5 @@
 package info.nightscout.implementation.profile
 
-import app.aaps.core.main.extensions.fromConstant
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -20,8 +17,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.ProfileSwitch
+import app.aaps.core.main.extensions.fromConstant
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.ProfileSwitch
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertOrUpdateProfileSwitch
 import io.reactivex.rxjava3.disposables.CompositeDisposable

@@ -7,9 +7,9 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.interfaces.end
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min

@@ -1,7 +1,7 @@
 package info.nightscout.plugins.sync.nsclient.extensions
 
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.Food
+import app.aaps.database.entities.Food
 import org.json.JSONObject
 
 fun Food.Companion.fromJson(jsonObject: JSONObject): Food? {

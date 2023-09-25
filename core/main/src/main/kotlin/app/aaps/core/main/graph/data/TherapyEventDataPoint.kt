@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator
-import info.nightscout.database.entities.TherapyEvent
+import app.aaps.database.entities.TherapyEvent
 
 class TherapyEventDataPoint(
     val data: TherapyEvent,

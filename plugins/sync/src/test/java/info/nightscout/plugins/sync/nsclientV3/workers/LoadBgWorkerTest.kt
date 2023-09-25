@@ -19,12 +19,12 @@ import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.utils.DecimalFormatterImpl
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor

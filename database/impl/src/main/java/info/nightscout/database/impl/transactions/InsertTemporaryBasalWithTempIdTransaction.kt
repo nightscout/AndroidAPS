@@ -1,11 +1,12 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TemporaryBasal
+import app.aaps.database.entities.TemporaryBasal
 
 /**
  * Creates or updates the TemporaryBasal from pump synchronization
  */
-class InsertTemporaryBasalWithTempIdTransaction(private val temporaryBasal: TemporaryBasal
+class InsertTemporaryBasalWithTempIdTransaction(
+    private val temporaryBasal: TemporaryBasal
 ) : Transaction<InsertTemporaryBasalWithTempIdTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {

@@ -6,7 +6,8 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.TemporaryTarget
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.TherapyEvent
 import org.json.JSONObject
 
 fun TemporaryTarget.Companion.fromJson(jsonObject: JSONObject, profileUtil: ProfileUtil): TemporaryTarget? {
@@ -54,7 +55,7 @@ fun TemporaryTarget.Companion.fromJson(jsonObject: JSONObject, profileUtil: Prof
 
 fun TemporaryTarget.toJson(isAdd: Boolean, dateUtil: DateUtil, profileUtil: ProfileUtil): JSONObject =
     JSONObject()
-        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.TEMPORARY_TARGET.text)
+        .put("eventType", TherapyEvent.Type.TEMPORARY_TARGET.text)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration)
         .put("isValid", isValid)

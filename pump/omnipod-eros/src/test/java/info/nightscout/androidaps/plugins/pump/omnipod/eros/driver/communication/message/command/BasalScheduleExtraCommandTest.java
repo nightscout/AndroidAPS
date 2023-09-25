@@ -74,7 +74,7 @@ class BasalScheduleExtraCommandTest {
 
     @Test
     void testEncodingFromBasalScheduleWithSingleEntry() {
-        BasalSchedule basalSchedule = new BasalSchedule(Arrays.asList(new BasalScheduleEntry(1.05, Duration.ZERO)));
+        BasalSchedule basalSchedule = new BasalSchedule(List.of(new BasalScheduleEntry(1.05, Duration.ZERO)));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(basalSchedule,
                 Duration.standardMinutes((0x20 + 1) * 30).minus(Duration.standardSeconds(0x33c0 / 8)),
                 false, true, Duration.ZERO);
@@ -137,7 +137,7 @@ class BasalScheduleExtraCommandTest {
 
     @Test
     void testBasalScheduleExtraCommandRoundsToNearestSecond() {
-        BasalSchedule basalSchedule = new BasalSchedule(Arrays.asList(new BasalScheduleEntry(1.00, Duration.ZERO)));
+        BasalSchedule basalSchedule = new BasalSchedule(List.of(new BasalScheduleEntry(1.00, Duration.ZERO)));
 
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(basalSchedule,
                 Duration.standardMinutes((0x2b + 1) * 30).minus(Duration.standardSeconds(0x1b38 / 8).plus(Duration.millis(456))),
@@ -164,6 +164,6 @@ class BasalScheduleExtraCommandTest {
     }
 
     private double extractDelayUntilNextPulseInSeconds(byte[] message) {
-        return ByteUtil.INSTANCE.toInt((int) message[6], (int) message[7], (int) message[8], (int) message[9], ByteUtil.BitConversion.BIG_ENDIAN) / 1_000_000.0;
+        return ByteUtil.INSTANCE.toInt(message[6], (int) message[7], (int) message[8], (int) message[9], ByteUtil.BitConversion.BIG_ENDIAN) / 1_000_000.0;
     }
 }

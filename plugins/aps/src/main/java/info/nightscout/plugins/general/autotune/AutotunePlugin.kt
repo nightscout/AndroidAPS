@@ -27,9 +27,9 @@ import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.ValueWithUnit
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.LocalInsulin

@@ -1,9 +1,5 @@
 package info.nightscout.implementation.pump
 
-import app.aaps.core.main.events.EventNewNotification
-import app.aaps.core.main.pump.fromDbPumpType
-import app.aaps.core.main.pump.toDbPumpType
-import app.aaps.core.main.pump.toDbSource
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -19,16 +15,20 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.TotalDailyDose
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.pump.fromDbPumpType
+import app.aaps.core.main.pump.toDbPumpType
+import app.aaps.core.main.pump.toDbSource
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.TotalDailyDose
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.ValueWithUnit
+import app.aaps.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertBolusWithTempIdTransaction
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampCarbsTransaction
@@ -513,5 +513,4 @@ class PumpSyncImplementation @Inject constructor(
                 return result.inserted.size > 0
             }
     }
-
 }

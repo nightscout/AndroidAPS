@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.daos.delegated
 
+import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.ProfileSwitchDao
-import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.database.entities.interfaces.DBEntry
 
 internal class DelegatedProfileSwitchDao(changes: MutableList<DBEntry>, private val dao: ProfileSwitchDao) : DelegatedDao(changes), ProfileSwitchDao by dao {
 

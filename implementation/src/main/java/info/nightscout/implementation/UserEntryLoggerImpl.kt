@@ -7,11 +7,11 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.userEntry.UserEntryMapper
 import app.aaps.core.interfaces.userEntry.ValueWithUnitMapper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
 import dagger.Reusable
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.UserEntryTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable

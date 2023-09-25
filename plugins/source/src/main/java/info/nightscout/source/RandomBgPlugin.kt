@@ -14,11 +14,11 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.isRunningTest
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.transactions.TransactionGlucoseValue
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
-import info.nightscout.database.transactions.TransactionGlucoseValue
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.security.SecureRandom

@@ -16,7 +16,7 @@ android {
 
     namespace 'app.aaps.shared.impl'
     defaultConfig {
-        minSdkVersion 25  // for wear
+        minSdkVersion 26  // for wear
     }
 }
 

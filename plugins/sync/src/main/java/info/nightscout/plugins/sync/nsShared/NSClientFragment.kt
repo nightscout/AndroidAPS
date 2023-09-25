@@ -33,8 +33,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.database.entities.UserEntry
 import dagger.android.support.DaggerFragment
-import info.nightscout.database.entities.UserEntry
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.databinding.NsClientFragmentBinding
 import info.nightscout.plugins.sync.databinding.NsClientLogItemBinding

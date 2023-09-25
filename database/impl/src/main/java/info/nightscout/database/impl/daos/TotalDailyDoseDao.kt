@@ -2,9 +2,9 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.TABLE_TOTAL_DAILY_DOSES
-import info.nightscout.database.entities.TotalDailyDose
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.TABLE_TOTAL_DAILY_DOSES
+import app.aaps.database.entities.TotalDailyDose
+import app.aaps.database.entities.embedments.InterfaceIDs
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

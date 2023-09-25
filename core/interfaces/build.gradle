@@ -17,7 +17,7 @@ android {
 
     namespace 'app.aaps.core.interfaces'
     defaultConfig {
-        minSdkVersion 25  // for wear
+        minSdkVersion 26  // for wear
     }
 }
 

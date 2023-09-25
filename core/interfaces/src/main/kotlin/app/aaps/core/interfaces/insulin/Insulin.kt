@@ -2,8 +2,8 @@ package app.aaps.core.interfaces.insulin
 
 import app.aaps.core.interfaces.configuration.ConfigExportImport
 import app.aaps.core.interfaces.iob.Iob
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.embedments.InsulinConfiguration
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.embedments.InsulinConfiguration
 
 interface Insulin : ConfigExportImport {
 

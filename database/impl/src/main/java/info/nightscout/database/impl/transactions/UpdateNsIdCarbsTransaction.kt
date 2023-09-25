@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Carbs
+import app.aaps.database.entities.Carbs
 
 class UpdateNsIdCarbsTransaction(private val carbs: List<Carbs>) : Transaction<UpdateNsIdCarbsTransaction.TransactionResult>() {
 

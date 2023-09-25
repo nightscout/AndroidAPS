@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.OfflineEvent
+import app.aaps.database.entities.OfflineEvent
 
 class UpdateNsIdOfflineEventTransaction(private val offlineEvents: List<OfflineEvent>) : Transaction<UpdateNsIdOfflineEventTransaction.TransactionResult>() {
 

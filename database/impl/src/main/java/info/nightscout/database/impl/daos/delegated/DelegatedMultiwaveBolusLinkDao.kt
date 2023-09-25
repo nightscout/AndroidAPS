@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.daos.delegated
 
+import app.aaps.database.entities.MultiwaveBolusLink
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.MultiwaveBolusLinkDao
-import info.nightscout.database.entities.MultiwaveBolusLink
-import info.nightscout.database.entities.interfaces.DBEntry
 
 internal class DelegatedMultiwaveBolusLinkDao(changes: MutableList<DBEntry>, private val dao: MultiwaveBolusLinkDao) : DelegatedDao(changes), MultiwaveBolusLinkDao by dao {
 

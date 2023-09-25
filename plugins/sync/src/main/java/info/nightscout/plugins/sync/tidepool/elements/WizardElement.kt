@@ -1,9 +1,9 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.Carbs
 import com.google.gson.annotations.Expose
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.Carbs
 import java.util.UUID
 
 class WizardElement(carbs: Carbs, dateUtil: DateUtil) : BaseElement(carbs.timestamp, UUID.nameUUIDFromBytes(("AAPS-wizard" + carbs.timestamp).toByteArray()).toString(), dateUtil) {

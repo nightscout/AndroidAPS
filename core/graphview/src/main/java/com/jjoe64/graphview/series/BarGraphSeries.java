@@ -1,18 +1,18 @@
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * with the "Linking Exception", which can be found at the license.txt
  * file in this program.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * with the "Linking Exception" along with this program; if not,
  * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
@@ -45,45 +45,39 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
      * paint to do drawing on canvas
      */
     private final Paint mPaint;
-
+    /**
+     * stores the coordinates of the bars to
+     * trigger tap on series events.
+     */
+    private final Map<RectF, E> mDataPoints = new HashMap<RectF, E>();
     /**
      * spacing between the bars in percentage.
      * 0 => no spacing
      * 100 => the space bewetten the bars is as big as the bars itself
      */
     private int mSpacing;
-
     /**
      * callback to generate value-dependent colors
      * of the bars
      */
     private ValueDependentColor<E> mValueDependentColor;
-
     /**
      * flag whether the values should drawn
      * above the bars as text
      */
     private boolean mDrawValuesOnTop;
-
     /**
      * color of the text above the bars.
      *
      * @see #mDrawValuesOnTop
      */
     private int mValuesOnTopColor;
-
     /**
      * font size of the text above the bars.
      *
      * @see #mDrawValuesOnTop
      */
     private float mValuesOnTopSize;
-
-    /**
-     * stores the coordinates of the bars to
-     * trigger tap on series events.
-     */
-    private final Map<RectF, E> mDataPoints = new HashMap<RectF, E>();
 
     /**
      * creates bar series without any data
@@ -139,10 +133,10 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
         int numValues = 0;
         boolean isCurrentSeries;
         SortedSet<Double> xVals = new TreeSet<Double>();
-        for(Series inspectedSeries: graphView.getSeries()) {
-            if(inspectedSeries instanceof BarGraphSeries) {
+        for (Series inspectedSeries : graphView.getSeries()) {
+            if (inspectedSeries instanceof BarGraphSeries) {
                 isCurrentSeries = (inspectedSeries == this);
-                if(isCurrentSeries) {
+                if (isCurrentSeries) {
                     currentSeriesOrder = numBarSeries;
                 }
                 numBarSeries++;
@@ -155,10 +149,14 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
                 Iterator<E> curValues = inspectedSeries.getValues(minX, maxX);
                 if (curValues.hasNext()) {
                     xVals.add(curValues.next().getX());
-                    if(isCurrentSeries) { numValues++; }
+                    if (isCurrentSeries) {
+                        numValues++;
+                    }
                     while (curValues.hasNext()) {
                         xVals.add(curValues.next().getX());
-                        if(isCurrentSeries) { numValues++; }
+                        if (isCurrentSeries) {
+                            numValues++;
+                        }
                     }
                 }
             }
@@ -169,8 +167,8 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
 
         Double lastVal = null;
         double minGap = 0;
-        for(Double curVal: xVals) {
-            if(lastVal != null) {
+        for (Double curVal : xVals) {
+            if (lastVal != null) {
                 double curGap = Math.abs(curVal - lastVal);
                 if (minGap == 0 || (curGap > 0 && curGap < minGap)) {
                     minGap = curGap;
@@ -179,23 +177,23 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
             lastVal = curVal;
         }
 
-        int numBarSlots = (minGap == 0) ? 1 : (int)Math.round((maxX - minX)/minGap) + 1;
+        int numBarSlots = (minGap == 0) ? 1 : (int) Math.round((maxX - minX) / minGap) + 1;
 
         Iterator<E> values = getValues(minX, maxX);
 
         // Calculate the overall bar slot width - this includes all bars across
         // all series, and any spacing between sets of bars
         float barSlotWidth = numBarSlots == 1
-            ? graphView.getGraphContentWidth()
-            : graphView.getGraphContentWidth() / (numBarSlots-1);
+                ? graphView.getGraphContentWidth()
+                : graphView.getGraphContentWidth() / (numBarSlots - 1);
         Log.d("BarGraphSeries", "numBars=" + numBarSlots);
 
         // Total spacing (both sides) between sets of bars
-        float spacing = Math.min((float) barSlotWidth*mSpacing/100, barSlotWidth*0.98f);
+        float spacing = Math.min(barSlotWidth * mSpacing / 100, barSlotWidth * 0.98f);
         // Width of an individual bar
         float barWidth = (barSlotWidth - spacing) / numBarSeries;
         // Offset from the center of a given bar to start drawing
-        float offset = barSlotWidth/2;
+        float offset = barSlotWidth / 2;
 
         double diffY = maxY - minY;
         double diffX = maxX - minX;
@@ -205,7 +203,7 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
         float contentTop = graphView.getGraphContentTop();
 
         // draw data
-        int i=0;
+        int i = 0;
         while (values.hasNext()) {
             E value = values.next();
 
@@ -228,22 +226,22 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
                 mPaint.setColor(getColor());
             }
 
-            float left = (float)x + contentLeft - offset + spacing/2 + currentSeriesOrder*barWidth;
-            float top = (contentTop - (float)y) + contentHeight;
+            float left = (float) x + contentLeft - offset + spacing / 2 + currentSeriesOrder * barWidth;
+            float top = (contentTop - (float) y) + contentHeight;
             float right = left + barWidth;
-            float bottom = (contentTop - (float)y0) + contentHeight - (graphView.getGridLabelRenderer().isHighlightZeroLines()?4:1);
+            float bottom = (contentTop - (float) y0) + contentHeight - (graphView.getGridLabelRenderer().isHighlightZeroLines() ? 4 : 1);
 
             boolean reverse = top > bottom;
             if (reverse) {
                 float tmp = top;
-                top = bottom + (graphView.getGridLabelRenderer().isHighlightZeroLines()?4:1);
+                top = bottom + (graphView.getGridLabelRenderer().isHighlightZeroLines() ? 4 : 1);
                 bottom = tmp;
             }
 
             // overdraw
             left = Math.max(left, contentLeft);
-            right = Math.min(right, contentLeft+contentWidth);
-            bottom = Math.min(bottom, contentTop+contentHeight);
+            right = Math.min(right, contentLeft + contentWidth);
+            bottom = Math.min(bottom, contentTop + contentHeight);
             top = Math.max(top, contentTop);
 
             mDataPoints.put(new RectF(left, top, right, bottom), value);
@@ -254,16 +252,16 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
             if (mDrawValuesOnTop) {
                 if (reverse) {
                     top = bottom + mValuesOnTopSize + 4;
-                    if (top > contentTop+contentHeight) top = contentTop + contentHeight;
+                    if (top > contentTop + contentHeight) top = contentTop + contentHeight;
                 } else {
                     top -= 4;
-                    if (top<=contentTop) top+=contentTop+4;
+                    if (top <= contentTop) top += contentTop + 4;
                 }
 
                 mPaint.setColor(mValuesOnTopColor);
                 canvas.drawText(
                         graphView.getGridLabelRenderer().getLabelFormatter().formatLabel(value.getY(), false)
-                        , (left+right)/2, top, mPaint);
+                        , (left + right) / 2, top, mPaint);
             }
 
             i++;
@@ -371,7 +369,7 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
     protected E findDataPoint(float x, float y) {
         for (Map.Entry<RectF, E> entry : mDataPoints.entrySet()) {
             if (x >= entry.getKey().left && x <= entry.getKey().right
-                && y >= entry.getKey().top && y <= entry.getKey().bottom) {
+                    && y >= entry.getKey().top && y <= entry.getKey().bottom) {
                 return entry.getValue();
             }
         }

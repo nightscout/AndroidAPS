@@ -1,11 +1,11 @@
 package info.nightscout.core.extensions
 
-import app.aaps.core.main.extensions.isOlderThan
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.extensions.isOlderThan
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.embedments.InterfaceIDs
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 

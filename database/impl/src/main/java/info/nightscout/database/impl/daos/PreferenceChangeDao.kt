@@ -3,8 +3,8 @@ package info.nightscout.database.impl.daos
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import info.nightscout.database.entities.PreferenceChange
-import info.nightscout.database.entities.TABLE_PREFERENCE_CHANGES
+import app.aaps.database.entities.PreferenceChange
+import app.aaps.database.entities.TABLE_PREFERENCE_CHANGES
 
 @Dao
 interface PreferenceChangeDao {

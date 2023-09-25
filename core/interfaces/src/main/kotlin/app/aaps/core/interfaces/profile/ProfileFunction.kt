@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.profile
 
 import app.aaps.core.interfaces.db.GlucoseUnit
-import info.nightscout.database.entities.ProfileSwitch
+import app.aaps.database.entities.ProfileSwitch
 
 interface ProfileFunction {
 

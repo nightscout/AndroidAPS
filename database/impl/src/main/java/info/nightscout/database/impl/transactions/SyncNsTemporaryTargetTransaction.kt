@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.interfaces.end
 import kotlin.math.abs
 
 /**

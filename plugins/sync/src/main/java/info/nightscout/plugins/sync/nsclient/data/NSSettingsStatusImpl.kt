@@ -18,8 +18,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry.Action
 import info.nightscout.plugins.sync.R
 import org.json.JSONException
 import org.json.JSONObject

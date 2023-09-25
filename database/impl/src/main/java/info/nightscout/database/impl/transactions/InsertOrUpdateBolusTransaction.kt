@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.embedments.InsulinConfiguration
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.embedments.InsulinConfiguration
+import app.aaps.database.entities.embedments.InterfaceIDs
 
 /**
  * Creates or updates the Bolus
@@ -21,14 +21,14 @@ class InsertOrUpdateBolusTransaction(
         interfaceIDs_backing: InterfaceIDs? = null
     ) : this(
         Bolus(
-        timestamp = timestamp,
-        amount = amount,
-        type = type,
-        notes = notes,
-        isBasalInsulin = isBasalInsulin,
-        insulinConfiguration = insulinConfiguration,
-        interfaceIDs_backing = interfaceIDs_backing
-    )
+            timestamp = timestamp,
+            amount = amount,
+            type = type,
+            notes = notes,
+            isBasalInsulin = isBasalInsulin,
+            insulinConfiguration = insulinConfiguration,
+            interfaceIDs_backing = interfaceIDs_backing
+        )
     )
 
     override fun run(): TransactionResult {

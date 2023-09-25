@@ -1,11 +1,12 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TotalDailyDose
+import app.aaps.database.entities.TotalDailyDose
 
 /**
  * Creates or updates the TotalDailyDose from pump synchronization
  */
-class SyncPumpTotalDailyDoseTransaction(private val tdd: TotalDailyDose
+class SyncPumpTotalDailyDoseTransaction(
+    private val tdd: TotalDailyDose
 ) : Transaction<SyncPumpTotalDailyDoseTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {

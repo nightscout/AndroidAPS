@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.interfaces.end
 
 class SyncPumpCancelTemporaryBasalIfAnyTransaction(
     private val timestamp: Long, private val endPumpId: Long, private val pumpType: InterfaceIDs.PumpType, private val pumpSerial: String

@@ -2,8 +2,8 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.MultiwaveBolusLink
-import info.nightscout.database.entities.TABLE_MULTIWAVE_BOLUS_LINKS
+import app.aaps.database.entities.MultiwaveBolusLink
+import app.aaps.database.entities.TABLE_MULTIWAVE_BOLUS_LINKS
 
 @Dao
 internal interface MultiwaveBolusLinkDao : TraceableDao<MultiwaveBolusLink> {

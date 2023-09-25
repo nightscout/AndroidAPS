@@ -21,7 +21,7 @@ public class OmnipodPacket implements RLMessage {
         if (encoded.length < 7) {
             return;
         }
-        this.packetAddress = ByteUtil.INSTANCE.toInt((int) encoded[0], (int) encoded[1],
+        this.packetAddress = ByteUtil.INSTANCE.toInt(encoded[0], (int) encoded[1],
                 (int) encoded[2], (int) encoded[3], ByteUtil.BitConversion.BIG_ENDIAN);
         try {
             this.packetType = PacketType.fromByte((byte) (((int) encoded[4] & 0xFF) >> 5));

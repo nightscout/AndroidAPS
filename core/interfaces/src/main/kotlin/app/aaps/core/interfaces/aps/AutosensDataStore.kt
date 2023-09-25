@@ -4,7 +4,7 @@ import androidx.collection.LongSparseArray
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
-import info.nightscout.database.entities.GlucoseValue
+import app.aaps.database.entities.GlucoseValue
 
 interface AutosensDataStore {
 

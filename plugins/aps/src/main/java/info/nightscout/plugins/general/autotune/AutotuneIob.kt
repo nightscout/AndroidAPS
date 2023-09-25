@@ -17,13 +17,13 @@ import app.aaps.core.main.extensions.toJson
 import app.aaps.core.main.extensions.toTemporaryBasal
 import app.aaps.core.main.iob.round
 import app.aaps.core.utils.MidnightUtils
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.LocalInsulin
@@ -327,7 +327,7 @@ open class AutotuneIob @Inject constructor(
 
     fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         JSONObject()
-            .put("eventType", if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else info.nightscout.database.entities.TherapyEvent.Type.MEAL_BOLUS.text)
+            .put("eventType", if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text)
             .put("insulin", amount)
             .put("created_at", dateUtil.toISOString(timestamp))
             .put("date", timestamp)
@@ -404,7 +404,7 @@ open class AutotuneIob @Inject constructor(
             JSONObject()
                 .put("created_at", dateUtil.toISOString(timestamp))
                 .put("enteredBy", "openaps://" + "AndroidAPS")
-                .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.TEMPORARY_BASAL.text)
+                .put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.text)
                 .put("isValid", isValid)
                 .put("duration", T.msecs(duration).mins())
                 .put("durationInMilliseconds", duration) // rounded duration leads to different basal IOB
@@ -431,7 +431,7 @@ open class AutotuneIob @Inject constructor(
             JSONObject()
                 .put("created_at", dateUtil.toISOString(timestamp))
                 .put("enteredBy", "openaps://" + "AndroidAPS")
-                .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.COMBO_BOLUS.text)
+                .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
                 .put("duration", T.msecs(duration).mins())
                 .put("durationInMilliseconds", duration)
                 .put("splitNow", 0)
@@ -450,7 +450,7 @@ open class AutotuneIob @Inject constructor(
 
         fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             JSONObject()
-                .put("eventType", if (amount < 12) info.nightscout.database.entities.TherapyEvent.Type.CARBS_CORRECTION.text else info.nightscout.database.entities.TherapyEvent.Type.MEAL_BOLUS.text)
+                .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
                 .put("carbs", amount)
                 .put("notes", notes)
                 .put("created_at", dateUtil.toISOString(timestamp))

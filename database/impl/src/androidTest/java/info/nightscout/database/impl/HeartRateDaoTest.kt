@@ -7,8 +7,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import info.nightscout.database.entities.HeartRate
-import info.nightscout.database.entities.TABLE_HEART_RATE
+import app.aaps.database.entities.HeartRate
+import app.aaps.database.entities.TABLE_HEART_RATE
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -112,6 +112,7 @@ internal class HeartRateDaoTest {
     }
 
     companion object {
+
         private const val TEST_DB_NAME = "testDatabase"
 
         fun createHeartRate(timestamp: Long? = null, beatsPerMinute: Double = 80.0) =

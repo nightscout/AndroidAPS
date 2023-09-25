@@ -3,8 +3,8 @@ package info.nightscout.database.impl.daos
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import info.nightscout.database.entities.TABLE_VERSION_CHANGES
-import info.nightscout.database.entities.VersionChange
+import app.aaps.database.entities.TABLE_VERSION_CHANGES
+import app.aaps.database.entities.VersionChange
 
 @Dao
 interface VersionChangeDao {

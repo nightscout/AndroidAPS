@@ -48,9 +48,9 @@ import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.database.ValueWrapper
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogWizardBinding

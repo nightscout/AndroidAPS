@@ -4,23 +4,23 @@ import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import app.aaps.core.main.graph.data.DataPointWithLabelInterface
-import app.aaps.core.main.graph.data.DeviationDataPoint
-import app.aaps.core.main.graph.data.FixedLineGraphSeries
-import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
-import app.aaps.core.main.graph.data.Scale
-import app.aaps.core.main.graph.data.ScaledDataPoint
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.CobInfo
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.core.main.graph.data.DataPointWithLabelInterface
+import app.aaps.core.main.graph.data.DeviationDataPoint
+import app.aaps.core.main.graph.data.FixedLineGraphSeries
+import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
+import app.aaps.core.main.graph.data.Scale
+import app.aaps.core.main.graph.data.ScaledDataPoint
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.TemporaryTarget
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.TemporaryTarget
 
 interface OverviewData {
 

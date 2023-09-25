@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TemporaryTarget
+import app.aaps.database.entities.TemporaryTarget
 
 class UpdateNsIdTemporaryTargetTransaction(private val temporaryTargets: List<TemporaryTarget>) : Transaction<UpdateNsIdTemporaryTargetTransaction.TransactionResult>() {
 

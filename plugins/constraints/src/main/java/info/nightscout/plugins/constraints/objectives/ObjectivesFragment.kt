@@ -29,10 +29,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
 import dagger.android.support.DaggerFragment
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.plugins.constraints.R
 import info.nightscout.plugins.constraints.databinding.ObjectivesFragmentBinding
 import info.nightscout.plugins.constraints.databinding.ObjectivesItemBinding

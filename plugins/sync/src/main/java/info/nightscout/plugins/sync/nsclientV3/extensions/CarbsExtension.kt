@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.embedments.InterfaceIDs
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSCarbs
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.embedments.InterfaceIDs
 import java.security.InvalidParameterException
 
 fun NSCarbs.toCarbs(): Carbs =

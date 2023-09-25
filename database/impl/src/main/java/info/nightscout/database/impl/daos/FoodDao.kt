@@ -2,8 +2,8 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.Food
-import info.nightscout.database.entities.TABLE_FOODS
+import app.aaps.database.entities.Food
+import app.aaps.database.entities.TABLE_FOODS
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

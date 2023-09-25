@@ -2,9 +2,9 @@ package info.nightscout.database.impl.daos.workaround;
 
 import androidx.room.Transaction;
 
-import info.nightscout.database.impl.daos.TraceableDaoKt;
-import info.nightscout.database.entities.interfaces.TraceableDBEntry;
+import app.aaps.database.entities.interfaces.TraceableDBEntry;
 import info.nightscout.database.impl.daos.TraceableDao;
+import info.nightscout.database.impl.daos.TraceableDaoKt;
 
 // keep in java, it's easier
 public interface TraceableDaoWorkaround<T extends TraceableDBEntry> {

@@ -1,5 +1,6 @@
 package info.nightscout.database.impl
 
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.APSResultDao
 import info.nightscout.database.impl.daos.APSResultLinkDao
 import info.nightscout.database.impl.daos.BolusCalculatorResultDao
@@ -10,6 +11,7 @@ import info.nightscout.database.impl.daos.EffectiveProfileSwitchDao
 import info.nightscout.database.impl.daos.ExtendedBolusDao
 import info.nightscout.database.impl.daos.FoodDao
 import info.nightscout.database.impl.daos.GlucoseValueDao
+import info.nightscout.database.impl.daos.HeartRateDao
 import info.nightscout.database.impl.daos.MultiwaveBolusLinkDao
 import info.nightscout.database.impl.daos.OfflineEventDao
 import info.nightscout.database.impl.daos.PreferenceChangeDao
@@ -30,6 +32,7 @@ import info.nightscout.database.impl.daos.delegated.DelegatedEffectiveProfileSwi
 import info.nightscout.database.impl.daos.delegated.DelegatedExtendedBolusDao
 import info.nightscout.database.impl.daos.delegated.DelegatedFoodDao
 import info.nightscout.database.impl.daos.delegated.DelegatedGlucoseValueDao
+import info.nightscout.database.impl.daos.delegated.DelegatedHeartRateDao
 import info.nightscout.database.impl.daos.delegated.DelegatedMultiwaveBolusLinkDao
 import info.nightscout.database.impl.daos.delegated.DelegatedOfflineEventDao
 import info.nightscout.database.impl.daos.delegated.DelegatedPreferenceChangeDao
@@ -40,9 +43,6 @@ import info.nightscout.database.impl.daos.delegated.DelegatedTherapyEventDao
 import info.nightscout.database.impl.daos.delegated.DelegatedTotalDailyDoseDao
 import info.nightscout.database.impl.daos.delegated.DelegatedUserEntryDao
 import info.nightscout.database.impl.daos.delegated.DelegatedVersionChangeDao
-import info.nightscout.database.entities.interfaces.DBEntry
-import info.nightscout.database.impl.daos.HeartRateDao
-import info.nightscout.database.impl.daos.delegated.DelegatedHeartRateDao
 
 internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val database: AppDatabase) {
 

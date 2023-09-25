@@ -9,9 +9,9 @@ import app.aaps.core.main.extensions.getCustomizedName
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
 fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): JSONObject =

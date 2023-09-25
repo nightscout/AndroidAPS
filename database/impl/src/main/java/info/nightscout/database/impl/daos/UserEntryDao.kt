@@ -3,9 +3,9 @@ package info.nightscout.database.impl.daos
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import info.nightscout.database.entities.TABLE_USER_ENTRY
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.UserEntry.Sources
+import app.aaps.database.entities.TABLE_USER_ENTRY
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry.Sources
 import io.reactivex.rxjava3.core.Single
 
 @Dao

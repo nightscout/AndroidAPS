@@ -26,8 +26,8 @@ import app.aaps.core.main.graph.data.TherapyEventDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.TherapyEvent
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

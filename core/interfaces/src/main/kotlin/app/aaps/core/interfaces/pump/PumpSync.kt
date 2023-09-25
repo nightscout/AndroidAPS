@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.entities.TemporaryBasal
+import app.aaps.database.entities.TemporaryBasal
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt

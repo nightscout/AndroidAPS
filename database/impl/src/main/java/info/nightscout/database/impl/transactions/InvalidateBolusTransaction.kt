@@ -1,10 +1,8 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Bolus
-
 class InvalidateBolusTransaction(val id: Long) : Transaction<InvalidateBolusTransaction.TransactionResult>() {
 
-    override fun run() : TransactionResult {
+    override fun run(): TransactionResult {
         val result = TransactionResult()
         val bolus = database.bolusDao.findById(id)
             ?: throw IllegalArgumentException("There is no such Bolus with the specified ID.")
@@ -17,6 +15,7 @@ class InvalidateBolusTransaction(val id: Long) : Transaction<InvalidateBolusTran
     }
 
     class TransactionResult {
-        val invalidated = mutableListOf<Bolus>()
+
+        val invalidated = mutableListOf<app.aaps.database.entities.Bolus>()
     }
 }

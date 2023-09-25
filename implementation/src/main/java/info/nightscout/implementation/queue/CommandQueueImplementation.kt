@@ -44,11 +44,11 @@ import app.aaps.core.main.extensions.getCustomizedName
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.interfaces.end
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.EffectiveProfileSwitch
-import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandBolus

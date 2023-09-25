@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import info.nightscout.database.entities.Bolus
+import app.aaps.database.entities.Bolus
 
 class BolusDataPoint(
     val data: Bolus,

@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.ExtendedBolus
+import app.aaps.database.entities.ExtendedBolus
 
 class UpdateNsIdExtendedBolusTransaction(val boluses: List<ExtendedBolus>) : Transaction<UpdateNsIdExtendedBolusTransaction.TransactionResult>() {
 

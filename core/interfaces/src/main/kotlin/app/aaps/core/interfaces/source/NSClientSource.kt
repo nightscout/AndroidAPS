@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.source
 
-import info.nightscout.database.entities.GlucoseValue
+import app.aaps.database.entities.GlucoseValue
 
 interface NSClientSource {
 

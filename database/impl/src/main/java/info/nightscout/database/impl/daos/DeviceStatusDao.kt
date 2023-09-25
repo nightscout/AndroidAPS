@@ -4,8 +4,8 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import info.nightscout.database.entities.DeviceStatus
-import info.nightscout.database.entities.TABLE_DEVICE_STATUS
+import app.aaps.database.entities.DeviceStatus
+import app.aaps.database.entities.TABLE_DEVICE_STATUS
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

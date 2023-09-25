@@ -11,10 +11,10 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry.Sources
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.UserEntry.Sources
 import javax.inject.Inject
 
 class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {

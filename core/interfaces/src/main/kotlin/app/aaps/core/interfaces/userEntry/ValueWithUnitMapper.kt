@@ -1,9 +1,9 @@
 package app.aaps.core.interfaces.userEntry
 
 import app.aaps.core.interfaces.db.GlucoseUnit
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.ValueWithUnit
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.ValueWithUnit
 
 sealed class ValueWithUnitMapper {          //I use a sealed class because of StringResource that contains a listOf as second parameter
 

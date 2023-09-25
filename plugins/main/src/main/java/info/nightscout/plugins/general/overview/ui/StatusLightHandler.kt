@@ -15,8 +15,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.TherapyEvent
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.R
 import java.util.concurrent.TimeUnit

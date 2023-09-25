@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry
 
 class UserEntryTransaction(private val entries: List<UserEntry>) : Transaction<List<UserEntry>>() {
 

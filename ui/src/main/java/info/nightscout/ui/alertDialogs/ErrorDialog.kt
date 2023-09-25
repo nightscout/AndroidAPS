@@ -13,10 +13,10 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.T
-import dagger.android.support.DaggerDialogFragment
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import dagger.android.support.DaggerDialogFragment
 import info.nightscout.ui.databinding.DialogErrorBinding
 import javax.inject.Inject
 

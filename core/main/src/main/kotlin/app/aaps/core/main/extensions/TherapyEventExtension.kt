@@ -2,7 +2,7 @@ package app.aaps.core.main.extensions
 
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.utils.DateUtil
-import info.nightscout.database.entities.TherapyEvent
+import app.aaps.database.entities.TherapyEvent
 
 fun TherapyEvent.isOlderThan(hours: Double, dateUtil: DateUtil): Boolean {
     return getHoursFromStart(dateUtil) > hours

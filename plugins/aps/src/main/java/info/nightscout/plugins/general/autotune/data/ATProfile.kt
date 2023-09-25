@@ -22,8 +22,8 @@ import app.aaps.core.main.extensions.blockValueBySeconds
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.database.entities.data.Block
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.data.Block
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject

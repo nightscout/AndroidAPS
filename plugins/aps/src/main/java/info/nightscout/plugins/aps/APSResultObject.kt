@@ -19,8 +19,8 @@ import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.database.entities.GlucoseValue
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.GlucoseValue
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject

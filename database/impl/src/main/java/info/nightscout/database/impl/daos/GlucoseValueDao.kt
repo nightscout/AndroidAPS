@@ -2,8 +2,8 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.TABLE_GLUCOSE_VALUES
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.TABLE_GLUCOSE_VALUES
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

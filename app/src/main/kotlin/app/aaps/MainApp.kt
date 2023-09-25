@@ -13,7 +13,6 @@ import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import app.aaps.di.DaggerAppComponent
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -28,6 +27,10 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.ui.locale.LocaleHelper
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.UserEntry
+import app.aaps.di.DaggerAppComponent
 import app.aaps.receivers.BTReceiver
 import app.aaps.receivers.ChargingStateReceiver
 import app.aaps.receivers.KeepAliveWorker
@@ -36,9 +39,6 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import app.aaps.core.ui.locale.LocaleHelper
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.VersionChangeTransaction

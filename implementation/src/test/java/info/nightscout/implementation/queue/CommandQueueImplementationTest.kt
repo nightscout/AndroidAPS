@@ -3,8 +3,6 @@ package info.nightscout.implementation.queue
 import android.content.Context
 import android.os.Handler
 import android.os.PowerManager
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -25,13 +23,15 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.Bolus
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.Bolus
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.queue.commands.CommandBolus
 import info.nightscout.implementation.queue.commands.CommandCustomCommand

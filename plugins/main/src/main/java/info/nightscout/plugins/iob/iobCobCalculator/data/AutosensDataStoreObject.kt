@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.entities.GlucoseValue
+import app.aaps.database.entities.GlucoseValue
 import kotlin.math.abs
 import kotlin.math.roundToLong
 

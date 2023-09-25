@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Bolus
+import app.aaps.database.entities.Bolus
 
 /**
  * Creates or updates the Bolus from pump synchronization
@@ -11,8 +11,7 @@ class SyncPumpBolusTransaction(
 ) : Transaction<SyncPumpBolusTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
-        bolus.interfaceIDs.pumpId ?: bolus.interfaceIDs.pumpType ?: bolus.interfaceIDs.pumpSerial ?:
-            throw IllegalStateException("Some pump ID is null")
+        bolus.interfaceIDs.pumpId ?: bolus.interfaceIDs.pumpType ?: bolus.interfaceIDs.pumpSerial ?: throw IllegalStateException("Some pump ID is null")
         val result = TransactionResult()
         val current = database.bolusDao.findByPumpIds(bolus.interfaceIDs.pumpId!!, bolus.interfaceIDs.pumpType!!, bolus.interfaceIDs.pumpSerial!!)
         if (current == null) {

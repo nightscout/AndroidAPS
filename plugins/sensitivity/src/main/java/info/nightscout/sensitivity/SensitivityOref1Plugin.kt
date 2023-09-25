@@ -18,8 +18,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
+import app.aaps.database.entities.TherapyEvent
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.sensitivity.extensions.isPSEvent5minBack
 import info.nightscout.sensitivity.extensions.isTherapyEventEvent5minBack

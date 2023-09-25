@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.profile
 
 import app.aaps.core.interfaces.db.GlucoseUnit
-import info.nightscout.database.entities.data.Block
-import info.nightscout.database.entities.data.TargetBlock
+import app.aaps.database.entities.data.Block
+import app.aaps.database.entities.data.TargetBlock
 import org.json.JSONObject
 import java.util.TimeZone
 

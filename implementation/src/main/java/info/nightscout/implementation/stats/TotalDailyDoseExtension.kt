@@ -7,7 +7,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import info.nightscout.database.entities.TotalDailyDose
+import app.aaps.database.entities.TotalDailyDose
 import info.nightscout.implementation.R
 
 val TotalDailyDose.total

@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
-import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.database.entities.TemporaryBasal
 import com.google.gson.annotations.Expose
-import info.nightscout.database.entities.TemporaryBasal
 import java.util.UUID
 
 class BasalElement(tbr: TemporaryBasal, profile: Profile, dateUtil: DateUtil) : BaseElement(tbr.timestamp, UUID.nameUUIDFromBytes(("AAPS-basal" + tbr.timestamp).toByteArray()).toString(), dateUtil) {

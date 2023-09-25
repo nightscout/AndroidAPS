@@ -29,8 +29,8 @@ import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.target
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.database.ValueWrapper
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.aps.OpenAPSFragment
 import info.nightscout.plugins.aps.R

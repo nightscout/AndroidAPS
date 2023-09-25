@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.utils
 
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.database.entities.GlucoseValue
+import app.aaps.database.entities.GlucoseValue
 
 /**
  *  Convert BG direction value to trend arrow or calculate it if not provided

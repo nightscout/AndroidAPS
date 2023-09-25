@@ -2,9 +2,9 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.APSResultLink
-import info.nightscout.database.entities.TABLE_APS_RESULTS
-import info.nightscout.database.entities.TABLE_APS_RESULT_LINKS
+import app.aaps.database.entities.APSResultLink
+import app.aaps.database.entities.TABLE_APS_RESULTS
+import app.aaps.database.entities.TABLE_APS_RESULT_LINKS
 
 @Dao
 internal interface APSResultLinkDao : TraceableDao<APSResultLink> {

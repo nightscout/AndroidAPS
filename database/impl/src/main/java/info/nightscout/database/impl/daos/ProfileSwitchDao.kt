@@ -2,9 +2,9 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.database.entities.TABLE_PROFILE_SWITCHES
-import info.nightscout.database.entities.data.checkSanity
+import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.TABLE_PROFILE_SWITCHES
+import app.aaps.database.entities.data.checkSanity
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

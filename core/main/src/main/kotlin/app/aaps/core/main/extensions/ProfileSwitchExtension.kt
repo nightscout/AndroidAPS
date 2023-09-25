@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.ProfileSwitch
+import app.aaps.database.entities.ProfileSwitch
 import org.json.JSONObject
 import java.util.TimeZone
 

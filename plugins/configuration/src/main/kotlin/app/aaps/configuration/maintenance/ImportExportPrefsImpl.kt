@@ -27,7 +27,6 @@ import app.aaps.configuration.maintenance.data.PrefsFormat
 import app.aaps.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.configuration.maintenance.dialogs.PrefImportSummaryDialog
 import app.aaps.configuration.maintenance.formats.EncryptedPrefsFormat
-import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -54,14 +53,15 @@ import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.T
-import dagger.android.HasAndroidInjector
+import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dialogs.TwoMessagesAlertDialog
 import app.aaps.core.ui.dialogs.WarningDialog
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import java.io.File
 import java.io.FileNotFoundException

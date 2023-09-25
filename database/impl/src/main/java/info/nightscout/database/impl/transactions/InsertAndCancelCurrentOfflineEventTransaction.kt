@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.interfaces.end
 
 class InsertAndCancelCurrentOfflineEventTransaction(
     val offlineEvent: OfflineEvent
@@ -24,6 +24,7 @@ class InsertAndCancelCurrentOfflineEventTransaction(
     }
 
     class TransactionResult {
+
         val inserted = mutableListOf<OfflineEvent>()
         val updated = mutableListOf<OfflineEvent>()
     }

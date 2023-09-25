@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.transactions.TransactionGlucoseValue
 import app.aaps.core.nssdk.localmodel.entry.Direction
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.transactions.TransactionGlucoseValue
 import java.security.InvalidParameterException
 
 fun NSSgvV3.toTransactionGlucoseValue(): TransactionGlucoseValue {

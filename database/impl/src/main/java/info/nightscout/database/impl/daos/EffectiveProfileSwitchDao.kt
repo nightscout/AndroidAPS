@@ -2,8 +2,8 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.EffectiveProfileSwitch
-import info.nightscout.database.entities.TABLE_EFFECTIVE_PROFILE_SWITCHES
+import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.TABLE_EFFECTIVE_PROFILE_SWITCHES
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

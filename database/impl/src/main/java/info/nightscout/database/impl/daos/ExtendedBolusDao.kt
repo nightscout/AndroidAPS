@@ -2,9 +2,9 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.TABLE_EXTENDED_BOLUSES
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.TABLE_EXTENDED_BOLUSES
+import app.aaps.database.entities.embedments.InterfaceIDs
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

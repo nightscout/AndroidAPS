@@ -2,8 +2,8 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.TABLE_OFFLINE_EVENTS
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.TABLE_OFFLINE_EVENTS
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

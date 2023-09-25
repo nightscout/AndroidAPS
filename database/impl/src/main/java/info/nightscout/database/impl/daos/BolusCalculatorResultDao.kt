@@ -2,8 +2,8 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.database.entities.TABLE_BOLUS_CALCULATOR_RESULTS
+import app.aaps.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.TABLE_BOLUS_CALCULATOR_RESULTS
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

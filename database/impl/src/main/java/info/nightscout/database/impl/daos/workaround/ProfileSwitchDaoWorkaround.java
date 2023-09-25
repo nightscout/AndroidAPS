@@ -2,9 +2,9 @@ package info.nightscout.database.impl.daos.workaround;
 
 import androidx.room.Transaction;
 
-import info.nightscout.database.impl.daos.ProfileSwitchDaoKt;
-import info.nightscout.database.entities.ProfileSwitch;
+import app.aaps.database.entities.ProfileSwitch;
 import info.nightscout.database.impl.daos.ProfileSwitchDao;
+import info.nightscout.database.impl.daos.ProfileSwitchDaoKt;
 import info.nightscout.database.impl.daos.TraceableDao;
 
 public interface ProfileSwitchDaoWorkaround extends TraceableDao<ProfileSwitch> {

@@ -41,11 +41,11 @@ import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
-import dagger.android.HasAndroidInjector
 import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.database.entities.ValueWithUnit
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
+import dagger.android.HasAndroidInjector
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Singleton

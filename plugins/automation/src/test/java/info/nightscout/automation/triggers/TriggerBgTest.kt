@@ -2,9 +2,9 @@ package info.nightscout.automation.triggers
 
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.database.entities.GlucoseValue
 import com.google.common.base.Optional
 import info.nightscout.automation.elements.Comparator
-import info.nightscout.database.entities.GlucoseValue
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

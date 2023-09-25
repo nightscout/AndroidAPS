@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.interfaces.end
 
 class InsertAndCancelCurrentTemporaryTargetTransaction(
     val temporaryTarget: TemporaryTarget
@@ -24,6 +24,7 @@ class InsertAndCancelCurrentTemporaryTargetTransaction(
     }
 
     class TransactionResult {
+
         val inserted = mutableListOf<TemporaryTarget>()
         val updated = mutableListOf<TemporaryTarget>()
     }

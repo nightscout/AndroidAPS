@@ -1,13 +1,13 @@
 package info.nightscout.core.extensions
 
-import app.aaps.core.main.extensions.iobCalc
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.extensions.iobCalc
+import app.aaps.database.entities.Bolus
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.Bolus
 import info.nightscout.insulin.InsulinLyumjevPlugin
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.BolusCalculatorResult
 
 /**
  * Sync the BolusCalculatorResult from NS

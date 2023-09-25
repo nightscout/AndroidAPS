@@ -1,8 +1,8 @@
 package info.nightscout.ui.extensions
 
+import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.embedments.InterfaceIDs
 import org.junit.jupiter.api.Test
 
 class InterfaceIDsExtensionKtTest : TestBase() {

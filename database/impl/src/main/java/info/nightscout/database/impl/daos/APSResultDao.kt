@@ -2,8 +2,8 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.APSResult
-import info.nightscout.database.entities.TABLE_APS_RESULTS
+import app.aaps.database.entities.APSResult
+import app.aaps.database.entities.TABLE_APS_RESULTS
 
 @Suppress("FunctionName")
 @Dao

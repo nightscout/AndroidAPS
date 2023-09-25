@@ -6,8 +6,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -20,12 +18,14 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import com.google.android.material.tabs.TabLayout
-import com.google.common.collect.Lists
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.EffectiveProfileSwitch
+import com.google.android.material.tabs.TabLayout
+import com.google.common.collect.Lists
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivityProfilehelperBinding
@@ -107,10 +107,10 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
 
         binding.profileType.setOnItemClickListener { _, _, _, _ ->
             when (binding.profileType.text.toString()) {
-                rh.gs(R.string.motol_default_profile)                            -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
-                rh.gs(R.string.dpv_default_profile)                              -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
-                rh.gs(R.string.current_profile)                                  -> switchTab(tabSelected, ProfileType.CURRENT)
-                rh.gs(R.string.available_profile)                                -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
+                rh.gs(R.string.motol_default_profile)                     -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
+                rh.gs(R.string.dpv_default_profile)                       -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
+                rh.gs(R.string.current_profile)                           -> switchTab(tabSelected, ProfileType.CURRENT)
+                rh.gs(R.string.available_profile)                         -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
                 rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch) -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
             }
         }

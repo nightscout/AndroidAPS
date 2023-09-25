@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.embedments.InterfaceIDs
-import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import org.junit.jupiter.api.Test
 
 internal class GlucoseValueExtensionKtTest : TestBaseWithProfile() {

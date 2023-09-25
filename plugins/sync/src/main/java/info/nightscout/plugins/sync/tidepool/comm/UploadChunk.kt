@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.entities.EffectiveProfileSwitch
-import info.nightscout.database.entities.TemporaryBasal
+import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.TemporaryBasal
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.tidepool.elements.BasalElement

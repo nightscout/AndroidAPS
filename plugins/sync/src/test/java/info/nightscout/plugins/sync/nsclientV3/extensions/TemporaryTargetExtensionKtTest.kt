@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import app.aaps.shared.tests.TestBaseWithProfile
-import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.embedments.InterfaceIDs
 import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.shared.tests.TestBaseWithProfile
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")

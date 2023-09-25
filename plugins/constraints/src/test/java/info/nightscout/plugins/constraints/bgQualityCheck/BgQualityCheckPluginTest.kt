@@ -1,7 +1,5 @@
 package info.nightscout.plugins.constraints.bgQualityCheck
 
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
@@ -10,11 +8,13 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.plugins.constraints.R
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

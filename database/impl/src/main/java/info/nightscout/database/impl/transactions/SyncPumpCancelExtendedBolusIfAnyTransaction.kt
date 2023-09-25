@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.interfaces.end
 
 class SyncPumpCancelExtendedBolusIfAnyTransaction(
     private val timestamp: Long, private val endPumpId: Long, private val pumpType: InterfaceIDs.PumpType, private val pumpSerial: String

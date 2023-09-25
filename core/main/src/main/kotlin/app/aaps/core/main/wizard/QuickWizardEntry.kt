@@ -16,8 +16,8 @@ import app.aaps.core.main.iob.round
 import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.MidnightUtils
+import app.aaps.database.ValueWrapper
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.ValueWrapper
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.UUID

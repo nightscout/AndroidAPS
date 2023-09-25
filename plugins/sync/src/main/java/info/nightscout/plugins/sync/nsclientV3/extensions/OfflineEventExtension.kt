@@ -1,10 +1,10 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.embedments.InterfaceIDs
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSOfflineEvent
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 import java.security.InvalidParameterException
 
 fun NSOfflineEvent.toOfflineEvent(): OfflineEvent =

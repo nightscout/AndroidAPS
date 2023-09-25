@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.GlucoseValue
+import app.aaps.database.entities.GlucoseValue
 
 class UpdateNsIdGlucoseValueTransaction(private val glucoseValues: List<GlucoseValue>) : Transaction<UpdateNsIdGlucoseValueTransaction.TransactionResult>() {
 

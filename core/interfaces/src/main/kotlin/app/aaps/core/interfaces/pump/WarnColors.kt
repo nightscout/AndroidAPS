@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.pump
 
 import android.widget.TextView
-import info.nightscout.database.entities.TherapyEvent
+import app.aaps.database.entities.TherapyEvent
 
 interface WarnColors {
 

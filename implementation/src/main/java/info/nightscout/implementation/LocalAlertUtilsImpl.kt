@@ -1,6 +1,5 @@
 package info.nightscout.implementation
 
-import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.Constants
@@ -17,11 +16,12 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.database.entities.ValueWithUnit
+import app.aaps.core.main.events.EventNewNotification
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable

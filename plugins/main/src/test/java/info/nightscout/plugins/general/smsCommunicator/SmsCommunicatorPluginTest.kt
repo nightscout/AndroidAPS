@@ -1,7 +1,6 @@
 package info.nightscout.plugins.general.smsCommunicator
 
 import android.telephony.SmsManager
-import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.interfaces.aps.ApsMode
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
@@ -20,11 +19,12 @@ import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction

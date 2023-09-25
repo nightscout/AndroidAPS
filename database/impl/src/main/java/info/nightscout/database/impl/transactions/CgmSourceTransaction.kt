@@ -1,13 +1,13 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.transactions.TransactionGlucoseValue
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.transactions.TransactionGlucoseValue
 
 /**
  * Inserts data from a CGM source into the database
  */
-class CgmSourceTransaction constructor(
+class CgmSourceTransaction(
     private val glucoseValues: List<TransactionGlucoseValue>,
     private val calibrations: List<Calibration>,
     private val sensorInsertionTime: Long?

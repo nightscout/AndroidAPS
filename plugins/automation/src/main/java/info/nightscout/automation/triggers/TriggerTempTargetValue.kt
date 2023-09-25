@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
+import app.aaps.database.ValueWrapper
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
@@ -12,7 +13,6 @@ import info.nightscout.automation.elements.InputBg
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.database.ValueWrapper
 import org.json.JSONObject
 
 class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {

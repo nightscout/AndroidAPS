@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.Bolus
+import app.aaps.database.entities.Bolus
 
 /**
  * Sync the Bolus from NS

@@ -2,8 +2,8 @@ package info.nightscout.database.impl.daos
 
 import androidx.room.Dao
 import androidx.room.Query
-import info.nightscout.database.entities.TABLE_TEMPORARY_TARGETS
-import info.nightscout.database.entities.TemporaryTarget
+import app.aaps.database.entities.TABLE_TEMPORARY_TARGETS
+import app.aaps.database.entities.TemporaryTarget
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 

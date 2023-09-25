@@ -1,12 +1,11 @@
 package app.aaps.core.interfaces.pump
 
 import android.content.Context
+import app.aaps.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.TherapyEvent
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import com.google.gson.Gson
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.database.entities.TherapyEvent
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

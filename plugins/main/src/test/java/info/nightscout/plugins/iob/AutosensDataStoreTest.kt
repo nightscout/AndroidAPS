@@ -8,12 +8,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataStoreObject
 import org.junit.jupiter.api.BeforeEach

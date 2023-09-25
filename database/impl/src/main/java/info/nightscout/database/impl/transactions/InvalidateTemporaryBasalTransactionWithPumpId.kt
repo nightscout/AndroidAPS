@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.embedments.InterfaceIDs
 
 class InvalidateTemporaryBasalTransactionWithPumpId(val pumpId: Long, val pumpType: InterfaceIDs.PumpType, val pumpSerial: String) :
     Transaction<InvalidateTemporaryBasalTransactionWithPumpId.TransactionResult>() {

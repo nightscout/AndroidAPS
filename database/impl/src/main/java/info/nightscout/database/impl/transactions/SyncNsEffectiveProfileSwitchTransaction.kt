@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.EffectiveProfileSwitch
 
 /**
  * Sync the EffectiveProfileSwitch from NS

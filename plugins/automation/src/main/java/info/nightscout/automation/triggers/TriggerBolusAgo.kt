@@ -4,6 +4,8 @@ import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.Bolus
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
 import info.nightscout.automation.R
@@ -12,8 +14,6 @@ import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.Bolus
 import org.json.JSONObject
 
 class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {

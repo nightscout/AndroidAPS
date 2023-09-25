@@ -29,4 +29,4 @@ class ActionsPlugin @Inject constructor(
         .shortName(R.string.actions_shortname)
         .description(R.string.description_actions),
     aapsLogger, rh, injector
-), app.aaps.core.interfaces.actions.Actions
+), Actions

@@ -1,11 +1,11 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.core.main.R
 import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.utils.DateUtil
-import info.nightscout.database.entities.GlucoseValue
+import app.aaps.core.main.R
+import app.aaps.database.entities.GlucoseValue
 import org.json.JSONObject
 
 fun GlucoseValue.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =

@@ -3,6 +3,25 @@ package info.nightscout.database.impl
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.DeviceStatus
+import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.Food
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.HeartRate
+import app.aaps.database.entities.MultiwaveBolusLink
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.PreferenceChange
+import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.TotalDailyDose
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.VersionChange
 import info.nightscout.database.impl.daos.APSResultDao
 import info.nightscout.database.impl.daos.APSResultLinkDao
 import info.nightscout.database.impl.daos.BolusCalculatorResultDao
@@ -13,6 +32,7 @@ import info.nightscout.database.impl.daos.EffectiveProfileSwitchDao
 import info.nightscout.database.impl.daos.ExtendedBolusDao
 import info.nightscout.database.impl.daos.FoodDao
 import info.nightscout.database.impl.daos.GlucoseValueDao
+import info.nightscout.database.impl.daos.HeartRateDao
 import info.nightscout.database.impl.daos.MultiwaveBolusLinkDao
 import info.nightscout.database.impl.daos.OfflineEventDao
 import info.nightscout.database.impl.daos.PreferenceChangeDao
@@ -23,39 +43,19 @@ import info.nightscout.database.impl.daos.TherapyEventDao
 import info.nightscout.database.impl.daos.TotalDailyDoseDao
 import info.nightscout.database.impl.daos.UserEntryDao
 import info.nightscout.database.impl.daos.VersionChangeDao
-import info.nightscout.database.entities.APSResult
-import info.nightscout.database.entities.APSResultLink
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.DeviceStatus
-import info.nightscout.database.entities.EffectiveProfileSwitch
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.Food
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.HeartRate
-import info.nightscout.database.entities.MultiwaveBolusLink
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.PreferenceChange
-import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.TotalDailyDose
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.VersionChange
-import info.nightscout.database.impl.daos.HeartRateDao
 import java.io.Closeable
 
 const val DATABASE_VERSION = 24
 
-@Database(version = DATABASE_VERSION,
-          entities = [APSResult::class, Bolus::class, BolusCalculatorResult::class, Carbs::class,
+@Database(
+    version = DATABASE_VERSION,
+    entities = [app.aaps.database.entities.APSResult::class, Bolus::class, BolusCalculatorResult::class, Carbs::class,
         EffectiveProfileSwitch::class, ExtendedBolus::class, GlucoseValue::class, ProfileSwitch::class,
-        TemporaryBasal::class, TemporaryTarget::class, TherapyEvent::class, TotalDailyDose::class, APSResultLink::class,
+        TemporaryBasal::class, TemporaryTarget::class, TherapyEvent::class, TotalDailyDose::class, app.aaps.database.entities.APSResultLink::class,
         MultiwaveBolusLink::class, PreferenceChange::class, VersionChange::class, UserEntry::class,
         Food::class, DeviceStatus::class, OfflineEvent::class, HeartRate::class],
-          exportSchema = true)
+    exportSchema = true
+)
 @TypeConverters(Converters::class)
 internal abstract class AppDatabase : Closeable, RoomDatabase() {
 

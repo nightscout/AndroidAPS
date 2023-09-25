@@ -1,18 +1,18 @@
 package app.aaps.core.interfaces.sync
 
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.DeviceStatus
-import info.nightscout.database.entities.EffectiveProfileSwitch
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.Food
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.TherapyEvent
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.BolusCalculatorResult
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.DeviceStatus
+import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.ExtendedBolus
+import app.aaps.database.entities.Food
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.TherapyEvent
 import org.json.JSONObject
 
 interface DataSyncSelector {

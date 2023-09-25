@@ -10,9 +10,9 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.database.entities.BolusCalculatorResult
 import com.google.gson.Gson
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogWizardinfoBinding
 import javax.inject.Inject

@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.iob
 
-import info.nightscout.database.entities.GlucoseValue
+import app.aaps.database.entities.GlucoseValue
 
 /**
  * Simplified [GlucoseValue] for storing in memory and calculations

@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.EffectiveProfileSwitch
 
 class EffectiveProfileSwitchDataPoint(
     val data: EffectiveProfileSwitch,

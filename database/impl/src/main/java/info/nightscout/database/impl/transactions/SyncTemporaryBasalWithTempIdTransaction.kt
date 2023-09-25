@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TemporaryBasal
+import app.aaps.database.entities.TemporaryBasal
 
 /**
  * Creates or updates the TemporaryBasal from pump synchronization

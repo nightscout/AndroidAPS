@@ -14,7 +14,6 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -29,8 +28,9 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.database.entities.TotalDailyDose
+import app.aaps.database.entities.TotalDailyDose
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.ui.databinding.ActivityTddStatsBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable

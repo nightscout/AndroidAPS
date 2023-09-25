@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.tidepool.elements
 
-import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.database.entities.EffectiveProfileSwitch
 import com.google.gson.annotations.Expose
-import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
 import java.util.UUID
 

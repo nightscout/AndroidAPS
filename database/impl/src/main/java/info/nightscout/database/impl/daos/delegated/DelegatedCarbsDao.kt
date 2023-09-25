@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.daos.delegated
 
+import app.aaps.database.entities.Carbs
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.CarbsDao
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.interfaces.DBEntry
 
 internal class DelegatedCarbsDao(changes: MutableList<DBEntry>, private val dao: CarbsDao) : DelegatedDao(changes), CarbsDao by dao {
 

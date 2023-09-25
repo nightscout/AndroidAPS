@@ -1,8 +1,8 @@
 package info.nightscout.database.impl.daos.delegated
 
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.interfaces.DBEntry
 import info.nightscout.database.impl.daos.OfflineEventDao
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.interfaces.DBEntry
 
 internal class DelegatedOfflineEventDao(changes: MutableList<DBEntry>, private val dao: OfflineEventDao) : DelegatedDao(changes), OfflineEventDao by dao {
 

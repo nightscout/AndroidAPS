@@ -11,7 +11,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -22,12 +21,13 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventFoodDatabaseChanged
 import app.aaps.core.interfaces.ui.UiInteraction
-import dagger.android.support.DaggerFragment
+import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
-import info.nightscout.database.entities.Food
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
+import app.aaps.database.entities.Food
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import dagger.android.support.DaggerFragment
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateFoodTransaction
 import info.nightscout.plugins.R

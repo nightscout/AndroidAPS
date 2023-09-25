@@ -3,7 +3,7 @@ package app.aaps.core.interfaces.aps
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import info.nightscout.database.entities.OfflineEvent
+import app.aaps.database.entities.OfflineEvent
 
 interface Loop {
 

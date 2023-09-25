@@ -2,15 +2,16 @@ package info.nightscout.plugins.sync.nsclient.extensions
 
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
 fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put(
             "eventType",
-            if (type == Bolus.Type.SMB) info.nightscout.database.entities.TherapyEvent.Type.CORRECTION_BOLUS.text else info.nightscout.database.entities.TherapyEvent.Type.MEAL_BOLUS.text
+            if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text
         )
         .put("insulin", amount)
         .put("created_at", dateUtil.toISOString(timestamp))

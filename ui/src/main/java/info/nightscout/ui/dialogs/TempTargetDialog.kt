@@ -19,12 +19,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.ValueWithUnit
 import com.google.common.base.Joiner
 import com.google.common.collect.Lists
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
@@ -231,7 +231,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                                 rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
                                 rh.gs(app.aaps.core.ui.R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
                                 rh.gs(app.aaps.core.ui.R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
-                                else                                               -> TemporaryTarget.Reason.CUSTOM
+                                else                                        -> TemporaryTarget.Reason.CUSTOM
                             },
                             lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
                             highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())

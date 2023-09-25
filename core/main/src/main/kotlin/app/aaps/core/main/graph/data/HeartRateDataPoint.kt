@@ -3,7 +3,7 @@ package app.aaps.core.main.graph.data
 import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.interfaces.resources.ResourceHelper
-import info.nightscout.database.entities.HeartRate
+import app.aaps.database.entities.HeartRate
 
 class HeartRateDataPoint(
     private val data: HeartRate,

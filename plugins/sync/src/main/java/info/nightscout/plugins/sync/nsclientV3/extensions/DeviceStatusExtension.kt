@@ -1,9 +1,9 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
+import app.aaps.database.entities.DeviceStatus
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
-import info.nightscout.database.entities.DeviceStatus
-import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import org.json.JSONObject
 
 fun DeviceStatus.toNSDeviceStatus(): NSDeviceStatus {

@@ -28,25 +28,25 @@ public class VersionResponse extends MessageBlock {
                 podProgressStatus = PodProgressStatus.fromByte(data[9]);
                 pmVersion = new FirmwareVersion(data[2], data[3], data[4]);
                 piVersion = new FirmwareVersion(data[5], data[6], data[7]);
-                lot = ByteUtil.INSTANCE.toInt((int) data[10], (int) data[11],
+                lot = ByteUtil.INSTANCE.toInt(data[10], (int) data[11],
                         (int) data[12], (int) data[13], ByteUtil.BitConversion.BIG_ENDIAN);
-                tid = ByteUtil.INSTANCE.toInt((int) data[14], (int) data[15],
+                tid = ByteUtil.INSTANCE.toInt(data[14], (int) data[15],
                         (int) data[16], (int) data[17], ByteUtil.BitConversion.BIG_ENDIAN);
                 gain = (byte) ((data[18] & 0xc0) >>> 6);
                 rssi = (byte) (data[18] & 0x3f);
-                address = ByteUtil.INSTANCE.toInt((int) data[19], (int) data[20],
+                address = ByteUtil.INSTANCE.toInt(data[19], (int) data[20],
                         (int) data[21], (int) data[22], ByteUtil.BitConversion.BIG_ENDIAN);
                 break;
             case SETUP_POD_VERSION_RESPONSE_LENGTH:
                 podProgressStatus = PodProgressStatus.fromByte(data[16]);
                 pmVersion = new FirmwareVersion(data[9], data[10], data[11]);
                 piVersion = new FirmwareVersion(data[12], data[13], data[14]);
-                lot = ByteUtil.INSTANCE.toInt((int) data[17], (int) data[18],
+                lot = ByteUtil.INSTANCE.toInt(data[17], (int) data[18],
                         (int) data[19], (int) data[20], ByteUtil.BitConversion.BIG_ENDIAN);
-                tid = ByteUtil.INSTANCE.toInt((int) data[21], (int) data[22],
+                tid = ByteUtil.INSTANCE.toInt(data[21], (int) data[22],
                         (int) data[23], (int) data[24], ByteUtil.BitConversion.BIG_ENDIAN);
 
-                address = ByteUtil.INSTANCE.toInt((int) data[25], (int) data[26],
+                address = ByteUtil.INSTANCE.toInt(data[25], (int) data[26],
                         (int) data[27], (int) data[28], ByteUtil.BitConversion.BIG_ENDIAN);
                 break;
             default:

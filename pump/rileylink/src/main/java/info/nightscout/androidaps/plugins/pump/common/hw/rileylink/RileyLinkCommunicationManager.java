@@ -275,7 +275,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         for (int k = 0; k < results.trials.size(); k++) {
             FrequencyTrial one = results.trials.get(k);
 
-            stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", String.valueOf(k), String.valueOf(one.frequencyMHz), one.averageRSSI + ", RSSIs =" + one.rssiList));
+            stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", k, one.frequencyMHz, one.averageRSSI + ", RSSIs =" + one.rssiList));
         }
 
         aapsLogger.info(LTag.PUMPBTCOMM, stringBuilder.toString());

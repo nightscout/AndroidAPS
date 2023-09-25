@@ -19,10 +19,10 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.TotalDailyDose
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.Bolus
+import app.aaps.database.entities.TotalDailyDose
+import app.aaps.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton

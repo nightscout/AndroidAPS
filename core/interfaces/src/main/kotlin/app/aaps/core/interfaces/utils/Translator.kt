@@ -1,10 +1,10 @@
 package app.aaps.core.interfaces.utils
 
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.TherapyEvent
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.ValueWithUnit
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.ValueWithUnit
 
 interface Translator {
 

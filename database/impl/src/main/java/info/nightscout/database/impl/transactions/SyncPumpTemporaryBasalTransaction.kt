@@ -1,7 +1,7 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.interfaces.end
+import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.entities.interfaces.end
 
 /**
  * Creates or updates the Temporary basal from pump synchronization
@@ -21,7 +21,7 @@ class SyncPumpTemporaryBasalTransaction(
             if (
                 existing.timestamp != temporaryBasal.timestamp ||
                 existing.rate != temporaryBasal.rate ||
-                existing.duration != temporaryBasal.duration  && existing.interfaceIDs.endId == null ||
+                existing.duration != temporaryBasal.duration && existing.interfaceIDs.endId == null ||
                 existing.type != type ?: existing.type
             ) {
                 val old = existing.copy()

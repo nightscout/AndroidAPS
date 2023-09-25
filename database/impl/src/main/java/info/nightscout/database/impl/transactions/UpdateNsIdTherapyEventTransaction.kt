@@ -1,6 +1,6 @@
 package info.nightscout.database.impl.transactions
 
-import info.nightscout.database.entities.TherapyEvent
+import app.aaps.database.entities.TherapyEvent
 
 class UpdateNsIdTherapyEventTransaction(val therapyEvents: List<TherapyEvent>) : Transaction<UpdateNsIdTherapyEventTransaction.TransactionResult>() {
 

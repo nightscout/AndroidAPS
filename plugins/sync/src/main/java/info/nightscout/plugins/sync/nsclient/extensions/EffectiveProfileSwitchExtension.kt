@@ -5,8 +5,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
-import info.nightscout.database.entities.EffectiveProfileSwitch
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
 fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
@@ -14,7 +15,7 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("isValid", isValid)
-        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.NOTE.text) // move to separate collection when available in NS
+        .put("eventType", TherapyEvent.Type.NOTE.text) // move to separate collection when available in NS
         .put("profileJson", ProfileSealed.EPS(this).toPureNsJson(dateUtil).toString())
         .put("originalProfileName", originalProfileName)
         .put("originalCustomizedName", originalCustomizedName)

@@ -1,8 +1,8 @@
 package app.aaps.core.main.pump
 
 import app.aaps.core.interfaces.pump.defs.PumpType
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.embedments.InterfaceIDs
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.embedments.InterfaceIDs
 
 fun PumpType.Companion.fromDbSource(s: UserEntry.Sources): PumpType.Source =
     when (s) {

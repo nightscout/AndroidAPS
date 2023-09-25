@@ -82,7 +82,7 @@ object DateTimeUtil {
 
     @JvmStatic fun toATechDate(timeInMillis: Long): Long {
         val gc = GregorianCalendar()
-        gc.setTimeInMillis(timeInMillis)
+        gc.timeInMillis = timeInMillis
         return toATechDate(gc)
     }
 
@@ -139,7 +139,7 @@ object DateTimeUtil {
 
     @JvmStatic fun toStringFromTimeInMillis(timeInMillis: Long): String {
         val gc = GregorianCalendar()
-        gc.setTimeInMillis(timeInMillis)
+        gc.timeInMillis = timeInMillis
         return toString(gc)
     }
 
@@ -155,7 +155,7 @@ object DateTimeUtil {
 
     fun toMillisFromATD(aTechDateTime: Long): Long {
         val gc = toGregorianCalendar(aTechDateTime)
-        return gc.getTimeInMillis()
+        return gc.timeInMillis
     }
 
     fun getATechDateDifferenceAsMinutes(date1: Long, date2: Long): Int {
@@ -171,13 +171,13 @@ object DateTimeUtil {
     fun getMillisFromATDWithAddedMinutes(atd: Long, minutesDiff: Int): Long {
         val oldestEntryTime = toGregorianCalendar(atd)
         oldestEntryTime.add(Calendar.MINUTE, minutesDiff)
-        return oldestEntryTime.getTimeInMillis()
+        return oldestEntryTime.timeInMillis
     }
 
     fun getATDWithAddedSeconds(atd: Long, addedSeconds: Int): Long {
         val oldestEntryTime = toGregorianCalendar(atd)
         oldestEntryTime.add(Calendar.SECOND, addedSeconds)
-        return toATechDate(oldestEntryTime.getTimeInMillis())
+        return toATechDate(oldestEntryTime.timeInMillis)
     }
 
     /*

@@ -3,8 +3,8 @@ package app.aaps.core.interfaces.aps
 import android.text.Spanned
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.database.entities.GlucoseValue
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.entities.GlucoseValue
 import org.json.JSONObject
 
 interface APSResult {

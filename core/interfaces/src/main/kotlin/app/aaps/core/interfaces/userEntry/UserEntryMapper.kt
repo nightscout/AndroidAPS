@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.userEntry
 
-import info.nightscout.database.entities.UserEntry
+import app.aaps.database.entities.UserEntry
 
 class UserEntryMapper {
     enum class Action(val db: UserEntry.Action) {

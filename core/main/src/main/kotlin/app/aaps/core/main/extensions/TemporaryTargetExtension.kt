@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import info.nightscout.database.entities.TemporaryTarget
+import app.aaps.database.entities.TemporaryTarget
 import java.util.concurrent.TimeUnit
 
 fun TemporaryTarget.lowValueToUnitsToString(units: GlucoseUnit, decimalFormatter: DecimalFormatter): String =
