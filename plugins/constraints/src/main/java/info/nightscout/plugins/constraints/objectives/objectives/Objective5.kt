@@ -19,7 +19,7 @@ class Objective5(injector: HasAndroidInjector) : Objective(injector, "maxiobzero
         tasks.add(
             object : Task(this, R.string.closedmodeenabled) {
                 override fun isCompleted(): Boolean {
-                    val closedLoopEnabled = ConstraintObject(false, aapsLogger)
+                    val closedLoopEnabled = ConstraintObject(true, aapsLogger)
                     safetyPlugin.isClosedLoopAllowed(closedLoopEnabled)
                     return closedLoopEnabled.value()
                 }

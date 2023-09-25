@@ -218,11 +218,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
             constraintChecker.isAdvancedFilteringEnabled(it)
             inputConstraints.copyReasons(it)
         }
-        val uam = ConstraintObject(false, aapsLogger).also {
+        val uam = ConstraintObject(true, aapsLogger).also {
             constraintChecker.isUAMEnabled(it)
             inputConstraints.copyReasons(it)
         }
-        dynIsfEnabled = ConstraintObject(false, aapsLogger).also {
+        dynIsfEnabled = ConstraintObject(true, aapsLogger).also {
             constraintChecker.isDynIsfModeEnabled(it)
             inputConstraints.copyReasons(it)
         }
