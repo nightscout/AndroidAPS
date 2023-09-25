@@ -3,16 +3,21 @@
     <string name="bolus_constraint_applied">Constrângere de bolus aplicată</string>
     <string name="carbs_constraint_applied">Constrângere de carbohidrați aplicată</string>
     <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog anulat</string>
     <string name="start_activity_tt">Start TT activitate</string>
     <string name="start_eating_soon_tt">Start TT mănânc-în-curând</string>
     <string name="start_hypo_tt">Start TT hipo</string>
     <string name="time_offset">Decalaj</string>
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
+    <string name="a11y_carb_reminder">setați memento</string>
     <!--    Widget-->
+    <string name="configure">Configurați opacitatea</string>
+    <string name="widget_description">Widget AAPS</string>
     <!--     Activities-->
     <string name="activity_monitor">Monitorizare activitate</string>
     <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
+    <string name="do_you_want_reset_tdd_stats">Doriți să resetați statisticile DZT?</string>
     <string name="statistics">Statistici</string>
     <string name="calculation_in_progress">Calcul în desfășurare</string>
     <string name="invalid_age">Valoare vârstă invalidă</string>
@@ -22,6 +27,7 @@
     <string name="age">Vârstă</string>
     <string name="weight_label">Greutate</string>
     <string name="most_common_profile">Cel mai frecvent profil:</string>
+    <string name="survey_comment">Notă: Doar datele vizibile pe acest ecran vor fi încărcate în mod anonim. ID-ul este alocat acestei instalări a AndroidAPS. Puteți trimite date din nou dacă profilul dumneavoastră principal se modifică, dar lăsați-l să ruleze cel puțin o săptămână pentru ca rezultatul să fie vizibil în interval de timp. Ajutorul dumneavoastră este apreciat.</string>
     <string name="glucose_type">Tip glicemie</string>
     <string name="bg_other">Altul</string>
     <string name="bg_meter">Glucometru</string>
@@ -61,13 +67,17 @@
     <string name="duration3h">3 ore</string>
     <string name="duration10h">10 ore</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">corectează rezultatul cu %</string>
+    <string name="a11_correction_units">corectează rezultatul cu unități</string>
     <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
     <string name="missing_carbs">Lipsă %1$d g</string>
     <string name="a11y_current_bg">valoarea actuală a glicemiei</string>
     <string name="carb_time_label">Ora carbohidrați</string>
+    <string name="a11y_set_carb_timer">stabilește alarma pentru timpul carbohidraților</string>
     <string name="show_calculation">Arată calculul</string>
     <!-- Treatments -->
+    <string name="no_records_available">Nicio înregistrare disponibila</string>
     <string name="calculation_short">Calc</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">Insulină:</string>
@@ -81,10 +91,25 @@
     <string name="treatments_wizard_correction_label">Corecție</string>
     <string name="meal_bolus">Masă</string>
     <string name="prime">Amorsare</string>
+    <string name="profile_changes">Modificări ale profilului</string>
+    <string name="tempt_targets">Ținte temporare</string>
+    <string name="carbs_and_bolus">Carbohidrați și bolusuri</string>
+    <string name="show_invalidated_records">Arată înregistrările invalidate / şterse</string>
+    <string name="hide_invalidated_records">Ascunde înregistrările invalidate / eliminate</string>
+    <string name="refresh_from_nightscout">Reîmprospătare din Nightscout</string>
     <string name="refresheventsfromnightscout">Actualizează din NS</string>
+    <string name="show_invalidated">Arată invalidat</string>
+    <string name="hide_invalidated">Ascunde invalidat</string>
+    <string name="careportal_remove_started_events">Eliminare intrări pornire AAPS</string>
+    <string name="hide_loop">Ascunde bucla</string>
+    <string name="show_loop">Arată bucla</string>
     <string name="user_entry">Înregistrare utilizator</string>
     <string name="clone_label">Clonează</string>
+    <string name="show_loop_records">Afișare înregistrări buclă</string>
+    <string name="show_hide_records">Ascundere înregistrări buclă</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profilul 1</string>
+    <string name="profile2">Profilul 2</string>
     <string name="profile_type">Tip profil</string>
     <string name="basal_pct_from_tdd_label">% din bazală</string>
     <string name="selected_profile">Selectat:</string>
@@ -103,6 +128,28 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP APĂSAT</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">numai pe ceas</string>
+    <string name="a11y_only_on_phone">numai pe telefon</string>
+    <string name="quickwizard_settings">Setări AsistentRapid</string>
+    <string name="overview_edit_quickwizard_button_text">Text buton:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbohidrați:</string>
+    <string name="overview_edit_quickwizard_valid">Valabil:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Adaugă</string>
+    <string name="overview_quickwizard_item_edit_button">Editează</string>
+    <string name="overview_edit_quickwizard_show_on_device">Arată înregistrarea pe dispozitiv:</string>
+    <string name="overview_edit_quickwizard_use_bg">Calcul glicemie</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Calcul IOB bolus</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Calcul IOB bazală</string>
+    <string name="overview_edit_quickwizard_use_trend">Calcul pantă</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Calcul superbolus</string>
+    <string name="overview_edit_quickwizard_percentage">Procentaj</string>
+    <string name="device_all">Toate</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Ceas</string>
+    <string name="positive_only">Doar pozitiv</string>
+    <string name="negative_only">Doar negativ</string>
+    <string name="overview_editquickwizard_usecob">Calcul COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Calcul țintă temporară</string>
     <string name="overview_editquickwizard_usepercentage">Calculul procentajului</string>
     <string name="app_default">Implicit pentru aplicație</string>
     <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
