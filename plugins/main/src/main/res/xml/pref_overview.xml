@@ -288,7 +288,7 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:title="@string/statuslights_cage_warning"
-                validate:maxNumber="120"
+                validate:maxNumber="240"
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
@@ -301,7 +301,7 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:title="@string/statuslights_cage_critical"
-                validate:maxNumber="120"
+                validate:maxNumber="240"
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
