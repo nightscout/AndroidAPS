@@ -1,6 +1,7 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.truth.Truth.assertThat
+import kotlin.test.assertIs
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Test
@@ -73,7 +74,7 @@ class TriggerConnectorTest : TriggerTestBase() {
         t.list.add(TriggerConnector(injector))
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerConnector
         assertThat(t2.size()).isEqualTo(1)
-        assertThat(t2.list[0]).isInstanceOf(TriggerConnector::class.java)
+        assertIs<TriggerConnector>(t2.list[0])
     }
 
 }

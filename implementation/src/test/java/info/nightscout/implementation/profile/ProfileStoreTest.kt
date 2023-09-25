@@ -3,6 +3,7 @@ package info.nightscout.implementation.profile
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
+import kotlin.test.assertIs
 import org.junit.jupiter.api.Test
 
 internal class ProfileStoreTest : TestBaseWithProfile() {
@@ -14,7 +15,7 @@ internal class ProfileStoreTest : TestBaseWithProfile() {
 
     @Test
     fun getDefaultProfileTest() {
-        assertThat(getValidProfileStore().getDefaultProfile()).isInstanceOf(PureProfile::class.java)
+        assertIs<PureProfile>(getValidProfileStore().getDefaultProfile())
     }
 
     @Test
@@ -35,7 +36,7 @@ internal class ProfileStoreTest : TestBaseWithProfile() {
 
     @Test
     fun getSpecificProfileTest() {
-        assertThat(getValidProfileStore().getSpecificProfile(TESTPROFILENAME)).isInstanceOf(PureProfile::class.java)
+        assertIs<PureProfile>(getValidProfileStore().getSpecificProfile(TESTPROFILENAME))
     }
 
     @Test

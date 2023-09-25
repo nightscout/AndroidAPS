@@ -12,6 +12,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.plugins.sync.nsclientV3.DataSyncSelectorV3
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
+import kotlin.test.assertIs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -64,6 +65,6 @@ internal class DataSyncWorkerTest : TestBase() {
         `when`(nsClient.hasWritePermission).thenReturn(true)
         val result = sut.doWorkAndLog()
         Mockito.verify(dataSyncSelectorV3, Mockito.times(1)).doUpload()
-        assertThat(result).isInstanceOf(Success::class.java)
+        assertIs<Success>(result)
     }
 }

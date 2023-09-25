@@ -1,12 +1,13 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.nssdk.localmodel.treatment.NSExtendedBolus
+import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
+import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import app.aaps.core.nssdk.localmodel.treatment.NSExtendedBolus
-import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryBasal
-import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
+import kotlin.test.assertIs
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
@@ -47,10 +48,10 @@ internal class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
         )
 
         val converted = extendedBolus.toNSExtendedBolus(validProfile)
-        assertThat(converted).isInstanceOf(NSTemporaryBasal::class.java)
+        assertIs<NSTemporaryBasal>(converted)
         assertThat((converted as NSTemporaryBasal).extendedEmulated).isNotNull()
         val convertedBack = converted.convertToRemoteAndBack()
-        assertThat(convertedBack).isInstanceOf(NSExtendedBolus::class.java)
+        assertIs<NSExtendedBolus>(convertedBack)
 
         extendedBolus2 = (extendedBolus.toNSExtendedBolus(validProfile).convertToRemoteAndBack() as NSExtendedBolus).toExtendedBolus()
         assertThat(extendedBolus.contentEqualsTo(extendedBolus2)).isTrue()
