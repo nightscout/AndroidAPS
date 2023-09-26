@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
@@ -54,7 +54,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(R.drawable.ic_network_wifi), TriggerWifiSsid(injector).icon())
+        assertThat(TriggerWifiSsid(injector).icon().get()).isEqualTo(R.drawable.ic_network_wifi)
     }
 
     @Test fun friendlyNameTest() {

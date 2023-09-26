@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.utils.T
 import app.aaps.plugins.automation.R
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -62,6 +62,6 @@ class TriggerTimeTest : TriggerTestBase() {
 
     @Test
     fun iconTest() {
-        Assertions.assertEquals(Optional.of(app.aaps.core.main.R.drawable.ic_access_alarm_24dp), TriggerTime(injector).icon())
+        assertThat(TriggerTime(injector).icon().get()).isEqualTo(app.aaps.core.main.R.drawable.ic_access_alarm_24dp)
     }
 }

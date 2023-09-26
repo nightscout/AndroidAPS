@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.triggers
 import android.location.Location
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputLocationMode
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
@@ -92,7 +92,7 @@ class TriggerLocationTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(R.drawable.ic_location_on), TriggerLocation(injector).icon())
+        assertThat(TriggerLocation(injector).icon().get()).isEqualTo(R.drawable.ic_location_on)
     }
 
     private fun mockedLocation(): Location {

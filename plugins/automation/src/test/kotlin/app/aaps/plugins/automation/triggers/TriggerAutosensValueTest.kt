@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
@@ -100,7 +100,7 @@ class TriggerAutosensValueTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(R.drawable.ic_as), TriggerAutosensValue(injector).icon())
+        assertThat(TriggerAutosensValue(injector).icon().get()).isEqualTo(R.drawable.ic_as)
     }
 
     private fun generateAutosensData(): AutosensDataObject {

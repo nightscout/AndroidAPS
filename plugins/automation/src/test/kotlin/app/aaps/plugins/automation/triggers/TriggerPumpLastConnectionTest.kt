@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -53,7 +53,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(app.aaps.core.main.R.drawable.ic_remove), TriggerPumpLastConnection(injector).icon())
+        assertThat(TriggerPumpLastConnection(injector).icon().get()).isEqualTo(app.aaps.core.main.R.drawable.ic_remove)
     }
 
     @Test fun friendlyNameTest() {

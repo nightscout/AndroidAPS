@@ -5,7 +5,7 @@ import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
@@ -88,7 +88,7 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
 
     @Test
     fun iconTest() {
-        Assertions.assertEquals(Optional.of(R.drawable.ic_keyboard_tab), TriggerTempTargetValue(injector).icon())
+        assertThat(TriggerTempTargetValue(injector).icon().get()).isEqualTo(R.drawable.ic_keyboard_tab)
     }
 }
 

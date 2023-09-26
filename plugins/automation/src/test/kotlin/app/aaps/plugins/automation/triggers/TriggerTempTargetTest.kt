@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.ComparatorExists
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -43,6 +43,6 @@ class TriggerTempTargetTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(R.drawable.ic_keyboard_tab), TriggerTempTarget(injector).icon())
+        assertThat(TriggerTempTarget(injector).icon().get()).isEqualTo(R.drawable.ic_keyboard_tab)
     }
 }

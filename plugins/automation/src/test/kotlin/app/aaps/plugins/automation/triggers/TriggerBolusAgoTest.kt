@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.Bolus
 import app.aaps.plugins.automation.elements.Comparator
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import org.json.JSONException
 import org.json.JSONObject
@@ -86,6 +86,6 @@ class TriggerBolusAgoTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(app.aaps.core.main.R.drawable.ic_bolus), TriggerBolusAgo(injector).icon())
+        assertThat(TriggerBolusAgo(injector).icon().get()).isEqualTo(app.aaps.core.main.R.drawable.ic_bolus)
     }
 }

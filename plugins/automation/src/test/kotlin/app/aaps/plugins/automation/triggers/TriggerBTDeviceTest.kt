@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.elements.ComparatorConnect
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -31,7 +31,7 @@ class TriggerBTDeviceTest : TriggerTestBase() {
 
     @Test
     fun icon() {
-        Assertions.assertEquals(Optional.of(app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp), TriggerBTDevice(injector).icon())
+        assertThat(TriggerBTDevice(injector).icon().get()).isEqualTo(app.aaps.core.ui.R.drawable.ic_bluetooth_white_48dp)
     }
 
     @Test fun duplicate() {

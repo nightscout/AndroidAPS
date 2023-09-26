@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -57,7 +57,7 @@ class TriggerProfilePercentTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(app.aaps.core.ui.R.drawable.ic_actions_profileswitch), TriggerProfilePercent(injector).icon())
+        assertThat(TriggerProfilePercent(injector).icon().get()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch)
     }
 
     @Test fun friendlyNameTest() {

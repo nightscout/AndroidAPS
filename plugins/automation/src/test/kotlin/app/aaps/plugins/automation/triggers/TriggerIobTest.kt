@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import com.google.common.base.Optional
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -60,7 +60,7 @@ class TriggerIobTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(Optional.of(R.drawable.ic_keyboard_capslock), TriggerIob(injector).icon())
+        assertThat(TriggerIob(injector).icon().get()).isEqualTo(R.drawable.ic_keyboard_capslock)
     }
 
     private fun generateIobRecordData(): IobTotal {
