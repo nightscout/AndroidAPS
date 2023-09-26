@@ -9,6 +9,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.R
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -28,7 +29,6 @@ import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import com.google.common.util.concurrent.ListenableFuture
-import info.nightscout.androidaps.R
 import info.nightscout.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit

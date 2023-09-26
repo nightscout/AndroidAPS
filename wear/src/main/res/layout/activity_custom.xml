@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
@@ -11,11 +10,11 @@
         android:id="@+id/background"
         android:layout_width="400px"
         android:layout_height="400px"
-        android:layout_marginTop="0px"
         android:layout_marginLeft="0px"
-        android:visibility="visible"
+        android:layout_marginTop="0px"
+        android:orientation="vertical"
         android:src="@drawable/background"
-        android:orientation="vertical" />
+        android:visibility="visible" />
 
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart"
@@ -29,84 +28,84 @@
         android:id="@+id/cover_chart"
         android:layout_width="400px"
         android:layout_height="400px"
-        android:layout_marginTop="0px"
         android:layout_marginLeft="0px"
-        android:visibility="gone"
-        android:orientation="vertical" />
+        android:layout_marginTop="0px"
+        android:orientation="vertical"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/freetext1"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginTop="0px"
         android:layout_marginLeft="0px"
-        android:textSize="21px"
+        android:layout_marginTop="0px"
         android:gravity="center"
-        android:visibility="gone"
-        android:textColor="@color/light_grey" />
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/freetext2"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginTop="0px"
         android:layout_marginLeft="0px"
-        android:textSize="21px"
+        android:layout_marginTop="0px"
         android:gravity="center"
-        android:visibility="gone"
-        android:textColor="@color/light_grey" />
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/freetext3"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginTop="0px"
         android:layout_marginLeft="0px"
-        android:textSize="21px"
+        android:layout_marginTop="0px"
         android:gravity="center"
-        android:visibility="gone"
-        android:textColor="@color/light_grey" />
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/freetext4"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginTop="0px"
         android:layout_marginLeft="0px"
-        android:textSize="21px"
+        android:layout_marginTop="0px"
         android:gravity="center"
-        android:visibility="gone"
-        android:textColor="@color/light_grey" />
+        android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/iob1"
         android:layout_width="130px"
         android:layout_height="33px"
-        android:layout_marginTop="168px"
         android:layout_marginLeft="270px"
-        android:textSize="21px"
+        android:layout_marginTop="168px"
         android:gravity="center"
         android:textColor="@color/light_grey"
+        android:textSize="21px"
         tools:text="@string/activity_IOB" />
 
     <TextView
         android:id="@+id/iob2"
         android:layout_width="130px"
         android:layout_height="33px"
-        android:layout_marginTop="196px"
         android:layout_marginLeft="270px"
-        android:textSize="21px"
-        android:textStyle="bold"
+        android:layout_marginTop="196px"
         android:gravity="center"
         android:textColor="@color/light_grey"
+        android:textSize="21px"
+        android:textStyle="bold"
         tools:text="@string/no_iob_u" />
 
     <TextView
         android:id="@+id/cob1"
         android:layout_width="120px"
         android:layout_height="33px"
-        android:layout_marginTop="168px"
         android:layout_marginLeft="0px"
+        android:layout_marginTop="168px"
         android:gravity="center"
         android:text="@string/activity_carb"
         android:textColor="@color/light_grey"
@@ -116,36 +115,36 @@
         android:id="@+id/cob2"
         android:layout_width="120px"
         android:layout_height="33px"
-        android:layout_marginTop="196px"
         android:layout_marginLeft="0px"
+        android:layout_marginTop="196px"
         android:gravity="center"
         android:text="@string/no_cob_g"
-        android:textSize="21px"
         android:textColor="@color/light_grey"
+        android:textSize="21px"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/delta"
         android:layout_width="59px"
         android:layout_height="32px"
-        android:layout_marginTop="133px"
         android:layout_marginLeft="15px"
+        android:layout_marginTop="133px"
         android:gravity="center"
+        android:textColor="@color/light_grey"
         android:textSize="23px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         tools:text="+/-" />
 
     <TextView
         android:id="@+id/avg_delta"
         android:layout_width="59px"
         android:layout_height="32px"
-        android:layout_marginTop="133px"
         android:layout_marginLeft="74px"
+        android:layout_marginTop="133px"
         android:gravity="center"
+        android:textColor="@color/light_grey"
         android:textSize="23px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         tools:text="@string/abbreviation_average" />
 
 
@@ -153,26 +152,26 @@
         android:id="@+id/uploader_battery"
         android:layout_width="60px"
         android:layout_height="32px"
-        android:gravity="center"
-        android:layout_marginTop="133px"
         android:layout_marginLeft="129px"
-        android:textSize="23px"
+        android:layout_marginTop="133px"
         android:fontFamily="@font/roboto_condensed_bold"
-        android:textStyle="bold"
+        android:gravity="center"
         android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
         tools:text="100%" />
 
     <TextView
         android:id="@+id/rig_battery"
         android:layout_width="60px"
         android:layout_height="32px"
-        android:gravity="center"
-        android:layout_marginTop="133px"
         android:layout_marginLeft="189px"
-        android:textSize="23px"
+        android:layout_marginTop="133px"
         android:fontFamily="@font/roboto_condensed_bold"
-        android:textStyle="bold"
+        android:gravity="center"
         android:textColor="@color/light_grey"
+        android:textSize="23px"
+        android:textStyle="bold"
         android:visibility="visible"
         tools:text="100%" />
 
@@ -180,25 +179,25 @@
         android:id="@+id/basalRate"
         android:layout_width="91px"
         android:layout_height="32px"
-        android:layout_marginTop="133px"
         android:layout_marginLeft="249px"
-        android:gravity="center"
+        android:layout_marginTop="133px"
         android:fontFamily="@font/roboto_condensed_bold"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
         android:textSize="23px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         tools:text="@string/no_tmp_basal_u_h" />
 
     <TextView
         android:id="@+id/bgi"
         android:layout_width="60px"
         android:layout_height="32px"
-        android:layout_marginTop="133px"
         android:layout_marginLeft="340px"
+        android:layout_marginTop="133px"
         android:gravity="center"
+        android:textColor="@color/light_grey"
         android:textSize="23px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         android:visibility="visible"
         tools:text="bgi" />
 
@@ -208,11 +207,11 @@
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginTop="151px"
-        android:gravity="center"
         android:fontFamily="@font/roboto_condensed_bold"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
         android:textSize="70px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         android:visibility="gone"
         tools:text="22:00" />
 
@@ -221,13 +220,13 @@
         android:id="@+id/hour"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginTop="151px"
         android:layout_marginLeft="119px"
+        android:layout_marginTop="151px"
         android:fontFamily="@font/roboto_condensed_bold"
         android:textAllCaps="true"
+        android:textColor="@color/light_grey"
         android:textSize="70px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         android:visibility="gone"
         tools:text="20" />
     <!-- minute -->
@@ -235,8 +234,8 @@
         android:id="@+id/minute"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginTop="158px"
         android:layout_marginLeft="210px"
+        android:layout_marginTop="158px"
         android:fontFamily="@font/roboto_condensed_bold"
         android:textColor="@color/light_grey"
         android:textSize="46px"
@@ -247,8 +246,8 @@
         android:id="@+id/second"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginTop="158px"
         android:layout_marginLeft="210px"
+        android:layout_marginTop="158px"
         android:fontFamily="@font/roboto_condensed_bold"
         android:textColor="@color/light_grey"
         android:textSize="46px"
@@ -265,9 +264,9 @@
         android:layout_marginLeft="210px"
         android:layout_marginTop="205px"
         android:fontFamily="@font/roboto_condensed_bold"
+        android:textColor="@color/light_grey"
         android:textSize="17px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         android:visibility="gone"
         tools:text="AM" />
 
@@ -275,12 +274,12 @@
         android:id="@+id/day_name"
         android:layout_width="56px"
         android:layout_height="36px"
-        android:layout_marginTop="172px"
         android:layout_marginLeft="120px"
+        android:layout_marginTop="172px"
         android:gravity="center"
+        android:textColor="@color/white"
         android:textSize="24px"
         android:textStyle="bold"
-        android:textColor="@color/white"
         android:visibility="visible"
         tools:text="day" />
 
@@ -288,24 +287,24 @@
         android:id="@+id/day"
         android:layout_width="56px"
         android:layout_height="36px"
-        android:layout_marginTop="198px"
         android:layout_marginLeft="120px"
+        android:layout_marginTop="198px"
         android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="24px"
         android:textColor="@color/white"
+        android:textSize="24px"
+        android:textStyle="bold"
         tools:text="01" />
 
     <TextView
         android:id="@+id/week_number"
         android:layout_width="0px"
         android:layout_height="0px"
-        android:layout_marginTop="0px"
         android:layout_marginLeft="0px"
+        android:layout_marginTop="0px"
         android:gravity="center"
-        android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="24px"
+        android:textStyle="bold"
         android:visibility="gone"
         tools:text="ww" />
 
@@ -313,60 +312,60 @@
         android:id="@+id/month"
         android:layout_width="50px"
         android:layout_height="36px"
-        android:layout_marginTop="180px"
         android:layout_marginLeft="220px"
+        android:layout_marginTop="180px"
         android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="24px"
         android:textColor="@color/white"
+        android:textSize="24px"
+        android:textStyle="bold"
         tools:text="févr." />
 
     <TextView
         android:id="@+id/loop"
         android:layout_width="50px"
         android:layout_height="50px"
-        android:layout_marginTop="61px"
         android:layout_marginLeft="68px"
+        android:layout_marginTop="61px"
         android:background="@drawable/loop_grey_25"
         android:gravity="center"
+        android:textColor="@color/light_grey"
         android:textSize="24px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         tools:text="--'" />
 
     <ImageView
         android:id="@+id/direction2"
         android:layout_width="40px"
         android:layout_height="40px"
-        android:layout_marginTop="36px"
         android:layout_marginLeft="291px"
-        android:visibility="visible"
+        android:layout_marginTop="36px"
+        android:orientation="vertical"
         android:src="@drawable/ic_invalid"
-        android:orientation="vertical" />
+        android:visibility="visible" />
 
     <TextView
         android:id="@+id/timestamp"
         android:layout_width="52px"
         android:layout_height="34px"
-        android:gravity="left"
-        android:layout_marginTop="79px"
         android:layout_marginLeft="291px"
+        android:layout_marginTop="79px"
+        android:gravity="left"
+        android:textColor="@color/light_grey"
         android:textSize="25px"
         android:textStyle="bold"
-        android:textColor="@color/light_grey"
         tools:text="--'" />
 
     <TextView
         android:id="@+id/sgv"
         android:layout_width="400px"
         android:layout_height="100px"
+        android:layout_marginLeft="0px"
+        android:layout_marginTop="26px"
+        android:fontFamily="@font/roboto_condensed_bold"
         android:gravity="center"
         android:lines="1"
-        android:layout_marginTop="26px"
-        android:layout_marginLeft="0px"
-        android:fontFamily="@font/roboto_condensed_bold"
-        android:textSize="74px"
         android:textColor="@color/light_grey"
+        android:textSize="74px"
         tools:text="200" />
 
     <ImageView
@@ -374,8 +373,8 @@
         android:layout_width="400px"
         android:layout_height="400px"
         android:orientation="vertical"
-        android:visibility="visible"
-        android:src="@drawable/simplified_dial" />
+        android:src="@drawable/simplified_dial"
+        android:visibility="visible" />
 
     <ImageView
         android:id="@+id/hour_hand"

@@ -8,9 +8,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
+import app.aaps.R
+import app.aaps.databinding.ActivityPreferencesBinding
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.ActivityPreferencesBinding
 
 class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 

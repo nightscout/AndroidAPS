@@ -42,15 +42,13 @@ import app.aaps.receivers.BTReceiver
 import app.aaps.receivers.ChargingStateReceiver
 import app.aaps.receivers.KeepAliveWorker
 import app.aaps.receivers.TimeDateOrTZChangeReceiver
+import app.aaps.ui.activityMonitor.ActivityMonitor
+import app.aaps.ui.widget.Widget
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.R
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.VersionChangeTransaction
-import app.aaps.ui.activityMonitor.ActivityMonitor
-import app.aaps.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.kotlin.plusAssign

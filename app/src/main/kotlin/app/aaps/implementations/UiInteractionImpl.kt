@@ -7,6 +7,7 @@ import androidx.annotation.RawRes
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentManager
 import app.aaps.MainActivity
+import app.aaps.R
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.MyPreferenceFragment
 import app.aaps.activities.PreferencesActivity
@@ -18,8 +19,6 @@ import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
 import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import app.aaps.ui.activities.BolusProgressHelperActivity
 import app.aaps.ui.activities.ErrorHelperActivity
 import app.aaps.ui.activities.QuickWizardListActivity
@@ -41,6 +40,7 @@ import app.aaps.ui.dialogs.WizardDialog
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
 import app.aaps.ui.widget.Widget
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
 class UiInteractionImpl @Inject constructor(
