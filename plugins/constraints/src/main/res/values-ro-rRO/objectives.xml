@@ -58,12 +58,31 @@
     <string name="objectives_exam_learned_profileswitch">Folosirea procentului nu afectează ţinta glicemică. Dar bazala, ISF şi IC sunt ajustate pentru a administra mai multă insulină (peste 100%%) sau mai puţină insulină (sub 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Folosind temporizarea în schimbarea profilului poți adapta profilul circadian la neregularități cum ar fi trezirea târzie.</string>
     <string name="objectives_exam_learned_profileswitch4">Editarea profilului în sine nu este suficientă pentru a face o schimbare. Încă trebuie să efectuezi o comutare de profil pentru a activa modificările.</string>
+    <string name="objectives_exam_learned_exercise">Ar trebui să reduci cantitatea de insulină din organism cu cel puţin 1 oră înainte de a începe activitatea fizică, selectând profilul sub 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Setarea unei ţinte temporare mai mari cu cel puţin 1 oră înainte de exerciţiul fizic ajută, de asemenea, la reducerea cantităţii de insulină din organism.</string>
+    <string name="objectives_exam_learned_noisycgm">Când nu poți avea încredere în valorile CGM, nu trebuie să folosești o buclă nesupravegheată.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS trebuie să ştie că pompa nu este conectată pentru a calcula corect IOB.</string>
+    <string name="objectives_exam_learned_insulin">Este necesar să se cunoască tipul de insulină din pompă pentru că asta afectează calculul IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Detectarea sensibilităţii face parte din algoritm, ceea ce permite adaptarea dozelor de insulină la diferite situaţii.</string>
+    <string name="objectives_exam_learned_objectives">Progresul dvs. în Obiective este stocat împreună cu alte setări și ar trebui să fie salvat într-un backup.</string>
+    <string name="objectives_exam_learned_objectives2">Păstrați întotdeauna setările exportate și APK-urile generate și pe un suport în afara telefonului. Telefonul poate fi pierdut, deteriorat etc. Un suport bun poate fi orice cloud accesibil de pe telefon. În acest caz puteţi restaura AAPS pe un alt dispozitiv în câteva minute. O bună practică este să stocați într-un loc sigur și parola principală utilizată. Fără acesta, copia de rezervă este inutilă. Același lucru este valabil și pentru semnarea cheilor (fișierul .jks) și parolele utilizate pentru a construi AAPS. Restul nu este important - poate fi descărcat din nou oricând de pe internet.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Dacă ai introdus greşit date în AAPS sau acestea nu se potrivesc cu realitatea, corectează cât mai repede. Altfel, greșelile pot duce la supradozare. AAPS trebuie informat întotdeauna cât mai corect despre carbohidraţi, insulină etc.</string>
+    <string name="objectives_exam_learned_iob">Analizezi dacă AAPS funcționează bine? Atunci vizionarea graficului IOB poate oferi foarte multe informații utile.</string>
+    <string name="objectives_exam_learned_cob">Calcularea COB depinde de relația dintre ISF și IC. Creșterea ISF sau scăderea IC va duce la timpi de absorbție mai mari. Însă schimbarea profilului cu procentaj modifică simultan ambele valori, iar timpul de absorbție nu este afectat.</string>
+    <string name="objectives_exam_learned_breadgrams">Sunt permise numai grame pentru introducerea carbohidraților.</string>
+    <string name="objectives_exam_learned_ecarbs">În lumea pompelor, E-carb reprezintă un înlocuitor pentru bolusul extins.</string>
+    <string name="objectives_exam_learned_nsclient">Monitorizarea și controlul de la distanță sunt posibile, dar nu toate funcțiile trebuie să fie disponibile de la distanță.</string>
     <string name="answerdisabledto">Posibilitatea de a răspunde este dezactivată până la: %1$s</string>
     <string name="wronganswer">Răspuns greșit!</string>
     <string name="unfinshed_button">Următoarea nefinalizată</string>
     <string name="requestcode">Solicită codul: %1$s</string>
     <string name="objectives_hint">(bifați toate răspunsurile corecte)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Nu există conexiune la internet</string>
     <string name="failedretrievetime">Nu s-a reușit preluarea timpului</string>
     <string name="requirementnotmet">Nu au fost îndeplinite cerințele obiectivului</string>
+    <string name="what_i_ve_learned">Ce am învăţat:</string>
 </resources>
