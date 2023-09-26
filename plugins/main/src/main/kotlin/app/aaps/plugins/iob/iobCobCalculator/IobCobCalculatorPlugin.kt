@@ -49,10 +49,10 @@ import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.interfaces.end
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.iob.iobCobCalculator.data.AutosensDataStoreObject
 import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONArray

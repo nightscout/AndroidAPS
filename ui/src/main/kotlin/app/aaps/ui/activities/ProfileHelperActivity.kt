@@ -24,14 +24,14 @@ import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.entities.EffectiveProfileSwitch
-import com.google.android.material.tabs.TabLayout
-import com.google.common.collect.Lists
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.databinding.ActivityProfilehelperBinding
 import app.aaps.ui.defaultProfile.DefaultProfile
 import app.aaps.ui.defaultProfile.DefaultProfileDPV
 import app.aaps.ui.dialogs.ProfileViewerDialog
+import com.google.android.material.tabs.TabLayout
+import com.google.common.collect.Lists
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

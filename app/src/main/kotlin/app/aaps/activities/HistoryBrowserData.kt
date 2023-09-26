@@ -13,10 +13,10 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

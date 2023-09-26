@@ -3,6 +3,7 @@ package app.aaps.di
 import app.aaps.MainApp
 import app.aaps.core.main.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
+import app.aaps.database.impl.DatabaseModule
 import app.aaps.implementation.di.ImplementationModule
 import app.aaps.plugins.aps.di.ApsModule
 import app.aaps.plugins.automation.di.AutomationModule
@@ -14,6 +15,7 @@ import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
 import app.aaps.shared.impl.di.SharedImplModule
+import app.aaps.ui.di.UiModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -26,7 +28,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
-import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.pump.combo.di.ComboModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 import info.nightscout.pump.common.di.PumpCommonModule
@@ -36,7 +37,6 @@ import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.pump.medtrum.di.MedtrumModule
 import info.nightscout.pump.virtual.di.VirtualPumpModule
-import app.aaps.ui.di.UiModule
 import info.nightscout.workflow.di.WorkflowModule
 import javax.inject.Singleton
 

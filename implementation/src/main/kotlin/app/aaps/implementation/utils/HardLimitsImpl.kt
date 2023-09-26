@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

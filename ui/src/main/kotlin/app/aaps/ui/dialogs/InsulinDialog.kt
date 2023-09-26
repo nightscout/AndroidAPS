@@ -39,13 +39,13 @@ import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.ValueWithUnit
-import com.google.common.base.Joiner
-import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogInsulinBinding
 import app.aaps.ui.extensions.toSignedString
+import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat

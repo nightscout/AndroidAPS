@@ -5,14 +5,14 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import app.aaps.database.impl.transactions.Transaction
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
-import info.nightscout.database.impl.transactions.Transaction
 import io.reactivex.rxjava3.core.Completable
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

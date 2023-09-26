@@ -2,13 +2,13 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
+import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 import org.mockito.Mockito.`when`

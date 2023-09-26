@@ -27,6 +27,7 @@ import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.Bolus
+import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCustomCommand
 import app.aaps.implementation.queue.commands.CommandExtendedBolus
@@ -37,7 +38,6 @@ import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

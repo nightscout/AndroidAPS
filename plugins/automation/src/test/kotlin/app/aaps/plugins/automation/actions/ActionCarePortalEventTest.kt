@@ -2,11 +2,11 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.queue.Callback
+import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import app.aaps.database.impl.transactions.Transaction
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
-import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import info.nightscout.database.impl.transactions.Transaction
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

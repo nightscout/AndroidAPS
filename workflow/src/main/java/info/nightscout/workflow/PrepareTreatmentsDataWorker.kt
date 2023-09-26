@@ -28,7 +28,7 @@ import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.TherapyEvent
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

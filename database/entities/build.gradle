@@ -33,5 +33,5 @@ dependencies {
 
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.database.annotations.DbOpenForTesting'
+    annotation 'app.aaps.database.annotations.DbOpenForTesting'
 }

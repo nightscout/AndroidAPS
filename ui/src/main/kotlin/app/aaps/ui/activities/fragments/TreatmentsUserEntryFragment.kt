@@ -28,11 +28,11 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
-import dagger.android.support.DaggerFragment
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.databinding.TreatmentsUserEntryFragmentBinding
 import app.aaps.ui.databinding.TreatmentsUserEntryItemBinding
+import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

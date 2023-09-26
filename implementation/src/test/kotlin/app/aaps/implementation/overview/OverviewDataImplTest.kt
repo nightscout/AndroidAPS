@@ -7,9 +7,9 @@ import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.utils.T
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.impl.AppRepository
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.database.impl.AppRepository
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

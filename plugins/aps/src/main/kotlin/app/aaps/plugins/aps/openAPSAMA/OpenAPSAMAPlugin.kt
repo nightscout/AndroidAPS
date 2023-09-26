@@ -30,13 +30,13 @@ import app.aaps.core.main.extensions.target
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.database.ValueWrapper
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import org.json.JSONException
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -25,12 +25,12 @@ import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.extendedBolusFromJson
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
 import app.aaps.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
 import app.aaps.plugins.sync.nsclient.extensions.temporaryBasalFromJson
-import info.nightscout.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

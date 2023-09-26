@@ -22,8 +22,8 @@ import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.ValueWithUnit
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

@@ -41,14 +41,14 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.ValueWithUnit
-import dagger.android.support.DaggerFragment
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InvalidateProfileSwitchTransaction
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
 import app.aaps.ui.R
 import app.aaps.ui.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import app.aaps.ui.databinding.TreatmentsProfileswitchFragmentBinding
 import app.aaps.ui.databinding.TreatmentsProfileswitchItemBinding
 import app.aaps.ui.dialogs.ProfileViewerDialog
+import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

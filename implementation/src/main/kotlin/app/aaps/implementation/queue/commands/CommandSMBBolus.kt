@@ -8,8 +8,8 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import javax.inject.Inject
 
 class CommandSMBBolus(

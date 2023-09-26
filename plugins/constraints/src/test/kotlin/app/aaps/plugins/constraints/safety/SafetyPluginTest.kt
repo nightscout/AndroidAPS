@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.source.GlimpPlugin
@@ -19,7 +20,6 @@ import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.pump.virtual.VirtualPumpPlugin
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

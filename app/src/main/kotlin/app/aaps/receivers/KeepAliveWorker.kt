@@ -27,9 +27,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import com.google.common.util.concurrent.ListenableFuture
-import info.nightscout.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject

@@ -15,10 +15,10 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.CgmSourceTransaction
 import app.aaps.database.transactions.TransactionGlucoseValue
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException

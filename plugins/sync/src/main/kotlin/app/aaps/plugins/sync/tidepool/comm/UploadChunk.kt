@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
@@ -21,7 +22,6 @@ import app.aaps.plugins.sync.tidepool.elements.SensorGlucoseElement
 import app.aaps.plugins.sync.tidepool.elements.WizardElement
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.utils.GsonInstance
-import info.nightscout.database.impl.AppRepository
 import java.util.LinkedList
 import javax.inject.Inject
 import javax.inject.Singleton

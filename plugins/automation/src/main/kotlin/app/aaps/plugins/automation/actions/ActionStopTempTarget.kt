@@ -7,10 +7,10 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.plugins.automation.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

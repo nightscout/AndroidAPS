@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.ValueWrapper
+import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import javax.inject.Inject
 
 class CommandSetProfile(

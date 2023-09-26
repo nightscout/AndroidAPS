@@ -2,9 +2,9 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
+import app.aaps.database.impl.transactions.Transaction
 import app.aaps.plugins.automation.R
-import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
-import info.nightscout.database.impl.transactions.Transaction
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

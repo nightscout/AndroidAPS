@@ -30,6 +30,9 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import app.aaps.database.impl.transactions.VersionChangeTransaction
 import app.aaps.di.DaggerAppComponent
 import app.aaps.implementation.db.CompatDBHelper
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
@@ -46,9 +49,6 @@ import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.widget.Widget
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import info.nightscout.database.impl.transactions.VersionChangeTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.kotlin.plusAssign

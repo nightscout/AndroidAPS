@@ -25,10 +25,10 @@ import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.ValueWrapper
+import app.aaps.database.impl.AppRepository
+import app.aaps.ui.databinding.DialogProfileviewerBinding
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.database.impl.AppRepository
-import app.aaps.ui.databinding.DialogProfileviewerBinding
 import org.json.JSONObject
 import java.text.DecimalFormat
 import javax.inject.Inject

@@ -23,11 +23,11 @@ import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.ValueWithUnit
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.CgmSourceTransaction
 import app.aaps.database.transactions.TransactionGlucoseValue
 import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -30,7 +30,7 @@ import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 import javax.inject.Singleton

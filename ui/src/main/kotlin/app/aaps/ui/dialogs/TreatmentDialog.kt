@@ -28,11 +28,11 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.ValueWithUnit
-import com.google.common.base.Joiner
-import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogTreatmentBinding
+import com.google.common.base.Joiner
+import dagger.android.HasAndroidInjector
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject

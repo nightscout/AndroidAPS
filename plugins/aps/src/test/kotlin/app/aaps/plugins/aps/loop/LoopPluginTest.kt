@@ -19,11 +19,11 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
+import app.aaps.database.impl.AppRepository
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import info.nightscout.pump.virtual.VirtualPumpPlugin
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 

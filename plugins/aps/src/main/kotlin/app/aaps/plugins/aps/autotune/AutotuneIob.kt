@@ -24,9 +24,9 @@ import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
-import info.nightscout.database.impl.AppRepository
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject

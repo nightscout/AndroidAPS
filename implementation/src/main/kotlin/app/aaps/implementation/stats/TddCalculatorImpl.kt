@@ -23,7 +23,7 @@ import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.embedments.InterfaceIDs
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -69,13 +69,13 @@ import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.ValueWithUnit
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
+import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
-import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject

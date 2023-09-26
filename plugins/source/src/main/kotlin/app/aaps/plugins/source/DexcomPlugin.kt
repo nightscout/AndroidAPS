@@ -28,13 +28,13 @@ import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.ValueWithUnit
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.CgmSourceTransaction
+import app.aaps.database.impl.transactions.InvalidateGlucoseValueTransaction
 import app.aaps.database.transactions.TransactionGlucoseValue
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.CgmSourceTransaction
-import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton

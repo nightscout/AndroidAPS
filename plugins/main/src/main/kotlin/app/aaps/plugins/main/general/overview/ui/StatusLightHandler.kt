@@ -17,8 +17,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.main.R
-import info.nightscout.database.impl.AppRepository
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton

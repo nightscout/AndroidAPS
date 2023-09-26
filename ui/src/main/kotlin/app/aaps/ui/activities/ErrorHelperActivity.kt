@@ -3,8 +3,8 @@ package app.aaps.ui.activities
 import android.os.Bundle
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import app.aaps.ui.alertDialogs.ErrorDialog
 import app.aaps.ui.services.AlarmSoundService
 import io.reactivex.rxjava3.disposables.CompositeDisposable

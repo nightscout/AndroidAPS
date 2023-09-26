@@ -18,6 +18,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.dialogs.ChooseTriggerDialog
 import app.aaps.plugins.automation.events.EventTriggerChanged
@@ -25,7 +26,6 @@ import app.aaps.plugins.automation.events.EventTriggerClone
 import app.aaps.plugins.automation.events.EventTriggerRemove
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import org.json.JSONObject
 import java.util.Optional
 import javax.inject.Inject

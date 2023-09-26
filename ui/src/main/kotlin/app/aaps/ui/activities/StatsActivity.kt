@@ -16,7 +16,7 @@ import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.activityMonitor.ActivityMonitor
 import app.aaps.ui.databinding.ActivityStatsBinding

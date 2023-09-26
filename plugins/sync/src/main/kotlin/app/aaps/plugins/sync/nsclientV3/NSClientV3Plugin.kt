@@ -57,6 +57,7 @@ import app.aaps.core.nssdk.mapper.toNSTreatment
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.interfaces.TraceableDBEntry
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSAlarmObject
 import app.aaps.plugins.sync.nsShared.NSClientFragment
@@ -90,7 +91,6 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.socket.client.Ack

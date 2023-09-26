@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.database.entities.GlucoseValue
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

@@ -17,8 +17,8 @@ import app.aaps.core.main.graph.data.GlucoseValueDataPoint
 import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import javax.inject.Inject

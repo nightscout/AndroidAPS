@@ -62,12 +62,12 @@ import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.entities.interfaces.end
+import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat

@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.T
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 

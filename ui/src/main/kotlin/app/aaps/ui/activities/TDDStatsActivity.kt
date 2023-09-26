@@ -31,7 +31,7 @@ import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.database.entities.TotalDailyDose
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import app.aaps.ui.databinding.ActivityTddStatsBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DateFormat

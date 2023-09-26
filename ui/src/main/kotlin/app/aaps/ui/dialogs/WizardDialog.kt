@@ -49,11 +49,11 @@ import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.ValueWrapper
-import dagger.android.HasAndroidInjector
-import dagger.android.support.DaggerDialogFragment
-import info.nightscout.database.impl.AppRepository
+import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogWizardBinding
+import dagger.android.HasAndroidInjector
+import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat

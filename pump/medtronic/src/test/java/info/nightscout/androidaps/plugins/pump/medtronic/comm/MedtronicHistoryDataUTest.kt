@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.util.Log
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.database.impl.serialisation.SealedClassHelper
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
@@ -12,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProce
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.database.impl.serialisation.SealedClassHelper
 import info.nightscout.pump.common.utils.ByteUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

@@ -29,6 +29,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.Sync
 import app.aaps.database.entities.data.Block
 import app.aaps.database.entities.interfaces.TraceableDBEntry
+import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.openhumans.delegates.OHAppIDDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
@@ -36,7 +37,6 @@ import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
 import app.aaps.plugins.sync.openhumans.ui.OHFragment
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.database.impl.AppRepository
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
