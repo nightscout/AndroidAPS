@@ -70,7 +70,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.ui.activities.ProfileHelperActivity
 import info.nightscout.ui.activities.StatsActivity
 import info.nightscout.ui.activities.TreatmentsActivity

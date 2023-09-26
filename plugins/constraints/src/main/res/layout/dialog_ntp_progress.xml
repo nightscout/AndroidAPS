@@ -4,7 +4,7 @@
     style="@style/StyleDialog"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.plugins.constraints.objectives.dialogs.NtpProgressDialog">
+    tools:context="info.nightscout.plugins.constraints.app.aaps.plugins.constraints.objectives.dialogs.NtpProgressDialog">
 
     <RelativeLayout
         style="@style/StyleDialogHeader"

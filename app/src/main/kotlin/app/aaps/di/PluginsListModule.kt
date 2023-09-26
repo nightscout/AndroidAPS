@@ -25,10 +25,13 @@ import info.nightscout.insulin.InsulinLyumjevPlugin
 import info.nightscout.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.insulin.InsulinOrefRapidActingPlugin
 import info.nightscout.insulin.InsulinOrefUltraRapidActingPlugin
-import info.nightscout.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
-import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
-import info.nightscout.plugins.constraints.safety.SafetyPlugin
-import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.constraints.bgQualityCheck.BgQualityCheckPlugin
+import app.aaps.plugins.constraints.dstHelper.DstHelperPlugin
+import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import app.aaps.plugins.constraints.safety.SafetyPlugin
+import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.plugins.constraints.storage.StorageConstraintPlugin
+import app.aaps.plugins.constraints.versionChecker.VersionCheckerPlugin
 import info.nightscout.plugins.general.actions.ActionsPlugin
 import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.overview.OverviewPlugin
@@ -274,7 +277,7 @@ abstract class PluginsListModule {
     @NotNSClient
     @IntoMap
     @IntKey(270)
-    abstract fun bindVersionCheckerPlugin(plugin: info.nightscout.plugins.constraints.versionChecker.VersionCheckerPlugin): PluginBase
+    abstract fun bindVersionCheckerPlugin(plugin: VersionCheckerPlugin): PluginBase
 
     @Binds
     @NotNSClient
@@ -286,7 +289,7 @@ abstract class PluginsListModule {
     @APS
     @IntoMap
     @IntKey(290)
-    abstract fun bindStorageConstraintPlugin(plugin: info.nightscout.plugins.constraints.storage.StorageConstraintPlugin): PluginBase
+    abstract fun bindStorageConstraintPlugin(plugin: StorageConstraintPlugin): PluginBase
 
     @Binds
     @APS
@@ -358,7 +361,7 @@ abstract class PluginsListModule {
     @AllConfigs
     @IntoMap
     @IntKey(380)
-    abstract fun bindDstHelperPlugin(plugin: info.nightscout.plugins.constraints.dstHelper.DstHelperPlugin): PluginBase
+    abstract fun bindDstHelperPlugin(plugin: DstHelperPlugin): PluginBase
 
     @Binds
     @AllConfigs

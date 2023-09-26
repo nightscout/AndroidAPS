@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.insulin.di.InsulinModule
-import info.nightscout.plugins.constraints.di.PluginsConstraintsModule
+import app.aaps.plugins.constraints.di.PluginsConstraintsModule
 import info.nightscout.plugins.di.PluginsModule
 import info.nightscout.plugins.sync.di.OpenHumansModule
 import info.nightscout.plugins.sync.di.SyncModule
