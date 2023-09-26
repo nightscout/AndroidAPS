@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">Pokaż BGI</string>
     <string name="pref_show_direction_arrow">Pokaż strzałkę trendu</string>
     <string name="pref_show_ago">Pokaż aktualność</string>
+    <string name="pref_show_temp_basal">Pokaż TBR</string>
+    <string name="pref_show_bolus">Pokaż Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Pokaż siatkę</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tryb ciemny</string>
     <string name="pref_highlight_basals">Podświetl Bazę</string>
     <string name="pref_prediction_lines">Pokazuj predykcje</string>
