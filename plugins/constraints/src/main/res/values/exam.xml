@@ -148,6 +148,7 @@
     <string name="cob3_longer">Setting profile to 150% will make the calculated carb absorption time longer</string>
     <string name="cob3_shorter">Setting profile to 150% will make the calculated carb absorption time shorter</string>
     <string name="cob3_no_effect">Setting profile to 150% will not affect calculated carbs absorption</string>
+    <string name="cob_hint1">https://androidaps.readthedocs.io/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">IOB value is affected by issued temporary basals.</string>
     <string name="iob_hightemp">High temp basal will not be given when your blood sugar is below target.</string>
     <string name="iob_negiob">Negative IOB for a substantial period in the absence of exercise suggests your profile is too strong and less insulin is needed in your settings.</string>

@@ -227,18 +227,21 @@ class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.s
                 .option(Option(R.string.cob_longer, true))
                 .option(Option(R.string.cob_shorter, false))
                 .option(Option(R.string.cob_no_effect, false))
+                .hint(Hint(R.string.cob_hint1))
         )
         tasks.add(
             ExamTask(this, R.string.cob_label, R.string.cob2_question, "cob2")
                 .option(Option(R.string.cob2_longer, false))
                 .option(Option(R.string.cob2_shorter, true))
                 .option(Option(R.string.cob2_no_effect, false))
+                .hint(Hint(R.string.cob_hint1))
         )
         tasks.add(
             ExamTask(this, R.string.cob_label, R.string.cob3_question, "cob3")
                 .option(Option(R.string.cob3_longer, false))
                 .option(Option(R.string.cob3_shorter, false))
                 .option(Option(R.string.cob3_no_effect, true))
+                .hint(Hint(R.string.cob_hint1))
                 .learned(Learned(R.string.objectives_exam_learned_cob))
         )
         tasks.add(
