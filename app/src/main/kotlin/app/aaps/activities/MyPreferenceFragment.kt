@@ -15,7 +15,6 @@ import androidx.preference.PreferenceGroup
 import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import androidx.preference.size
-import app.aaps.configuration.maintenance.MaintenancePlugin
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -39,6 +38,7 @@ import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import app.aaps.plugins.automation.AutomationPlugin
+import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
@@ -226,7 +226,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(wearPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(statusLinePlugin, rootKey)
             addPreferencesFromResource(R.xml.pref_alerts, rootKey)
-            addPreferencesFromResource(app.aaps.configuration.R.xml.pref_datachoices, rootKey)
+            addPreferencesFromResource(app.aaps.plugins.configuration.R.xml.pref_datachoices, rootKey)
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(openHumansUploaderPlugin, rootKey)
         }
@@ -252,7 +252,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         }
         if (key == rh.gs(info.nightscout.core.utils.R.string.key_use_autosens) && sp.getBoolean(info.nightscout.core.utils.R.string.key_use_autosens, false)) {
             activity?.let {
-                OKDialog.show(it, rh.gs(app.aaps.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
+                OKDialog.show(it, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }
         }
         checkForBiometricFallback(key)
@@ -278,7 +278,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.let {
                 val title = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_biometric)
                 val message =
-                    rh.gs(app.aaps.configuration.R.string.master_password_missing, rh.gs(app.aaps.configuration.R.string.configbuilder_general), rh.gs(app.aaps.configuration.R.string.protection))
+                    rh.gs(app.aaps.plugins.configuration.R.string.master_password_missing, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_general), rh.gs(app.aaps.plugins.configuration.R.string.protection))
                 OKDialog.show(it, title = title, message = message)
             }
         }
@@ -439,7 +439,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         context?.let { context ->
             when (preference.key) {
                 rh.gs(info.nightscout.core.utils.R.string.key_master_password)      -> {
-                    passwordCheck.queryPassword(context, app.aaps.configuration.R.string.current_master_password, info.nightscout.core.utils.R.string.key_master_password, {
+                    passwordCheck.queryPassword(context, app.aaps.plugins.configuration.R.string.current_master_password, info.nightscout.core.utils.R.string.key_master_password, {
                         passwordCheck.setPassword(context, app.aaps.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password)
                     })
                     true

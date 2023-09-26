@@ -1,4 +1,4 @@
-package app.aaps.configuration.maintenance.formats
+package app.aaps.plugins.configuration.maintenance.formats
 
 import app.aaps.core.interfaces.storage.Storage
 import java.io.File

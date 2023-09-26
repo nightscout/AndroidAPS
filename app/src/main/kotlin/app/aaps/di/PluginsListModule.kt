@@ -1,7 +1,5 @@
 package app.aaps.di
 
-import app.aaps.configuration.configBuilder.ConfigBuilderPlugin
-import app.aaps.configuration.maintenance.MaintenancePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.loop.LoopPlugin
@@ -9,6 +7,8 @@ import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import app.aaps.plugins.automation.AutomationPlugin
+import app.aaps.plugins.configuration.configBuilder.ConfigBuilderPlugin
+import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey

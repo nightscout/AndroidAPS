@@ -1,12 +1,12 @@
 package app.aaps.di
 
 import app.aaps.MainApp
-import app.aaps.configuration.di.ConfigurationModule
 import app.aaps.core.main.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
 import app.aaps.implementation.di.ImplementationModule
 import app.aaps.plugins.aps.di.ApsModule
 import app.aaps.plugins.automation.di.AutomationModule
+import app.aaps.plugins.configuration.di.ConfigurationModule
 import app.aaps.shared.impl.di.SharedImplModule
 import dagger.BindsInstance
 import dagger.Component

@@ -31,9 +31,6 @@ import androidx.core.view.MenuProvider
 import androidx.viewpager2.widget.ViewPager2
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.PreferencesActivity
-import app.aaps.configuration.activities.DaggerAppCompatActivityWithResult
-import app.aaps.configuration.activities.SingleFragmentActivity
-import app.aaps.configuration.setupwizard.SetupWizardActivity
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -62,6 +59,9 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
+import app.aaps.plugins.configuration.activities.SingleFragmentActivity
+import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -209,8 +209,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     R.id.nav_about              -> {
                         var message = "Build: ${BuildConfig.BUILDVERSION}\n"
                         message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
-                        message += "${rh.gs(app.aaps.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
-                        if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.configuration.R.string.engineering_mode_enabled)}"
+                        message += "${rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
+                        if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.plugins.configuration.R.string.engineering_mode_enabled)}"
                         if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
                         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
                         message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
@@ -309,7 +309,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun startWizard(): Boolean =
-        !sp.getBoolean(app.aaps.configuration.R.string.key_setupwizard_processed, false)
+        !sp.getBoolean(app.aaps.plugins.configuration.R.string.key_setupwizard_processed, false)
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
