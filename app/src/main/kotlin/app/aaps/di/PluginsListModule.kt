@@ -55,9 +55,9 @@ import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.smoothing.AvgSmoothingPlugin
-import info.nightscout.smoothing.ExponentialSmoothingPlugin
-import info.nightscout.smoothing.NoSmoothingPlugin
+import app.aaps.plugins.smoothing.AvgSmoothingPlugin
+import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
+import app.aaps.plugins.smoothing.NoSmoothingPlugin
 import info.nightscout.source.AidexPlugin
 import info.nightscout.source.DexcomPlugin
 import info.nightscout.source.GlimpPlugin

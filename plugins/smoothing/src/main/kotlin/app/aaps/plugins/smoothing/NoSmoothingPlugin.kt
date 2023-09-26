@@ -1,4 +1,4 @@
-package info.nightscout.smoothing
+package app.aaps.plugins.smoothing
 
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
