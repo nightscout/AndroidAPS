@@ -88,4 +88,9 @@
         <item quantity="few">%1$d ore în urmă</item>
         <item quantity="other">%1$d ore în urmă</item>
     </plurals>
+    <plurals name="daysago">
+        <item quantity="one">cu %1$d zile în urmă</item>
+        <item quantity="few">%1$d zile în urmă</item>
+        <item quantity="other">%1$d zile în urmă</item>
+    </plurals>
 </resources>
