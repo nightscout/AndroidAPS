@@ -37,6 +37,15 @@
     <string name="key_smscommunicator_settings" translatable="false">smscommunicator_settings</string>
     <string name="key_openapssmb_settings" translatable="false">openapssmb_settings</string>
     <string name="key_treatmentssafety_settings" translatable="false">treatmentssafety_settings</string>
+    <!-- Night mode -->
+    <string name="key_treatment_safety_night_mode_enabled" translatable="false">treatment_safety_night_mode_enabled</string>
+    <string name="key_treatment_safety_night_mode_bg_offset" translatable="false">treatment_safety_night_mode_bg_offset</string>
+    <string name="key_treatment_safety_night_mode_start" translatable="false">treatment_safety_night_mode_start</string>
+    <string name="key_treatment_safety_night_mode_end" translatable="false">treatment_safety_night_mode_end</string>
+    <string name="key_treatment_safety_night_mode_disable_with_cob" translatable="false">treatment_safety_night_mode_disable_with_cob</string>
+    <string name="key_treatment_safety_night_mode_disable_with_low_temp_target" translatable="false">treatment_safety_night_mode_disable_with_low_temp_target</string>
+
+    <!-- /Night mode -->
     <string name="key_loop_settings" translatable="false">loop_settings</string>
     <string name="key_virtualpump_settings" translatable="false">virtualpump_settings</string>
     <string name="key_pump_settings" translatable="false">pump_settings</string>

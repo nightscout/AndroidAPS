@@ -522,6 +522,18 @@
     <string name="max_carbs_title">Max allowed carbs [g]</string>
     <string name="patient_type">Patient type</string>
 
+    <!-- Night mode -->
+    <string name="treatment_safety_night_mode">Night mode</string>
+    <string name="treatment_safety_night_mode_enabled">Use night mode</string>
+    <string name="treatment_safety_night_mode_bg_offset_title">BG offset</string>
+    <string name="treatment_safety_night_mode_bg_offset_description">There will be no SMB when below this BG offset from profile target at night unless COB or a low TT is active\ne.g. if normalTarget is 5.5 (99) and this setting is 1.5 (27) there will be no SMB below 7.0 (126)</string>
+    <string name="treatment_safety_night_mode_start_title">Start time (24h format)</string>
+    <string name="treatment_safety_night_mode_end_title">End time (24h format)</string>
+    <string name="treatment_safety_night_mode_disable_with_cob_title">Disable night mode when COB > 0</string>
+    <string name="treatment_safety_night_mode_disable_with_low_temp_target_title">Disable night mode when Temporary Target below Profile Target is set</string>
+    <string name="treatment_safety_night_mode_smb_disabled">SMB disabled by Night mode</string>
+    <!-- /Night mode -->
+
     <!--    Protection-->
     <string name="unlock_settings">Unlock settings</string>
 

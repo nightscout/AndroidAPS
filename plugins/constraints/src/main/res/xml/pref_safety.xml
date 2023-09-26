@@ -34,6 +34,60 @@
             validate:floatminNumber="1"
             validate:testType="numericRange" />
 
+        <androidx.preference.PreferenceScreen
+            android:key="safety_night_mode"
+            android:title="@string/treatment_safety_night_mode">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_treatment_safety_night_mode_enabled"
+                android:title="@string/treatment_safety_night_mode_enabled" />
+
+            <info.nightscout.core.validators.ValidatingEditTextPreference
+                android:dependency="@string/key_treatment_safety_night_mode_enabled"
+                android:defaultValue="27"
+                android:inputType="numberDecimal"
+                android:title="@string/treatment_safety_night_mode_bg_offset_title"
+                android:key="@string/key_treatment_safety_night_mode_bg_offset"
+                android:dialogMessage="@string/treatment_safety_night_mode_bg_offset_description"
+                validate:floatmaxNumber="270.0"
+                validate:floatminNumber="0"
+                validate:testType="bgRange" />
+
+            <info.nightscout.core.validators.ValidatingEditTextPreference
+                android:dependency="@string/key_treatment_safety_night_mode_enabled"
+                android:defaultValue="23:00"
+                android:inputType="text"
+                android:key="@string/key_treatment_safety_night_mode_start"
+                android:title="@string/treatment_safety_night_mode_start_title"
+                validate:customRegexp="@string/time"
+                validate:testErrorString="@string/error_invalid_time"
+                validate:testType="regexp" />
+
+            <info.nightscout.core.validators.ValidatingEditTextPreference
+                android:dependency="@string/key_treatment_safety_night_mode_enabled"
+                android:defaultValue="07:00"
+                android:inputType="text"
+                android:key="@string/key_treatment_safety_night_mode_end"
+                android:title="@string/treatment_safety_night_mode_end_title"
+                validate:customRegexp="@string/time"
+                validate:testErrorString="@string/error_invalid_time"
+                validate:testType="regexp" />
+
+            <SwitchPreference
+                android:dependency="@string/key_treatment_safety_night_mode_enabled"
+                android:defaultValue="false"
+                android:key="@string/key_treatment_safety_night_mode_disable_with_cob"
+                android:title="@string/treatment_safety_night_mode_disable_with_cob_title" />
+
+            <SwitchPreference
+                android:dependency="@string/key_treatment_safety_night_mode_enabled"
+                android:defaultValue="false"
+                android:key="@string/key_treatment_safety_night_mode_disable_with_low_temp_target"
+                android:title="@string/treatment_safety_night_mode_disable_with_low_temp_target_title" />
+
+        </androidx.preference.PreferenceScreen>
+
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

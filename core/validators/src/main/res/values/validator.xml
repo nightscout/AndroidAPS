@@ -19,6 +19,7 @@
     <string name="error_mustbe12hexadidits">Must be 12 characters of ABCDEF0123456789</string>
     <string name="error_mustbe8hexadidits">Must be 8 characters of ABCDEF0123456789</string>
     <string name="error_mustbe4hexadidits">Must be 4 characters of ABCDEF0123456789</string>
+    <string name="error_invalid_time">Must be time value in hh:mm (24h) format</string>
     <string name="error_not_a_minimum_length">Not a minimum length</string>
     <string name="error_pin_not_valid">Pin should be 3 to 6 digits, not same or in series</string>
 
@@ -26,5 +27,7 @@
     <string name="twelvehexanumber" translatable="false">^[A-F0-9]{12}$</string>
     <string name="eighthexanumber" translatable="false">^[A-F0-9]{8}$</string>
     <string name="fourhexanumber" translatable="false">^[A-F0-9]{4}$</string>
+
+    <string name="time" translatable="false">^\\d{1,2}:\\d{1,2}$</string>
 
 </resources>

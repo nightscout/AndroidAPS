@@ -1,6 +1,7 @@
 package info.nightscout.plugins.aps.openAPSSMB
 
 import android.content.Context
+import android.icu.text.SimpleDateFormat
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
@@ -17,8 +18,10 @@ import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.ConstraintsChecker
 import info.nightscout.interfaces.constraints.PluginConstraints
+import info.nightscout.interfaces.iob.GlucoseStatus
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.iob.MealData
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -28,6 +31,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.utils.HardLimits
+import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.events.EventResetOpenAPSGui
@@ -88,6 +92,10 @@ open class OpenAPSSMBPlugin @Inject constructor(
     override var lastDetermineBasalAdapter: DetermineBasalAdapter? = null
     override var lastAutosensResult = AutosensResult()
 
+    var profileShared: Profile? = null
+    var glucoseStatusShared : GlucoseStatus? = null
+    var mealDataShared : MealData? = null
+
     override fun specialEnableCondition(): Boolean {
         return try {
             activePlugin.activePump.pumpDescription.isTempBasalCapable
@@ -110,11 +118,27 @@ open class OpenAPSSMBPlugin @Inject constructor(
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_enableSMB_after_carbs))?.isVisible = !smbAlwaysEnabled
     }
 
+    private fun verifyProfileLoaded(allowCurrent : Boolean = false) : Profile? {
+        if (profileShared == null || !allowCurrent) profileFunction.getProfile().also { profileShared = it }
+        return profileShared
+    }
+
+    private fun verifyGlucoseStatusLoaded(allowCurrent : Boolean = false) : GlucoseStatus? {
+        if (glucoseStatusShared == null || !allowCurrent) glucoseStatusProvider.glucoseStatusData.also { glucoseStatusShared = it }
+        return glucoseStatusShared
+    }
+
+    private fun verifyMealDataLoaded(allowCurrent : Boolean = false) : MealData {
+        if (mealDataShared == null || !allowCurrent) mealDataShared = iobCobCalculator.getMealDataWithWaitingForCalculationFinish()
+        return mealDataShared!!
+    }
+
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {
         aapsLogger.debug(LTag.APS, "invoke from $initiator tempBasalFallback: $tempBasalFallback")
         lastAPSResult = null
-        val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        val profile = profileFunction.getProfile()
+        val profile = verifyProfileLoaded()
+        val glucoseStatus = verifyGlucoseStatusLoaded()
+        val mealData = verifyMealDataLoaded()
         val pump = activePlugin.activePump
         if (profile == null) {
             rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(info.nightscout.core.ui.R.string.no_profile_set)))
@@ -258,7 +282,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 activePlugin.activePump.baseBasalRate,
                 iobArray,
                 glucoseStatus,
-                iobCobCalculator.getMealDataWithWaitingForCalculationFinish(),
+                mealData,
                 lastAutosensResult.ratio,
                 isTempTarget,
                 smbAllowed.value(),
@@ -336,6 +360,50 @@ open class OpenAPSSMBPlugin @Inject constructor(
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val enabled = sp.getBoolean(R.string.key_use_smb, false)
         if (!enabled) value.set(false, rh.gs(R.string.smb_disabled_in_preferences), this)
+        val bgCurrent = verifyGlucoseStatusLoaded(true)?.glucose
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_enabled, false) && bgCurrent != null) {
+
+            val parser = SimpleDateFormat("hh:mm")
+            val currentTimeMillis = System.currentTimeMillis()
+            val midnight = MidnightTime.calc(currentTimeMillis)
+            val start = midnight + parser.parse(sp.getString(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_start, "22:00")).time
+            val end = midnight + parser.parse(sp.getString(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_end, "7:00")).time
+            val bgOffset = sp.getDouble(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_bg_offset, 27.0)
+            val active = (end > start && currentTimeMillis >= start && currentTimeMillis < end) || ( start > end && (currentTimeMillis < end || currentTimeMillis >= start))
+
+            if (!active) return value
+
+            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_disable_with_cob, false)) {
+                val mealData = verifyMealDataLoaded(true)
+                if (mealData.mealCOB > 0) return value
+            }
+
+            val profile = verifyProfileLoaded(true)
+            val profileTarget = profile?.getTargetMgdl() ?: 99.0
+
+            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_disable_with_low_temp_target, false)) {
+                var targetBg = profileTarget
+                var isTempTarget = false
+                val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+                if (tempTarget is ValueWrapper.Existing) {
+                    isTempTarget = true
+                    targetBg =
+                        hardLimits.verifyHardLimits(
+                            tempTarget.value.target(),
+                            info.nightscout.core.ui.R.string.temp_target_value,
+                            HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0].toDouble(),
+                            HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1].toDouble()
+                        )
+                }
+
+                if (isTempTarget && targetBg < profileTarget) return value
+            }
+
+            if (bgCurrent < profileTarget + bgOffset) {
+                value.set(false, rh.gs(info.nightscout.core.ui.R.string.treatment_safety_night_mode_smb_disabled), this)
+                return value
+            }
+        }
         return value
     }
 
