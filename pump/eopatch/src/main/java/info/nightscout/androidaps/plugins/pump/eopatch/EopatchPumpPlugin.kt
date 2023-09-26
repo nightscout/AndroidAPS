@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -32,6 +31,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TimeChangeType
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager

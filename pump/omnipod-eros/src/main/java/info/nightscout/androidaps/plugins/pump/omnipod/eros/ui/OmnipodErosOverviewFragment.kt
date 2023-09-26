@@ -8,7 +8,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -24,6 +23,8 @@ import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.ui.dialogs.OKDialog
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
@@ -49,7 +50,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil
-import app.aaps.core.ui.dialogs.OKDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils

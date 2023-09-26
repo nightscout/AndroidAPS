@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
@@ -66,6 +67,7 @@ import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.implementation.utils.HardLimitsImpl
 import app.aaps.implementation.utils.TranslatorImpl
 import app.aaps.implementation.utils.TrendCalculatorImpl
+import app.aaps.implementation.utils.fabric.FabricPrivacyImpl
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -86,6 +88,7 @@ abstract class ImplementationModule {
     @Module
     interface Bindings {
 
+        @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindPersistenceLayer(persistenceLayerImpl: PersistenceLayerImpl): PersistenceLayer
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData

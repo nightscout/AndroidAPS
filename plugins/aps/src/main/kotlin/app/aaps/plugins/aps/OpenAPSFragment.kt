@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.aps.databinding.OpenapsFragmentBinding
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui

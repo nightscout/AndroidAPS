@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.DaggerService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject

@@ -19,7 +19,7 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.WearFragmentBinding

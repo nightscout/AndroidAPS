@@ -28,10 +28,10 @@ import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.durationInMinutes
 import app.aaps.core.main.extensions.toStringFull
 import app.aaps.core.main.iob.round
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import dagger.android.HasAndroidInjector

@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.events.EventIobCalculationProgress
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.graph.OverviewData
@@ -30,7 +31,6 @@ import app.aaps.core.main.utils.extensions.storeBoolean
 import app.aaps.core.main.utils.extensions.storeDouble
 import app.aaps.core.main.utils.extensions.storeInt
 import app.aaps.core.main.utils.extensions.storeString
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.validators.ValidatingEditTextPreference
 import app.aaps.plugins.main.R

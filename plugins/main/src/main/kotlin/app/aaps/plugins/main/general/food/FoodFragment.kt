@@ -21,7 +21,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventFoodDatabaseChanged
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.database.entities.Food

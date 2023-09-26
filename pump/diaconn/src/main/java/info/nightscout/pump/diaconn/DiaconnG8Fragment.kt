@@ -8,7 +8,6 @@ import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -27,6 +26,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.support.DaggerFragment
 import info.nightscout.pump.diaconn.activities.DiaconnG8HistoryActivity
 import info.nightscout.pump.diaconn.activities.DiaconnG8UserOptionsActivity

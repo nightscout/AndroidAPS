@@ -13,9 +13,9 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.implementation.profile.ProfileStoreObject

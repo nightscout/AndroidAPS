@@ -39,12 +39,12 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.iob.round
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.utils.extensions.formatColor
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper

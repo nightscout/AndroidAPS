@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.entities.UserEntry

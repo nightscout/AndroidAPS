@@ -19,7 +19,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import app.aaps.core.main.utils.fabric.FabricPrivacy;
 import app.aaps.core.interfaces.queue.Callback;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import app.aaps.core.interfaces.resources.ResourceHelper;
@@ -27,6 +26,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers;
 import app.aaps.core.interfaces.rx.bus.RxBus;
 import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.interfaces.utils.DecimalFormatter;
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
 import dagger.android.support.DaggerFragment;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.parameter_blocks.TBROverNotificationBlock;

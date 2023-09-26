@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.locale.LocaleHelper.update
 import app.aaps.plugins.configuration.R

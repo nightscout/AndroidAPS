@@ -20,7 +20,6 @@ import java.util.UUID;
 
 import javax.inject.Inject;
 
-import app.aaps.core.main.utils.fabric.FabricPrivacy;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
@@ -38,6 +37,8 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.ui.UiInteraction;
 import app.aaps.core.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
+import app.aaps.core.ui.toast.ToastUtils;
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danar.R;
@@ -55,7 +56,6 @@ import info.nightscout.androidaps.danar.comm.MsgHistoryRefill;
 import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
-import app.aaps.core.ui.toast.ToastUtils;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.comm.RecordTypes;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;

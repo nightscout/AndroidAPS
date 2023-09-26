@@ -19,7 +19,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.main.R
 import com.google.gson.Gson
 import javax.inject.Inject

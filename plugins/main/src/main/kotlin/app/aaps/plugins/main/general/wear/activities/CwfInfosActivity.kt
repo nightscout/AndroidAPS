@@ -21,8 +21,8 @@ import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.rx.weardata.ViewKeys
 import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.CwfInfosActivityBinding

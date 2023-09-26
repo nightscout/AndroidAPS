@@ -50,6 +50,7 @@ buildscript {
         wearable_version = '2.9.0'
         play_services_wearable_version = '18.1.0'
         play_services_location_version = '21.0.1'
+        play_services_measurement_version = '21.3.0'
 
         kotlinx_datetime_version = '0.4.1'
         kotlinx_serialization_version = '1.6.0'

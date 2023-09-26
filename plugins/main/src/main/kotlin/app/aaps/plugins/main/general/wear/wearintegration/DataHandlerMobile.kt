@@ -39,6 +39,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TrendCalculator
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.toStringShort
@@ -46,7 +47,6 @@ import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint
 import app.aaps.core.main.iob.generateCOBString
 import app.aaps.core.main.iob.round
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry

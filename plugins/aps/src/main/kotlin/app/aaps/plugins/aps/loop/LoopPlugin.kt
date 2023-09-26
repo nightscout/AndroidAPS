@@ -55,13 +55,13 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.main.extensions.plannedRemainingMinutes
 import app.aaps.core.main.iob.json
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.DeviceStatus

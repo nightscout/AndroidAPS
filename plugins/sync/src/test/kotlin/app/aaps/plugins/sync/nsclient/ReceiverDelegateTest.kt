@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventChargingState
 import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.sync.R
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat

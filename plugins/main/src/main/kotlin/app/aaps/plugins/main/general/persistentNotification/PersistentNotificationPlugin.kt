@@ -26,10 +26,10 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.iob.generateCOBString
 import app.aaps.core.main.iob.round
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable

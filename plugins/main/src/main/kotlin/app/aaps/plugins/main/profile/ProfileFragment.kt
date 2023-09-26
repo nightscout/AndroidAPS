@@ -26,8 +26,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.ValueWithUnit

@@ -28,9 +28,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.directionToIcon
 import app.aaps.core.main.utils.ActionModeHelper
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.UserEntry.Action

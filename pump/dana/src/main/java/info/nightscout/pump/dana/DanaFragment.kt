@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -34,8 +33,9 @@ import app.aaps.core.interfaces.userEntry.UserEntryMapper.Action
 import app.aaps.core.interfaces.userEntry.UserEntryMapper.Sources
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import dagger.android.support.DaggerFragment
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
+import dagger.android.support.DaggerFragment
 import info.nightscout.pump.dana.activities.DanaHistoryActivity
 import info.nightscout.pump.dana.activities.DanaUserOptionsActivity
 import info.nightscout.pump.dana.databinding.DanarFragmentBinding

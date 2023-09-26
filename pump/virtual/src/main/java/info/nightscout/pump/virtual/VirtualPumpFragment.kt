@@ -6,8 +6,6 @@ import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.main.extensions.toStringFull
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.defs.DoseStepSize
@@ -21,6 +19,8 @@ import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.main.extensions.toStringFull
 import dagger.android.support.DaggerFragment
 import info.nightscout.pump.virtual.databinding.VirtualPumpFragmentBinding
 import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui

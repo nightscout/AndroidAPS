@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.getThemeColor
 import app.aaps.core.ui.locale.LocaleHelper
 import java.util.Locale

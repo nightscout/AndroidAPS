@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.sync.Sync
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged

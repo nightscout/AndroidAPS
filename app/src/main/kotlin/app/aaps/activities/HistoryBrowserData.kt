@@ -10,8 +10,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.overview.OverviewDataImpl

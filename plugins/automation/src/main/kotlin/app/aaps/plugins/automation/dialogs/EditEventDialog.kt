@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.automation.AutomationEventObject
 import app.aaps.plugins.automation.AutomationPlugin

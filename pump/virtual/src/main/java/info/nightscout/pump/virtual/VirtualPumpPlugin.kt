@@ -34,10 +34,10 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TimeChangeType
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.plannedRemainingMinutes
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.fabric.InstanceId
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui

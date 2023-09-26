@@ -9,10 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.pump.danars.activities.PairingHelperActivity
 import info.nightscout.pump.danars.databinding.DanarsPairingProgressDialogBinding

@@ -1,4 +1,4 @@
-package app.aaps.core.main.utils.fabric
+package app.aaps.implementation.utils.fabric
 
 import android.os.Bundle
 import app.aaps.annotations.OpenForTesting
@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -24,12 +25,12 @@ import javax.inject.Singleton
  */
 @OpenForTesting
 @Singleton
-class FabricPrivacy @Inject constructor(
+class FabricPrivacyImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP
-) {
+) : FabricPrivacy {
 
-    val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+    override val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
     init {
         firebaseAnalytics.setAnalyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())
@@ -38,7 +39,7 @@ class FabricPrivacy @Inject constructor(
 
     // Analytics logCustom
     @Suppress("unused")
-    fun logCustom(name: String, event: Bundle) {
+    override fun logCustom(name: String, event: Bundle) {
         try {
             if (fabricEnabled()) {
                 firebaseAnalytics.logEvent(name, event)
@@ -69,7 +70,7 @@ class FabricPrivacy @Inject constructor(
     }
 
     // Analytics logCustom
-    fun logCustom(event: String) {
+    override fun logCustom(event: String) {
         try {
             if (fabricEnabled()) {
                 firebaseAnalytics.logEvent(event, Bundle())
@@ -84,22 +85,22 @@ class FabricPrivacy @Inject constructor(
     }
 
     // Crashlytics log message
-    fun logMessage(message: String) {
+    override fun logMessage(message: String) {
         aapsLogger.info(LTag.CORE, "Crashlytics log message: $message")
         FirebaseCrashlytics.getInstance().log(message)
     }
 
     // Crashlytics logException
-    fun logException(throwable: Throwable) {
+    override fun logException(throwable: Throwable) {
         aapsLogger.error("Crashlytics log exception: ", throwable)
         FirebaseCrashlytics.getInstance().recordException(throwable)
     }
 
-    fun fabricEnabled(): Boolean {
+    override fun fabricEnabled(): Boolean {
         return sp.getBoolean(R.string.key_enable_fabric, true)
     }
 
-    fun logWearException(wearException: EventData.WearException) {
+    override fun logWearException(wearException: EventData.WearException) {
         aapsLogger.debug(LTag.WEAR, "logWearException")
         FirebaseCrashlytics.getInstance().apply {
             setCustomKey("wear_exception", true)

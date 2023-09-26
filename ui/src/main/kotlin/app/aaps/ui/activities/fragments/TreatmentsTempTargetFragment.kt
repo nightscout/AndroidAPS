@@ -29,11 +29,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.Translator
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.friendlyDescription
 import app.aaps.core.main.extensions.highValueToUnitsToString
 import app.aaps.core.main.extensions.lowValueToUnitsToString
 import app.aaps.core.main.utils.ActionModeHelper
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.ValueWrapper

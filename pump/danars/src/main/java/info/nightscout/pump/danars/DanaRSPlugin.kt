@@ -7,8 +7,6 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
@@ -45,8 +43,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.T
-import dagger.android.HasAndroidInjector
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
+import dagger.android.HasAndroidInjector
 import info.nightscout.pump.dana.DanaFragment
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.comm.RecordTypes

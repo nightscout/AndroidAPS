@@ -9,7 +9,7 @@ import app.aaps.core.interfaces.rx.events.EventChargingState
 import app.aaps.core.interfaces.rx.events.EventNetworkChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import io.reactivex.rxjava3.disposables.CompositeDisposable

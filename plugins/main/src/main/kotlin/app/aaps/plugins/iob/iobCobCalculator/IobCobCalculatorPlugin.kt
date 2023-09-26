@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.iobCalc
 import app.aaps.core.main.extensions.toTemporaryBasal
@@ -42,7 +43,6 @@ import app.aaps.core.main.iob.copy
 import app.aaps.core.main.iob.determineBasalJson
 import app.aaps.core.main.iob.plus
 import app.aaps.core.main.iob.round
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.Bolus

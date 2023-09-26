@@ -8,7 +8,6 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.notifications.Notification
@@ -25,6 +24,9 @@ import app.aaps.core.interfaces.rx.events.EventQueueChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.ui.UIRunnable
+import app.aaps.core.ui.dialogs.OKDialog
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
@@ -41,8 +43,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import app.aaps.core.ui.UIRunnable
-import app.aaps.core.ui.dialogs.OKDialog
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.apache.commons.lang3.StringUtils

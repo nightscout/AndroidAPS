@@ -21,8 +21,8 @@ import app.aaps.core.interfaces.rx.events.EventOfflineChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.main.workflow.CalculationWorkflow.Companion.JOB
 import app.aaps.core.main.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION

@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.automation.databinding.AutomationDialogEditTriggerBinding
 import app.aaps.plugins.automation.events.EventAutomationUpdateTrigger
 import app.aaps.plugins.automation.events.EventTriggerChanged

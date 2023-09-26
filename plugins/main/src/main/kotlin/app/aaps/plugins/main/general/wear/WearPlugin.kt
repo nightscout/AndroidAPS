@@ -20,7 +20,7 @@ import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.main.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
