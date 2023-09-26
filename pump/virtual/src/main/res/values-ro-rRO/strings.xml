@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Model pompă virtuală</string>
+    <string name="virtual_pump_definition">Definire pompă</string>
+    <string name="virtual_pump_pump_def">Bolus: Pas=%1$s\nBolus Extins: [Pas=%2$s, Durată=%3$smin-%4$sh]\nBazală: Pas=%5$s\nRBT: %6$s (cu %7$s), Durată=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">Pompă_V</string>
     <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
+    <string name="virtual_pump_label">POMPĂ VIRTUALĂ</string>
     <string name="virtualpump_settings">Setări pompă virtuală</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* Pompa virtuală acceptă doar valori specifice ca și incremente, nu și intervale de valori.</string>
 </resources>
