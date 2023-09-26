@@ -1,4 +1,4 @@
-package info.nightscout.source
+package app.aaps.plugins.source
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase
@@ -8,18 +8,18 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
-class GlimpPluginTest : TestBase() {
+class XdripSourcePluginTest : TestBase() {
 
-    private lateinit var glimpPlugin: GlimpPlugin
+    private lateinit var xdripSourcePlugin: XdripSourcePlugin
 
     @Mock lateinit var rh: ResourceHelper
 
     @BeforeEach
     fun setup() {
-        glimpPlugin = GlimpPlugin({ AndroidInjector { } }, rh, aapsLogger)
+        xdripSourcePlugin = XdripSourcePlugin({ AndroidInjector { } }, rh, aapsLogger)
     }
 
     @Test fun advancedFilteringSupported() {
-        assertThat(glimpPlugin.advancedFilteringSupported()).isFalse()
+        assertThat(xdripSourcePlugin.advancedFilteringSupported()).isFalse()
     }
 }

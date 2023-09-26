@@ -10,6 +10,7 @@ import app.aaps.plugins.configuration.di.ConfigurationModule
 import app.aaps.plugins.constraints.di.PluginsConstraintsModule
 import app.aaps.plugins.insulin.di.InsulinModule
 import app.aaps.plugins.main.di.PluginsModule
+import app.aaps.plugins.source.di.SourceModule
 import app.aaps.shared.impl.di.SharedImplModule
 import dagger.BindsInstance
 import dagger.Component
@@ -35,7 +36,6 @@ import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.pump.medtrum.di.MedtrumModule
 import info.nightscout.pump.virtual.di.VirtualPumpModule
-import info.nightscout.source.di.SourceModule
 import info.nightscout.ui.di.UiModule
 import info.nightscout.workflow.di.WorkflowModule
 import javax.inject.Singleton

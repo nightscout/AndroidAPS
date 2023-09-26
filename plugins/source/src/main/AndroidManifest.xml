@@ -4,7 +4,7 @@
     <application>
 
         <activity
-            android:name="info.nightscout.source.activities.RequestDexcomPermissionActivity"
+            android:name=".activities.RequestDexcomPermissionActivity"
             android:exported="false" />
 
     </application>

@@ -1,8 +1,8 @@
-package info.nightscout.source.activities
+package app.aaps.plugins.source.activities
 
 import android.os.Bundle
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.source.DexcomPlugin
+import app.aaps.plugins.source.DexcomPlugin
 
 class RequestDexcomPermissionActivity : TranslatedDaggerAppCompatActivity() {
 

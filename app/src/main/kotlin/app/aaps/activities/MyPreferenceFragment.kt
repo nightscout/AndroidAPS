@@ -46,6 +46,14 @@ import app.aaps.plugins.main.general.wear.WearPlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
 import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
+import app.aaps.plugins.source.AidexPlugin
+import app.aaps.plugins.source.DexcomPlugin
+import app.aaps.plugins.source.EversensePlugin
+import app.aaps.plugins.source.GlimpPlugin
+import app.aaps.plugins.source.GlunovoPlugin
+import app.aaps.plugins.source.IntelligoPlugin
+import app.aaps.plugins.source.PoctechPlugin
+import app.aaps.plugins.source.TomatoPlugin
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
@@ -64,14 +72,6 @@ import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.source.AidexPlugin
-import info.nightscout.source.DexcomPlugin
-import info.nightscout.source.EversensePlugin
-import info.nightscout.source.GlimpPlugin
-import info.nightscout.source.GlunovoPlugin
-import info.nightscout.source.IntelligoPlugin
-import info.nightscout.source.PoctechPlugin
-import info.nightscout.source.TomatoPlugin
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {

@@ -1,4 +1,4 @@
-package info.nightscout.source
+package app.aaps.plugins.source
 
 import android.os.Bundle
 import android.util.SparseArray
@@ -36,11 +36,11 @@ import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.ValueWithUnit
+import app.aaps.plugins.source.databinding.SourceFragmentBinding
+import app.aaps.plugins.source.databinding.SourceItemBinding
 import dagger.android.support.DaggerFragment
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
-import info.nightscout.source.databinding.SourceFragmentBinding
-import info.nightscout.source.databinding.SourceItemBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.TimeUnit

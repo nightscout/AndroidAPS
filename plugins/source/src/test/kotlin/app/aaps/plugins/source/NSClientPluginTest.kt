@@ -1,5 +1,6 @@
-package info.nightscout.source
+package app.aaps.plugins.source
 
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -8,18 +9,19 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
-class XdripSourcePluginTest : TestBase() {
+class NSClientPluginTest : TestBase() {
 
-    private lateinit var xdripSourcePlugin: XdripSourcePlugin
+    private lateinit var nsClientSourcePlugin: NSClientSourcePlugin
 
     @Mock lateinit var rh: ResourceHelper
+    @Mock lateinit var config: Config
 
     @BeforeEach
     fun setup() {
-        xdripSourcePlugin = XdripSourcePlugin({ AndroidInjector { } }, rh, aapsLogger)
+        nsClientSourcePlugin = NSClientSourcePlugin({ AndroidInjector { } }, rh, aapsLogger, config)
     }
 
     @Test fun advancedFilteringSupported() {
-        assertThat(xdripSourcePlugin.advancedFilteringSupported()).isFalse()
+        assertThat(nsClientSourcePlugin.advancedFilteringSupported()).isFalse()
     }
 }

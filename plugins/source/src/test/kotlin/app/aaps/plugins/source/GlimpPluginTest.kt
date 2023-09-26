@@ -1,6 +1,5 @@
-package info.nightscout.source
+package app.aaps.plugins.source
 
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -9,19 +8,18 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
-class NSClientPluginTest : TestBase() {
+class GlimpPluginTest : TestBase() {
 
-    private lateinit var nsClientSourcePlugin: NSClientSourcePlugin
+    private lateinit var glimpPlugin: GlimpPlugin
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var config: Config
 
     @BeforeEach
     fun setup() {
-        nsClientSourcePlugin = NSClientSourcePlugin({ AndroidInjector { } }, rh, aapsLogger, config)
+        glimpPlugin = GlimpPlugin({ AndroidInjector { } }, rh, aapsLogger)
     }
 
     @Test fun advancedFilteringSupported() {
-        assertThat(nsClientSourcePlugin.advancedFilteringSupported()).isFalse()
+        assertThat(glimpPlugin.advancedFilteringSupported()).isFalse()
     }
 }

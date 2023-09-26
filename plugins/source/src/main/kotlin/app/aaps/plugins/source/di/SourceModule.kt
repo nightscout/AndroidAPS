@@ -1,22 +1,22 @@
-package info.nightscout.source.di
+package app.aaps.plugins.source.di
 
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.plugins.source.AidexPlugin
+import app.aaps.plugins.source.BGSourceFragment
+import app.aaps.plugins.source.DexcomPlugin
+import app.aaps.plugins.source.EversensePlugin
+import app.aaps.plugins.source.GlimpPlugin
+import app.aaps.plugins.source.MM640gPlugin
+import app.aaps.plugins.source.NSClientSourcePlugin
+import app.aaps.plugins.source.PoctechPlugin
+import app.aaps.plugins.source.TomatoPlugin
+import app.aaps.plugins.source.XdripSourcePlugin
+import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.source.AidexPlugin
-import info.nightscout.source.BGSourceFragment
-import info.nightscout.source.DexcomPlugin
-import info.nightscout.source.EversensePlugin
-import info.nightscout.source.GlimpPlugin
-import info.nightscout.source.MM640gPlugin
-import info.nightscout.source.NSClientSourcePlugin
-import info.nightscout.source.PoctechPlugin
-import info.nightscout.source.TomatoPlugin
-import info.nightscout.source.XdripSourcePlugin
-import info.nightscout.source.activities.RequestDexcomPermissionActivity
 
 @Module(
     includes = [

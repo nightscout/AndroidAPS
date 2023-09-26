@@ -32,6 +32,20 @@ import app.aaps.plugins.main.profile.ProfilePlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
 import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
+import app.aaps.plugins.smoothing.AvgSmoothingPlugin
+import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
+import app.aaps.plugins.smoothing.NoSmoothingPlugin
+import app.aaps.plugins.source.AidexPlugin
+import app.aaps.plugins.source.DexcomPlugin
+import app.aaps.plugins.source.GlimpPlugin
+import app.aaps.plugins.source.GlunovoPlugin
+import app.aaps.plugins.source.IntelligoPlugin
+import app.aaps.plugins.source.MM640gPlugin
+import app.aaps.plugins.source.NSClientSourcePlugin
+import app.aaps.plugins.source.PoctechPlugin
+import app.aaps.plugins.source.RandomBgPlugin
+import app.aaps.plugins.source.TomatoPlugin
+import app.aaps.plugins.source.XdripSourcePlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -55,20 +69,6 @@ import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import app.aaps.plugins.smoothing.AvgSmoothingPlugin
-import app.aaps.plugins.smoothing.ExponentialSmoothingPlugin
-import app.aaps.plugins.smoothing.NoSmoothingPlugin
-import info.nightscout.source.AidexPlugin
-import info.nightscout.source.DexcomPlugin
-import info.nightscout.source.GlimpPlugin
-import info.nightscout.source.GlunovoPlugin
-import info.nightscout.source.IntelligoPlugin
-import info.nightscout.source.MM640gPlugin
-import info.nightscout.source.NSClientSourcePlugin
-import info.nightscout.source.PoctechPlugin
-import info.nightscout.source.RandomBgPlugin
-import info.nightscout.source.TomatoPlugin
-import info.nightscout.source.XdripSourcePlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")

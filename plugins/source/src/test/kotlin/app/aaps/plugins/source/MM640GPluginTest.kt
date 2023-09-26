@@ -1,4 +1,4 @@
-package info.nightscout.source
+package app.aaps.plugins.source
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.shared.tests.TestBase

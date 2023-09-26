@@ -1,4 +1,4 @@
-package info.nightscout.source
+package app.aaps.plugins.source
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger

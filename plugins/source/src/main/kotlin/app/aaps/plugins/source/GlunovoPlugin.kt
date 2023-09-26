@@ -1,4 +1,4 @@
-package info.nightscout.source
+package app.aaps.plugins.source
 
 import android.content.Context
 import android.net.Uri
