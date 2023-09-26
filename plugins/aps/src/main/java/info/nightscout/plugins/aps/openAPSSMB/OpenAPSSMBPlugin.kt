@@ -45,6 +45,7 @@ import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
+import kotlin.time.Duration.Companion.hours
 
 @Singleton
 open class OpenAPSSMBPlugin @Inject constructor(
@@ -369,7 +370,9 @@ open class OpenAPSSMBPlugin @Inject constructor(
             val start = midnight + parser.parse(sp.getString(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_start, "22:00")).time
             val end = midnight + parser.parse(sp.getString(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_end, "7:00")).time
             val bgOffset = sp.getDouble(info.nightscout.core.utils.R.string.key_treatment_safety_night_mode_bg_offset, 27.0)
-            val active = (end > start && currentTimeMillis >= start && currentTimeMillis < end) || ( start > end && (currentTimeMillis < end || currentTimeMillis >= start))
+            val active =
+                if (end > start) currentTimeMillis in start..<end
+                else (currentTimeMillis in (start - 86400000)..<end || currentTimeMillis in start..<(end + 86400000))
 
             if (!active) return value
 
