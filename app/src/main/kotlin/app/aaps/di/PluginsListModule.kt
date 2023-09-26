@@ -8,6 +8,7 @@ import app.aaps.plugins.aps.loop.LoopPlugin
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import app.aaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
+import app.aaps.plugins.automation.AutomationPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -20,7 +21,6 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.automation.AutomationPlugin
 import info.nightscout.insulin.InsulinLyumjevPlugin
 import info.nightscout.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.insulin.InsulinOrefRapidActingPlugin
