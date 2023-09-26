@@ -43,6 +43,9 @@ import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.general.wear.WearPlugin
+import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
+import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
+import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
@@ -61,9 +64,6 @@ import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.sensitivity.SensitivityOref1Plugin
-import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.source.AidexPlugin
 import info.nightscout.source.DexcomPlugin
 import info.nightscout.source.EversensePlugin
@@ -475,7 +475,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                     true
                 }
                 // NSClient copy settings
-                rh.gs(app.aaps.plugins.main.R.string.key_statuslights_copy_ns)    -> {
+                rh.gs(app.aaps.plugins.main.R.string.key_statuslights_copy_ns)      -> {
                     nsSettingStatus.copyStatusLightsNsSettings(context)
                     true
                 }

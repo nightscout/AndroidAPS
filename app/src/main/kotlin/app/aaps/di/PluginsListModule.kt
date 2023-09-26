@@ -29,6 +29,9 @@ import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.general.themes.ThemeSwitcherPlugin
 import app.aaps.plugins.main.general.wear.WearPlugin
 import app.aaps.plugins.main.profile.ProfilePlugin
+import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
+import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
+import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -52,9 +55,6 @@ import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.sensitivity.SensitivityOref1Plugin
-import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.smoothing.AvgSmoothingPlugin
 import info.nightscout.smoothing.ExponentialSmoothingPlugin
 import info.nightscout.smoothing.NoSmoothingPlugin

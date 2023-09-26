@@ -1,4 +1,4 @@
-package info.nightscout.sensitivity
+package app.aaps.plugins.sensitivity
 
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.aps.AutosensDataStore
@@ -19,10 +19,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.database.entities.TherapyEvent
+import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
+import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.sensitivity.extensions.isPSEvent5minBack
-import info.nightscout.sensitivity.extensions.isTherapyEventEvent5minBack
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.Arrays

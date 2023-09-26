@@ -1,4 +1,4 @@
-package info.nightscout.sensitivity.extensions
+package app.aaps.plugins.sensitivity.extensions
 
 import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.TherapyEvent

@@ -1,4 +1,4 @@
-package info.nightscout.sensitivity
+package app.aaps.plugins.sensitivity
 
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.AutosensResult
