@@ -54,6 +54,11 @@ import app.aaps.plugins.source.GlunovoPlugin
 import app.aaps.plugins.source.IntelligoPlugin
 import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.TomatoPlugin
+import app.aaps.plugins.sync.nsclient.NSClientPlugin
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
+import app.aaps.plugins.sync.tidepool.TidepoolPlugin
+import app.aaps.plugins.sync.xdrip.XdripPlugin
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
@@ -62,11 +67,6 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.plugins.sync.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
-import info.nightscout.plugins.sync.xdrip.XdripPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
@@ -278,7 +278,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.let {
                 val title = rh.gs(app.aaps.core.ui.R.string.unsecure_fallback_biometric)
                 val message =
-                    rh.gs(app.aaps.plugins.configuration.R.string.master_password_missing, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_general), rh.gs(app.aaps.plugins.configuration.R.string.protection))
+                    rh.gs(
+                        app.aaps.plugins.configuration.R.string.master_password_missing,
+                        rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_general),
+                        rh.gs(app.aaps.plugins.configuration.R.string.protection)
+                    )
                 OKDialog.show(it, title = title, message = message)
             }
         }

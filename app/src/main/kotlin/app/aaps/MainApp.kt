@@ -132,7 +132,7 @@ class MainApp : DaggerApplication() {
                     // log version
                     disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
                     // log app start
-                    if (sp.getBoolean(info.nightscout.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
+                    if (sp.getBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
                         disposable += repository
                             .runTransaction(
                                 InsertIfNewByTimestampTherapyEventTransaction(
@@ -205,26 +205,26 @@ class MainApp : DaggerApplication() {
         // 3.1.0
         if (sp.contains("ns_wifionly")) {
             if (sp.getBoolean("ns_wifionly", false)) {
-                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_cellular, false)
-                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_wifi, true)
+                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_cellular, false)
+                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_wifi, true)
             } else {
-                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_cellular, true)
-                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_wifi, false)
+                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_cellular, true)
+                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_wifi, false)
             }
             sp.remove("ns_wifionly")
         }
         if (sp.contains("ns_charginonly")) {
             if (sp.getBoolean("ns_charginonly", false)) {
-                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_battery, false)
-                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_charging, true)
+                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_battery, false)
+                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_charging, true)
             } else {
-                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_battery, true)
-                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_charging, true)
+                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_battery, true)
+                sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_charging, true)
             }
             sp.remove("ns_charginonly")
         }
-        if (!sp.contains(info.nightscout.plugins.sync.R.string.key_ns_log_app_started_event))
-            sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_log_app_started_event, config.APS)
+        if (!sp.contains(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event))
+            sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS)
         if (sp.getString(app.aaps.plugins.configuration.R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
             sp.putString(app.aaps.plugins.configuration.R.string.key_maintenance_logs_email, "logs@aaps.app")
         // fix values for theme switching

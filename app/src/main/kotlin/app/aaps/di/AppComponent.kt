@@ -11,6 +11,8 @@ import app.aaps.plugins.constraints.di.PluginsConstraintsModule
 import app.aaps.plugins.insulin.di.InsulinModule
 import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
+import app.aaps.plugins.sync.di.OpenHumansModule
+import app.aaps.plugins.sync.di.SyncModule
 import app.aaps.shared.impl.di.SharedImplModule
 import dagger.BindsInstance
 import dagger.Component
@@ -25,8 +27,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.database.impl.DatabaseModule
-import info.nightscout.plugins.sync.di.OpenHumansModule
-import info.nightscout.plugins.sync.di.SyncModule
 import info.nightscout.pump.combo.di.ComboModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 import info.nightscout.pump.common.di.PumpCommonModule

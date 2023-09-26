@@ -46,6 +46,12 @@ import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.RandomBgPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
+import app.aaps.plugins.sync.dataBroadcaster.DataBroadcastPlugin
+import app.aaps.plugins.sync.nsclient.NSClientPlugin
+import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
+import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
+import app.aaps.plugins.sync.tidepool.TidepoolPlugin
+import app.aaps.plugins.sync.xdrip.XdripPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -58,12 +64,6 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.plugins.sync.dataBroadcaster.DataBroadcastPlugin
-import info.nightscout.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.plugins.sync.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
-import info.nightscout.plugins.sync.xdrip.XdripPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
