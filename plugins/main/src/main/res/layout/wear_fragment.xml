@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="2dp"
-    tools:context="info.nightscout.plugins.general.wear.WearFragment">
+    tools:context=".general.wear.WearFragment">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/log"

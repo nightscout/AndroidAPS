@@ -7,9 +7,9 @@ import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.plugins.aps.APSResultObject
+import app.aaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import org.json.JSONObject
 import javax.inject.Inject
 

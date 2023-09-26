@@ -8,9 +8,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import app.aaps.core.main.events.EventIobCalculationProgress
-import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
@@ -29,12 +26,15 @@ import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.events.EventIobCalculationProgress
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.plugins.main.general.overview.graphData.GraphData
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
-import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.plugins.general.overview.graphData.GraphData
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.Calendar
@@ -76,7 +76,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding = ActivityHistorybrowseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(info.nightscout.plugins.R.string.nav_history_browser)
+        title = rh.gs(app.aaps.plugins.main.R.string.nav_history_browser)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 

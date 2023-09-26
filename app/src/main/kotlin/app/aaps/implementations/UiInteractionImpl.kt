@@ -17,9 +17,9 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.activities.SingleFragmentActivity
+import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
 import info.nightscout.ui.activities.QuickWizardListActivity

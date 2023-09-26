@@ -36,6 +36,8 @@ import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.plugins.aps.utils.StaticInjector
+import app.aaps.plugins.main.general.overview.notifications.NotificationStore
+import app.aaps.plugins.main.general.themes.ThemeSwitcherPlugin
 import app.aaps.receivers.BTReceiver
 import app.aaps.receivers.ChargingStateReceiver
 import app.aaps.receivers.KeepAliveWorker
@@ -47,8 +49,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.VersionChangeTransaction
-import info.nightscout.plugins.general.overview.notifications.NotificationStore
-import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.ui.activityMonitor.ActivityMonitor
 import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -80,12 +80,12 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
-    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector// TODO avoid , here fake only to initialize
+    @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector// better avoid, here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var notificationStore: NotificationStore
     @Inject lateinit var processLifecycleListener: Provider<ProcessLifecycleListener>
-    @Inject lateinit var profileSwitchPlugin: ThemeSwitcherPlugin
+    @Inject lateinit var themeSwitcherPlugin: ThemeSwitcherPlugin
     @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var rh: Provider<ResourceHelper>
 
@@ -110,7 +110,7 @@ class MainApp : DaggerApplication() {
             }
             disposable += compatDBHelper.dbChangeDisposable()
             registerActivityLifecycleCallbacks(activityMonitor)
-            runOnUiThread { profileSwitchPlugin.setThemeMode() }
+            runOnUiThread { themeSwitcherPlugin.setThemeMode() }
             aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
             aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION)
             aapsLogger.debug("Remote: " + BuildConfig.REMOTE)
@@ -228,9 +228,9 @@ class MainApp : DaggerApplication() {
         if (sp.getString(app.aaps.plugins.configuration.R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
             sp.putString(app.aaps.plugins.configuration.R.string.key_maintenance_logs_email, "logs@aaps.app")
         // fix values for theme switching
-        sp.putString(info.nightscout.plugins.R.string.value_dark_theme, "dark")
-        sp.putString(info.nightscout.plugins.R.string.value_light_theme, "light")
-        sp.putString(info.nightscout.plugins.R.string.value_system_theme, "system")
+        sp.putString(app.aaps.plugins.main.R.string.value_dark_theme, "dark")
+        sp.putString(app.aaps.plugins.main.R.string.value_light_theme, "light")
+        sp.putString(app.aaps.plugins.main.R.string.value_system_theme, "system")
 
     }
 

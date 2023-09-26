@@ -12,8 +12,8 @@ import app.aaps.core.utils.extensions.copyDouble
 import app.aaps.core.utils.extensions.copyLong
 import app.aaps.core.utils.extensions.copyString
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.source.AidexPlugin
 import info.nightscout.source.DexcomPlugin
 import info.nightscout.source.EversensePlugin

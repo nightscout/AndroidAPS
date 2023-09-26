@@ -41,6 +41,8 @@ import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
+import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.main.general.wear.WearPlugin
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
@@ -49,8 +51,6 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.openhumans.OpenHumansUploaderPlugin
@@ -186,7 +186,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResource(pluginId, rootKey)
         } else {
             addPreferencesFromResource(R.xml.pref_general, rootKey)
-            addPreferencesFromResource(info.nightscout.plugins.R.xml.pref_overview, rootKey)
+            addPreferencesFromResource(app.aaps.plugins.main.R.xml.pref_overview, rootKey)
             addPreferencesFromResourceIfEnabled(safetyPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(eversensePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(dexcomPlugin, rootKey)
@@ -243,7 +243,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             //recreate() does not update language so better close settings
             activity?.finish()
         }
-        if (key == rh.gs(info.nightscout.plugins.R.string.key_short_tabtitles)) {
+        if (key == rh.gs(app.aaps.plugins.main.R.string.key_short_tabtitles)) {
             rxBus.send(EventRebuildTabs())
         }
         if (key == rh.gs(info.nightscout.core.utils.R.string.key_units)) {
@@ -475,7 +475,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
                     true
                 }
                 // NSClient copy settings
-                rh.gs(info.nightscout.plugins.R.string.key_statuslights_copy_ns)    -> {
+                rh.gs(app.aaps.plugins.main.R.string.key_statuslights_copy_ns)    -> {
                     nsSettingStatus.copyStatusLightsNsSettings(context)
                     true
                 }

@@ -2,8 +2,8 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
+import app.aaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataObject
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
