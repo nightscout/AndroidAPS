@@ -1,4 +1,4 @@
-package app.aaps.configuration.maintenance
+package app.aaps.plugins.configuration.maintenance
 
 import android.content.Context
 import app.aaps.core.interfaces.configuration.Config

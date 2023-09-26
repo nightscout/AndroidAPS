@@ -29,7 +29,7 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="info.nightscout.ui.activities.BolusProgressHelperActivity"
+            android:name="app.aaps.ui.activities.BolusProgressHelperActivity"
             android:exported="false"
             android:theme="@style/Theme.MaterialComponents.Translucent" />
         <activity
@@ -53,15 +53,20 @@
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="info.nightscout.ui.activities.QuickWizardListActivity"
+            android:name="app.aaps.ui.activities.QuickWizardListActivity"
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
+                <action android:name="app.aaps.ui.activities.QuickWizardListActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".services.AlarmSoundService"
+            android:enabled="true"
+            android:exported="false" />
 
     </application>
 

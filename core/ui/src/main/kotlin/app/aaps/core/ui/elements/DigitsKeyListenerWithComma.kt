@@ -36,7 +36,7 @@ internal class DigitsKeyListenerWithComma @JvmOverloads constructor(private val 
     override fun filter(
         source: CharSequence, start: Int, end: Int,
         dest: Spanned, dstart: Int, dend: Int
-    ): CharSequence {
+    ): CharSequence? {
         var sourceSequence = source
         var startIndex = start
         var endIndex = end

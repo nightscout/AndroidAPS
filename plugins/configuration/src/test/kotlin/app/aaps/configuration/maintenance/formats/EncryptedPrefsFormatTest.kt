@@ -1,13 +1,13 @@
-package app.aaps.configuration.maintenance.formats
+package app.aaps.plugins.configuration.maintenance.formats
 
-import app.aaps.configuration.maintenance.PrefsMetadataKeyImpl
-import app.aaps.configuration.maintenance.data.PrefFormatError
-import app.aaps.configuration.maintenance.data.Prefs
-import app.aaps.configuration.maintenance.data.PrefsFormat
-import app.aaps.configuration.maintenance.data.PrefsStatusImpl
-import app.aaps.core.main.utils.CryptoUtil
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.main.utils.CryptoUtil
+import app.aaps.plugins.configuration.maintenance.PrefsMetadataKeyImpl
+import app.aaps.plugins.configuration.maintenance.data.PrefFormatError
+import app.aaps.plugins.configuration.maintenance.data.Prefs
+import app.aaps.plugins.configuration.maintenance.data.PrefsFormat
+import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.TruthJUnit.assume

@@ -8,9 +8,9 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuProvider
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
-import app.aaps.configuration.activities.DaggerAppCompatActivityWithResult
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.ActivityPreferencesBinding
+import app.aaps.R
+import app.aaps.databinding.ActivityPreferencesBinding
+import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 
 class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
@@ -25,7 +25,7 @@ class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragm
         binding = ActivityPreferencesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(app.aaps.configuration.R.string.nav_preferences)
+        title = rh.gs(app.aaps.plugins.configuration.R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         myPreferenceFragment = MyPreferenceFragment()

@@ -1,8 +1,5 @@
 package app.aaps.activities
 
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.utils.fabric.FabricPrivacy
-import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.DefaultValueHelper
@@ -13,10 +10,13 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.main.graph.OverviewData
+import app.aaps.core.main.utils.fabric.FabricPrivacy
+import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.implementation.overview.OverviewDataImpl
+import app.aaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.implementation.overview.OverviewDataImpl
-import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import javax.inject.Inject
 import javax.inject.Singleton
 

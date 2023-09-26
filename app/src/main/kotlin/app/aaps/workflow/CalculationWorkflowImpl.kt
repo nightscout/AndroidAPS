@@ -29,8 +29,8 @@ import app.aaps.core.main.workflow.CalculationWorkflow.Companion.MAIN_CALCULATIO
 import app.aaps.core.main.workflow.CalculationWorkflow.Companion.PASS
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.utils.worker.then
+import app.aaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.workflow.DummyWorker
 import info.nightscout.workflow.InvokeLoopWorker
 import info.nightscout.workflow.LoadBgDataWorker

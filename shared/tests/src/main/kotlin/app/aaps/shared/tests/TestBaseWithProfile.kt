@@ -18,12 +18,12 @@ import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.utils.fabric.FabricPrivacy
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.embedments.InsulinConfiguration
+import app.aaps.implementation.profile.ProfileStoreObject
+import app.aaps.implementation.profile.ProfileUtilImpl
+import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.shared.impl.utils.DateUtilImpl
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.implementation.profile.ProfileStoreObject
-import info.nightscout.implementation.profile.ProfileUtilImpl
-import info.nightscout.implementation.utils.DecimalFormatterImpl
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers.anyDouble

@@ -31,9 +31,6 @@ import androidx.core.view.MenuProvider
 import androidx.viewpager2.widget.ViewPager2
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.PreferencesActivity
-import app.aaps.configuration.activities.DaggerAppCompatActivityWithResult
-import app.aaps.configuration.activities.SingleFragmentActivity
-import app.aaps.configuration.setupwizard.SetupWizardActivity
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
@@ -62,19 +59,20 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.isRunningRealPumpTest
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.databinding.ActivityMainBinding
+import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
+import app.aaps.plugins.configuration.activities.SingleFragmentActivity
+import app.aaps.plugins.configuration.setupwizard.SetupWizardActivity
+import app.aaps.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
+import app.aaps.ui.activities.ProfileHelperActivity
+import app.aaps.ui.activities.StatsActivity
+import app.aaps.ui.activities.TreatmentsActivity
+import app.aaps.ui.tabs.TabPageAdapter
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.joanzapata.iconify.Iconify
 import com.joanzapata.iconify.fonts.FontAwesomeModule
-import info.nightscout.androidaps.BuildConfig
-import info.nightscout.androidaps.R
-import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
-import info.nightscout.ui.activities.ProfileHelperActivity
-import info.nightscout.ui.activities.StatsActivity
-import info.nightscout.ui.activities.TreatmentsActivity
-import info.nightscout.ui.tabs.TabPageAdapter
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.io.File
@@ -127,7 +125,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
 
         // initialize screen wake lock
-        processPreferenceChange(EventPreferenceChange(rh.gs(info.nightscout.plugins.R.string.key_keep_screen_on)))
+        processPreferenceChange(EventPreferenceChange(rh.gs(app.aaps.plugins.main.R.string.key_keep_screen_on)))
         binding.mainPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -209,8 +207,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     R.id.nav_about              -> {
                         var message = "Build: ${BuildConfig.BUILDVERSION}\n"
                         message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
-                        message += "${rh.gs(app.aaps.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
-                        if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.configuration.R.string.engineering_mode_enabled)}"
+                        message += "${rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(app.aaps.plugins.main.R.string.not_available_full)}"
+                        if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.plugins.configuration.R.string.engineering_mode_enabled)}"
                         if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
                         if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(app.aaps.core.ui.R.string.fabric_upload_disabled)}"
                         message += rh.gs(app.aaps.core.ui.R.string.about_link_urls)
@@ -309,7 +307,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun startWizard(): Boolean =
-        !sp.getBoolean(app.aaps.configuration.R.string.key_setupwizard_processed, false)
+        !sp.getBoolean(app.aaps.plugins.configuration.R.string.key_setupwizard_processed, false)
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
@@ -334,13 +332,13 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun setWakeLock() {
-        val keepScreenOn = sp.getBoolean(info.nightscout.plugins.R.string.key_keep_screen_on, false)
+        val keepScreenOn = sp.getBoolean(app.aaps.plugins.main.R.string.key_keep_screen_on, false)
         if (keepScreenOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
-        if (ev.isChanged(rh.gs(info.nightscout.plugins.R.string.key_keep_screen_on))) setWakeLock()
-        if (ev.isChanged(rh.gs(info.nightscout.plugins.R.string.key_skin))) recreate()
+        if (ev.isChanged(rh.gs(app.aaps.plugins.main.R.string.key_keep_screen_on))) setWakeLock()
+        if (ev.isChanged(rh.gs(app.aaps.plugins.main.R.string.key_skin))) recreate()
     }
 
     private fun setupViews() {
@@ -374,7 +372,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         checkPluginPreferences(binding.mainPager)
 
         // Tabs
-        if (sp.getBoolean(info.nightscout.plugins.R.string.key_short_tabtitles, false)) {
+        if (sp.getBoolean(app.aaps.plugins.main.R.string.key_short_tabtitles, false)) {
             binding.tabsNormal.visibility = View.GONE
             binding.tabsCompact.visibility = View.VISIBLE
             binding.toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(app.aaps.core.ui.R.dimen.compact_height).toInt())

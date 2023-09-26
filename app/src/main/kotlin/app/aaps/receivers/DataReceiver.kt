@@ -12,16 +12,16 @@ import app.aaps.core.utils.extensions.copyDouble
 import app.aaps.core.utils.extensions.copyLong
 import app.aaps.core.utils.extensions.copyString
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.source.AidexPlugin
+import app.aaps.plugins.source.DexcomPlugin
+import app.aaps.plugins.source.EversensePlugin
+import app.aaps.plugins.source.GlimpPlugin
+import app.aaps.plugins.source.MM640gPlugin
+import app.aaps.plugins.source.PoctechPlugin
+import app.aaps.plugins.source.TomatoPlugin
+import app.aaps.plugins.source.XdripSourcePlugin
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
-import info.nightscout.source.AidexPlugin
-import info.nightscout.source.DexcomPlugin
-import info.nightscout.source.EversensePlugin
-import info.nightscout.source.GlimpPlugin
-import info.nightscout.source.MM640gPlugin
-import info.nightscout.source.PoctechPlugin
-import info.nightscout.source.TomatoPlugin
-import info.nightscout.source.XdripSourcePlugin
 import javax.inject.Inject
 
 open class DataReceiver : DaggerBroadcastReceiver() {

@@ -80,7 +80,7 @@ android {
             versionName version + "-aapsclient"
         }
     }
-    namespace 'info.nightscout.androidaps'
+    namespace 'app.aaps.wear'
 }
 
 allprojects {

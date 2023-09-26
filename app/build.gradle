@@ -99,7 +99,7 @@ def allCommitted = { ->
 
 android {
 
-    namespace 'info.nightscout.androidaps'
+    namespace 'app.aaps'
     ndkVersion "21.1.6352462"
 
     defaultConfig {
