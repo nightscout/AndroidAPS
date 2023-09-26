@@ -70,6 +70,7 @@
     <string name="step_retry_activation">Aktywacja w toku...</string>
     <string name="unexpected_state">Nieoczekiwany stan: %1$s</string>
     <string name="no_profile_selected">Nie wybrano profilu. Wybierz profil i spróbuj ponownie.</string>
+    <string name="no_sn_in_settings">Nieznany Numer seryjny. Proszę wprowadzić numer seryjny bazy pompy w ustawieniach i spróbować ponownie.</string>
     <string name="base_serial">Nr seryjny bazy pompy: %1$X</string>
     <string name="patch_begin_activation">Brak aktywnego Patcha. Naciśnij <b>Dalej</b>, aby rozpocząć proces aktywacji.</string>
     <string name="patch_not_active_note">Baza pompy nie powinna być podłączona do Patcha aż do następnego kroku!</string>
