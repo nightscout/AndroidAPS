@@ -25,7 +25,6 @@ import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.extendedBolusFromJson
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
@@ -43,7 +42,6 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var storeDataForDb: StoreDataForDb

@@ -30,7 +30,6 @@ import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.JsonHelper.safeGetStringAllowNull
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSAlarmObject
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
@@ -85,7 +84,6 @@ import javax.inject.Inject
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var dataSyncSelectorV1: DataSyncSelectorV1
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Inject lateinit var storeDataForDb: StoreDataForDb

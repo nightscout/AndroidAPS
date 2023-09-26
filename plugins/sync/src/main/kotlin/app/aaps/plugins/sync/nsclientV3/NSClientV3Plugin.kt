@@ -14,6 +14,7 @@ import androidx.work.WorkManager
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -57,7 +58,6 @@ import app.aaps.core.nssdk.mapper.toNSTreatment
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.interfaces.TraceableDBEntry
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSAlarmObject
 import app.aaps.plugins.sync.nsShared.NSClientFragment
@@ -122,7 +122,7 @@ class NSClientV3Plugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val dataSyncSelectorV3: DataSyncSelectorV3,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val nsDeviceStatusHandler: NSDeviceStatusHandler,
     private val nsClientSource: NSClientSource,
     private val nsIncomingDataProcessor: NsIncomingDataProcessor,
@@ -260,7 +260,7 @@ class NSClientV3Plugin @Inject constructor(
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()
             if (nsClientSource.isEnabled())
-                repository.getLastGlucoseValueWrapped().blockingGet().let {
+                persistenceLayer.getLastGlucoseValue().blockingGet().let {
                     // if last value is older than 5 min or there is no bg
                     if (it is ValueWrapper.Existing) {
                         if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {

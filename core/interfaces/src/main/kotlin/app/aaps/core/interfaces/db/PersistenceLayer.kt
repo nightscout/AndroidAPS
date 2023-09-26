@@ -6,6 +6,7 @@ import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.UserEntry
 import dagger.android.HasAndroidInjector
@@ -19,6 +20,7 @@ interface PersistenceLayer {
     fun insertOrUpdateCarbs(carbs: Carbs, callback: Callback? = null, injector: HasAndroidInjector? = null)
     fun insertOrUpdateBolus(bolus: Bolus)
 
+    fun getLastGlucoseValue(): Single<ValueWrapper<GlucoseValue>>
     fun getTemporaryTargetActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryTarget>>
     fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UserEntry>>
     fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Single<ValueWrapper<EffectiveProfileSwitch>>

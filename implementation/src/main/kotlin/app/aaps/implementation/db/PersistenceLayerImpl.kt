@@ -10,6 +10,7 @@ import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.impl.AppRepository
@@ -48,6 +49,8 @@ class PersistenceLayerImpl @Inject constructor(
                 { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
             )
     }
+
+    override fun getLastGlucoseValue(): Single<ValueWrapper<GlucoseValue>> = repository.getLastGlucoseValueWrapped()
 
     override fun insertOrUpdateCarbs(carbs: Carbs, callback: Callback?, injector: HasAndroidInjector?) {
         disposable += repository.runTransactionForResult(InsertOrUpdateCarbsTransaction(carbs))
