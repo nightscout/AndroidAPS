@@ -49,8 +49,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.VersionChangeTransaction
-import info.nightscout.ui.activityMonitor.ActivityMonitor
-import info.nightscout.ui.widget.Widget
+import app.aaps.ui.activityMonitor.ActivityMonitor
+import app.aaps.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.exceptions.UndeliverableException
 import io.reactivex.rxjava3.kotlin.plusAssign

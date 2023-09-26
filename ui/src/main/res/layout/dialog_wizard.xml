@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context="info.nightscout.ui.dialogs.InsulinDialog">
+    tools:context=".dialogs.InsulinDialog">
 
     <LinearLayout
         android:layout_width="match_parent"

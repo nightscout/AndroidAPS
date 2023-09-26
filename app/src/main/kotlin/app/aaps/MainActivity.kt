@@ -71,10 +71,10 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityMainBinding
-import info.nightscout.ui.activities.ProfileHelperActivity
-import info.nightscout.ui.activities.StatsActivity
-import info.nightscout.ui.activities.TreatmentsActivity
-import info.nightscout.ui.tabs.TabPageAdapter
+import app.aaps.ui.activities.ProfileHelperActivity
+import app.aaps.ui.activities.StatsActivity
+import app.aaps.ui.activities.TreatmentsActivity
+import app.aaps.ui.tabs.TabPageAdapter
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.io.File
