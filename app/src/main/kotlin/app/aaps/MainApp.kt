@@ -35,6 +35,7 @@ import app.aaps.implementation.db.CompatDBHelper
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver
+import app.aaps.plugins.aps.utils.StaticInjector
 import app.aaps.receivers.BTReceiver
 import app.aaps.receivers.ChargingStateReceiver
 import app.aaps.receivers.KeepAliveWorker
@@ -46,7 +47,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.VersionChangeTransaction
-import info.nightscout.plugins.aps.utils.StaticInjector
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.ui.activityMonitor.ActivityMonitor

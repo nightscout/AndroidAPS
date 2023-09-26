@@ -5,6 +5,7 @@ import app.aaps.configuration.di.ConfigurationModule
 import app.aaps.core.main.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
 import app.aaps.implementation.di.ImplementationModule
+import app.aaps.plugins.aps.di.ApsModule
 import app.aaps.shared.impl.di.SharedImplModule
 import dagger.BindsInstance
 import dagger.Component
@@ -21,7 +22,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.automation.di.AutomationModule
 import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.insulin.di.InsulinModule
-import info.nightscout.plugins.aps.di.ApsModule
 import info.nightscout.plugins.constraints.di.PluginsConstraintsModule
 import info.nightscout.plugins.di.PluginsModule
 import info.nightscout.plugins.sync.di.OpenHumansModule
