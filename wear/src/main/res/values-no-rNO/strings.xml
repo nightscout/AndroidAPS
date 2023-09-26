@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">Vis BGI</string>
     <string name="pref_show_direction_arrow">Vis retningspil</string>
     <string name="pref_show_ago">Vis siden</string>
+    <string name="pref_show_temp_basal">Vis TBR</string>
+    <string name="pref_show_bolus">Vis Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Vis rutenett</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørkt</string>
     <string name="pref_highlight_basals">Marker basaler</string>
     <string name="pref_prediction_lines">Vis prognoser</string>
