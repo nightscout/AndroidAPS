@@ -1,4 +1,4 @@
-package info.nightscout.insulin
+package app.aaps.plugins.insulin
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
@@ -17,7 +17,7 @@ import javax.inject.Singleton
  * Created by adrian on 14/08/17.
  */
 @Singleton
-class InsulinOrefRapidActingPlugin @Inject constructor(
+class InsulinOrefUltraRapidActingPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     profileFunction: ProfileFunction,
@@ -28,21 +28,19 @@ class InsulinOrefRapidActingPlugin @Inject constructor(
     uiInteraction: UiInteraction
 ) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
-    override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_RAPID_ACTING
-    override val friendlyName get(): String = rh.gs(R.string.rapid_acting_oref)
+    override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING
+    override val friendlyName get(): String = rh.gs(R.string.ultra_rapid_oref)
 
     override fun configuration(): JSONObject = JSONObject()
     override fun applyConfiguration(configuration: JSONObject) {}
 
-    override fun commentStandardText(): String = rh.gs(R.string.fast_acting_insulin_comment)
+    override fun commentStandardText(): String = rh.gs(R.string.ultra_fast_acting_insulin_comment)
 
-    override val peak = 75
+    override val peak = 55
 
     init {
         pluginDescription
-            .pluginName(R.string.rapid_acting_oref)
-            .description(R.string.description_insulin_rapid)
-            .setDefault()
-            .enableByDefault(true)
+            .pluginName(R.string.ultra_rapid_oref)
+            .description(R.string.description_insulin_ultra_rapid)
     }
 }

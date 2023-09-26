@@ -1,4 +1,4 @@
-package info.nightscout.insulin
+package app.aaps.plugins.insulin
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
@@ -23,9 +23,9 @@ import org.mockito.quality.Strictness
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class InsulinOrefRapidActingPluginTest {
+class InsulinOrefUltraRapidActingPluginTest {
 
-    private lateinit var sut: InsulinOrefRapidActingPlugin
+    private lateinit var sut: InsulinOrefUltraRapidActingPlugin
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
@@ -42,29 +42,29 @@ class InsulinOrefRapidActingPluginTest {
 
     @BeforeEach
     fun setup() {
-        sut = InsulinOrefRapidActingPlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction)
+        sut = InsulinOrefUltraRapidActingPlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction)
     }
 
     @Test
     fun `simple peak test`() {
-        assertThat(sut.peak).isEqualTo(75)
+        assertThat(sut.peak).isEqualTo(55)
     }
 
     @Test
     fun getIdTest() {
-        assertThat(sut.id).isEqualTo(Insulin.InsulinType.OREF_RAPID_ACTING)
+        assertThat(sut.id).isEqualTo(Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING)
     }
 
     @Test
     fun commentStandardTextTest() {
-        `when`(rh.gs(eq(R.string.fast_acting_insulin_comment))).thenReturn("Novorapid, Novolog, Humalog")
-        assertThat(sut.commentStandardText()).isEqualTo("Novorapid, Novolog, Humalog")
+        `when`(rh.gs(eq(R.string.ultra_fast_acting_insulin_comment))).thenReturn("Fiasp")
+        assertThat(sut.commentStandardText()).isEqualTo("Fiasp")
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(rh.gs(eq(R.string.rapid_acting_oref))).thenReturn("Rapid-Acting Oref")
-        assertThat(sut.friendlyName).isEqualTo("Rapid-Acting Oref")
+        `when`(rh.gs(eq(R.string.ultra_rapid_oref))).thenReturn("Ultra-Rapid Oref")
+        assertThat(sut.friendlyName).isEqualTo("Ultra-Rapid Oref")
     }
 
 }

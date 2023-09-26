@@ -1,8 +1,8 @@
-package info.nightscout.insulin.di
+package app.aaps.plugins.insulin.di
 
+import app.aaps.plugins.insulin.InsulinFragment
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.insulin.InsulinFragment
 
 @Module
 @Suppress("unused")
