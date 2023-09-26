@@ -1,10 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Integrare nativă a pompelor Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Nu se poate conecta la pompă</string>
+    <string name="combov2_not_paired">Nu este împerecheat cu pompa</string>
+    <string name="combov2_pump_terminated_connection">Conexiune cu pompă oprită</string>
+    <string name="combov2_warning">Avertizare Combo</string>
+    <string name="combov2_error">Eroare Combo</string>
+    <string name="combov2_warning_4">Apelați linia telefonică pentru actualizare</string>
+    <string name="combov2_warning_10">Defecțiune Bluetooth; refaceți asocierea</string>
+    <string name="combov2_error_1">Rezervor pompă gol</string>
     <string name="combov2_error_2">Baterie epuizată</string>
     <string name="combov2_error_4">Ocluzie</string>
+    <string name="combov2_error_5">Sfârşitul operării pompei de rezervă</string>
     <string name="combov2_error_6">Eroare mecanică</string>
+    <string name="combov2_error_7">Eroare electronică</string>
+    <string name="combov2_error_8">Întrerupere de energie</string>
+    <string name="combov2_error_9">Sfârşitul operaţiunii pompei de împrumut</string>
+    <string name="combov2_error_10">Eroare la rezervor</string>
+    <string name="combov2_error_11">Setul de infuzie neamorsat</string>
+    <string name="combov2_extended_bolus_not_supported">Bolusul extins nu este acceptat</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Împerechere pompă</string>
+    <string name="combov2_unpair_pump_title">Deconectare pompă</string>
+    <string name="combov2_driver_state_label">Stare soft conexiune</string>
+    <string name="combov2_current_activity_label">Activitate curentă</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
+    <string name="combov2_start_pairing">Începe asocierea</string>
+    <string name="combov2_pairing_in_progress">Asocierea Combo în curs</string>
+    <string name="combov2_pairing_start_steps">Pași pentru a efectua asocierea cu Combo:\n\n
+1. Pe pompă, navigați la Setările Bluetooth\n
+2. Verificați dacă un dispozitiv este deja afișat ca paired; în caz afirmativ, mergeți la ecranul pompei \"Șterge dispozitivul\" pentru a șterge/dezasocia dispozitivul\n
+3. Mergeți la ecranul pompei \"Adaugă dispozitiv\" și începeți asocierea cu pompa\n
+4. Faceți clic pe butonul \"Începeți asocierea\" de mai jos pentru a începe asocierea în AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">După un timp, numele telefonului este afișat pe ecranul pompei; apăsați CHECK pentru a confirma.\n\n
+Când asocierea este terminată cu succes, confirmați asocierea terminată a pompei și reveniți la ecranul principal al pompei apăsând butonul CHECK de două ori.\n\n
+Dacă nicio conexiune nu este stabilită după mai mult de ~5 minute:\n\n
+1. Apasă Înapoi sau butonul \"Anulează asocierea\"\n
+2. Anulează asocierea pe Combo (apasă atât butoanele UP cât şi MENU
+în acelaşi timp pentru a anula asocierea)\n
+3. Încearcă să asociezi din nou</string>
+    <string name="combov2_enter_pin">Introduceți PIN</string>
+    <string name="combov2_cancel_pairing">Anulați asocierea</string>
     <string name="combov2_not_initialized">Neiniţializat</string>
     <string name="combov2_suspended">Suspendat</string>
     <string name="combov2_setting_basal_profile_cmddesc">Se setează profilul bazalei</string>
