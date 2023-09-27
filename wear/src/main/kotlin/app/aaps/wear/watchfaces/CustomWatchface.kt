@@ -44,6 +44,7 @@ import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.rx.weardata.ResFormat
 import app.aaps.core.interfaces.rx.weardata.ViewKeys
 import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
+import app.aaps.core.interfaces.rx.weardata.isEquals
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
@@ -77,8 +78,6 @@ class CustomWatchface : BaseWatchFace() {
         persistence.store(defaultWatchface(), true)
         (context.getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(displaySize)
         zoomFactor = (displaySize.x).toDouble() / TEMPLATE_RESOLUTION.toDouble()
-        FontMap.init(this)
-        ViewMap.init(this)
         return binding
     }
 
@@ -92,7 +91,7 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun setDataFields() {
         super.setDataFields()
-        binding.direction2.setImageDrawable(TrendArrowMap.drawable(this))
+        binding.direction2.setImageDrawable(TrendArrowMap.drawable())
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
         // rotate the minute hand.
@@ -148,8 +147,12 @@ class CustomWatchface : BaseWatchFace() {
             updatePref(it.customWatchfaceData.metadata)
             try {
                 val json = JSONObject(it.customWatchfaceData.json)
-                resDataMap = it.customWatchfaceData.resDatas
-                FontMap.init(this)
+                if (!resDataMap.isEquals(it.customWatchfaceData.resDatas)) {
+                    resDataMap = it.customWatchfaceData.resDatas
+                    FontMap.init(this)
+                    ViewMap.init(this)
+                    TrendArrowMap.init(this)
+                }
                 enableSecond = json.optBoolean(ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
                 highColor = getColor(json.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
                 midColor = getColor(json.optString(MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
@@ -160,27 +163,18 @@ class CustomWatchface : BaseWatchFace() {
                 basalCenterColor = getColor(json.optString(BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
                 gridColor = getColor(json.optString(GRIDCOLOR.key), Color.WHITE)
                 pointSize = json.optInt(POINTSIZE.key, 2)
-                dayNameFormat = json.optString(DAYNAMEFORMAT.key, "E")
-                    .takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
-                monthFormat = json.optString(MONTHFORMAT.key, "MMM")
-                    .takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
+                dayNameFormat = json.optString(DAYNAMEFORMAT.key, "E").takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
+                monthFormat = json.optString(MONTHFORMAT.key, "MMM").takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
                 binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update daynName and month according to format on cwf loading
                 binding.month.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
 
                 binding.mainLayout.forEach { view ->
                     ViewMap.fromId(view.id)?.let { viewMap ->
                         json.optJSONObject(viewMap.key)?.also { viewJson ->
-                            viewMap.viewJson = viewJson
-                            viewMap.customizeViewCommon(view)
                             when (view) {
-                                is TextView  -> {
-                                    viewMap.customizeTextView(view)
-                                }
-
-                                is ImageView -> {
-                                    viewMap.customizeImageView(view)
-                                }
-
+                                is TextView  -> viewMap.customizeTextView(view, viewJson)
+                                is ImageView -> viewMap.customizeImageView(view, viewJson)
+                                else         -> viewMap.customizeViewCommon(view, viewJson)
                             }
                         } ?: apply {
                             view.visibility = View.GONE
@@ -266,7 +260,7 @@ class CustomWatchface : BaseWatchFace() {
         }
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
         val drawableDataMap: CwfResDataMap = mutableMapOf()
-        getResourceByteArray(app.aaps.shared.impl.R.drawable.watchface_custom)?.let {
+        getResourceByteArray(R.drawable.watchface_custom)?.let {
             drawableDataMap[ResFileMap.CUSTOM_WATCHFACE.fileName] = ResData(it, ResFormat.PNG)
         }
         return EventData.ActionSetCustomWatchface(CwfData(json.toString(4), metadataMap, drawableDataMap))
@@ -342,10 +336,8 @@ class CustomWatchface : BaseWatchFace() {
         params.leftMargin = 0
         binding.background.layoutParams = params
         binding.background.visibility = View.VISIBLE
-        // Update second visibility
         updateSecondVisibility()
         setSecond() // Update second visibility for time view
-        // Update timePeriod visibility
         binding.timePeriod.visibility = (binding.timePeriod.visibility == View.VISIBLE && android.text.format.DateFormat.is24HourFormat(this).not()).toVisibility()
     }
 
@@ -362,7 +354,7 @@ class CustomWatchface : BaseWatchFace() {
         BACKGROUND(
             key = ViewKeys.BACKGROUND.key,
             id = R.id.background,
-            defaultDrawable = app.aaps.shared.impl.R.drawable.background,
+            defaultDrawable = R.drawable.background,
             customDrawable = ResFileMap.BACKGROUND,
             customHigh = ResFileMap.BACKGROUND_HIGH,
             customLow = ResFileMap.BACKGROUND_LOW
@@ -405,7 +397,7 @@ class CustomWatchface : BaseWatchFace() {
         COVER_PLATE(
             key = ViewKeys.COVER_PLATE.key,
             id = R.id.cover_plate,
-            defaultDrawable = app.aaps.shared.impl.R.drawable.simplified_dial,
+            defaultDrawable = R.drawable.simplified_dial,
             customDrawable = ResFileMap.COVER_PLATE,
             customHigh = ResFileMap.COVER_PLATE_HIGH,
             customLow = ResFileMap.COVER_PLATE_LOW
@@ -413,7 +405,7 @@ class CustomWatchface : BaseWatchFace() {
         HOUR_HAND(
             key = ViewKeys.HOUR_HAND.key,
             id = R.id.hour_hand,
-            defaultDrawable = app.aaps.shared.impl.R.drawable.hour_hand,
+            defaultDrawable = R.drawable.hour_hand,
             customDrawable = ResFileMap.HOUR_HAND,
             customHigh = ResFileMap.HOUR_HAND_HIGH,
             customLow = ResFileMap.HOUR_HAND_LOW
@@ -421,7 +413,7 @@ class CustomWatchface : BaseWatchFace() {
         MINUTE_HAND(
             key = ViewKeys.MINUTE_HAND.key,
             id = R.id.minute_hand,
-            defaultDrawable = app.aaps.shared.impl.R.drawable.minute_hand,
+            defaultDrawable = R.drawable.minute_hand,
             customDrawable = ResFileMap.MINUTE_HAND,
             customHigh = ResFileMap.MINUTE_HAND_HIGH,
             customLow = ResFileMap.MINUTE_HAND_LOW
@@ -430,7 +422,7 @@ class CustomWatchface : BaseWatchFace() {
             key = ViewKeys.SECOND_HAND.key,
             id = R.id.second_hand,
             pref = R.string.key_show_seconds,
-            defaultDrawable = app.aaps.shared.impl.R.drawable.second_hand,
+            defaultDrawable = R.drawable.second_hand,
             customDrawable = ResFileMap.SECOND_HAND,
             customHigh = ResFileMap.SECOND_HAND_HIGH,
             customLow = ResFileMap.SECOND_HAND_LOW
@@ -438,44 +430,56 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun init(cwf: CustomWatchface) = values().forEach { it.cwf = cwf }
+            fun init(cwf: CustomWatchface) = values().forEach {
+                it.cwf = cwf
+                // reset all customized drawable when new watchface is loaded
+                it.rangeCustom = null
+                it.highCustom = null
+                it.lowCustom = null
+                it.textDrawable = null
+            }
             fun fromId(id: Int): ViewMap? = values().firstOrNull { it.id == id }
         }
 
         lateinit var cwf: CustomWatchface
-        var viewJson = JSONObject()
+        var width = 0
+        var height = 0
+        var left = 0
+        var top = 0
+        var rangeCustom: Drawable? = null
+            get() = field ?: customDrawable?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { rangeCustom = it } }
+        var highCustom: Drawable? = null
+            get() = field ?: customHigh?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { highCustom = it } }
+        var lowCustom: Drawable? = null
+            get() = field ?: customLow?.let { cd -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources).also { lowCustom = it } }
+        var textDrawable: Drawable? = null
+        val drawable: Drawable?
+            get() = when (cwf.singleBg.sgvLevel) {
+                1L   -> highCustom ?: rangeCustom
+                0L   -> rangeCustom
+                -1L  -> lowCustom ?: rangeCustom
+                else -> rangeCustom
+            }
         fun visibility(): Boolean = this.pref?.let { cwf.sp.getBoolean(it, true) }
             ?: true
 
-        fun drawable(): Drawable? = customDrawable?.let { cd ->
-            when (cwf.singleBg.sgvLevel) {
-                1L   -> {
-                    customHigh?.let { resFileMap -> cwf.resDataMap[resFileMap.fileName] }?.toDrawable(cwf.resources) ?: cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
-                }
+        fun textDrawable(viewJson: JSONObject): Drawable? = textDrawable
+            ?: cwf.resDataMap[viewJson.optString(JsonKeys.BACKGROUND.key)]?.toDrawable(cwf.resources, width, height)?.also { textDrawable = it }
 
-                0L   -> {
-                    cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
-                }
-
-                -1L  -> {
-                    customLow?.let { resFileMap -> cwf.resDataMap[resFileMap.fileName] }?.toDrawable(cwf.resources) ?: cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
-                }
-
-                else -> cwf.resDataMap[cd.fileName]?.toDrawable(cwf.resources)
-            }
-        }
-
-        fun customizeViewCommon(view: View) {
-            val width = (viewJson.optInt(WIDTH.key) * cwf.zoomFactor).toInt()
-            val height = (viewJson.optInt(HEIGHT.key) * cwf.zoomFactor).toInt()
+        fun customizeViewCommon(view: View, viewJson: JSONObject) {
+            width = (viewJson.optInt(WIDTH.key) * cwf.zoomFactor).toInt()
+            height = (viewJson.optInt(HEIGHT.key) * cwf.zoomFactor).toInt()
+            left = (viewJson.optInt(LEFTMARGIN.key) * cwf.zoomFactor).toInt()
+            top = (viewJson.optInt(TOPMARGIN.key) * cwf.zoomFactor).toInt()
             val params = FrameLayout.LayoutParams(width, height)
-            params.topMargin = (viewJson.optInt(TOPMARGIN.key) * cwf.zoomFactor).toInt()
-            params.leftMargin = (viewJson.optInt(LEFTMARGIN.key) * cwf.zoomFactor).toInt()
+            params.topMargin = top
+            params.leftMargin = left
             view.layoutParams = params
             view.visibility = cwf.setVisibility(viewJson.optString(VISIBILITY.key, JsonKeyValues.GONE.key), visibility())
         }
 
-        fun customizeTextView(view: TextView) {
+        fun customizeTextView(view: TextView, viewJson: JSONObject) {
+            customizeViewCommon(view, viewJson)
             view.rotation = viewJson.optInt(ROTATION.key).toFloat()
             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * cwf.zoomFactor).toFloat())
             view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
@@ -487,12 +491,13 @@ class CustomWatchface : BaseWatchFace() {
             view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
             if (viewJson.has(TEXTVALUE.key))
                 view.text = viewJson.optString(TEXTVALUE.key)
-            view.background = cwf.resDataMap[viewJson.optString(JsonKeys.BACKGROUND.key)]?.toDrawable(cwf.resources, view.width, view.height)
+            view.background = textDrawable(viewJson)
         }
 
-        fun customizeImageView(view: ImageView) {
+        fun customizeImageView(view: ImageView, viewJson: JSONObject) {
+            customizeViewCommon(view, viewJson)
             view.clearColorFilter()
-            drawable()?.let {
+            drawable?.let {
                 if (viewJson.has(COLOR.key))        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
                     it.colorFilter = cwf.changeDrawableColor(cwf.getColor(viewJson.optString(COLOR.key)))
                 else
@@ -522,12 +527,16 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun drawable(cwf: CustomWatchface): Drawable {
-                val arrow = values().firstOrNull { it.symbol == cwf.singleBg.slopeArrow } ?: NONE
-                return arrow.customDrawable?.let { cwf.resDataMap[it.fileName] }?.toDrawable(cwf.resources) ?: cwf.resources.getDrawable(arrow.icon)
+            fun init(cwf: CustomWatchface) = values().forEach {
+                it.cwf = cwf
+                it.arrowCustom = null
             }
-
+            fun drawable() = values().firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
         }
+
+        lateinit var cwf: CustomWatchface
+        var arrowCustom: Drawable? = null
+            get() = field ?: customDrawable?.let { cwf.resDataMap[it.fileName]?.toDrawable(cwf.resources)?.also { arrowCustom = it } } ?: cwf.resources.getDrawable(icon)
     }
 
     @SuppressLint("RtlHardcoded")
