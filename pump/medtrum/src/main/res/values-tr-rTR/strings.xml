@@ -70,6 +70,7 @@
     <string name="step_retry_activation">Etkinleştirme devam ediyor</string>
     <string name="unexpected_state">Beklenmeyen durum: %1$s</string>
     <string name="no_profile_selected">Profil seçilmedi. Lütfen bir profil seçin ve tekrar deneyin.</string>
+    <string name="no_sn_in_settings">Seri numarası bilinmiyor. Lütfen ayarlara pompa seri numarasını girin ve tekrar deneyin.</string>
     <string name="base_serial">Pompa Tabanı Seri: %1$X</string>
     <string name="patch_begin_activation">Aktif patch yok. Etkinleştirme işlemine başlamak için <b>İleri</b>\'ye basın.</string>
     <string name="patch_not_active_note">Bir sonraki adıma kadar pompa tabanı patch\'a bağlanmamalıdır!</string>

@@ -148,6 +148,7 @@
     <string name="cob3_longer">Nastavení profilu na 150% způsobí, že vypočtená doba absorpce sacharidů bude delší</string>
     <string name="cob3_shorter">Nastavení profilu na 150% způsobí, že vypočtená doba absorpce sacharidů bude kratší</string>
     <string name="cob3_no_effect">Nastavení profilu na 150% neovlivní vypočtenou absorpci sacharidů</string>
+    <string name="cob_hint1">https://wiki.aaps.app/cs/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">Hodnota IOB je ovlivněna vydanými dočasnými bazály.</string>
     <string name="iob_hightemp">Vysoký dočasný bazál nebude spuštěn, pokud je Vaše glykémie nižší než cíl.</string>
     <string name="iob_negiob">Negativní IOB po značnou dobu bez cvičení naznačuje, že váš profil je příliš \"silný\" a ve vašem profilu je potřeba méně inzulínu.</string>

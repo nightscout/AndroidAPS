@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Panou)</string>
     <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS (Personalizat)</string>
     <string name="label_actions_tile">AAPS(Acțiuni)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistent Rapid)</string>
@@ -22,20 +23,33 @@
     <string name="msg_warning_old">Datele AAPS sunt vechi de %1$s! Verificați senzorul, xDrip+, NS, configurația AAPS sau altele!</string>
     <string name="pref_vibrate_on_bolus">Vibrare la Bolus</string>
     <string name="pref_units_for_actions">Unităţi pentru Acţiuni</string>
+    <string name="units_short">U</string>
+    <string name="pref_display_settings">Afișaj</string>
+    <string name="pref_graph_settings">Grafic</string>
+    <string name="pref_interface_settings">Interfață</string>
+    <string name="pref_others_settings">Altele</string>
+    <string name="pref_complication_settings">Complicaţie</string>
     <string name="pref_show_date">Arată data</string>
     <string name="pref_show_iob">Arată IOB</string>
+    <string name="pref_show_detailed_iob">Arată IOB detaliat</string>
     <string name="pref_show_cob">Arată COB</string>
     <string name="pref_show_delta">Arată Delta</string>
+    <string name="pref_show_detailed_delta">Arată variație detaliată</string>
     <string name="pref_show_avgdelta">Arată AvgDelta</string>
     <string name="pref_show_phone_battery">Arată baterie telefon</string>
     <string name="pref_show_rig_battery">Arată Baterie Rig</string>
     <string name="pref_show_basal_rate">Arată rata bazală</string>
     <string name="pref_show_loop_status">Arată stare buclă închisă</string>
     <string name="pref_show_bg">Arată glicemia</string>
+    <string name="pref_show_bgi">Arată BGI</string>
     <string name="pref_show_direction_arrow">Arată săgeată pentru evoluție</string>
     <string name="pref_show_ago">Afişare în urmă</string>
+    <string name="pref_show_temp_basal">Arată RBT</string>
+    <string name="pref_show_bolus">Arată Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Afișare grilă</string>
     <string name="pref_dark" comment="Enables dark visual theme">Întunecat</string>
     <string name="pref_highlight_basals">Evidențiere rate bazale</string>
+    <string name="pref_prediction_lines">Arată predicții</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Potrivire divider</string>
     <string name="pref_chart_timeframe">Grafic Timp</string>
     <string name="pref_1_hour">1 oră</string>
@@ -143,6 +157,7 @@
     <string name="pref_simplify_ui_sum">Arată doar timpul și glicemia</string>
     <string name="pref_vibrate_hourly">Vibrează la fiecare ora</string>
     <string name="pref_show_weeknumber">Afișare număr săptămână</string>
+    <string name="custom_pref_show_seconds">Arată secunde</string>
     <string name="digitalstyle_pref_your_style">Stilul tău:</string>
     <string name="digitalstyle_style_none">niciun stil</string>
     <string name="digitalstyle_style_minimal">stil minimal</string>
@@ -190,7 +205,10 @@
     <string name="week_short">săpt</string>
     <string name="day_short">z</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">vechi</string>
     <string name="old_warning">!vechi!</string>
     <string name="error">!eroare!</string>
+    <string name="pref_heartRateSampling">Ritm cardiac</string>
 </resources>

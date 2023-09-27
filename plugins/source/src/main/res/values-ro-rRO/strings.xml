@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">Glicemie NSClient</string>
+    <string name="ns_client_bg_short">NS GL</string>
     <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
+    <string name="source_xdrip">Glicemie xDrip+</string>
     <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
     <string name="description_source_dexcom">Primește valori de glicemie de la aplicația Dexcom modificată.</string>
     <string name="eversense">Aplicația Eversense (modificată)</string>
     <string name="description_source_eversense">Primește valorile glicemiei din aplicația Eversense modificată.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Primește valorile glicemiei din aplicația 600SeriesAndroidUploader (Medtronic).</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Citire a valorii glicemiei din aplicația Poctech</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Primiți glicemii de la aplicația Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Primeşte valori de la aplicaţia Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Înregistrează valorile glicemiei din aplicația Tomato (dispozitiv MiaoMIao)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Primește valorile glicemiei de la GlucoRx Aidex CGMS.</string>
+    <string name="random_bg">Glicemie aleatoare</string>
+    <string name="description_source_random_bg">Generează glicemie aleatoare (doar mod Demo)</string>
+    <string name="random_bg_short">Glicemie</string>
+    <string name="do_xdrip_upload_title">Trimite date glicemie la xDrip+</string>
+    <string name="do_xdrip_upload_summary">În xDrip+, selectează 640g/Eversense sursă de date</string>
     <string name="bgsource_upload">Setări înregistrare glicemie</string>
+    <string name="dexcom_log_ns_sensor_change_title">Înregistrează schimbarea senzorului în NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Crează eveniment ”Schimbare Senzor” în NS la pornirea senzorului</string>
+    <string name="direction">direcție</string>
 </resources>

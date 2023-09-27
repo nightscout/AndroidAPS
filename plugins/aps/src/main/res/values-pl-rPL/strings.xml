@@ -83,6 +83,7 @@
     <string name="smb_disabled_in_preferences">SMB wyłączone w ustawieniach</string>
     <string name="uam_disabled_in_preferences">UAM wyłączone w ustawieniach</string>
     <string name="autosens_disabled_in_preferences">Autosens wyłączony w ustawieniach</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens wyłączony w DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Ograniczam IOB do %1$.1f U z uwagi na %2$s</string>
     <string name="maxvalueinpreferences">maks. wartość w ustawieniach</string>

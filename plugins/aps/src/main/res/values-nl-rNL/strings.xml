@@ -83,6 +83,7 @@
     <string name="smb_disabled_in_preferences">SMB gedeactiveerd in de instellingen</string>
     <string name="uam_disabled_in_preferences">UAM gedeactiveerd in de instellingen</string>
     <string name="autosens_disabled_in_preferences">Autosens gedeactiveerd in de instellingen</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens uitgeschakeld in DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
     <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>

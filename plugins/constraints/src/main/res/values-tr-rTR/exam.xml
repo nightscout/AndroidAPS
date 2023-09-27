@@ -148,6 +148,7 @@
     <string name="cob3_longer">Profili %150\'ye ayarlamak, hesaplanan karbonhidrat emilim süresini uzatır</string>
     <string name="cob3_shorter">Profili %150\'ye ayarlamak, hesaplanan karbonhidrat emilim süresini kısaltır</string>
     <string name="cob3_no_effect">Profili %150\'ye ayarlamak hesaplanan karbonhidrat emilimini etkilemez</string>
+    <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">AİNS değeri, verilen geçici bazallardan etkilenir.</string>
     <string name="iob_hightemp">Kan şekeriniz hedefin altına düştüğünde yüksek geçici bazal verilmeyecektir.</string>
     <string name="iob_negiob">Egzersiz yapmadığınız halde uzun bir dönem için negatif AİNS, profilinizin çok güçlü olduğunu ve ayarlarınızda daha az insüline ihtiyaç duyulduğunu gösterir.</string>

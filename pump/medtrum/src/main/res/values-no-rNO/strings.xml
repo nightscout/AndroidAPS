@@ -70,6 +70,7 @@
     <string name="step_retry_activation">Aktivering pågår</string>
     <string name="unexpected_state">Uventet status: %1$s</string>
     <string name="no_profile_selected">Ingen profil er valgt. Velg en profil og prøv igjen.</string>
+    <string name="no_sn_in_settings">Ingen serienummer kjent. Angi serienummeret til pumpbasen i innstillingene for å prøve igjen.</string>
     <string name="base_serial">Pumpebasens serienummer: %1$X</string>
     <string name="patch_begin_activation">Ingen aktiv patch. Trykk <b>Neste</b> for å starte aktiveringsprosessen.</string>
     <string name="patch_not_active_note">Pumpebase skal ikke kobles til patch før neste steg!</string>

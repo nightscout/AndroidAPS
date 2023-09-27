@@ -83,6 +83,7 @@
     <string name="smb_disabled_in_preferences">SMB deaktivert i innstillinger</string>
     <string name="uam_disabled_in_preferences">UAM deaktivert i innstillinger</string>
     <string name="autosens_disabled_in_preferences">Autosens deaktivert i innstillinger</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens deaktivert i DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="maxvalueinpreferences">maks verdi i innstillingene</string>

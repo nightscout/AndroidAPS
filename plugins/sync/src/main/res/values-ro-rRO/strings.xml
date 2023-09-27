@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- NSClient -->
+    <string name="ns_cellular">Utilizează conexiunea mobilă</string>
+    <string name="ns_wifi">Utilizează conexiunea WiFi</string>
     <string name="ns_wifi_ssids">SSID WiFi</string>
+    <string name="ns_charging">În timpul încărcării</string>
+    <string name="ns_battery">Pe baterie</string>
     <string name="connection_settings_title">Setări conexiune</string>
     <string name="ns_wifi_allowed_ssids">SSIDuri permise (separare prin punct și virgulă)</string>
     <string name="ns_allow_roaming">Permite conexiuni în roaming</string>
@@ -10,12 +14,17 @@
     <string name="ns_create_announcements_from_errors_summary">Crează anunțuri în Nightscout pentru dialoguri de erori și alerte locale (vizibile și în Careportal - Tratamente)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Creează anunțuri Nightscout din alertele de cerere carbohidrați</string>
     <string name="description_ns_client">Sincronizare a datelor cu Nightscout</string>
+    <string name="description_ns_client_v3">Sincronizează datele cu Nightscout folosind v3 API</string>
+    <string name="blocked_by_charging">Blocat de opțiunile de încărcare</string>
+    <string name="blocked_by_connectivity">Blocat de opțiunile de conectivitate</string>
     <string name="unsupported_ns_version">Versiune incompatibilă de Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
     <string name="ns_malfunction">Funcționare incorectă a NSClient. Aveți în vedere un restart al NS și al NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT nu are permisiuni de scriere. Cheia API este corect scrisă?</string>
+    <string name="ns_client_v3">NSClientV3</string>
+    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">Client NS</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
@@ -26,6 +35,9 @@
     <string name="ns_client_secret_title">Cheia API NS</string>
     <string name="ns_client_secret_dialog_title">Cheia API NS</string>
     <string name="ns_client_secret_dialog_message">Introduceți cheia API NS (min 12 caractere)</string>
+    <string name="nsclient_token_title">Token acces NS</string>
+    <string name="nsclient_token_dialog_title">Token acces NS</string>
+    <string name="nsclient_token_dialog_message">Token de acces generat pe pagina de administrare NS (min 17 caractere)</string>
     <string name="deliver_now">Livrează acum</string>
     <string name="clear_queue">Curăță coada de așteptare</string>
     <string name="show_queue">Arată coada de așteptare</string>
@@ -45,6 +57,8 @@
     <string name="ns_receive_profile_switch_summary">Acceptați schimbările de profil introduse prin NS sau NSClient</string>
     <string name="ns_receive_offline_event">Primiți evenimente APS offline</string>
     <string name="ns_receive_offline_event_summary">Acceptați evenimente offline APS introduse prin NS sau NSClient</string>
+    <string name="ns_receive_tbr_eb">Primește RBT și EB</string>
+    <string name="ns_receive_tbr_eb_summary">Acceptă TBR și EB introduse prin altă instanță</string>
     <string name="ns_receive_insulin">Primiţi date insulina</string>
     <string name="ns_receive_insulin_summary">Acceptaţi insulina introdusă prin NS sau NSClient (nu este livrată, ci doar calculată in IoB)</string>
     <string name="ns_receive_carbs">Primește carbohidrați</string>
@@ -61,6 +75,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Prag date mult prea vechi [min]</string>
     <string name="ns_log_app_started_event">Înregistrează pornirea aplicației în NS</string>
     <string name="copy_existing_values">Copiaţi setările NS (dacă există)?</string>
+    <string name="ns_use_ws_title">Conectează-te la websockets</string>
+    <string name="ns_use_ws_summary">Activare înseamnă: actualizări mai rapide, primirea alarmelor și anunțurilor și un consum mai mare al bateriei similar cu v1. Restul upload-urilor NS trebuie să folosească protocolul v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Utilizatorul Tidepool (de obicei adresa de email)</string>
     <string name="title_tidepool_username">Numele de utilizator</string>
@@ -77,8 +93,27 @@
     <string name="tidepool_upload_tbr">Înregistrează bazalele temporare</string>
     <string name="tidepool_upload_profile">Înregistrează schimbările de profil, țintele temporare</string>
     <string name="tidepool_upload_bg">Înregistrează testările de glicemie</string>
+    <string name="remove_all">Înlătură Tot</string>
+    <string name="reset_start">Reinițializare start</string>
     <string name="upload_now">Încarcă acum</string>
+    <string name="not_connected">Neconectat</string>
+    <string name="read_only">Doar vizualizare</string>
+    <string name="working">În lucru</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Trimite date către xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Arată IOB detaliat</string>
+    <string name="xdrip_status_detailed_iob_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
+    <string name="xdrip_status_show_bgi_title">Arată BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Adaugă BGI în linia de status</string>
+    <string name="xdrip_status_settings">Linie avansată de stare xDrip+</string>
+    <string name="disabled_loop">Buclă dezactivată</string>
+    <string name="xdrip_send_status_title">Trimite linia de stare către xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ nu este instalat.</string>
+    <string name="calibration_sent">Calibrare trimisă către xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Trimite date despre glucoză și tratamente către xDrip+. Trebuie să fie selectată sursa de date \"Sincronizare xDrip+ Urmăritor\" și acceptarea datelor trebuie să fie activată în „Setări - Setări între aplicații - Acceptă Glucoză/Tratamente”</string>
+    <string name="xdrip_local_broadcasts_title">Activează transmisiuni spre xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

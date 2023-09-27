@@ -10,6 +10,7 @@
     <string name="pump_status_not_initialized">Neiniţializat</string>
     <string name="pump_status_initialized">Pornit</string>
     <string name="pump_status_encrypt">Criptare comunicație</string>
+    <string name="pump_status_ready">Gata</string>
     <string name="pump_status_busy">Ocupat</string>
     <string name="pump_status_suspended">Suspendat</string>
     <string name="pump_status_executing_command">Executare comandă</string>
@@ -64,6 +65,14 @@
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Niciodată contactată</string>
+    <string name="pump_status_sleeping">În repaus</string>
+    <string name="pump_status_waking_up">Se pornește</string>
+    <string name="pump_status_active">Activă</string>
+    <string name="pump_status_error_comm">Eroare de comunicație</string>
+    <string name="pump_status_timeout_comm">Comunicația nu a reușit la timp</string>
+    <string name="pump_status_pump_unreachable">Pompă indisponibilă</string>
+    <string name="pump_status_invalid_config">Configurație invalidă</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>
@@ -78,5 +87,10 @@
         <item quantity="one">%1$d ore în urmă</item>
         <item quantity="few">%1$d ore în urmă</item>
         <item quantity="other">%1$d ore în urmă</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">cu %1$d zile în urmă</item>
+        <item quantity="few">%1$d zile în urmă</item>
+        <item quantity="other">%1$d zile în urmă</item>
     </plurals>
 </resources>
