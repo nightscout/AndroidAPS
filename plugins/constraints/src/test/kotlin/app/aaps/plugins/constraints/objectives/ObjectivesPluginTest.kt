@@ -1,19 +1,18 @@
 package app.aaps.plugins.constraints.objectives
 
-import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.plugins.constraints.R
+import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
-import app.aaps.plugins.constraints.objectives.objectives.Objective
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

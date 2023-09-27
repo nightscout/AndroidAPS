@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.T
+import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.profile.Profile
  * Every function has a param from previous chained call
  * Function can limit the value even more and add another reason of restriction
  *
- * see [info.nightscout.plugins.constraints.ConstraintsCheckerImpl]
+ * see [app.aaps.plugins.constraints.ConstraintsCheckerImpl]
  * which iterates over all registered plugins with [ConstraintsChecker] implemented
  */
 interface ConstraintsChecker : PluginConstraints {

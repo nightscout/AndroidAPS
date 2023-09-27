@@ -1,12 +1,12 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
-import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")

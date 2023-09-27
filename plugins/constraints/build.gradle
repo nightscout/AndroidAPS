@@ -12,7 +12,7 @@ apply from: "${project.rootDir}/core/main/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 android {
-    namespace 'info.nightscout.plugins.constraints'
+    namespace 'app.aaps.plugins.constraints'
 }
 
 dependencies {

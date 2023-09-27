@@ -1,12 +1,5 @@
 package app.aaps.plugins.constraints.safety
 
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.extensions.putDouble
-import app.aaps.core.main.utils.extensions.putInt
-import app.aaps.core.main.utils.extensions.putString
-import app.aaps.core.main.utils.extensions.storeDouble
-import app.aaps.core.main.utils.extensions.storeInt
-import app.aaps.core.main.utils.extensions.storeString
 import app.aaps.core.interfaces.aps.ApsMode
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
@@ -29,8 +22,15 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.utils.extensions.putDouble
+import app.aaps.core.main.utils.extensions.putInt
+import app.aaps.core.main.utils.extensions.putString
+import app.aaps.core.main.utils.extensions.storeDouble
+import app.aaps.core.main.utils.extensions.storeInt
+import app.aaps.core.main.utils.extensions.storeString
+import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -32,14 +32,14 @@ import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.ValueWithUnit
+import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.activities.ObjectivesExamDialog
 import app.aaps.plugins.constraints.objectives.dialogs.NtpProgressDialog
 import app.aaps.plugins.constraints.objectives.events.EventObjectivesUpdateGui
 import app.aaps.plugins.constraints.objectives.objectives.Objective.ExamTask
 import dagger.android.support.DaggerFragment
-import info.nightscout.plugins.constraints.R
-import info.nightscout.plugins.constraints.databinding.ObjectivesFragmentBinding
-import info.nightscout.plugins.constraints.databinding.ObjectivesItemBinding
+import app.aaps.plugins.constraints.databinding.ObjectivesFragmentBinding
+import app.aaps.plugins.constraints.databinding.ObjectivesItemBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

@@ -7,6 +7,7 @@ import androidx.work.WorkContinuation
 import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -56,7 +57,7 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var config: Config
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
-    @Mock lateinit var repository: AppRepository
+    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var workManager: WorkManager
@@ -101,7 +102,7 @@ internal class LoadBgWorkerTest : TestBase() {
         receiverDelegate = ReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
         nsClientV3Plugin = NSClientV3Plugin(
             injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-            sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, repository,
+            sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, persistenceLayer,
             nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb, decimalFormatter
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())

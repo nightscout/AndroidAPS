@@ -12,8 +12,8 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.plugins.constraints.R
 import dagger.Lazy
-import info.nightscout.plugins.constraints.R
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit

@@ -8,8 +8,8 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.sync.Tidepool
 import app.aaps.database.ValueWrapper
+import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
 import javax.inject.Inject
 
 class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R.string.objectives_0_objective, R.string.objectives_0_gate) {

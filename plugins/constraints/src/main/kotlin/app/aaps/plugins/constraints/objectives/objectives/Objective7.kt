@@ -1,8 +1,8 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
 import app.aaps.core.interfaces.utils.T
+import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
 
 class Objective7(injector: HasAndroidInjector) : Objective(injector, "autosens", R.string.objectives_autosens_objective, R.string.objectives_autosens_gate) {
 

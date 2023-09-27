@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -57,6 +58,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var insulin: Insulin
 
     private lateinit var storeDataForDb: StoreDataForDb
@@ -81,7 +83,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, repository,
+                sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, persistenceLayer,
                 nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb, decimalFormatter
             )
         sut.nsAndroidClient = nsAndroidClient

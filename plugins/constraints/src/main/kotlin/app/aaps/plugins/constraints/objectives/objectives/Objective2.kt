@@ -1,7 +1,7 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
 
 @Suppress("SpellCheckingInspection")
 class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.string.objectives_exam_objective, R.string.objectives_exam_gate) {

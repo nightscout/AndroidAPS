@@ -1,10 +1,9 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
-import app.aaps.core.interfaces.actions.Actions
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
+import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
 import javax.inject.Inject
 
 class Objective1 @Inject constructor(injector: HasAndroidInjector) : Objective(injector, "usage", R.string.objectives_usage_objective, R.string.objectives_usage_gate) {

@@ -39,7 +39,7 @@
             android:dependency="@string/key_smscommunicator_remote_commands_allowed"
             android:key="otpsetup"
             android:title="@string/smscommunicator_tab_otp_label">
-            <intent android:action="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+            <intent android:action="app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
         </Preference>
 
         <SwitchPreference

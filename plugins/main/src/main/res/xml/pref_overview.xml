@@ -139,7 +139,7 @@
         <Preference
             android:key="quickwizard"
             android:title="@string/quickwizard_settings">
-            <intent android:action="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
+            <intent android:action="app.aaps.ui.activities.QuickWizardListActivity" />
         </Preference>
 
         <androidx.preference.PreferenceScreen
@@ -464,8 +464,7 @@
             <Preference
                 android:key="@string/key_statuslights_copy_ns"
                 android:dependency="@string/key_show_statuslights"
-                android:title="@string/statuslights_copy_ns">
-            </Preference>
+                android:title="@string/statuslights_copy_ns"></Preference>
 
         </androidx.preference.PreferenceScreen>
 

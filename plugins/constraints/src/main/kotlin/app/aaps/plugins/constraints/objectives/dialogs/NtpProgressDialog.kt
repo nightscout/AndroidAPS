@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNtpStatus
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.plugins.constraints.databinding.DialogNtpProgressBinding
+import app.aaps.plugins.constraints.databinding.DialogNtpProgressBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

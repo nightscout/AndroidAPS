@@ -18,8 +18,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.constraints.R
+import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.objectives.objectives.Objective0
 import app.aaps.plugins.constraints.objectives.objectives.Objective1
@@ -32,6 +31,7 @@ import app.aaps.plugins.constraints.objectives.objectives.Objective5
 import app.aaps.plugins.constraints.objectives.objectives.Objective6
 import app.aaps.plugins.constraints.objectives.objectives.Objective7
 import app.aaps.plugins.constraints.objectives.objectives.Objective9
+import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
