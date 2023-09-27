@@ -1,4 +1,4 @@
-package info.nightscout.pump.virtual
+package app.aaps.pump.virtual
 
 import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
@@ -39,9 +39,9 @@ import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.plannedRemainingMinutes
 import app.aaps.core.utils.fabric.InstanceId
+import app.aaps.pump.virtual.events.EventVirtualPumpUpdateGui
+import app.aaps.pump.virtual.extensions.toText
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
-import info.nightscout.pump.virtual.extensions.toText
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONException

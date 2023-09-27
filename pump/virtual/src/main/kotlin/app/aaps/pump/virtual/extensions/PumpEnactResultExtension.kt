@@ -1,4 +1,4 @@
-package info.nightscout.pump.virtual.extensions
+package app.aaps.pump.virtual.extensions
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper

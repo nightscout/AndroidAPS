@@ -60,6 +60,7 @@ import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
+import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
@@ -71,7 +72,6 @@ import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
-import info.nightscout.pump.virtual.VirtualPumpPlugin
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {

@@ -1,4 +1,4 @@
-package info.nightscout.pump.virtual
+package app.aaps.pump.virtual
 
 import android.os.Bundle
 import android.os.Handler
@@ -21,9 +21,9 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.toStringFull
+import app.aaps.pump.virtual.databinding.VirtualPumpFragmentBinding
+import app.aaps.pump.virtual.events.EventVirtualPumpUpdateGui
 import dagger.android.support.DaggerFragment
-import info.nightscout.pump.virtual.databinding.VirtualPumpFragmentBinding
-import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

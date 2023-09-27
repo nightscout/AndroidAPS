@@ -14,6 +14,7 @@ import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
+import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.ui.di.UiModule
 import dagger.BindsInstance
@@ -36,7 +37,6 @@ import info.nightscout.pump.dana.di.DanaModule
 import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.pump.medtrum.di.MedtrumModule
-import info.nightscout.pump.virtual.di.VirtualPumpModule
 import info.nightscout.workflow.di.WorkflowModule
 import javax.inject.Singleton
 

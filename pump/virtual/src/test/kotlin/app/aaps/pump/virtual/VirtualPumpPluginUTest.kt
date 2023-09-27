@@ -1,4 +1,4 @@
-package info.nightscout.pump.virtual
+package app.aaps.pump.virtual
 
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer

@@ -1,4 +1,4 @@
-package info.nightscout.pump.virtual.events
+package app.aaps.pump.virtual.events
 
 import app.aaps.core.interfaces.rx.events.EventUpdateGui
 
