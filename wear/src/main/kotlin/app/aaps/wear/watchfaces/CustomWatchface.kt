@@ -53,6 +53,8 @@ import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.rx.weardata.isEquals
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
+import app.aaps.wear.interaction.utils.DisplayFormat
+import app.aaps.wear.interaction.utils.SmallestDoubleString
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
 import org.joda.time.TimeOfDay
 import org.json.JSONObject
@@ -489,9 +491,9 @@ class CustomWatchface : BaseWatchFace() {
             customHigh = ResFileMap.COVER_CHART_HIGH,
             customLow = ResFileMap.COVER_CHART_LOW
         ),
-        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, null, null, null, null, null),
-        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, null, null, null, null, null),
-        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, null, null, null, null, null),
+        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1),
+        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2),
+        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3),
         FREETEXT1(ViewKeys.FREETEXT1.key, R.id.freetext1),
         FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2),
         FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3),
