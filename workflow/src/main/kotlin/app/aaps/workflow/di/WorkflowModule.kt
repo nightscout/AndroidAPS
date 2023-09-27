@@ -1,5 +1,7 @@
 package app.aaps.workflow.di
 
+import app.aaps.core.main.workflow.CalculationWorkflow
+import app.aaps.workflow.CalculationWorkflowImpl
 import app.aaps.workflow.DummyWorker
 import app.aaps.workflow.InvokeLoopWorker
 import app.aaps.workflow.LoadBgDataWorker
@@ -15,12 +17,23 @@ import app.aaps.workflow.UpdateIobCobSensWorker
 import app.aaps.workflow.UpdateWidgetWorker
 import app.aaps.workflow.iob.IobCobOref1Worker
 import app.aaps.workflow.iob.IobCobOrefWorker
+import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
-@Module
 @Suppress("unused")
+@Module(
+    includes = [
+        WorkflowModule.WorkflowBindings::class
+    ]
+)
 abstract class WorkflowModule {
+
+    @Module
+    interface WorkflowBindings {
+
+        @Binds fun bindCalculationWorkflow(calculationWorkflow: CalculationWorkflowImpl): CalculationWorkflow
+    }
 
     @ContributesAndroidInjector abstract fun iobCobWorkerInjector(): IobCobOrefWorker
     @ContributesAndroidInjector abstract fun iobCobOref1WorkerInjector(): IobCobOref1Worker

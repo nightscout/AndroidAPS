@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.GlucoseValue
-import app.aaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
-import app.aaps.plugins.iob.iobCobCalculator.data.AutosensDataStoreObject
+import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataObject
+import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat

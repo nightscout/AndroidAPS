@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
-import app.aaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
+import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataObject
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions

@@ -29,7 +29,7 @@ import app.aaps.core.main.workflow.CalculationWorkflow.Companion.MAIN_CALCULATIO
 import app.aaps.core.main.workflow.CalculationWorkflow.Companion.PASS
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.utils.worker.then
-import app.aaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
+import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.workflow.iob.IobCobOref1Worker
 import app.aaps.workflow.iob.IobCobOrefWorker
 import dagger.android.HasAndroidInjector
@@ -62,7 +62,7 @@ class CalculationWorkflowImpl @Inject constructor(
     init {
         // Verify definition
         var sumPercent = 0
-        for (pass in CalculationWorkflow.ProgressData.values()) sumPercent += pass.percentOfTotal
+        for (pass in CalculationWorkflow.ProgressData.entries) sumPercent += pass.percentOfTotal
         require(sumPercent == 100)
 
         disposable += rxBus

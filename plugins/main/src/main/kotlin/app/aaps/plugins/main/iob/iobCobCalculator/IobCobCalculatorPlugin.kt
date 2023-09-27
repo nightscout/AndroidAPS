@@ -1,4 +1,4 @@
-package app.aaps.plugins.iob.iobCobCalculator
+package app.aaps.plugins.main.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
 import app.aaps.annotations.OpenForTesting
@@ -50,8 +50,8 @@ import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.interfaces.end
 import app.aaps.database.impl.AppRepository
-import app.aaps.plugins.iob.iobCobCalculator.data.AutosensDataStoreObject
 import app.aaps.plugins.main.R
+import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

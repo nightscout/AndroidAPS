@@ -2,15 +2,13 @@ package app.aaps.di
 
 import android.content.Context
 import app.aaps.MainApp
-import app.aaps.core.main.workflow.CalculationWorkflow
-import app.aaps.implementations.ConfigImpl
-import app.aaps.implementations.InstantiatorImpl
-import app.aaps.implementations.UiInteractionImpl
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.workflow.CalculationWorkflowImpl
+import app.aaps.implementations.ConfigImpl
+import app.aaps.implementations.InstantiatorImpl
+import app.aaps.implementations.UiInteractionImpl
 import dagger.Binds
 import dagger.Lazy
 import dagger.Module
@@ -51,7 +49,6 @@ open class AppModule {
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
-        @Binds fun bindCalculationWorkflow(calculationWorkflow: CalculationWorkflowImpl): CalculationWorkflow
         @Binds fun bindInstantiator(instantiatorImpl: InstantiatorImpl): Instantiator
 
     }

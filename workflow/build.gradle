@@ -23,4 +23,5 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':database:entities')
     implementation project(':database:impl')
+    implementation project(':plugins:main')
 }

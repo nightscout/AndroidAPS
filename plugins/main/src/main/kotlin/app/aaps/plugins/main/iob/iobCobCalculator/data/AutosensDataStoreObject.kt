@@ -1,4 +1,4 @@
-package app.aaps.plugins.iob.iobCobCalculator.data
+package app.aaps.plugins.main.iob.iobCobCalculator.data
 
 import androidx.collection.LongSparseArray
 import androidx.collection.size
