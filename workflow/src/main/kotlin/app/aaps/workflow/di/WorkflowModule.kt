@@ -1,22 +1,22 @@
-package info.nightscout.workflow.di
+package app.aaps.workflow.di
 
+import app.aaps.workflow.DummyWorker
+import app.aaps.workflow.InvokeLoopWorker
+import app.aaps.workflow.LoadBgDataWorker
+import app.aaps.workflow.PrepareBasalDataWorker
+import app.aaps.workflow.PrepareBgDataWorker
+import app.aaps.workflow.PrepareBucketedDataWorker
+import app.aaps.workflow.PrepareIobAutosensGraphDataWorker
+import app.aaps.workflow.PreparePredictionsWorker
+import app.aaps.workflow.PrepareTemporaryTargetDataWorker
+import app.aaps.workflow.PrepareTreatmentsDataWorker
+import app.aaps.workflow.UpdateGraphWorker
+import app.aaps.workflow.UpdateIobCobSensWorker
+import app.aaps.workflow.UpdateWidgetWorker
+import app.aaps.workflow.iob.IobCobOref1Worker
+import app.aaps.workflow.iob.IobCobOrefWorker
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.workflow.DummyWorker
-import info.nightscout.workflow.InvokeLoopWorker
-import info.nightscout.workflow.LoadBgDataWorker
-import info.nightscout.workflow.PrepareBasalDataWorker
-import info.nightscout.workflow.PrepareBgDataWorker
-import info.nightscout.workflow.PrepareBucketedDataWorker
-import info.nightscout.workflow.PrepareIobAutosensGraphDataWorker
-import info.nightscout.workflow.PreparePredictionsWorker
-import info.nightscout.workflow.PrepareTemporaryTargetDataWorker
-import info.nightscout.workflow.PrepareTreatmentsDataWorker
-import info.nightscout.workflow.UpdateGraphWorker
-import info.nightscout.workflow.UpdateIobCobSensWorker
-import info.nightscout.workflow.UpdateWidgetWorker
-import info.nightscout.workflow.iob.IobCobOref1Worker
-import info.nightscout.workflow.iob.IobCobOrefWorker
 
 @Module
 @Suppress("unused")

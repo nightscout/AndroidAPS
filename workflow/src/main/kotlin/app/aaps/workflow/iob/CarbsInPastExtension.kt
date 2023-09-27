@@ -1,4 +1,4 @@
-package info.nightscout.workflow.iob
+package app.aaps.workflow.iob
 
 import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.SMBDefaults

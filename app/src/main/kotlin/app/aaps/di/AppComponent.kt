@@ -17,6 +17,7 @@ import app.aaps.plugins.sync.di.SyncModule
 import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.ui.di.UiModule
+import app.aaps.workflow.di.WorkflowModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -37,7 +38,6 @@ import info.nightscout.pump.dana.di.DanaModule
 import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.pump.medtrum.di.MedtrumModule
-import info.nightscout.workflow.di.WorkflowModule
 import javax.inject.Singleton
 
 @Singleton
