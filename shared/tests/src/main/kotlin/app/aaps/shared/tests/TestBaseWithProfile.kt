@@ -87,7 +87,7 @@ open class TestBaseWithProfile : TestBase() {
         testPumpPlugin = TestPumpPlugin(profileInjector)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        Mockito.`when`(sp.getString(info.nightscout.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MGDL.asText)
+        Mockito.`when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MGDL.asText)
         hardLimits = HardLimitsMock(sp, rh)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
         effectiveProfileSwitch = EffectiveProfileSwitch(

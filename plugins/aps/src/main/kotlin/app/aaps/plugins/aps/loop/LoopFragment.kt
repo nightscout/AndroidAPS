@@ -116,7 +116,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
                        }, fabricPrivacy::logException)
 
         updateGUI()
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseloop, true)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseloop, true)
     }
 
     @Synchronized

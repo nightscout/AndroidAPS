@@ -32,7 +32,7 @@ class AutotunePrep @Inject constructor(
 
     fun categorize(tunedProfile: ATProfile): PreppedGlucose? {
         val preppedGlucose = categorizeBGDatums(tunedProfile, tunedProfile.localInsulin)
-        val tuneInsulin = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)
+        val tuneInsulin = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_tune_insulin_curve, false)
         if (tuneInsulin) {
             var minDeviations = 1000000.0
             val diaDeviations: MutableList<DiaDeviation> = ArrayList()
@@ -312,7 +312,7 @@ class AutotunePrep @Inject constructor(
 
             // Then, calculate carb absorption for that 5m interval using the deviation.
             if (mealCOB > 0) {
-                val ci = max(deviation, sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0))
+                val ci = max(deviation, sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0))
                 val absorbed = ci * tunedProfile.ic / sens
                 // Store the COB, and use it as the starting point for the next data point.
                 mealCOB = max(0.0, mealCOB - absorbed)
@@ -463,7 +463,7 @@ class AutotunePrep @Inject constructor(
         var isfLength = isfGlucoseData.size
         val uamLength = uamGlucoseData.size
         var basalLength = basalGlucoseData.size
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)) {
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)) {
             //aapsLogger.debug(LTag.AUTOTUNE, "Categorizing all UAM data as basal.")
             if (verbose)
                 log("Categorizing all UAM data as basal.")

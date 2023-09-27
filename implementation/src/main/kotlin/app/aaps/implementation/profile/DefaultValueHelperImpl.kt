@@ -53,13 +53,13 @@ class DefaultValueHelperImpl @Inject constructor(
      */
     override fun determineEatingSoonTT(): Double {
         val units = profileUtil.units
-        var value = sp.getDouble(info.nightscout.core.utils.R.string.key_eatingsoon_target, getDefaultEatingSoonTT(units))
+        var value = sp.getDouble(app.aaps.core.utils.R.string.key_eatingsoon_target, getDefaultEatingSoonTT(units))
         value = profileUtil.valueInCurrentUnitsDetect(value)
         return if (value > 0) value else getDefaultEatingSoonTT(units)
     }
 
     override fun determineEatingSoonTTDuration(): Int {
-        val value = sp.getInt(info.nightscout.core.utils.R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
+        val value = sp.getInt(app.aaps.core.utils.R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
         return if (value > 0) value else Constants.defaultEatingSoonTTDuration
     }
 
@@ -70,13 +70,13 @@ class DefaultValueHelperImpl @Inject constructor(
      */
     override fun determineActivityTT(): Double {
         val units = profileUtil.units
-        var value = sp.getDouble(info.nightscout.core.utils.R.string.key_activity_target, getDefaultActivityTT(units))
+        var value = sp.getDouble(app.aaps.core.utils.R.string.key_activity_target, getDefaultActivityTT(units))
         value = profileUtil.valueInCurrentUnitsDetect(value)
         return if (value > 0) value else getDefaultActivityTT(units)
     }
 
     override fun determineActivityTTDuration(): Int {
-        val value = sp.getInt(info.nightscout.core.utils.R.string.key_activity_duration, Constants.defaultActivityTTDuration)
+        val value = sp.getInt(app.aaps.core.utils.R.string.key_activity_duration, Constants.defaultActivityTTDuration)
         return if (value > 0) value else Constants.defaultActivityTTDuration
     }
 
@@ -87,13 +87,13 @@ class DefaultValueHelperImpl @Inject constructor(
      */
     override fun determineHypoTT(): Double {
         val units = profileUtil.units
-        var value = sp.getDouble(info.nightscout.core.utils.R.string.key_hypo_target, getDefaultHypoTT(units))
+        var value = sp.getDouble(app.aaps.core.utils.R.string.key_hypo_target, getDefaultHypoTT(units))
         value = profileUtil.valueInCurrentUnitsDetect(value)
         return if (value > 0) value else getDefaultHypoTT(units)
     }
 
     override fun determineHypoTTDuration(): Int {
-        val value = sp.getInt(info.nightscout.core.utils.R.string.key_hypo_duration, Constants.defaultHypoTTDuration)
+        val value = sp.getInt(app.aaps.core.utils.R.string.key_hypo_duration, Constants.defaultHypoTTDuration)
         return if (value > 0) value else Constants.defaultHypoTTDuration
     }
 
@@ -101,14 +101,14 @@ class DefaultValueHelperImpl @Inject constructor(
     override var bgTargetHigh = 180.0
 
     override fun determineHighLine(): Double {
-        var highLineSetting = sp.getDouble(info.nightscout.core.utils.R.string.key_high_mark, bgTargetHigh)
+        var highLineSetting = sp.getDouble(app.aaps.core.utils.R.string.key_high_mark, bgTargetHigh)
         if (highLineSetting < 1) highLineSetting = Constants.HIGH_MARK
         highLineSetting = profileUtil.valueInCurrentUnitsDetect(highLineSetting)
         return highLineSetting
     }
 
     override fun determineLowLine(): Double {
-        var lowLineSetting = sp.getDouble(info.nightscout.core.utils.R.string.key_low_mark, bgTargetLow)
+        var lowLineSetting = sp.getDouble(app.aaps.core.utils.R.string.key_low_mark, bgTargetLow)
         if (lowLineSetting < 1) lowLineSetting = Constants.LOW_MARK
         lowLineSetting = profileUtil.valueInCurrentUnitsDetect(lowLineSetting)
         return lowLineSetting

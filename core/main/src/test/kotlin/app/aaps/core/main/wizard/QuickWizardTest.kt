@@ -48,7 +48,7 @@ class QuickWizardTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_quickwizard, "[]")).thenReturn("[]")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_quickwizard, "[]")).thenReturn("[]")
         quickWizard = QuickWizard(sp, injector)
     }
 

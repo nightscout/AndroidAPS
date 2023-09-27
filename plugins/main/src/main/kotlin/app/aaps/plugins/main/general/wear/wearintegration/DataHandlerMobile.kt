@@ -417,13 +417,13 @@ class DataHandlerMobile @Inject constructor(
             bg = bgReading.valueToUnits(profileFunction.getUnits()),
             correction = 0.0,
             percentageCorrection = percentage,
-            useBg = sp.getBoolean(info.nightscout.core.utils.R.string.key_wearwizard_bg, true),
-            useCob = sp.getBoolean(info.nightscout.core.utils.R.string.key_wearwizard_cob, true),
-            includeBolusIOB = sp.getBoolean(info.nightscout.core.utils.R.string.key_wearwizard_iob, true),
-            includeBasalIOB = sp.getBoolean(info.nightscout.core.utils.R.string.key_wearwizard_iob, true),
+            useBg = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_bg, true),
+            useCob = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_cob, true),
+            includeBolusIOB = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_iob, true),
+            includeBasalIOB = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_iob, true),
             useSuperBolus = false,
-            useTT = sp.getBoolean(info.nightscout.core.utils.R.string.key_wearwizard_tt, false),
-            useTrend = sp.getBoolean(info.nightscout.core.utils.R.string.key_wearwizard_trend, false),
+            useTT = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_tt, false),
+            useTrend = sp.getBoolean(app.aaps.core.utils.R.string.key_wearwizard_trend, false),
             useAlarm = false
         )
         val insulinAfterConstraints = bolusWizard.insulinAfterConstraints
@@ -745,15 +745,15 @@ class DataHandlerMobile @Inject constructor(
             EventMobileToWear(
                 EventData.Preferences(
                     timeStamp = System.currentTimeMillis(),
-                    wearControl = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_control, false),
+                    wearControl = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false),
                     unitsMgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
-                    bolusPercentage = sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100),
-                    maxCarbs = sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 48),
-                    maxBolus = sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0),
+                    bolusPercentage = sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100),
+                    maxCarbs = sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48),
+                    maxBolus = sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0),
                     insulinButtonIncrement1 = sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1, Constants.INSULIN_PLUS1_DEFAULT),
                     insulinButtonIncrement2 = sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2, Constants.INSULIN_PLUS2_DEFAULT),
-                    carbsButtonIncrement1 = sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_1, Constants.CARBS_FAV1_DEFAULT),
-                    carbsButtonIncrement2 = sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_2, Constants.CARBS_FAV2_DEFAULT)
+                    carbsButtonIncrement1 = sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, Constants.CARBS_FAV1_DEFAULT),
+                    carbsButtonIncrement2 = sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, Constants.CARBS_FAV2_DEFAULT)
                 )
             )
         )

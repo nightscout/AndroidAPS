@@ -322,7 +322,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                     }
                 }
                 // report change bigger than 30%
-                var percentMinChangeChange = sp.getDouble(info.nightscout.core.utils.R.string.key_loop_openmode_min_change, 30.0)
+                var percentMinChangeChange = sp.getDouble(app.aaps.core.utils.R.string.key_loop_openmode_min_change, 30.0)
                 percentMinChangeChange /= 100.0
                 val lowThreshold = 1 - percentMinChangeChange
                 val highThreshold = 1 + percentMinChangeChange
@@ -358,7 +358,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                     }
                 }
                 // report change bigger than 30%
-                var percentMinChangeChange = sp.getDouble(info.nightscout.core.utils.R.string.key_loop_openmode_min_change, 30.0)
+                var percentMinChangeChange = sp.getDouble(app.aaps.core.utils.R.string.key_loop_openmode_min_change, 30.0)
                 percentMinChangeChange /= 100.0
                 val lowThreshold = 1 - percentMinChangeChange
                 val highThreshold = 1 + percentMinChangeChange

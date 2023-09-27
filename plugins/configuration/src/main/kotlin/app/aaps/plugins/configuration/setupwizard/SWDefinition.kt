@@ -114,17 +114,17 @@ class SWDefinition @Inject constructor(
             .add(
                 SWRadioButton(injector)
                     .option(R.array.unitsArray, R.array.unitsValues)
-                    .preferenceId(info.nightscout.core.utils.R.string.key_units).label(R.string.units)
+                    .preferenceId(app.aaps.core.utils.R.string.key_units).label(R.string.units)
                     .comment(R.string.setupwizard_units_prompt)
             )
-            .validator { sp.contains(info.nightscout.core.utils.R.string.key_units) }
+            .validator { sp.contains(app.aaps.core.utils.R.string.key_units) }
 
     private val displaySettings
         get() = SWScreen(injector, R.string.display_settings)
             .skippable(false)
             .add(
                 SWEditNumberWithUnits(injector, Constants.LOW_MARK * Constants.MGDL_TO_MMOLL, 3.0, 8.0)
-                    .preferenceId(info.nightscout.core.utils.R.string.key_low_mark)
+                    .preferenceId(app.aaps.core.utils.R.string.key_low_mark)
                     .updateDelay(5)
                     .label(R.string.low_mark)
                     .comment(R.string.low_mark_comment)
@@ -132,7 +132,7 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(
                 SWEditNumberWithUnits(injector, Constants.HIGH_MARK * Constants.MGDL_TO_MMOLL, 5.0, 20.0)
-                    .preferenceId(info.nightscout.core.utils.R.string.key_high_mark)
+                    .preferenceId(app.aaps.core.utils.R.string.key_high_mark)
                     .updateDelay(5)
                     .label(R.string.high_mark)
                     .comment(R.string.high_mark_comment)
@@ -207,7 +207,7 @@ class SWDefinition @Inject constructor(
         get() = SWScreen(injector, R.string.patient_name)
             .skippable(true)
             .add(SWInfoText(injector).label(R.string.patient_name_summary))
-            .add(SWEditString(injector).validator(String::isNotEmpty).preferenceId(info.nightscout.core.utils.R.string.key_patient_name))
+            .add(SWEditString(injector).validator(String::isNotEmpty).preferenceId(app.aaps.core.utils.R.string.key_patient_name))
 
     private val privacy
         get() = SWScreen(injector, R.string.privacy_settings)
@@ -219,10 +219,10 @@ class SWDefinition @Inject constructor(
         get() = SWScreen(injector, app.aaps.core.ui.R.string.master_password)
             .skippable(false)
             .add(SWInfoText(injector).label(app.aaps.core.ui.R.string.master_password))
-            .add(SWEditEncryptedPassword(injector, cryptoUtil).preferenceId(info.nightscout.core.utils.R.string.key_master_password))
+            .add(SWEditEncryptedPassword(injector, cryptoUtil).preferenceId(app.aaps.core.utils.R.string.key_master_password))
             .add(SWBreak(injector))
             .add(SWInfoText(injector).label(R.string.master_password_summary))
-            .validator { !cryptoUtil.checkPassword("", sp.getString(info.nightscout.core.utils.R.string.key_master_password, "")) }
+            .validator { !cryptoUtil.checkPassword("", sp.getString(app.aaps.core.utils.R.string.key_master_password, "")) }
 
     private val screenAge
         get() = SWScreen(injector, app.aaps.core.ui.R.string.patient_type)
@@ -230,30 +230,30 @@ class SWDefinition @Inject constructor(
             .add(SWBreak(injector))
             .add(
                 SWRadioButton(injector)
-                    .option(app.aaps.core.ui.R.array.ageArray, info.nightscout.core.utils.R.array.ageValues)
-                    .preferenceId(info.nightscout.core.utils.R.string.key_age)
+                    .option(app.aaps.core.ui.R.array.ageArray, app.aaps.core.utils.R.array.ageValues)
+                    .preferenceId(app.aaps.core.utils.R.string.key_age)
                     .label(app.aaps.core.ui.R.string.patient_type)
                     .comment(app.aaps.core.ui.R.string.patient_age_summary)
             )
             .add(SWBreak(injector))
             .add(
                 SWEditNumber(injector, 3.0, 0.1, 25.0)
-                    .preferenceId(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus)
+                    .preferenceId(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus)
                     .updateDelay(5)
                     .label(app.aaps.core.ui.R.string.max_bolus_title)
                     .comment(R.string.common_values)
             )
             .add(
                 SWEditIntNumber(injector, 48, 1, 100)
-                    .preferenceId(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs)
+                    .preferenceId(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs)
                     .updateDelay(5)
                     .label(app.aaps.core.ui.R.string.max_carbs_title)
                     .comment(R.string.common_values)
             )
             .validator {
-                sp.contains(info.nightscout.core.utils.R.string.key_age)
-                    && sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 0.0) > 0
-                    && sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 0) > 0
+                sp.contains(app.aaps.core.utils.R.string.key_age)
+                    && sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 0.0) > 0
+                    && sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 0) > 0
             }
 
     private val screenInsulin
@@ -354,10 +354,10 @@ class SWDefinition @Inject constructor(
             .add(
                 SWRadioButton(injector)
                     .option(app.aaps.core.ui.R.array.aps_modeArray, app.aaps.core.ui.R.array.aps_modeValues)
-                    .preferenceId(info.nightscout.core.utils.R.string.key_aps_mode).label(R.string.apsmode_title)
+                    .preferenceId(app.aaps.core.utils.R.string.key_aps_mode).label(R.string.apsmode_title)
                     .comment(R.string.setupwizard_preferred_aps_mode)
             )
-            .validator { sp.contains(info.nightscout.core.utils.R.string.key_aps_mode) }
+            .validator { sp.contains(app.aaps.core.utils.R.string.key_aps_mode) }
 
     private val screenLoop
         get() = SWScreen(injector, R.string.configbuilder_loop)

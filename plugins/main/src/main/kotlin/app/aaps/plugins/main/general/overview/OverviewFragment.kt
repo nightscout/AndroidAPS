@@ -208,9 +208,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.graphsLayout.bgGraph.setOnLongClickListener {
             overviewData.rangeToDisplay += 6
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
-            sp.putInt(info.nightscout.core.utils.R.string.key_rangetodisplay, overviewData.rangeToDisplay)
-            rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_rangetodisplay)))
-            sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, true)
+            sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, overviewData.rangeToDisplay)
+            rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+            sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusescale, true)
             false
         }
         prepareGraphsIfNeeded(overviewMenus.setting.size)
@@ -272,9 +272,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.main)
             .subscribe({
                            overviewData.rangeToDisplay = it.hours
-                           sp.putInt(info.nightscout.core.utils.R.string.key_rangetodisplay, it.hours)
-                           rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_rangetodisplay)))
-                           sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, true)
+                           sp.putInt(app.aaps.core.utils.R.string.key_rangetodisplay, it.hours)
+                           rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay)))
+                           sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusescale, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventBucketedDataCreated::class.java)
@@ -1088,7 +1088,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateSensitivity() {
         _binding ?: return
         val lastAutosensData = overviewData.lastAutosensData(iobCobCalculator)
-        if (config.NSCLIENT && sp.getBoolean(info.nightscout.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
+        if (config.NSCLIENT && sp.getBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
             !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()
         ) {
             binding.infoLayout.sensitivityIcon.setImageResource(app.aaps.core.main.R.drawable.ic_swap_vert_black_48dp_green)

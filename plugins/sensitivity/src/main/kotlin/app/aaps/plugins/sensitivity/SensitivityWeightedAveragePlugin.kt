@@ -48,12 +48,12 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
-        val age = sp.getString(info.nightscout.core.utils.R.string.key_age, "")
+        val age = sp.getString(app.aaps.core.utils.R.string.key_age, "")
         var defaultHours = 24
-        if (age == rh.gs(info.nightscout.core.utils.R.string.key_adult)) defaultHours = 24
-        if (age == rh.gs(info.nightscout.core.utils.R.string.key_teenage)) defaultHours = 4
-        if (age == rh.gs(info.nightscout.core.utils.R.string.key_child)) defaultHours = 4
-        val hoursForDetection = sp.getInt(info.nightscout.core.utils.R.string.key_openapsama_autosens_period, defaultHours)
+        if (age == rh.gs(app.aaps.core.utils.R.string.key_adult)) defaultHours = 24
+        if (age == rh.gs(app.aaps.core.utils.R.string.key_teenage)) defaultHours = 4
+        if (age == rh.gs(app.aaps.core.utils.R.string.key_child)) defaultHours = 4
+        val hoursForDetection = sp.getInt(app.aaps.core.utils.R.string.key_openapsama_autosens_period, defaultHours)
         if (ads.autosensDataTable.size() < 4) {
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. lastDataTime=" + ads.lastDataTime(dateUtil))
             return AutosensResult()
@@ -159,7 +159,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         return output
     }
 
-    override fun maxAbsorptionHours(): Double = sp.getDouble(info.nightscout.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+    override fun maxAbsorptionHours(): Double = sp.getDouble(app.aaps.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
     override val isMinCarbsAbsorptionDynamic: Boolean = true
     override val isOref1: Boolean = false
 
@@ -169,10 +169,10 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     override fun configuration(): JSONObject {
         val c = JSONObject()
         try {
-            c.put(rh.gs(info.nightscout.core.utils.R.string.key_absorption_maxtime), sp.getDouble(info.nightscout.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME))
-            c.put(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_period), sp.getInt(info.nightscout.core.utils.R.string.key_openapsama_autosens_period, 24))
-            c.put(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max), sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2))
-            c.put(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min), sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7))
+            c.put(rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime), sp.getDouble(app.aaps.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME))
+            c.put(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period), sp.getInt(app.aaps.core.utils.R.string.key_openapsama_autosens_period, 24))
+            c.put(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max), sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2))
+            c.put(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min), sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7))
         } catch (e: JSONException) {
             e.printStackTrace()
         }
@@ -181,23 +181,23 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
 
     override fun applyConfiguration(configuration: JSONObject) {
         try {
-            if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_absorption_maxtime))) sp.putDouble(
-                info.nightscout.core.utils.R.string.key_absorption_maxtime, configuration.getDouble(
-                    rh.gs(info.nightscout.core.utils.R.string.key_absorption_maxtime)
+            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime))) sp.putDouble(
+                app.aaps.core.utils.R.string.key_absorption_maxtime, configuration.getDouble(
+                    rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime)
                 )
             )
-            if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_period))) sp.putDouble(
-                info.nightscout.core.utils.R.string.key_openapsama_autosens_period,
-                configuration.getDouble(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_period))
+            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period))) sp.putDouble(
+                app.aaps.core.utils.R.string.key_openapsama_autosens_period,
+                configuration.getDouble(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period))
             )
-            if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max))) sp.getDouble(
-                info.nightscout.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(
-                    rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max)
+            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max))) sp.getDouble(
+                app.aaps.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(
+                    rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max)
                 )
             )
-            if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min))) sp.getDouble(
-                info.nightscout.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(
-                    rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min)
+            if (configuration.has(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min))) sp.getDouble(
+                app.aaps.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(
+                    rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min)
                 )
             )
         } catch (e: JSONException) {

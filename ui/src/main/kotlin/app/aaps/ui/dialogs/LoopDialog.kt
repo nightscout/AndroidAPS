@@ -162,7 +162,7 @@ class LoopDialog : DaggerDialogFragment() {
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
         val lgsEnabled = constraintChecker.isLgsAllowed(ConstraintObject(true, aapsLogger))
-        val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+        val apsMode = ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
         val pump = activePlugin.activePump
 
         binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
@@ -283,21 +283,21 @@ class LoopDialog : DaggerDialogFragment() {
         when (v.id) {
             R.id.overview_closeloop                       -> {
                 uel.log(UserEntry.Action.CLOSED_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
+                sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop                         -> {
                 uel.log(UserEntry.Action.LGS_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
+                sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop                        -> {
                 uel.log(UserEntry.Action.OPEN_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)
+                sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 return true
             }
@@ -356,7 +356,7 @@ class LoopDialog : DaggerDialogFragment() {
                         }
                     }
                 })
-                sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusereconnect, true)
+                sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusereconnect, true)
                 return true
             }
 
@@ -412,7 +412,7 @@ class LoopDialog : DaggerDialogFragment() {
                     loop.goToZeroTemp(T.hours(1).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                     rxBus.send(EventRefreshOverview("suspend_menu"))
                 }
-                sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusedisconnect, true)
+                sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusedisconnect, true)
                 return true
             }
 

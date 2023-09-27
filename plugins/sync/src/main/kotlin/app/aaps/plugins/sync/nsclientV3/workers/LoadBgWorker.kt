@@ -34,7 +34,7 @@ class LoadBgWorker(
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override suspend fun doWorkAndLog(): Result {
-        if (!nsClientSource.isEnabled() && !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_cgm, false))
+        if (!nsClientSource.isEnabled() && !sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_cgm, false))
             return Result.success(workDataOf("Result" to "Load not enabled"))
 
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
@@ -62,7 +62,7 @@ class LoadBgWorker(
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
                         rxBus.send(EventNSClientNewLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                         // Objective0
-                        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
+                        sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                         // Schedule processing of fetched data and continue of loading
                         continueLoading = response.code != 304
                         nsIncomingDataProcessor.processSgvs(sgvs)

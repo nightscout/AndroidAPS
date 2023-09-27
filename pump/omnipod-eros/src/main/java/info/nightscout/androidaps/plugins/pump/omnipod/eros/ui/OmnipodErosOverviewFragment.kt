@@ -703,7 +703,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
     // FIXME ideally we should just have access to LocalAlertUtils here
     private fun getPumpUnreachableTimeout(): Duration {
-        return Duration.standardMinutes(sp.getInt(info.nightscout.core.utils.R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
+        return Duration.standardMinutes(sp.getInt(app.aaps.core.utils.R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong())
     }
 
     inner class DisplayResultDialogCallback(private val errorMessagePrefix: String, private val withSoundOnError: Boolean) : Callback() {

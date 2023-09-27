@@ -45,7 +45,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Test
     fun `simple peak test`() {
-        `when`(sp.getInt(eq(info.nightscout.core.utils.R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
+        `when`(sp.getInt(eq(app.aaps.core.utils.R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
         assertThat(sut.peak).isEqualTo(90)
     }
 
@@ -56,7 +56,7 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
 
     @Test
     fun commentStandardTextTest() {
-        `when`(sp.getInt(eq(info.nightscout.core.utils.R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
+        `when`(sp.getInt(eq(app.aaps.core.utils.R.string.key_insulin_oref_peak), anyInt())).thenReturn(90)
         `when`(rh.gs(eq(R.string.insulin_peak_time))).thenReturn("Peak Time [min]")
         assertThat(sut.commentStandardText()).isEqualTo("Peak Time [min]: 90")
     }

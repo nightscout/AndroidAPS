@@ -47,16 +47,16 @@ class VirtualPumpPluginUTest : TestBase() {
 
     @Test
     fun refreshConfiguration() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
         Assertions.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
     }
 
     @Test
     fun refreshConfigurationTwice() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
         Assertions.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
     }

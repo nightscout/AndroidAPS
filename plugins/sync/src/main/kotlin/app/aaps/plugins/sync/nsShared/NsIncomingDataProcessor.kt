@@ -84,7 +84,7 @@ class NsIncomingDataProcessor @Inject constructor(
     @Suppress("SpellCheckingInspection")
     fun processSgvs(sgvs: Any) {
 
-        if (!nsClientSource.isEnabled() && !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_cgm, false)) return
+        if (!nsClientSource.isEnabled() && !sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_cgm, false)) return
 
         var latestDateInReceivedData: Long = 0
         aapsLogger.debug(LTag.NSCLIENT, "Received NS Data: $sgvs")
@@ -123,15 +123,15 @@ class NsIncomingDataProcessor @Inject constructor(
 
                 when (treatment) {
                     is NSBolus                  ->
-                        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
+                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
                             storeDataForDb.boluses.add(treatment.toBolus())
 
                     is NSCarbs                  ->
-                        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
+                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
                             storeDataForDb.carbs.add(treatment.toCarbs())
 
                     is NSTemporaryTarget        ->
-                        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
+                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                             if (treatment.duration > 0L) {
                                 // not ending event
                                 if (treatment.targetBottomAsMgdl() < Constants.MIN_TT_MGDL
@@ -152,14 +152,14 @@ class NsIncomingDataProcessor @Inject constructor(
                             storeDataForDb.temporaryBasals.add(treatment.toTemporaryBasal())
 
                     is NSEffectiveProfileSwitch ->
-                        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                             treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
                                 storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                             }
                         }
 
                     is NSProfileSwitch          ->
-                        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                             treatment.toProfileSwitch(activePlugin, dateUtil)?.let { profileSwitch ->
                                 storeDataForDb.profileSwitches.add(profileSwitch)
                             }
@@ -171,13 +171,13 @@ class NsIncomingDataProcessor @Inject constructor(
                         }
 
                     is NSTherapyEvent           ->
-                        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
                             treatment.toTherapyEvent().let { therapyEvent ->
                                 storeDataForDb.therapyEvents.add(therapyEvent)
                             }
 
                     is NSOfflineEvent           ->
-                        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
+                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
                             treatment.toOfflineEvent().let { offlineEvent ->
                                 storeDataForDb.offlineEvents.add(offlineEvent)
                             }
@@ -237,10 +237,10 @@ class NsIncomingDataProcessor @Inject constructor(
     }
 
     fun processProfile(profileJson: JSONObject) {
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
             val store = instantiator.provideProfileStore(profileJson)
             val createdAt = store.getStartDate()
-            val lastLocalChange = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, 0)
+            val lastLocalChange = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, 0)
             aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
             if (createdAt > lastLocalChange || createdAt % 1000 == 0L) { // whole second means edited in NS
                 profileSource.loadFromStore(store)

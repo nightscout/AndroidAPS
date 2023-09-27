@@ -26,13 +26,13 @@ class SWEditEncryptedPassword(injector: HasAndroidInjector, private val cryptoUt
 
     override fun generateDialog(layout: LinearLayout) {
         val context = layout.context
-        val isPasswordSet = sp.contains(info.nightscout.core.utils.R.string.key_master_password) && sp.getString(info.nightscout.core.utils.R.string.key_master_password, "") != ""
+        val isPasswordSet = sp.contains(app.aaps.core.utils.R.string.key_master_password) && sp.getString(app.aaps.core.utils.R.string.key_master_password, "") != ""
 
         button = Button(context)
         button?.setText(app.aaps.core.ui.R.string.unlock_settings)
         button?.setOnClickListener {
             scanForActivity(context)?.let { activity ->
-                passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, {
+                passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password, {
                     button?.visibility = View.GONE
                     editText?.visibility = View.VISIBLE
                     editText2?.visibility = View.VISIBLE

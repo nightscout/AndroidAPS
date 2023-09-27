@@ -28,7 +28,7 @@ class ErrorHelperActivity : TranslatedDaggerAppCompatActivity() {
         errorDialog.title = intent.getStringExtra(AlarmSoundService.TITLE) ?: ""
         errorDialog.show(supportFragmentManager, "Error")
 
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_errors, true))
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true))
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(intent.getStringExtra(AlarmSoundService.STATUS) ?: "")).subscribe()
     }
 }

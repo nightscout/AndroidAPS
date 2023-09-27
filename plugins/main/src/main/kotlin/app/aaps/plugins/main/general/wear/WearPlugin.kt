@@ -112,11 +112,11 @@ class WearPlugin @Inject constructor(
 
     fun checkCustomWatchfacePreferences() {
         savedCustomWatchface?.let { cwf ->
-            val cwf_authorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+            val cwf_authorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
             if (cwf_authorization != cwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()) {
                 // resend new customWatchface to Watch with updated authorization for preferences update
                 val newCwf = cwf.copy()
-                newCwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION] = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false).toString()
+                newCwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION] = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false).toString()
                 rxBus.send(EventMobileDataToWear(EventData.ActionSetCustomWatchface(newCwf)))
             }
         }

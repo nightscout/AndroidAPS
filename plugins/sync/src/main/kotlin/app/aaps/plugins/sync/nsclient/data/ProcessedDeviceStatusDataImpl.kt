@@ -101,10 +101,10 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
 
             // test warning level
             val level = when {
-                openAPSData.clockSuggested + T.mins(sp.getLong(info.nightscout.core.utils.R.string.key_ns_alarm_urgent_stale_data_value, 31))
+                openAPSData.clockSuggested + T.mins(sp.getLong(app.aaps.core.utils.R.string.key_ns_alarm_urgent_stale_data_value, 31))
                     .msecs() < dateUtil.now()                                                                                                                   -> ProcessedDeviceStatusData.Levels.URGENT
 
-                openAPSData.clockSuggested + T.mins(sp.getLong(info.nightscout.core.utils.R.string.key_ns_alarm_stale_data_value, 16)).msecs() < dateUtil.now() -> ProcessedDeviceStatusData.Levels.WARN
+                openAPSData.clockSuggested + T.mins(sp.getLong(app.aaps.core.utils.R.string.key_ns_alarm_stale_data_value, 16)).msecs() < dateUtil.now() -> ProcessedDeviceStatusData.Levels.WARN
                 else                                                                                                                                            -> ProcessedDeviceStatusData.Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")

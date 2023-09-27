@@ -109,7 +109,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.hardlimit)).thenReturn("hard limit")
-        `when`(rh.gs(info.nightscout.core.utils.R.string.key_child)).thenReturn("child")
+        `when`(rh.gs(app.aaps.core.utils.R.string.key_child)).thenReturn("child")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
         `when`(rh.gs(app.aaps.plugins.aps.R.string.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
@@ -243,13 +243,13 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     // 2x Safety & Objectives
     @Test
     fun isClosedLoopAllowedTest() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
 //        assertThat(c.reasonList[0].toString()).contains("Closed loop is disabled") // Safety & Objectives
         assertThat(c.value()).isFalse()
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
         c = constraintChecker.isClosedLoopAllowed()
         assertThat(c.reasonList[0]).contains("Closed loop mode disabled in preferences") // Safety & Objectives
 //        assertThat(c.reasonList).hasThat(3) // 2x Safety & Objectives
@@ -261,7 +261,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     fun isAutosensModeEnabledTest() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
-        `when`(sp.getBoolean(info.nightscout.core.utils.R.string.key_use_autosens, false)).thenReturn(false)
+        `when`(sp.getBoolean(app.aaps.core.utils.R.string.key_use_autosens, false)).thenReturn(false)
         val c = constraintChecker.isAutosensModeEnabled()
         assertThat(c.reasonList).hasSize(2) // Safety & Objectives
         assertThat(c.mostLimitedReasonList).hasSize(2) // Safety & Objectives
@@ -292,7 +292,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(app.aaps.plugins.aps.R.string.key_use_smb, false)).thenReturn(false)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
 //        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(ConstraintObject(true))
         val c = constraintChecker.isSMBModeEnabled()
         assertThat(c.reasonList).hasSize(3) // 2x Safety & Objectives
@@ -319,7 +319,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
 
         // Apply all limits
         val d = constraintChecker.getMaxBasalAllowed(validProfile)
@@ -346,7 +346,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
 
         // Apply all limits
         val i = constraintChecker.getMaxBasalPercentAllowed(validProfile)
@@ -372,8 +372,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 //        insightPlugin.setStatusResult(result);
 
         // No limit by default
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
 
         // Apply all limits
         val d = constraintChecker.getMaxBolusAllowed()
@@ -386,7 +386,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Test
     fun carbsAmountShouldBeLimited() {
         // No limit by default
-        `when`(sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
+        `when`(sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
 
         // Apply all limits
         val i = constraintChecker.getMaxCarbsAllowed()
@@ -399,9 +399,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Test
     fun iobAMAShouldBeLimited() {
         // No limit by default
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("teenage")
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, true)
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, false)
 
@@ -415,9 +415,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Test
     fun iobSMBShouldBeLimited() {
         // No limit by default
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("teenage")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, false)
 

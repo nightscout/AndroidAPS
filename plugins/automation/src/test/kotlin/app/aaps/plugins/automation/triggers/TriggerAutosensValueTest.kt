@@ -14,8 +14,8 @@ import org.mockito.Mockito.`when`
 class TriggerAutosensValueTest : TriggerTestBase() {
 
     @Test fun shouldRunTest() {
-        `when`(sp.getDouble(Mockito.eq(info.nightscout.core.utils.R.string.key_openapsama_autosens_max), ArgumentMatchers.anyDouble())).thenReturn(1.2)
-        `when`(sp.getDouble(Mockito.eq(info.nightscout.core.utils.R.string.key_openapsama_autosens_min), ArgumentMatchers.anyDouble())).thenReturn(0.7)
+        `when`(sp.getDouble(Mockito.eq(app.aaps.core.utils.R.string.key_openapsama_autosens_max), ArgumentMatchers.anyDouble())).thenReturn(1.2)
+        `when`(sp.getDouble(Mockito.eq(app.aaps.core.utils.R.string.key_openapsama_autosens_min), ArgumentMatchers.anyDouble())).thenReturn(0.7)
         `when`(autosensDataStore.getLastAutosensData(anyObject(), anyObject(), anyObject())).thenReturn(generateAutosensData())
         var t = TriggerAutosensValue(injector)
         t.autosens.value = 110.0

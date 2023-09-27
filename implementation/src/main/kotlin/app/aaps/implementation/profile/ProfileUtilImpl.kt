@@ -15,7 +15,7 @@ class ProfileUtilImpl @Inject constructor(
 
     override val units: GlucoseUnit
         get() =
-            if (sp.getString(info.nightscout.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
+            if (sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
             else GlucoseUnit.MMOL
 
     override fun fromMgdlToUnits(valueInMgdl: Double, targetUnits: GlucoseUnit): Double =

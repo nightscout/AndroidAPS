@@ -7,23 +7,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import app.aaps.core.main.wizard.QuickWizard
-import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
-import dagger.android.support.DaggerDialogFragment
+import app.aaps.core.main.wizard.QuickWizard
+import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.ui.extensions.selectedItemPosition
 import app.aaps.core.ui.extensions.setEnableForChildren
 import app.aaps.core.ui.extensions.setSelection
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogEditQuickwizardBinding
 import app.aaps.ui.events.EventQuickWizardChange
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
+import dagger.android.support.DaggerDialogFragment
 import org.json.JSONException
 import javax.inject.Inject
 
@@ -61,7 +61,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_control, false)) {
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
             binding.deviceLabel.visibility = View.VISIBLE
             binding.device.visibility = View.VISIBLE
         } else {

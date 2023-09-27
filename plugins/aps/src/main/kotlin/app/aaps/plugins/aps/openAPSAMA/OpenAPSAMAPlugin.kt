@@ -270,7 +270,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(info.nightscout.core.utils.R.string.key_use_autosens, false)
+        val enabled = sp.getBoolean(app.aaps.core.utils.R.string.key_use_autosens, false)
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
     }

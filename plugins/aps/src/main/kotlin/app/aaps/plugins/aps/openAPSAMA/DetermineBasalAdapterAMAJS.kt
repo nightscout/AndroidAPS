@@ -191,7 +191,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         if (mealData.usedMinCarbsImpact > 0) {
             this.profile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact)
         } else {
-            this.profile.put("min_5m_carbimpact", sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
+            this.profile.put("min_5m_carbimpact", sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
         }
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")

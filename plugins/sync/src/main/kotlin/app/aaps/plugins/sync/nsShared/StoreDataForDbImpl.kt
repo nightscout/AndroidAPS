@@ -555,13 +555,13 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
             therapyEvents.filter { it.type == TherapyEvent.Type.ANNOUNCEMENT }.forEach {
                 if (it.timestamp > dateUtil.now() - 15 * 60 * 1000L &&
                     it.note?.isNotEmpty() == true &&
                     it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
                 ) {
-                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, config.NSCLIENT))
+                    if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_announcements, config.NSCLIENT))
                         uiInteraction.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
                 }
             }
@@ -977,7 +977,7 @@ class StoreDataForDbImpl @Inject constructor(
 
     override fun updateDeletedTreatmentsInDb() {
         deleteTreatment.forEach { id ->
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
                 repository.findBolusByNSId(id)?.let { bolus ->
                     repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Bolus", it) }
@@ -989,7 +989,7 @@ class StoreDataForDbImpl @Inject constructor(
                             }
                         }
                 }
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
                 repository.findCarbsByNSId(id)?.let { carb ->
                     repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Carbs", it) }
@@ -1001,7 +1001,7 @@ class StoreDataForDbImpl @Inject constructor(
                             }
                         }
                 }
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT)
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT)
                 repository.findTemporaryTargetByNSId(id)?.let { gv ->
                     repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(gv.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryTarget", it) }
@@ -1025,7 +1025,7 @@ class StoreDataForDbImpl @Inject constructor(
                             }
                         }
                 }
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT)
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT)
                 repository.findEffectiveProfileSwitchByNSId(id)?.let { gv ->
                     repository.runTransactionForResult(InvalidateEffectiveProfileSwitchTransaction(gv.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating EffectiveProfileSwitch", it) }
@@ -1037,7 +1037,7 @@ class StoreDataForDbImpl @Inject constructor(
                             }
                         }
                 }
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT)
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT)
                 repository.findProfileSwitchByNSId(id)?.let { gv ->
                     repository.runTransactionForResult(InvalidateProfileSwitchTransaction(gv.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
@@ -1060,7 +1060,7 @@ class StoreDataForDbImpl @Inject constructor(
                         }
                     }
             }
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
                 repository.findTherapyEventByNSId(id)?.let { gv ->
                     repository.runTransactionForResult(InvalidateTherapyEventTransaction(gv.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TherapyEvent", it) }
@@ -1072,7 +1072,7 @@ class StoreDataForDbImpl @Inject constructor(
                             }
                         }
                 }
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
                 repository.findOfflineEventByNSId(id)?.let { gv ->
                     repository.runTransactionForResult(InvalidateOfflineEventTransaction(gv.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating OfflineEvent", it) }

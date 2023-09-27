@@ -17,7 +17,7 @@ class QuickWizard @Inject constructor(
     private var storage = JSONArray()
 
     init {
-        setData(JSONArray(sp.getString(info.nightscout.core.utils.R.string.key_quickwizard, "[]")))
+        setData(JSONArray(sp.getString(app.aaps.core.utils.R.string.key_quickwizard, "[]")))
         setGuidsForOldEntries()
     }
 
@@ -45,7 +45,7 @@ class QuickWizard @Inject constructor(
     }
 
     fun save() {
-        sp.putString(info.nightscout.core.utils.R.string.key_quickwizard, storage.toString())
+        sp.putString(app.aaps.core.utils.R.string.key_quickwizard, storage.toString())
     }
 
     fun size(): Int = storage.length()

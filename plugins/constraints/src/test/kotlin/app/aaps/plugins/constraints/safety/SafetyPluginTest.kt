@@ -68,7 +68,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(rh.gs(info.nightscout.core.utils.R.string.key_child)).thenReturn("child")
+        `when`(rh.gs(app.aaps.core.utils.R.string.key_child)).thenReturn("child")
         `when`(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)).thenReturn("Low Glucose Suspend")
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
@@ -95,7 +95,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun disabledEngineeringModeShouldLimitClosedLoop() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(config.isEngineeringModeOrRelease()).thenReturn(false)
         val c = safetyPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).contains("Running dev version. Closed loop is disabled.")
@@ -104,7 +104,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun setOpenLoopInPreferencesShouldLimitClosedLoop() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
         val c = safetyPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).contains("Closed loop mode disabled in preferences")
         assertThat(c.value()).isFalse()
@@ -141,7 +141,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
         val c = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         safetyPlugin.applyBasalConstraints(c, validProfile)
         assertThat(c.value()).isWithin(0.01).of(2.0)
@@ -155,7 +155,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun doNotAllowNegativeBasalRate() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
         val d = ConstraintObject(-0.5, aapsLogger)
         safetyPlugin.applyBasalConstraints(d, validProfile)
         assertThat(d.value()).isWithin(0.01).of(0.0)
@@ -170,7 +170,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
         val i = ConstraintObject(Int.MAX_VALUE, aapsLogger)
         safetyPlugin.applyBasalPercentConstraints(i, validProfile)
         assertThat(i.value()).isEqualTo(200)
@@ -193,7 +193,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         val i = ConstraintObject(Double.MAX_VALUE, aapsLogger)
         openAPSSMBPlugin.applyBasalConstraints(i, validProfile)
@@ -210,7 +210,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
 
     @Test
     fun doNotAllowNegativePercentBasalRate() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
         val i = ConstraintObject(-22, aapsLogger)
         safetyPlugin.applyBasalPercentConstraints(i, validProfile)
         assertThat(i.value()).isEqualTo(0)
@@ -226,8 +226,8 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
 
     @Test
     fun bolusAmountShouldBeLimited() {
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
         val d = safetyPlugin.applyBolusConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
         assertThat(d.value()).isWithin(0.01).of(3.0)
         assertThat(d.getReasons()).isEqualTo(
@@ -241,8 +241,8 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
 
     @Test
     fun doNotAllowNegativeBolusAmount() {
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
         val d = safetyPlugin.applyBolusConstraints(ConstraintObject(-22.0, aapsLogger))
         assertThat(d.value()).isWithin(0.01).of(0.0)
         assertThat(d.getReasons()).isEqualTo("Safety: Limiting bolus to 0.0 U because of it must be positive value")
@@ -252,7 +252,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
     @Test
     fun carbsAmountShouldBeLimited() {
         // No limit by default
-        `when`(sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
+        `when`(sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
 
         // Negative carbs not allowed
         var i: Constraint<Int> = ConstraintObject(-22, aapsLogger)
@@ -272,10 +272,10 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         //`when`(openAPSSMBPlugin.isEnabled()).thenReturn(true)
         //`when`(openAPSAMAPlugin.isEnabled()).thenReturn(false)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("teenage")
 
         // Apply all limits
         var d: Constraint<Double> = ConstraintObject(Double.MAX_VALUE, aapsLogger)

@@ -183,7 +183,7 @@ class LoopPlugin @Inject constructor(
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
             val maxIobAllowed = constraintChecker.getMaxIOBAllowed().value()
-            val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+            val apsMode = ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
             val pump = activePlugin.activePump
             var isLGS = false
             if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == HardLimits.MAX_IOB_LGS || apsMode == ApsMode.LGS) isLGS = true
@@ -322,18 +322,18 @@ class LoopPlugin @Inject constructor(
                             ) && carbsSuggestionsSuspendedUntil < System.currentTimeMillis() && !treatmentTimeThreshold(-15)
                         ) {
                             if (sp.getBoolean(
-                                    info.nightscout.core.utils.R.string.key_enable_carbs_required_alert_local,
+                                    app.aaps.core.utils.R.string.key_enable_carbs_required_alert_local,
                                     true
                                 ) && !sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
                             ) {
                                 val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
                                 rxBus.send(EventNewNotification(carbReqLocal))
                             }
-                            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req, false)) {
+                            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_carbs_req, false)) {
                                 disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resultAfterConstraints.carbsRequiredText)).subscribe()
                             }
                             if (sp.getBoolean(
-                                    info.nightscout.core.utils.R.string.key_enable_carbs_required_alert_local,
+                                    app.aaps.core.utils.R.string.key_enable_carbs_required_alert_local,
                                     true
                                 ) && sp.getBoolean(app.aaps.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
                             ) {
@@ -442,7 +442,7 @@ class LoopPlugin @Inject constructor(
                             .setPriority(Notification.IMPORTANCE_HIGH)
                             .setCategory(Notification.CATEGORY_ALARM)
                             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_control, false)) {
+                        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
                             builder.setLocalOnly(true)
                         }
                         presentSuggestion(builder)
@@ -519,7 +519,7 @@ class LoopPlugin @Inject constructor(
                             lastRun.lastTBREnact = dateUtil.now()
                             lastRun.lastOpenModeAccept = dateUtil.now()
                             buildAndStoreDeviceStatus()
-                            sp.incInt(info.nightscout.core.utils.R.string.key_ObjectivesmanualEnacts)
+                            sp.incInt(app.aaps.core.utils.R.string.key_ObjectivesmanualEnacts)
                         }
                         rxBus.send(EventAcceptOpenLoopChange())
                     }

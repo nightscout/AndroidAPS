@@ -64,13 +64,13 @@ class HardLimitsImpl @Inject constructor(
 
     }
 
-    private fun loadAge(): Int = when (sp.getString(info.nightscout.core.utils.R.string.key_age, "")) {
-        rh.gs(info.nightscout.core.utils.R.string.key_child)          -> CHILD
-        rh.gs(info.nightscout.core.utils.R.string.key_teenage)        -> TEENAGE
-        rh.gs(info.nightscout.core.utils.R.string.key_adult)          -> ADULT
-        rh.gs(info.nightscout.core.utils.R.string.key_resistantadult) -> RESISTANT_ADULT
-        rh.gs(info.nightscout.core.utils.R.string.key_pregnant)       -> PREGNANT
-        else                                                          -> ADULT
+    private fun loadAge(): Int = when (sp.getString(app.aaps.core.utils.R.string.key_age, "")) {
+        rh.gs(app.aaps.core.utils.R.string.key_child)          -> CHILD
+        rh.gs(app.aaps.core.utils.R.string.key_teenage)        -> TEENAGE
+        rh.gs(app.aaps.core.utils.R.string.key_adult)          -> ADULT
+        rh.gs(app.aaps.core.utils.R.string.key_resistantadult) -> RESISTANT_ADULT
+        rh.gs(app.aaps.core.utils.R.string.key_pregnant)       -> PREGNANT
+        else                                                   -> ADULT
     }
 
     override fun maxBolus(): Double = MAX_BOLUS[loadAge()]

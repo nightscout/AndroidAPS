@@ -92,8 +92,8 @@ class AutosensDataObject(injector: HasAndroidInjector) : AutosensData {
     // remove carbs older than timeframe
     override fun removeOldCarbs(toTime: Long, isAAPSOrWeighted: Boolean) {
         val maxAbsorptionHours: Double =
-            if (isAAPSOrWeighted) sp.getDouble(info.nightscout.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
-            else sp.getDouble(info.nightscout.core.utils.R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+            if (isAAPSOrWeighted) sp.getDouble(app.aaps.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+            else sp.getDouble(app.aaps.core.utils.R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
         var i = 0
         while (i < activeCarbsList.size) {
             val c = activeCarbsList[i]

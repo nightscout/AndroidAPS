@@ -62,9 +62,9 @@ class NotificationWithAction(
             activePlugin.activeNsClient?.handleClearAlarm(nsAlarm, 60 * 60 * 1000L)
             // Adding current time to snooze if we got staleData
             aapsLogger.debug(LTag.NOTIFICATION, "Notification text is: $text")
-            val msToSnooze = sp.getInt(info.nightscout.core.utils.R.string.key_ns_alarm_stale_data_value, 15) * 60 * 1000L
+            val msToSnooze = sp.getInt(app.aaps.core.utils.R.string.key_ns_alarm_stale_data_value, 15) * 60 * 1000L
             aapsLogger.debug(LTag.NOTIFICATION, "snooze nsalarm_staledatavalue in minutes is ${T.msecs(msToSnooze).mins()} currentTimeMillis is: ${System.currentTimeMillis()}")
-            sp.putLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + nsAlarm.level(), System.currentTimeMillis() + msToSnooze)
+            sp.putLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + nsAlarm.level(), System.currentTimeMillis() + msToSnooze)
         }
     }
 

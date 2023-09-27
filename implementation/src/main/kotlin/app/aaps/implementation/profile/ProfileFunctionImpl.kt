@@ -142,7 +142,7 @@ class ProfileFunctionImpl @Inject constructor(
     }
 
     override fun getUnits(): GlucoseUnit =
-        if (sp.getString(info.nightscout.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
+        if (sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
 
     override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): ProfileSwitch? {

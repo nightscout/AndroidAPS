@@ -120,8 +120,8 @@ class RunningConfigurationImpl @Inject constructor(
         }
 
         configuration.pump?.let {
-            if (sp.getString(info.nightscout.core.utils.R.string.key_virtualpump_type, "fake") != it) {
-                sp.putString(info.nightscout.core.utils.R.string.key_virtualpump_type, it)
+            if (sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, "fake") != it) {
+                sp.putString(app.aaps.core.utils.R.string.key_virtualpump_type, it)
                 activePlugin.activePump.pumpDescription.fillFor(PumpType.getByDescription(it))
                 pumpSync.connectNewPump(endRunning = false) // do not end running TBRs, we call this only to accept data properly
                 aapsLogger.debug(LTag.CORE, "Changing pump type to $it")

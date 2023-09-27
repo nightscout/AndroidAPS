@@ -130,7 +130,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_usebolusreminder, false)) {
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_usebolusreminder, false)) {
             glucoseStatusProvider.glucoseStatusData?.let { glucoseStatus ->
                 if (glucoseStatus.glucose + 3 * glucoseStatus.delta < 70.0)
                     binding.bolusReminder.visibility = View.VISIBLE
@@ -151,36 +151,36 @@ class CarbsDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("carbs")
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
-        val plus1text = toSignedString(sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT))
+        val plus1text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT))
         binding.plus1.text = plus1text
         binding.plus1.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus1text
         binding.plus1.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
-                    + sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT)
+                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT)
             )
             validateInputs()
             binding.carbs.announceValue()
         }
 
-        val plus2text = toSignedString(sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT))
+        val plus2text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT))
         binding.plus2.text = plus2text
         binding.plus2.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus2text
         binding.plus2.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
-                    + sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT)
+                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT)
             )
             validateInputs()
             binding.carbs.announceValue()
         }
-        val plus3text = toSignedString(sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT))
+        val plus3text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT))
         binding.plus3.text = plus3text
         binding.plus2.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus3text
         binding.plus3.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
-                    + sp.getInt(info.nightscout.core.utils.R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT)
+                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT)
             )
             validateInputs()
             binding.carbs.announceValue()
@@ -388,7 +388,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 automation.removeAutomationEventEatReminder()
                                 if (!result.success) {
                                     uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                                } else if (sp.getBoolean(info.nightscout.core.utils.R.string.key_usebolusreminder, false) && remindBolus)
+                                } else if (sp.getBoolean(app.aaps.core.utils.R.string.key_usebolusreminder, false) && remindBolus)
                                     automation.scheduleAutomationEventBolusReminder()
                             }
                         })

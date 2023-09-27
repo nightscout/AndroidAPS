@@ -22,7 +22,6 @@ import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.embedments.InterfaceIDs
-import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
@@ -120,7 +119,7 @@ internal class LoadBgWorkerTest : TestBase() {
     fun notEnabledNSClientSource() = runTest {
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
         Mockito.`when`(nsClientSource.isEnabled()).thenReturn(false)
-        Mockito.`when`(sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_cgm, false)).thenReturn(false)
+        Mockito.`when`(sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_cgm, false)).thenReturn(false)
 
         val result = sut.doWorkAndLog()
         assertIs<ListenableWorker.Result.Success>(result)

@@ -68,13 +68,13 @@ class QueueThread internal constructor(
                     pump.stopConnecting()
 
                     //BLUETOOTH-WATCHDOG
-                    var watchdog = sp.getBoolean(info.nightscout.core.utils.R.string.key_btwatchdog, false)
-                    val lastWatchdog = sp.getLong(info.nightscout.core.utils.R.string.key_btwatchdog_lastbark, 0L)
+                    var watchdog = sp.getBoolean(app.aaps.core.utils.R.string.key_btwatchdog, false)
+                    val lastWatchdog = sp.getLong(app.aaps.core.utils.R.string.key_btwatchdog_lastbark, 0L)
                     watchdog = watchdog && System.currentTimeMillis() - lastWatchdog > Constants.MIN_WATCHDOG_INTERVAL_IN_SECONDS * 1000
                     if (watchdog) {
                         aapsLogger.debug(LTag.PUMPQUEUE, "BT watchdog - toggling the phone bluetooth")
                         //write time
-                        sp.putLong(info.nightscout.core.utils.R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
+                        sp.putLong(app.aaps.core.utils.R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
                         //toggle BT
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)

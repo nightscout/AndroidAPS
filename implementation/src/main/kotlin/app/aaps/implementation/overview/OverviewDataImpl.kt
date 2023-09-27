@@ -108,7 +108,7 @@ class OverviewDataImpl @Inject constructor(
     }
 
     override fun initRange() {
-        rangeToDisplay = sp.getInt(info.nightscout.core.utils.R.string.key_rangetodisplay, 6)
+        rangeToDisplay = sp.getInt(app.aaps.core.utils.R.string.key_rangetodisplay, 6)
 
         val calendar = Calendar.getInstance().also {
             it.timeInMillis = System.currentTimeMillis()

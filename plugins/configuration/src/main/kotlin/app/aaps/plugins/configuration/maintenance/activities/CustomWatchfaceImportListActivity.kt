@@ -107,7 +107,7 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
                 val colorAttr = if (checkCustomVersion(metadata)) app.aaps.core.ui.R.attr.metadataTextOkColor else app.aaps.core.ui.R.attr.metadataTextWarningColor
                 cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
                 val prefExisting = metadata.keys.any { it.isPref }
-                val prefSetting = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+                val prefSetting = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
                 val prefColor = if (prefSetting) app.aaps.core.ui.R.attr.metadataTextWarningColor else app.aaps.core.ui.R.attr.importListFileNameColor
                 prefWarning.visibility = (prefExisting && prefSetting).toVisibility()
                 prefInfo.visibility = (prefExisting && !prefSetting).toVisibility()

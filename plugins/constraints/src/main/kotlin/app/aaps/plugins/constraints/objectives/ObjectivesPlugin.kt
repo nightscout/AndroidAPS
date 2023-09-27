@@ -87,16 +87,16 @@ class ObjectivesPlugin @Inject constructor(
             objective.startedOn = 0
             objective.accomplishedOn = 0
         }
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, false)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, false)
-        sp.putInt(info.nightscout.core.utils.R.string.key_ObjectivesmanualEnacts, 0)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseprofileswitch, false)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusedisconnect, false)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusereconnect, false)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusetemptarget, false)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseactions, false)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseloop, false)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, false)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, false)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, false)
+        sp.putInt(app.aaps.core.utils.R.string.key_ObjectivesmanualEnacts, 0)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseprofileswitch, false)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusedisconnect, false)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusereconnect, false)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusetemptarget, false)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseactions, false)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseloop, false)
+        sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusescale, false)
     }
 
     fun allPriorAccomplished(position: Int): Boolean {

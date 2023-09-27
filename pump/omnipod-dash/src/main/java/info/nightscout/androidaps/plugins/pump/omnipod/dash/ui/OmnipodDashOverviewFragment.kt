@@ -767,7 +767,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun getPumpUnreachableTimeout(): Duration {
         return Duration.ofMinutes(
             sp.getInt(
-                info.nightscout.core.utils.R.string.key_pump_unreachable_threshold_minutes,
+                app.aaps.core.utils.R.string.key_pump_unreachable_threshold_minutes,
                 Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES
             ).toLong()
         )

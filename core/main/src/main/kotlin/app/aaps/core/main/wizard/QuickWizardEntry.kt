@@ -137,7 +137,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         }
         // SuperBolus
         var superBolus = false
-        if (useSuperBolus() == YES && sp.getBoolean(info.nightscout.core.utils.R.string.key_usesuperbolus, false)) {
+        if (useSuperBolus() == YES && sp.getBoolean(app.aaps.core.utils.R.string.key_usesuperbolus, false)) {
             superBolus = true
         }
         if (loop.isEnabled() && loop.isSuperBolus) superBolus = false
@@ -151,7 +151,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta < 0) {
             trend = true
         }
-        val percentage = if (usePercentage() == DEFAULT) sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100) else percentage()
+        val percentage = if (usePercentage() == DEFAULT) sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100) else percentage()
         return BolusWizard(injector).doCalc(
             profile,
             profileName,

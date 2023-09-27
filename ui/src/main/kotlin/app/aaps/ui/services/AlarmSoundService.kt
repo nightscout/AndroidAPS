@@ -82,7 +82,7 @@ class AlarmSoundService : DaggerService() {
             player?.isLooping = true
             val audioManager = getAudioManager()
             if (!audioManager.isMusicActive) {
-                if (sp.getBoolean(info.nightscout.core.utils.R.string.key_gradually_increase_notification_volume, false)) {
+                if (sp.getBoolean(app.aaps.core.utils.R.string.key_gradually_increase_notification_volume, false)) {
                     currentVolumeLevel = 0
                     player?.setVolume(0f, 0f)
                     increaseVolumeHandler.postDelayed(volumeUpdater, VOLUME_INCREASE_INITIAL_SILENT_TIME_MILLIS)

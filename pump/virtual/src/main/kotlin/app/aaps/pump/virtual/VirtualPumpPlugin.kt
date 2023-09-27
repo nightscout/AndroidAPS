@@ -116,7 +116,7 @@ open class VirtualPumpPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_virtualpump_type))) refreshConfiguration() }, fabricPrivacy::logException)
+            .subscribe({ event: EventPreferenceChange -> if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_virtualpump_type))) refreshConfiguration() }, fabricPrivacy::logException)
         refreshConfiguration()
     }
 
@@ -127,7 +127,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val uploadStatus = preferenceFragment.findPreference(rh.gs(info.nightscout.core.utils.R.string.key_virtual_pump_upload_status)) as SwitchPreference?
+        val uploadStatus = preferenceFragment.findPreference(rh.gs(app.aaps.core.utils.R.string.key_virtual_pump_upload_status)) as SwitchPreference?
             ?: return
         uploadStatus.isVisible = !config.NSCLIENT
     }
@@ -341,7 +341,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
         val now = System.currentTimeMillis()
-        if (!sp.getBoolean(info.nightscout.core.utils.R.string.key_virtual_pump_upload_status, false)) {
+        if (!sp.getBoolean(app.aaps.core.utils.R.string.key_virtual_pump_upload_status, false)) {
             return JSONObject()
         }
         val pump = JSONObject()
@@ -391,7 +391,7 @@ open class VirtualPumpPlugin @Inject constructor(
     override fun canHandleDST(): Boolean = true
 
     fun refreshConfiguration() {
-        val pumpType = sp.getString(info.nightscout.core.utils.R.string.key_virtualpump_type, PumpType.GENERIC_AAPS.description)
+        val pumpType = sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, PumpType.GENERIC_AAPS.description)
         val pumpTypeNew = PumpType.getByDescription(pumpType)
         aapsLogger.debug(LTag.PUMP, "Pump in configuration: $pumpType, PumpType object: $pumpTypeNew")
         if (this.pumpType == pumpTypeNew) return

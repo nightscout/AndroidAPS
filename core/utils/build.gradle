@@ -13,7 +13,7 @@ apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 android {
 
-    namespace 'info.nightscout.core.utils'
+    namespace 'app.aaps.core.utils'
 }
 
 dependencies {

@@ -82,7 +82,7 @@ class DanaRKoreanPlugin @Inject constructor(
 
     init {
         pluginDescription.description(info.nightscout.pump.dana.R.string.description_pump_dana_r_korean)
-        useExtendedBoluses = sp.getBoolean(info.nightscout.core.utils.R.string.key_danar_useextended, false)
+        useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false)
         pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
     }
 
@@ -94,7 +94,7 @@ class DanaRKoreanPlugin @Inject constructor(
             .subscribe({
                            if (isEnabled()) {
                                val previousValue = useExtendedBoluses
-                               useExtendedBoluses = sp.getBoolean(info.nightscout.core.utils.R.string.key_danar_useextended, false)
+                               useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false)
                                if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().extendedBolus != null) {
                                    sExecutionService.extendedBolusStop()
                                }

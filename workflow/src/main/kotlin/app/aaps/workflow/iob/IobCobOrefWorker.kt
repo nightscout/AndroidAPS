@@ -202,7 +202,7 @@ class IobCobOrefWorker @Inject internal constructor(
                         }
                     } else {
                         //Oref sensitivity
-                        totalMinCarbsImpact = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+                        totalMinCarbsImpact = sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
                     }
 
                     // figure out how many carbs that represents

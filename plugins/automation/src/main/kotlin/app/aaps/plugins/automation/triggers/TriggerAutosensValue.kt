@@ -17,8 +17,8 @@ import java.util.Optional
 
 class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
 
-    private val minValue = (sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7) * 100).toInt()
-    private val maxValue = (sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2) * 100).toInt()
+    private val minValue = (sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7) * 100).toInt()
+    private val maxValue = (sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2) * 100).toInt()
     private val step = 1.0
     private val decimalFormat = DecimalFormat("1")
     var autosens: InputDouble = InputDouble(100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)

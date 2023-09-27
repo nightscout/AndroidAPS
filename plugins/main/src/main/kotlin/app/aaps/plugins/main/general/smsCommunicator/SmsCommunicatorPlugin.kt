@@ -512,7 +512,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.LGS_LOOP_MODE, Sources.SMS)
-                        sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
+                        sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
                         rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -527,7 +527,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.CLOSED_LOOP_MODE, Sources.SMS)
-                        sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
+                        sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
                         rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -947,13 +947,13 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         lastRemoteBolusTime = dateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
-                                                var eatingSoonTTDuration = sp.getInt(info.nightscout.core.utils.R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
+                                                var eatingSoonTTDuration = sp.getInt(app.aaps.core.utils.R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
                                                 eatingSoonTTDuration =
                                                     if (eatingSoonTTDuration > 0) eatingSoonTTDuration
                                                     else Constants.defaultEatingSoonTTDuration
                                                 var eatingSoonTT =
                                                     sp.getDouble(
-                                                        info.nightscout.core.utils.R.string.key_eatingsoon_target,
+                                                        app.aaps.core.utils.R.string.key_eatingsoon_target,
                                                         if (currentProfile.units == GlucoseUnit.MMOL) Constants.defaultEatingSoonTTmmol else Constants.defaultEatingSoonTTmgdl
                                                     )
                                                 eatingSoonTT =
@@ -1088,27 +1088,27 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var reason = TemporaryTarget.Reason.EATING_SOON
                     when {
                         isMeal     -> {
-                            keyDuration = info.nightscout.core.utils.R.string.key_eatingsoon_duration
+                            keyDuration = app.aaps.core.utils.R.string.key_eatingsoon_duration
                             defaultTargetDuration = Constants.defaultEatingSoonTTDuration
-                            keyTarget = info.nightscout.core.utils.R.string.key_eatingsoon_target
+                            keyTarget = app.aaps.core.utils.R.string.key_eatingsoon_target
                             defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
                             defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
                             reason = TemporaryTarget.Reason.EATING_SOON
                         }
 
                         isActivity -> {
-                            keyDuration = info.nightscout.core.utils.R.string.key_activity_duration
+                            keyDuration = app.aaps.core.utils.R.string.key_activity_duration
                             defaultTargetDuration = Constants.defaultActivityTTDuration
-                            keyTarget = info.nightscout.core.utils.R.string.key_activity_target
+                            keyTarget = app.aaps.core.utils.R.string.key_activity_target
                             defaultTargetMMOL = Constants.defaultActivityTTmmol
                             defaultTargetMGDL = Constants.defaultActivityTTmgdl
                             reason = TemporaryTarget.Reason.ACTIVITY
                         }
 
                         isHypo     -> {
-                            keyDuration = info.nightscout.core.utils.R.string.key_hypo_duration
+                            keyDuration = app.aaps.core.utils.R.string.key_hypo_duration
                             defaultTargetDuration = Constants.defaultHypoTTDuration
-                            keyTarget = info.nightscout.core.utils.R.string.key_hypo_target
+                            keyTarget = app.aaps.core.utils.R.string.key_hypo_target
                             defaultTargetMMOL = Constants.defaultHypoTTmmol
                             defaultTargetMGDL = Constants.defaultHypoTTmgdl
                             reason = TemporaryTarget.Reason.HYPOGLYCEMIA
@@ -1291,7 +1291,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun getApsModeText(): String =
-        when (ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))) {
+        when (ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))) {
             ApsMode.OPEN   -> rh.gs(app.aaps.core.ui.R.string.openloop)
             ApsMode.CLOSED -> rh.gs(app.aaps.core.ui.R.string.closedloop)
             ApsMode.LGS    -> rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)

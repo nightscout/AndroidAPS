@@ -69,7 +69,7 @@ class LoopPluginTest : TestBase() {
     fun testPluginInterface() {
         `when`(rh.gs(app.aaps.core.ui.R.string.loop)).thenReturn("Loop")
         `when`(rh.gs(app.aaps.plugins.aps.R.string.loop_shortname)).thenReturn("LOOP")
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         assertThat(loopPlugin.pluginDescription.fragmentClass).isEqualTo(LoopFragment::class.java.name)

@@ -39,7 +39,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     @DrawableRes override fun icon(): Int = app.aaps.core.ui.R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
-        val autoSwitch = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_auto, false)
+        val autoSwitch = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_auto, false)
         val profileName = if (inputProfileName.value == rh.gs(app.aaps.core.ui.R.string.active)) "" else inputProfileName.value
         var message = if (autoSwitch) app.aaps.core.ui.R.string.autotune_run_with_autoswitch else app.aaps.core.ui.R.string.autotune_run_without_autoswitch
         Thread {
@@ -62,7 +62,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         if (defaultValue == 0)
-            defaultValue = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5)
+            defaultValue = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5)
         daysBack.value = defaultValue
         LayoutBuilder()
             .add(LabelWithElement(rh, rh.gs(app.aaps.core.ui.R.string.autotune_select_profile), "", inputProfileName))
@@ -93,7 +93,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         inputProfileName.value = JsonHelper.safeGetString(o, "profileToTune", "")
         defaultValue = JsonHelper.safeGetInt(o, "tunedays")
         if (defaultValue == 0)
-            defaultValue = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5)
+            defaultValue = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5)
         daysBack.value = defaultValue
         return this
     }

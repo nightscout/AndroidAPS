@@ -36,9 +36,9 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
 
     override val friendlyName get(): String = rh.gs(R.string.free_peak_oref)
 
-    override fun configuration(): JSONObject = JSONObject().putInt(info.nightscout.core.utils.R.string.key_insulin_oref_peak, sp, rh)
+    override fun configuration(): JSONObject = JSONObject().putInt(app.aaps.core.utils.R.string.key_insulin_oref_peak, sp, rh)
     override fun applyConfiguration(configuration: JSONObject) {
-        configuration.storeInt(info.nightscout.core.utils.R.string.key_insulin_oref_peak, sp, rh)
+        configuration.storeInt(app.aaps.core.utils.R.string.key_insulin_oref_peak, sp, rh)
     }
 
     override fun commentStandardText(): String {
@@ -46,7 +46,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     }
 
     override val peak: Int
-        get() = sp.getInt(info.nightscout.core.utils.R.string.key_insulin_oref_peak, DEFAULT_PEAK)
+        get() = sp.getInt(app.aaps.core.utils.R.string.key_insulin_oref_peak, DEFAULT_PEAK)
 
     companion object {
 

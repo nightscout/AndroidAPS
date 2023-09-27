@@ -187,7 +187,7 @@ class ProfilePlugin @Inject constructor(
         }
         sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
 
-        sp.putLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, timestamp)
+        sp.putLong(app.aaps.core.utils.R.string.key_local_profile_last_change, timestamp)
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
@@ -406,7 +406,7 @@ class ProfilePlugin @Inject constructor(
                 }
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
-            val startDate = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, dateUtil.now())
+            val startDate = sp.getLong(app.aaps.core.utils.R.string.key_local_profile_last_change, dateUtil.now())
             json.put("date", startDate)
             json.put("created_at", dateUtil.toISOAsUTC(startDate))
             json.put("startDate", dateUtil.toISOAsUTC(startDate))

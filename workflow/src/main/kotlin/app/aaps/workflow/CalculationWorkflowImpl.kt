@@ -77,11 +77,11 @@ class CalculationWorkflowImpl @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_units))) {
+                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_units))) {
                                overviewData.reset()
                                rxBus.send(EventNewHistoryData(0, false))
                            }
-                           if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_rangetodisplay))) {
+                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay))) {
                                overviewData.initRange()
                                runOnScaleChanged()
                                rxBus.send(EventNewHistoryData(0, false))

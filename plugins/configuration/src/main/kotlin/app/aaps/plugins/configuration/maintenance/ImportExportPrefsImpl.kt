@@ -141,7 +141,7 @@ class ImportExportPrefsImpl @Inject constructor(
         val n6 = Settings.Global.getString(context.contentResolver, "device_name")
 
         // name provided (hopefully) by user
-        val patientName = sp.getString(info.nightscout.core.utils.R.string.key_patient_name, "")
+        val patientName = sp.getString(app.aaps.core.utils.R.string.key_patient_name, "")
         val defaultPatientName = rh.gs(app.aaps.core.ui.R.string.patient_name_default)
 
         // name we detect from OS
@@ -150,7 +150,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { password ->
+        passwordCheck.queryPassword(activity, app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password, { password ->
             then(password)
         }, {
                                         ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -162,7 +162,7 @@ class ImportExportPrefsImpl @Inject constructor(
         activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)
     ) {
-        passwordCheck.queryAnyPassword(activity, passwordName, info.nightscout.core.utils.R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
+        passwordCheck.queryAnyPassword(activity, passwordName, app.aaps.core.utils.R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
             then(password)
         }, {
                                            ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -175,7 +175,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
-        if (!sp.contains(info.nightscout.core.utils.R.string.key_master_password) || (sp.getString(info.nightscout.core.utils.R.string.key_master_password, "") == "")) {
+        if (!sp.contains(app.aaps.core.utils.R.string.key_master_password) || (sp.getString(app.aaps.core.utils.R.string.key_master_password, "") == "")) {
             WarningDialog.showWarning(activity,
                                       rh.gs(wrongPwdTitle),
                                       rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),

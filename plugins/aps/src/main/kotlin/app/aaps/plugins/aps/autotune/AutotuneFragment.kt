@@ -96,12 +96,12 @@ class AutotuneFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
-        sp.putBoolean(info.nightscout.core.utils.R.string.key_autotune_additional_log, false)      // put to false additional log
+        sp.putBoolean(app.aaps.core.utils.R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
+        sp.putBoolean(app.aaps.core.utils.R.string.key_autotune_additional_log, false)      // put to false additional log
         autotunePlugin.loadLastRun()
         if (autotunePlugin.lastNbDays.isEmpty())
-            autotunePlugin.lastNbDays = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5).toString()
-        val defaultValue = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5).toDouble()
+            autotunePlugin.lastNbDays = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5).toString()
+        val defaultValue = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5).toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(app.aaps.core.ui.R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
@@ -150,7 +150,7 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneCopyLocal.setOnClickListener {
             val localName = rh.gs(app.aaps.core.ui.R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
-            val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
+            val circadian = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             autotunePlugin.tunedProfile?.let { tunedProfile ->
                 OKDialog.showConfirmation(requireContext(),
                                           rh.gs(app.aaps.core.ui.R.string.autotune_copy_localprofile_button),
@@ -233,7 +233,7 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneCompare.setOnClickListener {
             val pumpProfile = autotunePlugin.pumpProfile
-            val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
+            val circadian = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             val tunedProfile = if (circadian) autotunePlugin.tunedProfile?.circadianProfile else autotunePlugin.tunedProfile?.profile
             uiInteraction.runProfileViewerDialog(
                 fragmentManager = childFragmentManager,
@@ -248,7 +248,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneProfileswitch.setOnClickListener {
             val tunedProfile = autotunePlugin.tunedProfile
             autotunePlugin.updateProfile(tunedProfile)
-            val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
+            val circadian = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
                 tunedP.profileStore(circadian)?.let {
                     OKDialog.showConfirmation(requireContext(),
@@ -400,7 +400,7 @@ class AutotuneFragment : DaggerFragment() {
     private fun resetParam(resetDay: Boolean) {
         binding.tuneWarning.text = addWarnings()
         if (resetDay) {
-            autotunePlugin.lastNbDays = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5).toString()
+            autotunePlugin.lastNbDays = sp.getInt(app.aaps.core.utils.R.string.key_autotune_default_tune_days, 5).toString()
             days.setAll(true)
         }
         autotunePlugin.result = ""
@@ -452,7 +452,7 @@ class AutotuneFragment : DaggerFragment() {
                                     })
                                 autotunePlugin.tunedProfile?.let { tuned ->
                                     layout.addView(toTableRowHeader(context))
-                                    val tuneInsulin = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)
+                                    val tuneInsulin = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_tune_insulin_curve, false)
                                     if (tuneInsulin) {
                                         layout.addView(
                                             toTableRowValue(

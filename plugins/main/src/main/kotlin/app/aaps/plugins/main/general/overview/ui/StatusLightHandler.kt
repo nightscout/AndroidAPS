@@ -56,34 +56,34 @@ class StatusLightHandler @Inject constructor(
         handleAge(
             cannulaAge,
             TherapyEvent.Type.CANNULA_CHANGE,
-            info.nightscout.core.utils.R.string.key_statuslights_cage_warning,
+            app.aaps.core.utils.R.string.key_statuslights_cage_warning,
             48.0,
-            info.nightscout.core.utils.R.string.key_statuslights_cage_critical,
+            app.aaps.core.utils.R.string.key_statuslights_cage_critical,
             72.0
         )
         handleAge(
             insulinAge,
             TherapyEvent.Type.INSULIN_CHANGE,
-            info.nightscout.core.utils.R.string.key_statuslights_iage_warning,
+            app.aaps.core.utils.R.string.key_statuslights_iage_warning,
             72.0,
-            info.nightscout.core.utils.R.string.key_statuslights_iage_critical,
+            app.aaps.core.utils.R.string.key_statuslights_iage_critical,
             144.0
         )
         handleAge(
             sensorAge,
             TherapyEvent.Type.SENSOR_CHANGE,
-            info.nightscout.core.utils.R.string.key_statuslights_sage_warning,
+            app.aaps.core.utils.R.string.key_statuslights_sage_warning,
             216.0,
-            info.nightscout.core.utils.R.string.key_statuslights_sage_critical,
+            app.aaps.core.utils.R.string.key_statuslights_sage_critical,
             240.0
         )
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
             handleAge(
                 batteryAge,
                 TherapyEvent.Type.PUMP_BATTERY_CHANGE,
-                info.nightscout.core.utils.R.string.key_statuslights_bage_warning,
+                app.aaps.core.utils.R.string.key_statuslights_bage_warning,
                 216.0,
-                info.nightscout.core.utils.R.string.key_statuslights_bage_critical,
+                app.aaps.core.utils.R.string.key_statuslights_bage_critical,
                 240.0
             )
         }

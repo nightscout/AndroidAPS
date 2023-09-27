@@ -288,7 +288,7 @@ class XdripPlugin @Inject constructor(
         // sent in 640G mode
         // com.eveningoutpost.dexdrip.NSEmulatorReceiver
         override fun sendIn640gMode(glucoseValue: GlucoseValue) {
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_dexcomg5_xdripupload, false)) {
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_dexcomg5_xdripupload, false)) {
                 val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
                 try {
                     val entriesBody = JSONArray()

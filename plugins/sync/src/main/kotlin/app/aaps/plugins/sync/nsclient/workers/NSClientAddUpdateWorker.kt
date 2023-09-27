@@ -72,14 +72,14 @@ class NSClientAddUpdateWorker(
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             if (insulin > 0) {
-                if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
+                if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
                     Bolus.fromJson(json)?.let { bolus ->
                         storeDataForDb.boluses.add(bolus)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
             if (carbs > 0) {
-                if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
+                if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
                     Carbs.fromJson(json)?.let { carb ->
                         storeDataForDb.carbs.add(carb)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
@@ -99,14 +99,14 @@ class NSClientAddUpdateWorker(
             when {
                 insulin > 0 || carbs > 0                                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
-                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         TemporaryTarget.fromJson(json, profileUtil)?.let { temporaryTarget ->
                             storeDataForDb.temporaryTargets.add(temporaryTarget)
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
 
                 eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
-                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         EffectiveProfileSwitch.fromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
                             storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
@@ -127,7 +127,7 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.EXERCISE.text ||
                     eventType == TherapyEvent.Type.NOTE.text ||
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text                 ->
-                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
                         TherapyEvent.fromJson(json)?.let { therapyEvent ->
                             storeDataForDb.therapyEvents.add(therapyEvent)
                         } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
@@ -148,14 +148,14 @@ class NSClientAddUpdateWorker(
                     }
 
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
-                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         ProfileSwitch.fromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
                             storeDataForDb.profileSwitches.add(profileSwitch)
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }
 
                 eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
-                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT) {
+                    if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT) {
                         OfflineEvent.fromJson(json)?.let { offlineEvent ->
                             storeDataForDb.offlineEvents.add(offlineEvent)
                         } ?: aapsLogger.error("Error parsing OfflineEvent json $json")

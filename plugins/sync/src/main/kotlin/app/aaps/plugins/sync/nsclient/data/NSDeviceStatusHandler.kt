@@ -83,7 +83,7 @@ class NSDeviceStatusHandler @Inject constructor(
             updateDeviceData(nsDeviceStatus)
             updateOpenApsData(nsDeviceStatus)
             updateUploaderData(nsDeviceStatus)
-            nsDeviceStatus.pump?.let { sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
+            nsDeviceStatus.pump?.let { sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
             if (config.NSCLIENT && !configurationDetected)
                 nsDeviceStatus.configuration?.let {
                     // copy configuration of Insulin and Sensitivity from main AAPS

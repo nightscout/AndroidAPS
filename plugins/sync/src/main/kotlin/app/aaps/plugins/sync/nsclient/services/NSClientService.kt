@@ -137,8 +137,8 @@ import javax.inject.Inject
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventPreferenceChange ->
-                           if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_url)) ||
-                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret)) ||
+                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_nsclientinternal_url)) ||
+                               event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_nsclientinternal_api_secret)) ||
                                event.isChanged(rh.gs(R.string.key_ns_paused))
                            ) {
                                latestDateInReceivedData = 0
@@ -360,8 +360,8 @@ import javax.inject.Inject
 
     private fun readPreferences() {
         nsEnabled = nsClientPlugin.isEnabled()
-        nsURL = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
-        nsAPISecret = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret, "")
+        nsURL = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "")
+        nsAPISecret = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_api_secret, "")
         nsDevice = sp.getString("careportal_enteredby", "")
     }
 
@@ -557,7 +557,7 @@ import javax.inject.Inject
                         if (sgvs.length() > 0) {
                             rxBus.send(EventNSClientNewLog("◄ DATA", "received " + sgvs.length() + " sgvs"))
                             // Objective0
-                            sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
+                            sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                             nsIncomingDataProcessor.processSgvs(sgvs)
                             storeDataForDb.storeGlucoseValuesToDb()
                         }
@@ -635,7 +635,7 @@ import javax.inject.Inject
 
     private fun handleAnnouncement(announcement: JSONObject) {
         val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, defaultVal)) {
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_announcements, defaultVal)) {
             val nsAlarm = NSAlarmObject(announcement)
             uiInteraction.addNotificationWithAction(injector, nsAlarm)
             rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", safeGetString(announcement, "message", "received")))
@@ -645,8 +645,8 @@ import javax.inject.Inject
 
     private fun handleAlarm(alarm: JSONObject) {
         val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, defaultVal)) {
+            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)
@@ -658,8 +658,8 @@ import javax.inject.Inject
 
     private fun handleUrgentAlarm(alarm: JSONObject) {
         val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, defaultVal)) {
+            val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)

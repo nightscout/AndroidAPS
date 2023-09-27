@@ -120,7 +120,7 @@ class AutotunePlugin @Inject constructor(
             calculationRunning = false
             return
         }
-        val detailedLog = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_additional_log, false)
+        val detailedLog = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_additional_log, false)
         calculationRunning = true
         lastNbDays = "" + daysBack
         lastRun = dateUtil.now()
@@ -223,7 +223,7 @@ class AutotunePlugin @Inject constructor(
         updateButtonVisibility = View.VISIBLE
 
         if (autoSwitch) {
-            val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
+            val circadian = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
                 tunedP.profileName = pumpProfile.profileName
                 updateProfile(tunedP)
@@ -277,7 +277,7 @@ class AutotunePlugin @Inject constructor(
         var strResult = line
         strResult += rh.gs(app.aaps.core.ui.R.string.autotune_log_title)
         strResult += line
-        val tuneInsulin = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)
+        val tuneInsulin = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_tune_insulin_curve, false)
         if (tuneInsulin) {
             strResult += rh.gs(app.aaps.core.ui.R.string.autotune_log_peak, rh.gs(R.string.insulin_peak), pumpProfile.localInsulin.peak, tunedProfile.localInsulin.peak)
             strResult += rh.gs(app.aaps.core.ui.R.string.autotune_log_dia, rh.gs(app.aaps.core.ui.R.string.ic_short), pumpProfile.localInsulin.dia, tunedProfile.localInsulin.dia)
@@ -308,16 +308,16 @@ class AutotunePlugin @Inject constructor(
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         val startDateString = dateUtil.toISOString(firstLoopStart).substring(0, 10)
         val endDateString = dateUtil.toISOString(lastLoopEnd - 24 * 60 * 60 * 1000L).substring(0, 10)
-        val nsUrl = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
-        val optCategorizeUam = if (sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)) "-c=true" else ""
-        val optInsulinCurve = if (sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)) "-i=true" else ""
+        val nsUrl = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "")
+        val optCategorizeUam = if (sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)) "-c=true" else ""
+        val optInsulinCurve = if (sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_tune_insulin_curve, false)) "-i=true" else ""
         try {
             jsonSettings.put("datestring", dateUtil.toISOString(runDate))
             jsonSettings.put("dateutc", dateUtil.toISOAsUTC(runDate))
             jsonSettings.put("utcOffset", utcOffset)
             jsonSettings.put("units", profileFunction.getUnits().asText)
             jsonSettings.put("timezone", TimeZone.getDefault().id)
-            jsonSettings.put("url_nightscout", sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, ""))
+            jsonSettings.put("url_nightscout", sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, ""))
             jsonSettings.put("nbdays", nbDays)
             jsonSettings.put("startdate", startDateString)
             jsonSettings.put("enddate", endDateString)
@@ -327,7 +327,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("oref0_command", "oref0-autotune -d=~/aaps -n=$nsUrl -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
             // aaps_command is for running modified oref0-autotune with exported data from aaps (ns-entries and ns-treatment json files copied in ~/aaps/autotune folder and pumpprofile.json copied in ~/aaps/settings/
             jsonSettings.put("aaps_command", "aaps-autotune -d=~/aaps -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
-            jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false))
+            jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
 
             val peakTime: Int = insulinInterface.peak
@@ -354,7 +354,7 @@ class AutotunePlugin @Inject constructor(
     fun updateProfile(newProfile: ATProfile?) {
         if (newProfile == null) return
         val profilePlugin = activePlugin.activeProfileSource
-        val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
+        val circadian = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_circadian_ic_isf, false)
         val profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
@@ -396,14 +396,14 @@ class AutotunePlugin @Inject constructor(
         }
         json.put("result", result)
         json.put("updateButtonVisibility", updateButtonVisibility)
-        sp.putString(info.nightscout.core.utils.R.string.key_autotune_last_run, json.toString())
+        sp.putString(app.aaps.core.utils.R.string.key_autotune_last_run, json.toString())
     }
 
     fun loadLastRun() {
         result = ""
         lastRunSuccess = false
         try {
-            val json = JSONObject(sp.getString(info.nightscout.core.utils.R.string.key_autotune_last_run, ""))
+            val json = JSONObject(sp.getString(app.aaps.core.utils.R.string.key_autotune_last_run, ""))
             lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
             lastRun = JsonHelper.safeGetLong(json, "lastRun")
             val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")

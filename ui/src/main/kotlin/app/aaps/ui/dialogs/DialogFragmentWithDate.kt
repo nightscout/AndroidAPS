@@ -117,7 +117,7 @@ abstract class DialogFragmentWithDate : DaggerDialogFragment() {
         }
 
         (view.findViewById(app.aaps.core.ui.R.id.notes_layout) as View?)?.visibility =
-            sp.getBoolean(info.nightscout.core.utils.R.string.key_show_notes_entry_dialogs, false).toVisibility()
+            sp.getBoolean(app.aaps.core.utils.R.string.key_show_notes_entry_dialogs, false).toVisibility()
 
         (view.findViewById(app.aaps.core.ui.R.id.ok) as Button?)?.setOnClickListener {
             synchronized(okClicked) {

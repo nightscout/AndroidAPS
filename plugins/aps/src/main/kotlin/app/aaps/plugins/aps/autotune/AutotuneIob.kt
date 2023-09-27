@@ -255,7 +255,7 @@ open class AutotuneIob @Inject constructor(
 
     private fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
-        val detailedLog = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_additional_log, false)
+        val detailedLog = sp.getBoolean(app.aaps.core.utils.R.string.key_autotune_additional_log, false)
         for (pos in boluses.indices) {
             val t = boluses[pos]
             if (!t.isValid) continue

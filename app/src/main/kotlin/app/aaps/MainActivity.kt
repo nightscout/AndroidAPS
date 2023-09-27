@@ -477,7 +477,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
         FirebaseCrashlytics.getInstance().setCustomKey("Committed", BuildConfig.COMMITTED)
         FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])
-        FirebaseCrashlytics.getInstance().setCustomKey("Email", sp.getString(info.nightscout.core.utils.R.string.key_email_for_crash_report, ""))
+        FirebaseCrashlytics.getInstance().setCustomKey("Email", sp.getString(app.aaps.core.utils.R.string.key_email_for_crash_report, ""))
     }
 
     /**
@@ -488,7 +488,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         val passwordReset = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
         if (passwordReset.exists()) {
             val sn = activePlugin.activePump.serialNumber()
-            sp.putString(info.nightscout.core.utils.R.string.key_master_password, cryptoUtil.hashPassword(sn))
+            sp.putString(app.aaps.core.utils.R.string.key_master_password, cryptoUtil.hashPassword(sn))
             passwordReset.delete()
             ToastUtils.okToast(context, context.getString(app.aaps.core.ui.R.string.password_set))
         }

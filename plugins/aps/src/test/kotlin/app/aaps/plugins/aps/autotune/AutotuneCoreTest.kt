@@ -44,9 +44,9 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
 
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test1/aapsorefprofile.json").readText()
         val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, inputProfile)
@@ -66,9 +66,9 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val pumpProfileJson = File("src/test/res/autotune/test4/profile.pump.json").readText()
         val pumpProfile = atProfileFromOapsJson(JSONObject(pumpProfileJson), dateUtil)!!
         val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
-        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test4/newprofile.2022-05-30.json").readText()
         val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, pumpProfile)

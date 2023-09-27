@@ -99,7 +99,7 @@ class PrefFileListProviderImpl @Inject constructor(
 
     override fun listCustomWatchfaceFiles(): MutableList<CwfData> {
         val customWatchfaceFiles = mutableListOf<CwfData>()
-        val customAwtchfaceAuthorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+        val customAwtchfaceAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
         exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENTION) }.forEach { file ->
             ZipWatchfaceFormat.loadCustomWatchface(ZipInputStream(file.inputStream()), file.name, customAwtchfaceAuthorization)?.also { customWatchface ->
                 customWatchfaceFiles.add(customWatchface)

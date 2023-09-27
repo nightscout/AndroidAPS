@@ -87,7 +87,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         this.rh = rh;
         this.fabricPrivacy = fabricPrivacy;
 
-        useExtendedBoluses = sp.getBoolean(info.nightscout.core.utils.R.string.key_danar_useextended, false);
+        useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false);
         pumpDescription.fillFor(PumpType.DANA_R);
     }
 
@@ -101,7 +101,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 .subscribe(event -> {
                     if (isEnabled()) {
                         boolean previousValue = useExtendedBoluses;
-                        useExtendedBoluses = sp.getBoolean(info.nightscout.core.utils.R.string.key_danar_useextended, false);
+                        useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false);
 
                         if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().getExtendedBolus() != null) {
                             sExecutionService.extendedBolusStop();
