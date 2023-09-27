@@ -18,11 +18,6 @@ repositories {
     google()
 }
 
-allOpen {
-    // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.androidaps.annotations.OpenForTesting'
-}
-
 def generateGitBuild = { ->
     StringBuilder stringBuilder = new StringBuilder()
     try {
@@ -104,13 +99,13 @@ def allCommitted = { ->
 
 android {
 
-    namespace 'info.nightscout.androidaps'
+    namespace 'app.aaps'
     ndkVersion "21.1.6352462"
 
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.2.0-dev-l"
+        version "3.2.0-dev-k"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -181,12 +176,12 @@ dependencies {
     // in order to use internet's versions you'd need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
-    implementation project(':app-wear-shared:shared-impl')
+    implementation project(':shared:impl')
     implementation project(':core:main')
     implementation project(':core:graphview')
     implementation project(':core:interfaces')
     implementation project(':core:libraries')
-    implementation project(':core:ns-sdk')
+    implementation project(':core:nssdk')
     implementation project(':core:utils')
     implementation project(':core:ui')
     implementation project(':core:validators')
@@ -222,7 +217,7 @@ dependencies {
     implementation project(':pump:virtual')
     implementation project(':workflow')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 

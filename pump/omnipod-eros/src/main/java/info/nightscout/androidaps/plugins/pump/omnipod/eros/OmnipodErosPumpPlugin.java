@@ -30,6 +30,45 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.plugin.OwnDatabasePlugin;
+import app.aaps.core.interfaces.plugin.PluginDescription;
+import app.aaps.core.interfaces.plugin.PluginType;
+import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.core.interfaces.profile.ProfileFunction;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
+import app.aaps.core.interfaces.pump.OmnipodEros;
+import app.aaps.core.interfaces.pump.Pump;
+import app.aaps.core.interfaces.pump.PumpEnactResult;
+import app.aaps.core.interfaces.pump.PumpPluginBase;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.pump.actions.CustomActionType;
+import app.aaps.core.interfaces.pump.defs.ManufacturerType;
+import app.aaps.core.interfaces.pump.defs.PumpDescription;
+import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.queue.Callback;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.queue.CustomCommand;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventAppExit;
+import app.aaps.core.interfaces.rx.events.EventAppInitialized;
+import app.aaps.core.interfaces.rx.events.EventDismissNotification;
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange;
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
+import app.aaps.core.interfaces.rx.events.EventSWRLStatus;
+import app.aaps.core.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.utils.DecimalFormatter;
+import app.aaps.core.interfaces.utils.Round;
+import app.aaps.core.interfaces.utils.T;
+import app.aaps.core.interfaces.utils.TimeChangeType;
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
+import app.aaps.core.utils.DateTimeUtil;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -71,46 +110,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.service.Ri
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.OmnipodErosOverviewFragment;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.core.utils.DateTimeUtil;
-import info.nightscout.core.utils.fabric.FabricPrivacy;
-import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.plugin.OwnDatabasePlugin;
-import info.nightscout.interfaces.plugin.PluginDescription;
-import info.nightscout.interfaces.plugin.PluginType;
-import info.nightscout.interfaces.profile.Profile;
-import info.nightscout.interfaces.profile.ProfileFunction;
-import info.nightscout.interfaces.pump.DetailedBolusInfo;
-import info.nightscout.interfaces.pump.OmnipodEros;
-import info.nightscout.interfaces.pump.Pump;
-import info.nightscout.interfaces.pump.PumpEnactResult;
-import info.nightscout.interfaces.pump.PumpPluginBase;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.actions.CustomActionType;
-import info.nightscout.interfaces.pump.defs.ManufacturerType;
-import info.nightscout.interfaces.pump.defs.PumpDescription;
-import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.interfaces.queue.Callback;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.queue.CustomCommand;
-import info.nightscout.interfaces.ui.UiInteraction;
-import info.nightscout.interfaces.utils.DecimalFormatter;
-import info.nightscout.interfaces.utils.Round;
-import info.nightscout.interfaces.utils.TimeChangeType;
 import info.nightscout.pump.common.defs.TempBasalPair;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.EventAppExit;
-import info.nightscout.rx.events.EventAppInitialized;
-import info.nightscout.rx.events.EventDismissNotification;
-import info.nightscout.rx.events.EventPreferenceChange;
-import info.nightscout.rx.events.EventRefreshOverview;
-import info.nightscout.rx.events.EventSWRLStatus;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
-import info.nightscout.shared.utils.DateUtil;
-import info.nightscout.shared.utils.T;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -192,7 +192,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         super(new PluginDescription() //
                         .mainType(PluginType.PUMP) //
                         .fragmentClass(OmnipodErosOverviewFragment.class.getName()) //
-                        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_pod_128)
+                        .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
                         .pluginName(R.string.omnipod_eros_name) //
                         .shortName(R.string.omnipod_eros_name_short) //
                         .preferencesId(R.xml.omnipod_eros_preferences) //
@@ -417,7 +417,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             } else {
                 // Not sure what's going on. Notify the user
                 aapsLogger.error(LTag.PUMP, "Unknown TBR in both Pod state and AAPS");
-                uiInteraction.addNotificationWithSound(Notification.OMNIPOD_UNKNOWN_TBR, rh.gs(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), Notification.NORMAL, info.nightscout.core.ui.R.raw.boluserror);
+                uiInteraction.addNotificationWithSound(Notification.OMNIPOD_UNKNOWN_TBR, rh.gs(R.string.omnipod_eros_error_tbr_running_but_aaps_not_aware), Notification.NORMAL, app.aaps.core.ui.R.raw.boluserror);
             }
         } else if (!podStateManager.isTempBasalRunning() && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded");
@@ -665,7 +665,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             // neither carbs nor bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
             return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d)
-                    .comment(info.nightscout.core.ui.R.string.invalid_input);
+                    .comment(app.aaps.core.ui.R.string.invalid_input);
         } else if (detailedBolusInfo.insulin > 0) {
             // bolus needed, ask pump to deliver it
             return deliverBolus(detailedBolusInfo);

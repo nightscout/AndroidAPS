@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
+import app.aaps.core.utils.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
-import info.nightscout.core.utils.toHex
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.Random

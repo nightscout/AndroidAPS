@@ -1,9 +1,9 @@
 package info.nightscout.pump.danars.comm
 
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.anyDouble

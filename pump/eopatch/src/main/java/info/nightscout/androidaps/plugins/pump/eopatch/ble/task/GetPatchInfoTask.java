@@ -5,6 +5,7 @@ import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetLOT;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetModelName;
@@ -19,7 +20,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.response.ModelNameRe
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PumpDurationResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.SerialNumberResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.WakeUpTimeResponse;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -50,13 +50,13 @@ public class GetPatchInfoTask extends TaskBase {
 
     public Single<Boolean> get() {
         Single<Boolean> tasks = Single.concat(Arrays.asList(
-                SET_GLOBAL_TIME.set(),
-                SERIAL_NUMBER_GET.get().doOnSuccess(this::onSerialNumberResponse),
-                LOT_NUMBER_GET.get().doOnSuccess(this::onLotNumberResponse),
-                FIRMWARE_VERSION_GET.get().doOnSuccess(this::onFirmwareResponse),
-                WAKE_UP_TIME_GET.get().doOnSuccess(this::onWakeupTimeResponse),
-                PUMP_DURATION_GET.get().doOnSuccess(this::onPumpDurationResponse),
-                GET_MODEL_NAME.get().doOnSuccess(this::onModelNameResponse)))
+                        SET_GLOBAL_TIME.set(),
+                        SERIAL_NUMBER_GET.get().doOnSuccess(this::onSerialNumberResponse),
+                        LOT_NUMBER_GET.get().doOnSuccess(this::onLotNumberResponse),
+                        FIRMWARE_VERSION_GET.get().doOnSuccess(this::onFirmwareResponse),
+                        WAKE_UP_TIME_GET.get().doOnSuccess(this::onWakeupTimeResponse),
+                        PUMP_DURATION_GET.get().doOnSuccess(this::onPumpDurationResponse),
+                        GET_MODEL_NAME.get().doOnSuccess(this::onModelNameResponse)))
                 .map(BaseResponse::isSuccess)
                 .filter(v -> !v)
                 .first(true);
@@ -98,7 +98,7 @@ public class GetPatchInfoTask extends TaskBase {
 
     private void onPatchWakeupSuccess(Boolean result) {
         synchronized (lock) {
-        	pm.flushPatchConfig();
+            pm.flushPatchConfig();
         }
     }
 

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="4dp"
     android:orientation="vertical"
-    tools:context="info.nightscout.configuration.maintenance.activities.PrefImportListActivity">
+    tools:context=".maintenance.activities.PrefImportListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"

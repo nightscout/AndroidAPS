@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="2dp"
-    tools:context="info.nightscout.plugins.general.wear.WearFragment">
+    tools:context=".general.wear.WearFragment">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/log"
@@ -110,7 +110,7 @@
                     android:padding="10dip"
                     app:columnCount="2">
 
-                    <info.nightscout.core.ui.elements.SingleClickButton
+                    <app.aaps.core.ui.elements.SingleClickButton
                         android:id="@+id/load_custom"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -126,7 +126,7 @@
                         app:layout_row="0"
                         app:layout_column="0" />
 
-                    <info.nightscout.core.ui.elements.SingleClickButton
+                    <app.aaps.core.ui.elements.SingleClickButton
                         android:id="@+id/infos_custom"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -142,7 +142,7 @@
                         app:layout_column="1"
                         app:layout_row="0" />
 
-                    <info.nightscout.core.ui.elements.SingleClickButton
+                    <app.aaps.core.ui.elements.SingleClickButton
                         android:id="@+id/export_custom"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -159,7 +159,7 @@
                         app:layout_row="1"
                         app:layout_column="0" />
 
-                    <info.nightscout.core.ui.elements.SingleClickButton
+                    <app.aaps.core.ui.elements.SingleClickButton
                         android:id="@+id/default_custom"
                         style="@style/GrayButton"
                         android:layout_width="0dp"
@@ -192,7 +192,6 @@
                 android:tag="cover_chart"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/watchface_custom"
                 android:visibility="visible"
                 android:orientation="vertical" />
 

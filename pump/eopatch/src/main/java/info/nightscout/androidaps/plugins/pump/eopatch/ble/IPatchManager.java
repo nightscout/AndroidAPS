@@ -1,14 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble;
 
 
-import info.nightscout.interfaces.pump.DetailedBolusInfo;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
-import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.ScanList;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.DeactivationStatus;
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle;
-
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalScheduleSetResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusResponse;
@@ -17,6 +13,9 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.response.ComboBolusS
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TempBasalScheduleSetResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TemperatureResponse;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.PatchSelfTestResult;
+import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.ScanList;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;

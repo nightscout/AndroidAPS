@@ -6,7 +6,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class ErrorResponse extends MessageBlock {
     public static final byte ERROR_RESPONSE_CODE_BAD_NONCE = (byte) 0x14;
@@ -24,12 +24,12 @@ public class ErrorResponse extends MessageBlock {
         if (encodedData.length < MESSAGE_LENGTH) {
             throw new IllegalArgumentException("Not enough data");
         }
-        this.encodedData = ByteUtil.substring(encodedData, 2, MESSAGE_LENGTH - 2);
+        this.encodedData = ByteUtil.INSTANCE.substring(encodedData, 2, MESSAGE_LENGTH - 2);
 
         errorResponseCode = encodedData[2];
 
         if (errorResponseCode == ERROR_RESPONSE_CODE_BAD_NONCE) {
-            nonceSearchKey = ByteUtil.makeUnsignedShort(encodedData[3], encodedData[4]);
+            nonceSearchKey = ByteUtil.INSTANCE.makeUnsignedShort(encodedData[3], encodedData[4]);
 
             faultEventCode = null;
             podProgressStatus = null;

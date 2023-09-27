@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseResponseException
@@ -13,9 +16,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
-import info.nightscout.core.utils.toHex
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 
 sealed class CommandSendResult
 object CommandSendSuccess : CommandSendResult()
@@ -46,7 +46,7 @@ class Session(
             aapsLogger.debug(LTag.PUMPBTCOMM, "Sending command(wrapped): ${msg.payload.toHex()}")
 
             when (val sendResult = msgIO.sendMessage(msg)) {
-                is MessageSendSuccess ->
+                is MessageSendSuccess         ->
                     return CommandSendSuccess
 
                 is MessageSendErrorConfirming -> {
@@ -54,7 +54,7 @@ class Session(
                     return CommandSendErrorConfirming(sendResult.msg)
                 }
 
-                is MessageSendErrorSending ->
+                is MessageSendErrorSending    ->
                     aapsLogger.debug(LTag.PUMPBTCOMM, "Error sending command: $sendResult")
             }
         }

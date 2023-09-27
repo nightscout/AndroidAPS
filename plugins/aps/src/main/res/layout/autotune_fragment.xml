@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.plugins.general.autotune.AutotuneFragment">
+    tools:context=".autotune.AutotuneFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                         android:layout_weight="1"
                         android:orientation="horizontal">
 
-                        <info.nightscout.core.ui.elements.NumberPicker
+                        <app.aaps.core.ui.elements.NumberPicker
                             android:id="@+id/tune_days"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

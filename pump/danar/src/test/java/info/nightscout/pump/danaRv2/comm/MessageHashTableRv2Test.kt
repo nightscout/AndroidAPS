@@ -1,9 +1,9 @@
 package info.nightscout.pump.danaRv2.comm
 
+import app.aaps.core.main.constraints.ConstraintObject
 import info.nightscout.androidaps.danaRv2.comm.MessageHashTableRv2
 import info.nightscout.androidaps.danaRv2.comm.MsgStatusAPS_v2
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.core.constraints.ConstraintObject
 import info.nightscout.pump.danaR.comm.DanaRTestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

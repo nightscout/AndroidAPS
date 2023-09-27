@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.danaRv2.comm
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.rx.events.EventRebuildTabs
-import info.nightscout.rx.logging.LTag
 
 class MsgCheckValue_v2(
     injector: HasAndroidInjector
@@ -36,7 +36,7 @@ class MsgCheckValue_v2(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_driver_change), null) // force new connection
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
             return
         }
         if (danaPump.protocol != 2) {
@@ -52,7 +52,7 @@ class MsgCheckValue_v2(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_driver_change), null) // force new connection
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
             return
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaPump.hwModel))

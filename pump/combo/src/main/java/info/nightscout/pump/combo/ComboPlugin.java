@@ -19,25 +19,36 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.constraints.Constraint;
+import app.aaps.core.interfaces.constraints.PluginConstraints;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.plugin.PluginDescription;
+import app.aaps.core.interfaces.plugin.PluginType;
+import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.core.interfaces.profile.ProfileFunction;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
+import app.aaps.core.interfaces.pump.Pump;
+import app.aaps.core.interfaces.pump.PumpEnactResult;
+import app.aaps.core.interfaces.pump.PumpPluginBase;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.pump.defs.ManufacturerType;
+import app.aaps.core.interfaces.pump.defs.PumpDescription;
+import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventDismissNotification;
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged;
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
+import app.aaps.core.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.utils.T;
+import app.aaps.core.utils.fabric.InstanceId;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.core.utils.fabric.InstanceId;
-import info.nightscout.interfaces.constraints.Constraint;
-import info.nightscout.interfaces.constraints.PluginConstraints;
-import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.plugin.PluginDescription;
-import info.nightscout.interfaces.plugin.PluginType;
-import info.nightscout.interfaces.profile.Profile;
-import info.nightscout.interfaces.profile.ProfileFunction;
-import info.nightscout.interfaces.pump.DetailedBolusInfo;
-import info.nightscout.interfaces.pump.Pump;
-import info.nightscout.interfaces.pump.PumpEnactResult;
-import info.nightscout.interfaces.pump.PumpPluginBase;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.defs.ManufacturerType;
-import info.nightscout.interfaces.pump.defs.PumpDescription;
-import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.pump.combo.events.EventComboPumpUpdateGUI;
 import info.nightscout.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.pump.combo.ruffyscripter.BolusProgressReporter;
@@ -51,17 +62,6 @@ import info.nightscout.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpHistory;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.pump.combo.ruffyscripter.history.Tdd;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.EventDismissNotification;
-import info.nightscout.rx.events.EventInitializationChanged;
-import info.nightscout.rx.events.EventOverviewBolusProgress;
-import info.nightscout.rx.events.EventRefreshOverview;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
-import info.nightscout.shared.utils.DateUtil;
-import info.nightscout.shared.utils.T;
 
 /**
  * Driver for the Roche Accu-Chek Combo pump, using the ruffy app for BT communication.
@@ -106,10 +106,10 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
                 event.setStatus(getRh().gs(R.string.combo_programming_bolus));
                 break;
             case DELIVERING:
-                event.setStatus(getRh().gs(info.nightscout.core.ui.R.string.bolus_delivering, delivered));
+                event.setStatus(getRh().gs(app.aaps.core.ui.R.string.bolus_delivering, delivered));
                 break;
             case DELIVERED:
-                event.setStatus(getRh().gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, delivered));
+                event.setStatus(getRh().gs(app.aaps.core.ui.R.string.bolus_delivered_successfully, delivered));
                 break;
             case STOPPING:
                 event.setStatus(getRh().gs(R.string.bolusstopping));
@@ -175,7 +175,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
                         .fragmentClass(ComboFragment.class.getName())
-                        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_combo_128)
+                        .pluginIcon(app.aaps.core.ui.R.drawable.ic_combo_128)
                         .pluginName(R.string.combopump)
                         .shortName(R.string.combopump_shortname)
                         .preferencesId(R.xml.pref_combo)
@@ -217,7 +217,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
         } else if (!pump.initialized) {
             return getRh().gs(R.string.combo_pump_state_initializing);
         } else if (!validBasalRateProfileSelectedOnPump) {
-            return getRh().gs(info.nightscout.core.ui.R.string.loop_disabled);
+            return getRh().gs(app.aaps.core.ui.R.string.loop_disabled);
         }
         return getRh().gs(R.string.combo_pump_state_running);
     }
@@ -281,8 +281,8 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
             // note that this should not happen anymore since the queue is present, which
             // issues a READSTATE when starting to issue commands which initializes the pump
             getAapsLogger().error("setNewBasalProfile not initialized");
-            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT);
-            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set);
+            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT);
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set);
         }
 
         BasalProfile requestedBasalProfile = convertProfileToComboProfile(profile);
@@ -301,8 +301,8 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
         CommandResult setResult = runCommand(getRh().gs(R.string.combo_activity_setting_basal_profile), 2,
                 () -> ruffyScripter.setBasalProfile(requestedBasalProfile));
         if (!setResult.success) {
-            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT);
-            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(info.nightscout.core.ui.R.string.failed_update_basal_profile);
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT);
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(app.aaps.core.ui.R.string.failed_update_basal_profile);
         }
 
         pump.basalProfile = requestedBasalProfile;
@@ -312,7 +312,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
         rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
         //issue success notification
         uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK,
-                getRh().gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60);
+                getRh().gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60);
         return new PumpEnactResult(getInjector()).success(true).enacted(true);
     }
 
@@ -404,7 +404,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
         if (stateResult.state.unsafeUsageDetected == PumpState.UNSUPPORTED_BASAL_RATE_PROFILE) {
             uiInteraction.addNotificationWithSound(Notification.COMBO_PUMP_ALARM,
                     getRh().gs(R.string.combo_force_disabled_notification),
-                    Notification.URGENT, info.nightscout.core.ui.R.raw.alarm);
+                    Notification.URGENT, app.aaps.core.ui.R.raw.alarm);
             return;
         }
 
@@ -818,7 +818,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
                 );
                 return new PumpEnactResult(getInjector()).isTempCancel(true).success(true).enacted(true);
             } else {
-                return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(info.nightscout.core.ui.R.string.canceling_eb_failed);
+                return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(app.aaps.core.ui.R.string.canceling_eb_failed);
             }
         } else if (activeTemp == null) {
             return new PumpEnactResult(getInjector()).success(true).enacted(false);
@@ -891,7 +891,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
                     setValidBasalRateProfileSelectedOnPump(false);
                     uiInteraction.addNotificationWithSound(Notification.COMBO_PUMP_ALARM,
                             getRh().gs(R.string.combo_force_disabled_notification),
-                            Notification.URGENT, info.nightscout.core.ui.R.raw.alarm);
+                            Notification.URGENT, app.aaps.core.ui.R.raw.alarm);
                     commandQueue.cancelTempBasal(true, null);
                 }
                 updateLocalData(commandResult);
@@ -1062,7 +1062,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
             if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis() && violationWarningRaisedForBolusAt != lowSuspendOnlyLoopEnforcedUntil) {
                 uiInteraction.addNotificationWithSound(Notification.COMBO_PUMP_ALARM,
                         getRh().gs(R.string.combo_low_suspend_forced_notification),
-                        Notification.URGENT, info.nightscout.core.ui.R.raw.alarm);
+                        Notification.URGENT, app.aaps.core.ui.R.raw.alarm);
                 violationWarningRaisedForBolusAt = lowSuspendOnlyLoopEnforcedUntil;
                 commandQueue.cancelTempBasal(true, null);
             }
@@ -1130,7 +1130,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
      * Reads the pump's history and updates the DB accordingly.
      */
     private boolean readHistory(@Nullable PumpHistoryRequest request) {
-        CommandResult historyResult = runCommand(getRh().gs(info.nightscout.core.ui.R.string.reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
+        CommandResult historyResult = runCommand(getRh().gs(app.aaps.core.ui.R.string.reading_pump_history), 3, () -> ruffyScripter.readHistory(request));
         PumpHistory history = historyResult.history;
         if (!historyResult.success || history == null) {
             return false;
@@ -1216,7 +1216,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
 
         // fetch new records
         long lastKnownPumpRecordTimestamp = recentBoluses.isEmpty() ? 0 : recentBoluses.get(0).timestamp;
-        CommandResult historyResult = runCommand(getRh().gs(info.nightscout.core.ui.R.string.reading_pump_history), 3, () ->
+        CommandResult historyResult = runCommand(getRh().gs(app.aaps.core.ui.R.string.reading_pump_history), 3, () ->
                 ruffyScripter.readHistory(new PumpHistoryRequest().bolusHistory(lastKnownPumpRecordTimestamp)));
         if (!historyResult.success) {
             pumpHistoryChanged = true;
@@ -1380,14 +1380,14 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
     @NonNull @Override
     public Constraint<Boolean> isLoopInvocationAllowed(@NonNull Constraint<Boolean> value) {
         if (!validBasalRateProfileSelectedOnPump)
-            value.set(false, getRh().gs(info.nightscout.core.ui.R.string.no_valid_basal_rate), this);
+            value.set(false, getRh().gs(app.aaps.core.ui.R.string.no_valid_basal_rate), this);
         return value;
     }
 
     @NonNull @Override
     public Constraint<Double> applyMaxIOBConstraints(@NonNull Constraint<Double> maxIob) {
         if (lowSuspendOnlyLoopEnforcedUntil > System.currentTimeMillis())
-            maxIob.setIfSmaller(0d, getRh().gs(info.nightscout.core.ui.R.string.limiting_iob, 0d, getRh().gs(R.string.unsafeusage)), this);
+            maxIob.setIfSmaller(0d, getRh().gs(app.aaps.core.ui.R.string.limiting_iob, 0d, getRh().gs(R.string.unsafeusage)), this);
         return maxIob;
     }
 

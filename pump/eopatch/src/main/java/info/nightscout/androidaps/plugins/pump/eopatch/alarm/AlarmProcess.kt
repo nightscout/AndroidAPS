@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import app.aaps.core.interfaces.rx.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A002
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A003
@@ -45,14 +46,15 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity.Compan
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity.Companion.createIntentForCheckConnection
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity.Companion.createIntentForDiscarded
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.CommonDialog
-import info.nightscout.rx.bus.RxBus
 import io.reactivex.rxjava3.core.Single
 import java.util.concurrent.Callable
 
 interface IAlarmProcess {
+
     fun doAction(context: Context, code: AlarmCode): Single<Int>
 
     companion object {
+
         const val ALARM_UNHANDLED = 0
         const val ALARM_PAUSE = 1
         const val ALARM_HANDLED = 2
@@ -61,6 +63,7 @@ interface IAlarmProcess {
 }
 
 class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmProcess {
+
     override fun doAction(context: Context, code: AlarmCode): Single<Int> {
         return when (code) {
             B001                   -> resumeBasalAction(context)
@@ -68,6 +71,7 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
             A020, A022, A023, A034, A041, A042,
             A043, A044, A106, A107, A108, A116,
             A117, A118             -> patchDeactivationAction(context)
+
             A007                   -> inappropriateTemperatureAction(context)
             A016                   -> needleInsertionErrorAction(context)
             B000                   -> Single.just(IAlarmProcess.ALARM_HANDLED)
@@ -83,13 +87,13 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
 
     private fun showCommunicationFailedDialog(onConfirmed: Runnable) {
         val dialog = CommonDialog().apply {
-           title = R.string.patch_communication_failed
-           message = R.string.patch_communication_check_helper_1
-           positiveBtn = R.string.string_communication_check
-           positiveListener = DialogInterface.OnClickListener { _, _ ->
-               onConfirmed.run()
-               dismiss()
-           }
+            title = R.string.patch_communication_failed
+            message = R.string.patch_communication_check_helper_1
+            positiveBtn = R.string.string_communication_check
+            positiveListener = DialogInterface.OnClickListener { _, _ ->
+                onConfirmed.run()
+                dismiss()
+            }
         }
 
         rxBus.send(EventDialog(dialog, true))
@@ -105,8 +109,10 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
         } else {
             Single.fromCallable {
                 showCommunicationFailedDialog {
-                    startActivityWithSingleTop(context,
-                        createIntentForCheckConnection(context, goHomeAfterDiscard = true, forceDiscard = true, isAlarmHandling = true))
+                    startActivityWithSingleTop(
+                        context,
+                        createIntentForCheckConnection(context, goHomeAfterDiscard = true, forceDiscard = true, isAlarmHandling = true)
+                    )
                 }
                 IAlarmProcess.ALARM_PAUSE
             }

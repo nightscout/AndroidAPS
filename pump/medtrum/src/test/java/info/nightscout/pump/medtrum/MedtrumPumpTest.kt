@@ -1,14 +1,14 @@
 package info.nightscout.pump.medtrum
 
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.rx.events.EventOverviewBolusProgress
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -118,7 +118,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val bolusCompleted = false
         val amount = 1.4
 
-        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0);
+        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
 
         // Call
         medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, amount)
@@ -337,7 +337,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedAndThenExpectNewData() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedThenExpectNewData() {
         // Inputs
         val basalType = BasalType.SUSPEND_MORE_THAN_MAX_PER_DAY
         val basalRate = 0.0
@@ -422,6 +422,57 @@ class MedtrumPumpTest : MedtrumTestBase() {
             anyOrNull(),
             anyOrNull(),
             anyOrNull()
+        )
+
+        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
+        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
+        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
+        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
+        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
+        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+    }
+
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedAndNewerFakeTBRThenExpectInvalidateAndNewData() {
+        // Inputs
+        val basalType = BasalType.SUSPEND_MORE_THAN_MAX_PER_DAY
+        val basalRate = 0.0
+        val basalSequence = 123
+        val basalPatchId = 1L
+        val basalStartTime = 1000L
+        val receivedTime = 1500L
+
+        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+
+        // Mocks
+        val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
+        Mockito.`when`(expectedTemporaryBasal.pumpId).thenReturn(basalStartTime + T.mins(10).msecs()) // Ensure it's different
+        Mockito.`when`(expectedTemporaryBasal.timestamp).thenReturn(basalStartTime + T.mins(10).msecs())  // Newer Fake TBR
+        Mockito.`when`(expectedTemporaryBasal.duration).thenReturn(T.mins(4800L).msecs()) // Fake TBR duration
+
+        Mockito.`when`(pumpSync.expectedPumpState()).thenReturn(
+            PumpSync.PumpState(
+                temporaryBasal = expectedTemporaryBasal,
+                extendedBolus = null,
+                bolus = null,
+                profile = null,
+                serialNumber = "someSerialNumber"
+            )
+        )
+        Mockito.`when`(temporaryBasalStorage.findTemporaryBasal(basalStartTime, basalRate)).thenReturn(null)
+
+        // Call
+        medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime, receivedTime)
+
+        // Expected values
+        Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
+            timestamp = basalStartTime,
+            rate = basalRate,
+            duration = T.mins(4800L).msecs(),
+            isAbsolute = true,
+            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+            pumpId = basalStartTime,
+            pumpType = PumpType.MEDTRUM_300U,
+            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
         Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
@@ -597,7 +648,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         Assertions.assertEquals(sequence, medtrumPump.currentSequenceNumber)
     }
 
-    @Test fun setFakeTBRIfNeededWhenNoFakeTBRAlreadyRunningExpectPumpSync() {
+    @Test fun setFakeTBRIfNotSetWhenNoFakeTBRAlreadyRunningExpectPumpSync() {
         // Inputs
         medtrumPump.deviceType = MedtrumSnUtil.MD_8301
 
@@ -616,7 +667,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
 
         // Call
-        medtrumPump.setFakeTBRIfNeeded()
+        medtrumPump.setFakeTBRIfNotSet()
 
         // Expected values
         Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
@@ -631,7 +682,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
     }
 
-    @Test fun setFakeTBRIfNeededWhenFakeTBRAlreadyRunningExpectNoPumpSync() {
+    @Test fun setFakeTBRIfNotSetWhenFakeTBRAlreadyRunningExpectNoPumpSync() {
         // Inputs
         medtrumPump.deviceType = MedtrumSnUtil.MD_8301
 
@@ -650,7 +701,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
 
         // Call
-        medtrumPump.setFakeTBRIfNeeded()
+        medtrumPump.setFakeTBRIfNotSet()
 
         // Expected values
         Mockito.verify(pumpSync, Mockito.never()).syncTemporaryBasalWithPumpId(

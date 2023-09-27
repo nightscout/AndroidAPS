@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.danar.comm
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
-import info.nightscout.rx.logging.LTag
-
 
 class MsgSetUserOptions(
     injector: HasAndroidInjector
@@ -14,7 +13,7 @@ class MsgSetUserOptions(
             // No options set -> Exiting
             aapsLogger.debug(LTag.PUMPCOMM, "NO USER OPTIONS LOADED EXITING!")
         } else {
-            danaPump.userOptionsFromPump!![0] = if( danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
+            danaPump.userOptionsFromPump!![0] = if (danaPump.timeDisplayType24) 0.toByte() else 1.toByte()
             danaPump.userOptionsFromPump!![1] = if (danaPump.buttonScrollOnOff) 1.toByte() else 0.toByte()
             danaPump.userOptionsFromPump!![2] = danaPump.beepAndAlarm.toByte()
             danaPump.userOptionsFromPump!![3] = danaPump.lcdOnTimeSec.toByte()

@@ -1,18 +1,19 @@
 package info.nightscout.pump.combov2
 
 import android.util.Log
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.comboctl.base.LogLevel
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import info.nightscout.comboctl.base.LoggerBackend as ComboCtlLoggerBackend
 
 internal class AAPSComboCtlLogger(private val aapsLogger: AAPSLogger) : ComboCtlLoggerBackend {
+
     override fun log(tag: String, level: LogLevel, throwable: Throwable?, message: String?) {
-        val ltag = with (tag) {
+        val ltag = with(tag) {
             when {
                 startsWith("Bluetooth") || startsWith("AndroidBluetooth") -> LTag.PUMPBTCOMM
-                endsWith("IO") -> LTag.PUMPCOMM
-                else -> LTag.PUMP
+                endsWith("IO")                                            -> LTag.PUMPCOMM
+                else                                                      -> LTag.PUMP
             }
         }
 

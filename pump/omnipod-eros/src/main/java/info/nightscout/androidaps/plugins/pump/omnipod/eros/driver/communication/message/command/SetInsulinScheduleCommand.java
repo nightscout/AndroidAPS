@@ -11,7 +11,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.sc
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BolusDeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.DeliverySchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.TempBasalDeliverySchedule;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {
 
@@ -65,10 +65,10 @@ public class SetInsulinScheduleCommand extends NonceResyncableMessageBlock {
     }
 
     private void encode() {
-        encodedData = ByteUtil.getBytesFromInt(nonce);
-        encodedData = ByteUtil.concat(encodedData, schedule.getType().getValue());
-        encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt16(schedule.getChecksum()));
-        encodedData = ByteUtil.concat(encodedData, schedule.getRawData());
+        encodedData = ByteUtil.INSTANCE.getBytesFromInt(nonce);
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, schedule.getType().getValue());
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt16(schedule.getChecksum()));
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, schedule.getRawData());
     }
 
     @Override

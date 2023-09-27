@@ -11,8 +11,8 @@ apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 android {
+    namespace 'app.aaps.database.impl'
 
-    namespace 'info.nightscout.database.impl'
     defaultConfig {
         kapt {
             arguments {
@@ -50,9 +50,4 @@ dependencies {
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
     androidTestImplementation "androidx.room:room-testing:$room_version"
-}
-
-allOpen {
-    // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.database.annotations.DbOpenForTesting'
 }

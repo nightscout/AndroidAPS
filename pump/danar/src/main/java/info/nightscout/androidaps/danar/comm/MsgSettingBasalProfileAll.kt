@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.danar.comm
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
-import info.nightscout.rx.logging.LTag
 import java.util.Locale
 
 /**
@@ -49,8 +49,9 @@ class MsgSettingBasalProfileAll(
                 for (index in 0..23) { //this is absurd  danaRPump.pumpProfiles[profile][index] returns nullPointerException
                     aapsLogger.debug(
                         LTag.PUMPCOMM, "Basal profile " + profile + ": " + String.format(Locale.ENGLISH, "%02d", index / 2) +
-                        ":" + String.format(Locale.ENGLISH, "%02d", index % 2 * 30) + " : " +
-                        danaPump.pumpProfiles!![profile][index])
+                            ":" + String.format(Locale.ENGLISH, "%02d", index % 2 * 30) + " : " +
+                            danaPump.pumpProfiles!![profile][index]
+                    )
                 }
             }
         }

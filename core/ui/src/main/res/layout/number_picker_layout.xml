@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="130dp"
     android:layout_height="40dp"
-    tools:context="info.nightscout.core.ui.elements.NumberPicker">
+    tools:context="app.aaps.core.ui.elements.NumberPicker">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/textInputLayout"

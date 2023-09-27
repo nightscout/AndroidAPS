@@ -5,10 +5,10 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.SetLowReservoirLevelAndExpireAlert;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -42,8 +42,8 @@ public class SetLowReservoirTask extends TaskBase {
 
         if (ready) {
             disposable = set(alertSetting, alertTime)
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe();
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe();
         }
     }
 

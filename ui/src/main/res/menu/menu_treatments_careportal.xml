@@ -20,11 +20,6 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/nav_refresh_ns"
-        android:title="@string/refresh_from_nightscout"
-        app:showAsAction="never" />
-
-    <item
         android:id="@+id/nav_remove_started_events"
         android:title="@string/careportal_remove_started_events"
         app:showAsAction="never" />

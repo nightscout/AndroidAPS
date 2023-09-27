@@ -1,6 +1,37 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.actions.CustomAction
+import app.aaps.core.interfaces.pump.actions.CustomActionType
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppInitialized
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.TimeChangeType
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
@@ -9,37 +40,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpPluginBase
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.actions.CustomAction
-import info.nightscout.interfaces.pump.actions.CustomActionType
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.Round
-import info.nightscout.interfaces.utils.TimeChangeType
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventAppInitialized
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.events.EventPreferenceChange
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -72,7 +72,7 @@ class EopatchPumpPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(EopatchOverviewFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_eopatch2_128)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_eopatch2_128)
         .pluginName(R.string.eopatch)
         .shortName(R.string.eopatch_shortname)
         .preferencesId(R.xml.pref_eopatch)
@@ -183,12 +183,12 @@ class EopatchPumpPlugin @Inject constructor(
         if (patchManager.isActivated) {
             if (patchManager.patchState.isTempBasalActive) {
                 val cancelResult = cancelTempBasal(true)
-                if (!cancelResult.success) return PumpEnactResult(injector).isTempCancel(true).comment(info.nightscout.core.ui.R.string.canceling_tbr_failed)
+                if (!cancelResult.success) return PumpEnactResult(injector).isTempCancel(true).comment(app.aaps.core.ui.R.string.canceling_tbr_failed)
             }
 
             if (patchManager.patchState.isExtBolusActive) {
                 val cancelResult = cancelExtendedBolus()
-                if (!cancelResult.success) return PumpEnactResult(injector).comment(info.nightscout.core.ui.R.string.canceling_eb_failed)
+                if (!cancelResult.success) return PumpEnactResult(injector).comment(app.aaps.core.ui.R.string.canceling_eb_failed)
             }
             var isSuccess: Boolean? = null
             val result: BehaviorSubject<Boolean> = BehaviorSubject.create()
@@ -215,7 +215,7 @@ class EopatchPumpPlugin @Inject constructor(
             disposable.dispose()
             aapsLogger.info(LTag.PUMP, "Basal Profile was set: ${isSuccess ?: false}")
             return if (isSuccess == true) {
-                uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+                uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
                 PumpEnactResult(injector).success(true).enacted(true)
             } else {
                 PumpEnactResult(injector)
@@ -223,7 +223,7 @@ class EopatchPumpPlugin @Inject constructor(
         } else {
             preferenceManager.getNormalBasalManager().setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
             return PumpEnactResult(injector).success(true).enacted(true)
         }
     }
@@ -299,7 +299,7 @@ class EopatchPumpPlugin @Inject constructor(
                 if (patchManager.patchConnectionState.isConnected) {
                     val delivering = patchManager.bolusCurrent.nowBolus.injected
                     rxBus.send(EventOverviewBolusProgress.apply {
-                        status = rh.gs(info.nightscout.core.ui.R.string.bolus_delivering, delivering)
+                        status = rh.gs(app.aaps.core.ui.R.string.bolus_delivering, delivering)
                         percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
                         t = tr
                     })
@@ -307,7 +307,7 @@ class EopatchPumpPlugin @Inject constructor(
             } while (!patchManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
 
             rxBus.send(EventOverviewBolusProgress.apply {
-                status = rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin)
+                status = rh.gs(app.aaps.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin)
                 percent = 100
             })
 
@@ -323,7 +323,7 @@ class EopatchPumpPlugin @Inject constructor(
 
         } else {
             // no bolus required
-            return PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).comment(rh.gs(info.nightscout.core.ui.R.string.error))
+            return PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).comment(rh.gs(app.aaps.core.ui.R.string.error))
         }
     }
 
@@ -333,7 +333,7 @@ class EopatchPumpPlugin @Inject constructor(
                              .observeOn(aapsSchedulers.main)
                              .subscribe { it ->
                                  rxBus.send(EventOverviewBolusProgress.apply {
-                                     status = rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, (it.injectedBolusAmount * 0.05f))
+                                     status = rh.gs(app.aaps.core.ui.R.string.bolus_delivered_successfully, (it.injectedBolusAmount * 0.05f))
                                  })
                              }
         )
@@ -424,7 +424,7 @@ class EopatchPumpPlugin @Inject constructor(
             .map { PumpEnactResult(injector).success(true).enacted(true) }
             .onErrorReturnItem(
                 PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0)
-                    .comment(rh.gs(info.nightscout.core.ui.R.string.error))
+                    .comment(rh.gs(app.aaps.core.ui.R.string.error))
             )
             .blockingGet()
     }
@@ -461,7 +461,7 @@ class EopatchPumpPlugin @Inject constructor(
             .map { PumpEnactResult(injector).success(true).enacted(true).isTempCancel(true) }
             .onErrorReturnItem(
                 PumpEnactResult(injector).success(false).enacted(false)
-                    .comment(rh.gs(info.nightscout.core.ui.R.string.error))
+                    .comment(rh.gs(app.aaps.core.ui.R.string.error))
             )
             .blockingGet()
     }
@@ -482,7 +482,7 @@ class EopatchPumpPlugin @Inject constructor(
                 .map { PumpEnactResult(injector).success(true).enacted(true).isTempCancel(true) }
                 .onErrorReturnItem(
                     PumpEnactResult(injector).success(false).enacted(false)
-                        .comment(rh.gs(info.nightscout.core.ui.R.string.canceling_eb_failed))
+                        .comment(rh.gs(app.aaps.core.ui.R.string.canceling_eb_failed))
                 )
                 .blockingGet()
         } else {

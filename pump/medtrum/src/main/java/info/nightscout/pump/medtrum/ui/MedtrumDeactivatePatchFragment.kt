@@ -3,14 +3,14 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.core.ui.dialogs.OKDialog
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumDeactivatePatchBinding
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class MedtrumDeactivatePatchFragment : MedtrumBaseFragment<FragmentMedtrumDeactivatePatchBinding>() {

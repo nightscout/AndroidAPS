@@ -11,7 +11,7 @@ apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 android {
-    namespace 'info.nightscout.implementation'
+    namespace 'app.aaps.implementation'
 }
 
 dependencies {
@@ -23,7 +23,9 @@ dependencies {
     implementation project(':core:ui')
     implementation project(':core:utils')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
+    testImplementation project(':plugins:aps')
+    testImplementation project(':pump:virtual')
 
     // Protection
     api 'androidx.biometric:biometric:1.1.0'

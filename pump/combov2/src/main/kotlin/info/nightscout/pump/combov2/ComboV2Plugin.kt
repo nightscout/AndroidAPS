@@ -8,6 +8,40 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.interfaces.androidPermissions.AndroidPermission
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress.Treatment
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.TimeChangeType
 import dagger.android.HasAndroidInjector
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
@@ -25,43 +59,9 @@ import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.constraints.PluginConstraints
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpPluginBase
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.TimeChangeType
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.combov2.activities.ComboV2PairingActivity
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventInitializationChanged
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.events.EventOverviewBolusProgress.Treatment
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.rx.events.EventRefreshOverview
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -857,14 +857,14 @@ class ComboV2Plugin @Inject constructor(
 
             uiInteraction.addNotification(
                 Notification.PROFILE_NOT_SET_NOT_INITIALIZED,
-                rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set),
+                rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set),
                 Notification.URGENT
             )
 
             return PumpEnactResult(injector).apply {
                 success = false
                 enacted = false
-                comment = rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set)
+                comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
             }
         }
 
@@ -888,7 +888,7 @@ class ComboV2Plugin @Inject constructor(
 
                         uiInteraction.addNotificationValidFor(
                             Notification.PROFILE_SET_OK,
-                            rh.gs(info.nightscout.core.ui.R.string.profile_set_ok),
+                            rh.gs(app.aaps.core.ui.R.string.profile_set_ok),
                             Notification.INFO,
                             60
                         )
@@ -926,14 +926,14 @@ class ComboV2Plugin @Inject constructor(
 
                 uiInteraction.addNotification(
                     Notification.FAILED_UPDATE_PROFILE,
-                    rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile),
+                    rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile),
                     Notification.URGENT
                 )
 
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile)
+                    comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
                 }
             }
         }
@@ -1070,7 +1070,7 @@ class ComboV2Plugin @Inject constructor(
                         is RTCommandProgressStage.DeliveringBolus -> {
                             val bolusingEvent = EventOverviewBolusProgress
                             bolusingEvent.percent = (progressReport.overallProgress * 100.0).toInt()
-                            bolusingEvent.status = rh.gs(info.nightscout.core.ui.R.string.bolus_delivering, detailedBolusInfo.insulin)
+                            bolusingEvent.status = rh.gs(app.aaps.core.ui.R.string.bolus_delivering, detailedBolusInfo.insulin)
                             rxBus.send(bolusingEvent)
                         }
 
@@ -1105,7 +1105,7 @@ class ComboV2Plugin @Inject constructor(
                     acquiredPump.deliverBolus(requestedBolusAmount, bolusReason)
                 }
 
-                reportFinishedBolus(rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
+                reportFinishedBolus(rh.gs(app.aaps.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
             } catch (e: CancellationException) {
                 // Cancellation is not an error, but it also means
                 // that the profile update was not enacted.
@@ -1222,7 +1222,7 @@ class ComboV2Plugin @Inject constructor(
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(info.nightscout.core.ui.R.string.error)
+                    comment = rh.gs(app.aaps.core.ui.R.string.error)
                 }
                 return pumpEnactResult
             }
@@ -1254,7 +1254,7 @@ class ComboV2Plugin @Inject constructor(
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(info.nightscout.core.ui.R.string.error)
+                    comment = rh.gs(app.aaps.core.ui.R.string.error)
                 }
                 return pumpEnactResult
             }
@@ -1683,7 +1683,7 @@ class ComboV2Plugin @Inject constructor(
                         // Notifications on the AAPS overview fragment are not useful here
                         // because the pairing activity obscures that fragment. So, instead,
                         // alert the user by showing the notification via the toaster.
-                        ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_enabled)
+                        ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_enabled)
                         ComboCtlPumpManager.PairingResult.ExceptionDuringPairing(e)
                     }
                 }
@@ -1707,7 +1707,7 @@ class ComboV2Plugin @Inject constructor(
                 // queue will contain a pump_driver_changed readstatus
                 // command already. The queue will see that and ignore
                 // this readStatus() call automatically.
-                commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_paired), null)
+                commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_paired), null)
             } finally {
                 pairingJob = null
                 pairingPINChannel?.close()

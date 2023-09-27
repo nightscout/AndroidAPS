@@ -3,6 +3,17 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventQueueChanged
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
@@ -11,17 +22,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.DashPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivation.DashPodDeactivationWizardActivity
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventQueueChanged
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -154,6 +154,6 @@ class DashPodManagementActivity : TranslatedDaggerAppCompatActivity() {
     }
 
     private fun displayErrorDialog(title: String, message: String, @Suppress("SameParameterValue") withSound: Boolean) {
-        uiInteraction.runAlarm(message, title, if (withSound) info.nightscout.core.ui.R.raw.boluserror else 0)
+        uiInteraction.runAlarm(message, title, if (withSound) app.aaps.core.ui.R.raw.boluserror else 0)
     }
 }

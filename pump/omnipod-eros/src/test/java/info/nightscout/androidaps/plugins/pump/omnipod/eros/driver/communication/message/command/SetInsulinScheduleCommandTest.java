@@ -11,25 +11,25 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BolusDeliverySchedule;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 class SetInsulinScheduleCommandTest {
     @Test
     void testTemporaryBasalScheduleAlternatingSegmentFlag() {
         SetInsulinScheduleCommand setInsulinScheduleCommand = new SetInsulinScheduleCommand(0x9746c65b, //
                 0.05, Duration.standardMinutes(30));
-        Assertions.assertArrayEquals(ByteUtil.fromHexString("1a0e9746c65b01007901384000000000"), //
+        Assertions.assertArrayEquals(ByteUtil.INSTANCE.fromHexString("1a0e9746c65b01007901384000000000"), //
                 setInsulinScheduleCommand.getRawData());
 
         SetInsulinScheduleCommand setInsulinScheduleCommand2 = new SetInsulinScheduleCommand(0x9746c65b, //
                 0.05, Duration.standardHours(8).plus(Duration.standardMinutes(30)));
-        Assertions.assertArrayEquals(ByteUtil.fromHexString("1a109746c65b0100911138400000f8000000"), //
+        Assertions.assertArrayEquals(ByteUtil.INSTANCE.fromHexString("1a109746c65b0100911138400000f8000000"), //
                 setInsulinScheduleCommand2.getRawData());
 
         // Test passed before introducing a maximum temp basal duration of 12 hours
 //        SetInsulinScheduleCommand setInsulinScheduleCommand3 = new SetInsulinScheduleCommand(0x9746c65b, //
 //                0.05, Duration.standardHours(16).plus(Duration.standardMinutes(30)));
-//        assertArrayEquals(ByteUtil.fromHexString("1a129746c65b0100a92138400000f800f8000000"), //
+//        assertArrayEquals(ByteUtil.INSTANCE.fromHexString("1a129746c65b0100a92138400000f800f8000000"), //
 //                setInsulinScheduleCommand3.getRawData());
     }
 
@@ -39,7 +39,7 @@ class SetInsulinScheduleCommandTest {
                 0.2, Duration.standardMinutes(30));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a0eea2d0a3b01007d01384000020002"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/TempBasalTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a0eea2d0a3b01007d01384000020002"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/TempBasalTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -49,7 +49,7 @@ class SetInsulinScheduleCommandTest {
                 0.05, Duration.standardMinutes(150));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a0e4e2c271701007f05384000004800"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/TempBasalTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a0e4e2c271701007f05384000004800"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/TempBasalTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -59,7 +59,7 @@ class SetInsulinScheduleCommandTest {
                 2D, Duration.standardMinutes(90));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a0e87e8d03a0100cb03384000142014"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/TempBasalTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a0e87e8d03a0100cb03384000142014"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/TempBasalTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -69,7 +69,7 @@ class SetInsulinScheduleCommandTest {
                 30D, Duration.standardHours(12));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a10a958c5ad0104f5183840012cf12c712c"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/TempBasalTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a10a958c5ad0104f5183840012cf12c712c"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/TempBasalTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -83,7 +83,7 @@ class SetInsulinScheduleCommandTest {
                 Duration.standardHours(8).plus(Duration.standardMinutes(15)));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a1201020304000064101c200000f800f800f800"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a1201020304000064101c200000f800f800f800"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -111,7 +111,7 @@ class SetInsulinScheduleCommandTest {
                 Duration.standardMinutes((0x03 + 1) * 30).minus(Duration.standardSeconds(0x0ae8 / 8)));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a2af36a23a3000291030ae80000000d280000111809700a180610052806100600072806001128100009e808"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a2af36a23a3000291030ae80000000d280000111809700a180610052806100600072806001128100009e808"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -140,7 +140,7 @@ class SetInsulinScheduleCommandTest {
                 Duration.standardMinutes((0x27 + 1) * 30).minus(Duration.standardSeconds(0x1518 / 8)));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a2a851072aa0001dd2715180003000d280000111809700a180610052806100600072806001118101801e808"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a2a851072aa0001dd2715180003000d280000111809700a180610052806100600072806001118101801e808"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -163,7 +163,7 @@ class SetInsulinScheduleCommandTest {
                 Duration.standardMinutes((0x28 + 1) * 30).minus(Duration.standardSeconds(0x1af0 / 8)));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a1ec2a32da800053a281af00010181b00ca003200650001f8008800f0230023"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a1ec2a32da800053a281af00010181b00ca003200650001f8008800f0230023"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -186,7 +186,7 @@ class SetInsulinScheduleCommandTest {
                 Duration.standardMinutes((0x2c + 1) * 30).minus(Duration.standardSeconds(0x2190 / 8)));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a18851072aa00021b2c21900004f00600071005b8061801e008"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a18851072aa00021b2c21900004f00600071005b8061801e008"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -211,7 +211,7 @@ class SetInsulinScheduleCommandTest {
                 Duration.standardMinutes((0x2a + 1) * 30).minus(Duration.standardSeconds(0x1e50 / 8)));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1a1a851072aa0002422a1e50000650083009f808380850073009700b"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
+                ByteUtil.INSTANCE.fromHexString("1a1a851072aa0002422a1e50000650083009f808380850073009700b"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BasalScheduleTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -221,7 +221,7 @@ class SetInsulinScheduleCommandTest {
         SetInsulinScheduleCommand setInsulinScheduleCommand = new SetInsulinScheduleCommand(0xbed2e16b, bolusDeliverySchedule);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.createByteArrayFromHexString("1a0ebed2e16b02010a0101a000340034"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BolusTests.swift
+                ByteUtil.INSTANCE.createByteArrayFromHexString("1a0ebed2e16b02010a0101a000340034"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BolusTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -231,7 +231,7 @@ class SetInsulinScheduleCommandTest {
         SetInsulinScheduleCommand setInsulinScheduleCommand = new SetInsulinScheduleCommand(0xcf9e81ac, bolusDeliverySchedule);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.createByteArrayFromHexString("1a0ecf9e81ac0200e501029000290029"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BolusTests.swift
+                ByteUtil.INSTANCE.createByteArrayFromHexString("1a0ecf9e81ac0200e501029000290029"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BolusTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 
@@ -241,7 +241,7 @@ class SetInsulinScheduleCommandTest {
         SetInsulinScheduleCommand setInsulinScheduleCommand = new SetInsulinScheduleCommand(0x31204ba7, bolusDeliverySchedule);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.createByteArrayFromHexString("1a0e31204ba702014801257002570257"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BolusTests.swift
+                ByteUtil.INSTANCE.createByteArrayFromHexString("1a0e31204ba702014801257002570257"), // from https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/BolusTests.swift
                 setInsulinScheduleCommand.getRawData());
     }
 }

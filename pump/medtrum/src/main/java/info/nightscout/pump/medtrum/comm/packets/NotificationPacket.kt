@@ -1,5 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.AlarmState
@@ -8,8 +10,6 @@ import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class NotificationPacket(val injector: HasAndroidInjector) {

@@ -91,7 +91,7 @@ class PairingSessionTest {
         override suspend fun send(dataToSend: List<Byte>) {
             try {
                 val sequenceEntry = getNextSequenceEntry(PacketDirection.SEND)
-                System.err.println("Next sequence entry: $sequenceEntry")
+                println("Next sequence entry: $sequenceEntry")
 
                 val expectedPacketData = sequenceEntry.packet.toByteList()
                 assertEquals(expectedPacketData, dataToSend)
@@ -129,7 +129,7 @@ class PairingSessionTest {
         override suspend fun receive(): List<Byte> {
             try {
                 val sequenceEntry = getNextSequenceEntry(PacketDirection.RECEIVE)
-                System.err.println("Next sequence entry: $sequenceEntry")
+                println("Next sequence entry: $sequenceEntry")
 
                 // Signal to the other, suspended coroutine that it can resume now.
                 barrier.trySend(Unit)

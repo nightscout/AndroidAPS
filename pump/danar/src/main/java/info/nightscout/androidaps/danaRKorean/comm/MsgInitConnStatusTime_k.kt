@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.rx.events.EventRebuildTabs
-import info.nightscout.rx.logging.LTag
 
 class MsgInitConnStatusTime_k(
     injector: HasAndroidInjector
@@ -30,7 +30,7 @@ class MsgInitConnStatusTime_k(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingKoreanDanaDriver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_driver_change), null) // force new connection
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.pump_driver_change), null) // force new connection
             return
         }
         val time = dateTimeSecFromBuff(bytes, 0)

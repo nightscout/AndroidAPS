@@ -1,9 +1,8 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 /**
@@ -11,7 +10,7 @@ import javax.inject.Inject
  */
 class InjectionBlockReportPacket(
     injector: HasAndroidInjector
-) : DiaconnG8Packet(injector ) {
+) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
 
@@ -32,7 +31,7 @@ class InjectionBlockReportPacket(
         diaconnG8Pump.injectionBlockGrade = getByteToInt(bufferData)
         diaconnG8Pump.injectionBlockProcess = getByteToInt(bufferData)
         diaconnG8Pump.injectionBlockRemainAmount = getShortToInt(bufferData) / 100.0
-        diaconnG8Pump.injectionBlockType =  getByteToInt(bufferData)
+        diaconnG8Pump.injectionBlockType = getByteToInt(bufferData)
 
         aapsLogger.debug(LTag.PUMPCOMM, "injectionBlockGrade --> ${diaconnG8Pump.injectionBlockGrade} (1:info, 2: warning , 3: major , 4: critical)")
         aapsLogger.debug(LTag.PUMPCOMM, "injectionBlockProcess --> ${diaconnG8Pump.injectionBlockProcess} (1:skip, 2: stop , 3: ignore ) ")

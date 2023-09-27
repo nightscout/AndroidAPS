@@ -1,19 +1,19 @@
 package info.nightscout.pump.dana
 
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileStore
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.objects.Instantiator
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.T
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONArray
@@ -411,16 +411,18 @@ class DanaPump @Inject constructor(
 
     fun modelFriendlyName(): String =
         when (hwModel) {
-            0x01 -> "DanaR Korean"
+            0x01       -> "DanaR Korean"
             0x03       ->
                 when (protocol) {
                     0x00 -> "DanaR old"
                     0x02 -> "DanaR v2"
                     else -> "DanaR" // 0x01 and 0x03 known
                 }
+
             0x05       ->
                 if (protocol < 10) "DanaRS"
                 else "DanaRS v3"
+
             0x06       -> "DanaRS Korean"
             0x07       -> "Dana-i (BLE4.2)"
             0x09, 0x0A -> "Dana-i (BLE5)"
@@ -436,6 +438,7 @@ class DanaPump @Inject constructor(
                     0x02 -> PumpType.DANA_RV2
                     else -> PumpType.DANA_R // 0x01 and 0x03 known
                 }
+
             0x05 -> PumpType.DANA_RS
             0x06 -> PumpType.DANA_RS_KOREAN
             0x07 -> PumpType.DANA_I

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.plugins.profile.ProfileFragment">
+    tools:context=".profile.ProfileFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -181,7 +181,7 @@
                         android:text="@string/dia"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <info.nightscout.core.ui.elements.NumberPicker
+                    <app.aaps.core.ui.elements.NumberPicker
                         android:id="@+id/dia"
                         android:layout_width="130dp"
                         android:layout_height="40dp"
@@ -198,7 +198,7 @@
 
                 </LinearLayout>
 
-                <info.nightscout.core.graph.ActivityGraph
+                <app.aaps.core.main.graph.ActivityGraph
                     android:id="@+id/insulin_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"
@@ -219,7 +219,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <info.nightscout.core.graph.IcProfileGraph
+                <app.aaps.core.main.graph.IcProfileGraph
                     android:id="@+id/ic_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"
@@ -240,7 +240,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <info.nightscout.core.graph.IsfProfileGraph
+                <app.aaps.core.main.graph.IsfProfileGraph
                     android:id="@+id/isf_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"
@@ -261,7 +261,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <info.nightscout.core.graph.BasalProfileGraph
+                <app.aaps.core.main.graph.BasalProfileGraph
                     android:id="@+id/basal_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"
@@ -282,7 +282,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <info.nightscout.core.graph.TargetBgProfileGraph
+                <app.aaps.core.main.graph.TargetBgProfileGraph
                     android:id="@+id/target_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"

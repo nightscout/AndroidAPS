@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalScheduleStart;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TempBasalScheduleSetResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton

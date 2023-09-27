@@ -19,6 +19,8 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.OmnipodMessage;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.StatusUpdatableResponse;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo.PodInfoDetailedStatus;
@@ -34,8 +36,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Om
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util.TimeUtil;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 
 // TODO add nullchecks on some setters
 public abstract class ErosPodStateManager {
@@ -62,6 +62,7 @@ public abstract class ErosPodStateManager {
 
     /**
      * Init Pod state but only if it has valid state.
+     *
      * @param address New Pod address
      */
     public final void initState(int address) {

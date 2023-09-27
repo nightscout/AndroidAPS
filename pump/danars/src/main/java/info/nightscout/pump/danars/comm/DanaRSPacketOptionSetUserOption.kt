@@ -1,9 +1,9 @@
 package info.nightscout.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class DanaRSPacketOptionSetUserOption(
@@ -30,7 +30,8 @@ class DanaRSPacketOptionSetUserOption(
                 + "\nlowReservoir:" + danaPump.lowReservoirRate
                 + "\ncannulaVolume:" + danaPump.cannulaVolume
                 + "\nrefillAmount:" + danaPump.refillAmount
-                + "\ntarget:" + danaPump.target)
+                + "\ntarget:" + danaPump.target
+        )
         val size = if (danaPump.hwModel >= 7) 15 else 13
         val request = ByteArray(size)
         request[0] = if (danaPump.timeDisplayType24) 0.toByte() else 1.toByte()

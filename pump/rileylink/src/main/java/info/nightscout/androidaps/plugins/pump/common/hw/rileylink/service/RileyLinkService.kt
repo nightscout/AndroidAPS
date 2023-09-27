@@ -4,6 +4,12 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
@@ -14,13 +20,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLink
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.pump.core.defs.PumpDeviceState
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.pump.common.defs.PumpDeviceState
 import java.util.Locale
 import javax.inject.Inject
 
@@ -140,7 +140,7 @@ abstract class RileyLinkService : DaggerService() {
     fun doTuneUpDevice() {
         rileyLinkServiceData.setServiceState(RileyLinkServiceState.TuneUpDevice)
         setPumpDeviceState(PumpDeviceState.Sleeping)
-        val lastGoodFrequency =  rileyLinkServiceData.lastGoodFrequency ?: sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0)
+        val lastGoodFrequency = rileyLinkServiceData.lastGoodFrequency ?: sp.getDouble(RileyLinkConst.Prefs.LastGoodDeviceFrequency, 0.0)
         val newFrequency = deviceCommunicationManager.tuneForDevice()
         if (newFrequency != 0.0 && newFrequency != lastGoodFrequency) {
             aapsLogger.info(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Saving new pump frequency of %.3f MHz", newFrequency))

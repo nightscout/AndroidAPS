@@ -11,49 +11,49 @@ import android.text.format.DateFormat
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.Medtrum
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.actions.CustomAction
+import app.aaps.core.interfaces.pump.actions.CustomActionType
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppExit
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.TimeChangeType
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.validators.ValidatingEditTextPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.validators.ValidatingEditTextPreference
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.Medtrum
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpPluginBase
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.TemporaryBasalStorage
-import info.nightscout.interfaces.pump.actions.CustomAction
-import info.nightscout.interfaces.pump.actions.CustomActionType
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventAppExit
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONException
@@ -82,7 +82,7 @@ import kotlin.math.abs
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(MedtrumOverviewFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_medtrum_128)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_medtrum_128)
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(R.xml.pref_medtrum_pump)
@@ -275,7 +275,7 @@ import kotlin.math.abs
             if (medtrumService != null) {
                 aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
                 val success = medtrumService?.connect(reason) ?: false
-                if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)
+                if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported_or_not_paired)
             }
         }
     }
@@ -310,10 +310,10 @@ import kotlin.math.abs
 
         return if (medtrumService?.updateBasalsInPump(profile) == true) {
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
             PumpEnactResult(injector).success(true).enacted(true)
         } else {
-            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
             PumpEnactResult(injector)
         }
     }
@@ -369,7 +369,7 @@ import kotlin.math.abs
             val result = PumpEnactResult(injector)
             result.success = false
             result.bolusDelivered = 0.0
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }

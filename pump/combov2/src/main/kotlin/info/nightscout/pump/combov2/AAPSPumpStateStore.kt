@@ -1,5 +1,6 @@
 package info.nightscout.pump.combov2
 
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.comboctl.base.BluetoothAddress
 import info.nightscout.comboctl.base.CurrentTbrState
 import info.nightscout.comboctl.base.InvariantPumpData
@@ -10,7 +11,6 @@ import info.nightscout.comboctl.base.Tbr
 import info.nightscout.comboctl.base.toBluetoothAddress
 import info.nightscout.comboctl.base.toCipher
 import info.nightscout.comboctl.base.toNonce
-import info.nightscout.shared.sharedPreferences.SP
 import kotlinx.datetime.Instant
 import kotlinx.datetime.UtcOffset
 import kotlin.reflect.KClassifier
@@ -50,6 +50,7 @@ class AAPSPumpStateStore(
     private val aapsMainSP: SP,
     private val internalSP: InternalSP
 ) : PumpStateStore {
+
     private var btAddress: String
         by SPDelegateString(internalSP, PreferenceKeys.BT_ADDRESS_KEY.str, "")
 
@@ -145,15 +146,16 @@ class AAPSPumpStateStore(
 
     override fun getCurrentTbrState(pumpAddress: BluetoothAddress) =
         if (tbrTimestamp >= 0)
-            CurrentTbrState.TbrStarted(Tbr(
-                timestamp = Instant.fromEpochSeconds(tbrTimestamp),
-                percentage = tbrPercentage,
-                durationInMinutes = tbrDuration,
-                type = Tbr.Type.fromStringId(tbrType) ?: throw PumpStateStoreAccessException(pumpAddress, "Invalid type \"$tbrType\"")
-            ))
+            CurrentTbrState.TbrStarted(
+                Tbr(
+                    timestamp = Instant.fromEpochSeconds(tbrTimestamp),
+                    percentage = tbrPercentage,
+                    durationInMinutes = tbrDuration,
+                    type = Tbr.Type.fromStringId(tbrType) ?: throw PumpStateStoreAccessException(pumpAddress, "Invalid type \"$tbrType\"")
+                )
+            )
         else
             CurrentTbrState.NoTbrOngoing
-
 
     override fun setCurrentTbrState(pumpAddress: BluetoothAddress, currentTbrState: CurrentTbrState) {
         when (currentTbrState) {
@@ -163,7 +165,8 @@ class AAPSPumpStateStore(
                 tbrDuration = currentTbrState.tbr.durationInMinutes
                 tbrType = currentTbrState.tbr.type.stringId
             }
-            else -> {
+
+            else                          -> {
                 tbrTimestamp = -1
                 tbrPercentage = -1
                 tbrDuration = -1
@@ -176,14 +179,16 @@ class AAPSPumpStateStore(
     // pump operations. These are the TBR values, the UTC offset, and the nonce. Users are recommended to
     // call this after AAPS disconnects the pump.
     fun copyVariantValuesToAAPSMainSP(commit: Boolean) =
-        copyValuesBetweenSPs(commit, from = internalSP, to = aapsMainSP, arrayOf(
-            PreferenceKeys.NONCE_KEY,
-            PreferenceKeys.TBR_TIMESTAMP_KEY,
-            PreferenceKeys.TBR_PERCENTAGE_KEY,
-            PreferenceKeys.TBR_DURATION_KEY,
-            PreferenceKeys.TBR_TYPE_KEY,
-            PreferenceKeys.UTC_OFFSET_KEY
-        ))
+        copyValuesBetweenSPs(
+            commit, from = internalSP, to = aapsMainSP, arrayOf(
+                PreferenceKeys.NONCE_KEY,
+                PreferenceKeys.TBR_TIMESTAMP_KEY,
+                PreferenceKeys.TBR_PERCENTAGE_KEY,
+                PreferenceKeys.TBR_DURATION_KEY,
+                PreferenceKeys.TBR_TYPE_KEY,
+                PreferenceKeys.UTC_OFFSET_KEY
+            )
+        )
 
     // Copies all pump state values from the AAPS main SP to the internal SP. This is supposed to be
     // called if the internal SP is empty. That way, a pump state can be imported from AAPS settings files.
@@ -205,8 +210,8 @@ class AAPSPumpStateStore(
                 if (!from.contains(key.str))
                     continue
                 when (key.type) {
-                    Int::class -> putInt(key.str, from.getInt(key.str, 0))
-                    Long::class -> putLong(key.str, from.getLong(key.str, 0L))
+                    Int::class    -> putInt(key.str, from.getInt(key.str, 0))
+                    Long::class   -> putLong(key.str, from.getLong(key.str, 0L))
                     String::class -> putString(key.str, from.getString(key.str, ""))
                 }
             }

@@ -1,6 +1,6 @@
 package info.nightscout.pump.common.events
 
-import info.nightscout.rx.events.Event
+import app.aaps.core.interfaces.rx.events.Event
 
 class EventBondChanged(
     var connectionAddress: String,

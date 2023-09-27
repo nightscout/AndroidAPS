@@ -3,10 +3,6 @@ files:
     translation: /app/src/main/res/values-%android_code%/strings.xml
   - source: /wear/src/main/res/values/strings.xml
     translation: /wear/src/main/res/values-%android_code%/strings.xml
-  - source: /app-wear-shared/shared/src/main/res/values/strings.xml
-    translation: /app-wear-shared/shared/src/main/res/values-%android_code%/strings.xml
-  - source: /app-wear-shared/shared-impl/src/main/res/values/strings.xml
-    translation: /app-wear-shared/shared-impl/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/aps/src/main/res/values/strings.xml
     translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/main/src/main/res/values/strings.xml

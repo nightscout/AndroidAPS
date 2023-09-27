@@ -1,9 +1,8 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 /**
@@ -11,10 +10,11 @@ import javax.inject.Inject
  */
 class TimeReportPacket(
     injector: HasAndroidInjector
-) : DiaconnG8Packet(injector ) {
+) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-    var result =0
+    var result = 0
+
     init {
         msgType = 0xCF.toByte()
         aapsLogger.debug(LTag.PUMPCOMM, "TimeReportPacket init ")
@@ -29,17 +29,17 @@ class TimeReportPacket(
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        diaconnG8Pump.year   = getByteToInt(bufferData) // yyyy
-        diaconnG8Pump.month  = getByteToInt(bufferData) // month
-        diaconnG8Pump.day    = getByteToInt(bufferData) // day
-        diaconnG8Pump.hour   = getByteToInt(bufferData) // hour
+        diaconnG8Pump.year = getByteToInt(bufferData) // yyyy
+        diaconnG8Pump.month = getByteToInt(bufferData) // month
+        diaconnG8Pump.day = getByteToInt(bufferData) // day
+        diaconnG8Pump.hour = getByteToInt(bufferData) // hour
         diaconnG8Pump.minute = getByteToInt(bufferData) // min
         diaconnG8Pump.second = getByteToInt(bufferData) // second
 
-        aapsLogger.debug(LTag.PUMPCOMM, "year   --> ${diaconnG8Pump.year  }")
-        aapsLogger.debug(LTag.PUMPCOMM, "month  --> ${diaconnG8Pump.month }")
-        aapsLogger.debug(LTag.PUMPCOMM, "day    --> ${diaconnG8Pump.day   }")
-        aapsLogger.debug(LTag.PUMPCOMM, "hour   --> ${diaconnG8Pump.hour  }")
+        aapsLogger.debug(LTag.PUMPCOMM, "year   --> ${diaconnG8Pump.year}")
+        aapsLogger.debug(LTag.PUMPCOMM, "month  --> ${diaconnG8Pump.month}")
+        aapsLogger.debug(LTag.PUMPCOMM, "day    --> ${diaconnG8Pump.day}")
+        aapsLogger.debug(LTag.PUMPCOMM, "hour   --> ${diaconnG8Pump.hour}")
         aapsLogger.debug(LTag.PUMPCOMM, "minute --> ${diaconnG8Pump.minute}")
         aapsLogger.debug(LTag.PUMPCOMM, "second --> ${diaconnG8Pump.second}")
     }

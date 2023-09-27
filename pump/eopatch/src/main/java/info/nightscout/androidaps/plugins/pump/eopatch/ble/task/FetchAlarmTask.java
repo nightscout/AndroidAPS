@@ -5,11 +5,11 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.rx.bus.RxBus;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetErrorCodes;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.AeCodeResponse;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -39,8 +39,8 @@ public class FetchAlarmTask extends TaskBase {
 
         if (ready) {
             disposable = getPatchAlarm()
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe();
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe();
         }
     }
 }

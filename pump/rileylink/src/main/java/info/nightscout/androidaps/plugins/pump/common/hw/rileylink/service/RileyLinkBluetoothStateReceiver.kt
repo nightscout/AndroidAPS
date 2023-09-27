@@ -4,14 +4,15 @@ import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import dagger.android.DaggerBroadcastReceiver
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 
 class RileyLinkBluetoothStateReceiver : DaggerBroadcastReceiver() {
+
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rileyLinkUtil: RileyLinkUtil

@@ -1,9 +1,8 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 /**
@@ -19,7 +18,7 @@ class BasalSettingPacket(
     private var amount4: Int,
     private var amount5: Int,
     private var amount6: Int
-) : DiaconnG8Packet(injector ) {
+) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
 
@@ -29,7 +28,7 @@ class BasalSettingPacket(
 
     }
 
-    override fun encode(msgSeq:Int): ByteArray {
+    override fun encode(msgSeq: Int): ByteArray {
         val buffer = if (group == 4) {
             // 마지막 그룹일때
             prefixEncode(msgType, msgSeq, MSG_CON_END)

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.di
 
 import android.content.Context
+import app.aaps.core.interfaces.logging.AAPSLogger
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -8,7 +9,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
-import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Singleton
 
 @Module

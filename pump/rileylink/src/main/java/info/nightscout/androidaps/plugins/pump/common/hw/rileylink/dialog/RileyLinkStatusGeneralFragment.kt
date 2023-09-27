@@ -4,19 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.databinding.RileylinkStatusGeneralBinding
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.pump.core.utils.StringUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import org.joda.time.LocalDateTime
 import javax.inject.Inject
 
 class RileyLinkStatusGeneralFragment : DaggerFragment() {
@@ -85,7 +83,7 @@ class RileyLinkStatusGeneralFragment : DaggerFragment() {
         }
         val lastConnectionTimeMillis = rileyLinkPumpDevice.lastConnectionTimeMillis
         if (lastConnectionTimeMillis == 0L) binding.lastDeviceContact.text = rh.gs(R.string.riley_link_ble_config_connected_never)
-        else binding.lastDeviceContact.text = StringUtil.toDateTimeString(LocalDateTime(lastConnectionTimeMillis))
+        else binding.lastDeviceContact.text = dateUtil.dateAndTimeAndSecondsString(lastConnectionTimeMillis)
     }
 
     companion object {

@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.eopatch.AppConstant
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
+import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType
 import info.nightscout.androidaps.plugins.pump.eopatch.core.util.FloatAdjusters
-import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
@@ -22,10 +22,12 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
  */
 
 class BolusCurrent : IPreference<BolusCurrent> {
+
     @Transient
     private val subject: BehaviorSubject<BolusCurrent> = BehaviorSubject.create()
 
     class Bolus {
+
         var historyId: Long = 0L
 
         var injected = 0f
@@ -85,8 +87,7 @@ class BolusCurrent : IPreference<BolusCurrent> {
             if (remain != other.remain) return false
             if (startTimestamp != other.startTimestamp) return false
             if (endTimestamp != other.endTimestamp) return false
-            if (endTimeSynced != other.endTimeSynced) return false
-            return true
+            return endTimeSynced == other.endTimeSynced
         }
 
         override fun hashCode(): Int {
@@ -101,7 +102,7 @@ class BolusCurrent : IPreference<BolusCurrent> {
 
         override fun toString(): String =
             when (historyId) {
-                0L -> "Bolus(NONE)"
+                0L   -> "Bolus(NONE)"
                 else -> "Bolus(id=$historyId, i=$injected, r=$remain, start=$startTimestamp, end=$endTimestamp, synced=$endTimeSynced)"
             }
     }
@@ -113,7 +114,7 @@ class BolusCurrent : IPreference<BolusCurrent> {
         when (type) {
             BolusType.NOW -> nowBolus
             BolusType.EXT -> extBolus
-            else -> nowBolus
+            else          -> nowBolus
         }
 
     fun historyId(t: BolusType) = getBolus(t).historyId
@@ -155,15 +156,14 @@ class BolusCurrent : IPreference<BolusCurrent> {
         other as BolusCurrent
 
         if (nowBolus != other.nowBolus) return false
-        if (extBolus != other.extBolus) return false
-        return true
+        return extBolus == other.extBolus
     }
 
     override fun observe(): Observable<BolusCurrent> {
         return subject.hide()
     }
 
-    override fun flush(sp: SP){
+    override fun flush(sp: SP) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
         sp.putString(SettingKeys.BOLUS_CURRENT, jsonStr)
         subject.onNext(this)

@@ -15,12 +15,12 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6b;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding.Encoding4b6bGeoff;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkEncodingType;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.BleAdvertisedData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem;
-import info.nightscout.rx.logging.AAPSLogger;
 
 /**
  * Created by andy on 17/05/2018.

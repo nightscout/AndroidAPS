@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data
 
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 
 sealed class Record
 
@@ -17,11 +17,12 @@ enum class BolusType {
     fun toBolusInfoBolusType(): DetailedBolusInfo.BolusType {
         return when (this) {
             DEFAULT -> DetailedBolusInfo.BolusType.NORMAL
-            SMB -> DetailedBolusInfo.BolusType.SMB
+            SMB     -> DetailedBolusInfo.BolusType.SMB
         }
     }
 
     companion object {
+
         fun fromBolusInfoBolusType(type: DetailedBolusInfo.BolusType): BolusType {
             return when (type) {
                 DetailedBolusInfo.BolusType.SMB -> SMB

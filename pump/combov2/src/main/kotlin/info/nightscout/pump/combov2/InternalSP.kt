@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.annotation.StringRes
-import info.nightscout.shared.SafeParse
-import info.nightscout.shared.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.SafeParse
 
 // This is a copy of the AAPS SPImplementation. We keep this to be able
 // to set up a custom internal SP store for the Combo pump state.
@@ -13,6 +13,7 @@ class InternalSP(
     private val sharedPreferences: SharedPreferences,
     private val context: Context
 ) : SP {
+
     @SuppressLint("ApplySharedPref")
     override fun edit(commit: Boolean, block: SP.Editor.() -> Unit) {
         val spEdit = sharedPreferences.edit()
@@ -25,6 +26,7 @@ class InternalSP(
             override fun remove(@StringRes resourceID: Int) {
                 spEdit.remove(context.getString(resourceID))
             }
+
             override fun remove(key: String) {
                 spEdit.remove(key)
             }
@@ -32,30 +34,39 @@ class InternalSP(
             override fun putBoolean(key: String, value: Boolean) {
                 spEdit.putBoolean(key, value)
             }
+
             override fun putBoolean(@StringRes resourceID: Int, value: Boolean) {
                 spEdit.putBoolean(context.getString(resourceID), value)
             }
+
             override fun putDouble(key: String, value: Double) {
                 spEdit.putString(key, value.toString())
             }
+
             override fun putDouble(@StringRes resourceID: Int, value: Double) {
                 spEdit.putString(context.getString(resourceID), value.toString())
             }
+
             override fun putLong(key: String, value: Long) {
                 spEdit.putLong(key, value)
             }
+
             override fun putLong(@StringRes resourceID: Int, value: Long) {
                 spEdit.putLong(context.getString(resourceID), value)
             }
+
             override fun putInt(key: String, value: Int) {
                 spEdit.putInt(key, value)
             }
+
             override fun putInt(@StringRes resourceID: Int, value: Int) {
                 spEdit.putInt(context.getString(resourceID), value)
             }
+
             override fun putString(key: String, value: String) {
                 spEdit.putString(key, value)
             }
+
             override fun putString(@StringRes resourceID: Int, value: String) {
                 spEdit.putString(context.getString(resourceID), value)
             }

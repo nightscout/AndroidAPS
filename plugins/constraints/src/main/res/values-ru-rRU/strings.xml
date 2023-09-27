@@ -48,4 +48,6 @@
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Вы можете потерять весь прогресс по ней.</string>
     <string name="objectives_next_button">Далее</string>
     <string name="objectives_previous_button">Назад</string>
+    <string name="objectives_button_unfinish">Сбросить пройденные</string>
+    <string name="objectives_button_unstart">Сбросить начатые</string>
 </resources>

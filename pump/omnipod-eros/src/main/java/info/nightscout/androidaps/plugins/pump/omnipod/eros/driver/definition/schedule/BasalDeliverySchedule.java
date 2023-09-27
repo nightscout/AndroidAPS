@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.s
 import androidx.annotation.NonNull;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.IRawRepresentable;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class BasalDeliverySchedule extends DeliverySchedule implements IRawRepresentable {
 
@@ -23,11 +23,11 @@ public class BasalDeliverySchedule extends DeliverySchedule implements IRawRepre
     @Override
     public byte[] getRawData() {
         byte[] rawData = new byte[0];
-        rawData = ByteUtil.concat(rawData, currentSegment);
-        rawData = ByteUtil.concat(rawData, ByteUtil.getBytesFromInt16(secondsRemaining << 3));
-        rawData = ByteUtil.concat(rawData, ByteUtil.getBytesFromInt16(pulsesRemaining));
+        rawData = ByteUtil.INSTANCE.concat(rawData, currentSegment);
+        rawData = ByteUtil.INSTANCE.concat(rawData, ByteUtil.INSTANCE.getBytesFromInt16(secondsRemaining << 3));
+        rawData = ByteUtil.INSTANCE.concat(rawData, ByteUtil.INSTANCE.getBytesFromInt16(pulsesRemaining));
         for (BasalTableEntry entry : basalTable.getEntries()) {
-            rawData = ByteUtil.concat(rawData, entry.getRawData());
+            rawData = ByteUtil.INSTANCE.concat(rawData, entry.getRawData());
         }
         return rawData;
     }
@@ -42,7 +42,7 @@ public class BasalDeliverySchedule extends DeliverySchedule implements IRawRepre
         int checksum = 0;
         byte[] rawData = getRawData();
         for (int i = 0; i < rawData.length && i < 5; i++) {
-            checksum += ByteUtil.convertUnsignedByteToInt(rawData[i]);
+            checksum += ByteUtil.INSTANCE.convertUnsignedByteToInt(rawData[i]);
         }
         for (BasalTableEntry entry : basalTable.getEntries()) {
             checksum += entry.getChecksum();

@@ -5,6 +5,12 @@ import android.app.AlarmManager.AlarmClockInfo
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.utils.DateUtil
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.OsAlarmReceiver
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.Companion.getUri
@@ -12,12 +18,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.PatchAeCode
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -125,10 +125,11 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
     private fun registerOsAlarm(alarmCode: AlarmCode, triggerTime: Long): Maybe<AlarmCode> {
         return Maybe.fromCallable {
             cancelOsAlarmInternal(alarmCode)
-            val pendingIntent = createPendingIntent(alarmCode, 0)
-            aapsLogger.debug("[${alarmCode}] OS Alarm added. ${dateUtil.toISOString(triggerTime)}")
-            mOsAlarmManager.setAlarmClock(AlarmClockInfo(triggerTime, pendingIntent), pendingIntent)
-            alarmCode
+            createPendingIntent(alarmCode, 0)?.let { pendingIntent ->
+                aapsLogger.debug("[${alarmCode}] OS Alarm added. ${dateUtil.toISOString(triggerTime)}")
+                mOsAlarmManager.setAlarmClock(AlarmClockInfo(triggerTime, pendingIntent), pendingIntent)
+                alarmCode
+            }
         }
     }
 

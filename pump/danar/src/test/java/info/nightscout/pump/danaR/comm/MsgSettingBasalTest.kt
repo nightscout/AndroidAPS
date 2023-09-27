@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaR.comm
 
+import app.aaps.core.interfaces.pump.defs.PumpDescription
 import info.nightscout.androidaps.danar.comm.MsgSettingBasal
-import info.nightscout.interfaces.pump.defs.PumpDescription
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`

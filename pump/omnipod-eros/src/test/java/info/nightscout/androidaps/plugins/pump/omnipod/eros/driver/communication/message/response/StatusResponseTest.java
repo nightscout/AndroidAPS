@@ -2,20 +2,20 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import static com.google.common.truth.Truth.assertThat;
 
+import org.joda.time.Duration;
+import org.junit.jupiter.api.Test;
+
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryStatus;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-import info.nightscout.pump.core.utils.ByteUtil;
-
-import org.joda.time.Duration;
-import org.junit.jupiter.api.Test;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 class StatusResponseTest {
 
     @Test
     void testRawData() {
-        byte[] encodedData = ByteUtil.fromHexString("1d080000000038800000");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("1d080000000038800000");
 
         StatusResponse statusResponse = new StatusResponse(encodedData);
 
@@ -24,8 +24,8 @@ class StatusResponseTest {
 
     @Test
     void testRawDataWithLongerMessage() {
-        byte[] encodedData = ByteUtil.fromHexString("1d08000000003880000001");
-        byte[] expected = ByteUtil.fromHexString("1d080000000038800000");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("1d08000000003880000001");
+        byte[] expected = ByteUtil.INSTANCE.fromHexString("1d080000000038800000");
 
         StatusResponse statusResponse = new StatusResponse(encodedData);
 
@@ -34,7 +34,7 @@ class StatusResponseTest {
 
     @Test
     void testWithSampleCapture() {
-        byte[] bytes = ByteUtil.fromHexString("1d180258f80000146fff"); // From https://github.com/openaps/openomni/wiki/Command-1D-Status-response
+        byte[] bytes = ByteUtil.INSTANCE.fromHexString("1d180258f80000146fff"); // From https://github.com/openaps/openomni/wiki/Command-1D-Status-response
         StatusResponse statusResponse = new StatusResponse(bytes);
 
         assertThat(statusResponse.getDeliveryStatus()).isEqualTo(DeliveryStatus.NORMAL);
@@ -47,12 +47,12 @@ class StatusResponseTest {
         assertThat(statusResponse.getBolusNotDelivered()).isWithin(0.000001).of(0);
         assertThat(statusResponse.getUnacknowledgedAlerts().getAlertSlots()).isEmpty();
 
-        assertThat(statusResponse.getRawData()).isEqualTo(ByteUtil.fromHexString("1d180258f80000146fff"));
+        assertThat(statusResponse.getRawData()).isEqualTo(ByteUtil.INSTANCE.fromHexString("1d180258f80000146fff"));
     }
 
     @Test
     void testWithSampleCaptureWithChangePodSoonAlert() {
-        byte[] bytes = ByteUtil.fromHexString("1d19061f6800044295e8"); // From https://github.com/openaps/openomni/wiki/Status-Response-1D-long-run-%28Lytrix%29
+        byte[] bytes = ByteUtil.INSTANCE.fromHexString("1d19061f6800044295e8"); // From https://github.com/openaps/openomni/wiki/Status-Response-1D-long-run-%28Lytrix%29
         StatusResponse statusResponse = new StatusResponse(bytes);
 
         assertThat(statusResponse.getDeliveryStatus()).isEqualTo(DeliveryStatus.NORMAL);
@@ -65,12 +65,12 @@ class StatusResponseTest {
         assertThat(statusResponse.getBolusNotDelivered()).isWithin(0.000001).of(0);
         assertThat(statusResponse.getUnacknowledgedAlerts().getAlertSlots()).containsExactly(AlertSlot.SLOT3);
 
-        assertThat(statusResponse.getRawData()).isEqualTo(ByteUtil.fromHexString("1d19061f6800044295e8"));
+        assertThat(statusResponse.getRawData()).isEqualTo(ByteUtil.INSTANCE.fromHexString("1d19061f6800044295e8"));
     }
 
     @Test
     void testLargeValues() {
-        byte[] bytes = ByteUtil.fromHexString("1d11ffffffffffffffff");
+        byte[] bytes = ByteUtil.INSTANCE.fromHexString("1d11ffffffffffffffff");
         StatusResponse statusResponse = new StatusResponse(bytes);
 
         assertThat(statusResponse.getTimeActive().getMillis()).isEqualTo(Duration.standardMinutes(8191).getMillis());
@@ -82,12 +82,12 @@ class StatusResponseTest {
         assertThat(statusResponse.getPodMessageCounter()).isEqualTo(15);
         assertThat(statusResponse.getUnacknowledgedAlerts().getAlertSlots()).hasSize(8);
 
-        assertThat(statusResponse.getRawData()).isEqualTo(ByteUtil.fromHexString("1d11ffffffffffffffff"));
+        assertThat(statusResponse.getRawData()).isEqualTo(ByteUtil.INSTANCE.fromHexString("1d11ffffffffffffffff"));
     }
 
     @Test
     void testWithReservoirLevel() {
-        byte[] bytes = ByteUtil.fromHexString("1d19050ec82c08376f98");
+        byte[] bytes = ByteUtil.INSTANCE.fromHexString("1d19050ec82c08376f98");
         StatusResponse statusResponse = new StatusResponse(bytes);
 
         assertThat(statusResponse.getTimeActive()).isEqualTo(Duration.standardMinutes(3547));
@@ -99,6 +99,6 @@ class StatusResponseTest {
         assertThat(statusResponse.getBolusNotDelivered()).isWithin(0.0001).of(2.2);
         assertThat(statusResponse.getPodMessageCounter()).isEqualTo(9);
 
-        assertThat(statusResponse.getRawData()).isEqualTo(ByteUtil.fromHexString("1d19050ec82c08376f98"));
+        assertThat(statusResponse.getRawData()).isEqualTo(ByteUtil.INSTANCE.fromHexString("1d19050ec82c08376f98"));
     }
 }

@@ -1,22 +1,21 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 /**
  * SerialNumInquireResponsePacket
  */
-class SerialNumInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector ) {
+class SerialNumInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
-
 
     init {
         msgType = 0xAE.toByte()
@@ -32,8 +31,8 @@ class SerialNumInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Pa
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        val result2 =  getByteToInt(bufferData)
-        if(!isSuccInquireResponseResult(result2)) {
+        val result2 = getByteToInt(bufferData)
+        if (!isSuccInquireResponseResult(result2)) {
             failed = true
             return
         }

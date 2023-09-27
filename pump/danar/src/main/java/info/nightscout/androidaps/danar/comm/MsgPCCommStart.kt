@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.danar.comm
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
-import info.nightscout.rx.logging.LTag
 
-
-class MsgPCCommStart constructor(
+class MsgPCCommStart(
     injector: HasAndroidInjector
 ) : MessageBase(injector) {
 

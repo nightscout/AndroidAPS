@@ -3,6 +3,46 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.OmnipodDash
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.actions.CustomAction
+import app.aaps.core.interfaces.pump.actions.CustomActionType
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.Command
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange
+import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview
+import app.aaps.core.interfaces.rx.events.EventTempBasalChange
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.TimeChangeType
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.utils.DateTimeUtil
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod
@@ -34,46 +74,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.Das
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.OmnipodDashOverviewFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.Constants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.util.mapProfileToBasalProgram
-import info.nightscout.core.utils.DateTimeUtil
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.OwnDatabasePlugin
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.OmnipodDash
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpPluginBase
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.actions.CustomAction
-import info.nightscout.interfaces.pump.actions.CustomActionType
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.Command
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.Round
-import info.nightscout.interfaces.utils.TimeChangeType
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.events.EventPreferenceChange
-import info.nightscout.rx.events.EventProfileSwitchChanged
-import info.nightscout.rx.events.EventRefreshOverview
-import info.nightscout.rx.events.EventTempBasalChange
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -129,7 +129,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         private val pluginDescription = PluginDescription()
             .mainType(PluginType.PUMP)
             .fragmentClass(OmnipodDashOverviewFragment::class.java.name)
-            .pluginIcon(info.nightscout.core.ui.R.drawable.ic_pod_128)
+            .pluginIcon(app.aaps.core.ui.R.drawable.ic_pod_128)
             .pluginName(R.string.omnipod_dash_name)
             .shortName(R.string.omnipod_dash_name_short)
             .preferencesId(R.xml.omnipod_dash_preferences)
@@ -193,7 +193,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         Notification.OMNIPOD_POD_SUSPENDED,
                         rh.gs(R.string.insulin_delivery_suspended),
                         Notification.NORMAL,
-                        info.nightscout.core.ui.R.raw.boluserror
+                        app.aaps.core.ui.R.raw.boluserror
                     )
                 } else {
                     rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_SUSPENDED))
@@ -371,7 +371,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                             Notification.OMNIPOD_POD_FAULT,
                             it.toString(),
                             Notification.URGENT,
-                            info.nightscout.core.ui.R.raw.boluserror
+                            app.aaps.core.ui.R.raw.boluserror
                         )
                     }
                     pumpSync.insertAnnouncement(
@@ -426,14 +426,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.failed_to_set_the_new_basal_profile),
                     Notification.URGENT,
-                    info.nightscout.core.ui.R.raw.boluserror
+                    app.aaps.core.ui.R.raw.boluserror
                 )
             } else {
                 showNotification(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.setting_basal_profile_might_have_failed),
                     Notification.URGENT,
-                    info.nightscout.core.ui.R.raw.boluserror
+                    app.aaps.core.ui.R.raw.boluserror
                 )
             }
             Completable.error(java.lang.IllegalStateException("Command not confirmed"))
@@ -465,7 +465,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 notifyOnUnconfirmed(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.suspend_delivery_is_unconfirmed),
-                    info.nightscout.core.ui.R.raw.boluserror,
+                    app.aaps.core.ui.R.raw.boluserror,
                 )
             }
     }
@@ -629,11 +629,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         Notification.OMNIPOD_UNCERTAIN_SMB,
                         "Unable to verify whether SMB bolus ($requestedBolusAmount U) succeeded. " +
                             "<b>Refresh pod status to confirm or deny this command.",
-                        info.nightscout.core.ui.R.raw.boluserror
+                        app.aaps.core.ui.R.raw.boluserror
                     )
                 } else {
                     if (podStateManager.activeCommand != null) {
-                        val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
+                        val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
                         showErrorDialog(rh.gs(R.string.bolus_delivery_status_uncertain), sound)
                     }
                 }
@@ -847,7 +847,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             notifyOnUnconfirmed(
                 Notification.OMNIPOD_TBR_ALERTS,
                 rh.gs(R.string.setting_temp_basal_might_have_basal_failed),
-                info.nightscout.core.ui.R.raw.boluserror,
+                app.aaps.core.ui.R.raw.boluserror,
             )
         }.toPumpEnactResultImpl()
 
@@ -905,7 +905,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     notifyOnUnconfirmed(
                         Notification.OMNIPOD_TBR_ALERTS,
                         rh.gs(R.string.cancelling_temp_basal_might_have_failed),
-                        info.nightscout.core.ui.R.raw.boluserror,
+                        app.aaps.core.ui.R.raw.boluserror,
                     )
                 }
             }
@@ -960,7 +960,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             notifyOnUnconfirmed(
                 Notification.OMNIPOD_TBR_ALERTS,
                 rh.gs(R.string.cancel_temp_basal_result_is_uncertain),
-                info.nightscout.core.ui.R.raw.boluserror, // TODO: add setting for this
+                app.aaps.core.ui.R.raw.boluserror, // TODO: add setting for this
             )
         }.toPumpEnactResultImpl()
     }
@@ -1187,7 +1187,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 notifyOnUnconfirmed(
                     Notification.FAILED_UPDATE_PROFILE,
                     rh.gs(R.string.unconfirmed_resumedelivery_command_please_refresh_pod_status),
-                    info.nightscout.core.ui.R.raw.boluserror
+                    app.aaps.core.ui.R.raw.boluserror
                 )
             }.toPumpEnactResultImpl()
         } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active") // TODO i18n
@@ -1545,7 +1545,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (tbr != null && podStateManager.deliveryStatus?.basalActive() == true) {
             aapsLogger.error(LTag.PUMP, "AAPS expected a TBR running but pump has no TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
             // Alert user
-            val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
+            val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
             showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
             // Sync stopped basal with AAPS
             val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -1559,7 +1559,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         } else if (tbr == null && podStateManager.deliveryStatus?.tempBasalActive() == true) {
             aapsLogger.error(LTag.PUMP, "AAPS expected no TBR running but pump has a TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
             // Alert user
-            val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
+            val sound = if (hasBolusErrorBeepEnabled()) app.aaps.core.ui.R.raw.boluserror else 0
             showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
             // If this is reached is reached there is probably a something wrong with the time (maybe it has changed?).
             // No way to calculate the TBR end time and update pumpSync properly.
@@ -1574,7 +1574,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun showErrorDialog(message: String, sound: Int) {
-        uiInteraction.runAlarm(message, rh.gs(info.nightscout.core.ui.R.string.error), sound)
+        uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound)
     }
 
     private fun showNotification(id: Int, message: String, urgency: Int, sound: Int?) {

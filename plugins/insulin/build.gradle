@@ -11,7 +11,7 @@ apply from: "${project.rootDir}/core/main/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 android {
-    namespace 'info.nightscout.insulin'
+    namespace 'app.aaps.plugins.insulin'
 }
 
 
@@ -24,6 +24,6 @@ dependencies {
     implementation project(':core:validators')
     implementation project(':database:entities')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
     testImplementation project(':core:main')
 }

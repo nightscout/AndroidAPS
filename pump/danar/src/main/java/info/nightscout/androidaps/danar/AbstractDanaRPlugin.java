@@ -5,43 +5,43 @@ import androidx.annotation.NonNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import app.aaps.core.main.constraints.ConstraintObject;
+import app.aaps.core.interfaces.constraints.Constraint;
+import app.aaps.core.interfaces.constraints.ConstraintsChecker;
+import app.aaps.core.interfaces.constraints.PluginConstraints;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.plugin.ActivePlugin;
+import app.aaps.core.interfaces.plugin.OwnDatabasePlugin;
+import app.aaps.core.interfaces.plugin.PluginDescription;
+import app.aaps.core.interfaces.plugin.PluginType;
+import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.core.interfaces.pump.Dana;
+import app.aaps.core.interfaces.pump.Pump;
+import app.aaps.core.interfaces.pump.PumpEnactResult;
+import app.aaps.core.interfaces.pump.PumpPluginBase;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.pump.defs.ManufacturerType;
+import app.aaps.core.interfaces.pump.defs.PumpDescription;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange;
+import app.aaps.core.interfaces.rx.events.EventDismissNotification;
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange;
+import app.aaps.core.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.utils.DecimalFormatter;
+import app.aaps.core.interfaces.utils.Round;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.core.constraints.ConstraintObject;
-import info.nightscout.interfaces.constraints.Constraint;
-import info.nightscout.interfaces.constraints.ConstraintsChecker;
-import info.nightscout.interfaces.constraints.PluginConstraints;
-import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.plugin.ActivePlugin;
-import info.nightscout.interfaces.plugin.OwnDatabasePlugin;
-import info.nightscout.interfaces.plugin.PluginDescription;
-import info.nightscout.interfaces.plugin.PluginType;
-import info.nightscout.interfaces.profile.Profile;
-import info.nightscout.interfaces.pump.Dana;
-import info.nightscout.interfaces.pump.Pump;
-import info.nightscout.interfaces.pump.PumpEnactResult;
-import info.nightscout.interfaces.pump.PumpPluginBase;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.defs.ManufacturerType;
-import info.nightscout.interfaces.pump.defs.PumpDescription;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.UiInteraction;
-import info.nightscout.interfaces.utils.DecimalFormatter;
-import info.nightscout.interfaces.utils.Round;
 import info.nightscout.pump.dana.DanaFragment;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.comm.RecordTypes;
 import info.nightscout.pump.dana.database.DanaHistoryDatabase;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.EventConfigBuilderChange;
-import info.nightscout.rx.events.EventDismissNotification;
-import info.nightscout.rx.events.EventPreferenceChange;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
-import info.nightscout.shared.utils.DateUtil;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -88,7 +88,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
                         .fragmentClass(DanaFragment.class.getName())
-                        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_danars_128)
+                        .pluginIcon(app.aaps.core.ui.R.drawable.ic_danars_128)
                         .pluginName(info.nightscout.pump.dana.R.string.danarspump)
                         .shortName(info.nightscout.pump.dana.R.string.danarpump_shortname)
                         .preferencesId(R.xml.pref_danar)
@@ -122,7 +122,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                     if (event.isChanged(getRh().gs(info.nightscout.pump.dana.R.string.key_danar_bt_name))) {
                         danaPump.reset();
                         pumpSync.connectNewPump(true);
-                        getCommandQueue().readStatus(getRh().gs(info.nightscout.core.ui.R.string.device_changed), null);
+                        getCommandQueue().readStatus(getRh().gs(app.aaps.core.ui.R.string.device_changed), null);
                     }
                 })
         );
@@ -157,19 +157,19 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         }
         if (!isInitialized()) {
             getAapsLogger().error("setNewBasalProfile not initialized");
-            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT);
-            result.comment(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set);
+            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, getRh().gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT);
+            result.comment(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set);
             return result;
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
-            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT);
-            result.comment(info.nightscout.core.ui.R.string.failed_update_basal_profile);
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, getRh().gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT);
+            result.comment(app.aaps.core.ui.R.string.failed_update_basal_profile);
         } else {
             rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             rxBus.send(new EventDismissNotification(Notification.FAILED_UPDATE_PROFILE));
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, getRh().gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60);
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, getRh().gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60);
             result.success(true).enacted(true).comment("OK");
         }
         return result;
@@ -228,7 +228,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getAapsLogger()), profile).value();
         if (percent < 0) {
-            result.isTempCancel(false).enacted(false).success(false).comment(info.nightscout.core.ui.R.string.invalid_input);
+            result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input);
             getAapsLogger().error("setTempBasalPercent: Invalid input");
             return result;
         }
@@ -236,7 +236,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             percent = getPumpDescription().getMaxTempPercent();
         if (danaPump.isTempBasalInProgress() && danaPump.getTempBasalPercent() == percent && danaPump.getTempBasalRemainingMin() > 4 && !enforceNew) {
             result.enacted(false).success(true).isTempCancel(false)
-                    .comment(info.nightscout.core.ui.R.string.ok)
+                    .comment(app.aaps.core.ui.R.string.ok)
                     .duration(danaPump.getTempBasalRemainingMin())
                     .percent(danaPump.getTempBasalPercent())
                     .isPercent(true);
@@ -248,7 +248,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         if (connectionOK && danaPump.isTempBasalInProgress() && danaPump.getTempBasalPercent() == percent) {
             result.enacted(true)
                     .success(true)
-                    .comment(info.nightscout.core.ui.R.string.ok)
+                    .comment(app.aaps.core.ui.R.string.ok)
                     .isTempCancel(false)
                     .duration((int) danaPump.getTempBasalDuration())
                     .percent(danaPump.getTempBasalPercent())
@@ -266,7 +266,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             );
             return result;
         }
-        result.enacted(false).success(false).comment(info.nightscout.core.ui.R.string.temp_basal_delivery_error);
+        result.enacted(false).success(false).comment(app.aaps.core.ui.R.string.temp_basal_delivery_error);
         getAapsLogger().error("setTempBasalPercent: Failed to set temp basal");
         return result;
     }
@@ -282,7 +282,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
-                    .comment(info.nightscout.core.ui.R.string.ok)
+                    .comment(app.aaps.core.ui.R.string.ok)
                     .duration(danaPump.getExtendedBolusRemainingMinutes())
                     .absolute(danaPump.getExtendedBolusAbsoluteRate())
                     .isPercent(false)
@@ -302,7 +302,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         if (connectionOK && danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(true)
                     .success(true)
-                    .comment(info.nightscout.core.ui.R.string.ok)
+                    .comment(app.aaps.core.ui.R.string.ok)
                     .isTempCancel(false)
                     .duration(danaPump.getExtendedBolusRemainingMinutes())
                     .absolute(danaPump.getExtendedBolusAbsoluteRate())
@@ -341,9 +341,9 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                         serialNumber()
                 );
             } else
-                result.success(false).enacted(false).isTempCancel(true).comment(info.nightscout.core.ui.R.string.canceling_eb_failed);
+                result.success(false).enacted(false).isTempCancel(true).comment(app.aaps.core.ui.R.string.canceling_eb_failed);
         } else {
-            result.success(true).comment(info.nightscout.core.ui.R.string.ok).isTempCancel(true);
+            result.success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(true);
             getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
         }
         return result;
@@ -465,21 +465,21 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public Constraint<Double> applyBasalConstraints(Constraint<Double> absoluteRate, @NonNull Profile profile) {
-        absoluteRate.setIfSmaller(danaPump.getMaxBasal(), getRh().gs(info.nightscout.core.ui.R.string.limitingbasalratio, danaPump.getMaxBasal(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
+        absoluteRate.setIfSmaller(danaPump.getMaxBasal(), getRh().gs(app.aaps.core.ui.R.string.limitingbasalratio, danaPump.getMaxBasal(), getRh().gs(app.aaps.core.ui.R.string.pumplimit)), this);
         return absoluteRate;
     }
 
     @NonNull @Override
     public Constraint<Integer> applyBasalPercentConstraints(Constraint<Integer> percentRate, @NonNull Profile profile) {
-        percentRate.setIfGreater(0, getRh().gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, getRh().gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this);
-        percentRate.setIfSmaller(getPumpDescription().getMaxTempPercent(), getRh().gs(info.nightscout.core.ui.R.string.limitingpercentrate, getPumpDescription().getMaxTempPercent(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
+        percentRate.setIfGreater(0, getRh().gs(app.aaps.core.ui.R.string.limitingpercentrate, 0, getRh().gs(app.aaps.core.ui.R.string.itmustbepositivevalue)), this);
+        percentRate.setIfSmaller(getPumpDescription().getMaxTempPercent(), getRh().gs(app.aaps.core.ui.R.string.limitingpercentrate, getPumpDescription().getMaxTempPercent(), getRh().gs(app.aaps.core.ui.R.string.pumplimit)), this);
 
         return percentRate;
     }
 
     @NonNull @Override
     public Constraint<Double> applyBolusConstraints(Constraint<Double> insulin) {
-        insulin.setIfSmaller(danaPump.getMaxBolus(), getRh().gs(info.nightscout.core.ui.R.string.limitingbolus, danaPump.getMaxBolus(), getRh().gs(info.nightscout.core.ui.R.string.pumplimit)), this);
+        insulin.setIfSmaller(danaPump.getMaxBolus(), getRh().gs(app.aaps.core.ui.R.string.limitingbolus, danaPump.getMaxBolus(), getRh().gs(app.aaps.core.ui.R.string.pumplimit)), this);
         return insulin;
     }
 

@@ -37,14 +37,14 @@ dependencies {
     implementation project(':pump:rileylink')
     implementation project(':pump:omnipod-common')
 
-    testImplementation project(':app-wear-shared:shared-impl')
+    testImplementation project(':shared:impl')
 
     api "androidx.room:room-ktx:$room_version"
     api "androidx.room:room-runtime:$room_version"
     api "androidx.room:room-rxjava3:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
     // optional - Test helpers
     testImplementation("androidx.room:room-testing:$room_version")
     testImplementation project(':implementation')

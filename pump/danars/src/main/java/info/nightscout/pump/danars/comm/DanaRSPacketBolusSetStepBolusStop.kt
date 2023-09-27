@@ -1,12 +1,12 @@
 package info.nightscout.pump.danars.comm
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 open class DanaRSPacketBolusSetStepBolusStop(

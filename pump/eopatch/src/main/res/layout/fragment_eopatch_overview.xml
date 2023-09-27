@@ -508,7 +508,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
-            <info.nightscout.core.ui.elements.SingleClickButton
+            <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/button1"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
@@ -520,7 +520,7 @@
                 android:enabled="@{!viewmodel.patchConfig.activated}"
                 app:onSafeClick="@{() -> viewmodel.onClickActivation()}"/>
 
-            <info.nightscout.core.ui.elements.SingleClickButton
+            <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/button2"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
@@ -532,7 +532,7 @@
                 android:enabled="@{viewmodel.patchConfig.activated}"
                 app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}"/>
 
-            <info.nightscout.core.ui.elements.SingleClickButton
+            <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/button3"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"

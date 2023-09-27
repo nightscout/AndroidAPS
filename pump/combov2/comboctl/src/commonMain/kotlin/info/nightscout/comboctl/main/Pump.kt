@@ -24,6 +24,8 @@ import info.nightscout.comboctl.base.Tbr
 import info.nightscout.comboctl.base.TransportLayer
 import info.nightscout.comboctl.base.toStringWithDecimal
 import info.nightscout.comboctl.base.withFixedYearFrom
+import info.nightscout.comboctl.main.Pump.CommandExecutionAttemptsFailedException
+import info.nightscout.comboctl.main.Pump.Event
 import info.nightscout.comboctl.parser.AlertScreenContent
 import info.nightscout.comboctl.parser.AlertScreenException
 import info.nightscout.comboctl.parser.BatteryState
@@ -228,7 +230,9 @@ class Pump(
     initialBasalProfile: BasalProfile? = null,
     private val onEvent: (event: Event) -> Unit = { }
 ) {
+
     private val pumpIO = PumpIO(pumpStateStore, bluetoothDevice, this::processDisplayFrame, this::packetReceiverExceptionThrown)
+
     // Updated by updateStatusImpl(). true if the Combo
     // is currently in the stop mode. If true, commands
     // are not executed, and an exception is thrown instead.
@@ -250,6 +254,7 @@ class Pump(
     // (necessary since the screen may change its contents but still be the same screen).
     private var rtScreenAlreadyDismissed = false
     private var seenAlertAfterDismissingCounter = 0
+
     // Used in handleAlertScreenContent() to check if the current alert
     // screen contains the same alert as the previous one.
     private var lastObservedAlertScreenContent: AlertScreenContent? = null
@@ -275,12 +280,15 @@ class Pump(
         // progress range.
         when (stage) {
             BasicProgressStage.Finished,
-            is BasicProgressStage.Aborted -> 1.0
+            is BasicProgressStage.Aborted                  -> 1.0
+
             is RTCommandProgressStage.SettingTBRPercentage ->
                 0.0 + stage.settingProgress.toDouble() / 100.0 * 0.5
-            is RTCommandProgressStage.SettingTBRDuration ->
+
+            is RTCommandProgressStage.SettingTBRDuration   ->
                 0.5 + stage.settingProgress.toDouble() / 100.0 * 0.5
-            else -> 0.0
+
+            else                                           -> 0.0
         }
     }
 
@@ -297,10 +305,12 @@ class Pump(
         // so we use that for the overall progress.
         when (stage) {
             BasicProgressStage.Finished,
-            is BasicProgressStage.Aborted -> 1.0
+            is BasicProgressStage.Aborted             -> 1.0
+
             is RTCommandProgressStage.DeliveringBolus ->
                 stage.deliveredImmediateAmount.toDouble() / stage.totalImmediateAmount.toDouble()
-            else -> 0.0
+
+            else                                      -> 0.0
         }
     }
 
@@ -336,10 +346,12 @@ class Pump(
             // read, which is suitable for a progress indicator,
             // so we use that for the overall progress.
             BasicProgressStage.Finished,
-            is BasicProgressStage.Aborted -> 1.0
+            is BasicProgressStage.Aborted                -> 1.0
+
             is RTCommandProgressStage.FetchingTDDHistory ->
                 stage.historyEntryIndex.toDouble() / stage.totalNumEntries.toDouble()
-            else -> 0.0
+
+            else                                         -> 0.0
         }
     }
 
@@ -370,12 +382,13 @@ class Pump(
         val type: Tbr.Type,
         val force100Percent: Boolean
     ) : CommandDescription()
+
     class DeliveringBolusCommandDesc(
         val totalBolusAmount: Int,
         val immediateBolusAmount: Int,
         val durationInMinutes: Int,
         val standardBolusReason: StandardBolusReason,
-        val bolusType: ApplicationLayer.CMDDeliverBolusType
+        val bolusType: CMDDeliverBolusType
     ) : CommandDescription()
 
     /**
@@ -422,7 +435,7 @@ class Pump(
         BolusDeliveryException(
             totalImmediateAmount,
             "Bolus cancelled (delivered amount: ${deliveredImmediateAmount.toStringWithDecimal(1)} IU  " +
-            "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU"
+                "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU"
         )
 
     /**
@@ -435,7 +448,7 @@ class Pump(
         BolusDeliveryException(
             totalImmediateAmount,
             "Bolus aborted due to an error (delivered amount: ${deliveredImmediateAmount.toStringWithDecimal(1)} IU  " +
-            "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU"
+                "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU"
         )
 
     /**
@@ -451,7 +464,7 @@ class Pump(
         BolusDeliveryException(
             bolusAmount,
             "Insufficient insulin in reservoir for bolus: bolus amount: ${bolusAmount.toStringWithDecimal(1)} IU  " +
-            "available units in reservoir: $availableUnitsInReservoir"
+                "available units in reservoir: $availableUnitsInReservoir"
         )
 
     /**
@@ -471,7 +484,7 @@ class Pump(
     ) : ComboException(
         if (actualTbrPercentage != null)
             "Expected TBR: $expectedTbrPercentage% $expectedTbrDuration minutes ; " +
-            "actual TBR: $actualTbrPercentage% $actualTbrDuration minutes"
+                "actual TBR: $actualTbrPercentage% $actualTbrDuration minutes"
         else if (expectedTbrPercentage == 100)
             "Did not expect a TBR during active extended/multiwave bolus, observed one"
         else
@@ -484,6 +497,7 @@ class Pump(
      * A standard bolus may be delivered for various reasons.
      */
     enum class StandardBolusReason {
+
         /**
          * This is a normal bolus.
          */
@@ -509,6 +523,7 @@ class Pump(
      * so for example, "57" means 5.7 IU.
      */
     sealed class Event {
+
         object BatteryLow : Event()
         object ReservoirLow : Event()
         data class QuickBolusRequested(
@@ -516,11 +531,13 @@ class Pump(
             val timestamp: Instant,
             val bolusAmount: Int
         ) : Event()
+
         data class QuickBolusInfused(
             val bolusId: Long,
             val timestamp: Instant,
             val bolusAmount: Int
         ) : Event()
+
         data class StandardBolusRequested(
             val bolusId: Long,
             val timestamp: Instant,
@@ -528,6 +545,7 @@ class Pump(
             val bolusAmount: Int,
             val standardBolusReason: StandardBolusReason
         ) : Event()
+
         data class StandardBolusInfused(
             val bolusId: Long,
             val timestamp: Instant,
@@ -535,18 +553,21 @@ class Pump(
             val bolusAmount: Int,
             val standardBolusReason: StandardBolusReason
         ) : Event()
+
         data class ExtendedBolusStarted(
             val bolusId: Long,
             val timestamp: Instant,
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int
         ) : Event()
+
         data class ExtendedBolusEnded(
             val bolusId: Long,
             val timestamp: Instant,
             val totalBolusAmount: Int,
             val totalDurationMinutes: Int
         ) : Event()
+
         data class MultiwaveBolusStarted(
             val bolusId: Long,
             val timestamp: Instant,
@@ -554,6 +575,7 @@ class Pump(
             val immediateBolusAmount: Int,
             val totalDurationMinutes: Int
         ) : Event()
+
         data class MultiwaveBolusEnded(
             val bolusId: Long,
             val timestamp: Instant,
@@ -561,6 +583,7 @@ class Pump(
             val immediateBolusAmount: Int,
             val totalDurationMinutes: Int
         ) : Event()
+
         data class TbrStarted(val tbr: Tbr) : Event()
         data class TbrEnded(val tbr: Tbr, val timestampWhenTbrEnded: Instant) : Event()
         data class UnknownTbrDetected(
@@ -594,6 +617,7 @@ class Pump(
      * Possible states the pump can be in.
      */
     sealed class State {
+
         /**
          * There is no connection to the pump. This is the initial state.
          */
@@ -652,11 +676,12 @@ class Pump(
          *   This is meant for logging purposes.
          */
         data class Error(val throwable: Throwable? = null, val message: String? = null) : State() {
+
             override fun toString(): String {
                 return if (throwable != null)
-                        "Error (\"$message\"); throwable: $throwable"
-                    else
-                        "Error (\"$message\")"
+                    "Error (\"$message\"); throwable: $throwable"
+                else
+                    "Error (\"$message\")"
             }
         }
     }
@@ -909,10 +934,12 @@ class Pump(
 
             logger(LogLevel.DEBUG) { "Attempt no. $connectionAttemptNr to establish connection" }
 
-            connectProgressReporter.setCurrentProgressStage(BasicProgressStage.EstablishingBtConnection(
-                currentAttemptNr = connectionAttemptNr,
-                totalNumAttempts = maxNumAttempts
-            ))
+            connectProgressReporter.setCurrentProgressStage(
+                BasicProgressStage.EstablishingBtConnection(
+                    currentAttemptNr = connectionAttemptNr,
+                    totalNumAttempts = maxNumAttempts
+                )
+            )
 
             try {
                 connectInternal()
@@ -939,7 +966,8 @@ class Pump(
                         setState(State.Error(throwable = e, "Connection error"))
                         throw e
                     }
-                    else -> Unit
+
+                    else                    -> Unit
                 }
                 if (connectionAttemptNr < actualMaxNumAttempts) {
                     logger(LogLevel.DEBUG) { "Got exception while connecting; will try again; exception was: $e" }
@@ -948,7 +976,7 @@ class Pump(
                 } else {
                     logger(LogLevel.ERROR) {
                         "Got exception $e while connecting, and max number of " +
-                        "connection establishing attempts reached; not trying again"
+                            "connection establishing attempts reached; not trying again"
                     }
                     connectProgressReporter.setCurrentProgressStage(BasicProgressStage.Error(e))
                     setState(State.Error(throwable = e, "Connection error"))
@@ -1173,6 +1201,7 @@ class Pump(
      * [setTbr] throws an exception.
      */
     enum class SetTbrOutcome {
+
         SET_NORMAL_TBR,
         SET_EMULATED_100_TBR,
         LETTING_EMULATED_100_TBR_FINISH,
@@ -1283,8 +1312,8 @@ class Pump(
                     result = SetTbrOutcome.LETTING_EMULATED_100_TBR_FINISH
                     logger(LogLevel.INFO) {
                         "Current TBR percentage is in the 90-110% range (${currentStatus.tbrPercentage}%)," +
-                        "and it will finish in ${currentStatus.remainingTbrDurationInMinutes} minute(s); " +
-                        "letting it finish and faking a successful TBR set operation"
+                            "and it will finish in ${currentStatus.remainingTbrDurationInMinutes} minute(s); " +
+                            "letting it finish and faking a successful TBR set operation"
                     }
                 } else {
                     val newPercentage = if (currentStatus.tbrPercentage < 100) 110 else 90
@@ -1331,11 +1360,11 @@ class Pump(
         val mainScreen = waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)
         val mainScreenContent = when (mainScreen) {
             is ParsedScreen.MainScreen -> mainScreen.content
-            else -> throw NoUsableRTScreenException()
+            else                       -> throw NoUsableRTScreenException()
         }
 
         val (actualTbrPercentage, actualTbrDuration) = when (mainScreenContent) {
-            is MainScreenContent.Stopped ->
+            is MainScreenContent.Stopped                  ->
                 // This should never be reached. The Combo can switch to the Stopped
                 // state on its own, but only if an error occurs, and errors are
                 // already caught by ParsedDisplayFrameStream.getParsedDisplayFrame().
@@ -1352,22 +1381,22 @@ class Pump(
                 }
             }
 
-            is MainScreenContent.Normal ->
+            is MainScreenContent.Normal                   ->
                 Pair(100, 0)
 
-            is MainScreenContent.Tbr ->
+            is MainScreenContent.Tbr                      ->
                 Pair(mainScreenContent.tbrPercentage, mainScreenContent.remainingTbrDurationInMinutes)
         }
 
         logger(LogLevel.DEBUG) {
             "Main screen content after setting TBR: $mainScreenContent; expected TBR " +
-                    "percentage / duration: $expectedTbrPercentage / $expectedTbrDuration"
+                "percentage / duration: $expectedTbrPercentage / $expectedTbrDuration"
         }
 
         val tbrVisibleOnMainScreen = when (mainScreenContent) {
-            is MainScreenContent.Tbr -> true
+            is MainScreenContent.Tbr                      -> true
             is MainScreenContent.ExtendedOrMultiwaveBolus -> mainScreenContent.tbrIsActive
-            else -> false
+            else                                          -> false
         }
 
         // Verify that the TBR state is OK according to these criteria:
@@ -1390,8 +1419,8 @@ class Pump(
             } else {
                 logger(LogLevel.ERROR) {
                     "Mismatch between expected TBR and actually active TBR; " +
-                    "expected TBR percentage / duration: $expectedTbrPercentage / $expectedTbrDuration; " +
-                    "actual TBR: percentage / remaining duration: $actualTbrPercentage / $actualTbrDuration"
+                        "expected TBR percentage / duration: $expectedTbrPercentage / $expectedTbrDuration; " +
+                        "actual TBR: percentage / remaining duration: $actualTbrPercentage / $actualTbrDuration"
                 }
                 false
             }
@@ -1435,7 +1464,7 @@ class Pump(
         immediateBolusAmount = 0,
         durationInMinutes = 0,
         standardBolusReason = bolusReason,
-        bolusType = ApplicationLayer.CMDDeliverBolusType.STANDARD_BOLUS,
+        bolusType = CMDDeliverBolusType.STANDARD_BOLUS,
         bolusStatusUpdateIntervalInMs = bolusStatusUpdateIntervalInMs
     )
 
@@ -1525,7 +1554,7 @@ class Pump(
         immediateBolusAmount: Int,
         durationInMinutes: Int,
         standardBolusReason: StandardBolusReason,
-        bolusType: ApplicationLayer.CMDDeliverBolusType,
+        bolusType: CMDDeliverBolusType,
         bolusStatusUpdateIntervalInMs: Long = 250
     ) = executeCommand(
         // Instruct executeCommand() to not set the mode on its own.
@@ -1564,35 +1593,35 @@ class Pump(
         }
 
         when (bolusType) {
-            CMDDeliverBolusType.STANDARD_BOLUS -> Unit
+            CMDDeliverBolusType.STANDARD_BOLUS  -> Unit
 
-            CMDDeliverBolusType.EXTENDED_BOLUS ->
+            CMDDeliverBolusType.EXTENDED_BOLUS  ->
                 require(
                     (durationInMinutes >= 15) &&
-                    (durationInMinutes <= 720) &&
-                    ((durationInMinutes % 15) == 0)
+                        (durationInMinutes <= 720) &&
+                        ((durationInMinutes % 15) == 0)
                 ) {
                     "extended bolus duration must be in the 15-720 range and an integer multiple of 15; " +
-                    "actual duration: $durationInMinutes"
+                        "actual duration: $durationInMinutes"
                 }
 
             CMDDeliverBolusType.MULTIWAVE_BOLUS -> {
                 require(
                     (durationInMinutes >= 15) &&
-                    (durationInMinutes <= 720) &&
-                    ((durationInMinutes % 15) == 0)
+                        (durationInMinutes <= 720) &&
+                        ((durationInMinutes % 15) == 0)
                 ) {
                     "multiwave bolus duration must be in the 15-720 range and an integer multiple of 15; " +
-                    "actual duration: $durationInMinutes"
+                        "actual duration: $durationInMinutes"
                 }
                 require(immediateBolusAmount >= 1) {
                     "immediate bolus portion of multiwave bolus must be at least 0.1 IU; actual" +
-                    "amount: ${immediateBolusAmount.toStringWithDecimal(1)}"
+                        "amount: ${immediateBolusAmount.toStringWithDecimal(1)}"
                 }
                 require(immediateBolusAmount < totalBolusAmount) {
                     "immediate bolus duration must be < total bolus amount; actual immediate/total " +
-                    "amount: ${immediateBolusAmount.toStringWithDecimal(1)}" +
-                    " / ${totalBolusAmount.toStringWithDecimal(1)}"
+                        "amount: ${immediateBolusAmount.toStringWithDecimal(1)}" +
+                        " / ${totalBolusAmount.toStringWithDecimal(1)}"
                 }
             }
         }
@@ -1610,8 +1639,8 @@ class Pump(
             val roundedBolusIU = (totalBolusAmount + 9) / 10
             logger(LogLevel.DEBUG) {
                 "Checking if there is enough insulin in reservoir; reservoir fill level: " +
-                "${status.availableUnitsInReservoir} IU; bolus amount: ${totalBolusAmount.toStringWithDecimal(1)} IU" +
-                "(rounded: $roundedBolusIU IU)"
+                    "${status.availableUnitsInReservoir} IU; bolus amount: ${totalBolusAmount.toStringWithDecimal(1)} IU" +
+                    "(rounded: $roundedBolusIU IU)"
             }
             if (status.availableUnitsInReservoir < roundedBolusIU)
                 throw InsufficientInsulinAvailableException(totalBolusAmount, status.availableUnitsInReservoir)
@@ -1660,9 +1689,10 @@ class Pump(
                     logger(LogLevel.VERBOSE) { "Got current bolus delivery status: $status" }
 
                     val deliveredAmount = when (status.deliveryState) {
-                        ApplicationLayer.CMDBolusDeliveryState.DELIVERING -> expectedImmediateAmount - status.remainingAmount
-                        ApplicationLayer.CMDBolusDeliveryState.DELIVERED -> expectedImmediateAmount
-                        ApplicationLayer.CMDBolusDeliveryState.CANCELLED_BY_USER -> {
+                        ApplicationLayer.CMDBolusDeliveryState.DELIVERING           -> expectedImmediateAmount - status.remainingAmount
+                        ApplicationLayer.CMDBolusDeliveryState.DELIVERED            -> expectedImmediateAmount
+
+                        ApplicationLayer.CMDBolusDeliveryState.CANCELLED_BY_USER    -> {
                             logger(LogLevel.DEBUG) { "Bolus cancelled by user" }
                             throw BolusCancelledByUserException(
                                 deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
@@ -1678,7 +1708,7 @@ class Pump(
                             )
                         }
 
-                        else -> continue
+                        else                                                        -> continue
                     }
 
                     bolusDeliveryProgressReporter.setCurrentProgressStage(
@@ -1705,7 +1735,8 @@ class Pump(
             when (e) {
                 is BolusCancelledByUserException ->
                     bolusDeliveryProgressReporter.setCurrentProgressStage(BasicProgressStage.Cancelled)
-                else ->
+
+                else                             ->
                     bolusDeliveryProgressReporter.setCurrentProgressStage(BasicProgressStage.Error(e))
             }
             throw e
@@ -1751,9 +1782,9 @@ class Pump(
                         reasonForLastStandardBolusInfusion = standardBolusReason
                     ) { entry ->
                         when (bolusType) {
-                            CMDDeliverBolusType.STANDARD_BOLUS ->
+                            CMDDeliverBolusType.STANDARD_BOLUS  ->
                                 when (val detail = entry.detail) {
-                                    is CMDHistoryEventDetail.StandardBolusInfused -> {
+                                    is CMDHistoryEventDetail.StandardBolusInfused   -> {
                                         numRelevantBolusEntries++
                                         if (numRelevantBolusEntries > 1)
                                             unexpectedBolusEntriesDetected = true
@@ -1763,13 +1794,13 @@ class Pump(
                                     is CMDHistoryEventDetail.StandardBolusRequested ->
                                         Unit
 
-                                    else -> {
+                                    else                                            -> {
                                         if (detail.isBolusDetail)
                                             unexpectedBolusEntriesDetected = true
                                     }
                                 }
 
-                            CMDDeliverBolusType.EXTENDED_BOLUS ->
+                            CMDDeliverBolusType.EXTENDED_BOLUS  ->
                                 when (val detail = entry.detail) {
                                     is CMDHistoryEventDetail.ExtendedBolusStarted -> {
                                         numRelevantBolusEntries++
@@ -1777,7 +1808,7 @@ class Pump(
                                             unexpectedBolusEntriesDetected = true
                                     }
 
-                                    else -> {
+                                    else                                          -> {
                                         if (detail.isBolusDetail)
                                             unexpectedBolusEntriesDetected = true
                                     }
@@ -1791,7 +1822,7 @@ class Pump(
                                             unexpectedBolusEntriesDetected = true
                                     }
 
-                                    else -> {
+                                    else                                           -> {
                                         if (detail.isBolusDetail)
                                             unexpectedBolusEntriesDetected = true
                                     }
@@ -1918,7 +1949,8 @@ class Pump(
             val firstTDDScreen = navigateToRTScreen(
                 rtNavigationContext,
                 ParsedScreen.MyDataDailyTotalsScreen::class,
-                pumpSuspended) as ParsedScreen.MyDataDailyTotalsScreen
+                pumpSuspended
+            ) as ParsedScreen.MyDataDailyTotalsScreen
             processTDDScreen(firstTDDScreen)
 
             longPressRTButtonUntil(rtNavigationContext, RTNavigationButton.DOWN) { parsedScreen ->
@@ -2022,12 +2054,15 @@ class Pump(
             // the overall progress.
             when (stage) {
                 BasicProgressStage.Finished,
-                is BasicProgressStage.Aborted -> 1.0
+                is BasicProgressStage.Aborted                 -> 1.0
+
                 is RTCommandProgressStage.SettingBasalProfile ->
                     stage.numSetFactors.toDouble() / NUM_COMBO_BASAL_PROFILE_FACTORS.toDouble()
+
                 is RTCommandProgressStage.GettingBasalProfile ->
                     stage.numSetFactors.toDouble() / NUM_COMBO_BASAL_PROFILE_FACTORS.toDouble()
-                else -> 0.0
+
+                else                                          -> 0.0
             }
         }
 
@@ -2052,8 +2087,8 @@ class Pump(
     ): T {
         check(
             (stateFlow.value == State.ReadyForCommands) ||
-            (allowExecutionWhileSuspended && (stateFlow.value == State.Suspended)) ||
-            (allowExecutionWhileChecking && (stateFlow.value == State.CheckingPump))
+                (allowExecutionWhileSuspended && (stateFlow.value == State.Suspended)) ||
+                (allowExecutionWhileChecking && (stateFlow.value == State.CheckingPump))
         ) { "Cannot execute command in the ${stateFlow.value} state" }
 
         val previousState = stateFlow.value
@@ -2142,8 +2177,8 @@ class Pump(
                     // "pump terminated connection" case to initiate a reconnect attempt.
                     val pumpTerminatedConnection = when (val it = e.cause) {
                         is ApplicationLayer.ErrorCodeException -> it.appLayerPacket.command == ApplicationLayer.Command.CTRL_DISCONNECT
-                        is ComboIOException -> true
-                        else -> false
+                        is ComboIOException                    -> true
+                        else                                   -> false
                     }
 
                     // Packet receiver exceptions can happen for a number of reasons.
@@ -2355,13 +2390,13 @@ class Pump(
             // screens, since they are not an error. The next time
             // handleAlertScreenContent() is called, we hopefully
             // get recognizable content.
-            is AlertScreenContent.None -> Unit
+            is AlertScreenContent.None    -> Unit
 
             // Error screen contents always cause a rethrow since all error
             // screens are considered non-recoverable errors that must not
             // be ignored / dismissed. Instead, let the code fail by rethrowing
             // the exception. The user needs to check out the error manually.
-            is AlertScreenContent.Error -> throw AlertScreenException(alertScreenContent)
+            is AlertScreenContent.Error   -> throw AlertScreenException(alertScreenContent)
 
             is AlertScreenContent.Warning -> {
                 // Check if the alert screen content changed in case
@@ -2389,10 +2424,10 @@ class Pump(
                 // and ignored.
                 // Any other warnings are intentionally rethrown for safety.
                 when (warningCode) {
-                    1 -> onEvent(Event.ReservoirLow)
-                    2 -> onEvent(Event.BatteryLow)
+                    1          -> onEvent(Event.ReservoirLow)
+                    2          -> onEvent(Event.BatteryLow)
                     3, 6, 7, 8 -> Unit
-                    else -> throw AlertScreenException(alertScreenContent)
+                    else       -> throw AlertScreenException(alertScreenContent)
                 }
 
                 // Warning screens are dismissed by pressing CHECK twice.
@@ -2404,9 +2439,9 @@ class Pump(
                 // for the second screen - just press twice right away.
                 if (!rtScreenAlreadyDismissed) {
                     val numRequiredButtonPresses = when (alertScreenContent.state) {
-                        AlertScreenContent.AlertScreenState.TO_SNOOZE -> 2
+                        AlertScreenContent.AlertScreenState.TO_SNOOZE  -> 2
                         AlertScreenContent.AlertScreenState.TO_CONFIRM -> 1
-                        else -> throw AlertScreenException(alertScreenContent)
+                        else                                           -> throw AlertScreenException(alertScreenContent)
                     }
                     logger(LogLevel.DEBUG) { "Dismissing W$warningCode by short-pressing CHECK $numRequiredButtonPresses time(s)" }
                     for (i in 1..numRequiredButtonPresses)
@@ -2498,46 +2533,57 @@ class Pump(
             val timestamp = entry.timestamp.toInstant(currentPumpUtcOffset!!)
 
             when (val detail = entry.detail) {
-                is CMDHistoryEventDetail.QuickBolusRequested ->
-                    onEvent(Event.QuickBolusRequested(
-                        bolusId = entry.eventCounter,
-                        timestamp = timestamp,
-                        bolusAmount = detail.bolusAmount
-                    ))
-                is CMDHistoryEventDetail.QuickBolusInfused -> {
-                    onEvent(Event.QuickBolusInfused(
-                        bolusId = entry.eventCounter,
-                        timestamp = timestamp,
-                        bolusAmount = detail.bolusAmount
-                    ))
+                is CMDHistoryEventDetail.QuickBolusRequested    ->
+                    onEvent(
+                        Event.QuickBolusRequested(
+                            bolusId = entry.eventCounter,
+                            timestamp = timestamp,
+                            bolusAmount = detail.bolusAmount
+                        )
+                    )
+
+                is CMDHistoryEventDetail.QuickBolusInfused      -> {
+                    onEvent(
+                        Event.QuickBolusInfused(
+                            bolusId = entry.eventCounter,
+                            timestamp = timestamp,
+                            bolusAmount = detail.bolusAmount
+                        )
+                    )
                     if (lastBolusInfusionTimestamp == null) {
                         lastBolusId = entry.eventCounter
                         lastBolusAmount = detail.bolusAmount
                         lastBolusInfusionTimestamp = timestamp
                     }
                 }
+
                 is CMDHistoryEventDetail.StandardBolusRequested -> {
                     val standardBolusReason =
                         if (lastStandardBolusRequestedTypeSet) StandardBolusReason.NORMAL else reasonForLastStandardBolusInfusion
-                    onEvent(Event.StandardBolusRequested(
-                        bolusId = entry.eventCounter,
-                        timestamp = timestamp,
-                        manual = detail.manual,
-                        bolusAmount = detail.bolusAmount,
-                        standardBolusReason = standardBolusReason
-                    ))
+                    onEvent(
+                        Event.StandardBolusRequested(
+                            bolusId = entry.eventCounter,
+                            timestamp = timestamp,
+                            manual = detail.manual,
+                            bolusAmount = detail.bolusAmount,
+                            standardBolusReason = standardBolusReason
+                        )
+                    )
                     lastStandardBolusRequestedTypeSet = true
                 }
-                is CMDHistoryEventDetail.StandardBolusInfused -> {
+
+                is CMDHistoryEventDetail.StandardBolusInfused   -> {
                     val standardBolusReason =
                         if (lastStandardBolusInfusedTypeSet) StandardBolusReason.NORMAL else reasonForLastStandardBolusInfusion
-                    onEvent(Event.StandardBolusInfused(
-                        bolusId = entry.eventCounter,
-                        timestamp = timestamp,
-                        manual = detail.manual,
-                        bolusAmount = detail.bolusAmount,
-                        standardBolusReason = standardBolusReason
-                    ))
+                    onEvent(
+                        Event.StandardBolusInfused(
+                            bolusId = entry.eventCounter,
+                            timestamp = timestamp,
+                            manual = detail.manual,
+                            bolusAmount = detail.bolusAmount,
+                            standardBolusReason = standardBolusReason
+                        )
+                    )
                     lastStandardBolusInfusedTypeSet = true
                     if (lastBolusInfusionTimestamp == null) {
                         lastBolusId = entry.eventCounter
@@ -2545,39 +2591,52 @@ class Pump(
                         lastBolusInfusionTimestamp = timestamp
                     }
                 }
-                is CMDHistoryEventDetail.ExtendedBolusStarted ->
-                    onEvent(Event.ExtendedBolusStarted(
-                        bolusId = entry.eventCounter,
-                        timestamp = timestamp,
-                        totalBolusAmount = detail.totalBolusAmount,
-                        totalDurationMinutes = detail.totalDurationMinutes
-                    ))
-                is CMDHistoryEventDetail.ExtendedBolusEnded -> {
-                    onEvent(Event.ExtendedBolusEnded(
-                        bolusId = entry.eventCounter,
-                        timestamp = timestamp,
-                        totalBolusAmount = detail.totalBolusAmount,
-                        totalDurationMinutes = detail.totalDurationMinutes
-                    ))
+
+                is CMDHistoryEventDetail.ExtendedBolusStarted   ->
+                    onEvent(
+                        Event.ExtendedBolusStarted(
+                            bolusId = entry.eventCounter,
+                            timestamp = timestamp,
+                            totalBolusAmount = detail.totalBolusAmount,
+                            totalDurationMinutes = detail.totalDurationMinutes
+                        )
+                    )
+
+                is CMDHistoryEventDetail.ExtendedBolusEnded     -> {
+                    onEvent(
+                        Event.ExtendedBolusEnded(
+                            bolusId = entry.eventCounter,
+                            timestamp = timestamp,
+                            totalBolusAmount = detail.totalBolusAmount,
+                            totalDurationMinutes = detail.totalDurationMinutes
+                        )
+                    )
                 }
-                is CMDHistoryEventDetail.MultiwaveBolusStarted ->
-                    onEvent(Event.MultiwaveBolusStarted(
-                        bolusId = entry.eventCounter,
-                        timestamp = timestamp,
-                        totalBolusAmount = detail.totalBolusAmount,
-                        immediateBolusAmount = detail.immediateBolusAmount,
-                        totalDurationMinutes = detail.totalDurationMinutes
-                    ))
-                is CMDHistoryEventDetail.MultiwaveBolusEnded -> {
-                    onEvent(Event.MultiwaveBolusEnded(
-                        bolusId = entry.eventCounter,
-                        timestamp = timestamp,
-                        totalBolusAmount = detail.totalBolusAmount,
-                        immediateBolusAmount = detail.immediateBolusAmount,
-                        totalDurationMinutes = detail.totalDurationMinutes
-                    ))
+
+                is CMDHistoryEventDetail.MultiwaveBolusStarted  ->
+                    onEvent(
+                        Event.MultiwaveBolusStarted(
+                            bolusId = entry.eventCounter,
+                            timestamp = timestamp,
+                            totalBolusAmount = detail.totalBolusAmount,
+                            immediateBolusAmount = detail.immediateBolusAmount,
+                            totalDurationMinutes = detail.totalDurationMinutes
+                        )
+                    )
+
+                is CMDHistoryEventDetail.MultiwaveBolusEnded    -> {
+                    onEvent(
+                        Event.MultiwaveBolusEnded(
+                            bolusId = entry.eventCounter,
+                            timestamp = timestamp,
+                            totalBolusAmount = detail.totalBolusAmount,
+                            immediateBolusAmount = detail.immediateBolusAmount,
+                            totalDurationMinutes = detail.totalDurationMinutes
+                        )
+                    )
                 }
-                else -> Unit
+
+                else                                            -> Unit
             }
         }
 
@@ -2605,7 +2664,7 @@ class Pump(
 
             logger(LogLevel.DEBUG) {
                 "Found a last bolus in history delta; details: $lastBolus; now: $now; " +
-                "lastBolusInfusionTimestamp: $lastBolusInfusionTimestamp -> bolusTimestamp: $bolusTimestamp"
+                    "lastBolusInfusionTimestamp: $lastBolusInfusionTimestamp -> bolusTimestamp: $bolusTimestamp"
             }
 
             _lastBolusFlow.value = lastBolus
@@ -2685,7 +2744,7 @@ class Pump(
             val tbrInfoShownOnMainScreen = (status.tbrPercentage != 100)
 
             when (currentTbrState) {
-                is CurrentTbrState.TbrStarted -> {
+                is CurrentTbrState.TbrStarted   -> {
                     if (!tbrInfoShownOnMainScreen) {
                         // Handle case #1.
 
@@ -2722,20 +2781,23 @@ class Pump(
                         // TBR durations are set in 15-minute steps, and a strict value equality check
                         // would raise false positives due to jitter caused by using the current time.
                         if ((expectedCurrentTbrPercentage != actualCurrentTbrPercentage) ||
-                            ((expectedRemainingDurationInMinutes - actualRemainingDurationInMinutes).absoluteValue >= 10)) {
-                                logger(LogLevel.DEBUG) {
-                                    "Unknown/unexpected TBR detected; expected TBR with percentage $expectedCurrentTbrPercentage " +
+                            ((expectedRemainingDurationInMinutes - actualRemainingDurationInMinutes).absoluteValue >= 10)
+                        ) {
+                            logger(LogLevel.DEBUG) {
+                                "Unknown/unexpected TBR detected; expected TBR with percentage $expectedCurrentTbrPercentage " +
                                     "and remaining duration expectedRemainingDurationInMinutes; actual TBR has percentage " +
                                     "$actualRemainingDurationInMinutes and remaining duration $actualRemainingDurationInMinutes"
-                                }
+                            }
 
-                                pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
-                                setCurrentTbr(percentage = 100, durationInMinutes = 0)
+                            pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
+                            setCurrentTbr(percentage = 100, durationInMinutes = 0)
 
-                                onEvent(Event.UnknownTbrDetected(
+                            onEvent(
+                                Event.UnknownTbrDetected(
                                     tbrPercentage = status.tbrPercentage,
                                     remainingTbrDurationInMinutes = status.remainingTbrDurationInMinutes
-                                ))
+                                )
+                            )
                         }
 
                         _currentTbrFlow.value = currentTbrState.tbr
@@ -2751,17 +2813,19 @@ class Pump(
 
                         logger(LogLevel.DEBUG) {
                             "Unknown TBR detected with percentage ${status.tbrPercentage} " +
-                            "and remaining duration ${status.remainingTbrDurationInMinutes}; " +
-                            "aborting this TBR"
+                                "and remaining duration ${status.remainingTbrDurationInMinutes}; " +
+                                "aborting this TBR"
                         }
 
                         pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
                         setCurrentTbr(percentage = 100, durationInMinutes = 0)
 
-                        onEvent(Event.UnknownTbrDetected(
-                            tbrPercentage = status.tbrPercentage,
-                            remainingTbrDurationInMinutes = status.remainingTbrDurationInMinutes
-                        ))
+                        onEvent(
+                            Event.UnknownTbrDetected(
+                                tbrPercentage = status.tbrPercentage,
+                                remainingTbrDurationInMinutes = status.remainingTbrDurationInMinutes
+                            )
+                        )
                     }
                 }
             }
@@ -2782,7 +2846,7 @@ class Pump(
                 var currentFactorFromProfile = currentBasalProfile!![timestampOfStatusUpdate.hour]
                 logger(LogLevel.DEBUG) {
                     "Current basal rate factor according to profile: $currentFactorFromProfile; current one" +
-                            " according to pump: $currentBasalRateFactor"
+                        " according to pump: $currentBasalRateFactor"
                 }
 
                 // We don't read the profile from the pump right away, and instead retry
@@ -2851,8 +2915,8 @@ class Pump(
         if (dateTimeDelta.absoluteValue >= 2.toDuration(DurationUnit.MINUTES)) {
             logger(LogLevel.INFO) {
                 "Current system datetime differs from pump's too much, updating pump datetime; " +
-                "system / pump datetime (UTC): $currentSystemDateTime / $currentPumpDateTime; " +
-                "datetime delta: $dateTimeDelta"
+                    "system / pump datetime (UTC): $currentSystemDateTime / $currentPumpDateTime; " +
+                    "datetime delta: $dateTimeDelta"
             }
             needsPumpDateTimeAdjustment = true
         }
@@ -2862,8 +2926,8 @@ class Pump(
         if (currentSystemUtcOffset != currentPumpUtcOffset!!) {
             logger(LogLevel.INFO) {
                 "System UTC offset differs from pump's; system timezone: $currentSystemTimeZone; " +
-                "system UTC offset: $currentSystemUtcOffset; pump state UTC offset: ${currentPumpUtcOffset!!}; " +
-                "updating pump state and datetime"
+                    "system UTC offset: $currentSystemUtcOffset; pump state UTC offset: ${currentPumpUtcOffset!!}; " +
+                    "updating pump state and datetime"
             }
             pumpStateStore.setCurrentUtcOffset(bluetoothDevice.address, currentSystemUtcOffset)
             currentPumpUtcOffset = currentSystemUtcOffset
@@ -2891,9 +2955,9 @@ class Pump(
         } else {
             logger(LogLevel.INFO) {
                 "Current system datetime is close enough to pump's current datetime, " +
-                "and timezones did not change; no pump datetime adjustment needed; " +
-                "system / pump datetime (UTC): $currentSystemDateTime / $currentPumpDateTime; " +
-                "datetime delta: $dateTimeDelta"
+                    "and timezones did not change; no pump datetime adjustment needed; " +
+                    "system / pump datetime (UTC): $currentSystemDateTime / $currentPumpDateTime; " +
+                    "datetime delta: $dateTimeDelta"
             }
         }
     }
@@ -2958,7 +3022,7 @@ class Pump(
                 numRetrievedFactors++
                 logger(LogLevel.DEBUG) {
                     "Got basal profile factor #$factorIndexOnScreen : $factor; $numRetrievedFactors " +
-                    "factor(s) read and $numObservedScreens screen(s) observed thus far"
+                        "factor(s) read and $numObservedScreens screen(s) observed thus far"
                 }
 
                 getBasalProfileReporter.setCurrentProgressStage(
@@ -3013,7 +3077,8 @@ class Pump(
                             // This is not the correct basal profile factor, so keep
                             // navigating through them to find the correct factor.
                             return@shortPressRTButtonsUntil ShortPressRTButtonsCommand.PressButton(
-                                RTNavigationButton.MENU)
+                                RTNavigationButton.MENU
+                            )
                         }
                     }
 
@@ -3085,12 +3150,16 @@ class Pump(
             else
                 Pair(now, (now - tbr.timestamp).inWholeMinutes.toInt())
 
-            onEvent(Event.TbrEnded(Tbr(
-                timestamp = tbr.timestamp,
-                percentage = tbr.percentage,
-                durationInMinutes = newDurationInMinutes,
-                tbr.type
-            ), endTbrTimestamp))
+            onEvent(
+                Event.TbrEnded(
+                    Tbr(
+                        timestamp = tbr.timestamp,
+                        percentage = tbr.percentage,
+                        durationInMinutes = newDurationInMinutes,
+                        tbr.type
+                    ), endTbrTimestamp
+                )
+            )
             _currentTbrFlow.value = null
         }
     }
@@ -3222,9 +3291,11 @@ class Pump(
             val simpleDistance = (end - begin).absoluteValue
             return if (simpleDistance <= (range / 2)) simpleDistance else (range - simpleDistance)
         }
+
         fun calcNormalDistance(begin: Int, end: Int): Int {
             return (end - begin).absoluteValue
         }
+
         fun calcLongRTButtonPressObservationPeriod(distance: Int): Duration {
             // Check if the distance is large enough to trigger a long RT button press. If so,
             // factor in 2 seconds. This is the time it takes after the long button
@@ -3249,24 +3320,24 @@ class Pump(
         val estimatedDuration =
             // 2 seconds to account for navigation to the time and date settings screens.
             2.toDuration(DurationUnit.SECONDS) +
-            // 1 second per quantity to factor in the waiting period while reading each initial quantity.
-            // We handle 5 quantities (hour/minute/year/month/day), so we factor in 5*1 seconds.
-            5.toDuration(DurationUnit.SECONDS) +
-            // Factor in the individual factor changes (1 increment/decrement takes ~300 ms to finish).
-            (totalDistance * 300).toDuration(DurationUnit.MILLISECONDS) +
-            // if a long RT button press happens, there's a waiting period after the button press stopped.
-            // IMPORTANT: This is evaluated for each distance individually instead of evaluating
-            // totalDistance once. That's because whether to do long RT button press is decided per-quantity
-            // and not once for all quantities.
-            calcLongRTButtonPressObservationPeriod(hourDistance) +
-            calcLongRTButtonPressObservationPeriod(minuteDistance) +
-            calcLongRTButtonPressObservationPeriod(yearDistance) +
-            calcLongRTButtonPressObservationPeriod(monthDistance) +
-            calcLongRTButtonPressObservationPeriod(dayDistance)
+                // 1 second per quantity to factor in the waiting period while reading each initial quantity.
+                // We handle 5 quantities (hour/minute/year/month/day), so we factor in 5*1 seconds.
+                5.toDuration(DurationUnit.SECONDS) +
+                // Factor in the individual factor changes (1 increment/decrement takes ~300 ms to finish).
+                (totalDistance * 300).toDuration(DurationUnit.MILLISECONDS) +
+                // if a long RT button press happens, there's a waiting period after the button press stopped.
+                // IMPORTANT: This is evaluated for each distance individually instead of evaluating
+                // totalDistance once. That's because whether to do long RT button press is decided per-quantity
+                // and not once for all quantities.
+                calcLongRTButtonPressObservationPeriod(hourDistance) +
+                calcLongRTButtonPressObservationPeriod(minuteDistance) +
+                calcLongRTButtonPressObservationPeriod(yearDistance) +
+                calcLongRTButtonPressObservationPeriod(monthDistance) +
+                calcLongRTButtonPressObservationPeriod(dayDistance)
 
         logger(LogLevel.DEBUG) {
             "Current local pump / local system datetime: $currentLocalPumpDateTime / $currentLocalSystemDateTime " +
-            "; estimated duration: $estimatedDuration"
+                "; estimated duration: $estimatedDuration"
         }
 
         return estimatedDuration
@@ -3407,7 +3478,7 @@ class Pump(
 
         val mainScreenContent = when (mainScreen) {
             is ParsedScreen.MainScreen -> mainScreen.content
-            else -> throw NoUsableRTScreenException()
+            else                       -> throw NoUsableRTScreenException()
         }
 
         val quickinfoScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, pumpSuspended)
@@ -3418,11 +3489,12 @@ class Pump(
                 rtNavigationContext.shortPressButton(RTNavigationButton.BACK)
                 quickinfoScreen.quickinfo
             }
-            else -> throw NoUsableRTScreenException()
+
+            else                                -> throw NoUsableRTScreenException()
         }
 
         _statusFlow.value = when (mainScreenContent) {
-            is MainScreenContent.Normal -> {
+            is MainScreenContent.Normal                   -> {
                 pumpSuspended = false
                 Status(
                     availableUnitsInReservoir = quickinfo.availableUnits,
@@ -3436,7 +3508,7 @@ class Pump(
                 )
             }
 
-            is MainScreenContent.Stopped -> {
+            is MainScreenContent.Stopped                  -> {
                 pumpSuspended = true
                 Status(
                     availableUnitsInReservoir = quickinfo.availableUnits,
@@ -3453,7 +3525,7 @@ class Pump(
                 )
             }
 
-            is MainScreenContent.Tbr -> {
+            is MainScreenContent.Tbr                      -> {
                 pumpSuspended = false
                 Status(
                     availableUnitsInReservoir = quickinfo.availableUnits,

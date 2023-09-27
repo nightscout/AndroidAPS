@@ -1,8 +1,8 @@
 package info.nightscout.pump.common.utils
 
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.Profile.ProfileValue
-import info.nightscout.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
+import app.aaps.core.interfaces.pump.defs.PumpType
 import java.util.Locale
 
 object ProfileUtil {
@@ -43,7 +43,7 @@ object ProfileUtil {
         // }
         // return if (stringBuilder.length > 3) stringBuilder.substring(0, stringBuilder.length - 2) else stringBuilder.toString()
 
-        var entriesCopy = profile.getBasalValues()
+        val entriesCopy = profile.getBasalValues()
 
         for (i in entriesCopy.indices) {
             val current = entriesCopy[i]

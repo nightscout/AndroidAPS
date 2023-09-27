@@ -12,9 +12,9 @@ import android.bluetooth.BluetoothGattService
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.bluetooth.le.ScanCallback
+import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
-import android.bluetooth.le.ScanFilter
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -22,15 +22,15 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
-import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.pump.medtrum.extension.toInt
-import info.nightscout.pump.medtrum.comm.WriteCommandPackets
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.comm.ManufacturerData
 import info.nightscout.pump.medtrum.comm.ReadDataPacket
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import java.util.UUID
+import info.nightscout.pump.medtrum.comm.WriteCommandPackets
+import info.nightscout.pump.medtrum.extension.toInt
 import java.util.Arrays
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -95,7 +95,7 @@ class BLEComm @Inject internal constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permissions")
             return false
         }
@@ -124,7 +124,7 @@ class BLEComm @Inject internal constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(app.aaps.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }

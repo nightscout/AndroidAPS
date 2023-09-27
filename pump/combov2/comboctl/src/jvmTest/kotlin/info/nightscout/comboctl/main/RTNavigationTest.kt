@@ -56,6 +56,7 @@ class RTNavigationTest {
         testParsedScreenList: List<ParsedScreen>,
         private val automaticallyAdvanceScreens: Boolean = false
     ) : RTNavigationContext {
+
         private val mainJob = SupervisorJob()
         private val mainScope = CoroutineScope(mainJob)
         private val testParsedScreenListIter = testParsedScreenList.listIterator()
@@ -69,7 +70,7 @@ class RTNavigationTest {
         init {
             mainScope.launch {
                 while (true) {
-                    System.err.println("Emitting test screen $currentParsedScreen")
+                    println("Emitting test screen $currentParsedScreen")
                     parsedScreenChannel.send(currentParsedScreen)
                     delay(100)
                     if (automaticallyAdvanceScreens) {
@@ -125,7 +126,7 @@ class RTNavigationTest {
                     // here by moving to the next screen if keepGoing() returns true.
                     // If keepGoing is not set, this behaves as if keepGoing() always
                     // returned true.
-                    if (keepGoing?.let { !it() } ?: false)
+                    if (keepGoing?.let { !it() } == true)
                         break
                     currentParsedScreen = testParsedScreenListIter.next()
                 }
@@ -145,12 +146,13 @@ class RTNavigationTest {
         override suspend fun shortPressButton(button: RTNavigationButton) {
             // Simulate the consequences of user interaction by moving to the next screen.
             currentParsedScreen = testParsedScreenListIter.next()
-            System.err.println("Moved to next screen $currentParsedScreen after short button press")
+            println("Moved to next screen $currentParsedScreen after short button press")
             shortPressedRTButtons.add(button)
         }
     }
 
     companion object {
+
         @BeforeAll
         @JvmStatic
         fun commonInit() {
@@ -188,16 +190,31 @@ class RTNavigationTest {
 
         assertNotNull(path)
         assertEquals(5, path.size)
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.TemporaryBasalRateMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)), path[0])
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.MyDataMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)), path[1])
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.BasalRate1ProgrammingMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)), path[2])
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.BasalRateTotalScreen::class, RTEdgeValue(RTNavigationButton.CHECK)), path[3])
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.BasalRateFactorSettingScreen::class, RTEdgeValue(RTNavigationButton.MENU)), path[4])
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.TemporaryBasalRateMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)
+            ), path[0]
+        )
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.MyDataMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)
+            ), path[1]
+        )
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.BasalRate1ProgrammingMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)
+            ), path[2]
+        )
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.BasalRateTotalScreen::class, RTEdgeValue(RTNavigationButton.CHECK)
+            ), path[3]
+        )
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.BasalRateFactorSettingScreen::class, RTEdgeValue(RTNavigationButton.MENU)
+            ), path[4]
+        )
     }
 
     @Test
@@ -214,14 +231,26 @@ class RTNavigationTest {
 
         assertNotNull(path)
         assertEquals(4, path.size)
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.MyDataMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)), path[0])
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.BasalRate1ProgrammingMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)), path[1])
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.BasalRateTotalScreen::class, RTEdgeValue(RTNavigationButton.CHECK)), path[2])
-        assertEquals(PathSegment<KClassifier, RTEdgeValue>(
-            ParsedScreen.BasalRateFactorSettingScreen::class, RTEdgeValue(RTNavigationButton.MENU)), path[3])
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.MyDataMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)
+            ), path[0]
+        )
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.BasalRate1ProgrammingMenuScreen::class, RTEdgeValue(RTNavigationButton.MENU)
+            ), path[1]
+        )
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.BasalRateTotalScreen::class, RTEdgeValue(RTNavigationButton.CHECK)
+            ), path[2]
+        )
+        assertEquals(
+            PathSegment<KClassifier, RTEdgeValue>(
+                ParsedScreen.BasalRateFactorSettingScreen::class, RTEdgeValue(RTNavigationButton.MENU)
+            ), path[3]
+        )
     }
 
     @Test
@@ -470,15 +499,19 @@ class RTNavigationTest {
         // the latter case, the watchdog will eventually cancel the
         // coroutine and report the test as failed.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Normal(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.QuickinfoMainScreen(Quickinfo(availableUnits = 105, reservoirState = ReservoirState.FULL))
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Normal(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.QuickinfoMainScreen(Quickinfo(availableUnits = 105, reservoirState = ReservoirState.FULL))
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, isComboStopped = false)
@@ -491,18 +524,22 @@ class RTNavigationTest {
         // otherwise the navigation may incorrectly press RT buttons more often
         // than necessary.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Normal(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.TemporaryBasalRateMenuScreen,
-            ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = 110, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = null, remainingDurationInMinutes = null),
-            ParsedScreen.TemporaryBasalRateDurationScreen(durationInMinutes = 45)
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Normal(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.TemporaryBasalRateMenuScreen,
+                ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = 110, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(percentage = null, remainingDurationInMinutes = null),
+                ParsedScreen.TemporaryBasalRateDurationScreen(durationInMinutes = 45)
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             navigateToRTScreen(rtNavigationContext, ParsedScreen.TemporaryBasalRateDurationScreen::class, isComboStopped = false)
@@ -523,14 +560,18 @@ class RTNavigationTest {
         // Check edge case handling when we want to navigate to
         // a target screen type, but we are in fact already there.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Normal(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            ))
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Normal(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                )
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, isComboStopped = false)
@@ -541,29 +582,33 @@ class RTNavigationTest {
     fun checkRTNavigationFromMainScreenToBasalRateFactorSettingScreen() {
         // Check the result of a more complex navigation.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Normal(
-                currentTime = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 23, minute = 11),
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 800,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.StopPumpMenuScreen,
-            ParsedScreen.StandardBolusMenuScreen,
-            ParsedScreen.ExtendedBolusMenuScreen,
-            ParsedScreen.MultiwaveBolusMenuScreen,
-            ParsedScreen.TemporaryBasalRateMenuScreen,
-            ParsedScreen.MyDataMenuScreen,
-            ParsedScreen.BasalRateProfileSelectionMenuScreen,
-            ParsedScreen.BasalRate1ProgrammingMenuScreen,
-            ParsedScreen.BasalRateTotalScreen(1840, 1),
-            ParsedScreen.BasalRateFactorSettingScreen(
-                LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0),
-                LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 1, minute = 0),
-                1000,
-                1
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Normal(
+                        currentTime = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 23, minute = 11),
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 800,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.StopPumpMenuScreen,
+                ParsedScreen.StandardBolusMenuScreen,
+                ParsedScreen.ExtendedBolusMenuScreen,
+                ParsedScreen.MultiwaveBolusMenuScreen,
+                ParsedScreen.TemporaryBasalRateMenuScreen,
+                ParsedScreen.MyDataMenuScreen,
+                ParsedScreen.BasalRateProfileSelectionMenuScreen,
+                ParsedScreen.BasalRate1ProgrammingMenuScreen,
+                ParsedScreen.BasalRateTotalScreen(1840, 1),
+                ParsedScreen.BasalRateFactorSettingScreen(
+                    LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 0, minute = 0),
+                    LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 1, minute = 0),
+                    1000,
+                    1
+                )
             )
-        ))
+        )
 
         runBlockingWithWatchdog(6000) {
             val targetScreen = navigateToRTScreen(
@@ -609,25 +654,31 @@ class RTNavigationTest {
         // second TBR main screen is skipped by the detection). Without
         // the screen type check, it would press CHECK _twice_.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Tbr(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                remainingTbrDurationInMinutes = 28,
-                tbrPercentage = 110,
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.MainScreen(MainScreenContent.Tbr(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                remainingTbrDurationInMinutes = 27,
-                tbrPercentage = 110,
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.QuickinfoMainScreen(Quickinfo(availableUnits = 105, reservoirState = ReservoirState.FULL))
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Tbr(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        remainingTbrDurationInMinutes = 28,
+                        tbrPercentage = 110,
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Tbr(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        remainingTbrDurationInMinutes = 27,
+                        tbrPercentage = 110,
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.QuickinfoMainScreen(Quickinfo(availableUnits = 105, reservoirState = ReservoirState.FULL))
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             navigateToRTScreen(rtNavigationContext, ParsedScreen.QuickinfoMainScreen::class, isComboStopped = false)
@@ -649,19 +700,23 @@ class RTNavigationTest {
         // 4th one, which is the target. To test for "overshoots",
         // there's a 5th one after that.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Normal(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.BasalRate1ProgrammingMenuScreen,
-            ParsedScreen.BasalRate2ProgrammingMenuScreen,
-            ParsedScreen.BasalRate3ProgrammingMenuScreen,
-            ParsedScreen.BasalRate4ProgrammingMenuScreen,
-            ParsedScreen.BasalRate5ProgrammingMenuScreen
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Normal(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.BasalRate1ProgrammingMenuScreen,
+                ParsedScreen.BasalRate2ProgrammingMenuScreen,
+                ParsedScreen.BasalRate3ProgrammingMenuScreen,
+                ParsedScreen.BasalRate4ProgrammingMenuScreen,
+                ParsedScreen.BasalRate5ProgrammingMenuScreen
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             val finalScreen = longPressRTButtonUntil(rtNavigationContext, RTNavigationButton.MENU) { parsedScreen ->
@@ -683,19 +738,23 @@ class RTNavigationTest {
         // 4th one, which is the target. To test for "overshoots",
         // there's a 5th one after that.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Normal(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.BasalRate1ProgrammingMenuScreen,
-            ParsedScreen.BasalRate2ProgrammingMenuScreen,
-            ParsedScreen.BasalRate3ProgrammingMenuScreen,
-            ParsedScreen.BasalRate4ProgrammingMenuScreen,
-            ParsedScreen.BasalRate5ProgrammingMenuScreen
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Normal(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.BasalRate1ProgrammingMenuScreen,
+                ParsedScreen.BasalRate2ProgrammingMenuScreen,
+                ParsedScreen.BasalRate3ProgrammingMenuScreen,
+                ParsedScreen.BasalRate4ProgrammingMenuScreen,
+                ParsedScreen.BasalRate5ProgrammingMenuScreen
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             val finalScreen = shortPressRTButtonsUntil(rtNavigationContext) { parsedScreen ->
@@ -714,20 +773,24 @@ class RTNavigationTest {
         // screen in between. We except the long button press to be aborted
         // and an AlertScreenException to be thrown.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Normal(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.BasalRate1ProgrammingMenuScreen,
-            ParsedScreen.BasalRate2ProgrammingMenuScreen,
-            ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6, AlertScreenContent.AlertScreenState.TO_SNOOZE)),
-            ParsedScreen.BasalRate3ProgrammingMenuScreen,
-            ParsedScreen.BasalRate4ProgrammingMenuScreen,
-            ParsedScreen.BasalRate5ProgrammingMenuScreen
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Normal(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.BasalRate1ProgrammingMenuScreen,
+                ParsedScreen.BasalRate2ProgrammingMenuScreen,
+                ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6, AlertScreenContent.AlertScreenState.TO_SNOOZE)),
+                ParsedScreen.BasalRate3ProgrammingMenuScreen,
+                ParsedScreen.BasalRate4ProgrammingMenuScreen,
+                ParsedScreen.BasalRate5ProgrammingMenuScreen
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             val e = assertFailsWith<AlertScreenException> {
@@ -756,19 +819,23 @@ class RTNavigationTest {
         // press MENU until it reaches basal rate programming screen 4
         // in our simulated sequence of screens.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.MainScreen(MainScreenContent.Normal(
-                currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
-                activeBasalProfileNumber = 1,
-                currentBasalRateFactor = 300,
-                batteryState = BatteryState.FULL_BATTERY
-            )),
-            ParsedScreen.BasalRate1ProgrammingMenuScreen,
-            ParsedScreen.BasalRate2ProgrammingMenuScreen,
-            ParsedScreen.BasalRate3ProgrammingMenuScreen,
-            ParsedScreen.BasalRate4ProgrammingMenuScreen,
-            ParsedScreen.BasalRate5ProgrammingMenuScreen
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.MainScreen(
+                    MainScreenContent.Normal(
+                        currentTime = LocalDateTime(year = 2020, monthNumber = 10, dayOfMonth = 4, hour = 0, minute = 0),
+                        activeBasalProfileNumber = 1,
+                        currentBasalRateFactor = 300,
+                        batteryState = BatteryState.FULL_BATTERY
+                    )
+                ),
+                ParsedScreen.BasalRate1ProgrammingMenuScreen,
+                ParsedScreen.BasalRate2ProgrammingMenuScreen,
+                ParsedScreen.BasalRate3ProgrammingMenuScreen,
+                ParsedScreen.BasalRate4ProgrammingMenuScreen,
+                ParsedScreen.BasalRate5ProgrammingMenuScreen
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             val finalScreen = cycleToRTScreen(
@@ -813,20 +880,22 @@ class RTNavigationTest {
         // expect adjustQuantityOnScreen() to catch this and correct it
         // using short RT button presses until the target quantity is observed.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.TemporaryBasalRatePercentageScreen(100, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(110, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(120, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(130, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(140, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(150, remainingDurationInMinutes = 30),
-            // No 160 quantity here, on purpose, to test overshoot handling
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30)
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.TemporaryBasalRatePercentageScreen(100, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(110, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(120, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(130, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(140, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(150, remainingDurationInMinutes = 30),
+                // No 160 quantity here, on purpose, to test overshoot handling
+                ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30)
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             adjustQuantityOnScreen(
@@ -849,25 +918,27 @@ class RTNavigationTest {
         // to be thrown. Such a warning screen interrupts and aborts whatever operation we
         // were doing and returns the Combo back to the main screen.
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.TemporaryBasalRatePercentageScreen(100, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(110, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(120, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(130, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(140, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(150, remainingDurationInMinutes = 30),
-            // No 160 quantity here, on purpose, to test overshoot handling.
-            // During the screens below, short button presses will be used
-            // to fix the overshoot, so we place the W6 in between these
-            // to test that the AlertScreenException is correctly thrown
-            // while short-pressing the button.
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
-            ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6, AlertScreenContent.AlertScreenState.TO_SNOOZE)),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30),
-            ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30)
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.TemporaryBasalRatePercentageScreen(100, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(110, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(120, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(130, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(140, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(150, remainingDurationInMinutes = 30),
+                // No 160 quantity here, on purpose, to test overshoot handling.
+                // During the screens below, short button presses will be used
+                // to fix the overshoot, so we place the W6 in between these
+                // to test that the AlertScreenException is correctly thrown
+                // while short-pressing the button.
+                ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
+                ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6, AlertScreenContent.AlertScreenState.TO_SNOOZE)),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30),
+                ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30)
+            )
+        )
 
         val e = assertFailsWith<AlertScreenException> {
             runBlockingWithWatchdog(6000) {
@@ -901,17 +972,19 @@ class RTNavigationTest {
         // without wraparound, it goes 58 -> 2 by decrementing, which
         // is a total distance of 55 steps.)
 
-        val rtNavigationContext = TestRTNavigationContext(listOf(
-            ParsedScreen.TimeAndDateSettingsMinuteScreen(58),
-            ParsedScreen.TimeAndDateSettingsMinuteScreen(59),
-            ParsedScreen.TimeAndDateSettingsMinuteScreen(0),
-            ParsedScreen.TimeAndDateSettingsMinuteScreen(1),
-            // No 2 quantity here, on purpose, to test overshoot handling
-            ParsedScreen.TimeAndDateSettingsMinuteScreen(3),
-            ParsedScreen.TimeAndDateSettingsMinuteScreen(2),
-            // This is a dummy screen to avoid an exception due to the next() call in TestRTNavigationContext.shortButtonPress()
-            ParsedScreen.TimeAndDateSettingsMinuteScreen(0)
-        ))
+        val rtNavigationContext = TestRTNavigationContext(
+            listOf(
+                ParsedScreen.TimeAndDateSettingsMinuteScreen(58),
+                ParsedScreen.TimeAndDateSettingsMinuteScreen(59),
+                ParsedScreen.TimeAndDateSettingsMinuteScreen(0),
+                ParsedScreen.TimeAndDateSettingsMinuteScreen(1),
+                // No 2 quantity here, on purpose, to test overshoot handling
+                ParsedScreen.TimeAndDateSettingsMinuteScreen(3),
+                ParsedScreen.TimeAndDateSettingsMinuteScreen(2),
+                // This is a dummy screen to avoid an exception due to the next() call in TestRTNavigationContext.shortButtonPress()
+                ParsedScreen.TimeAndDateSettingsMinuteScreen(0)
+            )
+        )
 
         runBlockingWithWatchdog(6000) {
             adjustQuantityOnScreen(

@@ -5,10 +5,10 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BolusStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusStopResponse;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -28,8 +28,8 @@ public class StopExtBolusTask extends BolusTask {
 
     public Single<BolusStopResponse> stopJob() {
         return BOLUS_STOP.stop(IPatchConstant.EXT_BOLUS_ID)
-                       .doOnSuccess(this::checkResponse)
-                       .doOnSuccess(this::onExtBolusStopped);
+                .doOnSuccess(this::checkResponse)
+                .doOnSuccess(this::onExtBolusStopped);
     }
 
 
@@ -43,8 +43,8 @@ public class StopExtBolusTask extends BolusTask {
 
         if (ready) {
             disposable = stop()
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe();
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe();
         }
     }
 

@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.pump.core.utils.StringUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import info.nightscout.pump.common.utils.StringUtil
 import org.apache.commons.lang3.StringUtils
 
 /**
@@ -14,9 +13,9 @@ import org.apache.commons.lang3.StringUtils
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
-abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogger: AAPSLogger,
-                                                                   var medtronicUtil: MedtronicUtil,
-                                                                   var bitUtils: ByteUtil
+abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(
+    var aapsLogger: AAPSLogger,
+    var medtronicUtil: MedtronicUtil
 ) : MedtronicHistoryDecoderInterface<T> {
 
     // STATISTICS (remove at later time or not)

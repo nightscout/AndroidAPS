@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.configuration.setupwizard.SetupWizardActivity">
+    tools:context=".setupwizard.SetupWizardActivity">
 
     <TextView
         android:id="@+id/sw_content"

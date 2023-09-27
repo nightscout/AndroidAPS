@@ -4,15 +4,15 @@ import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import androidx.annotation.StringRes
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import com.google.gson.Gson
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.core.utils.extensions.safeGetParcelableExtra
 import info.nightscout.pump.common.events.EventPumpConnectionParametersChanged
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 class BondStateReceiver(
@@ -29,7 +29,6 @@ class BondStateReceiver(
     @Inject lateinit var rxBus: RxBus
 
     var gson = Gson()
-    var applicationContext: Context? = null
 
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)

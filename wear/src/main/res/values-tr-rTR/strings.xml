@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">KŞ Etkisi Göster</string>
     <string name="pref_show_direction_arrow">Yön Oku Göster</string>
     <string name="pref_show_ago">Önce Göster</string>
+    <string name="pref_show_temp_basal">GBO göster</string>
+    <string name="pref_show_bolus">Bolus &amp; SMB göster</string>
+    <string name="pref_show_grid">Izgarayı Göster</string>
     <string name="pref_dark" comment="Enables dark visual theme">Koyu</string>
     <string name="pref_highlight_basals">Bazalları Vurgula</string>
     <string name="pref_prediction_lines">Tahminleri göster</string>

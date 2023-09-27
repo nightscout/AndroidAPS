@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpHistory;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 
 public class ReadQuickInfoCommand extends BaseCommand {
     private final AAPSLogger aapsLogger;

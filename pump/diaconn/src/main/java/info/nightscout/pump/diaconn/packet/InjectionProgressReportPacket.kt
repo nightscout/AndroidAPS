@@ -1,16 +1,16 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 /**
  * InjectionProgressReportPacket
  */
-class InjectionProgressReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector ) {
+class InjectionProgressReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var rxBus: RxBus
@@ -30,10 +30,10 @@ class InjectionProgressReportPacket(injector: HasAndroidInjector) : DiaconnG8Pac
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        val setAmount = getShortToInt(bufferData) /100.0
-        val injAmount  = getShortToInt(bufferData)/100.0
-        val speed  = getByteToInt(bufferData);
-        val injProgress  = getByteToInt(bufferData)
+        val setAmount = getShortToInt(bufferData) / 100.0
+        val injAmount = getShortToInt(bufferData) / 100.0
+        val speed = getByteToInt(bufferData)
+        val injProgress = getByteToInt(bufferData)
 
         diaconnG8Pump.bolusingSetAmount = setAmount
         diaconnG8Pump.bolusingInjAmount = injAmount

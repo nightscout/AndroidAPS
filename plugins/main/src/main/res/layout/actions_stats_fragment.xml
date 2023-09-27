@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:stretchColumns="0,2,4"
-    tools:context="info.nightscout.plugins.general.actions.ActionsFragment">
+    tools:context=".general.actions.ActionsFragment">
 
     <TableRow
         android:layout_width="fill_parent"

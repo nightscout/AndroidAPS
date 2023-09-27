@@ -4,6 +4,8 @@ import org.apache.commons.lang3.NotImplementedException;
 
 import javax.inject.Inject;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -13,9 +15,7 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.utils.CRC;
-import info.nightscout.pump.core.utils.ByteUtil;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by geoff on 5/30/16.
@@ -23,12 +23,11 @@ import info.nightscout.rx.logging.LTag;
 public class RadioResponse {
 
 
+    public int rssi;
     @Inject AAPSLogger aapsLogger;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
-
     private boolean decodedOK = false;
-    public int rssi;
     private int responseNumber;
     private byte[] decodedPayload = new byte[0];
     private byte receivedCRC;
@@ -75,11 +74,11 @@ public class RadioResponse {
         byte[] encodedPayload;
 
         if (rileyLinkServiceData.firmwareVersion.isSameVersion(RileyLinkFirmwareVersion.Version2AndHigher)) {
-            encodedPayload = ByteUtil.substring(rxData, 3, rxData.length - 3);
+            encodedPayload = ByteUtil.INSTANCE.substring(rxData, 3, rxData.length - 3);
             rssi = rxData[1];
             responseNumber = rxData[2];
         } else {
-            encodedPayload = ByteUtil.substring(rxData, 2, rxData.length - 2);
+            encodedPayload = ByteUtil.INSTANCE.substring(rxData, 2, rxData.length - 2);
             rssi = rxData[0];
             responseNumber = rxData[1];
         }
@@ -111,7 +110,7 @@ public class RadioResponse {
                     if (decodeThis != null && decodeThis.length > 2) {
                         decodedOK = true;
 
-                        decodedPayload = ByteUtil.substring(decodeThis, 0, decodeThis.length - 1);
+                        decodedPayload = ByteUtil.INSTANCE.substring(decodeThis, 0, decodeThis.length - 1);
                         receivedCRC = decodeThis[decodeThis.length - 1];
                         byte calculatedCRC = CRC.crc8(decodedPayload);
                         if (receivedCRC != calculatedCRC) {
@@ -130,7 +129,7 @@ public class RadioResponse {
             }
         } catch (NumberFormatException e) {
             decodedOK = false;
-            aapsLogger.error(LTag.PUMPBTCOMM, "Failed to decode radio data: " + ByteUtil.shortHexString(encodedPayload));
+            aapsLogger.error(LTag.PUMPBTCOMM, "Failed to decode radio data: " + ByteUtil.INSTANCE.shortHexString(encodedPayload));
         }
     }
 

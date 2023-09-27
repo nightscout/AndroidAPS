@@ -1,13 +1,13 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.stats.TddCalculator
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.medtrum.MedtrumPump
-import info.nightscout.pump.medtrum.comm.enums.CommandType.ACTIVATE
 import info.nightscout.pump.medtrum.comm.enums.BasalType
-import info.nightscout.pump.medtrum.extension.toByteArray
+import info.nightscout.pump.medtrum.comm.enums.CommandType.ACTIVATE
 import info.nightscout.pump.medtrum.extension.toByte
-import info.nightscout.interfaces.stats.TddCalculator
+import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil

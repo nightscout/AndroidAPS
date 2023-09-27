@@ -25,7 +25,7 @@ dependencies {
     implementation project(':core:ui')
     implementation project(':core:utils')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
 
     // RuffyScripter
     api "com.google.guava:guava:$guava_version"

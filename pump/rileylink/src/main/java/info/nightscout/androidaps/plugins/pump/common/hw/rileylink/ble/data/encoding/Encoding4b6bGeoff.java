@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkBLEError;
-import info.nightscout.pump.core.utils.ByteUtil;
-import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by andy on 11/24/18.
@@ -26,7 +26,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
         // LOG.error("Warning: data is odd number of bytes");
         // }
         // use arraylists because byte[] is annoying.
-        List<Byte> inData = ByteUtil.getListFromByteArray(data);
+        List<Byte> inData = ByteUtil.INSTANCE.getListFromByteArray(data);
         List<Byte> outData = new ArrayList<>();
 
         int acc = 0;
@@ -65,7 +65,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
         }
 
         // convert back to byte[]
-        byte[] rval = ByteUtil.getByteArrayFromList(outData);
+        byte[] rval = ByteUtil.INSTANCE.getByteArrayFromList(outData);
 
         return rval;
 
@@ -83,7 +83,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
 
         StringBuilder errorMessageBuilder = new StringBuilder();
 
-        errorMessageBuilder.append("Input data: " + ByteUtil.shortHexString(raw) + "\n");
+        errorMessageBuilder.append("Input data: " + ByteUtil.INSTANCE.shortHexString(raw) + "\n");
 
         if ((raw.length % 2) != 0) {
             errorMessageBuilder.append("Warn: odd number of bytes.\n");
@@ -94,7 +94,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
         int codingErrors = 0;
         int x = 0;
         // Log.w(TAG,"decode4b6b: untested code");
-        // Log.w(TAG,String.format("Decoding %d bytes: %s",raw.length,ByteUtil.shortHexString(raw)));
+        // Log.w(TAG,String.format("Decoding %d bytes: %s",raw.length,ByteUtil.INSTANCE.shortHexString(raw)));
         for (int i = 0; i < raw.length; i++) {
             int unsignedValue = raw[i];
             if (unsignedValue < 0) {
@@ -112,14 +112,14 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
                 // special case at end of transmission on uneven boundaries:
                 if ((highIndex >= 0) && (lowIndex >= 0)) {
                     byte decoded = (byte) ((highIndex << 4) + lowIndex);
-                    rval = ByteUtil.concat(rval, decoded);
+                    rval = ByteUtil.INSTANCE.concat(rval, decoded);
                     /*
                      * LOG.debug(String.format(
                      * "i=%d,x=0x%08X,0x%02X->0x%02X, 0x%02X->0x%02X, result: 0x%02X, %d bits remaining, errors %d, bytes remaining: %s"
                      * ,
                      * i,x,highcode,highIndex, lowcode,
-                     * lowIndex,decoded,availableBits,codingErrors,ByteUtil.shortHexString
-                     * (ByteUtil.substring(raw,i+1,raw.length-i-1))));
+                     * lowIndex,decoded,availableBits,codingErrors,ByteUtil.INSTANCE.shortHexString
+                     * (ByteUtil.INSTANCE.substring(raw,i+1,raw.length-i-1))));
                      */
                 } else {
                     // LOG.debug(String.format("i=%d,x=%08X, coding error: highcode=0x%02X, lowcode=0x%02X, %d bits remaining",i,x,highcode,lowcode,availableBits));
@@ -179,7 +179,7 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
     // int codingErrors = 0;
     // int x = 0;
     // // Log.w(TAG,"decode4b6b: untested code");
-    // // Log.w(TAG,String.format("Decoding %d bytes: %s",raw.length,ByteUtil.shortHexString(raw)));
+    // // Log.w(TAG,String.format("Decoding %d bytes: %s",raw.length,ByteUtil.INSTANCE.shortHexString(raw)));
     // for (int i = 0; i < raw.length; i++) {
     // int unsignedValue = raw[i];
     // if (unsignedValue < 0) {
@@ -197,15 +197,15 @@ public class Encoding4b6bGeoff extends Encoding4b6bAbstract {
     // // special case at end of transmission on uneven boundaries:
     // if ((highIndex >= 0) && (lowIndex >= 0)) {
     // byte decoded = (byte)((highIndex << 4) + lowIndex);
-    // rval = ByteUtil.concat(rval, decoded);
+    // rval = ByteUtil.INSTANCE.concat(rval, decoded);
     // /*
     // * LOG.debug(String.format(
     // *
     // "i=%d,x=0x%08X,0x%02X->0x%02X, 0x%02X->0x%02X, result: 0x%02X, %d bits remaining, errors %d, bytes remaining: %s"
     // * ,
     // * i,x,highcode,highIndex, lowcode,
-    // * lowIndex,decoded,availableBits,codingErrors,ByteUtil.shortHexString
-    // * (ByteUtil.substring(raw,i+1,raw.length-i-1))));
+    // * lowIndex,decoded,availableBits,codingErrors,ByteUtil.INSTANCE.shortHexString
+    // * (ByteUtil.INSTANCE.substring(raw,i+1,raw.length-i-1))));
     // */
     // } else {
     // //

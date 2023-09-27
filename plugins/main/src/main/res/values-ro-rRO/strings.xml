@@ -3,6 +3,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicator SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Control la distanţă al AAPS folosind comenzi SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de la aplicația Authenticator pentru: %1$s urmat de PIN</string>
     <string name="smscommunicator_otp_pin">PIN obligatoriu suplimentar la sfârșitul token-ului</string>
     <string name="smscommunicator_otp_pin_summary">Cifre suplimentare care ar trebui să fie memorate și adăugate la sfârșitul fiecărei parole unice generate</string>
@@ -18,9 +19,15 @@
     <string name="smscommunicator_otp_export_prompt">Sunteţi sigur că doriţi să copiaţi secretul OTP în clipboard?\n\nS-ar putea să aveţi nevoie doar dacă aplicaţia dumneavoastră de autentificare are probleme de scanare a QRCode, doriţi să o introduceţi manual sau doriţi să configuraţi token-ul hardware OTP folosind aplicaţia dedicată.</string>
     <string name="smscommunicator_otp_export_successful">Secret OTP (în formatul Base32) exportat şi copiat în clipboard. Lipiţi-l în autentificator sau in hardware OTP burner!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalați Authenticator</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanează codul pentru a configura codurile OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testați o parolă unică</string>
     <string name="smscommunicator_otp_reset_header">Resetați Authenticatori</string>
     <string name="smscommunicator_otp_install_info">Pe fiecare telefon urmăritor instalați o aplicație de tip Authenticator care suporta tokens RFC 6238 TOTP. Asemenea aplicații gratuite populare sunt:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Prin resetarea autentificatorului invalidați toți autentificatorii existenți. Va trebui să îi configurați din nou!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">MĂRIME INVALIDĂ!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN GREŞIT</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP GREȘIT</string>
     <string name="sms_wrong_code">Cod greșit. Comandă anulată.</string>
     <string name="sms_timeout_while_waiting">Timp expirat cat ce se aștepta terminarea comunicării anterioare a pompei</string>
     <string name="smscommunicator_allowednumbers">Numere de telefon permise</string>
@@ -85,6 +92,9 @@
     <string name="smscommunicator_message_body">Conținutul mesajului nu este valid</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Trimite SMS dacă este generata o alarma de eroare conexiune pompa</string>
     <string name="smscommunicator_pump_unreachable">Raportează pompa inaccesibilă</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Pentru a schimba modul buclei în LGS (Suspendare cu Glucoză inferioară) răspundeți cu codul %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Pentru a schimba modul buclei în Buclă Închisă răspundeți cu codul %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Mod curent buclă: %1$s</string>
     <string name="wrong_format">Format greșit</string>
     <string name="sms_actual_bg">Glicemie:</string>
     <string name="sms_last_bg">Ultima glicemie:</string>
@@ -97,6 +107,7 @@
     <string name="sms_read_status_failed">Citire eșuată a stării</string>
     <string name="sms_profile_switch_created">Schimbare de profil creată</string>
     <string name="sms_wrong_tbr_duration">Durata RBT trebuie să fie un multiplu de %1$d minute și mai mare de 0.</string>
+    <string name="a11y_otp_qr_code">Cod QR pentru configurarea unei parole de unică folosință</string>
     <string name="disabled_loop">Buclă inactivă</string>
     <!-- Food-->
     <string name="food_short">Mâncare</string>
@@ -111,11 +122,16 @@
     <string name="subcategory">Subcategorie</string>
     <string name="calculator_label">Calculator</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Alege modul întunecat, luminos sau urmărește tema de sistem</string>
     <string name="app_color_scheme">Schemă de culori aplicații</string>
+    <string name="dark_theme">Temă întunecată</string>
+    <string name="light_theme">Temă luminoasă</string>
+    <string name="follow_system_theme">Folosește tema dispozitivului</string>
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
     <string name="description_profile_local">Definire profil care să fie valabil offline.</string>
+    <string name="a11y_add_new_to_list">adăugare nouă la listă</string>
     <string name="do_you_want_switch_profile">Doriți să schimbați profilul și să renunțați la modificările făcute profilului curent?</string>
     <string name="save_or_reset_changes_first">Salvează sau resetează modificările curente mai întâi</string>
     <string name="delete_current_profile">Ştergeţi profilul curent?</string>
@@ -125,10 +141,14 @@
     <string name="error_in_basal_values">Eroare in valorile ratei bazale</string>
     <string name="error_in_target_values">Eroare in valorile tinta</string>
     <string name="error_in_isf_values">Eroare in valorile ISF</string>
+    <string name="profile_name_contains_dot">Unele nume de profiluri conțin puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
     <string name="invalid_profile_not_accepted">Profilul invalid din NS %1$s nu este acceptat</string>
     <string name="view">Vizualizare</string>
     <string name="errors">Erori</string>
+    <string name="select_profile">Selectează profilul pentru editare</string>
     <string name="profile_name">Nume profil:</string>
+    <string name="a11y_add_new_profile">adaugă un profil nou</string>
+    <string name="a11y_clone_profile">clonează profilul curent</string>
     <string name="a11y_delete_current_profile">ştergeţi profilul curent</string>
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
@@ -150,8 +170,12 @@
     <string name="cannula">Canula</string>
     <string name="ebstopsloop">Utilizarea unui bolus extins va opri modul buclă închisă pe timpul livrării bolusului extins. Sigur doriți acest lucru?</string>
     <string name="statuslights_cannula_age">vechime canulă</string>
+    <string name="statuslights_patch_pump_age">vârstă patch pompă</string>
+    <string name="patch_pump">Patch pompă</string>
     <!-- Overview -->
     <string name="show_statuslights">Afișați indicatorii luminoși ai pompei pe ecranul de start</string>
+    <string name="statuslights_cage_warning">Prag de avertizare timp de utilizare canulă [h]</string>
+    <string name="statuslights_cage_critical">Prag critic timp de utilizare canulă [h]</string>
     <string name="statuslights_iage_warning">Prag de avertizare vechime insulină [h]</string>
     <string name="statuslights_iage_critical">Prag critic vechime insulină [h]</string>
     <string name="statuslights_sage_warning">Prag de avertizare vechime senzor [h]</string>
@@ -168,7 +192,9 @@
     <string name="a11y_graph">grafic</string>
     <string name="a11y_insulin_label">insulină</string>
     <string name="chart_menu">Meniu diagramă</string>
+    <string name="a11y_bg_quality">calitatea valorii glicemiei</string>
     <string name="a11y_blood_glucose">blood glucose</string>
+    <string name="a11y_bg_outdated">învechită</string>
     <string name="set_basal_question">Acceptă noua bazală temporară:</string>
     <string name="overview_cgm">CGM</string>
     <string name="overview">Privire de ansamblu</string>
@@ -217,6 +243,7 @@
     <string name="short_tabtitles">Scurtează titlurile secțiunilor</string>
     <string name="overview_show_notes_field_in_dialogs_title">Afișează câmp pentru note în dialogurile de tratamente</string>
     <string name="deliverpartofboluswizard">Wizard bolus face un calcul, dar numai o parte din insulina calculată este și livrată. Este mai eficient când se folosește cu algoritmul SMB.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Livrează bolus complet (100%) dacă glicemia este mai veche de</string>
     <string name="enable_bolus_advisor">Activare consilier bolus</string>
     <string name="enable_bolus_advisor_summary">Folosește o alarma de reamintire pentru a începe sa mănânci mai târziu în loc de alerta de la calculatorul de bolus din timpul hiperglicemiei (\"pre-bolus\")</string>
     <string name="enablesuperbolus">Activează superbolus în asistent</string>
@@ -228,6 +255,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicții</string>
     <string name="overview_show_treatments">Tratamente</string>
+    <string name="overview_show_heartRate">Ritm cardiac</string>
     <string name="overview_show_deviation_slope">Panta deviaţiei</string>
     <string name="overview_show_activity">Activitate</string>
     <string name="overview_show_bgi">Impactul glicemiei</string>
@@ -245,7 +273,9 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
+    <string name="heartRate_shortname">RC</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="graph_scale">Scară grafică</string>
     <string name="graph_menu_divider_header">Grafic</string>
     <!-- Skins -->
     <string name="classic_description">Tema originală</string>
@@ -258,7 +288,22 @@
     <string name="send_logfiles">Trimite înregistrările zilei de astăzi către dezvoltatori, împreună cu timpul curent. Situație neașteptată.</string>
     <!--    Wear-->
     <string name="wear_shortname">CEAS</string>
+    <string name="description_wear">Monitorizează și controlează AAPS folosind ceasul WearOS.</string>
+    <string name="no_watch_connected">(Niciun ceas conectat)</string>
+    <string name="pump_status">Stare pompă</string>
     <string name="loop_status">Stare buclă</string>
+    <string name="wizard_result">Calc. Asistent:\nInsulină: %1$.2fU\nCarburi: %2$dg</string>
+    <string name="quick_wizard_not_available">Asistentul rapid selectat nu mai este disponibil, vă rugăm să reîncărcați iconița</string>
+    <string name="quick_wizard_message">Asistent calcul: %1$s\nInsulină: %2$.2fU\nCarbohidrați: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Presetare ȚintăTemporară necunoscută: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Se anulează rularea țintelor temporare?</string>
+    <string name="wear_action_tempt_unit_error">Unități diferite folosite pe ceas și telefon!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - anulați ȚinteleTemporare actuale?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-BG în afara intervalului!</string>
+    <string name="wear_action_tempt_max_bg_error">Max-BG în afara intervalului!</string>
+    <string name="wear_action_tempt_manual_range_message">ȚintăTemporară:\nMin: %1$s\nMax: %2$s\nDurată: %3$s</string>
+    <string name="wear_action_tempt_manual_message">ȚintăTemporară:\nȚintă: %1$s\nDurată: %2$s</string>
+    <string name="wear_action_tempt_preset_message">ȚintăTemporarăt:\nMotiv: %1$s\nȚintă: %2$s\nDurată: %3$s</string>
     <string name="no_success">fără succes - verificați telefonul</string>
     <string name="wear_settings">Setări Wear</string>
     <string name="wearcontrol_title">Controlare din ceas</string>
@@ -267,9 +312,46 @@
     <string name="wear_general_settings">Setări generale</string>
     <string name="wear_notifysmb_title">Notifică despre SMB</string>
     <string name="wear_notifysmb_summary">Arată SMB pe ceas ca și un bolus standard.</string>
+    <string name="wear_custom_watchface_settings">Cadran ceas - Setări personalizate </string>
+    <string name="wear_custom_watchface_authorization_title">Autorizare cadran personalizat</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorizează cadranul personalizat să modifice și să blocheze unele setări de afișare ale ceasului pentru a se potrivi designului cadranului</string>
+    <string name="wear_custom_watchface">Cadran personalizat: %1$s</string>
+    <string name="wear_load_watchface">Încărcaţi cadranul</string>
+    <string name="wear_infos_watchface">Info cadran</string>
+    <string name="wear_export_watchface">Exportă șablon</string>
+    <string name="wear_new_custom_watchface_exported">Șablon ceas personalizat exportat</string>
     <string name="resend_all_data">Retrimite toate datele</string>
     <string name="open_settings_on_wear">Deschide setările pe Wear</string>
+    <string name="cwf_infos_pref_locked">Lista de preferințe blocate de cadranul ceasului</string>
+    <string name="cwf_infos_pref_required">Lista de preferințe solicitate de cadranul ceasului</string>
+    <string name="cwf_infos_view_title">Lista câmpurilor incluse în fața ceasului</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Afişează o notificare activă cu o scurtă descriere referitoare la starea buclei</string>
     <string name="old_data">DATE VECHI</string>
+    <string name="pump_fetching_data">se încearcă preluarea datelor din pompă.</string>
+    <string name="pump_old_data">TDD: Date încă vechi! Nu se poate încărca din pompă.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Nicio schimbare de profil activă!</string>
+    <string name="profile_message">Profil:\n\nDecalare: %1$d\nProcent: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="no_profile">Niciun profil încărcat</string>
+    <string name="aps_only">Aplicați doar în modul APS!</string>
+    <string name="last_aps_result_na">Ultimul rezultat nu este disponibil!</string>
+    <string name="loop_status_closed">BUCLĂ ÎNCHISĂ</string>
+    <string name="loop_status_open">BUCLĂ DESCHISĂ</string>
+    <string name="loop_status_disabled">BUCLĂ INACTIVĂ</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Ultima rulare</string>
+    <string name="last_enact">Ultima implementare</string>
+    <string name="today">Astăzi</string>
+    <string name="weighted">ponderat</string>
+    <string name="target_only_aps_mode">Țintele se aplică numai în modul APS!</string>
+    <string name="no_history">Nu există date istorice!</string>
+    <string name="units_short">U</string>
+    <string name="temp_target">Țintă temporară</string>
+    <string name="until">până la</string>
+    <string name="default_range">INTERVAL IMPLICIT</string>
+    <string name="target">țintă</string>
+    <string name="rate_duration">Rată: %1$.2fU/h (%2$.2f%%) \nDurată %3$d min</string>
 </resources>

@@ -584,6 +584,22 @@
     <string name="cleanup_db_confirm_sync">Doriți să curățați baza de date?\nAceasta va elimina schimbările înregistrate și datele istorice mai vechi de 3 luni.\nFăcând acest lucru, veți accelera foarte mult sincronizarea completă.</string>
     <string name="cleared_entries">Înregistrări șterse</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">Dum</string>
+    <string name="weekday_saturday_short">Sâm</string>
+    <string name="weekday_friday_short">Vin</string>
+    <string name="weekday_thursday_short">Joi</string>
+    <string name="weekday_wednesday_short">Mie</string>
+    <string name="weekday_tuesday_short">Mar</string>
+    <string name="weekday_monday_short">Lun</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">L</string>
+    <string name="tuesday_short">Ma</string>
+    <string name="wednesday_short">Mi</string>
+    <string name="thursday_short">J</string>
+    <string name="friday_short">V</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">D</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

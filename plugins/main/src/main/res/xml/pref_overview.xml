@@ -33,7 +33,7 @@
                 android:key="@string/key_show_insulin_button"
                 android:title="@string/configbuilder_insulin" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0.5"
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
@@ -47,7 +47,7 @@
                 validate:floatminNumber="-5.0"
                 validate:testType="floatNumericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="1.0"
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
@@ -61,7 +61,7 @@
                 validate:floatminNumber="-5.0"
                 validate:testType="floatNumericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="2.0"
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
@@ -80,7 +80,7 @@
                 android:key="@string/key_show_carbs_button"
                 android:title="@string/carbs" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="5"
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
@@ -94,7 +94,7 @@
                 validate:minNumber="-50"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="10"
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
@@ -108,7 +108,7 @@
                 validate:minNumber="-50"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="20"
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
@@ -139,14 +139,14 @@
         <Preference
             android:key="quickwizard"
             android:title="@string/quickwizard_settings">
-            <intent android:action="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
+            <intent android:action="app.aaps.ui.activities.QuickWizardListActivity" />
         </Preference>
 
         <androidx.preference.PreferenceScreen
             android:key="@string/default_temptargets"
             android:title="@string/default_temptargets">
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="number"
                 android:key="@string/key_eatingsoon_duration"
@@ -155,7 +155,7 @@
                 validate:minNumber="15"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="@string/key_eatingsoon_target"
@@ -164,7 +164,7 @@
                 validate:floatminNumber="4.0"
                 validate:testType="floatNumericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="number"
                 android:key="@string/key_activity_duration"
@@ -173,7 +173,7 @@
                 validate:minNumber="15"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="@string/key_activity_target"
@@ -182,7 +182,7 @@
                 validate:floatminNumber="6.0"
                 validate:testType="floatNumericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="number"
                 android:key="@string/key_hypo_duration"
@@ -191,7 +191,7 @@
                 validate:minNumber="15"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="@string/key_hypo_target"
@@ -206,7 +206,7 @@
             android:key="@string/fill_bolus_title"
             android:title="@string/fill_bolus_title">
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0.3"
                 android:inputType="numberDecimal"
                 android:key="fill_button1"
@@ -215,7 +215,7 @@
                 validate:floatminNumber="0.05"
                 validate:testType="floatNumericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="fill_button2"
@@ -224,7 +224,7 @@
                 validate:floatminNumber="0.05"
                 validate:testType="floatNumericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="fill_button3"
@@ -240,7 +240,7 @@
             android:summary="@string/prefs_range_summary"
             android:title="@string/prefs_range_title">
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="@string/key_low_mark"
@@ -249,7 +249,7 @@
                 validate:floatminNumber="3"
                 validate:testType="floatNumericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="0"
                 android:inputType="numberDecimal"
                 android:key="@string/key_high_mark"
@@ -279,7 +279,7 @@
                 android:key="@string/key_show_statuslights"
                 android:title="@string/show_statuslights" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="48"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -288,11 +288,11 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:title="@string/statuslights_cage_warning"
-                validate:maxNumber="120"
+                validate:maxNumber="240"
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="72"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -301,11 +301,11 @@
                 android:selectAllOnFocus="true"
                 android:singleLine="true"
                 android:title="@string/statuslights_cage_critical"
-                validate:maxNumber="120"
+                validate:maxNumber="240"
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="72"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -318,7 +318,7 @@
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="144"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -331,7 +331,7 @@
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="216"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -344,7 +344,7 @@
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="240"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -357,7 +357,7 @@
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="25"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -370,7 +370,7 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="5"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -383,7 +383,7 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="216"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -396,7 +396,7 @@
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="240"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -409,7 +409,7 @@
                 validate:minNumber="24"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="80"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -422,7 +422,7 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="10"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -435,7 +435,7 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="25"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -448,7 +448,7 @@
                 validate:minNumber="0"
                 validate:testType="numericRange" />
 
-            <info.nightscout.core.validators.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="5"
                 android:dependency="@string/key_show_statuslights"
                 android:inputType="numberSigned"
@@ -464,12 +464,11 @@
             <Preference
                 android:key="@string/key_statuslights_copy_ns"
                 android:dependency="@string/key_show_statuslights"
-                android:title="@string/statuslights_copy_ns">
-            </Preference>
+                android:title="@string/statuslights_copy_ns"></Preference>
 
         </androidx.preference.PreferenceScreen>
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="100"
             android:dialogMessage="@string/deliverpartofboluswizard"
             android:inputType="number"
@@ -482,7 +481,7 @@
             validate:minNumber="10"
             validate:testType="numericRange" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="16"
             android:dialogMessage="@string/deliver_part_of_boluswizard_reset_time"
             android:inputType="number"

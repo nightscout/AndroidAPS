@@ -8,7 +8,7 @@
         android:title="@string/insulin_oref_peak"
         app:initialExpandedChildrenCount="0">
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="75"
             android:digits="0123456789"
             android:inputType="number"

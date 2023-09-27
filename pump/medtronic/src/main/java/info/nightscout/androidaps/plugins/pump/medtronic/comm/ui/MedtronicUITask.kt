@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.ui
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.MedtronicCommunicationManager
@@ -11,10 +14,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicUIRespons
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.core.defs.PumpDeviceState
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import info.nightscout.pump.common.defs.PumpDeviceState
 import org.joda.time.LocalDateTime
 import java.util.Locale
 import javax.inject.Inject
@@ -106,8 +106,10 @@ class MedtronicUITask {
             }
 
             MedtronicCommandType.GetHistoryData                              -> {
-                result = communicationManager.getPumpHistory(parameters!![0] as PumpHistoryEntry?,
-                    parameters!![1] as LocalDateTime?)
+                result = communicationManager.getPumpHistory(
+                    parameters!![0] as PumpHistoryEntry?,
+                    parameters!![1] as LocalDateTime?
+                )
             }
 
             else                                                             -> {
@@ -127,9 +129,11 @@ class MedtronicUITask {
     }
 
     private fun getTbrSettings(): TempBasalPair {
-        return TempBasalPair(getDoubleFromParameters(0)!!,  //
+        return TempBasalPair(
+            getDoubleFromParameters(0)!!,  //
             false,  //
-            getIntegerFromParameters(1))
+            getIntegerFromParameters(1)
+        )
     }
 
     private fun getFloatFromParameters(index: Int): Float {
@@ -153,13 +157,19 @@ class MedtronicUITask {
             postprocessor.postProcessData(this)
         }
         if (responseType === MedtronicUIResponseType.Invalid) {
-            rxBus.send(EventRileyLinkDeviceStatusChange(
-                PumpDeviceState.ErrorWhenCommunicating,
-                "Unsupported command in MedtronicUITask"))
+            rxBus.send(
+                EventRileyLinkDeviceStatusChange(
+                    PumpDeviceState.ErrorWhenCommunicating,
+                    "Unsupported command in MedtronicUITask"
+                )
+            )
         } else if (responseType === MedtronicUIResponseType.Error) {
-            rxBus.send(EventRileyLinkDeviceStatusChange(
-                PumpDeviceState.ErrorWhenCommunicating,
-                errorDescription))
+            rxBus.send(
+                EventRileyLinkDeviceStatusChange(
+                    PumpDeviceState.ErrorWhenCommunicating,
+                    errorDescription
+                )
+            )
         } else {
             rxBus.send(EventMedtronicPumpValuesChanged())
             medtronicPumpStatus.setLastCommunicationToNow()

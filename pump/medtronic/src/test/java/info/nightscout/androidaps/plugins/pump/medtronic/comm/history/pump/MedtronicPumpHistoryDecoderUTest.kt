@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
+import app.aaps.core.interfaces.ui.UiInteraction
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.pump.core.utils.ByteUtil
+import info.nightscout.pump.common.utils.ByteUtil
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -35,7 +35,7 @@ class MedtronicPumpHistoryDecoderUTest : MedtronicTestBase() {
             MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
         medtronicUtil =
             MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
-        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, ByteUtil())
+        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
     }
 
     /*

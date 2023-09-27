@@ -11,8 +11,9 @@ apply from: "${project.rootDir}/core/main/android_module_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
+
 android {
-    namespace 'info.nightscout.configuration'
+    namespace 'app.aaps.plugins.configuration'
 }
 
 
@@ -20,12 +21,12 @@ dependencies {
     implementation project(':database:entities')
     implementation project(':core:interfaces')
     implementation project(':core:main')
-    implementation project(':core:ns-sdk')
+    implementation project(':core:nssdk')
     implementation project(':core:utils')
     implementation project(':core:ui')
     implementation project(':core:validators')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
 
     //WorkManager
     api "androidx.work:work-runtime-ktx:$work_version"

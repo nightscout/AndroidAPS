@@ -12,21 +12,21 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.interfaces.profile.Profile.ProfileValue
-import info.nightscout.interfaces.pump.defs.PumpType
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup.Companion.getTranslatedList
 import info.nightscout.pump.common.defs.TempBasalPair
 import info.nightscout.pump.common.utils.ProfileUtil.getBasalProfilesDisplayable
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -109,7 +109,7 @@ class ErosPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
         recyclerView?.adapter = recyclerViewAdapter
         statusView?.visibility = View.GONE
         typeListFull = getTypeList(getTranslatedList(rh))
-        historyTypeSpinner?.adapter = ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, typeListFull)
+        historyTypeSpinner?.adapter = ArrayAdapter(this, app.aaps.core.ui.R.layout.spinner_centered, typeListFull)
         historyTypeSpinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                 if (manualChange) return

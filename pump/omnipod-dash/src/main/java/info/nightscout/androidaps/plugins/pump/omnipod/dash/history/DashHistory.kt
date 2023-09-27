@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
@@ -19,8 +21,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBas
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordEntity
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.lang.System.currentTimeMillis
@@ -67,11 +67,13 @@ class DashHistory @Inject constructor(
             id = currentTimeMillis()
         }
         when {
-            commandType == SET_BOLUS && bolusRecord == null ->
+            commandType == SET_BOLUS && bolusRecord == null               ->
                 Single.error(IllegalArgumentException("bolusRecord missing on SET_BOLUS"))
+
             commandType == SET_TEMPORARY_BASAL && tempBasalRecord == null ->
                 Single.error(IllegalArgumentException("tempBasalRecord missing on SET_TEMPORARY_BASAL"))
-            else ->
+
+            else                                                          ->
                 dao.save(
                     HistoryRecordEntity(
                         id = id,
@@ -108,13 +110,17 @@ class DashHistory @Inject constructor(
         val commandConfirmation = when (podState.getCommandConfirmationFromState()) {
             CommandSendingFailure      ->
                 dao.setInitialResult(historyId, InitialResult.FAILURE_SENDING)
+
             CommandSendingNotConfirmed ->
                 dao.setInitialResult(historyId, InitialResult.SENT)
+
             CommandConfirmationDenied  ->
                 markFailure(historyId)
+
             CommandConfirmationSuccess ->
                 dao.setInitialResult(historyId, InitialResult.SENT)
                     .andThen(markSuccess(historyId))
+
             NoActiveCommand            ->
                 Completable.complete()
         }

@@ -9,14 +9,14 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 
 import java.util.Arrays;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.pump.combo.ruffyscripter.PumpState;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 
 public class ReadBasalProfileCommand extends BaseCommand {
     private final AAPSLogger aapsLogger;
-    
+
     public ReadBasalProfileCommand(AAPSLogger aapsLogger) {
         this.aapsLogger = aapsLogger;
     }

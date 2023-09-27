@@ -11,9 +11,9 @@ apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 
 android {
 
-    namespace 'info.nightscout.database.entities'
+    namespace 'app.aaps.database.entities'
     defaultConfig {
-        minSdkVersion 25  // for wear
+        minSdkVersion 26  // for wear
     }
 
     buildFeatures {
@@ -33,5 +33,5 @@ dependencies {
 
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
-    annotation 'info.nightscout.database.annotations.DbOpenForTesting'
+    annotation 'app.aaps.database.annotations.DbOpenForTesting'
 }

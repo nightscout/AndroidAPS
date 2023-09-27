@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble
 
+import app.aaps.shared.tests.TestBase
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

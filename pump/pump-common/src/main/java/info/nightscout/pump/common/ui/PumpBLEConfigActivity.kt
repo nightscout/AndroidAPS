@@ -19,19 +19,19 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.BaseAdapter
 import android.widget.TextView
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.dialogs.OKDialog
 import info.nightscout.pump.common.R
 import info.nightscout.pump.common.databinding.PumpBleConfigActivityBinding
 import info.nightscout.pump.common.driver.PumpDriverConfigurationCapable
 import info.nightscout.pump.common.driver.ble.PumpBLESelector
 import info.nightscout.pump.common.driver.ble.PumpBLESelectorText
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
 import org.apache.commons.lang3.StringUtils
 import javax.inject.Inject
 
@@ -314,11 +314,13 @@ class PumpBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
     }
 
     internal class ViewHolder {
+
         var deviceName: TextView? = null
         var deviceAddress: TextView? = null
     }
 
     companion object {
+
         private val TAG = LTag.PUMPBTCOMM
         private const val SCAN_PERIOD_MILLIS: Long = 15000
     }

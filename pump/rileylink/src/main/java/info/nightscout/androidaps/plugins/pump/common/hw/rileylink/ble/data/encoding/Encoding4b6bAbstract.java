@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.encoding;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
-import info.nightscout.pump.core.utils.ByteUtil;
-import info.nightscout.rx.logging.AAPSLogger;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 
 /**
@@ -22,11 +22,19 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
 
     // 21, 49, 50, 35, 52, 37, 38, 22, 26, 25, 42, 11, 44, 13, 14, 28
 
+    /* O(n) lookup. Run on an O(n) translation of a byte-stream, gives O(n**2) performance. Sigh. */
+    public static int encode4b6bListIndex(byte b) {
+        for (int i = 0; i < encode4b6bList.length; i++) {
+            if (b == encode4b6bList[i]) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override public abstract byte[] encode4b6b(byte[] data);
 
-
     @Override public abstract byte[] decode4b6b(byte[] data) throws RileyLinkCommunicationException;
-
 
     protected short convertUnsigned(byte x) {
         short ss = x;
@@ -38,18 +46,6 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
         return ss;
     }
 
-
-    /* O(n) lookup. Run on an O(n) translation of a byte-stream, gives O(n**2) performance. Sigh. */
-    public static int encode4b6bListIndex(byte b) {
-        for (int i = 0; i < encode4b6bList.length; i++) {
-            if (b == encode4b6bList[i]) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-
     public void writeError(AAPSLogger aapsLogger, byte[] raw, String errorData) {
 
         aapsLogger.error(String.format("\n" +
@@ -58,7 +54,7 @@ public abstract class Encoding4b6bAbstract implements Encoding4b6b {
                         " encodedPayload: %s\n" +
                         " errors: %s\n" +
                         "=============================================================================", //
-                ByteUtil.getHex(raw), errorData));
+                ByteUtil.INSTANCE.getHex(raw), errorData));
 
         //FabricUtil.createEvent("MedtronicDecode4b6bError", null);
 

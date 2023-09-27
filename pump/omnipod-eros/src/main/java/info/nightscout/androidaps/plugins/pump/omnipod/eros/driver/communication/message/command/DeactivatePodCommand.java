@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.NonceResyncableMessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class DeactivatePodCommand extends NonceResyncableMessageBlock {
     private int nonce;
@@ -20,7 +20,7 @@ public class DeactivatePodCommand extends NonceResyncableMessageBlock {
     }
 
     private void encode() {
-        encodedData = ByteUtil.getBytesFromInt(nonce);
+        encodedData = ByteUtil.INSTANCE.getBytesFromInt(nonce);
     }
 
     @Override

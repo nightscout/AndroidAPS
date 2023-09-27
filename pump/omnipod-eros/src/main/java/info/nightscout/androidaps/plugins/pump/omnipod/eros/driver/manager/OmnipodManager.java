@@ -11,6 +11,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.AcknowledgeAlertsAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.AssignAddressAction;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.action.BolusAction;
@@ -50,9 +53,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Pod
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.PodProgressStatusVerificationFailedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.PrecedingCommandFailedUncertainlyException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;

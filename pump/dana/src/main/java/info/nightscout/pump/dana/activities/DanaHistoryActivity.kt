@@ -8,30 +8,30 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventDanaRSyncStatus
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.comm.RecordTypes
 import info.nightscout.pump.dana.database.DanaHistoryRecord
 import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import info.nightscout.pump.dana.databinding.DanarHistoryActivityBinding
 import info.nightscout.pump.dana.databinding.DanarHistoryItemBinding
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDanaRSyncStatus
-import info.nightscout.rx.events.EventPumpStatusChanged
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ProfileUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -88,7 +88,7 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
         binding = DanarHistoryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(info.nightscout.core.ui.R.string.pump_history)
+        title = rh.gs(app.aaps.core.ui.R.string.pump_history)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -116,7 +116,7 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
             typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.danar_history_refill)))
             typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.danar_history_syspend)))
         }
-        binding.typeList.setAdapter(ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, typeList))
+        binding.typeList.setAdapter(ArrayAdapter(this, app.aaps.core.ui.R.layout.spinner_centered, typeList))
 
         binding.reload.setOnClickListener {
             val selected = typeList.firstOrNull { it.name == binding.typeList.text.toString() } ?: return@setOnClickListener
@@ -179,9 +179,9 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
-                    holder.binding.dailyBasal.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBasal)
-                    holder.binding.dailyBolus.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBolus)
-                    holder.binding.dailyTotal.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+                    holder.binding.dailyBasal.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBasal)
+                    holder.binding.dailyBolus.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus)
+                    holder.binding.dailyTotal.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
                     holder.binding.time.text = dateUtil.dateString(record.timestamp)
                     holder.binding.time.visibility = View.VISIBLE
                     holder.binding.value.visibility = View.GONE

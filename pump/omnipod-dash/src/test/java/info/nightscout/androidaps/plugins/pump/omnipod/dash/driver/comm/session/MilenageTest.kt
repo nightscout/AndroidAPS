@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
-import info.nightscout.core.utils.toHex
-import info.nightscout.interfaces.Config
-import info.nightscout.sharedtests.AAPSLoggerTest
-import info.nightscout.sharedtests.TestBase
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.utils.toHex
+import app.aaps.shared.tests.AAPSLoggerTest
+import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock

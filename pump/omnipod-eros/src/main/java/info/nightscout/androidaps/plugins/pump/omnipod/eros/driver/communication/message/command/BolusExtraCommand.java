@@ -5,7 +5,7 @@ import org.joda.time.Duration;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.MessageBlock;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class BolusExtraCommand extends MessageBlock {
     private final boolean acknowledgementBeep;
@@ -48,11 +48,11 @@ public class BolusExtraCommand extends MessageBlock {
         int squareWavePulseCountCountX10 = (int) Math.round(squareWaveUnits * 200);
         int timeBetweenExtendedPulses = squareWavePulseCountCountX10 > 0 ? (int) squareWaveDuration.getMillis() * 100 / squareWavePulseCountCountX10 : 0;
 
-        encodedData = ByteUtil.concat(encodedData, beepOptions);
-        encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt16((int) Math.round(units * 200)));
-        encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt((int) timeBetweenPulses.getMillis() * 100));
-        encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt16(squareWavePulseCountCountX10));
-        encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt(timeBetweenExtendedPulses));
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, beepOptions);
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt16((int) Math.round(units * 200)));
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt((int) timeBetweenPulses.getMillis() * 100));
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt16(squareWavePulseCountCountX10));
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt(timeBetweenExtendedPulses));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.defs
 
-import info.nightscout.interfaces.pump.actions.CustomActionType
+import app.aaps.core.interfaces.pump.actions.CustomActionType
 
 /**
  * Created by andy on 11/3/18.

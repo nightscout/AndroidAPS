@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchRotateKnobBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 
 class EopatchRotateKnobFragment : EoBaseFragment<FragmentEopatchRotateKnobBinding>() {
 

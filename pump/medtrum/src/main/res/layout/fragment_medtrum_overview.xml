@@ -672,7 +672,7 @@
             android:orientation="horizontal">
 
             <!-- Refresh button -->
-            <info.nightscout.core.ui.elements.SingleClickButton
+            <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/refreshButton"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
@@ -686,7 +686,7 @@
                 app:onSafeClick="@{() -> viewmodel.onClickRefresh()}" />
 
             <!-- Reset Alarms button -->
-            <info.nightscout.core.ui.elements.SingleClickButton
+            <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/resetAlarmsButton"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
@@ -701,7 +701,7 @@
                 app:onSafeClick="@{() -> viewmodel.onClickResetAlarms()}" />
 
             <!-- Change Patch button -->
-            <info.nightscout.core.ui.elements.SingleClickButton
+            <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/changePatchButton"
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"

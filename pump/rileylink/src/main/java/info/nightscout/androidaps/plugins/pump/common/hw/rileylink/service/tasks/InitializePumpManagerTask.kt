@@ -1,6 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 
 import android.content.Context
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.Round
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
@@ -8,11 +13,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.utils.Round.isSame
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import kotlin.math.roundToLong
 
@@ -49,7 +49,7 @@ class InitializePumpManagerTask(injector: HasAndroidInjector, private val contex
                 }
             } else rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.IPC.MSG_PUMP_tunePump, context)
         } else {
-            if (!isSame(lastGoodFrequency, RileyLinkTargetFrequency.Omnipod.scanFrequencies[0])) {
+            if (!Round.isSame(lastGoodFrequency, RileyLinkTargetFrequency.Omnipod.scanFrequencies[0])) {
                 lastGoodFrequency = RileyLinkTargetFrequency.Omnipod.scanFrequencies[0]
                 lastGoodFrequency = (lastGoodFrequency * 1000.0).roundToLong() / 1000.0
                 rileyLinkServiceData.lastGoodFrequency = lastGoodFrequency

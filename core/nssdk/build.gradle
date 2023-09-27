@@ -1,0 +1,38 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlinx-serialization'
+}
+
+apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
+
+android {
+    namespace 'app.aaps.core.nssdk'
+}
+
+dependencies {
+    api "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
+    api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+    api "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+
+    api "com.google.code.gson:gson:$gson_version"
+
+    api "net.danlew:android.joda:$joda_version"
+
+    api "io.reactivex.rxjava3:rxjava:$rxjava_version"
+    api "io.reactivex.rxjava3:rxandroid:$rxandroid_version"
+    api "io.reactivex.rxjava3:rxkotlin:$rxkotlin_version"
+
+    api "androidx.core:core-ktx:$core_version"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:$coroutines_version"
+
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
+}

@@ -11,6 +11,12 @@ import java.util.UUID;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
+import app.aaps.core.interfaces.sharedPreferences.SP;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst;
@@ -31,15 +37,9 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.Rile
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.operations.BLECommOperationResult;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
-import info.nightscout.pump.core.utils.ByteUtil;
-import info.nightscout.pump.core.utils.StringUtil;
-import info.nightscout.pump.core.utils.ThreadUtil;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.EventRefreshOverview;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.pump.common.utils.ByteUtil;
+import info.nightscout.pump.common.utils.StringUtil;
+import info.nightscout.pump.common.utils.ThreadUtil;
 
 /**
  * Created by geoff on 5/26/16.
@@ -49,26 +49,23 @@ public class RFSpy {
     private static final long DEFAULT_BATTERY_CHECK_INTERVAL_MILLIS = 30 * 60 * 1_000L; // 30 minutes;
     private static final long LOW_BATTERY_BATTERY_CHECK_INTERVAL_MILLIS = 10 * 60 * 1_000L; // 10 minutes;
     private static final int LOW_BATTERY_PERCENTAGE_THRESHOLD = 20;
-
+    private static final long RILEYLINK_FREQ_XTAL = 24000000;
+    private static final int EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500; // 1500
+    private final HasAndroidInjector injector;
+    private final RileyLinkBLE rileyLinkBle;
+    private final UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
+    private final UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
+    private final UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
+    private final UUID batteryServiceUUID = UUID.fromString(GattAttributes.SERVICE_BATTERY);
+    private final UUID batteryLevelUUID = UUID.fromString(GattAttributes.CHARA_BATTERY_LEVEL);
+    public int notConnectedCount = 0;
     @Inject AAPSLogger aapsLogger;
     @Inject ResourceHelper rh;
     @Inject SP sp;
     @Inject RileyLinkServiceData rileyLinkServiceData;
     @Inject RileyLinkUtil rileyLinkUtil;
     @Inject RxBus rxBus;
-
-    private final HasAndroidInjector injector;
-
-    private static final long RILEYLINK_FREQ_XTAL = 24000000;
-    private static final int EXPECTED_MAX_BLUETOOTH_LATENCY_MS = 7500; // 1500
-    public int notConnectedCount = 0;
-    private final RileyLinkBLE rileyLinkBle;
     private RFSpyReader reader;
-    private final UUID radioServiceUUID = UUID.fromString(GattAttributes.SERVICE_RADIO);
-    private final UUID radioDataUUID = UUID.fromString(GattAttributes.CHARA_RADIO_DATA);
-    private final UUID radioVersionUUID = UUID.fromString(GattAttributes.CHARA_RADIO_VERSION);
-    private final UUID batteryServiceUUID = UUID.fromString(GattAttributes.SERVICE_BATTERY);
-    private final UUID batteryLevelUUID = UUID.fromString(GattAttributes.CHARA_BATTERY_LEVEL);
     private String bleVersion; // We don't use it so no need of sofisticated logic
     private Double currentFrequencyMHz;
     private long nextBatteryCheck = 0;
@@ -77,6 +74,25 @@ public class RFSpy {
     public RFSpy(HasAndroidInjector injector, RileyLinkBLE rileyLinkBle) {
         this.injector = injector;
         this.rileyLinkBle = rileyLinkBle;
+    }
+
+    static RileyLinkFirmwareVersion getFirmwareVersion(AAPSLogger aapsLogger, String bleVersion, String cc1110Version) {
+        if (cc1110Version != null) {
+            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(cc1110Version);
+            aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Firmware Version string: %s, resolved to %s.", cc1110Version, version));
+
+            if (version != RileyLinkFirmwareVersion.UnknownVersion) {
+                return version;
+            }
+        }
+
+        aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Firmware Version can't be determined. Checking with BLE Version [%s].", bleVersion));
+
+        if (bleVersion.contains(" 2.")) {
+            return RileyLinkFirmwareVersion.Version_2_0;
+        }
+
+        return RileyLinkFirmwareVersion.UnknownVersion;
     }
 
     @Inject
@@ -136,7 +152,7 @@ public class RFSpy {
     public String getVersion() {
         BLECommOperationResult result = rileyLinkBle.readCharacteristicBlocking(radioServiceUUID, radioVersionUUID);
         if (result.resultCode == BLECommOperationResult.RESULT_SUCCESS) {
-            String version = StringUtil.fromBytes(result.value);
+            String version = StringUtil.INSTANCE.fromBytes(result.value);
             aapsLogger.debug(LTag.PUMPBTCOMM, "BLE Version: " + version);
             return version;
         } else {
@@ -155,11 +171,11 @@ public class RFSpy {
             byte[] getVersionRaw = getByteArray(RileyLinkCommandType.GetVersion.code);
             byte[] response = writeToDataRaw(getVersionRaw, 5000);
 
-            aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Firmware Version. GetVersion [response=%s]", ByteUtil.shortHexString(response)));
+            aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Firmware Version. GetVersion [response=%s]", ByteUtil.INSTANCE.shortHexString(response)));
 
             if (response != null) { // && response[0] == (byte) 0xDD) {
 
-                String versionString = StringUtil.fromBytes(response);
+                String versionString = StringUtil.INSTANCE.fromBytes(response);
                 if (versionString.length() > 3) {
                     if (versionString.indexOf('s') >= 0) {
                         versionString = versionString.substring(versionString.indexOf('s'));
@@ -173,25 +189,6 @@ public class RFSpy {
         return null;
     }
 
-    static RileyLinkFirmwareVersion getFirmwareVersion(AAPSLogger aapsLogger, String bleVersion, String cc1110Version) {
-        if (cc1110Version != null) {
-            RileyLinkFirmwareVersion version = RileyLinkFirmwareVersion.getByVersionString(cc1110Version);
-            aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Firmware Version string: %s, resolved to %s.", cc1110Version, version));
-
-            if (version != RileyLinkFirmwareVersion.UnknownVersion) {
-                return version;
-            }
-        }
-
-        aapsLogger.error(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Firmware Version can't be determined. Checking with BLE Version [%s].", bleVersion));
-
-        if (bleVersion.contains(" 2.")) {
-            return RileyLinkFirmwareVersion.Version_2_0;
-        }
-
-        return RileyLinkFirmwareVersion.UnknownVersion;
-    }
-
     private byte[] writeToDataRaw(byte[] bytes, int responseTimeout_ms) {
         SystemClock.sleep(100);
         // FIXME drain read queue?
@@ -199,14 +196,14 @@ public class RFSpy {
 
         while (junkInBuffer != null) {
             aapsLogger.warn(LTag.PUMPBTCOMM, ThreadUtil.sig() + "writeToData: draining read queue, found this: "
-                    + ByteUtil.shortHexString(junkInBuffer));
+                    + ByteUtil.INSTANCE.shortHexString(junkInBuffer));
             junkInBuffer = reader.poll(0);
         }
 
         // prepend length, and send it.
-        byte[] prepended = ByteUtil.concat(new byte[]{(byte) (bytes.length)}, bytes);
+        byte[] prepended = ByteUtil.INSTANCE.concat(new byte[]{(byte) (bytes.length)}, bytes);
 
-        aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "writeToData (raw=%s)", ByteUtil.shortHexString(prepended)));
+        aapsLogger.debug(LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "writeToData (raw=%s)", ByteUtil.INSTANCE.shortHexString(prepended)));
 
         BLECommOperationResult writeCheck = rileyLinkBle.writeCharacteristicBlocking(radioServiceUUID, radioDataUUID,
                 prepended);

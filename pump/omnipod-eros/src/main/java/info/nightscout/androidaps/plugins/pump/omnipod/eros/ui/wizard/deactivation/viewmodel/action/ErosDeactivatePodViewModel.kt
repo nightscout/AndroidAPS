@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.viewmodel.action
 
 import androidx.annotation.StringRes
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.action.DeactivatePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLogger
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 

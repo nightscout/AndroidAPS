@@ -12,7 +12,7 @@ apply from: "${project.rootDir}/core/main/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 android {
-    namespace 'info.nightscout.plugins.constraints'
+    namespace 'app.aaps.plugins.constraints'
 }
 
 dependencies {
@@ -23,7 +23,17 @@ dependencies {
     implementation project(':core:validators')
     implementation project(':database:entities')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':database:impl')
+    testImplementation project(':implementation')
+    testImplementation project(':insight')
+    testImplementation project(':plugins:aps')
+    testImplementation project(':plugins:source')
+    testImplementation project(':pump:combo')
+    testImplementation project(':pump:dana')
+    testImplementation project(':pump:danar')
+    testImplementation project(':pump:danars')
+    testImplementation project(':pump:virtual')
+    testImplementation project(':shared:tests')
 
     // Phone checker
     api 'com.scottyab:rootbeer-lib:0.1.0'

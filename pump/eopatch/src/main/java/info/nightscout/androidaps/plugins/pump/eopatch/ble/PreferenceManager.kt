@@ -1,5 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ble
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
@@ -10,15 +14,12 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasalManager
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface IPreferenceManager {
+
     fun getPatchConfig(): PatchConfig
     fun getPatchState(): PatchState
     fun getBolusCurrent(): BolusCurrent
@@ -52,12 +53,12 @@ interface IPreferenceManager {
     fun isInitDone(): Boolean
 }
 
-
 /**
  * patch2 패키지에서 사용하는 프리퍼런스의 작업을 대신 처리하는 클래스
  */
 @Singleton
-class PreferenceManager @Inject constructor(): IPreferenceManager {
+class PreferenceManager @Inject constructor() : IPreferenceManager {
+
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -110,7 +111,7 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
             mPatchState = savedState
         } catch (ex: Exception) {
             mPatchState = PatchState()
-            aapsLogger.error(LTag.PUMP, ex.message?:"PatchState load error")
+            aapsLogger.error(LTag.PUMP, ex.message ?: "PatchState load error")
         }
 
         try {
@@ -119,7 +120,7 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
             mBolusCurrent = savedBolusCurrent
         } catch (ex: Exception) {
             mBolusCurrent = BolusCurrent()
-            aapsLogger.error(LTag.PUMP, ex.message?:"BolusCurrent load error")
+            aapsLogger.error(LTag.PUMP, ex.message ?: "BolusCurrent load error")
         }
 
         try {
@@ -127,7 +128,7 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
             val savedConfig = GsonHelper.sharedGson().fromJson(jsonStr, PatchConfig::class.java)
             mPatchConfig.update(savedConfig)
         } catch (ex: Exception) {
-            aapsLogger.error(LTag.PUMP, ex.message?:"PatchConfig load error")
+            aapsLogger.error(LTag.PUMP, ex.message ?: "PatchConfig load error")
         }
 
         try {
@@ -135,7 +136,7 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
             val normalBasalManager = GsonHelper.sharedGson().fromJson(jsonStr, NormalBasalManager::class.java)
             mNormalBasalMgr.update(normalBasalManager)
         } catch (ex: Exception) {
-            aapsLogger.error(LTag.PUMP, ex.message?:"NormalBasal load error")
+            aapsLogger.error(LTag.PUMP, ex.message ?: "NormalBasal load error")
         }
 
         try {
@@ -143,7 +144,7 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
             val tempBasalManager = GsonHelper.sharedGson().fromJson(jsonStr, TempBasalManager::class.java)
             mTempBasalMgr.update(tempBasalManager)
         } catch (ex: Exception) {
-            aapsLogger.error(LTag.PUMP, ex.message?:"TempBasal load error")
+            aapsLogger.error(LTag.PUMP, ex.message ?: "TempBasal load error")
         }
 
         try {
@@ -151,15 +152,15 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
             val alarms = GsonHelper.sharedGson().fromJson(jsonStr, Alarms::class.java)
             mAlarms.update(alarms)
         } catch (ex: Exception) {
-            aapsLogger.error(LTag.PUMP, ex.message?:"Alarms load error")
+            aapsLogger.error(LTag.PUMP, ex.message ?: "Alarms load error")
         }
 
-        aapsLogger.info(LTag.PUMP,"Load from PatchConfig preference: $mPatchConfig")
-        aapsLogger.info(LTag.PUMP,"Load from PatchState preference: $mPatchState")
-        aapsLogger.info(LTag.PUMP,"Load from BolusCurrent preference: $mBolusCurrent")
-        aapsLogger.info(LTag.PUMP,"Load from NormalBasal preference: $mNormalBasalMgr")
-        aapsLogger.info(LTag.PUMP,"Load from TempBasal preference: $mTempBasalMgr")
-        aapsLogger.info(LTag.PUMP,"Load from Alarms preference: $mAlarms")
+        aapsLogger.info(LTag.PUMP, "Load from PatchConfig preference: $mPatchConfig")
+        aapsLogger.info(LTag.PUMP, "Load from PatchState preference: $mPatchState")
+        aapsLogger.info(LTag.PUMP, "Load from BolusCurrent preference: $mBolusCurrent")
+        aapsLogger.info(LTag.PUMP, "Load from NormalBasal preference: $mNormalBasalMgr")
+        aapsLogger.info(LTag.PUMP, "Load from TempBasal preference: $mTempBasalMgr")
+        aapsLogger.info(LTag.PUMP, "Load from Alarms preference: $mAlarms")
         initialized = true
     }
 
@@ -186,7 +187,8 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
                 mTempBasalMgr.clear()
                 flushTempBasalManager()
             }
-            else -> Unit
+
+            else                    -> Unit
         }
 
     }
@@ -249,7 +251,7 @@ class PreferenceManager @Inject constructor(): IPreferenceManager {
         return mPatchState.observe()
     }
 
-    override fun observeBolusCurrent(): Observable<BolusCurrent>{
+    override fun observeBolusCurrent(): Observable<BolusCurrent> {
         return mBolusCurrent.observe()
     }
 

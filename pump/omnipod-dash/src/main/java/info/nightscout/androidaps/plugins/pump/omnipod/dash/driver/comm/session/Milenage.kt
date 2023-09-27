@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
 import android.annotation.SuppressLint
-import info.nightscout.core.utils.toHex
-import info.nightscout.interfaces.Config
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.toHex
 import org.spongycastle.util.encoders.Hex
 import java.security.SecureRandom
 import javax.crypto.Cipher
@@ -31,6 +31,7 @@ class Milenage(
     }
 
     private val secretKeySpec = SecretKeySpec(k, "AES")
+
     @SuppressLint("GetInstance")
     private val cipher: Cipher = Cipher.getInstance("AES/ECB/NoPadding")
 

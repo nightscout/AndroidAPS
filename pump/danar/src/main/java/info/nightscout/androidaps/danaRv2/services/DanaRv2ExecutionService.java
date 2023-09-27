@@ -9,6 +9,31 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import app.aaps.core.interfaces.configuration.Constants;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.plugin.ActivePlugin;
+import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.core.interfaces.profile.ProfileFunction;
+import app.aaps.core.interfaces.pump.BolusProgressData;
+import app.aaps.core.interfaces.pump.Pump;
+import app.aaps.core.interfaces.pump.PumpEnactResult;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.queue.Callback;
+import app.aaps.core.interfaces.queue.Command;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged;
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
+import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged;
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged;
+import app.aaps.core.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.utils.T;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;
@@ -45,33 +70,8 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.interfaces.Constants;
-import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.plugin.ActivePlugin;
-import info.nightscout.interfaces.profile.Profile;
-import info.nightscout.interfaces.profile.ProfileFunction;
-import info.nightscout.interfaces.pump.BolusProgressData;
-import info.nightscout.interfaces.pump.Pump;
-import info.nightscout.interfaces.pump.PumpEnactResult;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.interfaces.queue.Callback;
-import info.nightscout.interfaces.queue.Command;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.events.EventDanaRNewStatus;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.EventInitializationChanged;
-import info.nightscout.rx.events.EventOverviewBolusProgress;
-import info.nightscout.rx.events.EventProfileSwitchChanged;
-import info.nightscout.rx.events.EventPumpStatusChanged;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
-import info.nightscout.shared.utils.DateUtil;
-import info.nightscout.shared.utils.T;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject HasAndroidInjector injector;
@@ -193,7 +193,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 if (Math.abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds - large difference");
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.largetimediff), rh.gs(info.nightscout.pump.dana.R.string.largetimedifftitle), info.nightscout.core.ui.R.raw.error);
+                    uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.largetimediff), rh.gs(info.nightscout.pump.dana.R.string.largetimedifftitle), app.aaps.core.ui.R.raw.error);
 
                     //deinitialize pump
                     danaPump.reset();
@@ -348,7 +348,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             danaPump.readHistoryFrom = Math.min(danaPump.readHistoryFrom, carbtime - T.Companion.mins(1).msecs());
             if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.getFailed())
-                uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.carbs_store_error), rh.gs(info.nightscout.core.ui.R.string.error), info.nightscout.core.ui.R.raw.boluserror);
+                uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.carbs_store_error), rh.gs(app.aaps.core.ui.R.string.error), app.aaps.core.ui.R.raw.boluserror);
         }
 
         final long bolusStart = System.currentTimeMillis();
@@ -405,7 +405,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingbolusstatus)));
                 mSerialIOThread.sendMessage(new MsgStatus(injector));
                 bolusingEvent.setPercent(100);
-                rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.interfaces.R.string.disconnecting)));
+                rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)));
             }
         });
         return !start.getFailed();

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.insight.app_layer.history.history_events;
 
+import java.lang.reflect.InvocationTargetException;
+
 import info.nightscout.androidaps.plugins.pump.insight.ids.HistoryEventIDs;
 import info.nightscout.androidaps.plugins.pump.insight.utils.BOCUtil;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ByteBuf;
@@ -22,8 +24,8 @@ public class HistoryEvent implements Comparable<HistoryEvent> {
         if (eventClass == null) event = new HistoryEvent();
         else {
             try {
-                event = eventClass.newInstance();
-            } catch (IllegalAccessException | InstantiationException e) {
+                event = eventClass.getDeclaredConstructor().newInstance();
+            } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
                 //log.error("Unhandled exception", e);
                 event = new HistoryEvent();
             }

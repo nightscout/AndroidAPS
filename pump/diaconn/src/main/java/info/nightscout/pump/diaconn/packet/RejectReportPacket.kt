@@ -1,9 +1,8 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 /**
@@ -11,11 +10,12 @@ import javax.inject.Inject
  */
 class RejectReportPacket(
     injector: HasAndroidInjector
-) : DiaconnG8Packet(injector ) {
+) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
-    var reqMsgType:Int? = null
-    var reason:Int? = null
+    var reqMsgType: Int? = null
+    var reason: Int? = null
+
     init {
         msgType = 0xE2.toByte()
         aapsLogger.debug(LTag.PUMPCOMM, "RejectReportPacket init ")
@@ -30,8 +30,8 @@ class RejectReportPacket(
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        reqMsgType =  getByteToInt(bufferData)
-        reason =  getByteToInt(bufferData)
+        reqMsgType = getByteToInt(bufferData)
+        reason = getByteToInt(bufferData)
         aapsLogger.debug(LTag.PUMPCOMM, "reqMsgType --> $reqMsgType")
         aapsLogger.debug(LTag.PUMPCOMM, "Reject Reason --> $reason (6:cancel, 10:timeout) ")
     }

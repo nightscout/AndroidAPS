@@ -1,16 +1,16 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 /**
  * InjectionExtendedBolusResultReportPacket
  */
-class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector ) {
+class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var rxBus: RxBus
@@ -34,7 +34,7 @@ class InjectionExtendedBolusResultReportPacket(injector: HasAndroidInjector) : D
         val result = getByteToInt(bufferData) // 0: success , 1: user stop, 2:fail
         val settingMinutes = getShortToInt(bufferData)
         val elapsedTime = getShortToInt(bufferData)
-        val bolusAmountToBeDelivered  = getShortToInt(bufferData) / 100.0
+        val bolusAmountToBeDelivered = getShortToInt(bufferData) / 100.0
         val deliveredBolusAmount = getShortToInt(bufferData) / 100.0
 
         diaconnG8Pump.isExtendedInProgress = result == 0

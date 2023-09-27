@@ -1,14 +1,14 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.pumplog.PumpLogUtil
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import org.joda.time.DateTime
 import javax.inject.Inject
 import kotlin.math.floor
@@ -39,8 +39,8 @@ class BigMainInfoInquireResponsePacket(
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        val result2 =  getByteToInt(bufferData)  // 결과비트 상위 4비트 제거
-        if(!isSuccInquireResponseResult(result2)) {
+        val result2 = getByteToInt(bufferData)  // 결과비트 상위 4비트 제거
+        if (!isSuccInquireResponseResult(result2)) {
             failed = true
             return
         }
@@ -152,18 +152,18 @@ class BigMainInfoInquireResponsePacket(
         diaconnG8Pump.currentBasePattern = getByteToInt(bufferData) // 패턴 종류 (1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2)
         diaconnG8Pump.currentBaseHour = getByteToInt(bufferData) // 현재주입시간(0~23)
         diaconnG8Pump.currentBaseTbBeforeAmount = getShortToInt(bufferData) / 100.0 // 해당시간의 임시기저 계산 전 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
-        diaconnG8Pump.currentBaseTbAfterAmount = getShortToInt(bufferData)/ 100.0 // 해당시간의 임시기저 계산 후 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
+        diaconnG8Pump.currentBaseTbAfterAmount = getShortToInt(bufferData) / 100.0 // 해당시간의 임시기저 계산 후 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
 
         // 17. saved basal pattern status
-        diaconnG8Pump.baseAmount1  = getShortToInt(bufferData) / 100.0  // 주입량 1(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount2  = getShortToInt(bufferData) / 100.0  // 주입량 2(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount3  = getShortToInt(bufferData) / 100.0  // 주입량 3(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount4  = getShortToInt(bufferData) / 100.0  // 주입량 4(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount5  = getShortToInt(bufferData) / 100.0  // 주입량 5(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount6  = getShortToInt(bufferData) / 100.0  // 주입량 6(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount7  = getShortToInt(bufferData) / 100.0  // 주입량 7(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount8  = getShortToInt(bufferData) / 100.0  // 주입량 8(량*100, 23.25->2325, 15.2->1520)
-        diaconnG8Pump.baseAmount9  = getShortToInt(bufferData) / 100.0  // 주입량 9(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount1 = getShortToInt(bufferData) / 100.0  // 주입량 1(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount2 = getShortToInt(bufferData) / 100.0  // 주입량 2(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount3 = getShortToInt(bufferData) / 100.0  // 주입량 3(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount4 = getShortToInt(bufferData) / 100.0  // 주입량 4(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount5 = getShortToInt(bufferData) / 100.0  // 주입량 5(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount6 = getShortToInt(bufferData) / 100.0  // 주입량 6(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount7 = getShortToInt(bufferData) / 100.0  // 주입량 7(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount8 = getShortToInt(bufferData) / 100.0  // 주입량 8(량*100, 23.25->2325, 15.2->1520)
+        diaconnG8Pump.baseAmount9 = getShortToInt(bufferData) / 100.0  // 주입량 9(량*100, 23.25->2325, 15.2->1520)
         diaconnG8Pump.baseAmount10 = getShortToInt(bufferData) / 100.0  // 주입량 10(량*100, 23.25->2325, 15.2->1520)
         diaconnG8Pump.baseAmount11 = getShortToInt(bufferData) / 100.0  // 주입량 11(량*100, 23.25->2325, 15.2->1520)
         diaconnG8Pump.baseAmount12 = getShortToInt(bufferData) / 100.0  // 주입량 12(량*100, 23.25->2325, 15.2->1520)
@@ -181,22 +181,22 @@ class BigMainInfoInquireResponsePacket(
         diaconnG8Pump.baseAmount24 = getShortToInt(bufferData) / 100.0  // 주입량 24(량*100, 23.25->2325, 15.2->1520)
 
         // pump time setting 'yyyy-MM-dd'T'HH:mm:ssZ'	“2019-07-04T12:30:30+0530”
-        val time  = DateTime(diaconnG8Pump.year, diaconnG8Pump.month, diaconnG8Pump.day, diaconnG8Pump.hour, diaconnG8Pump.minute, diaconnG8Pump.second)
+        val time = DateTime(diaconnG8Pump.year, diaconnG8Pump.month, diaconnG8Pump.day, diaconnG8Pump.hour, diaconnG8Pump.minute, diaconnG8Pump.second)
         diaconnG8Pump.setPumpTime(time.millis)
         aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeAndSecondsString(time.millis))
 
         // basal pattern from pump
         diaconnG8Pump.pumpProfiles = Array(4) { Array(24) { 0.0 } }
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][0]  = diaconnG8Pump.baseAmount1
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][1]  = diaconnG8Pump.baseAmount2
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][2]  = diaconnG8Pump.baseAmount3
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][3]  = diaconnG8Pump.baseAmount4
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][4]  = diaconnG8Pump.baseAmount5
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][5]  = diaconnG8Pump.baseAmount6
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][6]  = diaconnG8Pump.baseAmount7
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][7]  = diaconnG8Pump.baseAmount8
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][8]  = diaconnG8Pump.baseAmount9
-        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][9]  = diaconnG8Pump.baseAmount10
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][0] = diaconnG8Pump.baseAmount1
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][1] = diaconnG8Pump.baseAmount2
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][2] = diaconnG8Pump.baseAmount3
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][3] = diaconnG8Pump.baseAmount4
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][4] = diaconnG8Pump.baseAmount5
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][5] = diaconnG8Pump.baseAmount6
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][6] = diaconnG8Pump.baseAmount7
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][7] = diaconnG8Pump.baseAmount8
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][8] = diaconnG8Pump.baseAmount9
+        diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][9] = diaconnG8Pump.baseAmount10
         diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][10] = diaconnG8Pump.baseAmount11
         diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][11] = diaconnG8Pump.baseAmount12
         diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][12] = diaconnG8Pump.baseAmount13

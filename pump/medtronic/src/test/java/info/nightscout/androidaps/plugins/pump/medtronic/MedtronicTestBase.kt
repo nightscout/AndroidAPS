@@ -1,5 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.medtronic
 
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
@@ -7,19 +12,12 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.Medtr
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.common.sync.PumpSyncStorage
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.sharedtests.TestBase
 import org.mockito.Answers
 import org.mockito.Mock
 
 open class MedtronicTestBase : TestBase() {
 
-    var byteUtil = ByteUtil()
     var rileyLinkUtil = RileyLinkUtil()
 
     @Mock lateinit var pumpSync: PumpSync

@@ -3,10 +3,10 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BolusStart;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusResponse;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -21,10 +21,10 @@ public class StartCalcBolusTask extends BolusTask {
     }
 
     public Single<? extends BolusResponse> start(DetailedBolusInfo detailedBolusInfo) {
-        return isReady().concatMapSingle(v -> startBolusImpl((float)detailedBolusInfo.insulin))
+        return isReady().concatMapSingle(v -> startBolusImpl((float) detailedBolusInfo.insulin))
                 .doOnNext(this::checkResponse)
                 .firstOrError()
-                .doOnSuccess(v -> onSuccess((float)detailedBolusInfo.insulin))
+                .doOnSuccess(v -> onSuccess((float) detailedBolusInfo.insulin))
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StartCalcBolusTask error"));
     }
 

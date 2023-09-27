@@ -1,22 +1,22 @@
 package info.nightscout.pump.medtrum.ui.viewmodel
 
 import androidx.lifecycle.LiveData
-import info.nightscout.pump.medtrum.code.EventType
-import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
-import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
-import info.nightscout.pump.medtrum.ui.event.UIEvent
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
+import info.nightscout.pump.medtrum.code.EventType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
+import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
+import info.nightscout.pump.medtrum.ui.event.UIEvent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -131,8 +131,8 @@ class MedtrumOverviewViewModel @Inject constructor(
                 if (!medtrumPump.bolusDone && medtrumPlugin.isInitialized()) {
                     _activeBolusStatus.postValue(
                         dateUtil.timeString(medtrumPump.bolusStartTime) + " " + dateUtil.sinceString(medtrumPump.bolusStartTime, rh)
-                            + " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, bolusAmount) + " / " + rh.gs(
-                            info.nightscout.core.ui.R.string.format_insulin_units, medtrumPump.bolusAmountToBeDelivered
+                            + " " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusAmount) + " / " + rh.gs(
+                            app.aaps.core.ui.R.string.format_insulin_units, medtrumPump.bolusAmountToBeDelivered
                         )
                     )
                 }
@@ -167,6 +167,8 @@ class MedtrumOverviewViewModel @Inject constructor(
         val profile = profileFunction.getProfile()
         if (profile == null) {
             _eventHandler.postValue(UIEvent(EventType.PROFILE_NOT_SET))
+        } else if (medtrumPump.pumpSN == 0L) {
+            _eventHandler.postValue(UIEvent(EventType.SERIAL_NOT_SET))
         } else {
             _eventHandler.postValue(UIEvent(EventType.CHANGE_PATCH_CLICKED))
         }
@@ -177,7 +179,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         if (medtrumPump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection
             val agoMinutes = agoMilliseconds / 1000 / 60
-            _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.interfaces.R.string.minago, agoMinutes))
+            _lastConnectionMinAgo.postValue(rh.gs(app.aaps.core.interfaces.R.string.minago, agoMinutes))
         }
         if (medtrumPump.lastBolusTime != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastBolusTime
@@ -186,7 +188,7 @@ class MedtrumOverviewViewModel @Inject constructor(
             // max 6h back
                 _lastBolus.postValue(
                     dateUtil.timeString(medtrumPump.lastBolusTime) + " " + dateUtil.sinceString(medtrumPump.lastBolusTime, rh) + " " + rh.gs(
-                        info.nightscout.core.ui.R.string.format_insulin_units, medtrumPump.lastBolusAmount
+                        app.aaps.core.ui.R.string.format_insulin_units, medtrumPump.lastBolusAmount
                     )
                 )
             else _lastBolus.postValue("")

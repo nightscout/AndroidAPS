@@ -11,7 +11,7 @@ apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 android {
-    namespace 'info.nightscout.workflow'
+    namespace 'app.aaps.workflow'
 }
 
 dependencies {
@@ -23,4 +23,5 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':database:entities')
     implementation project(':database:impl')
+    implementation project(':plugins:main')
 }

@@ -25,6 +25,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.sharedPreferences.SP;
 import dagger.android.DaggerService;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.AppLayerMessage;
@@ -89,10 +92,6 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.PairingDataStorage;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.DerivedKeys;
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag
-;
-import info.nightscout.shared.sharedPreferences.SP;
 
 public class InsightConnectionService extends DaggerService implements ConnectionEstablisher.Callback, InputStreamReader.Callback, OutputStreamWriter.Callback {
 

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.core.utils.DateTimeUtil
+import app.aaps.core.utils.DateTimeUtil
 import java.util.Locale
 
 /**

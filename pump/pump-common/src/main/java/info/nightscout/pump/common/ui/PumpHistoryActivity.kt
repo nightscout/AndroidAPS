@@ -11,8 +11,10 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.common.R
 import info.nightscout.pump.common.databinding.PumpHistoryActivityBinding
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
@@ -20,8 +22,6 @@ import info.nightscout.pump.common.driver.PumpDriverConfigurationCapable
 import info.nightscout.pump.common.driver.history.PumpHistoryDataProvider
 import info.nightscout.pump.common.driver.history.PumpHistoryEntry
 import info.nightscout.pump.common.driver.history.PumpHistoryText
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class PumpHistoryActivity : TranslatedDaggerAppCompatActivity() {
@@ -104,7 +104,7 @@ class PumpHistoryActivity : TranslatedDaggerAppCompatActivity() {
         binding.pumpHistoryRecyclerView.adapter = recyclerViewAdapter
         binding.pumpHistoryStatus.visibility = View.GONE
         typeListFull = getTypeList(historyDataProvider.getAllowedPumpHistoryGroups())
-        val spinnerAdapter = ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, typeListFull!!)
+        val spinnerAdapter = ArrayAdapter(this, app.aaps.core.ui.R.layout.spinner_centered, typeListFull!!)
 
         binding.pumpHistoryText.text = historyDataProvider.getText(PumpHistoryText.PUMP_HISTORY)
 
@@ -201,6 +201,7 @@ class PumpHistoryActivity : TranslatedDaggerAppCompatActivity() {
     }
 
     companion object {
+
         var showingType: TypeList? = null
         var selectedGroup = PumpHistoryEntryGroup.All
     }

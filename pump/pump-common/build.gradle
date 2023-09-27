@@ -16,7 +16,6 @@ android {
 
 dependencies {
     implementation project(':core:interfaces')
-    implementation project(':core:main')
     implementation project(':core:utils')
 
     implementation('com.thoughtworks.xstream:xstream:1.4.20') {

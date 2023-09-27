@@ -10,14 +10,14 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import java.util.Calendar;
 import java.util.Date;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.ruffyscripter.history.Bolus;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpAlert;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpHistory;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpHistoryRequest;
 import info.nightscout.pump.combo.ruffyscripter.history.Tbr;
 import info.nightscout.pump.combo.ruffyscripter.history.Tdd;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 
 public class ReadHistoryCommand extends BaseCommand {
     private final AAPSLogger aapsLogger;

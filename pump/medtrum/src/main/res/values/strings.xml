@@ -98,6 +98,7 @@
     <string name="step_retry_activation">Activation in progress</string>
     <string name="unexpected_state">Unexpected state: %1$s</string>
     <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
+    <string name="no_sn_in_settings">No serial number known. Please enter pumpbase serial number in settings and try again.</string>
 
     <string name="base_serial">Pump Base Serial: %1$X</string>
     <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>

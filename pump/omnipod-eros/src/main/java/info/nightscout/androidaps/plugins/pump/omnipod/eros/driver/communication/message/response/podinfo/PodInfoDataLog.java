@@ -8,7 +8,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class PodInfoDataLog extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 8;
@@ -27,8 +27,8 @@ public class PodInfoDataLog extends PodInfo {
         }
 
         faultEventCode = FaultEventCode.fromByte(encodedData[1]);
-        timeFaultEvent = Duration.standardMinutes(ByteUtil.toInt(encodedData[2], encodedData[3]));
-        timeSinceActivation = Duration.standardMinutes(ByteUtil.toInt(encodedData[4], encodedData[5]));
+        timeFaultEvent = Duration.standardMinutes(ByteUtil.INSTANCE.toInt(encodedData[2], encodedData[3]));
+        timeSinceActivation = Duration.standardMinutes(ByteUtil.INSTANCE.toInt(encodedData[4], encodedData[5]));
         dataChunkSize = encodedData[6];
         maximumNumberOfDwords = encodedData[7];
 
@@ -36,7 +36,7 @@ public class PodInfoDataLog extends PodInfo {
 
         int numberOfDwords = (bodyLength - 8) / 4;
         for (int i = 0; i < numberOfDwords; i++) {
-            dwords.add(ByteUtil.substring(encodedData, 8 + (4 * i), 4));
+            dwords.add(ByteUtil.INSTANCE.substring(encodedData, 8 + (4 * i), 4));
         }
     }
 

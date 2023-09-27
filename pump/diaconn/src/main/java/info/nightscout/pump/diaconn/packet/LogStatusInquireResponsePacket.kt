@@ -1,9 +1,8 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 /**
@@ -11,11 +10,12 @@ import javax.inject.Inject
  */
 open class LogStatusInquireResponsePacket(
     injector: HasAndroidInjector
-) : DiaconnG8Packet(injector ) {
+) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
 
     var result = 0
+
     init {
         msgType = 0x96.toByte()
         aapsLogger.debug(LTag.PUMPCOMM, "LogStatusInquireResponsePacket init")
@@ -30,8 +30,8 @@ open class LogStatusInquireResponsePacket(
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        result =  getByteToInt(bufferData)
-        if(!isSuccInquireResponseResult(result)) {
+        result = getByteToInt(bufferData)
+        if (!isSuccInquireResponseResult(result)) {
             failed = true
             return
         }

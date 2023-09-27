@@ -5,20 +5,20 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.toast.ToastUtils
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
 import info.nightscout.pump.diaconn.databinding.DiaconnG8UserOptionsActivityBinding
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import javax.inject.Inject
@@ -159,7 +159,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), info.nightscout.core.ui.R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), app.aaps.core.ui.R.raw.boluserror)
                 }
             }
         })
@@ -172,7 +172,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_vibrate))
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_silent))
         context.let { context ->
-            val adapterCategories = ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, categories)
+            val adapterCategories = ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, categories)
             binding.beepAndAlarm.adapter = adapterCategories
         }
     }
@@ -183,7 +183,7 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_middle))
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_high))
         context.let { context ->
-            val adapterCategories = ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, categories)
+            val adapterCategories = ArrayAdapter(context, app.aaps.core.ui.R.layout.spinner_centered, categories)
             binding.alarmIntesity.adapter = adapterCategories
         }
     }

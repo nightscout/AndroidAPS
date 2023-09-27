@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.ruffyscripter.PumpState;
 import info.nightscout.pump.combo.ruffyscripter.PumpWarningCodes;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 
 public class CancelTbrCommand extends BaseCommand {
     private final AAPSLogger aapsLogger;
@@ -15,7 +15,7 @@ public class CancelTbrCommand extends BaseCommand {
     public CancelTbrCommand(AAPSLogger aapsLogger) {
         this.aapsLogger = aapsLogger;
     }
-    
+
     @Override
     public Integer getReconnectWarningId() {
         return PumpWarningCodes.TBR_CANCELLED;

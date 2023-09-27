@@ -2,16 +2,16 @@ package info.nightscout.pump.combov2
 
 import android.content.Context
 import android.os.Build
+import app.aaps.core.interfaces.androidPermissions.AndroidPermission
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.comboctl.android.AndroidBluetoothPermissionException
 import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.main.BasalProfile
 import info.nightscout.comboctl.main.NUM_COMBO_BASAL_PROFILE_FACTORS
-import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.profile.Profile as AAPSProfile
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import kotlinx.coroutines.delay
+import app.aaps.core.interfaces.profile.Profile as AAPSProfile
 
 // Utility extension functions for clearer conversion between
 // ComboCtl units and AAPS units. ComboCtl uses integer-encoded

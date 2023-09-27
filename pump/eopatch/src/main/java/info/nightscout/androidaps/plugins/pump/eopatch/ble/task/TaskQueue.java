@@ -7,9 +7,9 @@ import java.util.Queue;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
 

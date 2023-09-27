@@ -14,7 +14,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Be
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.TimerAlertTrigger;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.UnitsRemainingAlertTrigger;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 class ConfigureAlertsCommandTest {
     @Test
@@ -31,7 +31,7 @@ class ConfigureAlertsCommandTest {
                 BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("79a410df0205"), //
+                ByteUtil.INSTANCE.fromHexString("79a410df0205"), //
                 alertConfiguration1.getRawData());
 
         Duration hardExpirationTime = Duration.standardHours(79).minus(Duration.standardMinutes(1));
@@ -46,7 +46,7 @@ class ConfigureAlertsCommandTest {
                 BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("280012830206"), //
+                ByteUtil.INSTANCE.fromHexString("280012830206"), //
                 alertConfiguration2.getRawData());
 
         AlertConfiguration alertConfiguration3 = new AlertConfiguration( //
@@ -60,7 +60,7 @@ class ConfigureAlertsCommandTest {
                 BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("020f00000202"), //
+                ByteUtil.INSTANCE.fromHexString("020f00000202"), //
                 alertConfiguration3.getRawData());
 
         ConfigureAlertsCommand configureAlertsCommand = new ConfigureAlertsCommand( //
@@ -68,7 +68,7 @@ class ConfigureAlertsCommandTest {
                 Arrays.asList(alertConfiguration1, alertConfiguration2, alertConfiguration3));
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("1916feb6268b79a410df0205280012830206020f00000202"), //
+                ByteUtil.INSTANCE.fromHexString("1916feb6268b79a410df0205280012830206020f00000202"), //
                 configureAlertsCommand.getRawData());
     }
 
@@ -89,7 +89,7 @@ class ConfigureAlertsCommandTest {
                 Collections.singletonList(alertConfiguration));
 
         Assertions.assertArrayEquals(
-                ByteUtil.fromHexString("190aae01a66c4c0000640102"), //
+                ByteUtil.INSTANCE.fromHexString("190aae01a66c4c0000640102"), //
                 configureAlertsCommand.getRawData());
     }
 }

@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.core.utils.extensions.safeGetSerializableExtra
+import app.aaps.core.utils.extensions.safeGetSerializableExtra
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState

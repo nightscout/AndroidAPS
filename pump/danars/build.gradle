@@ -37,6 +37,6 @@ dependencies {
     implementation project(':core:validators')
     implementation project(':pump:dana')
 
-    testImplementation project(':app-wear-shared:shared-tests')
+    testImplementation project(':shared:tests')
     testImplementation project(':core:main')
 }

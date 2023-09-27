@@ -90,6 +90,7 @@
     <string name="cwf_comment_direction">Стрелка тренда</string>
     <string name="cwf_comment_timestamp">Минут с последнего чтения ГК</string>
     <string name="cwf_comment_sgv">Значение ГК</string>
+    <string name="cwf_comment_cover_plate">Изображение перед текстом (циферблаты…)</string>
     <string name="cwf_comment_hour_hand">Изображение для часовой стрелки (Аналоговые часы)</string>
     <string name="cwf_comment_minute_hand">Изображение для минутной стрелки (Аналоговые часы)</string>
     <string name="cwf_comment_second_hand">Изображение для секундной стрелки (Аналоговые часы)</string>

@@ -69,7 +69,7 @@
             android:orientation="horizontal"
             android:visibility="gone">
 
-            <info.nightscout.core.ui.elements.SingleClickButton
+            <app.aaps.core.ui.elements.SingleClickButton
                 android:id="@+id/reusebutton"
                 style="@style/ButtonSmallFontStyle"
                 android:drawablePadding="10dp"
@@ -97,7 +97,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.core.ui.elements.MinutesNumberPicker
+            <app.aaps.core.ui.elements.MinutesNumberPicker
                 android:id="@+id/duration"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
@@ -134,7 +134,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.core.ui.elements.NumberPicker
+            <app.aaps.core.ui.elements.NumberPicker
                 android:id="@+id/percentage"
                 android:layout_width="130dp"
                 android:layout_height="40dp"
@@ -172,7 +172,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.core.ui.elements.NumberPicker
+            <app.aaps.core.ui.elements.NumberPicker
                 android:id="@+id/timeshift"
                 android:layout_width="130dp"
                 android:layout_height="40dp"

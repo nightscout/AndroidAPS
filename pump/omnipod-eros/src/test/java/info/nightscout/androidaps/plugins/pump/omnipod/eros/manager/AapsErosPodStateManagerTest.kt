@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager
 
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.shared.tests.TestBase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FirmwareVersion
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.sharedtests.TestBase
 import org.joda.time.DateTime
 import org.joda.time.DateTimeUtils
 import org.joda.time.DateTimeZone

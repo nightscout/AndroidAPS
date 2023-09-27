@@ -5,6 +5,10 @@ import java.util.stream.Stream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.FetchAlarmTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.InternalSuspendedTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ReadBolusFinishTimeTask;
@@ -14,10 +18,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.BolusCurrent;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
@@ -69,7 +69,7 @@ public class PatchStateManager {
             FETCH_ALARM.enqueue();
         }
 
-        if (newState.isPatchInternalSuspended()){
+        if (newState.isPatchInternalSuspended()) {
             onPatchInternalSuspended(newState);
         }
 
@@ -208,7 +208,7 @@ public class PatchStateManager {
         }
     }
 
-    private void onTempBasalCancelState()  {
+    private void onTempBasalCancelState() {
         TempBasal tempBasal = pm.getTempBasalManager().getStartedBasal();
 
         if (tempBasal != null) {
@@ -234,7 +234,7 @@ public class PatchStateManager {
         }
     }
 
-    void onNormalBasalResumed(boolean tempBasalFinished)  {
+    void onNormalBasalResumed(boolean tempBasalFinished) {
         NormalBasal normalBasal = pm.getNormalBasalManager().getNormalBasal();
         if (normalBasal != null) {
             pm.getNormalBasalManager().updateBasalStarted();

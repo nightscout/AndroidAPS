@@ -7,16 +7,18 @@ import java.util.EnumSet;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.BeepType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
-/** @noinspection SpellCheckingInspection*/
+/**
+ * @noinspection SpellCheckingInspection
+ */
 class CancelDeliveryCommandTest {
 
     @Test
     void testCancelBolusAndBasalWithBeep() {
         CancelDeliveryCommand command = new CancelDeliveryCommand(0x10203040, BeepType.BIP_BIP, EnumSet.of(DeliveryType.BASAL, DeliveryType.BOLUS));
 
-        byte[] expected = ByteUtil.fromHexString("1F051020304035");
+        byte[] expected = ByteUtil.INSTANCE.fromHexString("1F051020304035");
         Assertions.assertArrayEquals(expected, command.getRawData());
     }
 
@@ -24,7 +26,7 @@ class CancelDeliveryCommandTest {
     void testCancelBolusWithBeep() {
         CancelDeliveryCommand command = new CancelDeliveryCommand(0x4d91f8ff, BeepType.BEEEEEEP, DeliveryType.BOLUS);
 
-        byte[] expected = ByteUtil.fromHexString("1f054d91f8ff64");
+        byte[] expected = ByteUtil.INSTANCE.fromHexString("1f054d91f8ff64");
         Assertions.assertArrayEquals(expected, command.getRawData());
     }
 
@@ -32,7 +34,7 @@ class CancelDeliveryCommandTest {
     void testSuspendBasalCommandWithoutBeep() {
         CancelDeliveryCommand command = new CancelDeliveryCommand(0x6fede14a, BeepType.NO_BEEP, DeliveryType.BASAL);
 
-        byte[] expected = ByteUtil.fromHexString("1f056fede14a01");
+        byte[] expected = ByteUtil.INSTANCE.fromHexString("1f056fede14a01");
         Assertions.assertArrayEquals(expected, command.getRawData());
     }
 
@@ -40,6 +42,6 @@ class CancelDeliveryCommandTest {
     @Test
     void testCancelTempBasalWithoutBeep() {
         CancelDeliveryCommand cancelDeliveryCommand = new CancelDeliveryCommand(0xf76d34c4, BeepType.NO_BEEP, DeliveryType.TEMP_BASAL);
-        Assertions.assertArrayEquals(ByteUtil.fromHexString("1f05f76d34c402"), cancelDeliveryCommand.getRawData());
+        Assertions.assertArrayEquals(ByteUtil.INSTANCE.fromHexString("1f05f76d34c402"), cancelDeliveryCommand.getRawData());
     }
 }

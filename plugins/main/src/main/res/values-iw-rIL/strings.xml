@@ -322,6 +322,7 @@
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <string name="cwf_infos_pref_locked">רשימת העדפות ננעלה ע\"י פני השעון</string>
+    <string name="cwf_infos_pref_required">רשימת ההעדפות הנדרשת ע\"י פני השעון</string>
     <string name="cwf_infos_view_title">רשימת שדות הכלולים בפני השעון</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>

@@ -1,15 +1,14 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 /**
  * InjectionSnackInquireResponsePacket
  */
-class InjectionSnackInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector ) {
+class InjectionSnackInquireResponsePacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
 
@@ -27,9 +26,9 @@ class InjectionSnackInquireResponsePacket(injector: HasAndroidInjector) : Diacon
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        val result2 =  getByteToInt(bufferData)
+        val result2 = getByteToInt(bufferData)
 
-        if(!isSuccInquireResponseResult(result2)) {
+        if (!isSuccInquireResponseResult(result2)) {
             failed = true
             return
         }

@@ -4,7 +4,7 @@ import androidx.room.Entity;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-import info.nightscout.core.utils.DateTimeUtil;
+import app.aaps.core.utils.DateTimeUtil;
 
 /**
  * Created by andy on 30.11.2019.

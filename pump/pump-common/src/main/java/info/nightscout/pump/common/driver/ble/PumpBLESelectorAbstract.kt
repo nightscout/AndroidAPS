@@ -5,14 +5,14 @@ import android.bluetooth.le.ScanFilter
 import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.widget.Toast
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.pump.common.R
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 
-abstract class PumpBLESelectorAbstract constructor(
+abstract class PumpBLESelectorAbstract(
     var resourceHelper: ResourceHelper,
     var aapsLogger: AAPSLogger,
     var sp: SP,

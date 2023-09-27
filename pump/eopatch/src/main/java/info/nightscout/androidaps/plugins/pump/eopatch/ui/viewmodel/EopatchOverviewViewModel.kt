@@ -3,6 +3,15 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
@@ -14,15 +23,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.event.UIEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.util.Calendar
@@ -41,40 +41,41 @@ class EopatchOverviewViewModel @Inject constructor(
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync
 ) : EoBaseViewModel<EoBaseNavigator>() {
+
     private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
-    val eventHandler : LiveData<UIEvent<EventType>>
+    val eventHandler: LiveData<UIEvent<EventType>>
         get() = _eventHandler
 
     private val _patchConfig = SingleLiveEvent<PatchConfig>()
-    val patchConfig : LiveData<PatchConfig>
+    val patchConfig: LiveData<PatchConfig>
         get() = _patchConfig
 
     private val _patchState = SingleLiveEvent<PatchState>()
-    val patchState : LiveData<PatchState>
+    val patchState: LiveData<PatchState>
         get() = _patchState
 
     private val _normalBasal = SingleLiveEvent<String>()
-    val normalBasal : LiveData<String>
+    val normalBasal: LiveData<String>
         get() = _normalBasal
 
     private val _tempBasal = SingleLiveEvent<String>()
-    val tempBasal : LiveData<String>
+    val tempBasal: LiveData<String>
         get() = _tempBasal
 
     private val _bleStatus = SingleLiveEvent<String>()
-    val bleStatus : LiveData<String>
+    val bleStatus: LiveData<String>
         get() = _bleStatus
 
     private val _status = SingleLiveEvent<String>()
-    val status : LiveData<String>
+    val status: LiveData<String>
         get() = _status
 
     private val _pauseBtnStr = SingleLiveEvent<String>()
-    val pauseBtnStr : LiveData<String>
+    val pauseBtnStr: LiveData<String>
         get() = _pauseBtnStr
 
     private val _alarms = SingleLiveEvent<Alarms>()
-    val alarms : LiveData<Alarms>
+    val alarms: LiveData<Alarms>
         get() = _alarms
 
     private val _patchRemainingInsulin = MutableLiveData(0f)
@@ -86,8 +87,8 @@ class EopatchOverviewViewModel @Inject constructor(
         get() = _patchRemainingInsulin.map { insulin ->
             when {
                 insulin > 50f -> "50+ U"
-                insulin < 1f -> "0 U"
-                else -> "${insulin.roundToInt()} U"
+                insulin < 1f  -> "0 U"
+                else          -> "${insulin.roundToInt()} U"
             }
         }
 
@@ -113,10 +114,10 @@ class EopatchOverviewViewModel @Inject constructor(
         patchManager.observePatchConnectionState()
             .observeOn(aapsSchedulers.main)
             .subscribe {
-                _bleStatus.value = when(it){
-                    BleConnectionState.CONNECTED -> "{fa-bluetooth}"
+                _bleStatus.value = when (it) {
+                    BleConnectionState.CONNECTED    -> "{fa-bluetooth}"
                     BleConnectionState.DISCONNECTED -> "{fa-bluetooth-b}"
-                    else -> "{fa-bluetooth-b spin}  ${rh.gs(R.string.string_connecting)}"
+                    else                            -> "{fa-bluetooth-b spin}  ${rh.gs(R.string.string_connecting)}"
                 }
             }
             .addTo()
@@ -135,62 +136,62 @@ class EopatchOverviewViewModel @Inject constructor(
             }
             .addTo()
 
-        if(preferenceManager.getPatchState().isNormalBasalPaused){
+        if (preferenceManager.getPatchState().isNormalBasalPaused) {
             startPauseTimeUpdate()
-        }else {
+        } else {
             updateBasalInfo()
         }
     }
 
-    private fun updatePatchStatus(){
-        if(patchManager.isActivated){
-            val finishTimeMillis = patchConfig.value?.basalPauseFinishTimestamp?:System.currentTimeMillis()
+    private fun updatePatchStatus() {
+        if (patchManager.isActivated) {
+            val finishTimeMillis = patchConfig.value?.basalPauseFinishTimestamp ?: System.currentTimeMillis()
             val remainTimeMillis = max(finishTimeMillis - System.currentTimeMillis(), 0L)
-            val h =  TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
-            val m =  TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
-            _status.value = if(patchManager.patchState.isNormalBasalPaused)
-                    "${rh.gs(R.string.string_suspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
-                else
-                    rh.gs(R.string.string_running)
-        }else{
+            val h = TimeUnit.MILLISECONDS.toHours(remainTimeMillis)
+            val m = TimeUnit.MILLISECONDS.toMinutes(remainTimeMillis - TimeUnit.HOURS.toMillis(h))
+            _status.value = if (patchManager.patchState.isNormalBasalPaused)
+                "${rh.gs(R.string.string_suspended)}\n${rh.gs(R.string.string_temp_basal_remained_hhmm, h.toString(), m.toString())}"
+            else
+                rh.gs(R.string.string_running)
+        } else {
             _status.value = ""
         }
-        _pauseBtnStr.value = if(patchManager.patchState.isNormalBasalPaused) rh.gs(R.string.string_resume) else rh.gs(R.string.string_suspend)
+        _pauseBtnStr.value = if (patchManager.patchState.isNormalBasalPaused) rh.gs(R.string.string_resume) else rh.gs(R.string.string_suspend)
     }
 
-    private fun updateBasalInfo(){
-        if(patchManager.isActivated){
-            _normalBasal.value = if(patchManager.patchState.isNormalBasalRunning)
+    private fun updateBasalInfo() {
+        if (patchManager.isActivated) {
+            _normalBasal.value = if (patchManager.patchState.isNormalBasalRunning)
                 "${preferenceManager.getNormalBasalManager().normalBasal.currentSegmentDoseUnitPerHour} U/hr"
             else
                 ""
-            _tempBasal.value = if(patchManager.patchState.isTempBasalActive)
+            _tempBasal.value = if (patchManager.patchState.isTempBasalActive)
                 "${preferenceManager.getTempBasalManager().startedBasal?.doseUnitPerHour} U/hr"
             else
                 ""
 
-        }else{
+        } else {
             _normalBasal.value = ""
             _tempBasal.value = ""
         }
     }
 
-    fun onClickActivation(){
+    fun onClickActivation() {
         val profile = profileFunction.getProfile()
-        if(profile == null){
+        if (profile == null) {
             _eventHandler.postValue(UIEvent(EventType.PROFILE_NOT_SET))
-        }else{
+        } else {
             val basalValues = profile.getBasalValues()
             var isValid = true
-            for(basalRate in basalValues){
-                if(basalRate.value < 0.049999){
+            for (basalRate in basalValues) {
+                if (basalRate.value < 0.049999) {
                     _eventHandler.postValue(UIEvent(EventType.INVALID_BASAL_RATE))
                     isValid = false
                     break
                 }
             }
 
-            if(isValid) {
+            if (isValid) {
                 patchManager.preferenceManager.getNormalBasalManager().setNormalBasal(profile)
                 patchManager.preferenceManager.flushNormalBasalManager()
 
@@ -199,44 +200,44 @@ class EopatchOverviewViewModel @Inject constructor(
         }
     }
 
-    fun onClickDeactivation(){
+    fun onClickDeactivation() {
         _eventHandler.postValue(UIEvent(EventType.DEACTIVATION_CLICKED))
     }
 
-    fun onClickSuspendOrResume(){
-        if(patchManager.patchState.isNormalBasalPaused) {
+    fun onClickSuspendOrResume() {
+        if (patchManager.patchState.isNormalBasalPaused) {
             _eventHandler.postValue(UIEvent(EventType.RESUME_CLICKED))
-        }else{
+        } else {
             _eventHandler.postValue(UIEvent(EventType.SUSPEND_CLICKED))
         }
     }
 
-    fun pauseBasal(pauseDurationHour: Float){
+    fun pauseBasal(pauseDurationHour: Float) {
         patchManager.pauseBasal(pauseDurationHour)
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ response ->
-                if (response.isSuccess) {
-                    val result = pumpSync.syncTemporaryBasalWithPumpId(
-                        timestamp = dateUtil.now(),
-                        rate = 0.0,
-                        duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
-                        isAbsolute = true,
-                        type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                        pumpId = dateUtil.now(),
-                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                        pumpSerial = patchManager.patchConfig.patchSerialNumber
-                                   )
-                    aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
+                           if (response.isSuccess) {
+                               val result = pumpSync.syncTemporaryBasalWithPumpId(
+                                   timestamp = dateUtil.now(),
+                                   rate = 0.0,
+                                   duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
+                                   isAbsolute = true,
+                                   type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                                   pumpId = dateUtil.now(),
+                                   pumpType = PumpType.EOFLOW_EOPATCH2,
+                                   pumpSerial = patchManager.patchConfig.patchSerialNumber
+                               )
+                               aapsLogger.debug(LTag.PUMP, "syncTemporaryBasalWithPumpId: Result: $result")
 
-                    UIEvent(EventType.PAUSE_BASAL_SUCCESS).let { _eventHandler.postValue(it) }
-                    startPauseTimeUpdate()
-                } else {
-                    UIEvent(EventType.PAUSE_BASAL_FAILED).apply { value = pauseDurationHour }.let { _eventHandler.postValue(it) }
-                }
-            }, {
-                UIEvent(EventType.PAUSE_BASAL_FAILED).apply { value = pauseDurationHour }.let { _eventHandler.postValue(it) }
-            }).addTo()
+                               UIEvent(EventType.PAUSE_BASAL_SUCCESS).let { _eventHandler.postValue(it) }
+                               startPauseTimeUpdate()
+                           } else {
+                               UIEvent(EventType.PAUSE_BASAL_FAILED).apply { value = pauseDurationHour }.let { _eventHandler.postValue(it) }
+                           }
+                       }, {
+                           UIEvent(EventType.PAUSE_BASAL_FAILED).apply { value = pauseDurationHour }.let { _eventHandler.postValue(it) }
+                       }).addTo()
     }
 
     fun resumeBasal() {
@@ -244,41 +245,41 @@ class EopatchOverviewViewModel @Inject constructor(
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                if (it.isSuccess) {
-                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                        timestamp = dateUtil.now(),
-                        endPumpId = dateUtil.now(),
-                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                        pumpSerial = patchManager.patchConfig.patchSerialNumber
-                    )
-                    UIEvent(EventType.RESUME_BASAL_SUCCESS).let { event -> _eventHandler.postValue(event) }
-                    stopPauseTimeUpdate()
-                } else {
-                    _eventHandler.postValue(UIEvent(EventType.RESUME_BASAL_FAILED))
-                }
-            },{
-                _eventHandler.postValue(UIEvent(EventType.RESUME_BASAL_FAILED))
-            }).addTo()
+                           if (it.isSuccess) {
+                               pumpSync.syncStopTemporaryBasalWithPumpId(
+                                   timestamp = dateUtil.now(),
+                                   endPumpId = dateUtil.now(),
+                                   pumpType = PumpType.EOFLOW_EOPATCH2,
+                                   pumpSerial = patchManager.patchConfig.patchSerialNumber
+                               )
+                               UIEvent(EventType.RESUME_BASAL_SUCCESS).let { event -> _eventHandler.postValue(event) }
+                               stopPauseTimeUpdate()
+                           } else {
+                               _eventHandler.postValue(UIEvent(EventType.RESUME_BASAL_FAILED))
+                           }
+                       }, {
+                           _eventHandler.postValue(UIEvent(EventType.RESUME_BASAL_FAILED))
+                       }).addTo()
     }
 
-    private fun startPauseTimeUpdate(){
-        if(mPauseTimeDisposable == null) {
+    private fun startPauseTimeUpdate() {
+        if (mPauseTimeDisposable == null) {
             mPauseTimeDisposable = Observable.interval(30, TimeUnit.SECONDS)
                 .observeOn(aapsSchedulers.main)
                 .subscribe { updatePatchStatus() }
         }
     }
 
-    private fun stopPauseTimeUpdate(){
+    private fun stopPauseTimeUpdate() {
         mPauseTimeDisposable?.dispose()
         mPauseTimeDisposable = null
     }
 
-    fun startBasalRateUpdate(){
+    fun startBasalRateUpdate() {
         val initialDelaySecs = Calendar.getInstance().let { c ->
             (60 - c.get(Calendar.MINUTE) - 1) * 60 + (60 - c.get(Calendar.SECOND))
         }
-        if(mBasalRateDisposable == null) {
+        if (mBasalRateDisposable == null) {
             mBasalRateDisposable = Observable.interval(initialDelaySecs.toLong(), 3600L, TimeUnit.SECONDS)
                 .observeOn(aapsSchedulers.main)
                 .subscribe { updateBasalInfo() }
@@ -286,7 +287,7 @@ class EopatchOverviewViewModel @Inject constructor(
         updateBasalInfo()
     }
 
-    fun stopBasalRateUpdate(){
+    fun stopBasalRateUpdate() {
         mBasalRateDisposable?.dispose()
         mBasalRateDisposable = null
     }

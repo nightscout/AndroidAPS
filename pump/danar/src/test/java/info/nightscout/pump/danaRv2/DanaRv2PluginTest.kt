@@ -1,20 +1,20 @@
 package info.nightscout.pump.danaRv2
 
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.objects.Instantiator
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
-import info.nightscout.core.constraints.ConstraintObject
-import info.nightscout.interfaces.constraints.ConstraintsChecker
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.TemporaryBasalStorage
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
-import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -42,10 +42,10 @@ class DanaRv2PluginTest : TestBaseWithProfile() {
     fun prepareMocks() {
         `when`(sp.getString(info.nightscout.pump.dana.R.string.key_danar_bt_name, "")).thenReturn("")
         `when`(sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")).thenReturn("")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        `when`(rh.gs(app.aaps.core.ui.R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        `when`(rh.gs(app.aaps.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         danaRv2Plugin = DanaRv2Plugin(
             injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, detailedBolusInfoStorage,

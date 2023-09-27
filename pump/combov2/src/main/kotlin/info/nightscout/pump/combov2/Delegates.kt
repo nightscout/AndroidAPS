@@ -1,6 +1,6 @@
 package info.nightscout.pump.combov2
 
-import info.nightscout.shared.sharedPreferences.SP
+import app.aaps.core.interfaces.sharedPreferences.SP
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
@@ -24,6 +24,7 @@ class SPDelegateBoolean(
     private val defaultValue: Boolean = false,
     private val commit: Boolean = false
 ) : ReadWriteProperty<Any, Boolean> {
+
     override fun getValue(thisRef: Any, property: KProperty<*>) =
         sp.getBoolean(key, defaultValue)
 
@@ -37,6 +38,7 @@ class SPDelegateDouble(
     private val defaultValue: Double = 0.0,
     private val commit: Boolean = false
 ) : ReadWriteProperty<Any, Double> {
+
     override fun getValue(thisRef: Any, property: KProperty<*>) =
         sp.getDouble(key, defaultValue)
 
@@ -50,6 +52,7 @@ class SPDelegateLong(
     private val defaultValue: Long = 0,
     private val commit: Boolean = false
 ) : ReadWriteProperty<Any, Long> {
+
     override fun getValue(thisRef: Any, property: KProperty<*>) =
         sp.getLong(key, defaultValue)
 
@@ -63,6 +66,7 @@ class SPDelegateInt(
     private val defaultValue: Int = 0,
     private val commit: Boolean = false
 ) : ReadWriteProperty<Any, Int> {
+
     override fun getValue(thisRef: Any, property: KProperty<*>) =
         sp.getInt(key, defaultValue)
 
@@ -76,6 +80,7 @@ class SPDelegateString(
     private val defaultValue: String = "",
     private val commit: Boolean = false
 ) : ReadWriteProperty<Any, String> {
+
     override fun getValue(thisRef: Any, property: KProperty<*>) =
         sp.getString(key, defaultValue)
 

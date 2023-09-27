@@ -16,11 +16,11 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.resources.ResourceHelper;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
-import info.nightscout.shared.interfaces.ResourceHelper;
 
 /**
  * Created by andy on 4/8/19.
