@@ -27,7 +27,9 @@ class RawDisplayData {
         sgv = 0.0,
         high = 0.0,
         low = 0.0,
-        color = 0
+        color = 0,
+        deltaMgdl = null,
+        avgDeltaMgdl = null
     )
 
     // status bundle
