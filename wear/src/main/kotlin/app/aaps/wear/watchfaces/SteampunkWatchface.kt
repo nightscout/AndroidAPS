@@ -8,7 +8,6 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
-import app.aaps.core.interfaces.utils.SafeParse.stringToFloat
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivitySteampunkBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
@@ -51,9 +50,7 @@ class SteampunkWatchface : BaseWatchFace() {
                 binding.glucoseDial.setImageResource(if (singleBg.glucoseUnits == "mmol") R.drawable.steampunk_dial_mmol else R.drawable.steampunk_dial_mgdl)
 
                 // convert the Sgv to degrees of rotation
-                rotationAngle =
-                    if (singleBg.glucoseUnits == "mmol") stringToFloat(singleBg.sgvString) * 18f //convert to mg/dL, which is equivalent to degrees
-                    else stringToFloat(singleBg.sgvString) // if glucose a value is received, use it to determine the amount of rotation of the dial.
+                rotationAngle = singleBg.sgv.toFloat()
             }
             if (rotationAngle > 330) rotationAngle = 330f // if the glucose value is higher than 330 then show "HIGH" on the dial. ("HIGH" is at 330 degrees on the dial)
             if (rotationAngle != 0f && rotationAngle < 30) rotationAngle = 30f // if the glucose value is lower than 30 show "LOW" on the dial. ("LOW" is at 30 degrees on the dial)
@@ -69,62 +66,41 @@ class SteampunkWatchface : BaseWatchFace() {
             lastEndDegrees = rotationAngle //store the final angle as a starting point for the next rotation.
         }
 
-        // set the delta gauge and rotate the delta pointer
-        var deltaIsNegative = 1f // by default go clockwise
-        if (singleBg.avgDelta != "--") {      // if a legitimate delta value is
-            // received,
-            // then...
-            if (singleBg.avgDelta[0] == '-') deltaIsNegative = -1f //if the delta is negative, go counter-clockwise
-            val absAvgDelta = stringToFloat(singleBg.avgDelta.substring(1)) //get rid of the sign so it can be converted to float.
+        singleBg.avgDeltaMgdl?.let {// if a legitimate delta value is
+            val absAvgDelta = it.toFloat()
             var autoGranularity = "0" //auto-granularity off
             // ensure the delta gauge is the right units and granularity
-            if (singleBg.glucoseUnits != "-") {
-                if (singleBg.glucoseUnits == "mmol") {
-                    if (sp.getString("delta_granularity", "2") == "4") {  //Auto granularity
-                        autoGranularity =
-                            when {
-                                absAvgDelta < 0.3 -> "3" // high if below 0.3 mmol/l
-                                absAvgDelta < 0.5 -> "2" // medium if below 0.5 mmol/l
-                                else              -> "1" // low (init)
-                            }
+            if (sp.getString("delta_granularity", "2") == "4") {  //Auto granularity
+                autoGranularity =
+                    when {
+                        absAvgDelta < 5  -> "3" // high if below 5 mg/dl
+                        absAvgDelta < 10 -> "2" // medium if below 10 mg/dl
+                        else             -> "1" // low (init)
                     }
-                    if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
-                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10)
-                        deltaRotationAngle = absAvgDelta * 30f
-                    }
-                    if (sp.getString("delta_granularity", "2") == "2" || autoGranularity == "2") {  //medium
-                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05)
-                        deltaRotationAngle = absAvgDelta * 60f
-                    }
-                    if (sp.getString("delta_granularity", "2") == "3" || autoGranularity == "3") {  //high
-                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03)
-                        deltaRotationAngle = absAvgDelta * 100f
-                    }
-                } else {
-                    if (sp.getString("delta_granularity", "2") == "4") {  //Auto granularity
-                        autoGranularity =
-                            when {
-                                absAvgDelta < 5  -> "3" // high if below 5 mg/dl
-                                absAvgDelta < 10 -> "2" // medium if below 10 mg/dl
-                                else             -> "1" // low (init)
-                            }
-                    }
-                    if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
-                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20)
-                        deltaRotationAngle = absAvgDelta * 1.5f
-                    }
-                    if (sp.getString("delta_granularity", "2") == "2" || autoGranularity == "2") {  //medium
-                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10)
-                        deltaRotationAngle = absAvgDelta * 3f
-                    }
-                    if (sp.getString("delta_granularity", "2") == "3" || autoGranularity == "3") {  //high
-                        binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5)
-                        deltaRotationAngle = absAvgDelta * 6f
-                    }
-                }
+            }
+            if (sp.getString("delta_granularity", "2") == "1" || autoGranularity == "1") {  //low
+                if (singleBg.glucoseUnits == "mmol")
+                    binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_10)
+                else
+                    binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_20)
+                deltaRotationAngle = absAvgDelta * 1.5f
+            }
+            if (sp.getString("delta_granularity", "2") == "2" || autoGranularity == "2") {  //medium
+                if (singleBg.glucoseUnits == "mmol")
+                    binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_05)
+                else
+                    binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_10)
+                deltaRotationAngle = absAvgDelta * 3f
+            }
+            if (sp.getString("delta_granularity", "2") == "3" || autoGranularity == "3") {  //high
+                if (singleBg.glucoseUnits == "mmol")
+                    binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mmol_03)
+                else
+                    binding.secondaryLayout.setBackgroundResource(R.drawable.steampunk_gauge_mgdl_5)
+                deltaRotationAngle = absAvgDelta * 6f
             }
             if (deltaRotationAngle > 40) deltaRotationAngle = 40f
-            binding.deltaPointer.rotation = deltaRotationAngle * deltaIsNegative
+            binding.deltaPointer.rotation = deltaRotationAngle
         }
 
         // rotate the minute hand.
