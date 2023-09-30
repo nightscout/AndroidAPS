@@ -70,6 +70,7 @@
     <string name="step_retry_activation">Activation en cours</string>
     <string name="unexpected_state">État inattendu : %1$s</string>
     <string name="no_profile_selected">Aucun profil sélectionné. Veuillez sélectionner un profil et réessayez.</string>
+    <string name="no_sn_in_settings">Aucun numéro de série connu. Veuillez entrer le numéro de série de la base de pompe dans les paramètres et réessayez.</string>
     <string name="base_serial">N° de série de la base de la pompe : %1$X</string>
     <string name="patch_begin_activation">Aucun Patch actif. Appuyez sur <b>Suivant</b> pour commencer le processus d\'activation.</string>
     <string name="patch_not_active_note">La base de la pompe ne doit pas être connectée au Patch avant l\'étape suivante !</string>
