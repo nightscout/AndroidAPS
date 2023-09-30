@@ -148,6 +148,7 @@
     <string name="cob3_longer">Ajustar el perfil al 150% hará que el tiempo de absorción de carbohidratos calculado sea mayor</string>
     <string name="cob3_shorter">Si se ajusta el perfil al 150%, el tiempo de absorción de carbohidratos calculado será menor</string>
     <string name="cob3_no_effect">Establecer el perfil a 150% no afectará la absorción calculada de carbohidratos</string>
+    <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>
     <string name="iob_hightemp">No se dará alta tasa basal temporal cuando su nivel de azúcar en sangre esté por debajo del objetivo.</string>
     <string name="iob_negiob">El IOB negativo durante un período sustancial en ausencia de ejercicio sugiere que tu perfil es demasiado fuerte y que se necesita menos insulina en tus ajustes.</string>

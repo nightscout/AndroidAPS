@@ -44,6 +44,7 @@
     <string name="pref_show_bgi">Vis BSI</string>
     <string name="pref_show_direction_arrow">Vis Retningspil</string>
     <string name="pref_show_ago">Vis Siden</string>
+    <string name="pref_show_grid">Vis Gitter</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørk</string>
     <string name="pref_highlight_basals">Fremhæv Basaler</string>
     <string name="pref_prediction_lines">Vis forudsigelser</string>
