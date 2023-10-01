@@ -3,6 +3,8 @@ package com.microtechmd.equil.manager.command;
 import androidx.annotation.NonNull;
 
 import com.microtechmd.equil.EquilConst;
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
+import com.microtechmd.equil.data.database.ResolvedResult;
 import com.microtechmd.equil.manager.Crc;
 import com.microtechmd.equil.manager.EquilCmdModel;
 import com.microtechmd.equil.manager.EquilManager;
@@ -21,9 +23,10 @@ import info.nightscout.shared.logging.LTag;
 import info.nightscout.shared.sharedPreferences.SP;
 
 public abstract class BaseCmd implements CustomCommand {
+    public ResolvedResult resolvedResult = ResolvedResult.NONE;
     public static final String defaultPort = "0F0F";
     public static int reqIndex;
-    public static int reqCmdIndex = 10;
+    public static int pumpReqIndex = 10;
     public static int rspIndex = -1;
     AAPSLogger aapsLogger;
     SP sp;
@@ -39,6 +42,32 @@ public abstract class BaseCmd implements CustomCommand {
     public EquilResponse response;
     public String runPwd;
     public String runCode;
+    final long createTime;
+
+    public BaseCmd(long createTime) {
+        this.createTime = createTime;
+    }
+
+    public abstract EquilResponse getEquilResponse();
+
+    public abstract EquilResponse getNextEquilResponse();
+
+    public abstract EquilResponse decodeEquilPacket(byte[] data);
+
+    public abstract EquilResponse decode() throws Exception;
+
+    public abstract EquilResponse decodeConfirm() throws Exception;
+
+    public abstract EquilHistoryRecord.EventType getEventType();
+
+
+    public ResolvedResult getResolvedResult() {
+        return resolvedResult;
+    }
+
+    public void setResolvedResult(ResolvedResult resolvedResult) {
+        this.resolvedResult = resolvedResult;
+    }
 
     public boolean isEnacted() {
         return enacted;
@@ -81,17 +110,6 @@ public abstract class BaseCmd implements CustomCommand {
         this.aapsLogger = equilManager.getAapsLogger();
         this.sp = equilManager.getSp();
     }
-
-
-    public abstract EquilResponse getEquilResponse();
-
-    public abstract EquilResponse getNextEquilResponse();
-
-    public abstract EquilResponse decodeEquilPacket(byte[] data);
-
-    public abstract EquilResponse decode() throws Exception;
-
-    public abstract EquilResponse decodeConfirm() throws Exception;
 
 
     public boolean checkData(byte[] data) {
@@ -143,6 +161,9 @@ public abstract class BaseCmd implements CustomCommand {
         return bg.setScale(0, BigDecimal.ROUND_UP).intValue();
     }
 
+    public boolean isPairStep() {
+        return false;
+    }
 
     public EquilResponse responseCmd(EquilCmdModel equilCmdModel, String port) {
         StringBuffer allData = new StringBuffer();
@@ -161,7 +182,7 @@ public abstract class BaseCmd implements CustomCommand {
         } else {
             index = 2;
         }
-        EquilResponse equilResponse = new EquilResponse();
+        EquilResponse equilResponse = new EquilResponse(createTime);
         int maxLen = up1((allByte.length - 8) / 10) + index;
         for (int i = 0; i < maxLen; i++) {
             ByteBuffer buffer = ByteBuffer.allocate(16);

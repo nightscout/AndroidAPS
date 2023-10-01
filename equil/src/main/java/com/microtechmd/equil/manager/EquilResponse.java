@@ -12,10 +12,17 @@ public class EquilResponse {
     private final LinkedList<ByteBuffer> send;
     private String error_message;
     private long delay = 20;
+    private final long cmdCreateTime;
 
-    public EquilResponse() {
+    public EquilResponse(long cmdCreateTime) {
+        this.cmdCreateTime = cmdCreateTime;
         send = new LinkedList<>();
     }
+
+    public long getCmdCreateTime() {
+        return cmdCreateTime;
+    }
+
 
     public boolean hasError() {
         return error_message != null;

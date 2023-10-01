@@ -2,38 +2,59 @@ package com.microtechmd.equil.manager.command;
 
 
 import com.microtechmd.equil.EquilConst;
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
+import com.microtechmd.equil.driver.definition.BasalSchedule;
+import com.microtechmd.equil.driver.definition.BasalScheduleEntry;
 import com.microtechmd.equil.manager.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.interfaces.Profile;
+import info.nightscout.shared.logging.LTag;
 
 public class CmdBasalSet extends BaseSetting {
     Profile profile;
 
-    public CmdBasalSet(Profile profile) {
+    public Profile getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Profile profile) {
         this.profile = profile;
+    }
+
+    BasalSchedule basalSchedule;
+
+    public CmdBasalSet(BasalSchedule basalSchedule, Profile profile) {
+        super(System.currentTimeMillis());
+        this.profile = profile;
+        this.basalSchedule = basalSchedule;
+
     }
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x01, 0x02};
         List<Byte> list = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            double value = profile.getBasalTimeFromMidnight(i * 60 * 60);
-            value = value / 2f;
-            aapsLogger.debug("profile====" + value);
-            byte[] bs = intToByteArray(value);
+        int i = 0;
+        for (BasalScheduleEntry basalScheduleEntry : basalSchedule.getEntries()) {
+            double rate = basalScheduleEntry.getRate();
+            double value = rate / 2f;
+            byte[] bs = Utils.basalToByteArray(value);
+            aapsLogger.debug(LTag.EQUILBLE,
+                    i + "==CmdBasalSet==" + value + "====" + rate + "===" + Utils.decodeSpeedToUH(value) + "==="
+                            + Utils.decodeSpeedToUHT(value));
             list.add(bs[1]);
             list.add(bs[0]);
             list.add(bs[1]);
             list.add(bs[0]);
+            i++;
         }
         String hex = Utils.bytesToHex(list);
         byte[] data = Utils.concat(indexByte, data2, Utils.hexStringToBytes(hex));
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -46,10 +67,10 @@ public class CmdBasalSet extends BaseSetting {
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x02, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -59,5 +80,9 @@ public class CmdBasalSet extends BaseSetting {
             setCmdStatus(true);
             notify();
         }
+    }
+
+    @Override public EquilHistoryRecord.EventType getEventType() {
+        return EquilHistoryRecord.EventType.SET_BASAL_PROFILE;
     }
 }

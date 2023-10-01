@@ -7,7 +7,11 @@
     <string name="key_equil_alarm_insulin_10" translatable="false">key_equil_alarm_insulin_10</string>
     <string name="key_equil_alarm_insulin_5" translatable="false">key_equil_alarm_insulin_5</string>
     <string name="key_equil_basal_set" translatable="false">key_equil_basal_set</string>
-    <string name="key_equil_state" translatable="false">key_equil_state</string>
+    <string name="key_equil_state" translatable="false">key_equil_state1</string>
+    <string name="key_equil_pair_password" translatable="false">key_equil_pair_password</string>
+    <string name="key_equil_alarm_battery" translatable="false">key_equil_alarm_battery</string>
+    <string name="key_equil_alarm_insulin" translatable="false">key_equil_alarm_insulin</string>
+
 
     <!--  start  -->
     <string name="equil_alarm_text_startup">非正常输注停止！</string>
@@ -73,7 +77,7 @@
     <string name="equil_assemble">Please assemble the filled reservoir and fully charged battery onto the pump.</string>
     <string name="equil_innsert">Please perform plunger positioning until liquid is expelled from the reservoir needle.</string>
     <string name="equil_innsert2">Please do not install the pump onto the base plate until plunger positioning is completed.</string>
-    <string name="equil_install">Please install the pump onto the base plate.</string>
+    <string name="equil_attach">Please install the pump onto the base plate.</string>
     <string name="equil_error">Connection error</string>
 
     <string name="equil_change">Change Pump</string>
@@ -127,5 +131,39 @@
     <string name="equil_common_cmd_insert_cannula">植入输注导管</string>
     <string name="equil_common_cmd_unpair">解绑Equil</string>
     <string name="equil_common_cmd_alarm">警报</string>
+    <string name="equil_common_cmd_set_extended_bolus">设置扩展大剂量</string>
+    <string name="equil_common_cmd_cancel_extended_bolus">取消扩展大剂量</string>
+    <string name="equil_common_change_insulin">推杆回退</string>
+    <string name="equil_common_set_alarm_tone">设置仅提示音</string>
+    <string name="equil_common_set_alarm_shake">设置仅震动</string>
+    <string name="equil_common_set_alarm_mute">设置静音</string>
+    <string name="equil_common_set_alarm_tone_and_shake">设置提示音加震动</string>
+    <string name="equil_common_read_devices">读取设备信息</string>
+    <string name="equil_common_cmd_fill">充盈</string>
 
+    <string name="history_mannual_confirm">Mannual Confirm</string>
+
+    <string name="equil_command_not_found">找不到设备</string>
+    <string name="equil_command_connect_error">泵连接失败</string>
+    <string name="equil_command_connect_no_response">泵无返回</string>
+    <string name="equil_command__unknown">命令的未知状态</string>
+
+    <string name="equil_install">请将泵植入身体</string>
+
+    <string name="equil_password_title">泵密码</string>
+    <string name="equil_common_preferences_category_confirmation_beeps">确认提示音</string>
+    <string name="equil_settings">设置</string>
+    <string name="equil_settings_alarm_battery">低电量报警</string>
+    <string name="equil_settings_alarm_insulin">储药器药量低报警</string>
+    <string name="equil_init_insulin_error">储药器初始化未完成</string>
+
+    <string name="equil_history_group_all">All</string>
+    <string name="equil_history_group_pair">Pair</string>
+    <string name="equil_history_group_bolus">Boluses</string>
+    <string name="equil_history_group_basal">Basals</string>
+    <string name="equil_history_group_prime">Prime</string>
+    <string name="equil_history_group_configuration">Configurations</string>
+    <string name="equil_tab_action">History action</string>
+    <string name="equil_tab_equil">Equil 历史</string>
+    <string name="equil_password_error">Equil 配对密码错误</string>
 </resources>

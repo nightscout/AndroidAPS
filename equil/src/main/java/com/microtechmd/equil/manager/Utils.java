@@ -2,15 +2,26 @@ package com.microtechmd.equil.manager;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.security.SecureRandom;
 import java.util.List;
 
 public class Utils {
+    public static byte[] generateRandomPassword(int length) {
+        SecureRandom secureRandom = new SecureRandom();
+        byte[] password = new byte[length];
+        secureRandom.nextBytes(password);
+        return password;
+    }
 
     public static int bytesToInt(byte highByte, byte lowByte) {
         // 将byte转换为int，同时进行位运算合并
         int highValue = (highByte & 0xFF) << 8;
         int lowValue = lowByte & 0xFF;
-        return highValue | lowValue;
+        int value = highValue | lowValue;
+        if (value >= 0x8000) {
+            return value - 0x8000;
+        }
+        return value;
     }
 
     public final static float internalDecodeSpeedToUH(int i) {
@@ -30,11 +41,21 @@ public class Utils {
     }
 
     public final static int decodeSpeedToUH(double i) {
-        return new BigDecimal(i).divide(new BigDecimal("0.00625")).intValue();
+        BigDecimal a = new BigDecimal(String.valueOf(i));
+        BigDecimal b = new BigDecimal("0.00625");
+        BigDecimal c = a.divide(b);
+//        c.setScale(2);
+        return c.intValue();
+    }
+
+    public final static double decodeSpeedToUHT(double i) {
+        BigDecimal a = new BigDecimal(String.valueOf(i));
+        BigDecimal b = new BigDecimal("0.00625");
+        return a.divide(b).doubleValue();
     }
 
     public static byte[] basalToByteArray(double v) {
-        int value = (int) (v / 0.025f * 4);
+        int value = decodeSpeedToUH(v);
         byte[] result = new byte[2];
         result[0] = (byte) ((value >> 8) & 0xFF); // 高位
         result[1] = (byte) (value & 0xFF); // 低位
@@ -42,7 +63,7 @@ public class Utils {
     }
 
     public static byte[] basalToByteArray2(double v) {
-        int value = (int) (v / 0.025f * 4);
+        int value = decodeSpeedToUH(v);
         byte[] result = new byte[2];
         result[1] = (byte) ((value >> 8) & 0xFF); // 高位
         result[0] = (byte) (value & 0xFF); // 低位

@@ -40,7 +40,7 @@ class EquilPairActivity : NoSplashAppCompatActivity() {
             } else if (intent.getSerializableExtra(KEY_TYPE) as Type == Type.PAIR) {
                 R.id.startEquilActivationFragment
             } else {
-                R.id.startEquilPairFillFragment
+                R.id.startEquilChangeInsulinFragment
             }
         pair = startDestination == R.id.startEquilActivationFragment
         setStartDestination(startDestination)
@@ -80,16 +80,10 @@ class EquilPairActivity : NoSplashAppCompatActivity() {
         (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
     public fun getTotalDefinedNumberOfSteps(): Int {
-        if (pair) {
-            return 4
-        }
-        return 2
+        return 6
     }
 
     public fun getActualNumberOfSteps(): Int {
-        if (pair) {
-            return 4
-        }
-        return 2
+        return 6
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -13,20 +14,31 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
 import com.microtechmd.equil.EquilConst
 import com.microtechmd.equil.EquilPumpPlugin
 import com.microtechmd.equil.R
+import com.microtechmd.equil.data.database.EquilBasalValuesRecord
+import com.microtechmd.equil.data.database.EquilHistoryPump
 import com.microtechmd.equil.data.database.EquilHistoryRecord
 import com.microtechmd.equil.data.database.EquilHistoryRecordDao
+import com.microtechmd.equil.data.database.ResolvedResult
 import com.microtechmd.equil.databinding.EquilHistoryRecordActivityBinding
+import com.microtechmd.equil.driver.definition.EquilHistoryEntryGroup
 import com.microtechmd.equil.events.EventEquilDataChanged
+import com.microtechmd.equil.manager.Utils
+import com.microtechmd.equil.manager.command.PumpEvent
 import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.androidaps.extensions.toVisibility
 import info.nightscout.androidaps.interfaces.ActivePlugin
 import info.nightscout.androidaps.interfaces.CommandQueue
 import info.nightscout.androidaps.interfaces.ResourceHelper
 import info.nightscout.androidaps.plugins.bus.RxBus
 import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType
+import info.nightscout.androidaps.plugins.pump.common.utils.ProfileUtil
+import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.utils.FabricPrivacy
 import info.nightscout.androidaps.utils.rx.AapsSchedulers
 import info.nightscout.shared.logging.AAPSLogger
@@ -61,7 +73,6 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
     private val disposable = CompositeDisposable()
     var filteredHistoryList: MutableList<EquilHistoryRecord> = java.util.ArrayList<EquilHistoryRecord>()
     private val fullHistoryList: MutableList<EquilHistoryRecord> = java.util.ArrayList<EquilHistoryRecord>()
-
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     @Inject lateinit var rxBus: RxBus
     val calendar: Calendar = Calendar.getInstance();
@@ -86,12 +97,18 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
             layoutManager = llm
             adapter = recyclerViewAdapter
         }
-
+        binding.recyclerviewEquil?.run {
+            setHasFixedSize(true)
+            layoutManager = LinearLayoutManager(this@EquilHistoryRecordActivity)
+        }
         disposable += rxBus
             .toObservable(EventEquilDataChanged::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ loadData() }, fabricPrivacy::logException)
-        typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(rh))
+            .subscribe({
+                           loadData()
+                           loadDataEquil()
+                       }, fabricPrivacy::logException)
+        typeListFull = getTypeList(EquilHistoryEntryGroup.Companion.getTranslatedList(rh))
 
         val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, R.layout.spinner_centered, typeListFull!!)
         binding.equilHistorytype?.run {
@@ -107,76 +124,112 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     if (manualChange) return
-                    filterHistory(PumpHistoryEntryGroup.All)
+                    filterHistory(EquilHistoryEntryGroup.All)
                 }
             }
         }
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                processVisibility(tab.position)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {}
+            override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+        loadDataEquil()
     }
 
-    private fun filterHistory(group: PumpHistoryEntryGroup) {
+    private fun processVisibility(position: Int) {
+        binding.recyclerview.visibility = (position == 0).toVisibility()
+        binding.recyclerviewEquil.visibility = (position == 1).toVisibility()
+
+    }
+
+    private fun filterHistory(group: EquilHistoryEntryGroup) {
         filteredHistoryList.clear()
-        aapsLogger.debug(LTag.EQUILBLE, "Items on full list: {}", fullHistoryList.size)
-        if (group === PumpHistoryEntryGroup.All) {
+        aapsLogger.error(LTag.EQUILBLE, "Items on full list: {}", fullHistoryList.size)
+        if (group === EquilHistoryEntryGroup.All) {
+            aapsLogger.error(LTag.EQUILBLE, "alll===")
             filteredHistoryList.addAll(fullHistoryList)
         } else {
-            filteredHistoryList.addAll(fullHistoryList.filter { groupForCommandType(it.type) == group })
+            filteredHistoryList.addAll(fullHistoryList.filter { it.type?.let { it1 -> groupForCommandType(it1) } == group })
         }
 
         recyclerViewAdapter?.let {
             it.historyList = filteredHistoryList
             it.notifyDataSetChanged()
         }
-        aapsLogger.debug(LTag.EQUILBLE, "Items on filtered list: {}", filteredHistoryList.size)
+        aapsLogger.error(LTag.EQUILBLE, "Items on filtered list: {}", filteredHistoryList.size)
     }
 
-    private fun groupForCommandType(type: EquilHistoryRecord.EventType): PumpHistoryEntryGroup {
+    private fun groupForCommandType(type: EquilHistoryRecord.EventType): EquilHistoryEntryGroup {
         return when (type) {
-            EquilHistoryRecord.EventType.INITIALIZE_EQUIL       ->
-                PumpHistoryEntryGroup.Prime
+            EquilHistoryRecord.EventType.INITIALIZE_EQUIL        ->
+                EquilHistoryEntryGroup.Pair
 
-            EquilHistoryRecord.EventType.INSERT_CANNULA         ->
-                PumpHistoryEntryGroup.Prime
+            EquilHistoryRecord.EventType.INSERT_CANNULA          ->
+                EquilHistoryEntryGroup.Pair
 
+            EquilHistoryRecord.EventType.UNPAIR_EQUIL            ->
+                EquilHistoryEntryGroup.Pair
             // EquilHistoryRecord.EventType.DEACTIVATE_POD         ->
             //     PumpHistoryEntryGroup.Prime
             //
             // EquilHistoryRecord.EventType.DISCARD_POD            ->
             //     PumpHistoryEntryGroup.Prime
 
-            EquilHistoryRecord.EventType.CANCEL_TEMPORARY_BASAL ->
-                PumpHistoryEntryGroup.Basal
+            EquilHistoryRecord.EventType.CANCEL_TEMPORARY_BASAL  ->
+                EquilHistoryEntryGroup.Basal
 
-            EquilHistoryRecord.EventType.SET_BASAL_PROFILE      ->
-                PumpHistoryEntryGroup.Basal
+            EquilHistoryRecord.EventType.CANCEL_EXTENDED_BOLUS   ->
+                EquilHistoryEntryGroup.Basal
 
-            EquilHistoryRecord.EventType.SET_TEMPORARY_BASAL    ->
-                PumpHistoryEntryGroup.Basal
+            EquilHistoryRecord.EventType.SET_EXTENDED_BOLUS      ->
+                EquilHistoryEntryGroup.Basal
 
-            EquilHistoryRecord.EventType.RESUME_DELIVERY        ->
-                PumpHistoryEntryGroup.Basal
+            EquilHistoryRecord.EventType.SET_BASAL_PROFILE       ->
+                EquilHistoryEntryGroup.Basal
 
-            EquilHistoryRecord.EventType.SUSPEND_DELIVERY       ->
-                PumpHistoryEntryGroup.Basal
+            EquilHistoryRecord.EventType.SET_TEMPORARY_BASAL     ->
+                EquilHistoryEntryGroup.Basal
 
-            EquilHistoryRecord.EventType.SET_BOLUS              ->
-                PumpHistoryEntryGroup.Bolus
+            EquilHistoryRecord.EventType.RESUME_DELIVERY         ->
+                EquilHistoryEntryGroup.Basal
 
-            EquilHistoryRecord.EventType.CANCEL_BOLUS           ->
-                PumpHistoryEntryGroup.Bolus
+            EquilHistoryRecord.EventType.SUSPEND_DELIVERY        ->
+                EquilHistoryEntryGroup.Basal
 
-            EquilHistoryRecord.EventType.SET_TIME               ->
-                PumpHistoryEntryGroup.Configuration
+            EquilHistoryRecord.EventType.SET_BOLUS               ->
+                EquilHistoryEntryGroup.Bolus
+
+            EquilHistoryRecord.EventType.CANCEL_BOLUS            ->
+                EquilHistoryEntryGroup.Bolus
+
+            EquilHistoryRecord.EventType.SET_TIME                ->
+                EquilHistoryEntryGroup.Configuration
+
+            EquilHistoryRecord.EventType.SET_ALARM_MUTE          ->
+                EquilHistoryEntryGroup.Configuration
+
+            EquilHistoryRecord.EventType.SET_ALARM_SHAKE         ->
+                EquilHistoryEntryGroup.Configuration
+
+            EquilHistoryRecord.EventType.SET_ALARM_TONE          ->
+                EquilHistoryEntryGroup.Configuration
+
+            EquilHistoryRecord.EventType.SET_ALARM_TONE_AND_SHAK ->
+                EquilHistoryEntryGroup.Configuration
 
             // EquilHistoryRecord.EventType.READ_POD_PULSE_LOG     ->
             //     PumpHistoryEntryGroup.Unknown
-            else                                                -> {
-                PumpHistoryEntryGroup.All
+            else                                                 -> {
+                EquilHistoryEntryGroup.All
 
             }
         }
     }
 
-    private fun getTypeList(list: List<PumpHistoryEntryGroup>): List<TypeList> {
+    private fun getTypeList(list: List<EquilHistoryEntryGroup>): List<TypeList> {
         val typeList = java.util.ArrayList<TypeList>()
         for (pumpHistoryEntryGroup in list) {
             typeList.add(TypeList(pumpHistoryEntryGroup))
@@ -184,7 +237,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         return typeList
     }
 
-    internal class TypeList(val entryGroup: PumpHistoryEntryGroup) {
+    internal class TypeList(val entryGroup: EquilHistoryEntryGroup) {
 
         val name: String = entryGroup.translated ?: "XXX TODO"
 
@@ -202,15 +255,38 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         calendar.add(Calendar.DAY_OF_MONTH, 1)
         calendar.add(Calendar.MILLISECOND, -1)
         var endTime = calendar.timeInMillis
+        aapsLogger.error(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
         disposable += equilHistoryRecordDao
             .allSince(endTime)
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ historyList ->
-                           // aapsLogger.error(LTag.EQUILBLE, "historyList===" + historyList.size)
+                           aapsLogger.error(LTag.EQUILBLE, "historyList===" + historyList.size)
                            fullHistoryList.clear()
                            fullHistoryList.addAll(historyList)
                            // }
+                       }) {
+                aapsLogger.error(LTag.EQUILBLE, "historyListerror===" + it)
+            }
+    }
+
+    fun loadDataEquil() {
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        var startTime = calendar.timeInMillis
+        calendar.add(Calendar.DAY_OF_MONTH, 1)
+        calendar.add(Calendar.MILLISECOND, -1)
+        var endTime = calendar.timeInMillis
+        aapsLogger.error(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
+        disposable += equilHistoryRecordDao
+            .allFromByType(startTime, endTime, equilPumpPlugin.serialNumber())
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ historyList ->
+                           aapsLogger.error(LTag.EQUILBLE, "loadDataEquil===" + historyList.size)
+                           binding.recyclerviewEquil.swapAdapter(RecyclerViewAdapterEquil(toModels(historyList), rh), false)
                        }) {
                 aapsLogger.error(LTag.EQUILBLE, "historyListerror===" + it)
             }
@@ -260,9 +336,12 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
             // holder.timeView.text = item.type.name
             // holder.typeView.text = item.serialNumber
             holder.typeView.text = item.tempBasalRecord?.rate.toString()
+            holder.typeView.text = rh.gs(item.type!!.resourceId)
 
-            holder.typeView.text = rh.gs(item.type.resourceId)
-
+            if (!item.isSuccess()) {
+                holder.valueView.text = rh.gs(translatedFailure(item))
+                return
+            }
             holder.valueView.text = when (item.type) {
                 EquilHistoryRecord.EventType.SET_TEMPORARY_BASAL -> {
                     val tbr = item.tempBasalRecord
@@ -273,6 +352,15 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                     }
                 }
 
+                EquilHistoryRecord.EventType.SET_EXTENDED_BOLUS  -> {
+                    val tbr = item.tempBasalRecord
+                    val duration = (tbr?.duration?.div(60 * 1000) ?: 0)
+                    var rate = (tbr!!.rate * (60 / duration));
+                    tbr.let {
+                        rh.gs(R.string.equil_common_history_tbr_value, rate, duration)
+                    }
+                }
+
                 EquilHistoryRecord.EventType.SET_BOLUS           -> {
                     val bolus = item.bolusRecord
                     bolus.let {
@@ -280,11 +368,43 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                     }
                 }
 
+                EquilHistoryRecord.EventType.INSERT_CANNULA      -> {
+                    rh.gs(R.string.history_mannual_confirm)
+                }
+
+                EquilHistoryRecord.EventType.EQUIL_ALARM         -> {
+                    item.note
+                }
+
+                EquilHistoryRecord.EventType.SET_BASAL_PROFILE   -> {
+                    val basal = item.basalValuesRecord as EquilBasalValuesRecord
+                    ProfileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.EQUIL)
+                }
+
                 else                                             ->
-                    ""
+                    rh.gs(R.string.equil_success)
             }
 
             // holder.typeView.setTextColor(textColor)
+        }
+
+        private fun translatedFailure(historyEntry: EquilHistoryRecord): Int {
+            return when {
+                historyEntry.resolvedStatus == ResolvedResult.NOT_FOUNT     ->
+                    R.string.equil_command_not_found
+
+                historyEntry.resolvedStatus == ResolvedResult.CONNECT_ERROR ->
+                    R.string.equil_command_connect_error
+
+                historyEntry.resolvedStatus == ResolvedResult.FAILURE       ->
+                    R.string.equil_command_connect_no_response
+
+                historyEntry.resolvedStatus == ResolvedResult.SUCCESS       ->
+                    R.string.equil_success
+
+                else                                                        ->
+                    R.string.equil_command__unknown
+            }
         }
 
         override fun getItemCount(): Int {
@@ -309,7 +429,142 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
     companion object {
 
-        private var selectedGroup: PumpHistoryEntryGroup = PumpHistoryEntryGroup.All
+        private var selectedGroup: EquilHistoryEntryGroup = EquilHistoryEntryGroup.All
         const val DAYS_TO_DISPLAY = 5
+    }
+
+    fun toModels(list: List<EquilHistoryPump>): List<ItemModel> {
+        val arrayList = ArrayList<ItemModel>()
+        var record: EquilHistoryPump? = null
+        var record2: EquilHistoryPump? = null
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
+        var list2 = list.sortedWith(compareBy(EquilHistoryPump::eventTimestamp, EquilHistoryPump::eventIndex))
+        val iterator = list2.listIterator()
+        var pre: EquilHistoryPump? = null
+
+        while (iterator.hasNext()) {
+            val next = iterator.next()
+
+            // Process basal speed
+            if (record2 == null || record2.rate != next.rate) {
+                val format = format.format(next.eventTimestamp)
+                val valueOf = Utils.decodeSpeedToUH(next.rate).toString()
+                // aapsLogger.error(LTag.EQUILBLE, "valueOf===" + valueOf + "===" + next.eventIndex + "====" + pre?.type + "===" + pre?.eventIndex)
+                if (pre?.type == 10) {
+                    // arrayList.add(ItemModel(format, valueOf, ItemModel.TYPE_BASAL, next.eventTimestamp))
+                    arrayList.add(ItemModel(format, valueOf, ItemModel.TYPE_BASAL_TEMP, next.eventTimestamp))
+                } else {
+                    arrayList.add(ItemModel(format, valueOf, ItemModel.TYPE_BASAL, next.eventTimestamp))
+
+                }
+                record2 = next
+            }
+            // Process bolus speed
+            if (record != null && next.largeRate != record.largeRate) {
+                val time = next.eventTimestamp
+                val time2 = record.eventTimestamp
+
+                val format2 = format.format(time2)
+                val format3 = "%.3f".format(
+                    (Math.abs(time - time2) / 1000.0)
+                        * Utils.decodeSpeedToUS(record.largeRate)
+                )
+                val t = (Math.abs(time - time2) / 1000.0);
+                aapsLogger.error(LTag.EQUILBLE, "time===" + t + "===" + format3)
+                arrayList.add(ItemModel(format2, format3, ItemModel.TYPE_BOLUS, time2))
+                record = null
+            }
+            pre = next;
+            if (next.largeRate > 0) {
+                record = next
+            }
+            // Process event
+            val string = PumpEvent.getTips(next.port, next.type, next.level)
+
+            if (!"--".equals(string)) {
+                val format4 = format.format(next.eventTimestamp)
+                arrayList.add(ItemModel(format4, string, ItemModel.TYPE_TEXT, next.eventTimestamp))
+            }
+        }
+
+        // Process remaining bolus speed
+        record?.let {
+            val decodeSpeedToUH = Utils.decodeSpeedToUH(it.largeRate)
+            val format5 = format.format(it.eventTimestamp)
+            arrayList.add(ItemModel(format5, "正在注射 大剂量 $decodeSpeedToUH U/H", 4, it.eventTimestamp))
+        }
+
+        val reversedList = arrayList.reversed()
+        return reversedList
+    }
+
+    data class ItemModel(val time: String, val text: String, val type: Int, var eventTime: Long) {
+        companion object {
+
+            const val TYPE_BOLUS = 1
+            const val TYPE_BASAL = 2
+            const val TYPE_TEXT = 3
+            const val TYPE_BOLUS_ING = 4
+            const val TYPE_BASAL_TEMP = 5
+
+        }
+    }
+
+    class RecyclerViewAdapterEquil internal constructor(
+        var historyList: List<ItemModel>,
+        var rh: ResourceHelper
+    ) : RecyclerView.Adapter<RecyclerViewAdapterEquil.EquilHistoryViewHolder>() {
+
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerViewAdapterEquil.EquilHistoryViewHolder {
+            val v = LayoutInflater.from(viewGroup.context).inflate(
+                R.layout.equil_item_record,  //
+                viewGroup, false
+            )
+            return EquilHistoryViewHolder(v)
+        }
+
+        override fun onBindViewHolder(holder: EquilHistoryViewHolder, position: Int) {
+            val item = historyList[position]
+            Log.e(LTag.EQUILBLE.tag, "onBindViewHolder  ${position}")
+            holder.timeView.text = item.time
+            holder.typeView.text = item.text
+            val type = item.type
+            val textColor = when (type) {
+                ItemModel.TYPE_BOLUS      -> rh.gc(R.color.equil_bolus)
+                ItemModel.TYPE_BASAL      -> rh.gc(R.color.equil_basal)
+                ItemModel.TYPE_BASAL_TEMP -> rh.gc(R.color.equil_basal)
+                ItemModel.TYPE_BOLUS_ING  -> rh.gc(R.color.equil_bolus_ing)
+                else                      -> rh.gc(R.color.equil_noramll)
+            }
+            var text = when (type) {
+                ItemModel.TYPE_BOLUS      -> rh.gs(R.string.equil_record_bolus, item.text)
+                ItemModel.TYPE_BASAL      -> rh.gs(R.string.equil_record_basal, item.text)
+                ItemModel.TYPE_BASAL_TEMP -> rh.gs(R.string.equil_record_basal_temp, item.text)
+                else                      -> item.text
+            }
+            holder.timeView.text = item.time
+            holder.typeView.text = text
+            holder.typeView.setTextColor(textColor)
+        }
+
+        override fun getItemCount(): Int {
+            return historyList.size
+        }
+
+        class EquilHistoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+            var timeView: TextView
+            var typeView: TextView
+            var descriptionView: TextView
+
+            init {
+                timeView = itemView.findViewById(R.id.equil_history_time)
+                typeView = itemView.findViewById(R.id.equil_history_source)
+                descriptionView = itemView.findViewById(R.id.equil_history_description)
+                descriptionView.visibility = View.GONE
+
+            }
+        }
+
     }
 }

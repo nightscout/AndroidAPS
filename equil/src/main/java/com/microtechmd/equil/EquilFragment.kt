@@ -1,8 +1,8 @@
 package com.microtechmd.equil
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -10,19 +10,17 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.microtechmd.equil.data.AlarmMode
 import com.microtechmd.equil.data.RunMode
-import com.microtechmd.equil.data.database.EquilHistoryRecord
 import com.microtechmd.equil.databinding.EquilFraBinding
 import com.microtechmd.equil.events.EventEquilDataChanged
 import com.microtechmd.equil.events.EventEquilModeChanged
 import com.microtechmd.equil.manager.command.*
 import com.microtechmd.equil.ui.*
-import com.microtechmd.equil.ui.dlg.EquilChangeInsulinDlg
 import com.microtechmd.equil.ui.dlg.LoadingDlg
 import com.microtechmd.equil.ui.dlg.SingleChooseDlg
+import com.microtechmd.equil.ui.pair.EquilPairActivity
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.events.EventPumpStatusChanged
 import info.nightscout.androidaps.extensions.runOnUiThread
@@ -68,7 +66,6 @@ class EquilFragment : DaggerFragment() {
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
-    private lateinit var refreshBle: Runnable
 
     private var _binding: EquilFraBinding? = null
 
@@ -80,10 +77,6 @@ class EquilFragment : DaggerFragment() {
         refreshLoop = Runnable {
             activity?.runOnUiThread { updateGUI() }
             handler.postDelayed(refreshLoop, T.mins(1).msecs())
-        }
-        refreshBle = Runnable {
-            activity?.runOnUiThread { getStatus() }
-            handler.postDelayed(refreshBle, T.mins(3).msecs())
         }
     }
 
@@ -101,7 +94,6 @@ class EquilFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         handler.postDelayed(refreshLoop, T.mins(1).msecs())
-        // handler.postDelayed(refreshBle, T.mins(3).msecs())
 
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
@@ -146,11 +138,18 @@ class EquilFragment : DaggerFragment() {
             binding.insulinReservoir.text = equilPumpPlugin.equilManager.currentInsulin.toString()
             binding.basalSpeed.text = String.format(rh.gs(R.string.equil_unit_u_hours), equilPumpPlugin.equilManager.rate.toString())
             binding.firmwareVersion.text = equilPumpPlugin.equilManager.firmwareVersion?.toString()
-            var totalDelivered = equilPumpPlugin.equilManager.startInsulin - equilPumpPlugin.equilManager.currentInsulin;
-            binding.totalDelivered.text = String.format(
-                rh.gs(R.string.equil_unit_u),
-                totalDelivered.toString()
-            )
+            equilPumpPlugin.equilManager.startInsulin.let {
+                if (it == -1) {
+                    binding.totalDelivered.text = "-"
+                } else {
+                    var totalDelivered = it - equilPumpPlugin.equilManager.currentInsulin;
+                    binding.totalDelivered.text = String.format(
+                        rh.gs(R.string.equil_unit_u),
+                        totalDelivered.toString()
+                    )
+                }
+            }
+
             binding.timeLastGetdata.text = android.text.format.DateFormat.format(
                 "yyyy-MM-dd HH:mm:ss",
                 equilPumpPlugin.equilManager.lastDataTime
@@ -160,25 +159,34 @@ class EquilFragment : DaggerFragment() {
                 equilPumpPlugin.equilManager.lastDataTime
             ).toString()
             var runMode = equilPumpPlugin.equilManager.runMode;
-            if (runMode == RunMode.RUN) {
-                binding.mode.text = rh.gs(R.string.equil_mode_deliver)
-                binding.btnResumeDelivery.visibility = View.GONE
-                binding.btnSuspendDelivery.visibility = View.VISIBLE
-            } else if (runMode == RunMode.STOP) {
-
-                binding.mode.text = rh.gs(R.string.equil_mode_stop)
-            } else if (runMode == RunMode.SUSPEND) {
-                binding.mode.text = rh.gs(R.string.equil_mode_suspend)
-                binding.btnResumeDelivery.visibility = View.VISIBLE
-                binding.btnSuspendDelivery.visibility = View.GONE
+            binding.mode.setTextColor(Color.WHITE)
+            if (equilPumpPlugin.equilManager.isActivationCompleted) {
+                if (runMode == RunMode.RUN) {
+                    binding.mode.text = rh.gs(R.string.equil_mode_deliver)
+                    binding.btnResumeDelivery.visibility = View.GONE
+                    binding.btnSuspendDelivery.visibility = View.VISIBLE
+                } else if (runMode == RunMode.STOP) {
+                    binding.mode.text = rh.gs(R.string.equil_mode_stop)
+                    binding.btnResumeDelivery.visibility = View.GONE
+                    binding.btnSuspendDelivery.visibility = View.GONE
+                } else if (runMode == RunMode.SUSPEND) {
+                    binding.mode.text = rh.gs(R.string.equil_mode_suspend)
+                    binding.btnResumeDelivery.visibility = View.VISIBLE
+                    binding.btnSuspendDelivery.visibility = View.GONE
+                } else {
+                    binding.btnResumeDelivery.visibility = View.VISIBLE
+                    binding.btnSuspendDelivery.visibility = View.GONE
+                    binding.mode.text = ""
+                }
             } else {
-                binding.btnResumeDelivery.visibility = View.VISIBLE
+                binding.btnResumeDelivery.visibility = View.GONE
                 binding.btnSuspendDelivery.visibility = View.GONE
-                binding.mode.text = ""
+                binding.mode.text = rh.gs(R.string.equil_init_insulin_error)
+                binding.mode.setTextColor(Color.RED)
             }
             binding.serialNumber.text = devName
             updateTempBasal()
-            updateUI()
+            updateAlarm()
             runOnUiThread {
                 equilPumpPlugin.equilManager.bolusRecord.let {
                     if (it == null) {
@@ -205,6 +213,8 @@ class EquilFragment : DaggerFragment() {
             binding.btnHistory.visibility = View.VISIBLE
 
         } else {
+            binding.tempBasal.text = "-"
+            binding.lastBolus.text = '-'.toString()
             binding.battery.text = '-'.toString()
             binding.basalSpeed.text = '-'.toString()
             binding.timeLastGetdata.text = '-'.toString()
@@ -224,19 +234,18 @@ class EquilFragment : DaggerFragment() {
             binding.btnResumeDelivery.visibility = View.GONE
             binding.btnSuspendDelivery.visibility = View.GONE
             binding.btnBind.setOnClickListener {
-                val intent = Intent(context, com.microtechmd.equil.ui.pair.EquilPairActivity::class.java)
-                intent.putExtra(com.microtechmd.equil.ui.pair.EquilPairActivity.KEY_TYPE, com.microtechmd.equil.ui.pair.EquilPairActivity.Type.PAIR)
-                startActivity(intent)
+                if (equilPumpPlugin.checkProfile()) {
+                    val intent = Intent(context, EquilPairActivity::class.java)
+                    intent.putExtra(EquilPairActivity.KEY_TYPE, EquilPairActivity.Type.PAIR)
+                    startActivity(intent)
+                } else {
+                    equilPumpPlugin.showToast(rh.gs(R.string.noprofileset))
+                }
             }
         }
-
         binding.imv.setOnClickListener {
-
-
+            // commandQueue.customCommand(CmdStatusGet(), null)
         }
-
-        // binding.progressMode.visibility = View.GONE
-
         binding.progressDeviceTime.visibility = View.GONE
         binding.btnHistory.setOnClickListener {
             if (TextUtils.isEmpty(devName)) {
@@ -263,7 +272,7 @@ class EquilFragment : DaggerFragment() {
             if (TextUtils.isEmpty(devName)) {
                 ToastUtils.errorToast(context, rh.gs(R.string.equil_error_no_devices))
             } else
-                showEquilChangeInsulinDlg();
+                changeInsulin();
 
         }
     }
@@ -272,9 +281,10 @@ class EquilFragment : DaggerFragment() {
         val dialogFragment = SingleChooseDlg(equilPumpPlugin.equilManager.alarmMode)
         dialogFragment.setDialogResultListener { data ->
             showLoading()
-            commandQueue.customCommand(CmdAlarm(data.data.command), object : Callback() {
+            commandQueue.customCommand(CmdAlarmSet(data.data.command), object : Callback() {
                 override fun run() {
                     dismissLoading();
+                    aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
                     if (result.success) {
                         equilPumpPlugin.equilManager.alarmMode = data.data;
                         runOnUiThread {
@@ -302,22 +312,8 @@ class EquilFragment : DaggerFragment() {
         commandQueue.customCommand(CmdModelSet(tempMode.command), object : Callback() {
             override fun run() {
                 dismissLoading();
+                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
-                    var type = EquilHistoryRecord.EventType.SUSPEND_DELIVERY
-                    if (tempMode == RunMode.RUN) {
-                        type = EquilHistoryRecord.EventType.RESUME_DELIVERY
-                    }
-                    var time = System.currentTimeMillis();
-                    val equilHistoryRecord = EquilHistoryRecord(
-                        time,
-                        null,
-                        null,
-                        type,
-                        time,
-                        equilPumpPlugin.serialNumber()
-                    )
-                    equilPumpPlugin.equilHistoryRecordDao.insert(equilHistoryRecord)
-
                     equilPumpPlugin.equilManager.runMode = tempMode
                     runOnUiThread {
                         updateGUI()
@@ -348,7 +344,7 @@ class EquilFragment : DaggerFragment() {
         }
     }
 
-    fun updateUI() {
+    fun updateAlarm() {
         var alarmMode = equilPumpPlugin.equilManager.alarmMode;
         if (alarmMode == AlarmMode.MUTE) {
             binding.tvTone.text = rh.gs(R.string.equil_tone_mode_mute)
@@ -359,15 +355,6 @@ class EquilFragment : DaggerFragment() {
         } else if (alarmMode == AlarmMode.TONE_AND_SHAKE) {
             binding.tvTone.text = rh.gs(R.string.equil_tone_mode_tone_and_shake)
         }
-    }
-
-    private fun showEquilChangeInsulinDlg() {
-        val dialogFragment = EquilChangeInsulinDlg()
-        dialogFragment.setDialogResultListener {
-            // binding.tvLimitReservoir.text = result.toString()
-            changeInsulin()
-        }
-        dialogFragment.show(childFragmentManager, "EquilChangeInsulinDlg")
     }
 
     @SuppressLint("SetTextI18n")
@@ -391,30 +378,24 @@ class EquilFragment : DaggerFragment() {
     @SuppressLint("SetTextI18n")
     @Synchronized
     fun changeInsulin() {
-        showLoading();
-        commandQueue.customCommand(CmdInsulinChange(), object : Callback() {
-            override fun run() {
-                dismissLoading();
-                if (result.success) {
-                    equilPumpPlugin.resetData();
-                    equilPumpPlugin.equilManager.runMode = RunMode.STOP;
-                    activity?.let { activity ->
-                        context?.let { context ->
-                            protectionCheck.queryProtection(
-                                activity, ProtectionCheck.Protection.PREFERENCES,
-                                UIRunnable {
-                                    val intent = Intent(context, com.microtechmd.equil.ui.pair.EquilPairActivity::class.java)
-                                    intent.putExtra(com.microtechmd.equil.ui.pair.EquilPairActivity.KEY_TYPE, com.microtechmd.equil.ui.pair.EquilPairActivity.Type.CHANGE_INSULIN)
-                                    startActivity(intent)
-                                }
-                            )
-                        }
-                    }
-                } else {
 
-                }
+        activity?.let { activity ->
+            context?.let { context ->
+                protectionCheck.queryProtection(
+                    activity, ProtectionCheck.Protection.PREFERENCES,
+                    UIRunnable {
+                        if (equilPumpPlugin.checkProfile()) {
+                            val intent = Intent(context, EquilPairActivity::class.java)
+                            intent.putExtra(EquilPairActivity.KEY_TYPE, EquilPairActivity.Type.CHANGE_INSULIN)
+                            startActivity(intent)
+                        } else {
+                            equilPumpPlugin.showToast(rh.gs(R.string.noprofileset))
+                        }
+
+                    }
+                )
             }
-        })
+        }
     }
 
     fun getStatus() {

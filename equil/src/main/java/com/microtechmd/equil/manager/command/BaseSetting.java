@@ -11,11 +11,15 @@ import info.nightscout.shared.logging.LTag;
 
 public abstract class BaseSetting extends BaseCmd {
 
+    public BaseSetting(long createTime) {
+        super(createTime);
+    }
+
     public byte[] getReqData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] tzm = Utils.hexStringToBytes(getEquilDevices());
         byte[] data = Utils.concat(indexByte, tzm);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -24,7 +28,7 @@ public abstract class BaseSetting extends BaseCmd {
     public EquilResponse getEquilResponse() {
         config = false;
         isEnd = false;
-        response = new EquilResponse();
+        response = new EquilResponse(createTime);
         byte[] pwd = Utils.hexStringToBytes(getEquilPassWord());
         byte[] data = getReqData();
         EquilCmdModel equilCmdModel = null;
@@ -59,11 +63,11 @@ public abstract class BaseSetting extends BaseCmd {
             try {
                 EquilResponse response1 = decodeConfirm();
                 isEnd = true;
-                response = new EquilResponse();
+                response = new EquilResponse(createTime);
                 rspIndex = intValue;
                 return response1;
             } catch (Exception e) {
-                response = new EquilResponse();
+                response = new EquilResponse(createTime);
                 aapsLogger.debug(LTag.EQUILBLE, "decodeEquilPacket error =====" + e.getMessage());
             }
             return null;
@@ -76,12 +80,12 @@ public abstract class BaseSetting extends BaseCmd {
         }
         try {
             EquilResponse list = decode();
-            response = new EquilResponse();
+            response = new EquilResponse(createTime);
             config = true;
             rspIndex = intValue;
             return list;
         } catch (Exception e) {
-            response = new EquilResponse();
+            response = new EquilResponse(createTime);
             aapsLogger.debug(LTag.EQUILBLE, "decodeEquilPacket error=====" + e.getMessage());
         }
         return null;
@@ -102,15 +106,18 @@ public abstract class BaseSetting extends BaseCmd {
     }
 
     public EquilResponse getNextEquilResponse() {
+        aapsLogger.debug(LTag.EQUILBLE, "getNextEquilResponse=== start11 ");
         config = true;
         isEnd = false;
-        response = new EquilResponse();
+        response = new EquilResponse(createTime);
         byte[] data = getFirstData();
         EquilCmdModel equilCmdModel = null;
         try {
+            aapsLogger.debug(LTag.EQUILBLE, "getNextEquilResponse=== start ");
             equilCmdModel = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
             return responseCmd(equilCmdModel, port + runCode);
         } catch (Exception e) {
+            aapsLogger.debug(LTag.EQUILBLE, "getNextEquilResponse===" + e.getMessage());
             synchronized (this) {
                 setCmdStatus(false);
             }

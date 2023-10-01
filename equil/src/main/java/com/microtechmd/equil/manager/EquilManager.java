@@ -15,20 +15,27 @@ import com.microtechmd.equil.ble.EquilBLE;
 import com.microtechmd.equil.data.AlarmMode;
 import com.microtechmd.equil.data.BolusProfile;
 import com.microtechmd.equil.data.RunMode;
+import com.microtechmd.equil.data.database.BolusType;
+import com.microtechmd.equil.data.database.EquilBasalValuesRecord;
 import com.microtechmd.equil.data.database.EquilBolusRecord;
 import com.microtechmd.equil.data.database.EquilHistoryPump;
 import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.data.database.EquilHistoryRecordDao;
 import com.microtechmd.equil.data.database.EquilTempBasalRecord;
+import com.microtechmd.equil.data.database.ResolvedResult;
+import com.microtechmd.equil.driver.definition.ActivationProgress;
+import com.microtechmd.equil.driver.definition.BasalSchedule;
+import com.microtechmd.equil.driver.definition.BluetoothConnectionState;
 import com.microtechmd.equil.events.EventEquilDataChanged;
 import com.microtechmd.equil.events.EventEquilInsulinChanged;
 import com.microtechmd.equil.events.EventEquilModeChanged;
-import com.microtechmd.equil.manager.action.EquilAction;
 import com.microtechmd.equil.manager.command.BaseCmd;
 import com.microtechmd.equil.manager.command.CmdBasalGet;
+import com.microtechmd.equil.manager.command.CmdBasalSet;
 import com.microtechmd.equil.manager.command.CmdExtendedBolusSet;
 import com.microtechmd.equil.manager.command.CmdHistoryGet;
 import com.microtechmd.equil.manager.command.CmdLargeBasalSet;
+import com.microtechmd.equil.manager.command.CmdModelGet;
 import com.microtechmd.equil.manager.command.CmdTempBasalSet;
 import com.microtechmd.equil.manager.command.PumpEvent;
 
@@ -38,8 +45,10 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.ISODateTimeFormat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import javax.inject.Inject;
@@ -57,6 +66,7 @@ import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNo
 import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.general.overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
+import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.utils.HardLimits;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
 import info.nightscout.shared.logging.AAPSLogger;
@@ -86,6 +96,7 @@ public class EquilManager {
         return sp;
     }
 
+
     @Inject
     public EquilManager(
             AAPSLogger aapsLogger,
@@ -113,20 +124,19 @@ public class EquilManager {
         loadPodState();
         initEquilError();
         equilBLE.init(this);
-        equilBLE.startScan();
+        equilBLE.getEquilStatus();
     }
 
     List<PumpEvent> listEvent;
 
     private void initEquilError() {
         listEvent = new ArrayList<>();
-
-//        listEvent.add(new PumpEvent(4, 0, 0, ""));
         listEvent.add(new PumpEvent(4, 2, 2, rh.gs(R.string.equil_occlusion)));
         listEvent.add(new PumpEvent(4, 3, 0, rh.gs(R.string.equil_motor_reverse)));
         listEvent.add(new PumpEvent(4, 3, 2, rh.gs(R.string.equil_motor_fault)));
         listEvent.add(new PumpEvent(4, 6, 1, rh.gs(R.string.equil_shutdown_be)));
         listEvent.add(new PumpEvent(4, 6, 2, rh.gs(R.string.equil_shutdown)));
+        listEvent.add(new PumpEvent(4, 8, 0, rh.gs(R.string.equil_shutdown)));
         listEvent.add(new PumpEvent(5, 1, 2, rh.gs(R.string.equil_insert_error)));
 
     }
@@ -140,10 +150,6 @@ public class EquilManager {
         return listEvent.get(index).getConent();
     }
 
-    // Convenience method
-    public <T> T executeAction(EquilAction<T> action) {
-        return action.execute(this);
-    }
 
     public PumpEnactResult closeBle() {
         PumpEnactResult result = new PumpEnactResult(injector);
@@ -165,51 +171,94 @@ public class EquilManager {
         return result;
     }
 
-    public PumpEnactResult setTempBasal(double insulin, int time) {
+    public PumpEnactResult setTempBasal(double insulin, int time, boolean cancel) {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
-            CmdTempBasalSet command = new CmdTempBasalSet(0, 0);
+            CmdTempBasalSet command = new CmdTempBasalSet(insulin, time);
+            command.setCancel(cancel);
+            EquilHistoryRecord equilHistoryRecord = addHistory(command);
             command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
             if (command.isCmdStatus()) {
-                SystemClock.sleep(500);
-                command = new CmdTempBasalSet(insulin, time);
-                command.setEquilManager(this);
-                equilBLE.writeCmd(command);
-                synchronized (command) {
-                    command.wait(command.getTimeOut());
+                long currentTime = System.currentTimeMillis();
+                if (cancel) {
+                    pumpSync.syncStopTemporaryBasalWithPumpId(
+                            currentTime,
+                            currentTime,
+                            PumpType.EQUIL,
+                            getSerialNumber()
+                    );
+                    setTempBasal(null);
+                } else {
+                    EquilTempBasalRecord tempBasalRecord =
+                            new EquilTempBasalRecord(time * 60 * 1000,
+                                    insulin, currentTime);
+                    setTempBasal(tempBasalRecord);
+                    pumpSync.syncTemporaryBasalWithPumpId(
+                            currentTime,
+                            insulin,
+                            time * 60 * 1000,
+                            true,
+                            PumpSync.TemporaryBasalType.NORMAL,
+                            currentTime,
+                            PumpType.EQUIL,
+                            getSerialNumber()
+                    );
                 }
-                result.setSuccess(command.isCmdStatus());
-                result.enacted(true);
-            } else {
-                result.setSuccess(false);
+                command.setResolvedResult(ResolvedResult.SUCCESS);
             }
-
+            updateHistory(equilHistoryRecord, command.getResolvedResult());
+            result.setSuccess(command.isCmdStatus());
+            result.enacted(true);
         } catch (Exception ex) {
+            ex.printStackTrace();
             result.success(false).enacted(false).comment(translateException(ex));
         }
         return result;
     }
 
-    public PumpEnactResult setExtendedBolus(double insulin, int time) {
+    public PumpEnactResult setExtendedBolus(double insulin, int time, boolean cancel) {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
-            CmdExtendedBolusSet command = new CmdExtendedBolusSet(insulin, time);
+            CmdExtendedBolusSet command = new CmdExtendedBolusSet(insulin, time, cancel);
+            EquilHistoryRecord equilHistoryRecord = addHistory(command);
             command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
+
+            result.setSuccess(command.isCmdStatus());
             if (command.isCmdStatus()) {
-                result.setSuccess(command.isCmdStatus());
+                command.setResolvedResult(ResolvedResult.SUCCESS);
+                long currentTimeMillis = System.currentTimeMillis();
+                if (cancel) {
+                    pumpSync.syncStopExtendedBolusWithPumpId(
+                            currentTimeMillis,
+                            currentTimeMillis,
+                            PumpType.EQUIL,
+                            getSerialNumber()
+                    );
+                } else {
+                    pumpSync.syncExtendedBolusWithPumpId(
+                            currentTimeMillis,
+                            insulin,
+                            time * 60 * 1000,
+                            true,
+                            currentTimeMillis,
+                            PumpType.EQUIL,
+                            getSerialNumber()
+                    );
+                }
+
                 result.enacted(true);
             } else {
                 result.setSuccess(false);
             }
-
+            updateHistory(equilHistoryRecord, command.getResolvedResult());
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));
         }
@@ -225,6 +274,7 @@ public class EquilManager {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
             CmdLargeBasalSet command = new CmdLargeBasalSet(detailedBolusInfo.insulin);
+            EquilHistoryRecord equilHistoryRecord = addHistory(command);
             command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
@@ -248,12 +298,26 @@ public class EquilManager {
                     aapsLogger.debug(LTag.EQUILBLE, "isCmdStatus===" + percent + "====" + bolusProfile.getStop());
                 }
             }
-
-
             result.setSuccess(command.isCmdStatus());
             result.enacted(true);
             result.setComment(rh.gs(R.string.virtualpump_resultok));
             result.setBolusDelivered(Double.valueOf(percent / 100f * detailedBolusInfo.insulin));
+            if (command.isCmdStatus()) {
+                command.setResolvedResult(ResolvedResult.SUCCESS);
+                long currentTime = System.currentTimeMillis();
+                pumpSync.syncBolusWithPumpId(currentTime,
+                        result.getBolusDelivered(),
+                        detailedBolusInfo.getBolusType(),
+                        detailedBolusInfo.timestamp,
+                        PumpType.EQUIL,
+                        getSerialNumber());
+                EquilBolusRecord equilBolusRecord =
+                        new EquilBolusRecord(result.getBolusDelivered(),
+                                BolusType.SMB, currentTime);
+                setBolusRecord(equilBolusRecord);
+
+            }
+            updateHistory(equilHistoryRecord, command.getResolvedResult());
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));
         }
@@ -264,13 +328,19 @@ public class EquilManager {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
             BaseCmd command = new CmdLargeBasalSet(0);
+            EquilHistoryRecord equilHistoryRecord = addHistory(command);
             command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
             bolusProfile.setStop(command.isCmdStatus());
+            aapsLogger.debug(LTag.EQUILBLE, "stopBolus===");
             result.setSuccess(command.isCmdStatus());
+            if (command.isCmdStatus()) {
+                command.setResolvedResult(ResolvedResult.SUCCESS);
+            }
+            updateHistory(equilHistoryRecord, command.getResolvedResult());
             result.enacted(true);
         } catch (Exception ex) {
             result.success(false).enacted(false).comment(translateException(ex));
@@ -278,9 +348,25 @@ public class EquilManager {
         return result;
     }
 
-    public int loadHistory(int index) {
+    public int loadEquilHistory(int index) {
         try {
             aapsLogger.debug(LTag.EQUILBLE, "loadHistory start: ");
+            CmdHistoryGet historyGet = new CmdHistoryGet(index);
+            historyGet.setEquilManager(this);
+            equilBLE.readHistory(historyGet);
+            synchronized (historyGet) {
+                historyGet.wait(historyGet.getTimeOut());
+            }
+            aapsLogger.debug(LTag.EQUILBLE, "loadHistory end: ");
+            return historyGet.getCurrentIndex();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return -1;
+    }
+
+    public int loadHistory(int index) {
+        try {
             CmdHistoryGet historyGet = new CmdHistoryGet(index);
             historyGet.setEquilManager(this);
             equilBLE.writeCmd(historyGet);
@@ -288,11 +374,9 @@ public class EquilManager {
                 historyGet.wait(historyGet.getTimeOut());
             }
             aapsLogger.debug(LTag.EQUILBLE, "loadHistory end: ");
-            SystemClock.sleep(100);
             return historyGet.getCurrentIndex();
         } catch (Exception ex) {
             ex.printStackTrace();
-
         }
         return -1;
     }
@@ -314,21 +398,85 @@ public class EquilManager {
         return result;
     }
 
-    public PumpEnactResult executeCmd(BaseCmd command) {
+    public EquilHistoryRecord addHistory(BaseCmd command) {
+        EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(System.currentTimeMillis()
+                , getSerialNumber());
+        if (command.getEventType() != null) {
+            equilHistoryRecord.setType(command.getEventType());
+        }
+        if (command instanceof CmdBasalSet) {
+            Profile profile = ((CmdBasalSet) command).getProfile();
+            equilHistoryRecord.setBasalValuesRecord(new EquilBasalValuesRecord(Arrays.asList(profile.getBasalValues())));
+        }
+        if (command instanceof CmdTempBasalSet) {
+            CmdTempBasalSet cmd = ((CmdTempBasalSet) command);
+            boolean cancel = cmd.isCancel();
+            if (!cancel) {
+                EquilTempBasalRecord equilTempBasalRecord =
+                        new EquilTempBasalRecord(cmd.getDuration() * 60 * 1000,
+                                cmd.getInsulin(), System.currentTimeMillis());
+                equilHistoryRecord.setTempBasalRecord(equilTempBasalRecord);
+            }
+        }
+        if (command instanceof CmdExtendedBolusSet) {
+            CmdExtendedBolusSet cmd = ((CmdExtendedBolusSet) command);
+            boolean cancel = cmd.isCancel();
+            if (!cancel) {
+                EquilTempBasalRecord equilTempBasalRecord =
+                        new EquilTempBasalRecord(cmd.getDurationInMinutes() * 60 * 1000,
+                                cmd.getInsulin(), System.currentTimeMillis());
+                equilHistoryRecord.setTempBasalRecord(equilTempBasalRecord);
+            }
+        }
+        if (command instanceof CmdLargeBasalSet) {
+            CmdLargeBasalSet cmd = ((CmdLargeBasalSet) command);
+            double insulin = cmd.getInsulin();
+            if (insulin != 0) {
+                EquilBolusRecord equilBolusRecord =
+                        new EquilBolusRecord(insulin,
+                                BolusType.SMB, System.currentTimeMillis());
+                equilHistoryRecord.setBolusRecord(equilBolusRecord);
+            }
+        }
 
+        if (equilHistoryRecord.getType() != null) {
+            long id = equilHistoryRecordDao.insert(equilHistoryRecord);
+            equilHistoryRecord.setId(id);
+            aapsLogger.debug(LTag.EQUILBLE, "equilHistoryRecord is {}", id);
+        }
+        return equilHistoryRecord;
+    }
 
+    public void updateHistory(EquilHistoryRecord equilHistoryRecord, ResolvedResult result) {
+        if (result != null && equilHistoryRecord != null) {
+            aapsLogger.debug(LTag.EQUILBLE, "equilHistoryRecord2 is {} {}",
+                    equilHistoryRecord.getId(), result);
+            equilHistoryRecord.setResolvedAt(System.currentTimeMillis());
+            equilHistoryRecord.setResolvedStatus(result);
+            int status = equilHistoryRecordDao.update(equilHistoryRecord);
+            aapsLogger.debug(LTag.EQUILBLE, "equilHistoryRecord3== is {} {} status {}",
+                    equilHistoryRecord.getId(), equilHistoryRecord.getResolvedStatus(), status);
+        }
+    }
+
+    public PumpEnactResult readEquilStatus() {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
+            BaseCmd command = new CmdModelGet();
             command.setEquilManager(this);
             equilBLE.writeCmd(command);
-
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
-            aapsLogger.debug(LTag.EQUILBLE, "isCmdStatus===" + command.isCmdStatus());
+            if (command.isCmdStatus()) {
+                command.setResolvedResult(ResolvedResult.SUCCESS);
+            }
+            if (command.isCmdStatus()) {
+                SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD);
+                return loadEquilHistory();
+            }
             result.setSuccess(command.isCmdStatus());
             result.enacted(command.isEnacted());
-
         } catch (Exception ex) {
             ex.printStackTrace();
             result.success(false).enacted(false).comment(translateException(ex));
@@ -336,21 +484,56 @@ public class EquilManager {
         return result;
     }
 
-    public PumpEnactResult executeCommandGet(BaseCmd command) {
+    public PumpEnactResult loadEquilHistory() {
+        PumpEnactResult pumpEnactResult = new PumpEnactResult(injector);
+        int startIndex;
+        startIndex = getStartHistoryIndex();
+        int index = getHistoryIndex();
+        aapsLogger.debug(LTag.EQUILBLE, "return ===" + index + "====" + startIndex);
+        if (index == -1) {
+            return pumpEnactResult.success(false);
+        }
+        int allCount = 1;
+        while (startIndex != index && allCount < 20) {
+            startIndex++;
+            if (startIndex > 2000) {
+                startIndex = 1;
+            }
+            SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD);
+            int currentIndex = loadEquilHistory(startIndex);
+            aapsLogger.debug(LTag.EQUILBLE, "while index===" + startIndex + "===" + index + "===" + currentIndex);
+            if (currentIndex > 1) {
+                setStartHistoryIndex(currentIndex);
+            }
+            allCount++;
+        }
+        return pumpEnactResult.success(true);
+    }
+
+    public PumpEnactResult executeCmd(BaseCmd command) {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
+            EquilHistoryRecord equilHistoryRecord = addHistory(command);
             command.setEquilManager(this);
             equilBLE.writeCmd(command);
             synchronized (command) {
                 command.wait(command.getTimeOut());
             }
+            if (command.isCmdStatus()) {
+                command.setResolvedResult(ResolvedResult.SUCCESS);
+            }
+            updateHistory(equilHistoryRecord, command.getResolvedResult());
+            aapsLogger.debug(LTag.EQUILBLE, "executeCmd result {}", command.getResolvedResult());
             result.setSuccess(command.isCmdStatus());
-            result.enacted(true);
+            result.enacted(command.isEnacted());
         } catch (Exception ex) {
+
+            ex.printStackTrace();
             result.success(false).enacted(false).comment(translateException(ex));
         }
         return result;
     }
+
 
     public String translateException(Throwable ex) {
         return "";
@@ -503,23 +686,14 @@ public class EquilManager {
         EquilTempBasalRecord equilTempBasalRecord = getTempBasal();
         if (hasTempBasal()) {
             DateTime tempBasalStartTime = new DateTime(equilTempBasalRecord.getStartTime());
-//            tempBasalStartTime = tempBasalStartTime.minus(equilTempBasalRecord.getStartTime());
-//            aapsLogger.error("isTempBasalRunningAt===" + android.text.format.DateFormat.format(
-//                    "yyyy-MM-dd HH:mm:ss",
-//                    tempBasalStartTime.getMillis()
-//            ).toString());
-//            aapsLogger.error("isTempBasalRunningAt222===" + android.text.format.DateFormat.format(
-//                    "yyyy-MM-dd HH:mm:ss",
-//                    equilTempBasalRecord.getStartTime()
-//            ).toString());
             DateTime tempBasalEndTime = tempBasalStartTime.plus(equilTempBasalRecord.getDuration());
-//            aapsLogger.error("isTempBasalRunningAt3333===" + android.text.format.DateFormat.format(
-//                    "yyyy-MM-dd HH:mm:ss",
-//                    tempBasalEndTime.getMillis()
-//            ).toString());
             return (time.isAfter(tempBasalStartTime) || time.isEqual(tempBasalStartTime)) && time.isBefore(tempBasalEndTime);
         }
         return false;
+    }
+
+    public final boolean isPumpRunning() {
+        return getRunMode() == RunMode.RUN;
     }
 
     public final void setTempBasal(EquilTempBasalRecord tempBasal) {
@@ -553,11 +727,12 @@ public class EquilManager {
     }
 
     public int getStartInsulin() {
-//        return getSafe(() -> equilState.getCurrentInsulin());
-        return 200;
+        return getSafe(() -> equilState.getStartInsulin());
+//        return 200;
     }
 
     public void setStartInsulin(int startInsulin) {
+        aapsLogger.debug(LTag.EQUILBLE, "startInsulin {}", startInsulin);
         setAndStore(() -> equilState.setStartInsulin(startInsulin));
 
     }
@@ -626,7 +801,56 @@ public class EquilManager {
 
     }
 
+    public final ActivationProgress getActivationProgress() {
+        if (hasPodState()) {
+            return Optional.ofNullable(equilState.getActivationProgress()).orElse(ActivationProgress.NONE);
+        }
+        return ActivationProgress.NONE;
+    }
+
+    public final boolean isActivationCompleted() {
+        return getActivationProgress() == ActivationProgress.COMPLETED;
+    }
+
+    public final boolean isActivationInitialized() {
+        return getActivationProgress() != ActivationProgress.NONE;
+    }
+
+    public void setActivationProgress(ActivationProgress activationProgress) {
+        setAndStore(() -> equilState.setActivationProgress(activationProgress));
+    }
+
+
+    public BluetoothConnectionState getBluetoothConnectionState() {
+        return getSafe(() -> equilState.getBluetoothConnectionState());
+    }
+
+    public void setBluetoothConnectionState(BluetoothConnectionState bluetoothConnectionState) {
+        setAndStore(() -> equilState.setBluetoothConnectionState(bluetoothConnectionState));
+    }
+
+    public int getStartHistoryIndex() {
+        return getSafe(() -> equilState.getStartHistoryIndex());
+
+    }
+
+    public void setStartHistoryIndex(int startHistoryIndex) {
+        setAndStore(() -> equilState.setStartHistoryIndex(startHistoryIndex));
+
+    }
+
+    public BasalSchedule getBasalSchedule() {
+        return getSafe(() -> equilState.getBasalSchedule());
+
+    }
+
+    public void setBasalSchedule(BasalSchedule basalSchedule) {
+        setAndStore(() -> equilState.setBasalSchedule(basalSchedule));
+
+    }
+
     private static final class EquilState {
+        private ActivationProgress activationProgress;
         private String serialNumber;
         private String address;
         private String firmwareVersion;
@@ -642,6 +866,42 @@ public class EquilManager {
         private AlarmMode alarmMode = AlarmMode.TONE_AND_SHAKE;
         private float rate;
         private int historyIndex;
+
+        BluetoothConnectionState bluetoothConnectionState = BluetoothConnectionState.DISCONNECTED;
+        private int startHistoryIndex;
+        private BasalSchedule basalSchedule;
+
+        public BasalSchedule getBasalSchedule() {
+            return basalSchedule;
+        }
+
+        public void setBasalSchedule(BasalSchedule basalSchedule) {
+            this.basalSchedule = basalSchedule;
+        }
+
+        public int getStartHistoryIndex() {
+            return startHistoryIndex;
+        }
+
+        public void setStartHistoryIndex(int startHistoryIndex) {
+            this.startHistoryIndex = startHistoryIndex;
+        }
+
+        public BluetoothConnectionState getBluetoothConnectionState() {
+            return bluetoothConnectionState;
+        }
+
+        public void setBluetoothConnectionState(BluetoothConnectionState bluetoothConnectionState) {
+            this.bluetoothConnectionState = bluetoothConnectionState;
+        }
+
+        public ActivationProgress getActivationProgress() {
+            return activationProgress;
+        }
+
+        public void setActivationProgress(ActivationProgress activationProgress) {
+            this.activationProgress = activationProgress;
+        }
 
         public int getHistoryIndex() {
             return historyIndex;
@@ -790,7 +1050,6 @@ public class EquilManager {
         //ae6ae9100501 17070e100f16 1100000000007d0204080000
         int battery = data[12] & 0xff;
         int insulin = data[13] & 0xff;
-
         int rate = Utils.bytesToInt(data[15], data[14]);
         int largeRate = Utils.bytesToInt(data[17], data[16]);
         int index = Utils.bytesToInt(data[19], data[18]);
@@ -819,8 +1078,9 @@ public class EquilManager {
         equilHistoryPump.setLevel(level);
         equilHistoryPump.setParm(parm);
         equilHistoryPump.setEventIndex(index);
-
-
+        equilHistoryPump.setSerialNumber(getSerialNumber());
+        long id = equilHistoryRecordDao.insert(equilHistoryPump);
+        aapsLogger.debug(LTag.EQUILBLE, "decodeHistory insert id {}", id);
         rxBus.send(new EventEquilDataChanged());
     }
 
@@ -837,10 +1097,8 @@ public class EquilManager {
         int rate1 = Utils.bytesToInt(data[20], data[19]);
         float rate = Utils.internalDecodeSpeedToUH(rate1);
         float largeRate = Utils.bytesToInt(data[22], data[21]);
-
         int historyIndex = Utils.bytesToInt(data[24], data[23]);
         int currentIndex = getHistoryIndex();
-
         int port = data[25] & 0xff;
         int level = data[26] & 0xff;
         int parm = data[27] & 0xff;
@@ -850,19 +1108,20 @@ public class EquilManager {
                     errorTips,
                     Notification.NORMAL, R.raw.alarm);
             long time = System.currentTimeMillis();
-            EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(time,
-                    null,
-                    null,
+            EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(
                     EquilHistoryRecord.EventType.EQUIL_ALARM,
                     time,
                     getSerialNumber()
             );
-//            equilBLE.handler.postDelayed(new Runnable() {
-//                @Override public void run() {
-//                    equilHistoryRecordDao.insert(equilHistoryRecord);
-//                }
-//            },1);
+            equilHistoryRecord.setResolvedAt(System.currentTimeMillis());
+            equilHistoryRecord.setResolvedStatus(ResolvedResult.SUCCESS);
+            equilHistoryRecord.setNote(errorTips);
+            equilHistoryRecordDao.insert(equilHistoryRecord);
         }
+        aapsLogger.debug(LTag.EQUILBLE, "decodeData historyIndex {} errorTips {} port:{} level:{} " +
+                        "parm:{}",
+                historyIndex,
+                errorTips, port, level, parm);
         setHistoryIndex(historyIndex);
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
@@ -871,7 +1130,6 @@ public class EquilManager {
         calendar.set(Calendar.HOUR_OF_DAY, hour);
         calendar.set(Calendar.MINUTE, min);
         calendar.set(Calendar.SECOND, second);
-
         setLastDataTime(System.currentTimeMillis());
         setCurrentInsulin(insulin);
         setBattery(battery);

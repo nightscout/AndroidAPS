@@ -112,12 +112,14 @@ abstract class EquilPairFragmentBase : DaggerFragment() {
     protected abstract fun getIndex(): Int
 
     protected fun showLoading() {
+        if(activity==null)return
         LoadingDlg().also { dialog ->
         }.show(childFragmentManager, "loading")
     }
 
     protected fun dismissLoading() {
-        val fragment = childFragmentManager.findFragmentByTag("loading")
+        if(activity==null)return
+        val fragment = childFragmentManager?.findFragmentByTag("loading")
         if (fragment is LoadingDlg) {
             fragment.dismiss()
         }

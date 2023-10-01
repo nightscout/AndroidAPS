@@ -1,7 +1,10 @@
 package com.microtechmd.equil.manager.command;
 
 
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.manager.Utils;
+
+import info.nightscout.shared.logging.LTag;
 
 public class CmdSettingGet extends BaseSetting {
     private long useTime;
@@ -12,22 +15,25 @@ public class CmdSettingGet extends BaseSetting {
     private float infusionUnit;
     private float basalAlarm;
     private float largeAlarm;
-    public CmdSettingGet(){}
+
+    public CmdSettingGet() {
+        super(System.currentTimeMillis());
+    }
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x02, 0x05};
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x05, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -41,18 +47,20 @@ public class CmdSettingGet extends BaseSetting {
 //        int i6 = ((data[25] & 0x0f) << 8) | data[24] & 0xff;
 
 
-        int i1 = Utils.bytesToInt(data[15],data[14]);
-        int i2 = Utils.bytesToInt(data[17],data[16]);
-        int i3 = Utils.bytesToInt(data[19],data[18]);
-        int i4 = Utils.bytesToInt(data[21],data[20]);
-        int i5 = Utils.bytesToInt(data[23],data[22]);
-        int i6 = Utils.bytesToInt(data[25],data[24]);
+        int i1 = Utils.bytesToInt(data[15], data[14]);
+        int i2 = Utils.bytesToInt(data[17], data[16]);
+        int i3 = Utils.bytesToInt(data[19], data[18]);
+        int i4 = Utils.bytesToInt(data[21], data[20]);
+        int i5 = Utils.bytesToInt(data[23], data[22]);
+        int i6 = Utils.bytesToInt(data[25], data[24]);
         lowAlarm = Utils.internalDecodeSpeedToUH(i1);
         largefastAlarm = Utils.internalDecodeSpeedToUH(i2);
         stopAlarm = Utils.internalDecodeSpeedToUH(i3);
         infusionUnit = Utils.internalDecodeSpeedToUH(i4);
         basalAlarm = Utils.internalDecodeSpeedToUH(i5);
         largeAlarm = Utils.internalDecodeSpeedToUH(i6);
+        aapsLogger.error(LTag.EQUILBLE,
+                "CmdSettingGet===" + Utils.bytesToHex(data) + "====" + lowAlarm + "=======" + i1);
         synchronized (this) {
             setCmdStatus(true);
             notify();
@@ -123,4 +131,7 @@ public class CmdSettingGet extends BaseSetting {
         this.largeAlarm = largeAlarm;
     }
 
+    @Override public EquilHistoryRecord.EventType getEventType() {
+        return null;
+    }
 }

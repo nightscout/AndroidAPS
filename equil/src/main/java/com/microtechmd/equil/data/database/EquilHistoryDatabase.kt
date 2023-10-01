@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-const val TABLE_DANA_HISTORY_PUMP = "equilHistoryPump"
-const val TABLE_DANA_HISTORY_RECORD = "equilHistoryRecord"
+const val TABLE_EQUIL_HISTORY_PUMP = "equilHistoryPump"
+const val TABLE_EQUIL_HISTORY_RECORD = "equilHistoryRecord"
+const val TABLE_EQUIL_LOGS = "EquilLogs"
 
 @Database(
     entities = [EquilHistoryPump::class, EquilHistoryRecord::class],
@@ -21,8 +22,7 @@ abstract class DanaHistoryDatabase : RoomDatabase() {
 
     companion object {
 
-        const val VERSION = 1
-
+        const val VERSION = 10
         fun build(context: Context) =
             Room.databaseBuilder(
                 context.applicationContext,

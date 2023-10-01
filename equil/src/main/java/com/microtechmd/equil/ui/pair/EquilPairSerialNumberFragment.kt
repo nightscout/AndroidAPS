@@ -12,22 +12,30 @@ import android.bluetooth.le.ScanSettings
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.*
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.microtechmd.equil.EquilConst
 import com.microtechmd.equil.R
 import com.microtechmd.equil.ble.GattAttributes
-import com.microtechmd.equil.data.database.EquilHistoryRecord
+import com.microtechmd.equil.driver.definition.ActivationProgress
+import com.microtechmd.equil.driver.definition.BluetoothConnectionState
+import com.microtechmd.equil.manager.Utils
 import com.microtechmd.equil.manager.command.CmdPair
+import com.microtechmd.equil.manager.command.CmdSettingSet
 import info.nightscout.androidaps.extensions.runOnUiThread
 import info.nightscout.androidaps.queue.Callback
 import info.nightscout.shared.logging.LTag
+import java.math.BigInteger
+import java.util.regex.Pattern
 
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
@@ -74,22 +82,20 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
     lateinit var textTips: TextView
     lateinit var buttonPair: Button
     lateinit var progressPair: ProgressBar
-
+    lateinit var equilPasswordText: TextInputEditText
+    lateinit var equilTextInputLayout: TextInputLayout
+    lateinit var password: String
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         buttonNext = view.findViewById<Button>(R.id.button_next);
         buttonPair = view.findViewById<Button>(R.id.button_pair);
         textTips = view.findViewById<TextView>(R.id.text_tips);
         progressPair = view.findViewById<ProgressBar>(R.id.progress_pair);
+        equilPasswordText = view.findViewById<TextInputEditText>(R.id.devicesPwd)
+        equilTextInputLayout = view.findViewById<TextInputLayout>(R.id.devicesPwdLayout)
+
         buttonNext.setOnClickListener {
             context?.let {
-                // serialNumber = view.findViewById<TextView>(R.id.devicesName).text.toString().trim();
-                // aapsLogger.error(LTag.PUMPBTCOMM, "serialNumber ====" + serialNumber)
-                // sp.putString(EquilConst.Prefs.addrss, "")
-                // sp.putString(EquilConst.Prefs.name, "")
-                // if (!TextUtils.isEmpty(serialNumber)) {
-                //     startLeDeviceScan()
-                // }
                 val nextPage = getNextPageActionId()
                 if (nextPage != null) {
                     findNavController().navigate(nextPage)
@@ -97,6 +103,18 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
 
             }
         }
+        equilPasswordText.setText(sp.getString(rh.gs(R.string.key_equil_pair_password), ""))
+        equilPasswordText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                validate(s.toString())
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+            }
+        })
         buttonNext.alpha = 0.3f
         buttonNext.isClickable = false
         buttonPair.setOnClickListener {
@@ -109,10 +127,27 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                 aapsLogger.error(LTag.PUMPBTCOMM, "serialNumber ====" + serialNumber)
                 equilPumpPlugin.equilManager.address = ""
                 equilPumpPlugin.equilManager.serialNumber = ""
-                if (!TextUtils.isEmpty(serialNumber)) {
+                password = equilPasswordText.getText().toString();
+                if (!TextUtils.isEmpty(serialNumber) && validate(password)) {
+                    sp.putString(rh.gs(R.string.key_equil_pair_password), password)
                     startLeDeviceScan()
                 }
             }
+        }
+    }
+
+    private fun validate(email: String): Boolean {
+        val emailPattern = rh.gs(R.string.fourhexanumber)
+        val pattern = Pattern.compile(emailPattern)
+        val matcher = pattern.matcher(email)
+        if (matcher.matches()) {
+            equilPasswordText.error = null
+            equilTextInputLayout.isErrorEnabled = false
+            return true
+        } else {
+            equilPasswordText.error = rh.gs(R.string.error_mustbe4hexadidits)
+            equilTextInputLayout.isErrorEnabled = true
+            return false
         }
     }
 
@@ -122,7 +157,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
     }
 
     private fun prepareForScanning() {
-        val checkOK = activity?.let { blePreCheck.prerequisitesCheck(it as AppCompatActivity) }
+        val checkOK = activity?.let { blePreCheck.prerequisitesCheck(it) }
         if (checkOK == true) {
             bleScanner = bluetoothAdapter?.bluetoothLeScanner
             settings = ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build()
@@ -144,7 +179,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         handler.postDelayed(stopScanAfterTimeoutRunnable, SCAN_PERIOD_MILLIS)
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || activity?.let { ActivityCompat.checkSelfPermission(it, Manifest.permission.BLUETOOTH_SCAN) } == PackageManager.PERMISSION_GRANTED) {
             bleScanner?.startScan(filters, settings, bleScanCallback)
-            aapsLogger.error(LTag.PUMPBTCOMM, "startLeDeviceScan: Scanning Start")
+            aapsLogger.debug(LTag.EQUILBLE, "startLeDeviceScan: Scanning Start")
         }
     }
 
@@ -153,6 +188,13 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
             aapsLogger.debug(LTag.PUMPBTCOMM, scanRecord.toString())
             var name = scanRecord.device.name;
             if (!TextUtils.isEmpty(name) && name.contains(serialNumber)) {
+                scanRecord.scanRecord?.bytes.let {
+                    if (it != null) {
+                        val historyIndex = Utils.bytesToInt(it[24], it[23])
+                        equilPumpPlugin.equilManager.startHistoryIndex = historyIndex;
+                        aapsLogger.error(LTag.EQUILBLE, "historyIndex  $historyIndex")
+                    }
+                }
                 handler.removeCallbacks(stopScanAfterTimeoutRunnable)
                 stopLeDeviceScan()
                 pair(scanRecord.device)
@@ -174,33 +216,68 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        equilPumpPlugin.tempActivationProgress = ActivationProgress.NONE;
+    }
+
     private fun pair(scanResult: BluetoothDevice) {
-        aapsLogger.debug(LTag.EQUILBLE, "result====" + scanResult.name.toString()+"==="+scanResult.address.toString())
-        commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString()), object : Callback() {
+        equilPumpPlugin.equilManager.activationProgress = ActivationProgress.PRIMING
+        equilPumpPlugin.equilManager.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
+        aapsLogger.error(LTag.EQUILBLE, "result====" + scanResult.name.toString() + "===" + scanResult.address.toString())
+        commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(),password), object : Callback() {
             override fun run() {
-                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
+                if (activity == null) return
+                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success + "===" + result.enacted)
                 if (result.success) {
-                    equilPumpPlugin.equilManager.closeBle();
-                    SystemClock.sleep(100)
+                    if (result.enacted) {
+
+                        SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                        pumpSettings(scanResult.address.toString(), scanResult.name.toString())
+                    } else {
+                        equilPumpPlugin.equilManager.closeBle()
+                        dismissLoading();
+                        runOnUiThread {
+                            progressPair.visibility = View.INVISIBLE
+                            buttonPair.isClickable = true
+                            textTips.text = rh.gs(R.string.equil_password_error)
+                            textTips.visibility = View.VISIBLE
+                            buttonPair.text = rh.gs(R.string.equil_retry)
+                            buttonPair.alpha = 1f
+                        }
+                    }
+                } else {
                     dismissLoading();
-                    equilPumpPlugin.equilManager.address = scanResult.address.toString()
-                    equilPumpPlugin.equilManager.serialNumber = scanResult.name.toString()
+                    runOnUiThread {
+                        progressPair.visibility = View.INVISIBLE
+                        buttonPair.isClickable = true
+                        textTips.visibility = View.VISIBLE
+                        buttonPair.text = rh.gs(R.string.equil_retry)
+                        textTips.text = rh.gs(R.string.equil_pair_error)
+
+                        buttonPair.alpha = 1f
+                    }
+
+                    equilPumpPlugin.equilManager.address = ""
+                    equilPumpPlugin.equilManager.serialNumber = ""
+                }
+            }
+        })
+    }
+
+    private fun pumpSettings(address: String, serialNumber: String) {
+        commandQueue.customCommand(CmdSettingSet(), object : Callback() {
+            override fun run() {
+                if (activity == null) return
+                if (result.success) {
+                    dismissLoading();
+                    equilPumpPlugin.equilManager.address = address
+                    equilPumpPlugin.equilManager.serialNumber = serialNumber
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_success))
-
-                    var time = System.currentTimeMillis();
-
-                    val equilHistoryRecord = EquilHistoryRecord(
-                        time,
-                        null,
-                        null,
-                        EquilHistoryRecord.EventType.INITIALIZE_EQUIL,
-                        time,
-                        equilPumpPlugin.serialNumber()
-                    )
-                    equilPumpPlugin.equilHistoryRecordDao.insert(equilHistoryRecord)
                     runOnUiThread {
                         val nextPage = getNextPageActionId()
                         if (nextPage != null) {
+                            equilPumpPlugin.equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
                             findNavController().navigate(nextPage)
                         }
                     }
@@ -213,12 +290,10 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                         buttonPair.text = rh.gs(R.string.equil_retry)
                         buttonPair.alpha = 1f
                     }
-
                     equilPumpPlugin.equilManager.address = ""
                     equilPumpPlugin.equilManager.serialNumber = ""
                 }
             }
         })
     }
-
 }

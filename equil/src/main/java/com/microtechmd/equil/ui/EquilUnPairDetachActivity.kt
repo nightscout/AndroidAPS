@@ -13,6 +13,7 @@ import com.microtechmd.equil.EquilPumpPlugin
 import com.microtechmd.equil.R
 import com.microtechmd.equil.data.RunMode
 import com.microtechmd.equil.databinding.EquilUnpairDetachActivityBinding
+import com.microtechmd.equil.driver.definition.ActivationProgress
 import com.microtechmd.equil.events.EventEquilUnPairChanged
 import com.microtechmd.equil.manager.command.CmdInsulinChange
 import com.microtechmd.equil.ui.dlg.LoadingDlg
@@ -97,7 +98,8 @@ class EquilUnPairDetachActivity : DaggerAppCompatActivity() {
                     equilPumpPlugin.equilManager.runMode = RunMode.STOP
                     equilPumpPlugin.equilManager.closeBle();
                     equilPumpPlugin.resetData()
-                    SystemClock.sleep(1000)
+                    SystemClock.sleep(500)
+                    equilPumpPlugin.equilManager.activationProgress=ActivationProgress.CANNULA_CHANGE
                     dismissLoading()
                     startActivity(Intent(context, EquilUnPairActivity::class.java))
                 } else {

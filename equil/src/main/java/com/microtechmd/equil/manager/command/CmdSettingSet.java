@@ -1,38 +1,45 @@
 package com.microtechmd.equil.manager.command;
 
 
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.manager.Utils;
+
+import info.nightscout.shared.logging.LTag;
 
 public class CmdSettingSet extends BaseSetting {
     double lowAlarm;
-    public CmdSettingSet(double lowAlarm){
-        this.lowAlarm=lowAlarm;
+
+    public CmdSettingSet() {
+        super(System.currentTimeMillis());
+        this.lowAlarm = lowAlarm;
     }
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
-        byte[] data2 = new byte[]{0x01, 0x05};
-        byte[] data3 = Utils.intToBytes(0);
-        byte[] lowAlarmByte = Utils.intToTwoBytes(Utils.decodeSpeedToUH(lowAlarm));
-        byte[] fast = Utils.intToTwoBytes(0);
-
-        byte[] data5 = Utils.intToTwoBytes(2800);
-        byte[] data6 = Utils.intToTwoBytes(8);
-        byte[] data7 = Utils.intToTwoBytes(240);
-        byte[] data8 = Utils.intToTwoBytes(1600);
-        byte[] data = Utils.concat(indexByte, data2, data3, data3,
-                lowAlarmByte, fast,
-                data5, data6, data7, data8);
-        reqCmdIndex++;
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
+        byte[] equilCmd = new byte[]{0x01, 0x05};
+        byte[] useTime = Utils.intToBytes(0);
+        byte[] autoCloseTime = Utils.intToBytes(0);
+        byte[] lowAlarmByte = Utils.intToTwoBytes(1600);
+        byte[] fastBolus = Utils.intToTwoBytes(0);
+        byte[] occlusion = Utils.intToTwoBytes(2800);
+        byte[] insulinUnit = Utils.intToTwoBytes(8);
+        byte[] basalThreshold = Utils.intToTwoBytes(240);
+        byte[] bolusThreshold = Utils.intToTwoBytes(1600);
+        byte[] data = Utils.concat(indexByte, equilCmd, useTime, autoCloseTime,
+                lowAlarmByte, fastBolus,
+                occlusion, insulinUnit, basalThreshold, bolusThreshold);
+        pumpReqIndex++;
+        aapsLogger.debug(LTag.EQUILBLE,
+                "CmdSettingSet data===" + Utils.bytesToHex(data) + "====" + lowAlarm + "===" + Utils.decodeSpeedToUH(lowAlarm));
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x05, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -58,5 +65,11 @@ public class CmdSettingSet extends BaseSetting {
         }
     }
 
+    public boolean isPairStep() {
+        return true;
+    }
 
+    @Override public EquilHistoryRecord.EventType getEventType() {
+        return null;
+    }
 }

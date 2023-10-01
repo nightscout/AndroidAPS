@@ -1,27 +1,29 @@
 package com.microtechmd.equil.manager.command;
 
 
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.manager.Utils;
 
 public class CmdTimeGet extends BaseSetting {
     public CmdTimeGet() {
+        super(System.currentTimeMillis());
         port = "0505";
     }
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x02, 0x00};
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x00, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -35,5 +37,9 @@ public class CmdTimeGet extends BaseSetting {
         int hour = data[9] & 0xff;
         int min = data[10] & 0xff;
         int s = data[11] & 0xff;
+    }
+
+    @Override public EquilHistoryRecord.EventType getEventType() {
+        return null;
     }
 }

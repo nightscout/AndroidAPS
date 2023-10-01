@@ -1,39 +1,70 @@
 package com.microtechmd.equil.manager.command;
 
 
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.manager.Utils;
+
+import info.nightscout.shared.logging.LTag;
 
 public class CmdTempBasalSet extends BaseSetting {
     double insulin;
+    int duration;
     int step;
-    int time;
+    int pumpTime;
+    boolean cancel;
 
+    public double getInsulin() {
+        return insulin;
+    }
 
-    public CmdTempBasalSet(double insulin, int time) {
+    public void setInsulin(double insulin) {
         this.insulin = insulin;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public boolean isCancel() {
+        return cancel;
+    }
+
+    public void setCancel(boolean cancel) {
+        this.cancel = cancel;
+    }
+
+    public CmdTempBasalSet(double insulin, int duration) {
+        super(System.currentTimeMillis());
+        this.insulin = insulin;
+        this.duration = duration;
         if (insulin != 0) {
             step = (int) (insulin / 0.05d * 8) / 2;
-            this.time = time * 60;
+            this.pumpTime = duration * 60;
         }
     }
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        aapsLogger.error(LTag.EQUILBLE, "step===" + step + "=====" + pumpTime);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x01, 0x04};
         byte[] data3 = Utils.intToBytes(step);
-        byte[] data4 = Utils.intToBytes(time);
+        byte[] data4 = Utils.intToBytes(pumpTime);
         byte[] data = Utils.concat(indexByte, data2, data3, data4);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x04, 0x01};
         byte[] data3 = Utils.intToBytes(0);
         byte[] data = Utils.concat(indexByte, data2, data3);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -43,6 +74,14 @@ public class CmdTempBasalSet extends BaseSetting {
         synchronized (this) {
             setCmdStatus(true);
             notify();
+        }
+    }
+
+    @Override public EquilHistoryRecord.EventType getEventType() {
+        if (cancel) {
+            return EquilHistoryRecord.EventType.CANCEL_TEMPORARY_BASAL;
+        } else {
+            return EquilHistoryRecord.EventType.SET_TEMPORARY_BASAL;
         }
     }
 }

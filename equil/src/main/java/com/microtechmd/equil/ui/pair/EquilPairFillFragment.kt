@@ -6,9 +6,11 @@ import android.view.View
 import android.widget.Button
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
+import com.microtechmd.equil.EquilConst
 import com.microtechmd.equil.R
 import com.microtechmd.equil.data.RunMode
 import com.microtechmd.equil.data.database.EquilHistoryRecord
+import com.microtechmd.equil.data.database.ResolvedResult
 import com.microtechmd.equil.manager.command.CmdBasalSet
 import com.microtechmd.equil.manager.command.CmdDevicesGet
 import com.microtechmd.equil.manager.command.CmdResistanceGet
@@ -32,13 +34,10 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     }
 
     override fun getNextPageActionId(): Int? {
-        return R.id.action_startEquilActivationFragment_to_startEquilPairConfirmFragment;
+        return R.id.action_startEquilActivationFragment_to_startEquilPairAttachFragment
     }
 
     override fun getIndex(): Int {
-        if ((activity as? EquilPairActivity)?.pair == false) {
-            return 1
-        }
         return 3
     }
 
@@ -54,12 +53,6 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         lytAction = view.findViewById<View>(R.id.lyt_action);
         buttonNext.alpha = 0.3f
         buttonNext.isClickable = false
-        // view.findViewById<Button>(R.id.button_next).setOnClickListener {
-        //     context?.let {
-        //         showLoading()
-        //         setProfile()
-        //     }
-        // }
         buttonFill.setOnClickListener {
             context?.let {
                 auto = true
@@ -67,21 +60,25 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                 setStep()
             }
         }
-        view.findViewById<Button>(R.id.button_air).setOnClickListener {
-            context?.let {
-                auto = false
-                showLoading()
-                setStep()
-            }
-        }
         view.findViewById<Button>(R.id.button_finish).setOnClickListener {
             context?.let {
-                auto = true
-                showLoading()
-                if ((activity as? EquilPairActivity)?.pair == true) {
-                    setProfile()
-                } else {
-                    setModel()
+                var time = System.currentTimeMillis();
+                val equilHistoryRecord = EquilHistoryRecord(
+                    time,
+                    null,
+                    null,
+                    EquilHistoryRecord.EventType.FILL,
+                    time,
+                    equilPumpPlugin.serialNumber()
+                )
+                equilHistoryRecord.resolvedAt = System.currentTimeMillis()
+                equilHistoryRecord.resolvedStatus = ResolvedResult.SUCCESS
+                equilPumpPlugin.loopHandler.post {
+                    equilPumpPlugin.equilHistoryRecordDao.insert(equilHistoryRecord)
+                }
+                val nextPage = getNextPageActionId()
+                if (nextPage != null) {
+                    findNavController().navigate(nextPage)
                 }
             }
         }
@@ -111,13 +108,15 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     private fun setStep() {
         commandQueue.customCommand(CmdStepSet(), object : Callback() {
             override fun run() {
-                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
+                if (activity == null) return
+
+                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
                     if (auto) {
-                        SystemClock.sleep(50)
+                        SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         readStatus()
                     } else {
-                        SystemClock.sleep(50)
+                        SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         readStatus();
                     }
                 } else {
@@ -126,7 +125,6 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                     } else {
                         dismissLoading()
                     }
-                    // equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                 }
             }
         })
@@ -137,11 +135,13 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
             CmdResistanceGet(),
             object : Callback() {
                 override fun run() {
-                    aapsLogger.debug(LTag.EQUILBLE, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
+                    if (activity == null) return
+                    aapsLogger.error(LTag.EQUILBLE, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
+                    // result.enacted=true
                     if (result.success) {
                         if (!result.enacted) {
                             if (auto) {
-                                SystemClock.sleep(50)
+                                SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                                 setStep()
                             } else {
                                 dismissLoading()
@@ -170,93 +170,4 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         )
     }
 
-    private fun setTime() {
-        showLoading()
-        commandQueue.customCommand(CmdTimeSet(), object : Callback() {
-            override fun run() {
-                aapsLogger.debug(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
-                if (result.success) {
-                    SystemClock.sleep(50)
-                    dismissLoading();
-                    var time = System.currentTimeMillis();
-                    val equilHistoryRecord = EquilHistoryRecord(
-                        time,
-                        null,
-                        null,
-                        EquilHistoryRecord.EventType.SET_TIME,
-                        time,
-                        equilPumpPlugin.serialNumber()
-                    )
-                    equilPumpPlugin.equilHistoryRecordDao.insert(equilHistoryRecord)
-                    setModel()
-                } else {
-                    dismissLoading();
-                    equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
-                }
-            }
-        })
-    }
-
-    private fun readFM() {
-        commandQueue.customCommand(CmdDevicesGet(), object : Callback() {
-            override fun run() {
-                if (result.success) {
-                    equilPumpPlugin.equilManager.closeBle()
-                    SystemClock.sleep(50)
-                    dismissLoading();
-                    equilPumpPlugin.equilManager.readStatus()
-                    runOnUiThread {
-                        // binding.navButtonsLayout.buttonNext.performClick()
-                        val nextPage = getNextPageActionId()
-                        if (nextPage != null) {
-                            findNavController().navigate(nextPage)
-                        }
-                    }
-                } else {
-                    dismissLoading();
-                    equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
-                }
-            }
-        })
-    }
-
-    private fun setProfile() {
-        var profile = profileFunction.getProfile();
-        if (profile == null) {
-            setTime()
-            return
-        }
-        commandQueue.customCommand(CmdBasalSet(profile), object : Callback() {
-            override fun run() {
-                aapsLogger.debug(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
-                if (result.success) {
-                    SystemClock.sleep(50)
-                    dismissLoading()
-                    equilPumpPlugin.addBasalProfileLog()
-                    setTime()
-                } else {
-                    dismissLoading();
-                    equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
-                }
-
-            }
-        })
-    }
-
-    private fun setModel() {
-        showLoading()
-        commandQueue.customCommand(CmdModelSet(RunMode.RUN.command), object : Callback() {
-            override fun run() {
-                aapsLogger.debug(LTag.EQUILBLE, "setModel result====" + result.success + "====")
-                if (result.success) {
-                    dismissLoading();
-                    equilPumpPlugin.equilManager.runMode = RunMode.RUN;
-                    SystemClock.sleep(50)
-                    readFM();
-                } else {
-                    dismissLoading();
-                }
-            }
-        })
-    }
 }

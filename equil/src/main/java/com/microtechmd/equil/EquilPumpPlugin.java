@@ -8,7 +8,6 @@ import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,26 +16,26 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.common.Scopes;
 import com.microtechmd.equil.data.BolusProfile;
 import com.microtechmd.equil.data.RunMode;
-import com.microtechmd.equil.data.database.BolusType;
-import com.microtechmd.equil.data.database.EquilBolusRecord;
 import com.microtechmd.equil.data.database.EquilHistoryPump;
-import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.data.database.EquilHistoryRecordDao;
-import com.microtechmd.equil.data.database.EquilTempBasalRecord;
+import com.microtechmd.equil.driver.definition.ActivationProgress;
+import com.microtechmd.equil.driver.definition.BasalSchedule;
 import com.microtechmd.equil.events.EventEquilDataChanged;
 import com.microtechmd.equil.manager.EquilManager;
 import com.microtechmd.equil.manager.command.BaseCmd;
 import com.microtechmd.equil.manager.command.CmdBasalSet;
 import com.microtechmd.equil.manager.command.CmdHistoryGet;
-import com.microtechmd.equil.manager.command.CmdModelGet;
-import com.microtechmd.equil.manager.command.CmdSettingGet;
+import com.microtechmd.equil.manager.command.CmdStatusGet;
+import com.microtechmd.equil.manager.command.CmdTimeSet;
 import com.microtechmd.equil.service.EquilService;
 
+import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.Instant;
+import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,12 +43,10 @@ import javax.inject.Singleton;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.database.entities.GlucoseValue;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventAppInitialized;
 import info.nightscout.androidaps.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.interfaces.ActivePlugin;
-import info.nightscout.androidaps.interfaces.BgSource;
 import info.nightscout.androidaps.interfaces.CommandQueue;
 import info.nightscout.androidaps.interfaces.PluginDescription;
 import info.nightscout.androidaps.interfaces.PluginType;
@@ -65,7 +62,6 @@ import info.nightscout.androidaps.plugins.common.ManufacturerType;
 import info.nightscout.androidaps.plugins.general.actions.defs.CustomActionType;
 import info.nightscout.androidaps.plugins.general.overview.notifications.Notification;
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
-import info.nightscout.androidaps.queue.Callback;
 import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
 import info.nightscout.androidaps.utils.FabricPrivacy;
@@ -82,8 +78,10 @@ import kotlin.jvm.internal.Intrinsics;
  *
  */
 @Singleton
-public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
+public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     public static final String VERSION = "2023_09_20_01";
+    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
+    private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 3_000L; // 1 minute
     public static final Duration BASAL_STEP_DURATION = Duration.standardMinutes(30);
     private final ProfileFunction profileFunction;
     private final AAPSLogger aapsLogger;
@@ -115,7 +113,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     BolusProfile bolusProfile;
     EquilManager equilManager;
     public EquilHistoryRecordDao equilHistoryRecordDao;
-    Thread readStatus;
+    private final Runnable statusChecker;
 
     @Inject
     public EquilPumpPlugin(
@@ -163,7 +161,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 EquilService.LocalBinder mLocalBinder = (EquilService.LocalBinder) service;
                 equilService = mLocalBinder.getServiceInstance();
-//                equilService.setNotInPreInit();
             }
 
             @Override
@@ -172,21 +169,25 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
                 equilService = null;
             }
         };
-//        sp.putDouble("statuslights_cage_warning",
-//                System.currentTimeMillis()-10000000);
         pumpDescription = new PumpDescription(pumpType);
-        readStatus = new Thread() {
+        statusChecker = new Runnable() {
             @Override public void run() {
-                super.run();
-                aapsLogger.debug(LTag.EQUILBLE, "readStatus========" + VERSION);
-                equilManager.readStatus();
-                loopHandler.postDelayed(readStatus, 3 * 1000 * 60);
+                if (commandQueue.size() == 0 &&
+                        commandQueue.performing() == null) {
+                    if (equilManager.isActivationCompleted()) {
+//                        getCommandQueue().customCommand(new CmdHistoryGet(), null);
+                        getCommandQueue().customCommand(new CmdStatusGet(), null);
+                    }
+
+                } else {
+                    aapsLogger.debug(LTag.EQUILBLE, "Skipping Pod status check because command queue is" +
+                            " not empty");
+                }
+                loopHandler.postDelayed(this, STATUS_CHECK_INTERVAL_MILLIS);
             }
         };
 
     }
-
-
 
     @Override
     protected void onStart() {
@@ -195,57 +196,18 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
             handlerThread = new HandlerThread(EquilPumpPlugin.class.getSimpleName());
             handlerThread.start();
             loopHandler = new Handler(handlerThread.getLooper());
-            loopHandler.postDelayed(readStatus, 3 * 1000 * 60);
         }
         Intent intent = new Intent(context, EquilService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        loopHandler.postDelayed(new Runnable() {
-            @Override public void run() {
-                getCommandQueue().customCommand(new CmdModelGet(), new Callback() {
-                    @Override public void run() {
-                        if (result.getSuccess()) {
-                            SystemClock.sleep(50);
-                            CmdSettingGet cmdSettingGet = new CmdSettingGet();
-                            getCommandQueue().customCommand(cmdSettingGet, new Callback() {
-                                @Override public void run() {
-                                    if (result.getSuccess()) {
-//                                        settingProfile.setCloseTime(cmdSettingGet.getCloseTime());
-//                                        settingProfile.setLowAlarm(cmdSettingGet.getLowAlarm());
-//                                        settingProfile.setLargeFastAlarm(cmdSettingGet.getLargefastAlarm());
-//                                        settingProfile.setStopAlarm(cmdSettingGet.getStopAlarm());
-//                                        settingProfile.setInfusionUnit(cmdSettingGet.getInfusionUnit());
-//                                        settingProfile.setBasalAlarm(cmdSettingGet.getBasalAlarm());
-//                                        settingProfile.setLargeAlarm(cmdSettingGet.getLargeAlarm());
-//                                        equilManager.saveSettingProfile(settingProfile);
+        aapsLogger.debug(LTag.EQUILBLE, "EquilPumpPlugin is connected");
 
-                                    }
-
-                                }
-                            });
-                        }
-
-                    }
-                });
-            }
-        }, 1000);
-
+        loopHandler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS);
         disposable.add(rxBus
                 .toObservable(EventAppExit.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> context.unbindService(serviceConnection), fabricPrivacy::logException)
         );
 
-//        disposable.add(rxBus
-//                .toObservable(EventPreferenceChange.class)
-//                .observeOn(aapsSchedulers.getIo())
-//                .subscribe(event -> {
-//                    if (event.isChanged(getRh(), R.string.equil_key_device_address)) {
-//                        connectNewPump();
-//                        getCommandQueue().readStatus(rh.gs(R.string.device_changed),
-//                                null);
-//                    }
-//                }, fabricPrivacy::logException)
-//        );
         disposable.add(rxBus
                 .toObservable(EventAppInitialized.class)
                 .observeOn(aapsSchedulers.getIo())
@@ -257,59 +219,17 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
                 .toObservable(EventEquilDataChanged.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    int battery = equilManager.getBattery();
-                    int insulin = equilManager.getCurrentInsulin();
-                    if (battery <= 10) {
-                        boolean alarmBattery10 =
-                                sp.getBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, false);
-                        if (!alarmBattery10) {
-                            equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
-                                    rh.gs(R.string.equil_lowbattery) + battery + "%",
-                                    Notification.NORMAL, R.raw.alarm);
-                            sp.putBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, true);
-                        } else {
-                            if (battery < 5) {
-                                equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
-                                        rh.gs(R.string.equil_lowbattery) + battery + "%",
-                                        Notification.URGENT, R.raw.alarm);
-                            }
-                        }
-
-                    }
-                    if (equilManager.getRunMode() == RunMode.RUN) {
-                        if (insulin <= 10 && insulin > 5) {
-                            boolean alarmInsulin10 =
-                                    sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_10, false);
-                            if (!alarmInsulin10) {
-                                equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
-                                        rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                                        Notification.NORMAL, R.raw.alarm);
-                                sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_10, true);
-                            }
-                        } else if (insulin <= 5 && insulin > 2) {
-                            boolean alarmInsulin5 =
-                                    sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_5, false);
-                            if (!alarmInsulin5) {
-                                equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
-                                        rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                                        Notification.NORMAL, R.raw.alarm);
-                                sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_5, true);
-                            }
-                        } else if (insulin <= 2) {
-                            equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
-                                    rh.gs(R.string.equil_low_insulin) + insulin + "U",
-                                    Notification.URGENT, R.raw.alarm);
-                        }
-                    }
+                    playAlarm();
                 }, fabricPrivacy::logException)
         );
     }
 
+    public ActivationProgress tempActivationProgress = ActivationProgress.NONE;
 
     @Override
     protected void onStop() {
         super.onStop();
-        aapsLogger.error(LTag.EQUILBLE, "OmnipodPumpPlugin.onStop()");
+        aapsLogger.debug(LTag.EQUILBLE, "OmnipodPumpPlugin.onStop()");
 
         context.unbindService(serviceConnection);
         disposable.clear();
@@ -321,38 +241,44 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
 
     @Override
     public boolean isInitialized() {
+        boolean flag = equilManager.isActivationInitialized();
+//        return flag;
         return true;
     }
 
     @Override
     public boolean isConnected() {
-        return true;
+        return isInitialized();
     }
 
     @Override
     public boolean isConnecting() {
         return false;
-    }
 
-    @Override
-    public boolean isHandshakeInProgress() {
-        if (displayConnectionMessages) {
-            aapsLogger.debug(LTag.EQUILBLE, "isHandshakeInProgress [OmnipodPumpPlugin] - default " +
-                    "(empty) implementation.");
-        }
-        return false;
     }
 
     // TODO is this correct?
     @Override
     public boolean isBusy() {
-        return busy;
+        aapsLogger.error(LTag.EQUILBLE, "isBusy  flag: {}");
+        return false;
+
+    }
+
+    @Override
+    public boolean isHandshakeInProgress() {
+//        return  equilManager.getBluetoothConnectionState() == BluetoothConnectionState.CONNECTED;
+        return false;
     }
 
 
     @Override
     public boolean isSuspended() {
-        return equilManager.getRunMode() == RunMode.SUSPEND;
+        RunMode runMode = equilManager.getRunMode();
+        if (equilManager.isActivationCompleted()) {
+            return runMode == RunMode.SUSPEND || runMode == RunMode.STOP;
+        }
+        return true;
     }
 
 
@@ -364,11 +290,17 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     @NonNull
     @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
+        aapsLogger.debug(LTag.EQUILBLE, "setNewBasalProfile");
         RunMode mode = equilManager.getRunMode();
         if (mode == RunMode.RUN || mode == RunMode.SUSPEND) {
-            PumpEnactResult pumpEnactResult = equilManager.executeCmd(new CmdBasalSet(profile));
+            BasalSchedule basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile);
+            if (basalSchedule == null || basalSchedule.getEntries() == null || basalSchedule.getEntries().size() < 24) {
+                return new PumpEnactResult(getInjector()).enacted(false).success(false).comment(rh.gs(R.string.failedupdatebasalprofile));
+            }
+            PumpEnactResult pumpEnactResult =
+                    equilManager.executeCmd(new CmdBasalSet(basalSchedule, profile));
             if (pumpEnactResult.getSuccess()) {
-                addBasalProfileLog();
+                equilManager.setBasalSchedule(basalSchedule);
             }
             return pumpEnactResult;
         }
@@ -377,15 +309,13 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
 
     @Override
     public boolean isThisProfileSet(@NonNull Profile profile) {
-
-//        PumpEnactResult pumpEnactResult = equilManager.getBasal(profile);
-//        aapsLogger.error(LTag.EQUILBLE, "isThisProfileSet====" + pumpEnactResult.getSuccess());
-//        return pumpEnactResult.getSuccess();
-        RunMode mode = equilManager.getRunMode();
-        if (mode == RunMode.RUN || mode == RunMode.SUSPEND) {
-            return sp.getBoolean(EquilConst.Prefs.EQUIL_BASAL_SET, false);
+        if (!equilManager.isActivationCompleted()) {
+            // When no Pod is active, return true here in order to prevent AAPS from setting a profile
+            // When we activate a new Pod, we just use ProfileFunction to set the currently active profile
+            return true;
         }
-        return true;
+        return Objects.equals(equilManager.getBasalSchedule(),
+                BasalSchedule.mapProfileToBasalSchedule(profile));
     }
 
     @Override
@@ -398,9 +328,22 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
         return equilManager.getLastDataTime();
     }
 
+    public static Duration toDuration(DateTime dateTime) {
+        if (dateTime == null) {
+            throw new IllegalArgumentException("dateTime can not be null");
+        }
+        return new Duration(dateTime.toLocalTime().getMillisOfDay());
+    }
+
     @Override
     public double getBaseBasalRate() {
-        return equilManager.getRate();
+        if (isSuspended()) {
+            return 0.0d;
+        }
+        aapsLogger.debug(LTag.EQUILBLE, "getBaseBasalRate======");
+        BasalSchedule schedule = equilManager.getBasalSchedule();
+        if (schedule != null) return schedule.rateAt(toDuration(DateTime.now()));
+        else return 0;
     }
 
     @Override
@@ -417,13 +360,14 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
             // neither carbs nor bolus requested
-            aapsLogger.debug("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
-            return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
-                    .comment(R.string.invalidinput);
+            aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
+            return new PumpEnactResult(getInjector()).success(false).enacted(false)
+                    .bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalidinput);
         }
         RunMode mode = equilManager.getRunMode();
-        if (mode !=RunMode.RUN) {
-            return new PumpEnactResult(getInjector()).enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run));
+        if (mode != RunMode.RUN) {
+            return new PumpEnactResult(getInjector()).enacted(false).success(false)
+                    .bolusDelivered(0d).carbsDelivered(0d).comment(rh.gs(R.string.equil_pump_not_run));
         }
         int lastInsulin = equilManager.getCurrentInsulin();
         if (detailedBolusInfo.insulin > lastInsulin) {
@@ -433,42 +377,20 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
                     .bolusDelivered(0d)
                     .comment(R.string.equil_not_enough_insulin);
         }
-        bolusProfile.setInsulin(detailedBolusInfo.insulin);
-        long time = System.currentTimeMillis();
-        PumpEnactResult pumpEnactResult = equilManager.bolus(detailedBolusInfo, bolusProfile);
-        if (pumpEnactResult.getSuccess()) {
-            pumpSync.syncBolusWithPumpId(time,
-                    pumpEnactResult.getBolusDelivered(),
-                    detailedBolusInfo.getBolusType(),
-                    detailedBolusInfo.timestamp,
-                    PumpType.EQUIL,
-                    serialNumber());
-            EquilBolusRecord equilBolusRecord =
-                    new EquilBolusRecord(pumpEnactResult.getBolusDelivered(),
-                            BolusType.SMB, time);
-            equilManager.setBolusRecord(equilBolusRecord);
-            EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(time,
-                    null,
-                    equilBolusRecord,
-                    EquilHistoryRecord.EventType.SET_BOLUS,
-                    time,
-                    serialNumber()
-            );
-            long t = equilHistoryRecordDao.insert(equilHistoryRecord);
-        }
-
-
-        return pumpEnactResult;
+        return deliverBolus(detailedBolusInfo);
     }
 
     public PumpEnactResult loadHistory() {
         PumpEnactResult pumpEnactResult = new PumpEnactResult(getInjector());
-        EquilHistoryPump equilHistoryPump2 = equilHistoryRecordDao.last();
-        int startIndex = 1;
-        if (equilHistoryPump2 != null) {
-            startIndex = equilHistoryPump2.getEventIndex();
+        EquilHistoryPump equilHistoryLast = equilHistoryRecordDao.last(serialNumber());
+        int startIndex;
+        if (equilHistoryLast == null) {
+            startIndex = equilManager.getStartHistoryIndex();
+        } else {
+            startIndex = equilHistoryLast.getEventIndex();
         }
-        int index = equilManager.loadHistory(0);
+        int index = equilManager.getHistoryIndex();
+        aapsLogger.debug(LTag.EQUILBLE, "return ===" + index + "====" + startIndex);
         if (index == -1) {
             return pumpEnactResult.success(false);
         }
@@ -477,7 +399,9 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
             if (startIndex > 2000) {
                 startIndex = 1;
             }
+            aapsLogger.debug(LTag.EQUILBLE, "while index===" + startIndex + "===" + index);
             equilManager.loadHistory(startIndex);
+
         }
         return pumpEnactResult.success(true);
     }
@@ -485,17 +409,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     @Override
     public void stopBolusDelivering() {
         PumpEnactResult result = equilManager.stopBolus(bolusProfile);
-        if (result.getSuccess()) {
-            long time = System.currentTimeMillis();
-            EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(time,
-                    null,
-                    null,
-                    EquilHistoryRecord.EventType.CANCEL_BOLUS,
-                    time,
-                    serialNumber()
-            );
-            equilHistoryRecordDao.insert(equilHistoryRecord);
-        }
+        aapsLogger.debug(LTag.EQUILBLE, "stopBolusDelivering=====");
     }
 
     @Override
@@ -503,38 +417,19 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile,
                                                 boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
 
+        aapsLogger.debug(LTag.EQUILBLE,
+                "setTempBasalAbsolute=====" + absoluteRate
+                        + "====" + durationInMinutes + "===" + enforceNew);
         if (durationInMinutes <= 0 || durationInMinutes % BASAL_STEP_DURATION.getStandardMinutes() != 0) {
             return new PumpEnactResult(getInjector()).success(false).comment(rh.gs(R.string.equil_error_set_temp_basal_failed_validation, BASAL_STEP_DURATION.getStandardMinutes()));
         }
         RunMode mode = equilManager.getRunMode();
-        if (mode !=RunMode.RUN) {
+        if (mode != RunMode.RUN) {
             return new PumpEnactResult(getInjector()).enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run));
         }
-        PumpEnactResult pumpEnactResult = equilManager.setTempBasal(absoluteRate, durationInMinutes);
+        PumpEnactResult pumpEnactResult = equilManager.setTempBasal(absoluteRate,
+                durationInMinutes, false);
         if (pumpEnactResult.getSuccess()) {
-            long time = System.currentTimeMillis();
-            pumpSync.syncTemporaryBasalWithPumpId(
-                    time,
-                    absoluteRate,
-                    durationInMinutes * 60 * 1000,
-                    true,
-                    PumpSync.TemporaryBasalType.NORMAL,
-                    time,
-                    pumpType,
-                    serialNumber()
-            );
-            EquilTempBasalRecord tempBasalRecord =
-                    new EquilTempBasalRecord(durationInMinutes * 60 * 1000,
-                            absoluteRate, time);
-            equilManager.setTempBasal(tempBasalRecord);
-            EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(time,
-                    tempBasalRecord,
-                    null,
-                    EquilHistoryRecord.EventType.SET_TEMPORARY_BASAL,
-                    time,
-                    serialNumber()
-            );
-            equilHistoryRecordDao.insert(equilHistoryRecord);
             pumpEnactResult.setTempCancel(false);
             pumpEnactResult.setDuration(durationInMinutes);
             pumpEnactResult.setPercent(false);
@@ -547,26 +442,11 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     @Override
     @NonNull
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        PumpEnactResult pumpEnactResult = equilManager.setTempBasal(0, 0);
+        aapsLogger.debug(LTag.EQUILBLE, "cancelTempBasal=====" + enforceNew);
+        PumpEnactResult pumpEnactResult = equilManager.setTempBasal(0, 0, true);
         if (pumpEnactResult.getSuccess()) {
-            long time = System.currentTimeMillis();
-            EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(time,
-                    null,
-                    null,
-                    EquilHistoryRecord.EventType.CANCEL_TEMPORARY_BASAL,
-                    time,
-                    serialNumber()
-            );
-            equilHistoryRecordDao.insert(equilHistoryRecord);
             pumpEnactResult.setTempCancel(true);
-            pumpSync.syncStopTemporaryBasalWithPumpId(
-                    time,
-                    time,
-                    pumpType,
-                    serialNumber()
-            );
         }
-
         return pumpEnactResult;
     }
 
@@ -582,7 +462,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
             if (!isConnected()) {
                 JSONObject jSONObject = new JSONObject();
                 JSONObject jSONObject2 = new JSONObject();
-                jSONObject2.put("status", "泵没有连接");
+                jSONObject2.put("status", "no active Pod");
                 jSONObject.put("status", jSONObject2);
                 return jSONObject;
             }
@@ -591,9 +471,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
             JSONObject jSONObject5 = new JSONObject();
             JSONObject jSONObject6 = new JSONObject();
             try {
-//                jSONObject4.put("percent", this.pump.getMonitorInfo().getBatteryForReadable());
-//                jSONObject5.put("status", this.pump.getMode().getHolder().name());
-//                jSONObject5.put(ServerValues.NAME_OP_TIMESTAMP, this.dateUtil.toISOString(getLastDataTime()));
                 jSONObject6.put("Version", version);
                 PumpSync.PumpState.Bolus bolus = this.pumpSync.expectedPumpState().getBolus();
                 if (bolus != null) {
@@ -666,18 +543,24 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
 
     @Override
     public void executeCustomAction(@NonNull CustomActionType customActionType) {
-        aapsLogger.error(LTag.PUMP, "Unknown custom action: " + customActionType);
+        aapsLogger.debug(LTag.EQUILBLE, "Unknown custom action: " + customActionType);
     }
 
     @Override
     public PumpEnactResult executeCustomCommand(@NonNull CustomCommand command) {
+        aapsLogger.debug(LTag.EQUILBLE, "executeCustomCommand " + command);
+        PumpEnactResult pumpEnactResult = null;
         if (command instanceof CmdHistoryGet) {
-            return loadHistory();
+            pumpEnactResult = loadHistory();
         }
         if (command instanceof BaseCmd) {
-            return equilManager.executeCmd((BaseCmd) command);
+            pumpEnactResult = equilManager.executeCmd((BaseCmd) command);
         }
-        return equilManager.executeCmd((BaseCmd) command);
+        if (command instanceof CmdStatusGet) {
+            pumpEnactResult = equilManager.readEquilStatus();
+        }
+
+        return pumpEnactResult;
     }
 
 
@@ -685,10 +568,10 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
 
         Instant now = Instant.now();
-
-        aapsLogger.info(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver");
+        aapsLogger.debug(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver");
         lastTimeDateOrTimeZoneUpdate = now;
         hasTimeDateOrTimeZoneChanged = true;
+        getCommandQueue().customCommand(new CmdTimeSet(), null);
     }
 
     @Override
@@ -708,31 +591,26 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
 
     @Override
     public void finishHandshaking() {
-        if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, "finishHandshaking [OmnipodPumpPlugin] - default (empty) implementation.");
+//        if (displayConnectionMessages)
+        aapsLogger.debug(LTag.EQUILBLE, "finishHandshaking [OmnipodPumpPlugin] - default (empty) " +
+                "implementation.");
     }
 
     @Override public void connect(@NonNull String reason) {
-        if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, "connect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
+
     }
 
-    @Override public int waitForDisconnectionInSeconds() {
-        return 0;
-    }
 
     @Override public void disconnect(@NonNull String reason) {
-        if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, "disconnect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
+        aapsLogger.debug(LTag.PUMP, "disconnect (reason={}) [PumpPluginAbstract] - default (empty) implementation." + reason);
     }
 
     @Override public void stopConnecting() {
-        if (displayConnectionMessages)
-            aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
+        aapsLogger.debug(LTag.PUMP, "stopConnecting [PumpPluginAbstract] - default (empty) implementation.");
     }
 
     @NonNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-
+        aapsLogger.error(LTag.EQUILBLE, "setTempBasalPercent [OmnipodPumpPlugin] ");
         if (percent == 0) {
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew, tbrType);
         } else {
@@ -743,18 +621,12 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     }
 
     @NonNull @Override public PumpEnactResult setExtendedBolus(double insulin, int durationInMinutes) {
-        PumpEnactResult pumpEnactResult = equilManager.setExtendedBolus(insulin, durationInMinutes);
+        aapsLogger.debug(LTag.EQUILBLE,
+                "setExtendedBolus [OmnipodPumpPlugin] - Not implemented." + insulin + "====" + durationInMinutes);
+        PumpEnactResult pumpEnactResult = equilManager.setExtendedBolus(insulin,
+                durationInMinutes, false);
         if (pumpEnactResult.getSuccess()) {
-            long time = System.currentTimeMillis();
-            pumpSync.syncExtendedBolusWithPumpId(
-                    time,
-                    insulin,
-                    durationInMinutes * 60 * 1000,
-                    true,
-                    time,
-                    pumpType,
-                    serialNumber()
-            );
+
             pumpEnactResult.setTempCancel(false);
             pumpEnactResult.setDuration(durationInMinutes);
             pumpEnactResult.setPercent(false);
@@ -764,18 +636,9 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
     }
 
     @NonNull @Override public PumpEnactResult cancelExtendedBolus() {
+        aapsLogger.debug(LTag.EQUILBLE, "cancelExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
 //        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
-
-        PumpEnactResult pumpEnactResult = equilManager.setExtendedBolus(0, 0);
-        if (pumpEnactResult.getSuccess()) {
-            long time = System.currentTimeMillis();
-            pumpSync.syncStopExtendedBolusWithPumpId(
-                    System.currentTimeMillis(),
-                    System.currentTimeMillis(),
-                    pumpType,
-                    serialNumber()
-            );
-        }
+        PumpEnactResult pumpEnactResult = equilManager.setExtendedBolus(0, 0, true);
         return pumpEnactResult;
     }
 
@@ -791,7 +654,12 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
 
 
     @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
-        return new PumpEnactResult(getInjector()).success(false).enacted(false);
+        aapsLogger.debug(LTag.EQUILBLE, "deliverBolus");
+        bolusProfile.setInsulin(detailedBolusInfo.insulin);
+        PumpEnactResult pumpEnactResult = equilManager.bolus(detailedBolusInfo, bolusProfile);
+        if (pumpEnactResult.getSuccess()) {
+        }
+        return pumpEnactResult;
     }
 
 
@@ -831,28 +699,60 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump, BgSource {
         sp.putString(EquilConst.Prefs.EQUIL_PASSWORD, "");
     }
 
-    @Override public boolean advancedFilteringSupported() {
+    public boolean checkProfile() {
+        Profile profile = profileFunction.getProfile();
+        if (profile == null) {
+            return false;
+        }
         return true;
     }
 
-    @Override public int getSensorBatteryLevel() {
-        return 10;
-    }
-
-    @Override public boolean shouldUploadToNs(@NonNull GlucoseValue glucoseValue) {
-        return false;
-    }
-
-    public void addBasalProfileLog() {
-        long time = System.currentTimeMillis();
-        EquilHistoryRecord equilHistoryRecord = new EquilHistoryRecord(time,
-                null,
-                null,
-                EquilHistoryRecord.EventType.SET_BASAL_PROFILE,
-                time,
-                serialNumber()
-        );
-        equilHistoryRecordDao.insert(equilHistoryRecord);
+    public void playAlarm() {
+        int battery = equilManager.getBattery();
+        int insulin = equilManager.getCurrentInsulin();
+        boolean alarmBattery = sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_BATTERY, true);
+        boolean alarmInsulin = sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN, true);
+        if (battery <= 10 && alarmBattery) {
+            boolean alarmBattery10 =
+                    sp.getBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, false);
+            if (!alarmBattery10) {
+                equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
+                        rh.gs(R.string.equil_lowbattery) + battery + "%",
+                        Notification.NORMAL, R.raw.alarm);
+                sp.putBoolean(EquilConst.Prefs.Equil_ALARM_BATTERY_10, true);
+            } else {
+                if (battery < 5) {
+                    equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
+                            rh.gs(R.string.equil_lowbattery) + battery + "%",
+                            Notification.URGENT, R.raw.alarm);
+                }
+            }
+        }
+        if (equilManager.getRunMode() == RunMode.RUN && alarmInsulin && equilManager.isActivationCompleted()) {
+            if (insulin <= 10 && insulin > 5) {
+                boolean alarmInsulin10 =
+                        sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_10, false);
+                if (!alarmInsulin10) {
+                    equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
+                            rh.gs(R.string.equil_low_insulin) + insulin + "U",
+                            Notification.NORMAL, R.raw.alarm);
+                    sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_10, true);
+                }
+            } else if (insulin <= 5 && insulin > 2) {
+                boolean alarmInsulin5 =
+                        sp.getBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_5, false);
+                if (!alarmInsulin5) {
+                    equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
+                            rh.gs(R.string.equil_low_insulin) + insulin + "U",
+                            Notification.NORMAL, R.raw.alarm);
+                    sp.putBoolean(EquilConst.Prefs.EQUIL_ALARM_INSULIN_5, true);
+                }
+            } else if (insulin <= 2) {
+                equilManager.showNotification(Notification.FAILED_UPDATE_PROFILE,
+                        rh.gs(R.string.equil_low_insulin) + insulin + "U",
+                        Notification.URGENT, R.raw.alarm);
+            }
+        }
     }
 }
 

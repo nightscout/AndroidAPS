@@ -1,27 +1,32 @@
 package com.microtechmd.equil.manager.command;
 
 
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.manager.Utils;
 
 public class SettingCmd extends BaseSetting {
     public static final String TAG = "SettingCmd";
 
+    public SettingCmd() {
+        super(System.currentTimeMillis());
+    }
+
 
     public byte[] getData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] tzm = Utils.hexStringToBytes(getEquilDevices());
         byte[] data = Utils.concat(indexByte, tzm);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
 
     public byte[] getData2() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x01, 0x07};
         byte[] data3 = Utils.intToBytes(120);
         byte[] data = Utils.concat(indexByte, data2, data3);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -38,11 +43,14 @@ public class SettingCmd extends BaseSetting {
     }
 
     public byte[] getData3() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x07, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
+    @Override public EquilHistoryRecord.EventType getEventType() {
+        return null;
+    }
 }

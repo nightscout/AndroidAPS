@@ -10,6 +10,10 @@ data class EquilBolusRecord(val amout: Double, val bolusType: BolusType, var sta
 data class EquilTempBasalRecord(val duration: Int, val rate: Double, var startTime: Long) : EquilRecord()
 
 data class EquilBasalValuesRecord(val segments: List<Profile.ProfileValue>) : EquilRecord()
+enum class ResolvedResult {
+    NONE, SUCCESS, FAILURE, CONNECT_ERROR, NOT_FOUNT
+
+}
 
 enum class BolusType {
     DEFAULT, SMB;

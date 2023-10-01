@@ -459,6 +459,8 @@
                 android:paddingLeft="0dp"
                 android:paddingRight="0dp"
                 android:text="@string/equil_unbind" />
+
+
         </androidx.appcompat.widget.LinearLayoutCompat>
     </com.google.android.material.card.MaterialCardView>
 </RelativeLayout>

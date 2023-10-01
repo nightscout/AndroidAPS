@@ -1,18 +1,20 @@
 package com.microtechmd.equil.manager.command;
 
 
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.manager.Utils;
 
 import java.util.Calendar;
 
 public class CmdTimeSet extends BaseSetting {
     public CmdTimeSet() {
+        super(System.currentTimeMillis());
         port = "0505";
     }
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x01, 0x00};
         byte[] data3 = new byte[6];
         Calendar calendar = Calendar.getInstance();
@@ -31,15 +33,15 @@ public class CmdTimeSet extends BaseSetting {
         data3[5] = (byte) second;
         byte[] data = Utils.concat(indexByte, data2, data3);
 //        ZLog.e2("setTime==" + year + "==" + month + "===" + day + "===" + hour + "===" + minute + "===" + second);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x00, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -48,5 +50,9 @@ public class CmdTimeSet extends BaseSetting {
             setCmdStatus(true);
             notify();
         }
+    }
+
+    @Override public EquilHistoryRecord.EventType getEventType() {
+        return EquilHistoryRecord.EventType.SET_TIME;
     }
 }

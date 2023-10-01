@@ -1,6 +1,9 @@
 package com.microtechmd.equil.manager.command;
 
+import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.manager.Utils;
+
+import info.nightscout.shared.logging.LTag;
 
 public class CmdHistoryGet extends BaseSetting {
 
@@ -22,29 +25,32 @@ public class CmdHistoryGet extends BaseSetting {
     private int currentIndex = 0;
 
     public CmdHistoryGet() {
+        super(System.currentTimeMillis());
         this.port = "0505";
     }
 
     public CmdHistoryGet(int currentIndex) {
-        this.port = "0505";
+        this();
         this.currentIndex = currentIndex;
     }
 
     @Override
     public byte[] getFirstData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x02, 0x01};
         byte[] data3 = Utils.intToBytes(currentIndex);
         byte[] data = Utils.concat(indexByte, data2, data3);
-        reqCmdIndex++;
+        pumpReqIndex++;
+        aapsLogger.error(LTag.EQUILBLE, "getReqData2===" + Utils.bytesToHex(data));
         return data;
     }
 
     public byte[] getNextData() {
-        byte[] indexByte = Utils.intToBytes(reqCmdIndex);
+        byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x01, 0x01};
+        aapsLogger.error(LTag.EQUILBLE, "currentIndex===" + currentIndex);
         byte[] data = Utils.concat(indexByte, data2);
-        reqCmdIndex++;
+        pumpReqIndex++;
         return data;
     }
 
@@ -61,7 +67,6 @@ public class CmdHistoryGet extends BaseSetting {
         //ae6ae9100501 17070e100f16 1100000000007d0204080000
         battery = data[12] & 0xff;
         medicine = data[13] & 0xff;
-
         rate = Utils.bytesToInt(data[15], data[14]);
         largeRate = Utils.bytesToInt(data[17], data[16]);
         index = Utils.bytesToInt(data[19], data[18]);
@@ -73,11 +78,13 @@ public class CmdHistoryGet extends BaseSetting {
             equilManager.decodeHistory(data);
         }
         currentIndex = index;
+        aapsLogger.error(LTag.EQUILBLE, "history index==" + index + "===" + Utils.bytesToHex(data) +
+                "===" + rate + "====" + largeRate + "===" + Utils.bytesToHex(new byte[]{data[16],
+                data[17]}));
         synchronized (this) {
             setCmdStatus(true);
             notify();
         }
-//        fa86fb5b050117070f043900050000000000830205000100
     }
 
     @Override
@@ -107,5 +114,9 @@ public class CmdHistoryGet extends BaseSetting {
 
     public void setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;
+    }
+
+    @Override public EquilHistoryRecord.EventType getEventType() {
+        return null;
     }
 }

@@ -76,25 +76,14 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
 
     fun unpair(name: String) {
         showLoading();
-        commandQueue.customCommand(CmdUnPair(name), object : Callback() {
+        commandQueue.customCommand(CmdUnPair(name, sp.getString(rh.gs(R.string.key_equil_pair_password), "")), object : Callback() {
             override fun run() {
                 dismissLoading();
                 if (result.success) {
-
-                    equilPumpPlugin.equilManager.serialNumber=""
-                    equilPumpPlugin.equilManager.address=""
+                    equilPumpPlugin.equilManager.serialNumber = ""
+                    equilPumpPlugin.equilManager.address = ""
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_unbind))
                     rxBus.send(EventEquilUnPairChanged())
-                    var time = System.currentTimeMillis();
-                    val equilHistoryRecord = EquilHistoryRecord(
-                        time,
-                        null,
-                        null,
-                        EquilHistoryRecord.EventType.UNPAIR_EQUIL,
-                        time,
-                        equilPumpPlugin.serialNumber()
-                    )
-                    equilPumpPlugin.equilHistoryRecordDao.insert(equilHistoryRecord)
                     equilPumpPlugin.clearData()
                     SystemClock.sleep(50)
                     finish()

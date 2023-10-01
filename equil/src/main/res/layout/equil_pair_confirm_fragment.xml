@@ -27,15 +27,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_hint1" />
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imv"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/equil_animation_wizard_attach"
-        app:layout_constraintDimensionRatio="260:197"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_hint2"
-        app:layout_constraintWidth_percent="0.8" />
+<!--    <androidx.appcompat.widget.AppCompatImageView-->
+<!--        android:id="@+id/imv"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:src="@drawable/equil_animation_wizard_attach"-->
+<!--        app:layout_constraintDimensionRatio="260:197"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/tv_hint2"-->
+<!--        app:layout_constraintWidth_percent="0.8" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

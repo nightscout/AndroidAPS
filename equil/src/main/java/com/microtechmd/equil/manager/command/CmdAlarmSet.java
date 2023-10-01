@@ -1,30 +1,13 @@
 package com.microtechmd.equil.manager.command;
 
 
-import com.microtechmd.equil.data.RunMode;
+import com.microtechmd.equil.data.AlarmMode;
 import com.microtechmd.equil.data.database.EquilHistoryRecord;
 import com.microtechmd.equil.manager.Utils;
 
-public class CmdModelSet extends BaseSetting {
-    public RunMode getMode() {
-        if (mode == 0) {
-            return RunMode.SUSPEND;
-        } else if (mode == 1) {
-            return RunMode.RUN;
-        } else if (mode == 2) {
-            return RunMode.RUN;
-        } else {
-            return RunMode.SUSPEND;
-        }
-    }
+public class CmdAlarmSet extends BaseSetting {
 
-    public void setMode(int mode) {
-        this.mode = mode;
-    }
-
-    int mode;
-
-    public CmdModelSet(int mode) {
+    public CmdAlarmSet(int mode) {
         super(System.currentTimeMillis());
         this.mode = mode;
     }
@@ -32,7 +15,7 @@ public class CmdModelSet extends BaseSetting {
     @Override
     public byte[] getFirstData() {
         byte[] indexByte = Utils.intToBytes(pumpReqIndex);
-        byte[] data2 = new byte[]{0x01, 0x00};
+        byte[] data2 = new byte[]{0x01, 0x0b};
         byte[] data3 = Utils.intToBytes(mode);
         byte[] data = Utils.concat(indexByte, data2, data3);
         pumpReqIndex++;
@@ -41,12 +24,13 @@ public class CmdModelSet extends BaseSetting {
 
     public byte[] getNextData() {
         byte[] indexByte = Utils.intToBytes(pumpReqIndex);
-        byte[] data2 = new byte[]{0x00, 0x00, 0x01};
+        byte[] data2 = new byte[]{0x00, 0x0b, 0x01};
         byte[] data = Utils.concat(indexByte, data2);
         pumpReqIndex++;
         return data;
     }
 
+    @Override
     public void decodeConfirmData(byte[] data) {
         synchronized (this) {
             setCmdStatus(true);
@@ -54,12 +38,26 @@ public class CmdModelSet extends BaseSetting {
         }
     }
 
+
+    int mode;
+
+    public int getMode() {
+        return mode;
+    }
+
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+
     @Override public EquilHistoryRecord.EventType getEventType() {
-        RunMode runMode = getMode();
-        if (runMode == RunMode.RUN) {
-            return EquilHistoryRecord.EventType.RESUME_DELIVERY;
-        } else if (runMode == RunMode.SUSPEND) {
-            return EquilHistoryRecord.EventType.SUSPEND_DELIVERY;
+        if (mode == AlarmMode.MUTE.getCommand()) {
+            return EquilHistoryRecord.EventType.SET_ALARM_MUTE;
+        } else if (mode == AlarmMode.TONE.getCommand()) {
+            return EquilHistoryRecord.EventType.SET_ALARM_TONE;
+        } else if (mode == AlarmMode.TONE_AND_SHAKE.getCommand()) {
+            return EquilHistoryRecord.EventType.SET_ALARM_TONE_AND_SHAK;
+        } else if (mode == AlarmMode.SHAKE.getCommand()) {
+            return EquilHistoryRecord.EventType.SET_ALARM_SHAKE;
         }
         return null;
     }
