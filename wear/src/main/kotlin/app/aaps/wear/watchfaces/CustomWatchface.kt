@@ -510,15 +510,15 @@ class CustomWatchface : BaseWatchFace() {
             customizeViewCommon(view, viewJson)
             view.clearColorFilter()
             drawable?.let {
-                if (viewJson.has(COLOR.key))        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
-                    it.colorFilter = cwf.changeDrawableColor(cwf.getColor(viewJson.optString(COLOR.key)))
+                if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                    it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                 else
                     it.clearColorFilter()
                 view.setImageDrawable(it)
             } ?: apply {
                 view.setImageDrawable(defaultDrawable?.let { cwf.resources.getDrawable(it) })
-                if (viewJson.has(COLOR.key))
-                    view.setColorFilter(cwf.getColor(viewJson.optString(COLOR.key)))
+                if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)
+                    view.setColorFilter(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                 else
                     view.clearColorFilter()
             }
@@ -527,6 +527,7 @@ class CustomWatchface : BaseWatchFace() {
         fun customizeGraphView(view: lecho.lib.hellocharts.view.LineChartView, viewJson: JSONObject) {
             customizeViewCommon(view, viewJson)
             view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"),Color.TRANSPARENT))
+            view.background = dynData?.getDrawable() ?: textDrawable(viewJson)
         }
     }
 
