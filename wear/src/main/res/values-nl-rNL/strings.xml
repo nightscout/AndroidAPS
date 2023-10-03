@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">Toon BGI</string>
     <string name="pref_show_direction_arrow">Toon richtingspijl</string>
     <string name="pref_show_ago">Toon tijd geleden</string>
+    <string name="pref_show_temp_basal">Toon TBR</string>
+    <string name="pref_show_bolus">Toon Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Raster weergeven</string>
     <string name="pref_dark" comment="Enables dark visual theme">Donker</string>
     <string name="pref_highlight_basals">Markeer basaalstanden</string>
     <string name="pref_prediction_lines">Voorspellingen tonen</string>

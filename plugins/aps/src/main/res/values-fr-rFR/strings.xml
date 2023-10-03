@@ -83,6 +83,7 @@
     <string name="smb_disabled_in_preferences">SMB désactivé dans les préférences</string>
     <string name="uam_disabled_in_preferences">Repas Non Signalé (RNS) désactivé dans les préférences</string>
     <string name="autosens_disabled_in_preferences">Autosens désactivé dans les préférences</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens désactivé dans DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="maxvalueinpreferences">valeur Max dans les préférences</string>

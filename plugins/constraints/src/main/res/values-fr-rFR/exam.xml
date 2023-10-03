@@ -148,6 +148,7 @@
     <string name="cob3_longer">Définir le profil à 150% allongera le temps d\'absorption des glucides calculé</string>
     <string name="cob3_shorter">Définir le profil à 150% réduira le temps d\'absorption des glucides calculé</string>
     <string name="cob3_no_effect">Définir le profil à 150% n\'impactera pas le calcul de l\'absorption des glucides</string>
+    <string name="cob_hint1">https://wiki.aaps.app/fr/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">La valeur de l\'IA est impactée par les débits de basal temporaires émis.</string>
     <string name="iob_hightemp">Une basale temp haute ne sera pas donnée quand votre glycémie est en dessous de la cible.</string>
     <string name="iob_negiob">Une IA négative pendant une période significative en l\'absence d\'exercice indique que votre profil est trop fort et qu\'il faut moins d\'insuline dans vos paramètres.</string>
