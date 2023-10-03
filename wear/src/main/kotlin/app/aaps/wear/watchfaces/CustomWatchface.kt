@@ -530,17 +530,17 @@ class CustomWatchface : BaseWatchFace() {
         }
     }
 
-    private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int, val customDrawable: ResFileMap?) {
-        NONE("??", R.drawable.ic_invalid, ResFileMap.ARROW_NONE),
-        TRIPLE_UP("X", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
-        DOUBLE_UP("\u21c8", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
-        SINGLE_UP("\u2191", R.drawable.ic_singleup, ResFileMap.ARROW_SINGLE_UP),
-        FORTY_FIVE_UP("\u2197", R.drawable.ic_fortyfiveup, ResFileMap.ARROW_FORTY_FIVE_UP),
-        FLAT("\u2192", R.drawable.ic_flat, ResFileMap.ARROW_FLAT),
-        FORTY_FIVE_DOWN("\u2198", R.drawable.ic_fortyfivedown, ResFileMap.ARROW_FORTY_FIVE_DOWN),
-        SINGLE_DOWN("\u2193", R.drawable.ic_singledown, ResFileMap.ARROW_SINGLE_DOWN),
-        DOUBLE_DOWN("\u21ca", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN),
-        TRIPLE_DOWN("X", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN);
+    private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int, val customDrawable: ResFileMap?, val dynValue: Double) {
+        NONE("??", R.drawable.ic_invalid, ResFileMap.ARROW_NONE, 0.0),
+        TRIPLE_UP("X", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP, 7.0),
+        DOUBLE_UP("\u21c8", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP, 7.0),
+        SINGLE_UP("\u2191", R.drawable.ic_singleup, ResFileMap.ARROW_SINGLE_UP, 6.0),
+        FORTY_FIVE_UP("\u2197", R.drawable.ic_fortyfiveup, ResFileMap.ARROW_FORTY_FIVE_UP, 5.0),
+        FLAT("\u2192", R.drawable.ic_flat, ResFileMap.ARROW_FLAT, 4.0),
+        FORTY_FIVE_DOWN("\u2198", R.drawable.ic_fortyfivedown, ResFileMap.ARROW_FORTY_FIVE_DOWN, 3.0),
+        SINGLE_DOWN("\u2193", R.drawable.ic_singledown, ResFileMap.ARROW_SINGLE_DOWN, 2.0),
+        DOUBLE_DOWN("\u21ca", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN, 2.0),
+        TRIPLE_DOWN("X", R.drawable.ic_doubledown, ResFileMap.ARROW_DOUBLE_DOWN, 1.0);
 
         companion object {
 
@@ -549,6 +549,7 @@ class CustomWatchface : BaseWatchFace() {
                 it.arrowCustom = null
             }
             fun drawable() = values().firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.arrowCustom ?: NONE.arrowCustom
+            fun value() = values().firstOrNull { it.symbol == it.cwf.singleBg.slopeArrow }?.dynValue ?: NONE.dynValue
         }
 
         lateinit var cwf: CustomWatchface
@@ -639,6 +640,7 @@ class CustomWatchface : BaseWatchFace() {
     private enum class ValueMap(val key: String, val min: Double, val max: Double) {
         SGV(ViewKeys.SGV.key, 39.0, 400.0),
         SGVLEVEL(JsonKeyValues.SGVLEVEL.key, -1.0, 1.0),
+        DIRECTION(ViewKeys.DIRECTION.key, 1.0, 7.0),
         DELTA(ViewKeys.DELTA.key, -25.0, 25.0),
         AVG_DELTA(ViewKeys.AVG_DELTA.key, -25.0, 25.0),
         UPLOADER_BATTERY(ViewKeys.UPLOADER_BATTERY.key, 0.0, 100.0),
@@ -689,6 +691,7 @@ class CustomWatchface : BaseWatchFace() {
             get() = when (valueMap) {
                 ValueMap.SGV              -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgv else null
                 ValueMap.SGVLEVEL         -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgvLevel.toDouble() else null
+                ValueMap.DIRECTION        -> TrendArrowMap.value()
                 ValueMap.DELTA            -> cwf.singleBg.deltaMgdl
                 ValueMap.AVG_DELTA        -> cwf.singleBg.avgDeltaMgdl
                 ValueMap.RIG_BATTERY      -> cwf.status.rigBattery.replace("%", "").toDoubleOrNull()
