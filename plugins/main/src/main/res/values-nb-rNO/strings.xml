@@ -266,7 +266,7 @@
     <string name="overview_show_abs_insulin">Absolutt insulinmengde</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
+    <string name="deviation_shortname">AVVIK</string>
     <string name="activity_shortname">AKT</string>
     <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
