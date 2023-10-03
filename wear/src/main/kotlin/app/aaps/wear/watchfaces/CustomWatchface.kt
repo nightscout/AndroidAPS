@@ -53,6 +53,7 @@ import org.joda.time.TimeOfDay
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import javax.inject.Inject
+import kotlin.math.floor
 
 @SuppressLint("UseCompatLoadingForDrawables")
 class CustomWatchface : BaseWatchFace() {
@@ -157,7 +158,7 @@ class CustomWatchface : BaseWatchFace() {
                     FontMap.init(this)
                     ViewMap.init(this)
                     TrendArrowMap.init(this)
-                    DynProvider.init(this, json.optJSONObject(DYNDATA.key))
+                    DynProvider.init(json.optJSONObject(DYNDATA.key))
                 }
                 enableSecond = json.optBoolean(ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
                 highColor = getColor(json.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
@@ -480,7 +481,7 @@ class CustomWatchface : BaseWatchFace() {
             left = (viewJson.optInt(LEFTMARGIN.key) * cwf.zoomFactor).toInt()
             top = (viewJson.optInt(TOPMARGIN.key) * cwf.zoomFactor).toInt()
             val params = FrameLayout.LayoutParams(width, height)
-            dynData = DynProvider.getDyn(viewJson.optString(DYNDATA.key),width, height, key)
+            dynData = DynProvider.getDyn(cwf, viewJson.optString(DYNDATA.key),width, height, key)
             val topOffset = if (viewJson.optBoolean(TOPOFFSET.key, false)) dynData?.getTopOffset() ?:0 else 0
             params.topMargin = top + topOffset
             val leftOffset = if (viewJson.optBoolean(LEFTOFFSET.key, false)) dynData?.getLeftOffset() ?:0 else 0
@@ -646,6 +647,7 @@ class CustomWatchface : BaseWatchFace() {
         AVG_DELTA(ViewKeys.AVG_DELTA.key, -25.0, 25.0),
         UPLOADER_BATTERY(ViewKeys.UPLOADER_BATTERY.key, 0.0, 100.0),
         RIG_BATTERY(ViewKeys.RIG_BATTERY.key, 0.0, 100.0),
+        TIMESTAMP(ViewKeys.TIMESTAMP.key, 0.0, 60.0),
         LOOP(ViewKeys.LOOP.key, 0.0, 28.0),
         DAY(ViewKeys.DAY.key, 1.0, 31.0),
         DAY_NAME(ViewKeys.DAY_NAME.key, 1.0, 7.0),
@@ -664,9 +666,9 @@ class CustomWatchface : BaseWatchFace() {
 
         fun stepValue(dataValue: Double, range: DataRange, step: Int): Int = step(dataValue, range, step)
         private fun step(dataValue: Double, dataRange: DataRange, step: Int): Int = when {
-            dataValue < dataRange.minData -> dataRange.minData
+            dataValue < dataRange.minData  -> dataRange.minData
             dataValue >= dataRange.maxData -> dataRange.maxData * 0.9999 // to avoid dataValue == maxData and be out of range
-            else                          -> dataValue
+            else                           -> dataValue
         }.let { if (dataRange.minData != dataRange.maxData) (1 + ((it - dataRange.minData) * step) / (dataRange.maxData - dataRange.minData)).toInt() else 0 }
 
         companion object {
@@ -675,7 +677,7 @@ class CustomWatchface : BaseWatchFace() {
         }
     }
 
-    private class DynProvider(val dataJson: JSONObject, val valueMap: ValueMap, val width: Int, val height: Int) {
+    private class DynProvider(val cwf: CustomWatchface, val dataJson: JSONObject, val valueMap: ValueMap, val width: Int, val height: Int) {
 
         private val dynDrawable = mutableMapOf<Int, Drawable?>()
         private val dynColor = mutableMapOf<Int, Int>()
@@ -698,6 +700,7 @@ class CustomWatchface : BaseWatchFace() {
                 ValueMap.RIG_BATTERY      -> cwf.status.rigBattery.replace("%", "").toDoubleOrNull()
                 ValueMap.UPLOADER_BATTERY -> cwf.status.battery.replace("%", "").toDoubleOrNull()
                 ValueMap.LOOP             -> if (cwf.status.openApsStatus != -1L) ((System.currentTimeMillis() - cwf.status.openApsStatus) / 1000 / 60).toDouble() else null
+                ValueMap.TIMESTAMP        -> if (cwf.singleBg.timeStamp != 0L) floor(cwf.timeSince() / (1000 * 60)) else null
                 ValueMap.DAY              -> DateTime().dayOfMonth.toDouble()
                 ValueMap.DAY_NAME         -> DateTime().dayOfWeek.toDouble()
                 ValueMap.MONTH            -> DateTime().monthOfYear.toDouble()
@@ -707,7 +710,7 @@ class CustomWatchface : BaseWatchFace() {
         fun getTopOffset(): Int = dataRange?.let { dataRange -> topRange?.let { topRange -> dataValue?.let { valueMap.dynValue(it, dataRange, topRange) } ?: topRange.invalidData } } ?: 0
         fun getLeftOffset(): Int = dataRange?.let { dataRange -> leftRange?.let { leftRange -> dataValue?.let { valueMap.dynValue(it, dataRange, leftRange) } ?: leftRange.invalidData } } ?: 0
         fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
-        fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?:dynDrawable[0] }
+        fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] }
         fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] } else null
         private fun load() {
             dynDrawable[0] = dataJson.optString(INVALIDIMAGE.key)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
@@ -733,20 +736,19 @@ class CustomWatchface : BaseWatchFace() {
         companion object {
 
             val dynData = mutableMapOf<String, DynProvider>()
-            private lateinit var cwf: CustomWatchface
             var dynJson: JSONObject? = null
-            fun init(cwf: CustomWatchface, dynJson: JSONObject?) {
-                this.cwf = cwf
+            fun init(dynJson: JSONObject?) {
                 this.dynJson = dynJson
                 dynData.clear()
             }
 
-            fun getDyn(key: String, width: Int, height: Int, defaultViewKey: String): DynProvider? = dynData["${defaultViewKey}_$key"]
+            fun getDyn(cwf: CustomWatchface, key: String, width: Int, height: Int, defaultViewKey: String): DynProvider? = dynData["${defaultViewKey}_$key"]
                 ?: dynJson?.optJSONObject(key)?.let { dataJson ->
                     ValueMap.fromKey(dataJson.optString(VALUEKEY.key, defaultViewKey))?.let { valueMap ->
-                        DynProvider(dataJson, valueMap, width, height).also { it.load() }
+                        DynProvider(cwf, dataJson, valueMap, width, height).also { it.load() }
                     }
                 }?.also { dynData["${defaultViewKey}_$key"] = it }
+
             private fun parseDataRange(json: JSONObject?, defaultData: DataRange) =
                 json?.let {
                     DataRange(
