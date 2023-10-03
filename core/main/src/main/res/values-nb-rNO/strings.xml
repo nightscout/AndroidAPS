@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="format_carbs">%1$d g</string>
+    <string name="count_selected">%1$d valgt</string>
+    <string name="remove_items">Slett elementer</string>
+    <string name="sort_items">Sorter elementer</string>
+    <string name="remove_selected_items">Slett valgte elementer</string>
+    <string name="sort_label">Sorter</string>
+</resources>
