@@ -157,7 +157,7 @@
     <string name="actions">Handlinger</string>
     <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
     <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">MidlBasal</string>
+    <string name="tempbasal_button">Midlertidig basal</string>
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="tools">Verktøy</string>
@@ -170,8 +170,8 @@
     <string name="cannula">Kanyle</string>
     <string name="ebstopsloop">Bruk av forlenget bolusfunksjon vil deaktivere lukket loop i perioden med forlenget bolus. Vil du virkelig dette?</string>
     <string name="statuslights_cannula_age">kanyle alder</string>
-    <string name="statuslights_patch_pump_age">patch pumpe alder</string>
-    <string name="patch_pump">Patch pumpe</string>
+    <string name="statuslights_patch_pump_age">pumpealder</string>
+    <string name="patch_pump">Pumpe</string>
     <!-- Overview -->
     <string name="show_statuslights">Vis statusindikatorer på hjem-skjermen</string>
     <string name="statuslights_cage_warning">Terskel for advarsel om alder på slangesett [h]</string>
