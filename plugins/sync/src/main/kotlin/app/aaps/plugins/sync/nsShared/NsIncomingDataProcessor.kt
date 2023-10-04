@@ -2,7 +2,6 @@ package app.aaps.plugins.sync.nsShared
 
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -32,9 +31,10 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.utils.JsonHelper
+import app.aaps.data.configuration.Constants
+import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.Food
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.transactions.TransactionGlucoseValue
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
@@ -79,7 +79,7 @@ class NsIncomingDataProcessor @Inject constructor(
             raw = sgv.filtered?.toDouble(),
             trendArrow = TrendArrow.fromString(sgv.direction).toDb(),
             nightscoutId = sgv.id,
-            sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
+            sourceSensor = SourceSensor.fromString(sgv.device).toDb()
         )
     }
 

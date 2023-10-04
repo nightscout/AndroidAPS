@@ -6,7 +6,7 @@ import org.json.JSONObject
 
 fun GlucoseValue.toXdripJson(): JSONObject =
     JSONObject()
-        .put("device", sourceSensor.text)
+        .put("device", sourceSensor.fromDb().text)
         .put("mills", timestamp)
         .put("isValid", isValid)
         .put("mgdl", value)

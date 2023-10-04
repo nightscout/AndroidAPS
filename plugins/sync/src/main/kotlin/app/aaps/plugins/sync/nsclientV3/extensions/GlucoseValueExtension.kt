@@ -6,6 +6,7 @@ import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.localmodel.entry.Direction
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
+import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.transactions.TransactionGlucoseValue
@@ -19,7 +20,7 @@ fun NSSgvV3.toTransactionGlucoseValue(): TransactionGlucoseValue {
         raw = filtered,
         trendArrow = TrendArrow.fromString(direction?.nsName).toDb(),
         nightscoutId = identifier,
-        sourceSensor = GlucoseValue.SourceSensor.fromString(device),
+        sourceSensor = SourceSensor.fromString(device).toDb(),
         isValid = isValid,
         utcOffset = T.mins(utcOffset ?: 0L).msecs()
     )
@@ -51,6 +52,6 @@ fun GlucoseValue.toNSSvgV3(): NSSgvV3 =
         units = NsUnits.MG_DL,
         direction = Direction.fromString(trendArrow.fromDb().text),
         noise = noise,
-        device = sourceSensor.text,
+        device = sourceSensor.fromDb().text,
         identifier = interfaceIDs.nightscoutId
     )

@@ -24,8 +24,8 @@ import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
@@ -97,9 +97,9 @@ class DexcomPlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             try {
                 val sourceSensor = when (bundle.getString("sensorType") ?: "") {
-                    "G6" -> GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE
-                    "G5" -> GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE
-                    else -> GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN
+                    "G6" -> SourceSensor.DEXCOM_G6_NATIVE
+                    "G5" -> SourceSensor.DEXCOM_G5_NATIVE
+                    else -> SourceSensor.DEXCOM_NATIVE_UNKNOWN
                 }
                 val calibrations = mutableListOf<CgmSourceTransaction.Calibration>()
                 bundle.getBundle("meters")?.let { meters ->
@@ -129,10 +129,10 @@ class DexcomPlugin @Inject constructor(
                     val timestamp = glucoseValueBundle.getLong("timestamp") * 1000
                     // G5 calibration bug workaround (calibration is sent as glucoseValue too)
                     var valid = true
-                    if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE)
+                    if (sourceSensor == SourceSensor.DEXCOM_G5_NATIVE)
                         calibrations.forEach { calibration -> if (calibration.timestamp == timestamp) valid = false }
                     // G6 is sending one 24h old changed value causing recalculation. Ignore
-                    if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE)
+                    if (sourceSensor == SourceSensor.DEXCOM_G6_NATIVE)
                         if ((now - timestamp) > T.hours(20).msecs()) valid = false
                     if (valid)
                         glucoseValues += TransactionGlucoseValue(
@@ -141,7 +141,7 @@ class DexcomPlugin @Inject constructor(
                             noise = null,
                             raw = null,
                             trendArrow = TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!).toDb(),
-                            sourceSensor = sourceSensor
+                            sourceSensor = sourceSensor.toDb()
                         )
                 }
                 var sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_log_ns_sensor_change, false) && bundle.containsKey("sensorInsertionTime")) {
@@ -162,7 +162,7 @@ class DexcomPlugin @Inject constructor(
                     .also { result ->
                         // G6 calibration bug workaround (2 additional GVs are created within 1 minute)
                         for (i in result.inserted.indices) {
-                            if (sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE) {
+                            if (sourceSensor == SourceSensor.DEXCOM_G6_NATIVE) {
                                 if (i < result.inserted.size - 1) {
                                     if (abs(result.inserted[i].timestamp - result.inserted[i + 1].timestamp) < T.mins(1).msecs()) {
                                         repository.runTransactionForResult(InvalidateGlucoseValueTransaction(result.inserted[i].id))

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -16,8 +15,9 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.data.configuration.Constants
+import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
 import app.aaps.database.transactions.TransactionGlucoseValue
@@ -87,7 +87,7 @@ class AidexPlugin @Inject constructor(
                 raw = null,
                 noise = null,
                 trendArrow = TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)).toDb(),
-                sourceSensor = GlucoseValue.SourceSensor.AIDEX
+                sourceSensor = SourceSensor.AIDEX.toDb()
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {

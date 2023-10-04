@@ -4,7 +4,6 @@ import android.content.Context
 import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
-import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -18,8 +17,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.toDb
+import app.aaps.data.configuration.Constants
+import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.ValueWithUnit
@@ -125,7 +125,7 @@ class GlunovoPlugin @Inject constructor(
                             raw = 0.0,
                             noise = null,
                             trendArrow = TrendArrow.NONE.toDb(),
-                            sourceSensor = GlucoseValue.SourceSensor.GLUNOVO_NATIVE
+                            sourceSensor = SourceSensor.GLUNOVO_NATIVE.toDb()
                         )
                     else
                         calibrations.add(

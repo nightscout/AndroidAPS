@@ -5,7 +5,6 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -20,7 +19,9 @@ import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
+import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow
+import app.aaps.data.iob.IobTotal
 import app.aaps.database.entities.GlucoseValue
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
@@ -180,7 +181,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = GlucoseValue.SourceSensor.IOB_PREDICTION,
+                                sourceSensor = SourceSensor.IOB_PREDICTION.toDb(),
                                 trendArrow = TrendArrow.NONE.toDb()
                             )
                             array.add(gv)
@@ -194,7 +195,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = GlucoseValue.SourceSensor.A_COB_PREDICTION,
+                                sourceSensor = SourceSensor.A_COB_PREDICTION.toDb(),
                                 trendArrow = TrendArrow.NONE.toDb()
                             )
                             array.add(gv)
@@ -208,7 +209,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = GlucoseValue.SourceSensor.COB_PREDICTION,
+                                sourceSensor = SourceSensor.COB_PREDICTION.toDb(),
                                 trendArrow = TrendArrow.NONE.toDb()
                             )
                             array.add(gv)
@@ -222,7 +223,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = GlucoseValue.SourceSensor.UAM_PREDICTION,
+                                sourceSensor = SourceSensor.UAM_PREDICTION.toDb(),
                                 trendArrow = TrendArrow.NONE.toDb()
                             )
                             array.add(gv)
@@ -236,7 +237,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = GlucoseValue.SourceSensor.ZT_PREDICTION,
+                                sourceSensor = SourceSensor.ZT_PREDICTION.toDb(),
                                 trendArrow = TrendArrow.NONE.toDb()
                             )
                             array.add(gv)

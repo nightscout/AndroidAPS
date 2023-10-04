@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
@@ -48,12 +49,12 @@ class XdripSourcePlugin @Inject constructor(
 
     private fun detectSource(glucoseValue: GlucoseValue) {
         advancedFiltering = arrayOf(
-            GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN,
-            GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE,
-            GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE,
-            GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
-            GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE_XDRIP,
-            GlucoseValue.SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP
+            SourceSensor.DEXCOM_NATIVE_UNKNOWN.toDb(),
+            SourceSensor.DEXCOM_G6_NATIVE.toDb(),
+            SourceSensor.DEXCOM_G5_NATIVE.toDb(),
+            SourceSensor.DEXCOM_G6_NATIVE_XDRIP.toDb(),
+            SourceSensor.DEXCOM_G5_NATIVE_XDRIP.toDb(),
+            SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP.toDb()
         ).any { it == glucoseValue.sourceSensor }
     }
 
@@ -82,10 +83,7 @@ class XdripSourcePlugin @Inject constructor(
                 raw = bundle.getDouble(Intents.EXTRA_RAW, 0.0),
                 noise = null,
                 trendArrow = TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)).toDb(),
-                sourceSensor = GlucoseValue.SourceSensor.fromString(
-                    bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION)
-                        ?: ""
-                )
+                sourceSensor = SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION) ?: "").toDb()
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {

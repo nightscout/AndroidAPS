@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.iob
 
+import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow
-import app.aaps.database.entities.GlucoseValue
 
 /**
  * Simplified [app.aaps.database.entities.GlucoseValue] for storing in memory and calculations
@@ -28,7 +28,7 @@ class InMemoryGlucoseValue(
     /**
      * Taken from GlucoseValue
      */
-    var sourceSensor: GlucoseValue.SourceSensor
+    var sourceSensor: SourceSensor
 ) {
 
     /**
