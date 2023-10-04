@@ -70,6 +70,7 @@
     <string name="step_retry_activation">Bezig met activatie</string>
     <string name="unexpected_state">Onverwachte staat: %1$s</string>
     <string name="no_profile_selected">Geen profiel geselecteerd. Selecteer een profiel en probeer het opnieuw.</string>
+    <string name="no_sn_in_settings">Geen serienummer bekend. Voer bij instellingen het serienummer van de pomp-basis in en probeer het opnieuw.</string>
     <string name="base_serial">Pomp basis serie nr.: %1$X</string>
     <string name="patch_begin_activation">Geen actieve patch. Druk op <b>Volgende</b> om het activeringsproces te starten.</string>
     <string name="patch_not_active_note">Pomp basis mag niet verbonden zijn met de patch tot de volgende stap!</string>

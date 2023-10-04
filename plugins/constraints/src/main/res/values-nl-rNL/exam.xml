@@ -148,6 +148,7 @@
     <string name="cob3_longer">Het profiel instellen op 150% zal de berekende koolhydraten absorptie verlengen</string>
     <string name="cob3_shorter">Het profiel instellen op 150% zal de berekende koolhydraten absorptie verkorten</string>
     <string name="cob3_no_effect">Instellen van profiel op 150% heeft geen invloed op berekende koolhydraten absorptie</string>
+    <string name="cob_hint1">https://wiki.aaps.app/nl/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">De IOB-waarde wordt beïnvloed door eerdere tijdelijke basaalstanden.</string>
     <string name="iob_hightemp">Een hoge tijdelijke basaal zal niet worden ingesteld wanneer je bloedsuiker onder het streefdoel ligt.</string>
     <string name="iob_negiob">Negatieve IOB voor een aanzienlijke periode vrij van inspanning, suggereert dat je profiel te hoog is ingesteld, dus dat er minder insuline nodig is.</string>
