@@ -1,6 +1,6 @@
 package app.aaps.plugins.aps.autotune
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T

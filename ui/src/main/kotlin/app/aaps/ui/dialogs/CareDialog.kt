@@ -8,8 +8,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.configuration.Constants
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger

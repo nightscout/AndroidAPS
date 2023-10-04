@@ -1,6 +1,6 @@
 package app.aaps.plugins.constraints
 
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.data.aps.ApsMode
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.Objectives

@@ -9,7 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.queue.Callback

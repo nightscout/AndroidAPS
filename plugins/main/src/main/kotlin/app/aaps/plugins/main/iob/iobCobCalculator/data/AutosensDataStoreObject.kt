@@ -3,7 +3,7 @@ package app.aaps.plugins.main.iob.iobCobCalculator.data
 import androidx.collection.LongSparseArray
 import androidx.collection.size
 import app.aaps.annotations.OpenForTesting
-import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.data.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.AAPSLogger

@@ -8,6 +8,7 @@ import app.aaps.core.main.iob.json
 import app.aaps.core.main.iob.plus
 import app.aaps.core.main.iob.round
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.data.iob.IobTotal
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat

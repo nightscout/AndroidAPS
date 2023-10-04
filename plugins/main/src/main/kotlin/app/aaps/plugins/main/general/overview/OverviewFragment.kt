@@ -29,9 +29,9 @@ import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
@@ -858,10 +858,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updateTemporaryBasal() {
-        val temporaryBasalText = overviewData.temporaryBasalText(iobCobCalculator)
-        val temporaryBasalColor = overviewData.temporaryBasalColor(context, iobCobCalculator)
-        val temporaryBasalIcon = overviewData.temporaryBasalIcon(iobCobCalculator)
-        val temporaryBasalDialogText = overviewData.temporaryBasalDialogText(iobCobCalculator)
+        val temporaryBasalText = overviewData.temporaryBasalText()
+        val temporaryBasalColor = overviewData.temporaryBasalColor(context)
+        val temporaryBasalIcon = overviewData.temporaryBasalIcon()
+        val temporaryBasalDialogText = overviewData.temporaryBasalDialogText()
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.baseBasal.text = temporaryBasalText
@@ -874,8 +874,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateExtendedBolus() {
         val pump = activePlugin.activePump
         val extendedBolus = iobCobCalculator.getExtendedBolus(dateUtil.now())
-        val extendedBolusText = overviewData.extendedBolusText(iobCobCalculator)
-        val extendedBolusDialogText = overviewData.extendedBolusDialogText(iobCobCalculator)
+        val extendedBolusText = overviewData.extendedBolusText()
+        val extendedBolusDialogText = overviewData.extendedBolusDialogText()
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.extendedBolus.text = extendedBolusText
@@ -914,9 +914,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     private fun updateIobCob() {
-        val iobText = overviewData.iobText(iobCobCalculator)
-        val iobDialogText = overviewData.iobDialogText(iobCobCalculator)
-        val displayText = overviewData.cobInfo(iobCobCalculator).displayText(rh, decimalFormatter)
+        val iobText = overviewData.iobText()
+        val iobDialogText = overviewData.iobDialogText()
+        val displayText = overviewData.cobInfo().displayText(rh, decimalFormatter)
         val lastCarbsTime = overviewData.lastCarbsTime
         runOnUiThread {
             _binding ?: return@runOnUiThread
@@ -1087,7 +1087,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateSensitivity() {
         _binding ?: return
-        val lastAutosensData = overviewData.lastAutosensData(iobCobCalculator)
+        val lastAutosensData = overviewData.lastAutosensData()
         if (config.NSCLIENT && sp.getBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
             !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()
         ) {

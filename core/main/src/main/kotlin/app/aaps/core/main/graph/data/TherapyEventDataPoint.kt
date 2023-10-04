@@ -2,11 +2,13 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.database.entities.TherapyEvent
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.Shape
 
 class TherapyEventDataPoint(
     val data: TherapyEvent,
@@ -40,13 +42,13 @@ class TherapyEventDataPoint(
     override val shape
         get() =
             when {
-                data.type == TherapyEvent.Type.NS_MBG                -> PointsWithLabelGraphSeries.Shape.MBG
-                data.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE -> PointsWithLabelGraphSeries.Shape.BGCHECK
-                data.type == TherapyEvent.Type.ANNOUNCEMENT          -> PointsWithLabelGraphSeries.Shape.ANNOUNCEMENT
-                data.type == TherapyEvent.Type.APS_OFFLINE           -> PointsWithLabelGraphSeries.Shape.OPENAPS_OFFLINE
-                data.type == TherapyEvent.Type.EXERCISE              -> PointsWithLabelGraphSeries.Shape.EXERCISE
-                duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERAL_WITH_DURATION
-                else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
+                data.type == TherapyEvent.Type.NS_MBG                -> Shape.MBG
+                data.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE -> Shape.BGCHECK
+                data.type == TherapyEvent.Type.ANNOUNCEMENT          -> Shape.ANNOUNCEMENT
+                data.type == TherapyEvent.Type.APS_OFFLINE           -> Shape.OPENAPS_OFFLINE
+                data.type == TherapyEvent.Type.EXERCISE              -> Shape.EXERCISE
+                duration > 0                                         -> Shape.GENERAL_WITH_DURATION
+                else                                                 -> Shape.GENERAL
             }
     override val paintStyle: Paint.Style = Paint.Style.FILL // not used
 

@@ -5,11 +5,11 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.interfaces.aps.AutosensData
-import app.aaps.core.interfaces.aps.AutosensResult
-import app.aaps.core.interfaces.aps.SMBDefaults
+import app.aaps.data.aps.AutosensData
+import app.aaps.data.aps.AutosensResult
+import app.aaps.data.aps.SMBDefaults
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -19,12 +19,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.main.events.EventIobCalculationProgress
 import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.DataPointWithLabelInterface
-import app.aaps.core.main.graph.data.DeviationDataPoint
-import app.aaps.core.main.graph.data.FixedLineGraphSeries
-import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
-import app.aaps.core.main.graph.data.Scale
-import app.aaps.core.main.graph.data.ScaledDataPoint
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.DeviationDataPoint
+import app.aaps.interfaces.graph.data.FixedLineGraphSeries
+import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
+import app.aaps.interfaces.graph.data.Scale
+import app.aaps.interfaces.graph.data.ScaledDataPoint
 import app.aaps.core.main.iob.combine
 import app.aaps.core.main.iob.copy
 import app.aaps.core.main.utils.worker.LoggingWorker
@@ -32,6 +32,7 @@ import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.ValueWrapper
 import app.aaps.database.impl.AppRepository
+import app.aaps.interfaces.graph.data.Shape
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.coroutines.Dispatchers
@@ -85,7 +86,7 @@ class PrepareIobAutosensGraphDataWorker(
         override fun setY(y: Double) {}
         override val label = ""
         override val duration = 0L
-        override val shape = PointsWithLabelGraphSeries.Shape.IOB_PREDICTION
+        override val shape = Shape.IOB_PREDICTION
         override val size = 0.5f
         override val paintStyle: Paint.Style = Paint.Style.FILL
 
@@ -108,7 +109,7 @@ class PrepareIobAutosensGraphDataWorker(
         override fun setY(y: Double) {}
         override val label: String = ""
         override val duration = 0L
-        override val shape = PointsWithLabelGraphSeries.Shape.COB_FAIL_OVER
+        override val shape = Shape.COB_FAIL_OVER
         override val size = 0.5f
         override val paintStyle: Paint.Style = Paint.Style.FILL
         override fun color(context: Context?): Int {

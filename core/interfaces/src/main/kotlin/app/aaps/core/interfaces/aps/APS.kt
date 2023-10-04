@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.aps
 
+import app.aaps.data.aps.AutosensResult
+
 interface APS {
 
     val lastAPSResult: APSResult?

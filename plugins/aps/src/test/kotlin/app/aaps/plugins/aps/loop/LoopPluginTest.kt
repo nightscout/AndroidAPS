@@ -2,7 +2,7 @@ package app.aaps.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.data.aps.ApsMode
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator

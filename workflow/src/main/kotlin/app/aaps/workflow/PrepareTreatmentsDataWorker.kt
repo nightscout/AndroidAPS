@@ -3,7 +3,7 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -17,11 +17,11 @@ import app.aaps.core.main.events.EventIobCalculationProgress
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.graph.data.BolusDataPoint
 import app.aaps.core.main.graph.data.CarbsDataPoint
-import app.aaps.core.main.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.core.main.graph.data.EffectiveProfileSwitchDataPoint
 import app.aaps.core.main.graph.data.ExtendedBolusDataPoint
 import app.aaps.core.main.graph.data.HeartRateDataPoint
-import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
+import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.main.graph.data.TherapyEventDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
@@ -66,7 +66,7 @@ class PrepareTreatmentsDataWorker(
         val filteredEps: MutableList<DataPointWithLabelInterface> = ArrayList()
 
         repository.getBolusesDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-            .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper, decimalFormatter) }
+            .map { BolusDataPoint(it, rh, activePlugin.activePump.pumpDescription.bolusStep, defaultValueHelper, decimalFormatter) }
             .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())

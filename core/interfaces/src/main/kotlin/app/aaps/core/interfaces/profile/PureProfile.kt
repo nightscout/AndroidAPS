@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.profile
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.database.entities.data.Block
 import app.aaps.database.entities.data.TargetBlock
 import org.json.JSONObject

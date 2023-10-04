@@ -4,7 +4,7 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.defs.PumpDescription
 import app.aaps.core.interfaces.queue.CommandQueue

@@ -1,7 +1,7 @@
 package app.aaps.core.main.extensions
 
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.iob.Iob
+import app.aaps.data.iob.Iob
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.database.entities.Bolus
 

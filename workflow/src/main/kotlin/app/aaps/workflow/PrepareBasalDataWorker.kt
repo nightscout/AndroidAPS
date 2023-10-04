@@ -11,7 +11,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.main.events.EventIobCalculationProgress
 import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.ScaledDataPoint
+import app.aaps.interfaces.graph.data.ScaledDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage

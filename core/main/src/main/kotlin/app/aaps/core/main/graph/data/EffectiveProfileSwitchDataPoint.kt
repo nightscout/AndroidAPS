@@ -5,6 +5,9 @@ import android.graphics.Paint
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.EffectiveProfileSwitch
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.Scale
+import app.aaps.interfaces.graph.data.Shape
 
 class EffectiveProfileSwitchDataPoint(
     val data: EffectiveProfileSwitch,
@@ -21,7 +24,7 @@ class EffectiveProfileSwitchDataPoint(
             (if (data.originalPercentage != 100 && data.originalTimeshift != 0L) "," else "") +
             (if (data.originalTimeshift != 0L) (T.msecs(data.originalTimeshift).hours().toString() + rh.gs(app.aaps.core.interfaces.R.string.shorthour)) else "")
     override val duration = 0L
-    override val shape = PointsWithLabelGraphSeries.Shape.PROFILE
+    override val shape = Shape.PROFILE
     override val size = 2f
     override val paintStyle: Paint.Style = Paint.Style.FILL // not used
     override fun color(context: Context?): Int {

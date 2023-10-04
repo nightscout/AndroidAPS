@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin

@@ -14,11 +14,11 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.aps.APSResult
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.data.aps.ApsMode
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.Loop.LastRun
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator

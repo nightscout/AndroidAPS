@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.database.entities.HeartRate
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.Shape
 
 class HeartRateDataPoint(
     private val data: HeartRate,
@@ -16,7 +18,7 @@ class HeartRateDataPoint(
 
     override val label: String = ""
     override val duration = data.duration
-    override val shape = PointsWithLabelGraphSeries.Shape.HEARTRATE
+    override val shape = Shape.HEARTRATE
     override val size = 10f
     override val paintStyle: Paint.Style = Paint.Style.FILL
 

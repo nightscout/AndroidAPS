@@ -30,8 +30,6 @@ class InMemoryGlucoseValue(
     var sourceSensor: GlucoseValue.SourceSensor
 ) {
 
-    constructor(gv: GlucoseValue) : this(timestamp = gv.timestamp, value = gv.value, trendArrow = gv.trendArrow, sourceSensor = gv.sourceSensor)
-
     /**
      * Provide smoothed value if available,
      * non smoothed value as a fallback

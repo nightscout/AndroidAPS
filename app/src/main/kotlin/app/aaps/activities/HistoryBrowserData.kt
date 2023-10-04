@@ -1,5 +1,6 @@
 package app.aaps.activities
 
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.DefaultValueHelper
@@ -16,6 +17,7 @@ import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
+import dagger.Lazy
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -38,7 +40,7 @@ class HistoryBrowserData @Inject constructor(
     decimalFormatter: DecimalFormatter
 ) {
 
-    var iobCobCalculator: IobCobCalculatorPlugin
+    lateinit var iobCobCalculator: IobCobCalculatorPlugin
     var overviewData: OverviewData
 
     init {
@@ -54,7 +56,7 @@ class HistoryBrowserData @Inject constructor(
                 profileFunction,
                 repository,
                 decimalFormatter
-            )
+            ) { iobCobCalculator }
         iobCobCalculator =
             IobCobCalculatorPlugin(
                 injector,

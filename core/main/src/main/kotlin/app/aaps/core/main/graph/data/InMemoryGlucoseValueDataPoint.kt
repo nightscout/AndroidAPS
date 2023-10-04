@@ -4,12 +4,14 @@ import android.content.Context
 import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.configuration.Constants
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.Shape
 
 class InMemoryGlucoseValueDataPoint(
     val data: InMemoryGlucoseValue,
@@ -26,7 +28,7 @@ class InMemoryGlucoseValueDataPoint(
     override fun setY(y: Double) {}
     override val label: String = ""
     override val duration = 0L
-    override val shape = PointsWithLabelGraphSeries.Shape.BUCKETED_BG
+    override val shape = Shape.BUCKETED_BG
     override val size = 1f
     override val paintStyle: Paint.Style = Paint.Style.FILL
 

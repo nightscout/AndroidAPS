@@ -2,7 +2,7 @@ package app.aaps.shared.tests
 
 import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction

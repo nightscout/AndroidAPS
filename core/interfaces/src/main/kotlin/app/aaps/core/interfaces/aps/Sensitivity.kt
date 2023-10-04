@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.aps
 
 import app.aaps.core.interfaces.configuration.ConfigExportImport
+import app.aaps.data.aps.AutosensResult
 
 interface Sensitivity : ConfigExportImport {
 
@@ -12,7 +13,7 @@ interface Sensitivity : ConfigExportImport {
 
         companion object {
 
-            private val map = values().associateBy(SensitivityType::value)
+            private val map = entries.associateBy(SensitivityType::value)
             fun fromInt(type: Int) = map[type]
         }
     }

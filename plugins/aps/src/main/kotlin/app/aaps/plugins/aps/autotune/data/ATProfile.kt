@@ -1,7 +1,7 @@
 package app.aaps.plugins.aps.autotune.data
 
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag

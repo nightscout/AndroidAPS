@@ -1,7 +1,7 @@
 package app.aaps.implementation.iob
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.core.interfaces.iob.GlucoseStatus
+import app.aaps.data.iob.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger

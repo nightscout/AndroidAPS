@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.data.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.iob.CobInfo
+import app.aaps.data.iob.CobInfo
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.DefaultValueHelper
@@ -26,12 +26,12 @@ import app.aaps.core.main.extensions.toStringFull
 import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.DataPointWithLabelInterface
-import app.aaps.core.main.graph.data.DeviationDataPoint
-import app.aaps.core.main.graph.data.FixedLineGraphSeries
-import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
-import app.aaps.core.main.graph.data.Scale
-import app.aaps.core.main.graph.data.ScaledDataPoint
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.DeviationDataPoint
+import app.aaps.interfaces.graph.data.FixedLineGraphSeries
+import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
+import app.aaps.interfaces.graph.data.Scale
+import app.aaps.interfaces.graph.data.ScaledDataPoint
 import app.aaps.core.main.iob.round
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.GlucoseValue
@@ -40,6 +40,7 @@ import app.aaps.database.impl.AppRepository
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import dagger.Lazy
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -54,7 +55,8 @@ class OverviewDataImpl @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
     private val repository: AppRepository,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val iobCobCalculator: Lazy<IobCobCalculator>
 ) : OverviewData {
 
     override var rangeToDisplay = 6 // for graph
@@ -180,26 +182,26 @@ class OverviewDataImpl @Inject constructor(
      * TEMPORARY BASAL
      */
 
-    override fun temporaryBasalText(iobCobCalculator: IobCobCalculator): String =
+    override fun temporaryBasalText(): String =
         profileFunction.getProfile()?.let { profile ->
-            var temporaryBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())
+            var temporaryBasal = iobCobCalculator.get().getTempBasalIncludingConvertedExtended(dateUtil.now())
             if (temporaryBasal?.isInProgress == false) temporaryBasal = null
             temporaryBasal?.let { "T:" + it.toStringShort(decimalFormatter) }
                 ?: rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
         } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
-    override fun temporaryBasalDialogText(iobCobCalculator: IobCobCalculator): String =
+    override fun temporaryBasalDialogText(): String =
         profileFunction.getProfile()?.let { profile ->
-            iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
+            iobCobCalculator.get().getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
                 "${rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label)}: ${rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())}" +
                     "\n" + rh.gs(app.aaps.core.ui.R.string.tempbasal_label) + ": " + temporaryBasal.toStringFull(profile, dateUtil, decimalFormatter)
             }
                 ?: "${rh.gs(app.aaps.core.ui.R.string.base_basal_rate_label)}: ${rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, profile.getBasal())}"
         } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
-    @DrawableRes override fun temporaryBasalIcon(iobCobCalculator: IobCobCalculator): Int =
+    @DrawableRes override fun temporaryBasalIcon(): Int =
         profileFunction.getProfile()?.let { profile ->
-            iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
+            iobCobCalculator.get().getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { temporaryBasal ->
                 val percentRate = temporaryBasal.convertedToPercent(dateUtil.now(), profile)
                 when {
                     percentRate > 100 -> R.drawable.ic_cp_basal_tbr_high
@@ -209,7 +211,7 @@ class OverviewDataImpl @Inject constructor(
             }
         } ?: R.drawable.ic_cp_basal_no_tbr
 
-    @AttrRes override fun temporaryBasalColor(context: Context?, iobCobCalculator: IobCobCalculator): Int = iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let {
+    @AttrRes override fun temporaryBasalColor(context: Context?): Int = iobCobCalculator.get().getTempBasalIncludingConvertedExtended(dateUtil.now())?.let {
         rh.gac(
             context, app.aaps.core.ui.R
                 .attr.basal
@@ -221,36 +223,36 @@ class OverviewDataImpl @Inject constructor(
      * EXTENDED BOLUS
     */
 
-    override fun extendedBolusText(iobCobCalculator: IobCobCalculator): String =
-        iobCobCalculator.getExtendedBolus(dateUtil.now())?.let { extendedBolus ->
+    override fun extendedBolusText(): String =
+        iobCobCalculator.get().getExtendedBolus(dateUtil.now())?.let { extendedBolus ->
             if (!extendedBolus.isInProgress(dateUtil)) ""
             else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, extendedBolus.rate)
             else ""
         } ?: ""
 
-    override fun extendedBolusDialogText(iobCobCalculator: IobCobCalculator): String =
-        iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter) ?: ""
+    override fun extendedBolusDialogText(): String =
+        iobCobCalculator.get().getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter) ?: ""
 
     /*
      * IOB, COB
      */
 
-    override fun bolusIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
-    override fun basalIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-    override fun cobInfo(iobCobCalculator: IobCobCalculator): CobInfo = iobCobCalculator.getCobInfo("Overview COB")
+    private fun bolusIob(): IobTotal = iobCobCalculator.get().calculateIobFromBolus().round()
+    private fun basalIob(): IobTotal = iobCobCalculator.get().calculateIobFromTempBasalsIncludingConvertedExtended().round()
+    override fun cobInfo(): CobInfo = iobCobCalculator.get().getCobInfo("Overview COB")
 
     override val lastCarbsTime: Long
         get() = repository.getLastCarbsRecordWrapped().blockingGet().let { lastCarbs ->
             if (lastCarbs is ValueWrapper.Existing) lastCarbs.value.timestamp else 0L
         }
 
-    override fun iobText(iobCobCalculator: IobCobCalculator): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob + basalIob(iobCobCalculator).basaliob)
+    override fun iobText(): String =
+        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)
 
-    override fun iobDialogText(iobCobCalculator: IobCobCalculator): String =
-        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob + basalIob(iobCobCalculator).basaliob) + "\n" +
-            rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob) + "\n" +
-            rh.gs(app.aaps.core.ui.R.string.basal) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, basalIob(iobCobCalculator).basaliob)
+    override fun iobDialogText(): String =
+        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob) + "\n" +
+            rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob) + "\n" +
+            rh.gs(app.aaps.core.ui.R.string.basal) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, basalIob().basaliob)
 
     /*
      * TEMP TARGET
@@ -267,7 +269,7 @@ class OverviewDataImpl @Inject constructor(
      * SENSITIVITY
      */
 
-    override fun lastAutosensData(iobCobCalculator: IobCobCalculator): AutosensData? = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
+    override fun lastAutosensData(): AutosensData? = iobCobCalculator.get().ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
 
     /*
      * Graphs

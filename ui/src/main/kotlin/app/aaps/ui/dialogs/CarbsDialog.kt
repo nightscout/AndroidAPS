@@ -8,11 +8,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import app.aaps.core.interfaces.automation.Automation
-import app.aaps.core.interfaces.configuration.Constants.CARBS_FAV1_DEFAULT
-import app.aaps.core.interfaces.configuration.Constants.CARBS_FAV2_DEFAULT
-import app.aaps.core.interfaces.configuration.Constants.CARBS_FAV3_DEFAULT
+import app.aaps.data.configuration.Constants.CARBS_FAV1_DEFAULT
+import app.aaps.data.configuration.Constants.CARBS_FAV2_DEFAULT
+import app.aaps.data.configuration.Constants.CARBS_FAV3_DEFAULT
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag

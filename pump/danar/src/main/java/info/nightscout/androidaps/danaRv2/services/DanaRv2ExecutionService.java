@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import app.aaps.core.interfaces.configuration.Constants;
+import app.aaps.data.configuration.Constants;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;

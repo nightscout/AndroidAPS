@@ -8,9 +8,9 @@ import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.core.main.graph.data.InMemoryGlucoseValueDataPoint
-import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
+import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers

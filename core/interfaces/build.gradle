@@ -22,6 +22,7 @@ android {
 }
 
 dependencies {
+    implementation project(':core:data')
     implementation project(':database:entities')
 
     api "androidx.appcompat:appcompat:$appcompat_version"

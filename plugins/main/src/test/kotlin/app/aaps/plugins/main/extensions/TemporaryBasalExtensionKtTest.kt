@@ -1,7 +1,7 @@
 package app.aaps.plugins.main.extensions
 
-import app.aaps.core.interfaces.aps.AutosensResult
-import app.aaps.core.interfaces.aps.SMBDefaults
+import app.aaps.data.aps.AutosensResult
+import app.aaps.data.aps.SMBDefaults
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.ui.UiInteraction

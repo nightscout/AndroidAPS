@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.userEntry
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.ValueWithUnit

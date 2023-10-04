@@ -1,4 +1,6 @@
 dependencies {
+    implementation project(':core:data')
+    implementation project(':core:data')
     //testImplementation "junit:junit:$junit_version"
     testImplementation 'org.jetbrains.kotlin:kotlin-test:1.9.10'
     testImplementation "org.junit.jupiter:junit-jupiter:$junit_jupiter_version"

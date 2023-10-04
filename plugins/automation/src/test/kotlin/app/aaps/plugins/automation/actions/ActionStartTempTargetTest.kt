@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction

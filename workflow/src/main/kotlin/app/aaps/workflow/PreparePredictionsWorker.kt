@@ -12,9 +12,9 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint
-import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
+import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.impl.AppRepository

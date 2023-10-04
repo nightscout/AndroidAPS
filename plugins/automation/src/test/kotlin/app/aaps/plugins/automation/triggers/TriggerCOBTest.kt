@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.interfaces.iob.CobInfo
+import app.aaps.data.iob.CobInfo
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject

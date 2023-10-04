@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.objects
 
 import app.aaps.core.interfaces.aps.APSResult
-import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.data.aps.AutosensData
 import app.aaps.core.interfaces.profile.ProfileStore
 import org.json.JSONObject
 

@@ -1,12 +1,12 @@
 package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
-import app.aaps.core.interfaces.aps.SMBDefaults
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.iob.GlucoseStatus
+import app.aaps.data.aps.SMBDefaults
+import app.aaps.data.db.GlucoseUnit
+import app.aaps.data.iob.GlucoseStatus
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.iob.IobTotal
-import app.aaps.core.interfaces.iob.MealData
+import app.aaps.data.iob.IobTotal
+import app.aaps.data.iob.MealData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin

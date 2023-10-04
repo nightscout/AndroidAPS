@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.aps
 
 import android.text.Spanned
 import app.aaps.core.interfaces.constraints.Constraint
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.data.iob.IobTotal
 import app.aaps.database.entities.GlucoseValue
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject

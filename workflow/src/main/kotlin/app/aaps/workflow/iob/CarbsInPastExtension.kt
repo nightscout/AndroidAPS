@@ -1,13 +1,13 @@
 package app.aaps.workflow.iob
 
-import app.aaps.core.interfaces.aps.AutosensData
-import app.aaps.core.interfaces.aps.SMBDefaults
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.data.aps.SMBDefaults
+import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.data.aps.AutosensData
 import app.aaps.database.entities.Carbs
 
 fun fromCarbs(t: Carbs, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunction, aapsLogger: AAPSLogger, dateUtil: DateUtil, sp: SP): AutosensData.CarbsInPast {

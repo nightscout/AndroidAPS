@@ -2,11 +2,13 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.configuration.Constants
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.database.entities.GlucoseValue
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.Shape
 
 class GlucoseValueDataPoint(
     val data: GlucoseValue,
@@ -23,7 +25,7 @@ class GlucoseValueDataPoint(
     override fun setY(y: Double) {}
     override val label: String = profileUtil.fromMgdlToStringInUnits(data.value)
     override val duration = 0L
-    override val shape get() = if (isPrediction) PointsWithLabelGraphSeries.Shape.PREDICTION else PointsWithLabelGraphSeries.Shape.BG
+    override val shape get() = if (isPrediction) Shape.PREDICTION else Shape.BG
     override val size = if (isPrediction) 1f else 0.6f
     override val paintStyle: Paint.Style = if (isPrediction) Paint.Style.FILL else Paint.Style.STROKE
 

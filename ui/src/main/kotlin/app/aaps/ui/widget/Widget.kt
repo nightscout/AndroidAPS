@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -172,22 +172,22 @@ class Widget : AppWidgetProvider() {
     }
 
     private fun updateTemporaryBasal(views: RemoteViews) {
-        views.setTextViewText(R.id.base_basal, overviewData.temporaryBasalText(iobCobCalculator))
+        views.setTextViewText(R.id.base_basal, overviewData.temporaryBasalText())
         views.setTextColor(R.id.base_basal, iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gc(app.aaps.core.ui.R.color.widget_basal) }
             ?: rh.gc(app.aaps.core.ui.R.color.white))
-        views.setImageViewResource(R.id.base_basal_icon, overviewData.temporaryBasalIcon(iobCobCalculator))
+        views.setImageViewResource(R.id.base_basal_icon, overviewData.temporaryBasalIcon())
     }
 
     private fun updateExtendedBolus(views: RemoteViews) {
         val pump = activePlugin.activePump
-        views.setTextViewText(R.id.extended_bolus, overviewData.extendedBolusText(iobCobCalculator))
+        views.setTextViewText(R.id.extended_bolus, overviewData.extendedBolusText())
         views.setViewVisibility(R.id.extended_layout, (iobCobCalculator.getExtendedBolus(dateUtil.now()) != null && !pump.isFakingTempsByExtendedBoluses).toVisibility())
     }
 
     private fun updateIobCob(views: RemoteViews) {
-        views.setTextViewText(R.id.iob, overviewData.iobText(iobCobCalculator))
+        views.setTextViewText(R.id.iob, overviewData.iobText())
         // cob
-        var cobText = overviewData.cobInfo(iobCobCalculator).displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+        var cobText = overviewData.cobInfo().displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
         val lastRun = loop.lastRun
@@ -263,7 +263,7 @@ class Widget : AppWidgetProvider() {
             views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_swap_vert_black_48dp_green)
         else
             views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_x_swap_vert)
-        views.setTextViewText(R.id.sensitivity, overviewData.lastAutosensData(iobCobCalculator)?.let { autosensData ->
+        views.setTextViewText(R.id.sensitivity, overviewData.lastAutosensData()?.let { autosensData ->
             String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
         } ?: "")
 

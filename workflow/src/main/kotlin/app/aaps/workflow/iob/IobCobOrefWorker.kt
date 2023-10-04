@@ -4,10 +4,10 @@ import android.content.Context
 import android.os.SystemClock
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.interfaces.aps.AutosensData
-import app.aaps.core.interfaces.aps.SMBDefaults
+import app.aaps.data.aps.AutosensData
+import app.aaps.data.aps.SMBDefaults
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.objects.Instantiator

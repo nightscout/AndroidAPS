@@ -2,7 +2,7 @@ package app.aaps.plugins.main.general.smsCommunicator.otp
 
 import android.util.Base64
 import app.aaps.annotations.OpenForTesting
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil

@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger

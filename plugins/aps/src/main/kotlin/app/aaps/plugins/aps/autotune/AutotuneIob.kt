@@ -1,8 +1,8 @@
 package app.aaps.plugins.aps.autotune
 
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.iob.Iob
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.data.configuration.Constants
+import app.aaps.data.iob.Iob
+import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile

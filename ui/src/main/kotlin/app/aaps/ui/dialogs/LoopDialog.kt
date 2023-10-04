@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.data.aps.ApsMode
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker

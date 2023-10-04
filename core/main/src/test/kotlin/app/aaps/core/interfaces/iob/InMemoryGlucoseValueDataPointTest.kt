@@ -2,7 +2,7 @@ package app.aaps.core.interfaces.iob
 
 import android.content.Context
 import android.graphics.Color
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper

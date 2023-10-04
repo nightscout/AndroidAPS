@@ -3,7 +3,7 @@ package app.aaps.plugins.main.general.overview.graphData
 import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -13,8 +13,10 @@ import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.graph.data.BolusDataPoint
 import app.aaps.core.main.graph.data.EffectiveProfileSwitchDataPoint
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint
-import app.aaps.core.main.graph.data.TimeAsXAxisLabelFormatter
+import app.aaps.interfaces.graph.data.TimeAsXAxisLabelFormatter
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.interfaces.graph.data.AreaGraphSeries
+import app.aaps.interfaces.graph.data.DoubleDataPoint
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -63,10 +65,10 @@ class GraphData(
 
     fun addInRangeArea(fromTime: Long, toTime: Long, lowLine: Double, highLine: Double) {
         val inRangeAreaDataPoints = arrayOf(
-            app.aaps.core.main.graph.data.DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
-            app.aaps.core.main.graph.data.DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
+            DoubleDataPoint(fromTime.toDouble(), lowLine, highLine),
+            DoubleDataPoint(toTime.toDouble(), lowLine, highLine)
         )
-        addSeries(app.aaps.core.main.graph.data.AreaGraphSeries(inRangeAreaDataPoints).also {
+        addSeries(AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
             it.backgroundColor = rh.gac(graph.context, app.aaps.core.ui.R.attr.inRangeBackground)

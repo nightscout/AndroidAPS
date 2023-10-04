@@ -5,6 +5,8 @@ import android.graphics.Paint
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.main.R
 import app.aaps.database.entities.Carbs
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.Shape
 
 class CarbsDataPoint(
     val data: Carbs,
@@ -18,7 +20,7 @@ class CarbsDataPoint(
     override val label get() = rh.gs(R.string.format_carbs, data.amount.toInt())
     override val duration = 0L
     override val size = 2f
-    override val shape = PointsWithLabelGraphSeries.Shape.CARBS
+    override val shape = Shape.CARBS
     override val paintStyle: Paint.Style = Paint.Style.FILL // not used
 
     override fun color(context: Context?): Int {

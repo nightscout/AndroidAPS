@@ -2,10 +2,10 @@ package app.aaps.plugins.sensitivity
 
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.aps.AutosensResult
-import app.aaps.core.interfaces.aps.SMBDefaults
+import app.aaps.data.aps.AutosensResult
+import app.aaps.data.aps.SMBDefaults
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
-import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger

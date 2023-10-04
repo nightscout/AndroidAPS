@@ -1,6 +1,6 @@
 package app.aaps.plugins.constraints.safety
 
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.data.aps.ApsMode
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker

@@ -4,20 +4,18 @@ import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import app.aaps.core.interfaces.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.iob.CobInfo
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.iob.IobTotal
-import app.aaps.core.main.graph.data.DataPointWithLabelInterface
-import app.aaps.core.main.graph.data.DeviationDataPoint
-import app.aaps.core.main.graph.data.FixedLineGraphSeries
-import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
-import app.aaps.core.main.graph.data.Scale
-import app.aaps.core.main.graph.data.ScaledDataPoint
+import app.aaps.data.aps.AutosensData
+import app.aaps.data.iob.CobInfo
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryTarget
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.DeviationDataPoint
+import app.aaps.interfaces.graph.data.FixedLineGraphSeries
+import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
+import app.aaps.interfaces.graph.data.Scale
+import app.aaps.interfaces.graph.data.ScaledDataPoint
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -66,27 +64,25 @@ interface OverviewData {
      * TEMPORARY BASAL
      */
 
-    fun temporaryBasalText(iobCobCalculator: IobCobCalculator): String
-    fun temporaryBasalDialogText(iobCobCalculator: IobCobCalculator): String
-    @DrawableRes fun temporaryBasalIcon(iobCobCalculator: IobCobCalculator): Int
-    @AttrRes fun temporaryBasalColor(context: Context?, iobCobCalculator: IobCobCalculator): Int
+    fun temporaryBasalText(): String
+    fun temporaryBasalDialogText(): String
+    @DrawableRes fun temporaryBasalIcon(): Int
+    @AttrRes fun temporaryBasalColor(context: Context?): Int
 
     /*
      * EXTENDED BOLUS
     */
-    fun extendedBolusText(iobCobCalculator: IobCobCalculator): String
-    fun extendedBolusDialogText(iobCobCalculator: IobCobCalculator): String
+    fun extendedBolusText(): String
+    fun extendedBolusDialogText(): String
 
     /*
      * IOB, COB
      */
-    fun bolusIob(iobCobCalculator: IobCobCalculator): IobTotal
-    fun basalIob(iobCobCalculator: IobCobCalculator): IobTotal
-    fun cobInfo(iobCobCalculator: IobCobCalculator): CobInfo
+    fun cobInfo(): CobInfo
 
     val lastCarbsTime: Long
-    fun iobText(iobCobCalculator: IobCobCalculator): String
-    fun iobDialogText(iobCobCalculator: IobCobCalculator): String
+    fun iobText(): String
+    fun iobDialogText(): String
 
     /*
      * TEMP TARGET
@@ -96,7 +92,7 @@ interface OverviewData {
     /*
      * SENSITIVITY
      */
-    fun lastAutosensData(iobCobCalculator: IobCobCalculator): AutosensData?
+    fun lastAutosensData(): AutosensData?
     /*
      * Graphs
      */

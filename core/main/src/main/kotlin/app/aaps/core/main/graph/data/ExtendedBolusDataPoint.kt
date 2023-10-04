@@ -5,6 +5,8 @@ import android.graphics.Paint
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.database.entities.ExtendedBolus
+import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
+import app.aaps.interfaces.graph.data.Shape
 
 class ExtendedBolusDataPoint(
     val data: ExtendedBolus,
@@ -19,7 +21,7 @@ class ExtendedBolusDataPoint(
     override val label get() = data.toStringTotal()
     override val duration get() = data.duration
     override val size = 10f
-    override val shape = PointsWithLabelGraphSeries.Shape.EXTENDEDBOLUS
+    override val shape = Shape.EXTENDEDBOLUS
     override val paintStyle: Paint.Style = Paint.Style.FILL // not used
     override fun color(context: Context?): Int {
         return rh.gac(context, app.aaps.core.ui.R.attr.extBolusColor)

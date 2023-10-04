@@ -2,12 +2,12 @@ package app.aaps.plugins.sync.dataBroadcaster
 
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.db.GlucoseUnit
-import app.aaps.core.interfaces.iob.CobInfo
-import app.aaps.core.interfaces.iob.GlucoseStatus
+import app.aaps.data.db.GlucoseUnit
+import app.aaps.data.iob.CobInfo
+import app.aaps.data.iob.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.core.interfaces.iob.IobTotal
+import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.pump.PumpEnactResult

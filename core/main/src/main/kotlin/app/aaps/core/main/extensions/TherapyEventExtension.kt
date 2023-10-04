@@ -1,6 +1,6 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.entities.TherapyEvent
 

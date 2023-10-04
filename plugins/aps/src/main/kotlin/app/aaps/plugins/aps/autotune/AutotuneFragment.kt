@@ -17,8 +17,8 @@ import android.widget.ArrayAdapter
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import app.aaps.core.interfaces.configuration.Constants
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.data.configuration.Constants
+import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.UserEntryLogger

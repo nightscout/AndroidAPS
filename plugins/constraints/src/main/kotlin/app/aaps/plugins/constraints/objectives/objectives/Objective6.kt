@@ -1,6 +1,6 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
-import app.aaps.core.interfaces.aps.ApsMode
+import app.aaps.data.aps.ApsMode
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.utils.T
 import app.aaps.plugins.constraints.R

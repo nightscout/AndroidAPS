@@ -1,10 +1,13 @@
 package app.aaps.core.interfaces.iob
 
-import app.aaps.core.interfaces.aps.AutosensData
+import app.aaps.data.aps.AutosensData
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.aps.AutosensResult
-import app.aaps.core.interfaces.aps.BasalData
+import app.aaps.data.aps.BasalData
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.data.aps.AutosensResult
+import app.aaps.data.iob.CobInfo
+import app.aaps.data.iob.IobTotal
+import app.aaps.data.iob.MealData
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.TemporaryBasal
 import org.json.JSONArray

@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.insulin
 
 import app.aaps.core.interfaces.configuration.ConfigExportImport
-import app.aaps.core.interfaces.iob.Iob
+import app.aaps.data.iob.Iob
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.embedments.InsulinConfiguration
 
