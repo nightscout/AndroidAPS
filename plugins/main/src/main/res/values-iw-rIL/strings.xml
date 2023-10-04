@@ -351,4 +351,5 @@
     <string name="until">עד</string>
     <string name="default_range">טווח ברירת מחדל</string>
     <string name="target">מטרה</string>
+    <string name="rate_duration">מינון: %1$.2f יח\'\\שעה (%2$.2f%%) \nמשך: %3$d דק\'</string>
 </resources>
