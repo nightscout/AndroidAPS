@@ -80,7 +80,7 @@
     <string name="pref_version">Versjon:</string>
     <string name="pref_moreWatchfaceSettings">Flere innstillinger for urskive</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Vennligst sjekk urskiveinnstillinger.</string>
-    <string name="menu_tempt">MidlMål</string>
+    <string name="menu_tempt">Midl. mål</string>
     <string name="menu_wizard">Kalkulator</string>
     <string name="menu_wizard_short">Kalk</string>
     <string name="menu_treatment">Behandling</string>
