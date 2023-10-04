@@ -2,7 +2,7 @@ package app.aaps.implementation.overview
 
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.data.db.GlucoseUnit
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.utils.T
 import app.aaps.database.ValueWrapper

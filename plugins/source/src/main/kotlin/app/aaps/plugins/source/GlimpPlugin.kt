@@ -11,7 +11,9 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
@@ -59,7 +61,7 @@ class GlimpPlugin @Inject constructor(
                 value = inputData.getDouble("mySGV", 0.0),
                 raw = inputData.getDouble("mySGV", 0.0),
                 noise = null,
-                trendArrow = GlucoseValue.TrendArrow.fromString(inputData.getString("myTrend")),
+                trendArrow = TrendArrow.fromString(inputData.getString("myTrend")).toDb(),
                 sourceSensor = GlucoseValue.SourceSensor.LIBRE_1_GLIMP
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))

@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.data.db.GlucoseUnit
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat

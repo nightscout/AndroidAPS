@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.iob.generateCOBString
 import app.aaps.core.main.iob.round

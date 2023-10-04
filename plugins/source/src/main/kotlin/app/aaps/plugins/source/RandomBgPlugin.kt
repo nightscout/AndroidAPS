@@ -13,7 +13,9 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.utils.isRunningTest
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
@@ -106,7 +108,7 @@ class RandomBgPlugin @Inject constructor(
             value = bgMgdl,
             raw = 0.0,
             noise = null,
-            trendArrow = GlucoseValue.TrendArrow.values().toList().shuffled().first(),
+            trendArrow = TrendArrow.entries.shuffled().first().toDb(),
             sourceSensor = GlucoseValue.SourceSensor.RANDOM
         )
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))

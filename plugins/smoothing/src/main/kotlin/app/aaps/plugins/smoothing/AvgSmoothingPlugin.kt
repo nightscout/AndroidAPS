@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.utils.T
-import app.aaps.database.entities.GlucoseValue
+import app.aaps.data.db.TrendArrow
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -46,7 +46,7 @@ class AvgSmoothingPlugin @Inject constructor(
             ) {
                 // We could further improve this by adding a weight to the neighbours, for simplicity this is not done.
                 data[i].smoothed = ((data[i - 1].value + data[i].value + data[i + 1].value) / 3.0)
-                data[i].trendArrow = GlucoseValue.TrendArrow.NONE
+                data[i].trendArrow = TrendArrow.NONE
             } else {
                 // data[i].smoothed = data[i].value
                 val currentTime = data[i].timestamp

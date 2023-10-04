@@ -11,8 +11,10 @@ import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
@@ -96,7 +98,7 @@ class EversensePlugin @Inject constructor(
                             value = glucoseLevels[i].toDouble(),
                             raw = glucoseLevels[i].toDouble(),
                             noise = null,
-                            trendArrow = GlucoseValue.TrendArrow.NONE,
+                            trendArrow = TrendArrow.NONE.toDb(),
                             sourceSensor = GlucoseValue.SourceSensor.EVERSENSE
                         )
                     repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))

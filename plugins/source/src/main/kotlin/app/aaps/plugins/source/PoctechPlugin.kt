@@ -12,8 +12,10 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.JsonHelper.safeGetString
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
@@ -68,7 +70,7 @@ class PoctechPlugin @Inject constructor(
                         else json.getDouble("current"),
                         raw = json.getDouble("raw"),
                         noise = null,
-                        trendArrow = GlucoseValue.TrendArrow.fromString(json.getString("direction")),
+                        trendArrow = TrendArrow.fromString(json.getString("direction")).toDb(),
                         sourceSensor = GlucoseValue.SourceSensor.POCTECH_NATIVE
                     )
                 }

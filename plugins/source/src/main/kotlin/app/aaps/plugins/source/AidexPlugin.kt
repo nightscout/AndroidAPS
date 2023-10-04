@@ -13,8 +13,10 @@ import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
@@ -84,7 +86,7 @@ class AidexPlugin @Inject constructor(
                 value = bgValueTarget,
                 raw = null,
                 noise = null,
-                trendArrow = GlucoseValue.TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)),
+                trendArrow = TrendArrow.fromString(bundle.getString(Intents.AIDEX_BG_SLOPE_NAME)).toDb(),
                 sourceSensor = GlucoseValue.SourceSensor.AIDEX
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))

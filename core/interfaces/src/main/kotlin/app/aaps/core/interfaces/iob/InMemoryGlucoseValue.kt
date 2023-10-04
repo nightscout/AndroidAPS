@@ -1,9 +1,10 @@
 package app.aaps.core.interfaces.iob
 
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 
 /**
- * Simplified [GlucoseValue] for storing in memory and calculations
+ * Simplified [app.aaps.database.entities.GlucoseValue] for storing in memory and calculations
  * It may correspond to GlucoseValue value in db
  * but because of 5 min recalculations and smoothing it may not
  */
@@ -13,7 +14,7 @@ class InMemoryGlucoseValue(
      * Value in mg/dl
      */
     var value: Double = 0.0,
-    var trendArrow: GlucoseValue.TrendArrow = GlucoseValue.TrendArrow.NONE,
+    var trendArrow: TrendArrow = TrendArrow.NONE,
     /**
      * Smoothed value. Value is added by smoothing plugin
      * or null if smoothing was not done

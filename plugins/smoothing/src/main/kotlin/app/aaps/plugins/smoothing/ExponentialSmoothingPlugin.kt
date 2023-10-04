@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smoothing.Smoothing
-import app.aaps.database.entities.GlucoseValue
+import app.aaps.data.db.TrendArrow
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -125,13 +125,13 @@ class ExponentialSmoothingPlugin @Inject constructor(
             }
             for (i in 0 until minOf(ssBG.size, data.size)) { // noise at the beginning of the smoothing window is the greatest, so only include the 10 most recent values in the output
                 data[i].smoothed = max(round(ssBG[i]), 39.0) //Make 39 the smallest value as smaller values trigger errors (xDrip error state = 38)
-                data[i].trendArrow = GlucoseValue.TrendArrow.NONE
+                data[i].trendArrow = TrendArrow.NONE
             }
         } else {
             for (i in 0 until data.size) { // noise at the beginning of the smoothing window is the greatest, so only include the 10 most recent values in the output
                 data[i].smoothed = max(data[i].value, 39.0) // if insufficient smoothing data, copy 'value' into 'smoothed' data column so that it isn't empty; Make 39 the smallest value as smaller
                 // values trigger errors (xDrip error state = 38)
-                data[i].trendArrow = GlucoseValue.TrendArrow.NONE
+                data[i].trendArrow = TrendArrow.NONE
             }
         }
 

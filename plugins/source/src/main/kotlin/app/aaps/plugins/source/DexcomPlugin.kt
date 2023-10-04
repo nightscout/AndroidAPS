@@ -21,8 +21,10 @@ import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.extensions.fromConstant
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry.Action
@@ -138,7 +140,7 @@ class DexcomPlugin @Inject constructor(
                             value = glucoseValueBundle.getInt("glucoseValue").toDouble(),
                             noise = null,
                             raw = null,
-                            trendArrow = GlucoseValue.TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!),
+                            trendArrow = TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!).toDb(),
                             sourceSensor = sourceSensor
                         )
                 }

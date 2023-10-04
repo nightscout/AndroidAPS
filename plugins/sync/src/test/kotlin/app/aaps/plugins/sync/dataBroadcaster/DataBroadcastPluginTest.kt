@@ -6,7 +6,7 @@ import app.aaps.data.db.GlucoseUnit
 import app.aaps.data.iob.CobInfo
 import app.aaps.data.iob.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.DefaultValueHelper

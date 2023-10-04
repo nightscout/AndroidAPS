@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.data.iob.CobInfo
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginType

@@ -2,7 +2,7 @@ package app.aaps.implementation.iob
 
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.data.iob.GlucoseStatus
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.iob.asRounded

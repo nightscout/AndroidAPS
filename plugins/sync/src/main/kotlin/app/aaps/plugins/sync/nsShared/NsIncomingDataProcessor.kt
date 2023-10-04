@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
@@ -31,6 +32,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.utils.JsonHelper
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.transactions.TransactionGlucoseValue
@@ -75,7 +77,7 @@ class NsIncomingDataProcessor @Inject constructor(
             value = sgv.mgdl?.toDouble() ?: return null,
             noise = null,
             raw = sgv.filtered?.toDouble(),
-            trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction),
+            trendArrow = TrendArrow.fromString(sgv.direction).toDb(),
             nightscoutId = sgv.id,
             sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
         )

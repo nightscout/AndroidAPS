@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.directionToIcon
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.database.entities.GlucoseValue
@@ -144,7 +145,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(glucoseValue.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeStringWithSeconds(glucoseValue.timestamp)
             holder.binding.value.text = profileUtil.fromMgdlToStringInUnits(glucoseValue.value)
-            holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
+            holder.binding.direction.setImageResource(glucoseValue.trendArrow.fromDb().directionToIcon())
             if (position > 0) {
                 val previous = glucoseValues[position - 1]
                 val diff = previous.timestamp - glucoseValue.timestamp

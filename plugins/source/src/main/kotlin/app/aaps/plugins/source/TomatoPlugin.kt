@@ -11,7 +11,9 @@ import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
@@ -60,7 +62,7 @@ class TomatoPlugin @Inject constructor(
                 value = inputData.getDouble("com.fanqies.tomatofn.Extras.BgEstimate", 0.0),
                 raw = 0.0,
                 noise = null,
-                trendArrow = GlucoseValue.TrendArrow.NONE,
+                trendArrow = TrendArrow.NONE.toDb(),
                 sourceSensor = GlucoseValue.SourceSensor.LIBRE_1_TOMATO
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))

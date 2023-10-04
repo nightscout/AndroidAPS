@@ -19,6 +19,8 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.main.extensions.toDb
+import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry
@@ -133,7 +135,7 @@ class IntelligoPlugin @Inject constructor(
                         value = value * Constants.MMOLL_TO_MGDL,
                         raw = 0.0,
                         noise = null,
-                        trendArrow = GlucoseValue.TrendArrow.NONE,
+                        trendArrow = TrendArrow.NONE.toDb(),
                         sourceSensor = GlucoseValue.SourceSensor.INTELLIGO_NATIVE
                     )
                 else
