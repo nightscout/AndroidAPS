@@ -24,7 +24,6 @@ buildscript {
         set("gridlayout_version", "1.0.0")
         set("constraintlayout_version", "2.1.4")
         set("preferencektx_version", "1.2.1")
-        set("commonslang3_version", "3.13.0")
         set("commonscodec_version", "1.16.0")
         set("guava_version", "32.1.2-jre")
         set("jodatime_version", "2.12.5")
@@ -51,12 +50,10 @@ buildscript {
         set("wearable_version", "2.9.0")
         set("play_services_wearable_version", "18.1.0")
         set("play_services_location_version", "21.0.1")
-        set("play_services_measurement_version", "21.3.0")
 
         set("kotlinx_datetime_version", "0.4.1")
         set("kotlinx_serialization_version", "1.6.0")
 
-        set("caverock_androidsvg_version", "1.4")
     }
     repositories {
         google()

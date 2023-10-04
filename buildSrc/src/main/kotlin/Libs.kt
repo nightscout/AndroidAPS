@@ -2,21 +2,66 @@
 object Libs {
 
     object Kotlin {
+
         const val kotlin = "1.9.10"
 
     }
-    object AndroidX {
-        const val core = "androidx.core:core-ktx:1.12.0"
+
+    object KotlinX {
+
+        private const val serialization = "1.6.0"
+
+        const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
+        const val serializationProtobuf = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serialization"
     }
+
+    object AndroidX {
+
+        const val core = "androidx.core:core-ktx:1.12.0"
+        const val appCompat = "androidx.appcompat:appcompat:1.6.1"
+        const val preference = "androidx.preference:preference-ktx:1.2.1"
+        const val workRuntimeKtx = "androidx.work:work-runtime-ktx:2.8.1"
+    }
+
+    object Google {
+        object PlayServices {
+
+            const val measurementApi = "com.google.android.gms:play-services-measurement-api:21.3.0"
+        }
+    }
+
     object Dagger {
-        private const val dagger = "2.48"
-        const val androidProcessor = "com.google.dagger:dagger-android-processor:$dagger"
-        const val compiler = "com.google.dagger:dagger-compiler:$dagger"
+
+        private const val version = "2.48"
+        const val dagger = "com.google.dagger:dagger:$version"
+        const val android = "com.google.dagger:dagger-android:$version"
+        const val androidProcessor = "com.google.dagger:dagger-android-processor:$version"
+        const val androidSupport = "com.google.dagger:dagger-android-support:$version"
+        const val compiler = "com.google.dagger:dagger-compiler:$version"
     }
 
     object Rx {
+
         const val rxDogTag = "com.uber.rxdogtag2:rxdogtag:2.0.2"
+        const val rxJava = "io.reactivex.rxjava3:rxjava:3.1.7"
+        const val rxKotlin = "io.reactivex.rxjava3:rxkotlin:3.0.1"
+        const val rxAndroid = "io.reactivex.rxjava3:rxandroid:3.0.2"
     }
+
+    object Apache {
+
+        const val commonsLang3 = "org.apache.commons:commons-lang3:3.13.0"
+    }
+
+    object Logging {
+
+        const val slf4jApi = "org.slf4j:slf4j-api:1.7.36" // 2.0.x breaks logging. Code change needed
+        const val logbackAndroid = "com.github.tony19:logback-android:2.0.0"
+    }
+
+    const val joda = "net.danlew:android.joda:2.12.5"
+    const val androidSvg = "com.caverock:androidsvg:1.4"
+
     const val rxjava = "3.1.7"
     const val rxandroid = "3.0.2"
     const val rxkotlin = "3.0.1"
@@ -28,7 +73,6 @@ object Libs {
     const val ormLite = "4.46"
     const val gson = "2.10.1"
     const val nav = "2.7.3"
-    const val appcompat = "1.6.1"
     const val material = "1.9.0"
     const val gridlayout = "1.0.0"
     const val constraintlayout = "2.1.4"
@@ -36,11 +80,9 @@ object Libs {
     const val commonslang3 = "3.13.0"
     const val commonscodec = "1.16.0"
     const val guava = "32.1.2-jre"
-    const val jodatime = "2.12.5"
     const val work = "2.8.1"
     const val tink = "1.10.0"
     const val json = "20230618"
-    const val joda = "2.12.5"
     const val swipe = "1.1.0"
 
     const val junit = "4.13.2"
