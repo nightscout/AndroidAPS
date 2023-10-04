@@ -1,6 +1,6 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.R
 import app.aaps.data.configuration.Constants

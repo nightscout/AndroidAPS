@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper

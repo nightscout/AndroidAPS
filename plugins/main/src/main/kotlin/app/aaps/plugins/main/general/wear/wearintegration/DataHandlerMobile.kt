@@ -9,8 +9,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
+import app.aaps.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -43,7 +42,6 @@ import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint

@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.main.graph.data.InMemoryGlucoseValueDataPoint
+import app.aaps.data.iob.InMemoryGlucoseValue
 import app.aaps.database.entities.GlucoseValue
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

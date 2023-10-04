@@ -1,7 +1,7 @@
 package app.aaps.implementation.utils
 
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.data.iob.InMemoryGlucoseValue
 import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.T

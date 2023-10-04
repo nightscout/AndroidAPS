@@ -1,4 +1,4 @@
-package app.aaps.core.interfaces.iob
+package app.aaps.data.iob
 
 import app.aaps.data.db.SourceSensor
 import app.aaps.data.db.TrendArrow

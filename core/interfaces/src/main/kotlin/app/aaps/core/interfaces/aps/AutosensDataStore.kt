@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.aps
 
 import androidx.collection.LongSparseArray
-import app.aaps.core.interfaces.iob.InMemoryGlucoseValue
+import app.aaps.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.data.aps.AutosensData
