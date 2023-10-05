@@ -2,7 +2,6 @@ package app.aaps.core.interfaces.utils
 
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
-import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.database.entities.GlucoseValue
 
 /**
@@ -30,10 +29,9 @@ interface TrendCalculator {
     /**
      * Provide or calculate trend from newest bucketed data
      *
-     * @param autosensDataStore current store from IobCobCalculator
      * @return TrendArrow
      */
-    fun getTrendArrow(autosensDataStore: AutosensDataStore): TrendArrow?
+    fun getTrendArrow(): TrendArrow?
 
     /**
      * Provide or calculate trend
@@ -46,8 +44,7 @@ interface TrendCalculator {
     /**
      * Provide or calculate trend from newest bucketed data
      *
-     * @param autosensDataStore current store from IobCobCalculator
      * @return string description of TrendArrow
      */
-    fun getTrendDescription(autosensDataStore: AutosensDataStore): String
+    fun getTrendDescription(): String
 }

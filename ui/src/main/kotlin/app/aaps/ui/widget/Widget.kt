@@ -132,23 +132,23 @@ class Widget : AppWidgetProvider() {
     private fun updateBg(views: RemoteViews) {
         views.setTextViewText(
             R.id.bg,
-            overviewData.lastBg(iobCobCalculator.ads)?.let { profileUtil.fromMgdlToStringInUnits(it.value) } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short))
+            overviewData.lastBg()?.let { profileUtil.fromMgdlToStringInUnits(it.value) } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short))
         views.setTextColor(
             R.id.bg, when {
-                overviewData.isLow(iobCobCalculator.ads)  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
-                overviewData.isHigh(iobCobCalculator.ads) -> rh.gc(app.aaps.core.ui.R.color.widget_high)
-                else                                      -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
+                overviewData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                overviewData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
+                else                  -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
         )
-        trendCalculator.getTrendArrow(iobCobCalculator.ads)?.let {
+        trendCalculator.getTrendArrow()?.let {
             views.setImageViewResource(R.id.arrow, it.directionToIcon())
         }
-        views.setViewVisibility(R.id.arrow, (trendCalculator.getTrendArrow(iobCobCalculator.ads) != null).toVisibilityKeepSpace())
+        views.setViewVisibility(R.id.arrow, (trendCalculator.getTrendArrow() != null).toVisibilityKeepSpace())
         views.setInt(
             R.id.arrow, "setColorFilter", when {
-                overviewData.isLow(iobCobCalculator.ads)  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
-                overviewData.isHigh(iobCobCalculator.ads) -> rh.gc(app.aaps.core.ui.R.color.widget_high)
-                else                                      -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
+                overviewData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                overviewData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
+                else                  -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
         )
 
@@ -164,10 +164,10 @@ class Widget : AppWidgetProvider() {
         }
 
         // strike through if BG is old
-        if (!overviewData.isActualBg(iobCobCalculator.ads)) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+        if (!overviewData.isActualBg()) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
         else views.setInt(R.id.bg, "setPaintFlags", Paint.ANTI_ALIAS_FLAG)
 
-        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, overviewData.lastBg(iobCobCalculator.ads)?.timestamp))
+        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, overviewData.lastBg()?.timestamp))
         //views.setTextViewText(R.id.time_ago_short, "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")")
     }
 

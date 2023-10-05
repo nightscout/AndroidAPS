@@ -9,7 +9,6 @@ import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -142,40 +141,40 @@ class OverviewDataImpl @Inject constructor(
      * BG
      */
 
-    override fun lastBg(autosensDataStore: AutosensDataStore): InMemoryGlucoseValue? =
-        autosensDataStore.bucketedData?.firstOrNull()
+    override fun lastBg(): InMemoryGlucoseValue? =
+        iobCobCalculator.get().ads.bucketedData?.firstOrNull()
             ?: repository.getLastGlucoseValueWrapped().blockingGet().let { gvWrapped ->
                 if (gvWrapped is ValueWrapper.Existing) InMemoryGlucoseValue.fromDb(gvWrapped.value)
                 else null
             }
 
-    override fun isLow(autosensDataStore: AutosensDataStore): Boolean =
-        lastBg(autosensDataStore)?.let { lastBg ->
+    override fun isLow(): Boolean =
+        lastBg()?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()
         } ?: false
 
-    override fun isHigh(autosensDataStore: AutosensDataStore): Boolean =
-        lastBg(autosensDataStore)?.let { lastBg ->
+    override fun isHigh(): Boolean =
+        lastBg()?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine()
         } ?: false
 
     @ColorInt
-    override fun lastBgColor(context: Context?, autosensDataStore: AutosensDataStore): Int =
+    override fun lastBgColor(context: Context?): Int =
         when {
-            isLow(autosensDataStore)  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
-            isHigh(autosensDataStore) -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)
-            else                      -> rh.gac(context, app.aaps.core.ui.R.attr.bgInRange)
+            isLow()  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
+            isHigh() -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)
+            else     -> rh.gac(context, app.aaps.core.ui.R.attr.bgInRange)
         }
 
-    override fun lastBgDescription(autosensDataStore: AutosensDataStore): String =
+    override fun lastBgDescription(): String =
         when {
-            isLow(autosensDataStore)  -> rh.gs(app.aaps.core.ui.R.string.a11y_low)
-            isHigh(autosensDataStore) -> rh.gs(app.aaps.core.ui.R.string.a11y_high)
-            else                      -> rh.gs(app.aaps.core.ui.R.string.a11y_inrange)
+            isLow()  -> rh.gs(app.aaps.core.ui.R.string.a11y_low)
+            isHigh() -> rh.gs(app.aaps.core.ui.R.string.a11y_high)
+            else     -> rh.gs(app.aaps.core.ui.R.string.a11y_inrange)
         }
 
-    override fun isActualBg(autosensDataStore: AutosensDataStore): Boolean =
-        lastBg(autosensDataStore)?.let { lastBg ->
+    override fun isActualBg(): Boolean =
+        lastBg()?.let { lastBg ->
             lastBg.timestamp > dateUtil.now() - T.mins(9).msecs()
         } ?: false
 

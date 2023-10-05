@@ -7,7 +7,6 @@ import androidx.annotation.DrawableRes
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
-import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
@@ -54,12 +53,12 @@ interface OverviewData {
      *
      * @return newest glucose value
      */
-    fun lastBg(autosensDataStore: AutosensDataStore): InMemoryGlucoseValue?
-    fun isLow(autosensDataStore: AutosensDataStore): Boolean
-    fun isHigh(autosensDataStore: AutosensDataStore): Boolean
-    @ColorInt fun lastBgColor(context: Context?, autosensDataStore: AutosensDataStore): Int
-    fun lastBgDescription(autosensDataStore: AutosensDataStore): String
-    fun isActualBg(autosensDataStore: AutosensDataStore): Boolean
+    fun lastBg(): InMemoryGlucoseValue?
+    fun isLow(): Boolean
+    fun isHigh(): Boolean
+    @ColorInt fun lastBgColor(context: Context?): Int
+    fun lastBgDescription(): String
+    fun isActualBg(): Boolean
     /*
      * TEMPORARY BASAL
      */

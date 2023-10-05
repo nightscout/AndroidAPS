@@ -780,13 +780,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     fun updateBg() {
-        val lastBg = overviewData.lastBg(iobCobCalculator.ads)
-        val lastBgColor = overviewData.lastBgColor(context, iobCobCalculator.ads)
-        val isActualBg = overviewData.isActualBg(iobCobCalculator.ads)
+        val lastBg = overviewData.lastBg()
+        val lastBgColor = overviewData.lastBgColor(context)
+        val isActualBg = overviewData.isActualBg()
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
-        val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
-        val lastBgDescription = overviewData.lastBgDescription(iobCobCalculator.ads)
+        val trendDescription = trendCalculator.getTrendDescription()
+        val trendArrow = trendCalculator.getTrendArrow()
+        val lastBgDescription = overviewData.lastBgDescription()
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.value)

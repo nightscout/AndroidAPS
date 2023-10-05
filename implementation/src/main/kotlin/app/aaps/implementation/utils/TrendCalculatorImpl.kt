@@ -3,7 +3,7 @@ package app.aaps.implementation.utils
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.fromDb
@@ -15,7 +15,8 @@ import javax.inject.Singleton
 @Singleton
 class TrendCalculatorImpl @Inject constructor(
     private val repository: AppRepository,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private val iobCobCalculator: IobCobCalculator
 ) : TrendCalculator {
 
     override fun getTrendArrow(glucoseValue: GlucoseValue?): TrendArrow =
@@ -74,8 +75,8 @@ class TrendCalculatorImpl @Inject constructor(
         }
     }
 
-    override fun getTrendArrow(autosensDataStore: AutosensDataStore): TrendArrow? {
-        val data = autosensDataStore.getBucketedDataTableCopy() ?: return null
+    override fun getTrendArrow(): TrendArrow? {
+        val data = iobCobCalculator.ads.getBucketedDataTableCopy() ?: return null
         if (data.size == 0) return null
         val glucoseValue = data[0]
         return when {
@@ -85,8 +86,8 @@ class TrendCalculatorImpl @Inject constructor(
         }
     }
 
-    override fun getTrendDescription(autosensDataStore: AutosensDataStore): String {
-        return when (getTrendArrow(autosensDataStore)) {
+    override fun getTrendDescription(): String {
+        return when (getTrendArrow()) {
             TrendArrow.DOUBLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_double_down)
             TrendArrow.SINGLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_single_down)
             TrendArrow.FORTY_FIVE_DOWN -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_forty_five_down)

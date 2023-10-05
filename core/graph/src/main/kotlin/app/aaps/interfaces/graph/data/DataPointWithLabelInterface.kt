@@ -3,7 +3,6 @@ package app.aaps.interfaces.graph.data
 import android.content.Context
 import android.graphics.Paint
 import androidx.annotation.ColorInt
-import app.aaps.interfaces.graph.data.Shape
 import com.jjoe64.graphview.series.DataPointInterface
 
 interface DataPointWithLabelInterface : DataPointInterface {
