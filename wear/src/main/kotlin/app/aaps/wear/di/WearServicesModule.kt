@@ -28,7 +28,6 @@ import app.aaps.wear.watchfaces.CockpitWatchface
 import app.aaps.wear.watchfaces.CustomWatchface
 import app.aaps.wear.watchfaces.DigitalStyleWatchface
 import app.aaps.wear.watchfaces.NoChartWatchface
-import app.aaps.wear.watchfaces.SteampunkWatchface
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -57,7 +56,6 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesAapsWatchface(): AapsWatchface
     @ContributesAndroidInjector abstract fun contributesAapsV2Watchface(): AapsV2Watchface
     @ContributesAndroidInjector abstract fun contributesAapsLargeWatchface(): AapsLargeWatchface
-    @ContributesAndroidInjector abstract fun contributesSteampunk(): SteampunkWatchface
     @ContributesAndroidInjector abstract fun contributesDigitalStyleWatchface(): DigitalStyleWatchface
     @ContributesAndroidInjector abstract fun contributesCockpitWatchface(): CockpitWatchface
     @ContributesAndroidInjector abstract fun contributesBIGChart(): BigChartWatchface
