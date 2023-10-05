@@ -2,7 +2,6 @@ package info.nightscout.pump.common.defs
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.pump.common.R
-import kotlin.streams.toList
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes
@@ -63,17 +62,12 @@ enum class PumpHistoryEntryGroup(val resourceId: Int, val pumpTypeGroupConfig: P
             val outList: List<PumpHistoryEntryGroup>
 
             if (pumpTypeGroupConfig == PumpTypeGroupConfig.All) {
-                outList = translatedList!!.stream()
-                    .filter { pre -> pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All }
-                    .toList()
+                outList = translatedList!!.filter { pre -> pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All }
             } else {
-                outList = translatedList!!.stream()
-                    .filter { pre -> (pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All || pre.pumpTypeGroupConfig == pumpTypeGroupConfig) }
-                    .toList()
+                outList = translatedList!!.filter { pre -> (pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All || pre.pumpTypeGroupConfig == pumpTypeGroupConfig) }
             }
 
             return outList
         }
     }
-
 }

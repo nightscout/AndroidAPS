@@ -157,4 +157,14 @@
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי)!</string>
     <!-- Maintenance -->
+    <string name="metadata_label_format">פורמט הקובץ</string>
+    <string name="metadata_label_created_at">נוצר ב-</string>
+    <string name="metadata_label_aaps_version">גרסת AAPS</string>
+    <string name="metadata_label_aaps_flavour">גרסת בנייה</string>
+    <string name="metadata_label_device_name">מייצא את שם מכשיר המטופל\\ת</string>
+    <string name="metadata_label_device_model">מייצא את דגם המכשיר</string>
+    <string name="metadata_label_encryption">הצפנת קבצים</string>
+    <string name="metadata_format_new">פורמט הצפנה חדש</string>
+    <string name="metadata_format_debug">פורמט דיבאג חדש (בלתי מוצפן)</string>
+    <string name="metadata_format_other">פורמט ייצוא לא ידוע</string>
 </resources>
