@@ -14,6 +14,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.core.data.pump.defs.PumpType;
+import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
@@ -31,7 +32,6 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.ui.UiInteraction;
-import app.aaps.core.interfaces.utils.T;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;

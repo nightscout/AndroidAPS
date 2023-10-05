@@ -3,6 +3,7 @@ package info.nightscout.pump.dana
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.objects.Instantiator
@@ -13,7 +14,6 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import org.json.JSONArray

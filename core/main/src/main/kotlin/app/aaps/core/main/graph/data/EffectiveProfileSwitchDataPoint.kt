@@ -2,8 +2,8 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.Scale

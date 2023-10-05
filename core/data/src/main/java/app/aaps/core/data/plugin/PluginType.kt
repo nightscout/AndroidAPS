@@ -1,9 +1,9 @@
-package app.aaps.core.interfaces.plugin
+package app.aaps.core.data.plugin
 
 /**
  * Main plugin type
  *
- * set by [info.nightscout.interfaces.PluginDescription.mainType]
+ * set by [app.aaps.core.interfaces.plugin.PluginDescription.mainType]
  */
 enum class PluginType {
 

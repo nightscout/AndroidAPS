@@ -1,9 +1,9 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.main.extensions.getCustomizedName
 import app.aaps.core.main.extensions.pureProfileFromJson

@@ -1,6 +1,7 @@
 package app.aaps.core.main.profile
 
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.profile.Profile
@@ -11,7 +12,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.blockValueBySeconds
 import app.aaps.core.main.extensions.highTargetBlockValueBySeconds

@@ -9,7 +9,6 @@ import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.Typeface
 import androidx.core.content.ContextCompat
-import app.aaps.core.interfaces.graph.R
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.BaseSeries
 import kotlin.math.min
@@ -207,7 +206,7 @@ open class PointsWithLabelGraphSeries<E : DataPointWithLabelInterface> : BaseSer
                     mPaint.style = Paint.Style.FILL_AND_STROKE
                     canvas.drawRect(bounds, mPaint)
                 } else if (value.shape == Shape.PROFILE) {
-                    val drawable = ContextCompat.getDrawable(graphView.context, R.drawable.ic_ribbon_profile) ?: break
+                    val drawable = ContextCompat.getDrawable(graphView.context, app.aaps.core.ui.R.drawable.ic_ribbon_profile) ?: break
                     drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.MULTIPLY)
                     drawable.setBounds(
                         (endX - drawable.intrinsicWidth / 2).toInt(),

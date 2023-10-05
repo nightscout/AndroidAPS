@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.nssdk.localmodel.treatment.EventType

@@ -18,6 +18,7 @@ import android.os.Build
 import android.os.SystemClock
 import android.util.Base64
 import androidx.core.app.ActivityCompat
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -29,7 +30,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis

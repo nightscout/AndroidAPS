@@ -1,9 +1,6 @@
-package app.aaps.core.interfaces.plugin
+package app.aaps.core.data.plugin
 
-import app.aaps.annotations.OpenForTesting
-
-@OpenForTesting
-class PluginDescription {
+open class PluginDescription {
 
     var mainType = PluginType.GENERAL
     var fragmentClass: String? = null

@@ -1,10 +1,10 @@
 package app.aaps.core.interfaces.pump
 
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.TemporaryBasal
 import kotlin.math.max
 import kotlin.math.min

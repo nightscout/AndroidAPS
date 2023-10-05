@@ -57,8 +57,8 @@ object PrefImportSummaryDialog {
             (rowLayout.findViewById<View>(R.id.summary_icon) as ImageView).setImageResource(metaKey.icon)
             (rowLayout.findViewById<View>(R.id.status_icon) as ImageView).setImageResource(metaEntry.status.icon)
 
-            if (metaEntry.status == PrefsStatusImpl.WARN) label.setTextColor(themedCtx.getColor(app.aaps.core.interfaces.R.color.metadataTextWarning))
-            else if (metaEntry.status == PrefsStatusImpl.ERROR) label.setTextColor(themedCtx.getColor(app.aaps.core.interfaces.R.color.metadataTextError))
+            if (metaEntry.status == PrefsStatusImpl.WARN) label.setTextColor(themedCtx.getColor(app.aaps.core.ui.R.color.metadataTextWarning))
+            else if (metaEntry.status == PrefsStatusImpl.ERROR) label.setTextColor(themedCtx.getColor(app.aaps.core.ui.R.color.metadataTextError))
 
             if (metaEntry.info != null) {
                 details.add("<b>${context.getString(metaKey.label)}</b>: ${metaEntry.value}<br/><i style=\"color:silver\">${metaEntry.info}</i>")

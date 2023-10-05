@@ -11,6 +11,7 @@ import app.aaps.core.data.configuration.Constants.INSULIN_PLUS1_DEFAULT
 import app.aaps.core.data.configuration.Constants.INSULIN_PLUS2_DEFAULT
 import app.aaps.core.data.configuration.Constants.INSULIN_PLUS3_DEFAULT
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -31,7 +32,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog

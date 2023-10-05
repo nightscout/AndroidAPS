@@ -1,10 +1,10 @@
 package app.aaps.plugins.aps.autotune
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.GlucoseValue

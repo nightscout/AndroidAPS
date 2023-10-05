@@ -1,9 +1,9 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.utils.T
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase

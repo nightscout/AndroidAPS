@@ -1,8 +1,7 @@
 package info.nightscout.pump.combo
 
 import android.content.Context
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
@@ -11,6 +10,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector

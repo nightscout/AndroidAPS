@@ -1,8 +1,8 @@
 package app.aaps.core.main.utils
 
 import android.content.Context
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.T
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat

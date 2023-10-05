@@ -5,11 +5,11 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.collection.LongSparseArray
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.R
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
 import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -121,10 +121,10 @@ class DateUtilImpl @Inject constructor(private val context: Context) : DateUtil 
         val beginOfToday = beginOfDay(now())
         return if (mills < now()) // Past
             when {
-                mills > beginOfToday -> rh.gs(R.string.today)
+                mills > beginOfToday                     -> rh.gs(R.string.today)
                 mills > beginOfToday - T.days(1).msecs() -> rh.gs(R.string.yesterday)
                 mills > beginOfToday - T.days(7).msecs() -> dayAgo(mills, rh, true)
-                else -> day
+                else                                     -> day
             }
         else // Future
             when {

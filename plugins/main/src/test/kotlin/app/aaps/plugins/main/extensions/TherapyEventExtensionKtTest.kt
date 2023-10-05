@@ -1,6 +1,6 @@
 package app.aaps.plugins.main.extensions
 
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.time.T
 import app.aaps.core.main.extensions.isOlderThan
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs

@@ -18,6 +18,7 @@ import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.extensions.toVisibility
@@ -38,7 +39,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.valueToUnits

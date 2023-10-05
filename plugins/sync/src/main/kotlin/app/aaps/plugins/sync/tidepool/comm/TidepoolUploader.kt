@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.tidepool.comm
 import android.content.Context
 import android.os.PowerManager
 import android.os.SystemClock
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -10,7 +11,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate

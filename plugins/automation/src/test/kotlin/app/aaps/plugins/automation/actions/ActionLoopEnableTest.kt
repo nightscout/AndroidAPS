@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import org.junit.jupiter.api.Assertions

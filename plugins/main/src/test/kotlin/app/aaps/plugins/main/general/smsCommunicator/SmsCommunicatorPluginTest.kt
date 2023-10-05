@@ -6,11 +6,12 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
@@ -18,8 +19,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
@@ -90,7 +91,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(iobCobCalculator.getCobInfo("SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0))
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        `when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(reading))
+        `when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue.fromDb(reading))
 
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
 

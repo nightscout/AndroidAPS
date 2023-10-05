@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TableLayout
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.interfaces.utils.T
 import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton

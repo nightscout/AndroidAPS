@@ -3,8 +3,8 @@ package app.aaps.core.main.graph
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.Bolus
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint

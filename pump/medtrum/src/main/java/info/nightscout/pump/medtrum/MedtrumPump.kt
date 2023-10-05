@@ -2,6 +2,7 @@ package info.nightscout.pump.medtrum
 
 import android.util.Base64
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
@@ -12,7 +13,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
 import info.nightscout.pump.medtrum.comm.enums.AlarmState

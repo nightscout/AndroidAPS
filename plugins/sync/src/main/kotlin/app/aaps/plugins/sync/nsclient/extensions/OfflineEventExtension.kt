@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.TherapyEvent

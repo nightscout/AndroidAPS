@@ -1,7 +1,7 @@
 package app.aaps.plugins.constraints.objectives.objectives
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.safety.SafetyPlugin

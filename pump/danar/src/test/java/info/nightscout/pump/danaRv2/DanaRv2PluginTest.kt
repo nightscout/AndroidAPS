@@ -1,14 +1,14 @@
 package info.nightscout.pump.danaRv2
 
-import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.objects.Instantiator
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector

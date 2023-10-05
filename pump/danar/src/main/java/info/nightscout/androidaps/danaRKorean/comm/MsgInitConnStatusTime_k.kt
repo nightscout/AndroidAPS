@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase

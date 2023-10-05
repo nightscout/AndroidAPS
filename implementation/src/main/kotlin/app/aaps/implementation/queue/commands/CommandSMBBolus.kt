@@ -1,5 +1,6 @@
 package app.aaps.implementation.queue.commands
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -7,7 +8,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject

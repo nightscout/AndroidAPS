@@ -7,6 +7,7 @@ import androidx.work.workDataOf
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
@@ -21,7 +22,6 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.events.EventIobCalculationProgress
 import app.aaps.core.main.extensions.target
 import app.aaps.core.main.utils.worker.LoggingWorker

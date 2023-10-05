@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.time.T
 import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject

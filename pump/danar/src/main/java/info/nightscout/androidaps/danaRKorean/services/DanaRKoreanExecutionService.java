@@ -10,6 +10,7 @@ import javax.inject.Inject;
 
 import app.aaps.core.data.configuration.Constants;
 import app.aaps.core.data.pump.defs.PumpType;
+import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.constraints.ConstraintsChecker;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
@@ -29,7 +30,6 @@ import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged;
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged;
 import app.aaps.core.interfaces.ui.UiInteraction;
 import app.aaps.core.interfaces.utils.DateUtil;
-import app.aaps.core.interfaces.utils.T;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRKorean.comm.MessageHashTableRKorean;
 import info.nightscout.androidaps.danaRKorean.comm.MsgCheckValue_k;

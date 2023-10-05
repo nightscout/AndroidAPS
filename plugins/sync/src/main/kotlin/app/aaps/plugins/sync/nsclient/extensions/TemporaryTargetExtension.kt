@@ -2,9 +2,9 @@ package app.aaps.plugins.sync.nsclient.extensions
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent

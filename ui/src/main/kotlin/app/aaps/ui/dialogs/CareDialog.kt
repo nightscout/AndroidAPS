@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.annotation.StringRes
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -17,7 +18,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.ui.dialogs.OKDialog

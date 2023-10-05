@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.Spanned
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
@@ -31,7 +32,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.highValueToUnitsToString
 import app.aaps.core.main.extensions.lowValueToUnitsToString

@@ -1,6 +1,6 @@
 package app.aaps.plugins.sensitivity.extensions
 
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.time.T
 import app.aaps.database.entities.ProfileSwitch
 
 fun List<ProfileSwitch>.isPSEvent5minBack(time: Long): Boolean {

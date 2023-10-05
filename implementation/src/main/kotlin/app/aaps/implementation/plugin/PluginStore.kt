@@ -1,5 +1,6 @@
 package app.aaps.implementation.plugin
 
+import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.Config
@@ -13,7 +14,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.Overview
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.pump.Pump
 import app.aaps.core.interfaces.smoothing.Smoothing

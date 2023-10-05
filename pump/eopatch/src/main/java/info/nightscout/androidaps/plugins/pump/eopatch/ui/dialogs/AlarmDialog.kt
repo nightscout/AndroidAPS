@@ -8,11 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.ui.R
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmProcess
@@ -22,7 +23,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogAlarmBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
-import app.aaps.core.ui.R
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 

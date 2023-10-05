@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSBolusWizard

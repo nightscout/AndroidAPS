@@ -6,10 +6,10 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.fragment.app.FragmentActivity
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.plugins.constraints.R
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject

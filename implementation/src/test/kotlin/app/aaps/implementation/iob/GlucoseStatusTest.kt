@@ -4,9 +4,9 @@ import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.iob.asRounded
 import app.aaps.core.main.iob.log
 import app.aaps.shared.tests.TestBaseWithProfile

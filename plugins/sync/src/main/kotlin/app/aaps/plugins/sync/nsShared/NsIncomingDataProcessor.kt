@@ -4,6 +4,7 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -18,7 +19,6 @@ import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood

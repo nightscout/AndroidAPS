@@ -2,7 +2,7 @@ package app.aaps.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
-import app.aaps.core.interfaces.utils.T
+import app.aaps.core.data.time.T
 import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.localmodel.entry.Direction

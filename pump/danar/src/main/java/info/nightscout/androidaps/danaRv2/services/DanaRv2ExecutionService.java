@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import app.aaps.core.data.configuration.Constants;
 import app.aaps.core.data.pump.defs.PumpType;
+import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
@@ -33,7 +34,6 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.ui.UiInteraction;
 import app.aaps.core.interfaces.utils.DateUtil;
-import app.aaps.core.interfaces.utils.T;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin;

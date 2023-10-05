@@ -2,9 +2,9 @@ package app.aaps.implementation.utils
 
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.fromDb
 import app.aaps.database.entities.GlucoseValue
