@@ -2,8 +2,8 @@ package app.aaps.plugins.aps.openAPSAMA
 
 import android.content.Context
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.interfaces.aps.APS
-import app.aaps.data.aps.AutosensResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker

@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.annotations.OpenForTesting;
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.constraints.ConstraintsChecker;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
@@ -20,7 +21,7 @@ import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpSync;
-import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.pump.defs.PumpDescriptionExtensionKt;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.AapsSchedulers;
@@ -88,7 +89,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         this.fabricPrivacy = fabricPrivacy;
 
         useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false);
-        pumpDescription.fillFor(PumpType.DANA_R);
+        PumpDescriptionExtensionKt.fillFor(pumpDescription, PumpType.DANA_R);
     }
 
     @Override

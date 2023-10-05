@@ -1,8 +1,8 @@
 package app.aaps.implementation.profile
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.sharedPreferences.SP

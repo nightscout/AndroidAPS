@@ -1,8 +1,9 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
-import app.aaps.database.entities.GlucoseValue
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
@@ -79,7 +80,7 @@ class TriggerBgTest : TriggerTestBase() {
 
     private fun generateOneCurrentRecordBgData(): MutableList<InMemoryGlucoseValue> {
         val list: MutableList<InMemoryGlucoseValue> = ArrayList()
-        list.add(InMemoryGlucoseValue(value = 214.0, timestamp = now - 1, trendArrow = GlucoseValue.TrendArrow.FLAT, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN))
+        list.add(InMemoryGlucoseValue(value = 214.0, timestamp = now - 1, trendArrow = TrendArrow.FLAT, sourceSensor = SourceSensor.UNKNOWN))
         return list
     }
 }

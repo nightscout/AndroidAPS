@@ -1,7 +1,7 @@
 package app.aaps.implementations
 
+import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.interfaces.aps.APSResult
-import app.aaps.data.aps.AutosensData
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.utils.DateUtil

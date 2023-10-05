@@ -26,7 +26,9 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.core.main.events.EventNewNotification;
+import app.aaps.core.data.pump.defs.ManufacturerType;
+import app.aaps.core.data.pump.defs.PumpDescription;
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.configuration.Config;
 import app.aaps.core.interfaces.constraints.Constraint;
 import app.aaps.core.interfaces.constraints.PluginConstraints;
@@ -45,9 +47,7 @@ import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpPluginBase;
 import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.pump.PumpSync.PumpState.TemporaryBasal;
-import app.aaps.core.interfaces.pump.defs.ManufacturerType;
-import app.aaps.core.interfaces.pump.defs.PumpDescription;
-import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.pump.defs.PumpDescriptionExtensionKt;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.bus.RxBus;
@@ -58,6 +58,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.interfaces.utils.T;
+import app.aaps.core.main.events.EventNewNotification;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.insight.database.InsightBolusID;
@@ -232,7 +233,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         this.insightDatabase = insightDatabase;
 
         pumpDescription = new PumpDescription();
-        pumpDescription.fillFor(PumpType.ACCU_CHEK_INSIGHT);
+        PumpDescriptionExtensionKt.fillFor(pumpDescription, PumpType.ACCU_CHEK_INSIGHT);
         lastBolusTimestamp = sp.getLong(R.string.key_insight_last_bolus_timestamp, 0L);
         lastBolusAmount = sp.getDouble(R.string.key_insight_last_bolus_amount, 0.0);
     }

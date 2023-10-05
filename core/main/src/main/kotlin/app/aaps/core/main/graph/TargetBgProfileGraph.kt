@@ -2,12 +2,12 @@ package app.aaps.core.main.graph
 
 import android.content.Context
 import android.util.AttributeSet
-import app.aaps.interfaces.graph.data.AreaGraphSeries
-import app.aaps.interfaces.graph.data.DoubleDataPoint
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.interfaces.graph.data.AreaGraphSeries
+import app.aaps.interfaces.graph.data.DoubleDataPoint
 import com.jjoe64.graphview.DefaultLabelFormatter
 import com.jjoe64.graphview.GraphView
 import java.text.NumberFormat

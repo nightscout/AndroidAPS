@@ -1,4 +1,4 @@
-package app.aaps.data.iob
+package app.aaps.core.data.iob
 
 @Suppress("SpellCheckingInspection")
 open class IobTotal(val time: Long) {

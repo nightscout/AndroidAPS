@@ -3,6 +3,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
+import app.aaps.core.data.pump.defs.ManufacturerType
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -19,9 +22,7 @@ import app.aaps.core.interfaces.pump.PumpPluginBase
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
-import app.aaps.core.interfaces.pump.defs.ManufacturerType
-import app.aaps.core.interfaces.pump.defs.PumpDescription
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
@@ -135,7 +136,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .preferencesId(R.xml.omnipod_dash_preferences)
             .description(R.string.omnipod_dash_pump_description)
 
-        private val pumpDescription = PumpDescription(PumpType.OMNIPOD_DASH)
+        private val pumpDescription = PumpDescription().fillFor(PumpType.OMNIPOD_DASH)
     }
 
     init {

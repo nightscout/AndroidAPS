@@ -1,7 +1,4 @@
-package app.aaps.core.interfaces.pump.defs
-
-import app.aaps.core.interfaces.utils.Round
-import kotlin.math.min
+package app.aaps.core.data.pump.defs
 
 @Suppress("unused")
 enum class PumpType {
@@ -463,7 +460,7 @@ enum class PumpType {
     var baseBasalMinValue = 0.01
         get() = parent?.baseBasalMinValue ?: field
         private set
-    private var baseBasalMaxValue: Double? = null
+    var baseBasalMaxValue: Double? = null
         get() = parent?.baseBasalMaxValue ?: field
     var baseBasalStep = 1.0
         get() = parent?.baseBasalStep ?: field
@@ -512,7 +509,7 @@ enum class PumpType {
     companion object {
 
         fun getByDescription(desc: String): PumpType =
-            values().firstOrNull { it.description == desc } ?: GENERIC_AAPS
+            entries.firstOrNull { it.description == desc } ?: GENERIC_AAPS
 
     }
 
@@ -566,27 +563,5 @@ enum class PumpType {
         this.supportBatteryLevel = supportBatteryLevel
         this.useHardwareLink = useHardwareLink
         this.source = source
-    }
-
-    fun baseBasalRange(): String =
-        if (baseBasalMaxValue == null) baseBasalMinValue.toString()
-        else baseBasalMinValue.toString() + "-" + baseBasalMaxValue.toString()
-
-    fun hasExtendedBasals(): Boolean = baseBasalSpecialSteps != null || specialBolusSize != null
-
-    fun determineCorrectBolusSize(bolusAmount: Double): Double =
-        Round.roundTo(bolusAmount, specialBolusSize?.getStepSizeForAmount(bolusAmount) ?: bolusSize)
-
-    fun determineCorrectBolusStepSize(bolusAmount: Double): Double =
-        specialBolusSize?.getStepSizeForAmount(bolusAmount) ?: bolusSize
-
-    fun determineCorrectExtendedBolusSize(bolusAmount: Double): Double {
-        val ebSettings = extendedBolusSettings ?: throw IllegalStateException()
-        return Round.roundTo(min(bolusAmount, ebSettings.maxDose), ebSettings.step)
-    }
-
-    fun determineCorrectBasalSize(basalAmount: Double): Double {
-        val tSettings = tbrSettings ?: throw IllegalStateException()
-        return Round.roundTo(min(basalAmount, tSettings.maxDose), baseBasalSpecialSteps?.getStepSizeForAmount(basalAmount) ?: baseBasalStep)
     }
 }

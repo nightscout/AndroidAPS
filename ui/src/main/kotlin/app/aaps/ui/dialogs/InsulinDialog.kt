@@ -7,13 +7,13 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.configuration.Constants.INSULIN_PLUS1_DEFAULT
+import app.aaps.core.data.configuration.Constants.INSULIN_PLUS2_DEFAULT
+import app.aaps.core.data.configuration.Constants.INSULIN_PLUS3_DEFAULT
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.data.configuration.Constants.INSULIN_PLUS1_DEFAULT
-import app.aaps.data.configuration.Constants.INSULIN_PLUS2_DEFAULT
-import app.aaps.data.configuration.Constants.INSULIN_PLUS3_DEFAULT
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.LTag
@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusStepSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper

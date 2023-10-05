@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
+import app.aaps.core.data.pump.defs.ManufacturerType
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -15,9 +18,7 @@ import app.aaps.core.interfaces.pump.PumpPluginBase
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.actions.CustomAction
 import app.aaps.core.interfaces.pump.actions.CustomActionType
-import app.aaps.core.interfaces.pump.defs.ManufacturerType
-import app.aaps.core.interfaces.pump.defs.PumpDescription
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.queue.CustomCommand
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -83,7 +84,7 @@ class EopatchPumpPlugin @Inject constructor(
 
     private var mPumpType: PumpType = PumpType.EOFLOW_EOPATCH2
     private var mLastDataTime: Long = 0
-    private val mPumpDescription = PumpDescription(mPumpType)
+    private val mPumpDescription = PumpDescription().fillFor(mPumpType)
 
     override fun onStart() {
         super.onStart()

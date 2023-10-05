@@ -1,14 +1,14 @@
 package app.aaps.plugins.main.general.smsCommunicator
 
 import android.telephony.SmsManager
-import app.aaps.data.aps.ApsMode
+import app.aaps.core.data.aps.ApsMode
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.data.iob.CobInfo
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
-import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profile.ProfileSource

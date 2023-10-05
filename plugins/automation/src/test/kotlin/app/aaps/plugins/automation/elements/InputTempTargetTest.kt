@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.elements
 
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.plugins.automation.triggers.TriggerTestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

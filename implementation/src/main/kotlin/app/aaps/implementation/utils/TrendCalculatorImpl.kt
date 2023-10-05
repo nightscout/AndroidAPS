@@ -1,13 +1,12 @@
 package app.aaps.implementation.utils
 
+import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.data.iob.InMemoryGlucoseValue
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.fromDb
-import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
@@ -23,7 +22,7 @@ class TrendCalculatorImpl @Inject constructor(
         when {
             glucoseValue?.trendArrow == null                    -> TrendArrow.NONE
             glucoseValue.trendArrow.fromDb() != TrendArrow.NONE -> glucoseValue.trendArrow.fromDb()
-            else                                                -> calculateDirection(InMemoryGlucoseValue(glucoseValue))
+            else                                                -> calculateDirection(InMemoryGlucoseValue.fromDb(glucoseValue))
         }
 
     override fun getTrendArrow(glucoseValue: InMemoryGlucoseValue?): TrendArrow =

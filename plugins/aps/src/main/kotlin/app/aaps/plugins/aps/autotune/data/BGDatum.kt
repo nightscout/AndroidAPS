@@ -1,9 +1,9 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.extensions.fromDb
-import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import org.json.JSONException
 import org.json.JSONObject

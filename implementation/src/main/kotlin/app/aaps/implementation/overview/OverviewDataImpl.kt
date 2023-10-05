@@ -4,13 +4,12 @@ import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
-import app.aaps.data.aps.AutosensData
+import app.aaps.core.data.aps.AutosensData
+import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.data.iob.InMemoryGlucoseValue
-import app.aaps.data.iob.CobInfo
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.DefaultValueHelper
@@ -22,22 +21,23 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.R
 import app.aaps.core.main.extensions.convertedToPercent
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.extensions.isInProgress
 import app.aaps.core.main.extensions.toStringFull
 import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.OverviewData
+import app.aaps.core.main.iob.round
+import app.aaps.database.ValueWrapper
+import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.TemporaryTarget
+import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.DeviationDataPoint
 import app.aaps.interfaces.graph.data.FixedLineGraphSeries
 import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
 import app.aaps.interfaces.graph.data.Scale
 import app.aaps.interfaces.graph.data.ScaledDataPoint
-import app.aaps.core.main.iob.round
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.impl.AppRepository
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -145,7 +145,7 @@ class OverviewDataImpl @Inject constructor(
     override fun lastBg(autosensDataStore: AutosensDataStore): InMemoryGlucoseValue? =
         autosensDataStore.bucketedData?.firstOrNull()
             ?: repository.getLastGlucoseValueWrapped().blockingGet().let { gvWrapped ->
-                if (gvWrapped is ValueWrapper.Existing) InMemoryGlucoseValue(gvWrapped.value)
+                if (gvWrapped is ValueWrapper.Existing) InMemoryGlucoseValue.fromDb(gvWrapped.value)
                 else null
             }
 
@@ -315,7 +315,6 @@ class OverviewDataImpl @Inject constructor(
     override var absIobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     override var iobPredictions1Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> =
         PointsWithLabelGraphSeries()
-    //var iobPredictions2Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 
     override var maxBGIValue = Double.MIN_VALUE
     override val bgiScale = Scale()

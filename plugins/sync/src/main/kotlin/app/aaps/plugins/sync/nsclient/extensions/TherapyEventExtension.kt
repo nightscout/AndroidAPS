@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.utils.JsonHelper

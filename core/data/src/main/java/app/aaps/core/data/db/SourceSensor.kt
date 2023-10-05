@@ -1,4 +1,4 @@
-package app.aaps.data.db
+package app.aaps.core.data.db
 
 enum class SourceSensor(val text: String) {
     DEXCOM_NATIVE_UNKNOWN("AAPS-Dexcom"),

@@ -1,6 +1,6 @@
 package app.aaps.core.main.pump
 
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.embedments.InterfaceIDs
 

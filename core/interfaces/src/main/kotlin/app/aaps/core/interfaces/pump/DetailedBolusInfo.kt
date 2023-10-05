@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.pump
 
 import android.content.Context
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs

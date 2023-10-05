@@ -3,7 +3,7 @@ package app.aaps.plugins.constraints.storage
 import android.os.Environment
 import android.os.StatFs
 import app.aaps.annotations.OpenForTesting
-import app.aaps.data.configuration.Constants
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger

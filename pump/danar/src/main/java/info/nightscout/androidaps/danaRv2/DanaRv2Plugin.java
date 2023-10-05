@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.annotations.OpenForTesting;
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.constraints.ConstraintsChecker;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
@@ -22,7 +23,7 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage;
-import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.pump.defs.PumpDescriptionExtensionKt;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.AapsSchedulers;
@@ -100,7 +101,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         getPluginDescription().description(info.nightscout.pump.dana.R.string.description_pump_dana_r_v2);
 
         useExtendedBoluses = false;
-        pumpDescription.fillFor(PumpType.DANA_RV2);
+        PumpDescriptionExtensionKt.fillFor(pumpDescription, PumpType.DANA_RV2);
     }
 
     @Override

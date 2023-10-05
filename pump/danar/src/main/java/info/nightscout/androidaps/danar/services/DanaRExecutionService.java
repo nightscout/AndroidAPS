@@ -8,14 +8,14 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import app.aaps.data.configuration.Constants;
+import app.aaps.core.data.configuration.Constants;
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.profile.ProfileFunction;
 import app.aaps.core.interfaces.pump.BolusProgressData;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
-import app.aaps.core.interfaces.pump.defs.PumpType;
 import app.aaps.core.interfaces.queue.Callback;
 import app.aaps.core.interfaces.queue.Command;
 import app.aaps.core.interfaces.queue.CommandQueue;
@@ -71,12 +71,6 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
     public void onCreate() {
         super.onCreate();
         mBinder = new LocalBinder();
-    }
-
-    public class LocalBinder extends Binder {
-        public DanaRExecutionService getServiceInstance() {
-            return DanaRExecutionService.this;
-        }
     }
 
     @SuppressLint("MissingPermission") public void connect() {
@@ -385,5 +379,11 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
         mSerialIOThread.sendMessage(msg);
         SystemClock.sleep(200);
         return new PumpEnactResult(injector).success(!msg.getFailed());
+    }
+
+    public class LocalBinder extends Binder {
+        public DanaRExecutionService getServiceInstance() {
+            return DanaRExecutionService.this;
+        }
     }
 }

@@ -2,8 +2,8 @@ package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin

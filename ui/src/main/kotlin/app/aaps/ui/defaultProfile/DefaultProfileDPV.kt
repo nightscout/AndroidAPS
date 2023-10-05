@@ -1,10 +1,10 @@
 package app.aaps.ui.defaultProfile
 
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.extensions.pureProfileFromJson
 import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONObject

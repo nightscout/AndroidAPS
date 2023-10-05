@@ -1,6 +1,6 @@
 package app.aaps.core.main.iob
 
-import app.aaps.data.iob.CobInfo
+import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
 

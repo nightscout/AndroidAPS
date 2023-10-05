@@ -30,6 +30,9 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.pump.defs.ManufacturerType;
+import app.aaps.core.data.pump.defs.PumpDescription;
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
@@ -45,9 +48,8 @@ import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpPluginBase;
 import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.pump.actions.CustomActionType;
-import app.aaps.core.interfaces.pump.defs.ManufacturerType;
-import app.aaps.core.interfaces.pump.defs.PumpDescription;
-import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.pump.defs.PumpDescriptionExtensionKt;
+import app.aaps.core.interfaces.pump.defs.PumpTypeExtensionKt;
 import app.aaps.core.interfaces.queue.Callback;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import app.aaps.core.interfaces.queue.CustomCommand;
@@ -120,11 +122,10 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable;
  */
 @Singleton
 public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, RileyLinkPumpDevice, OmnipodEros, OwnDatabasePlugin {
-    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
-    private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     public static final int STARTUP_STATUS_REQUEST_TRIES = 2;
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
-
+    private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
+    private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
     private final ErosPodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final AapsOmnipodErosManager aapsOmnipodErosManager;
@@ -149,12 +150,12 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private final DecimalFormatter decimalFormatter;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
-
+    private final boolean displayConnectionMessages = false;
+    private final Runnable statusChecker;
     // variables for handling statuses and history
     private boolean firstRun = true;
     private boolean hasTimeDateOrTimeZoneChanged = false;
     private Instant lastTimeDateOrTimeZoneUpdate = Instant.ofEpochSecond(0L);
-    private final boolean displayConnectionMessages = false;
     private RileyLinkOmnipodService rileyLinkOmnipodService;
     private boolean busy = false;
     private int timeChangeRetries;
@@ -162,8 +163,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     private long lastConnectionTimeMillis;
     private HandlerThread handlerThread;
     private Handler loopHandler;
-
-    private final Runnable statusChecker;
 
     @Inject
     public OmnipodErosPumpPlugin(
@@ -218,7 +217,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         this.erosHistoryDatabase = erosHistoryDatabase;
         this.decimalFormatter = decimalFormatter;
 
-        pumpDescription = new PumpDescription(pumpType);
+        pumpDescription = PumpDescriptionExtensionKt.fillFor(new PumpDescription(), pumpType);
 
         this.serviceConnection = new ServiceConnection() {
             @Override
@@ -1059,7 +1058,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew, tbrType);
         } else {
             double absoluteValue = profile.getBasal() * (percent / 100.0d);
-            absoluteValue = pumpDescription.getPumpType().determineCorrectBasalSize(absoluteValue);
+            absoluteValue = PumpTypeExtensionKt.determineCorrectBasalSize(pumpDescription.getPumpType(), absoluteValue);
             aapsLogger.warn(LTag.PUMP, "setTempBasalPercent [OmnipodPumpPlugin] - You are trying to use setTempBasalPercent with percent other then 0% (" + percent + "). This will start setTempBasalAbsolute, with calculated value (" + absoluteValue + "). Result might not be 100% correct.");
             return setTempBasalAbsolute(absoluteValue, durationInMinutes, profile, enforceNew, tbrType);
         }

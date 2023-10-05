@@ -1,13 +1,13 @@
 package info.nightscout.pump.medtrum
 
 import android.util.Base64
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -321,7 +321,7 @@ class MedtrumPump @Inject constructor(
     fun loadUserSettingsFromSP() {
         desiredPatchExpiration = sp.getBoolean(R.string.key_patch_expiration, false)
         val alarmSettingCode = sp.getString(R.string.key_alarm_setting, AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code.toString()).toByte()
-        desiredAlarmSetting = AlarmSetting.values().firstOrNull { it.code == alarmSettingCode } ?: AlarmSetting.LIGHT_VIBRATE_AND_BEEP
+        desiredAlarmSetting = AlarmSetting.entries.firstOrNull { it.code == alarmSettingCode } ?: AlarmSetting.LIGHT_VIBRATE_AND_BEEP
         desiredHourlyMaxInsulin = sp.getInt(R.string.key_hourly_max_insulin, 40)
         desiredDailyMaxInsulin = sp.getInt(R.string.key_daily_max_insulin, 180)
         _pumpSN = pumpSNFromSP
@@ -601,12 +601,12 @@ class MedtrumPump @Inject constructor(
             EnumSet.noneOf(AlarmState::class.java)
         } else {
             alarmsStr.split(",")
-                .mapNotNull { AlarmState.values().find { alarm -> alarm.name == it } }
+                .mapNotNull { AlarmState.entries.find { alarm -> alarm.name == it } }
                 .let { EnumSet.copyOf(it) }
         }
     }
 
     private fun newRecordInfo(newRecord: Boolean): String {
-        return "${if (newRecord) "**NEW** " else ""}"
+        return if (newRecord) "**NEW** " else ""
     }
 }

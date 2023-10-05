@@ -1,8 +1,9 @@
 package app.aaps.implementation.overview
 
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.utils.T
 import app.aaps.database.ValueWrapper
@@ -30,7 +31,7 @@ class OverviewDataImplTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        sut = OverviewDataImpl(aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, repository, decimalFormatter)
+        sut = OverviewDataImpl(aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, repository, decimalFormatter) { iobCobCalculator }
         Mockito.`when`(defaultValueHelper.determineLowLine()).thenReturn(80.0)
         Mockito.`when`(defaultValueHelper.determineHighLine()).thenReturn(180.0)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
@@ -39,7 +40,7 @@ class OverviewDataImplTest : TestBaseWithProfile() {
     @Test
     fun lastBg() {
         val bucketedData: MutableList<InMemoryGlucoseValue> = mutableListOf()
-        bucketedData.add(InMemoryGlucoseValue(time, 70.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN))
+        bucketedData.add(InMemoryGlucoseValue(time, 70.0, sourceSensor = SourceSensor.UNKNOWN))
         // no data
         Mockito.`when`(autosensDataStore.bucketedData).thenReturn(null)
         Mockito.`when`(repository.getLastGlucoseValueWrapped()).thenReturn(Single.just(ValueWrapper.Absent()))

@@ -1,4 +1,4 @@
-package app.aaps.data.configuration
+package app.aaps.core.data.configuration
 
 /**
  * Created by mike on 07.06.2016.

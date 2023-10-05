@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
@@ -20,7 +21,7 @@ import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpSync;
-import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.pump.defs.PumpTypeExtensionKt;
 import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.AapsSchedulers;
 import app.aaps.core.interfaces.rx.bus.RxBus;
@@ -160,7 +161,7 @@ public class AapsOmnipodErosManager {
         }
         List<BasalScheduleEntry> entries = new ArrayList<>();
         for (Profile.ProfileValue basalValue : basalValues) {
-            entries.add(new BasalScheduleEntry(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(basalValue.getValue()),
+            entries.add(new BasalScheduleEntry(PumpTypeExtensionKt.determineCorrectBasalSize(PumpType.OMNIPOD_EROS, basalValue.getValue()),
                     Duration.standardSeconds(basalValue.getTimeAsSeconds())));
         }
 
@@ -395,13 +396,14 @@ public class AapsOmnipodErosManager {
 
         Date bolusStarted;
         try {
-            bolusCommandResult = executeCommand(() -> delegate.bolus(PumpType.OMNIPOD_EROS.determineCorrectBolusSize(detailedBolusInfo.insulin), beepsEnabled, beepsEnabled, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? null :
-                    (estimatedUnitsDelivered, percentage) -> {
-                        EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
-                        progressUpdateEvent.setStatus(getStringResource(info.nightscout.pump.common.R.string.bolus_delivered_so_far, estimatedUnitsDelivered, detailedBolusInfo.insulin));
-                        progressUpdateEvent.setPercent(percentage);
-                        sendEvent(progressUpdateEvent);
-                    }));
+            bolusCommandResult = executeCommand(() -> delegate.bolus(PumpTypeExtensionKt.determineCorrectBolusSize(PumpType.OMNIPOD_EROS, detailedBolusInfo.insulin), beepsEnabled, beepsEnabled,
+                    detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? null :
+                            (estimatedUnitsDelivered, percentage) -> {
+                                EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
+                                progressUpdateEvent.setStatus(getStringResource(info.nightscout.pump.common.R.string.bolus_delivered_so_far, estimatedUnitsDelivered, detailedBolusInfo.insulin));
+                                progressUpdateEvent.setPercent(percentage);
+                                sendEvent(progressUpdateEvent);
+                            }));
 
             bolusStarted = new Date();
         } catch (Exception ex) {
@@ -507,7 +509,8 @@ public class AapsOmnipodErosManager {
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
         boolean beepsEnabled = isTbrBeepsEnabled();
         try {
-            executeCommand(() -> delegate.setTemporaryBasal(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(tempBasalPair.getInsulinRate()), Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled));
+            executeCommand(() -> delegate.setTemporaryBasal(PumpTypeExtensionKt.determineCorrectBasalSize(PumpType.OMNIPOD_EROS, tempBasalPair.getInsulinRate()),
+                    Duration.standardMinutes(tempBasalPair.getDurationMinutes()), beepsEnabled, beepsEnabled));
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
@@ -549,7 +552,7 @@ public class AapsOmnipodErosManager {
 
         return new PumpEnactResult(injector)
                 .duration(tempBasalPair.getDurationMinutes())
-                .absolute(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(tempBasalPair.getInsulinRate()))
+                .absolute(PumpTypeExtensionKt.determineCorrectBasalSize(PumpType.OMNIPOD_EROS, tempBasalPair.getInsulinRate()))
                 .success(true).enacted(true);
     }
 

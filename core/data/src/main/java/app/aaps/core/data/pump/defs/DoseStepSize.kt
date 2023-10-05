@@ -1,4 +1,4 @@
-package app.aaps.core.interfaces.pump.defs
+package app.aaps.core.data.pump.defs
 
 import java.util.Locale
 

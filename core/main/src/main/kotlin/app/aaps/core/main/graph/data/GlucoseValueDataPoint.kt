@@ -2,12 +2,12 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.main.extensions.toDb
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.data.db.SourceSensor
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.Shape

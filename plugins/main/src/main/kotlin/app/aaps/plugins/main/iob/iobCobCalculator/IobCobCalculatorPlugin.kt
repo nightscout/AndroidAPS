@@ -2,15 +2,15 @@ package app.aaps.plugins.main.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
 import app.aaps.annotations.OpenForTesting
-import app.aaps.data.aps.AutosensData
+import app.aaps.core.data.aps.AutosensData
+import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.data.aps.BasalData
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.iob.MealData
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.data.aps.AutosensResult
-import app.aaps.data.aps.BasalData
-import app.aaps.data.configuration.Constants
-import app.aaps.data.iob.CobInfo
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.data.iob.IobTotal
-import app.aaps.data.iob.MealData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin

@@ -1,14 +1,14 @@
 package info.nightscout.pump.dana
 
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileStore
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
@@ -50,7 +50,7 @@ class DanaPump @Inject constructor(
 
         companion object {
 
-            private val map = values().associateBy(ErrorState::code)
+            private val map = entries.associateBy(ErrorState::code)
             operator fun get(value: Int) = map[value]
         }
     }
@@ -470,7 +470,7 @@ class DanaPump @Inject constructor(
 
         companion object {
 
-            fun fromInt(value: Int) = values().firstOrNull { it.value == value } ?: throw InvalidParameterException()
+            fun fromInt(value: Int) = entries.firstOrNull { it.value == value } ?: throw InvalidParameterException()
         }
 
     }

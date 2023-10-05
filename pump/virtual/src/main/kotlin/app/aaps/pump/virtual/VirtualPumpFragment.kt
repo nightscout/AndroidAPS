@@ -6,11 +6,13 @@ import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.pump.defs.DoseStepSize
+import app.aaps.core.data.pump.defs.PumpTempBasalType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.defs.DoseStepSize
-import app.aaps.core.interfaces.pump.defs.PumpTempBasalType
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.baseBasalRange
+import app.aaps.core.interfaces.pump.defs.hasExtendedBasals
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus

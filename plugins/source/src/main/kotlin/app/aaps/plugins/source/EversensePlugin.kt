@@ -3,6 +3,8 @@ package app.aaps.plugins.source
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -14,8 +16,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.data.db.SourceSensor
-import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction

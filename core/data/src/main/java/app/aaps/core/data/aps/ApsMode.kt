@@ -1,4 +1,4 @@
-package app.aaps.data.aps
+package app.aaps.core.data.aps
 
 enum class ApsMode {
     OPEN,

@@ -1,6 +1,6 @@
 package app.aaps.core.main.iob
 
-import app.aaps.data.iob.IobTotal
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import org.json.JSONException

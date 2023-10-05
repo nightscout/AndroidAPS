@@ -1,12 +1,12 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.R
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.data.db.SourceSensor
-import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 import org.json.JSONObject
 

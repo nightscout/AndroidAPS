@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -24,8 +26,6 @@ import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.data.db.SourceSensor
-import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources

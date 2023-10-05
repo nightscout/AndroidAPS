@@ -1,7 +1,7 @@
 package app.aaps.plugins.aps.autotune
 
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.data.iob.IobTotal
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.PureProfile

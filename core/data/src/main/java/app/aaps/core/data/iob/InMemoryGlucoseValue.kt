@@ -1,7 +1,7 @@
-package app.aaps.data.iob
+package app.aaps.core.data.iob
 
-import app.aaps.data.db.SourceSensor
-import app.aaps.data.db.TrendArrow
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
 
 /**
  * Simplified [app.aaps.database.entities.GlucoseValue] for storing in memory and calculations
@@ -36,4 +36,6 @@ class InMemoryGlucoseValue(
      * non smoothed value as a fallback
      */
     val recalculated: Double get() = smoothed ?: value
+
+    companion object
 }

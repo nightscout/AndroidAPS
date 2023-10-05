@@ -6,6 +6,9 @@ import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -19,9 +22,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.toDb
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.SourceSensor
-import app.aaps.data.db.TrendArrow
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.ValueWithUnit

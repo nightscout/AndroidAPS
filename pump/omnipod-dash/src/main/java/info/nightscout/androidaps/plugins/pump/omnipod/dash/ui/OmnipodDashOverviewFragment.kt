@@ -8,10 +8,12 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
+import app.aaps.core.interfaces.pump.defs.determineCorrectBolusSize
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -391,8 +393,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
                     rh.gs(
                         app.aaps.core.ui.R.string.pump_base_basal_rate,
-                        omnipodDashPumpPlugin.model()
-                            .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
+                        omnipodDashPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
                     )
                 } else {
                     PLACEHOLDER

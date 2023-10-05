@@ -56,7 +56,7 @@ data class InterfaceIDs @Ignore constructor(
 
         companion object {
 
-            fun fromString(name: String?) = values().firstOrNull { it.name == name }
+            fun fromString(name: String?) = entries.firstOrNull { it.name == name }
         }
     }
 }

@@ -1,5 +1,9 @@
 package app.aaps.core.interfaces.pump.defs
 
+import app.aaps.core.data.pump.defs.PumpCapability
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpTempBasalType
+import app.aaps.core.data.pump.defs.PumpType
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 

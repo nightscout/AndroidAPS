@@ -12,8 +12,8 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.data.configuration.Constants
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag

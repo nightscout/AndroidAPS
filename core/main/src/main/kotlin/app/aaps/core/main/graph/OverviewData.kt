@@ -4,11 +4,10 @@ import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.aps.AutosensData
+import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.data.iob.InMemoryGlucoseValue
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
-import app.aaps.data.aps.AutosensData
-import app.aaps.data.iob.CobInfo
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface

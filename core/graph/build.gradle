@@ -16,9 +16,6 @@ apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 android {
 
     namespace 'app.aaps.core.interfaces.graph'
-    defaultConfig {
-        minSdkVersion 26  // for wear
-    }
 }
 
 dependencies {

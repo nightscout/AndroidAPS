@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.profile
 
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.database.entities.ProfileSwitch
 
 interface ProfileFunction {

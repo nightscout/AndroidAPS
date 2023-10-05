@@ -3,15 +3,14 @@ package app.aaps.plugins.main.iob.iobCobCalculator.data
 import androidx.collection.LongSparseArray
 import androidx.collection.size
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.aps.AutosensData
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.core.main.extensions.fromDb
-import app.aaps.data.aps.AutosensData
 import app.aaps.database.entities.GlucoseValue
 import kotlin.math.abs
 import kotlin.math.roundToLong
@@ -240,7 +239,7 @@ class AutosensDataStoreObject : AutosensDataStore {
             val older = findOlder(currentTime)
             if (newer == null || older == null) break
             if (older.timestamp == newer.timestamp) { // direct hit
-                newBucketedData.add(InMemoryGlucoseValue(newer))
+                newBucketedData.add(InMemoryGlucoseValue.fromDb(newer))
             } else {
                 val bgDelta = newer.value - older.value
                 val timeDiffToNew = newer.timestamp - currentTime
@@ -262,7 +261,7 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
         val lastBg = bgReadings[0]
         val bData: MutableList<InMemoryGlucoseValue> = ArrayList()
-        bData.add(InMemoryGlucoseValue(bgReadings[0]))
+        bData.add(InMemoryGlucoseValue.fromDb(bgReadings[0]))
         aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgReadings[0].timestamp)} lastBgTime: none-first-value ${bgReadings[0]}" }
         var j = 0
         for (i in 1 until bgReadings.size) {

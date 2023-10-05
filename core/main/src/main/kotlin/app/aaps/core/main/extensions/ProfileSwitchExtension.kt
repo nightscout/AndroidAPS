@@ -1,7 +1,7 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter

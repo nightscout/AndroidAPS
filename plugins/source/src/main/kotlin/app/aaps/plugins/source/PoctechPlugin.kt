@@ -3,6 +3,10 @@ package app.aaps.plugins.source
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -13,10 +17,6 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.JsonHelper.safeGetString
-import app.aaps.data.configuration.Constants
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.data.db.SourceSensor
-import app.aaps.data.db.TrendArrow
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
 import app.aaps.database.transactions.TransactionGlucoseValue

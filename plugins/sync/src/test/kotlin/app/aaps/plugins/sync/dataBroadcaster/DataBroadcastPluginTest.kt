@@ -1,19 +1,19 @@
 package app.aaps.plugins.sync.dataBroadcaster
 
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.iob.CobInfo
+import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.data.iob.CobInfo
-import app.aaps.data.iob.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
-import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -47,7 +47,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
             loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN))
+        Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))
         Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         Mockito.`when`(profileFunction.getProfileName()).thenReturn("TestProfile")

@@ -12,11 +12,11 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -33,13 +33,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.directionToIcon
-import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.displayText
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.database.entities.interfaces.end
-import dagger.android.HasAndroidInjector
 import app.aaps.ui.R
+import dagger.android.HasAndroidInjector
 import java.util.Locale
 import javax.inject.Inject
 import kotlin.math.abs

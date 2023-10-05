@@ -1,7 +1,7 @@
 package app.aaps.plugins.main.general.smsCommunicator
 
 import android.os.SystemClock
-import app.aaps.data.configuration.Constants
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.queue.CommandQueue

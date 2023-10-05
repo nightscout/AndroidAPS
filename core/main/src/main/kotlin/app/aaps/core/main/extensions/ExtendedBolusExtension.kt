@@ -1,8 +1,8 @@
 package app.aaps.core.main.extensions
 
-import app.aaps.data.aps.AutosensResult
+import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.data.iob.IobTotal
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter

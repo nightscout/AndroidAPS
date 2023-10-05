@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.aps
 
+import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.interfaces.configuration.ConfigExportImport
-import app.aaps.data.aps.AutosensResult
 
 interface Sensitivity : ConfigExportImport {
 

@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.data.aps.AutosensResult
+import app.aaps.core.data.aps.AutosensResult
 
 interface APS {
 

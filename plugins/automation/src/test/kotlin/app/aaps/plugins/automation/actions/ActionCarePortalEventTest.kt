@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import app.aaps.database.impl.transactions.Transaction

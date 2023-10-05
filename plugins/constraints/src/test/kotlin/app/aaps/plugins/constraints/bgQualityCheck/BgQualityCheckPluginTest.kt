@@ -1,8 +1,8 @@
 package app.aaps.plugins.constraints.bgQualityCheck
 
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.plugins.constraints.R
 import app.aaps.shared.tests.TestBase
@@ -341,7 +342,7 @@ class BgQualityCheckPluginTest : TestBase() {
             )
         )
         `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(flatData)
-        `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue(flatData[0]))
+        `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue.fromDb(flatData[0]))
 
         plugin.processBgData()
         assertThat(plugin.state).isEqualTo(BgQualityCheck.State.FLAT)
@@ -450,7 +451,7 @@ class BgQualityCheckPluginTest : TestBase() {
             )
         )
         `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(flatDataDexcom)
-        `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue(flatDataDexcom[0]))
+        `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue.fromDb(flatDataDexcom[0]))
 
         plugin.processBgData()
         assertThat(plugin.state).isNotEqualTo(BgQualityCheck.State.FLAT)
@@ -479,7 +480,7 @@ class BgQualityCheckPluginTest : TestBase() {
             )
         )
         `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(incompleteData)
-        `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue(incompleteData[0]))
+        `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue.fromDb(incompleteData[0]))
         plugin.processBgData()// must be more than 5 values
         assertThat(plugin.state).isNotEqualTo(BgQualityCheck.State.FLAT)
         flatData.add(

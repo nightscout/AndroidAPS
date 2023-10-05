@@ -1,6 +1,6 @@
 package app.aaps.plugins.main.extensions
 
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.main.extensions.highValueToUnitsToString
 import app.aaps.core.main.extensions.lowValueToUnitsToString
 import app.aaps.core.main.extensions.target

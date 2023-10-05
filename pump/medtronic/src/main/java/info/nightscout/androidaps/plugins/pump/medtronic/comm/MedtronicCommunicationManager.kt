@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.os.SystemClock
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst

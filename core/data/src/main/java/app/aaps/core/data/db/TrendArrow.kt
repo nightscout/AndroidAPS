@@ -1,4 +1,4 @@
-package app.aaps.data.db
+package app.aaps.core.data.db
 
 enum class TrendArrow(val text: String, val symbol: String) {
     NONE("NONE", "??"),

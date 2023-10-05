@@ -1,14 +1,16 @@
 package info.nightscout.pump.diaconn.packet
 
 import android.content.Context
+import app.aaps.core.data.pump.defs.PumpDescription
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
-import app.aaps.core.interfaces.pump.defs.PumpDescription
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
+import app.aaps.core.interfaces.pump.defs.fillFor
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
@@ -79,7 +81,7 @@ class BigLogInquireResponsePacket(
     @Inject lateinit var context: Context
 
     var result = 0// 조회결과
-    private var pumpDesc = PumpDescription(PumpType.DIACONN_G8)
+    private var pumpDesc = PumpDescription().fillFor(PumpType.DIACONN_G8)
 
     init {
         msgType = 0xb2.toByte()

@@ -19,6 +19,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.pump.defs.ManufacturerType;
+import app.aaps.core.data.pump.defs.PumpDescription;
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.constraints.Constraint;
 import app.aaps.core.interfaces.constraints.PluginConstraints;
 import app.aaps.core.interfaces.logging.AAPSLogger;
@@ -33,9 +36,7 @@ import app.aaps.core.interfaces.pump.Pump;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpPluginBase;
 import app.aaps.core.interfaces.pump.PumpSync;
-import app.aaps.core.interfaces.pump.defs.ManufacturerType;
-import app.aaps.core.interfaces.pump.defs.PumpDescription;
-import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.pump.defs.PumpDescriptionExtensionKt;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.bus.RxBus;
@@ -191,7 +192,8 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
         this.ruffyScripter = ruffyScripter;
         this.uiInteraction = activitynames;
 
-        pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO);
+
+        PumpDescriptionExtensionKt.fillFor(pumpDescription, PumpType.ACCU_CHEK_COMBO);
     }
 
     @Override protected void onStart() {
@@ -340,10 +342,10 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
              * */
 
             if (rate < 1) {
-                //round to 0.01 granularity;
+                //round to 0.01 granularity
                 rate = Math.round(rate / 0.01) * 0.01;
             } else {
-                //round to 0.05 granularity;
+                //round to 0.05 granularity
                 rate = Math.round(rate / 0.05) * 0.05;
             }
 

@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -131,7 +131,6 @@ class MedtronicHistoryData @Inject constructor(
         val bolusEstimates: MutableList<PumpHistoryEntry> = mutableListOf()
         val aTechDate = DateTimeUtil.toATechDate(GregorianCalendar())
 
-        //aapsLogger.debug(LTag.PUMP, "Filter new entries: Before {}", newHistory);
         if (!isCollectionEmpty(newHistory)) {
             for (pumpHistoryEntry in newHistory) {
                 if (!allPumpIds.contains(pumpHistoryEntry.pumpId)) {
@@ -1284,9 +1283,6 @@ class MedtronicHistoryData @Inject constructor(
 
     // HELPER METHODS
     private fun sort(list: MutableList<PumpHistoryEntry>) {
-        // if (list != null && !list.isEmpty()) {
-        //     Collections.sort(list, PumpHistoryEntry.Comparator())
-        // }
         list.sortWith(PumpHistoryEntry.Comparator())
     }
 

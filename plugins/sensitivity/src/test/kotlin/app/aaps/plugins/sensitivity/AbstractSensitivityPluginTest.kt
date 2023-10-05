@@ -1,7 +1,7 @@
 package app.aaps.plugins.sensitivity
 
+import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.interfaces.aps.AutosensDataStore
-import app.aaps.data.aps.AutosensResult
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginDescription

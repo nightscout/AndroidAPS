@@ -1,6 +1,7 @@
 package app.aaps.plugins.main.extensions
 
-import app.aaps.data.aps.SMBDefaults
+import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -8,7 +9,6 @@ import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.extensions.iobCalc
 import app.aaps.core.main.extensions.isInProgress
 import app.aaps.core.main.extensions.toTemporaryBasal
-import app.aaps.data.aps.AutosensResult
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.plugins.insulin.InsulinLyumjevPlugin

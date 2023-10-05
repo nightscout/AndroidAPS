@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.smoothing
 
-import app.aaps.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 
 interface Smoothing {
 

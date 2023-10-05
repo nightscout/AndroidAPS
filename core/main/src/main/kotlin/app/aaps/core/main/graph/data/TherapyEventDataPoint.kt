@@ -2,7 +2,7 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
-import app.aaps.data.configuration.Constants
+import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator

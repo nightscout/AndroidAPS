@@ -1,7 +1,7 @@
 package app.aaps.core.main.profile
 
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.data.db.GlucoseUnit
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.Profile.ProfileValue

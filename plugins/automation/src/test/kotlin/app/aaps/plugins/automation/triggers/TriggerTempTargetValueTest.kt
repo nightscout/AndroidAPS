@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.plugins.automation.R

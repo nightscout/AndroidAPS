@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.pump
 
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
@@ -294,7 +294,7 @@ interface PumpSync {
 
         companion object {
 
-            fun fromDbType(dbType: TemporaryBasal.Type) = values().firstOrNull { it.name == dbType.name }
+            fun fromDbType(dbType: TemporaryBasal.Type) = entries.firstOrNull { it.name == dbType.name }
                 ?: NORMAL
         }
 

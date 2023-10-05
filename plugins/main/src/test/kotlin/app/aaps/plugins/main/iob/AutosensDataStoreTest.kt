@@ -2,7 +2,7 @@ package app.aaps.plugins.main.iob
 
 import android.content.Context
 import androidx.collection.LongSparseArray
-import app.aaps.data.aps.AutosensData
+import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP

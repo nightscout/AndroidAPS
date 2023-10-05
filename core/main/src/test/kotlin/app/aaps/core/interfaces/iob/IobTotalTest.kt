@@ -1,14 +1,14 @@
 package app.aaps.core.interfaces.iob
 
 import android.content.Context
+import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.iob.combine
 import app.aaps.core.main.iob.copy
 import app.aaps.core.main.iob.determineBasalJson
 import app.aaps.core.main.iob.json
 import app.aaps.core.main.iob.plus
 import app.aaps.core.main.iob.round
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.data.iob.IobTotal
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat

@@ -1,4 +1,4 @@
-package app.aaps.data.db
+package app.aaps.core.data.db
 
 @Suppress("SpellCheckingInspection")
 enum class GlucoseUnit(val asText: String) {

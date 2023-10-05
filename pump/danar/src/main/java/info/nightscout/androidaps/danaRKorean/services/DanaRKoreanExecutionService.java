@@ -8,7 +8,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import app.aaps.data.configuration.Constants;
+import app.aaps.core.data.configuration.Constants;
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.constraints.ConstraintsChecker;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
@@ -18,7 +19,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction;
 import app.aaps.core.interfaces.pump.BolusProgressData;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpSync;
-import app.aaps.core.interfaces.pump.defs.PumpType;
 import app.aaps.core.interfaces.queue.Command;
 import app.aaps.core.interfaces.queue.CommandQueue;
 import app.aaps.core.interfaces.resources.ResourceHelper;

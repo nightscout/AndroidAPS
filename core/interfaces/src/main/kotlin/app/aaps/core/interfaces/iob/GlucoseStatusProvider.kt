@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.iob
 
-import app.aaps.data.iob.GlucoseStatus
+import app.aaps.core.data.iob.GlucoseStatus
 
 interface GlucoseStatusProvider {
 

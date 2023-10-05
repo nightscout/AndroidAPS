@@ -1,8 +1,8 @@
 package app.aaps.plugins.insulin
 
+import app.aaps.core.data.iob.Iob
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.data.iob.Iob
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.PluginBase

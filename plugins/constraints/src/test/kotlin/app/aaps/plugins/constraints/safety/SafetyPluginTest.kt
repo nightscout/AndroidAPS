@@ -1,13 +1,13 @@
 package app.aaps.plugins.constraints.safety
 
-import app.aaps.data.aps.ApsMode
+import app.aaps.core.data.aps.ApsMode
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.profiling.Profiler
-import app.aaps.core.interfaces.pump.defs.PumpDescription
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits

@@ -1,13 +1,13 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import app.aaps.core.data.aps.SMBDefaults
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.iob.MealData
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
-import app.aaps.data.aps.SMBDefaults
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.data.iob.GlucoseStatus
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.data.iob.IobTotal
-import app.aaps.data.iob.MealData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver
 
 import app.aaps.annotations.OpenForTesting
-import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -111,7 +111,7 @@ class MedtronicPumpStatus @Inject constructor(
 
     fun getBatteryTypeByDescription(batteryTypeStr: String?): BatteryType {
         if (batteryTypeByDescMap.isEmpty()) {
-            for (value in BatteryType.values()) {
+            for (value in BatteryType.entries) {
                 batteryTypeByDescMap[rh.gs(value.description)] = value
             }
         }

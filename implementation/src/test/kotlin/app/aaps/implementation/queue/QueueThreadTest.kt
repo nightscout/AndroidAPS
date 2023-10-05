@@ -2,11 +2,11 @@ package app.aaps.implementation.queue
 
 import android.content.Context
 import android.os.PowerManager
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.pump.defs.PumpDescription
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.main.constraints.ConstraintObject

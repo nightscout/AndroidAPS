@@ -2,13 +2,13 @@ package app.aaps.core.interfaces.iob
 
 import android.content.Context
 import android.graphics.Color
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.main.graph.data.InMemoryGlucoseValueDataPoint
-import app.aaps.data.iob.InMemoryGlucoseValue
-import app.aaps.database.entities.GlucoseValue
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -37,7 +37,7 @@ internal class InMemoryGlucoseValueDataPointTest {
 
     @Test
     fun alphaShouldBeAddedForFilledGaps() {
-        val gv = InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN)
+        val gv = InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN)
         val sut = InMemoryGlucoseValueDataPoint(gv, defaultValueHelper, profileFunction, rh)
 
         var alpha = sut.color(context).ushr(24)

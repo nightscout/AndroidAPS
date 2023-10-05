@@ -8,9 +8,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import app.aaps.core.interfaces.pump.PumpSync;
-import app.aaps.core.interfaces.pump.defs.PumpType;
 import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.AapsSchedulers;
 import app.aaps.core.interfaces.rx.bus.RxBus;
@@ -57,6 +57,7 @@ import io.reactivex.rxjava3.disposables.Disposable;
 @Singleton
 public class PatchManager implements IPatchManager {
 
+    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     @Inject PatchManagerImpl patchManager;
     @Inject IPreferenceManager pm;
     @Inject ResourceHelper resourceHelper;
@@ -68,9 +69,7 @@ public class PatchManager implements IPatchManager {
     @Inject RxAction rxAction;
     @Inject AapsSchedulers aapsSchedulers;
     @Inject IAlarmRegistry alarmRegistry;
-
     private IPatchScanner patchScanner;
-    private final CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private Disposable mConnectingDisposable = null;
 
     @Inject

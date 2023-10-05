@@ -1,9 +1,11 @@
 package app.aaps.plugins.main.extensions
 
-import app.aaps.data.db.GlucoseUnit
-import app.aaps.core.main.extensions.InMemoryGlucoseValue
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.main.R
 import app.aaps.core.main.extensions.directionToIcon
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -14,7 +16,7 @@ class GlucoseValueExtensionKtTest : TestBaseWithProfile() {
 
     private val glucoseValue =
         GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT)
-    private val inMemoryGlucoseValue = InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN)
+    private val inMemoryGlucoseValue = InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN)
 
     @Test
     fun valueToUnitsString() {
@@ -28,24 +30,24 @@ class GlucoseValueExtensionKtTest : TestBaseWithProfile() {
 
     @Test
     fun directionToIcon() {
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_flat)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_flat)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.NONE
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_invalid)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_invalid)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.TRIPLE_DOWN
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_invalid)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_invalid)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.TRIPLE_UP
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_invalid)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_invalid)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.DOUBLE_DOWN
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_doubledown)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_doubledown)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.SINGLE_DOWN
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_singledown)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_singledown)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.FORTY_FIVE_DOWN
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_fortyfivedown)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_fortyfivedown)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.FORTY_FIVE_UP
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_fortyfiveup)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_fortyfiveup)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.SINGLE_UP
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_singleup)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_singleup)
         glucoseValue.trendArrow = GlucoseValue.TrendArrow.DOUBLE_UP
-        assertThat(glucoseValue.trendArrow.directionToIcon()).isEqualTo(R.drawable.ic_doubleup)
+        assertThat(glucoseValue.trendArrow.fromDb().directionToIcon()).isEqualTo(R.drawable.ic_doubleup)
     }
 }

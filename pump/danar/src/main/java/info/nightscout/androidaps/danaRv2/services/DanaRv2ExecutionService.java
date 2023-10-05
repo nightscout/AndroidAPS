@@ -9,7 +9,8 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
-import app.aaps.data.configuration.Constants;
+import app.aaps.core.data.configuration.Constants;
+import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
@@ -20,7 +21,6 @@ import app.aaps.core.interfaces.pump.BolusProgressData;
 import app.aaps.core.interfaces.pump.Pump;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpSync;
-import app.aaps.core.interfaces.pump.defs.PumpType;
 import app.aaps.core.interfaces.queue.Callback;
 import app.aaps.core.interfaces.queue.Command;
 import app.aaps.core.interfaces.queue.CommandQueue;
@@ -92,12 +92,6 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject UiInteraction uiInteraction;
 
     public DanaRv2ExecutionService() {
-    }
-
-    public class LocalBinder extends Binder {
-        public DanaRv2ExecutionService getServiceInstance() {
-            return DanaRv2ExecutionService.this;
-        }
     }
 
     @Override
@@ -470,6 +464,12 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         mSerialIOThread.sendMessage(msg);
         SystemClock.sleep(200);
         return new PumpEnactResult(injector).success(!msg.getFailed());
+    }
+
+    public class LocalBinder extends Binder {
+        public DanaRv2ExecutionService getServiceInstance() {
+            return DanaRv2ExecutionService.this;
+        }
     }
 
 }

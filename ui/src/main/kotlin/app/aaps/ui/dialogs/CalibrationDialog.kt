@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -15,9 +15,9 @@ import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.ValueWithUnit
+import app.aaps.ui.databinding.DialogCalibrationBinding
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import app.aaps.ui.databinding.DialogCalibrationBinding
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject

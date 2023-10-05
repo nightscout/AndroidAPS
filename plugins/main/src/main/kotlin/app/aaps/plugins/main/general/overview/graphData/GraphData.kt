@@ -3,7 +3,7 @@ package app.aaps.plugins.main.general.overview.graphData
 import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
-import app.aaps.data.db.GlucoseUnit
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -13,10 +13,10 @@ import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.graph.data.BolusDataPoint
 import app.aaps.core.main.graph.data.EffectiveProfileSwitchDataPoint
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint
-import app.aaps.interfaces.graph.data.TimeAsXAxisLabelFormatter
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.interfaces.graph.data.AreaGraphSeries
 import app.aaps.interfaces.graph.data.DoubleDataPoint
+import app.aaps.interfaces.graph.data.TimeAsXAxisLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries

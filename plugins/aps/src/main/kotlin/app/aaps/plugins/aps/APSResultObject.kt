@@ -1,6 +1,10 @@
 package app.aaps.plugins.aps
 
 import android.text.Spanned
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -9,7 +13,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.defs.PumpDescription
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
@@ -19,9 +22,6 @@ import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.data.db.SourceSensor
-import app.aaps.data.db.TrendArrow
-import app.aaps.data.iob.IobTotal
 import app.aaps.database.entities.GlucoseValue
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
