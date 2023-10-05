@@ -3,8 +3,8 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.plugins.automation.elements.ComparatorConnect
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerBTDeviceTest : TriggerTestBase() {
 
@@ -19,14 +19,14 @@ class TriggerBTDeviceTest : TriggerTestBase() {
     @Test fun toJSON() {
         val t = TriggerBTDevice(injector)
         t.btDevice.value = someName
-        Assertions.assertEquals(btJson, t.toJSON())
+        JSONAssert.assertEquals(btJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSON() {
         val t2 = TriggerDummy(injector).instantiate(JSONObject(btJson)) as TriggerBTDevice
-        Assertions.assertEquals(ComparatorConnect.Compare.ON_CONNECT, t2.comparator.value)
-        Assertions.assertEquals("Headset", t2.btDevice.value)
+        assertThat(t2.comparator.value).isEqualTo(ComparatorConnect.Compare.ON_CONNECT)
+        assertThat(t2.btDevice.value).isEqualTo("Headset")
     }
 
     @Test
@@ -40,7 +40,7 @@ class TriggerBTDeviceTest : TriggerTestBase() {
             it.btDevice.value = someName
         }
         val t1 = t.duplicate() as TriggerBTDevice
-        Assertions.assertEquals("Headset", t1.btDevice.value)
-        Assertions.assertEquals(ComparatorConnect.Compare.ON_DISCONNECT, t.comparator.value)
+        assertThat(t1.btDevice.value).isEqualTo("Headset")
+        assertThat(t.comparator.value).isEqualTo(ComparatorConnect.Compare.ON_DISCONNECT)
     }
 }
