@@ -707,8 +707,10 @@ class CustomWatchface : BaseWatchFace() {
                 ValueMap.WEEKNUMBER       -> DateTime().weekOfWeekyear.toDouble()
             }
 
-        fun getTopOffset(): Int = dataRange?.let { dataRange -> topRange?.let { topRange -> dataValue?.let { valueMap.dynValue(it, dataRange, topRange) } ?: topRange.invalidData } } ?: 0
-        fun getLeftOffset(): Int = dataRange?.let { dataRange -> leftRange?.let { leftRange -> dataValue?.let { valueMap.dynValue(it, dataRange, leftRange) } ?: leftRange.invalidData } } ?: 0
+        fun getTopOffset(): Int = dataRange?.let { dataRange -> topRange?.let { topRange -> dataValue?.let { (valueMap.dynValue(it, dataRange, topRange) * cwf.zoomFactor).toInt() }
+            ?: (topRange.invalidData * cwf.zoomFactor).toInt() } } ?: 0
+        fun getLeftOffset(): Int = dataRange?.let { dataRange -> leftRange?.let { leftRange -> dataValue?.let { (valueMap.dynValue(it, dataRange, leftRange) * cwf.zoomFactor).toInt() }
+            ?: (leftRange.invalidData * cwf.zoomFactor).toInt() } } ?: 0
         fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
         fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] }
         fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] } else null
