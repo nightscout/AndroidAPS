@@ -6,7 +6,7 @@ import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransac
 import app.aaps.database.impl.transactions.Transaction
 import app.aaps.plugins.automation.R
 import io.reactivex.rxjava3.core.Single
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -25,15 +25,15 @@ class ActionLoopResumeTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.string.resumeloop, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.resumeloop)
     }
 
     @Test fun shortDescriptionTest() {
-        Assertions.assertEquals("Resume loop", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Resume loop")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(R.drawable.ic_replay_24dp, sut.icon())
+        assertThat(sut.icon()).isEqualTo(R.drawable.ic_replay_24dp)
     }
 
     @Test fun doActionTest() {
