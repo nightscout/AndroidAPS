@@ -1,16 +1,17 @@
 package app.aaps.plugins.automation.elements
 
 import app.aaps.plugins.automation.triggers.TriggerTestBase
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
+import kotlin.test.assertIs
 
 class LabelWithElementTest : TriggerTestBase() {
 
     @Test
     fun constructorTest() {
         val l = LabelWithElement(rh, "A", "B", InputInsulin())
-        Assertions.assertEquals("A", l.textPre)
-        Assertions.assertEquals("B", l.textPost)
-        Assertions.assertEquals(InputInsulin::class.java, l.element!!.javaClass)
+        assertThat(l.textPre).isEqualTo("A")
+        assertThat(l.textPost).isEqualTo("B")
+        assertIs<InputInsulin>(l.element)
     }
 }
