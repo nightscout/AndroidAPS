@@ -2,11 +2,12 @@ package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.T
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
+import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerRecurringTimeTest : TriggerTestBase() {
 
@@ -19,12 +20,12 @@ class TriggerRecurringTimeTest : TriggerTestBase() {
 
         var t: TriggerRecurringTime = TriggerRecurringTime(injector).time(89)
         t.days.setAll(true)
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
 
         // scheduled 1 min before
         t = TriggerRecurringTime(injector).time(94)
         t.days.setAll(true)
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
     }
 
     private var timeJson =
@@ -33,13 +34,13 @@ class TriggerRecurringTimeTest : TriggerTestBase() {
     @Test
     fun toJSONTest() {
         val t = TriggerRecurringTime(injector).time(4444)
-        Assertions.assertEquals(timeJson, t.toJSON())
+        JSONAssert.assertEquals(timeJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSONTest() {
         val t = TriggerRecurringTime(injector).time(4444)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerRecurringTime
-        Assertions.assertEquals(4444, t2.time.value)
+        assertThat(t2.time.value).isEqualTo(4444)
     }
 }
