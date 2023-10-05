@@ -6,9 +6,9 @@ import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONException
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerWifiSsidTest : TriggerTestBase() {
 
@@ -17,40 +17,40 @@ class TriggerWifiSsidTest : TriggerTestBase() {
         `when`(receiverStatusStore.lastNetworkEvent).thenReturn(e)
         var t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID 1").comparator(Comparator.Compare.IS_EQUAL)
         e.wifiConnected = false
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
         e.wifiConnected = true
         e.ssid = "otherSSID"
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
         e.wifiConnected = true
         e.ssid = "aSSID 1"
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         t = TriggerWifiSsid(injector).setValue("aSSID 1").comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         e.wifiConnected = false
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
 
         // no network data
         `when`(receiverStatusStore.lastNetworkEvent).thenReturn(null)
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun copyConstructorTest() {
         val t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         val t1 = t.duplicate() as TriggerWifiSsid
-        Assertions.assertEquals("aSSID", t1.ssid.value)
-        Assertions.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
+        assertThat(t1.ssid.value).isEqualTo("aSSID")
+        assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     var json = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"ssid\":\"aSSID\"},\"type\":\"TriggerWifiSsid\"}"
     @Test fun toJSONTest() {
         val t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL)
-        Assertions.assertEquals(json, t.toJSON())
+        JSONAssert.assertEquals(json, t.toJSON(), true)
     }
 
     @Test @Throws(JSONException::class) fun fromJSONTest() {
         val t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerWifiSsid
-        Assertions.assertEquals(Comparator.Compare.IS_EQUAL, t2.comparator.value)
-        Assertions.assertEquals("aSSID", t2.ssid.value)
+        assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
+        assertThat(t2.ssid.value).isEqualTo("aSSID")
     }
 
     @Test fun iconTest() {
@@ -58,10 +58,10 @@ class TriggerWifiSsidTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.string.ns_wifi_ssids, TriggerWifiSsid(injector).friendlyName())
+        assertThat(TriggerWifiSsid(injector).friendlyName()).isEqualTo(app.aaps.core.ui.R.string.ns_wifi_ssids)
     }
 
     @Test fun friendlyDescriptionTest() {
-        Assertions.assertEquals(null, TriggerWifiSsid(injector).friendlyDescription()) //not mocked
+        assertThat(TriggerWifiSsid(injector).friendlyDescription()).isNull() //not mocked
     }
 }

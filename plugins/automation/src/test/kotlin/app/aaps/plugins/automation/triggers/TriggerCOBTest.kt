@@ -4,11 +4,11 @@ import app.aaps.core.interfaces.iob.CobInfo
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerCOBTest : TriggerTestBase() {
 
@@ -20,41 +20,41 @@ class TriggerCOBTest : TriggerTestBase() {
         // COB value is 6
         `when`(iobCobCalculator.getCobInfo("AutomationTriggerCOB")).thenReturn(CobInfo(0, 6.0, 2.0))
         var t: TriggerCOB = TriggerCOB(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
         t = TriggerCOB(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL)
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         t = TriggerCOB(injector).setValue(5.0).comparator(Comparator.Compare.IS_GREATER)
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         t = TriggerCOB(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_GREATER)
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         t = TriggerCOB(injector).setValue(6.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         t = TriggerCOB(injector).setValue(1.0).comparator(Comparator.Compare.IS_EQUAL)
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
         t = TriggerCOB(injector).setValue(10.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         t = TriggerCOB(injector).setValue(5.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun copyConstructorTest() {
         val t: TriggerCOB = TriggerCOB(injector).setValue(213.0).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
-        Assertions.assertEquals(213.0, t.cob.value, 0.01)
-        Assertions.assertEquals(Comparator.Compare.IS_EQUAL_OR_LESSER, t.comparator.value)
+        assertThat(t.cob.value).isWithin(0.01).of(213.0)
+        assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL_OR_LESSER)
     }
 
     private var bgJson = "{\"data\":{\"comparator\":\"IS_EQUAL\",\"carbs\":4},\"type\":\"TriggerCOB\"}"
     @Test fun toJSONTest() {
         val t: TriggerCOB = TriggerCOB(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
-        Assertions.assertEquals(bgJson, t.toJSON())
+        JSONAssert.assertEquals(bgJson, t.toJSON(), true)
     }
 
     @Test
     fun fromJSONTest() {
         val t: TriggerCOB = TriggerCOB(injector).setValue(4.0).comparator(Comparator.Compare.IS_EQUAL)
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerCOB
-        Assertions.assertEquals(Comparator.Compare.IS_EQUAL, t2.comparator.value)
-        Assertions.assertEquals(4.0, t2.cob.value, 0.01)
+        assertThat(t2.comparator.value).isEqualTo(Comparator.Compare.IS_EQUAL)
+        assertThat(t2.cob.value).isWithin(0.01).of(4.0)
     }
 
     @Test fun iconTest() {

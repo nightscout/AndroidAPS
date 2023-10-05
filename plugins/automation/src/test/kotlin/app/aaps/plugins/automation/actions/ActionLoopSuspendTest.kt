@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.actions
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -24,16 +24,16 @@ class ActionLoopSuspendTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.string.suspendloop, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.suspendloop)
     }
 
     @Test fun shortDescriptionTest() {
         sut.minutes = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assertions.assertEquals("Suspend loop for 30 min", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Suspend loop for 30 min")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(R.drawable.ic_pause_circle_outline_24dp, sut.icon())
+        assertThat(sut.icon()).isEqualTo(R.drawable.ic_pause_circle_outline_24dp)
     }
 
     @Test fun doActionTest() {
@@ -57,11 +57,11 @@ class ActionLoopSuspendTest : ActionsTestBase() {
         a.minutes = InputDuration(20, InputDuration.TimeUnit.MINUTES)
         val b = ActionLoopSuspend(injector)
         b.apply(a)
-        Assertions.assertEquals(20, b.minutes.getMinutes().toLong())
+        assertThat(b.minutes.getMinutes().toLong()).isEqualTo(20)
     }
 
     @Test fun hasDialogTest() {
         val a = ActionLoopSuspend(injector)
-        Assertions.assertTrue(a.hasDialog())
+        assertThat(a.hasDialog()).isTrue()
     }
 }

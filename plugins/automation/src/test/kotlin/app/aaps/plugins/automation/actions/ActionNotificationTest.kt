@@ -14,13 +14,14 @@ import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.core.Completable
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionNotificationTest : TestBase() {
 
@@ -60,22 +61,22 @@ class ActionNotificationTest : TestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.string.notification, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.notification)
     }
 
     @Test fun shortDescriptionTest() {
         sut.text = InputString("Asd")
-        Assertions.assertEquals("Notification: %s", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Notification: %s")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(R.drawable.ic_notifications, sut.icon())
+        assertThat(sut.icon()).isEqualTo(R.drawable.ic_notifications)
     }
 
     @Test fun doActionTest() {
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
+                assertThat(result.success).isTrue()
             }
         })
         Mockito.verify(rxBusMocked, Mockito.times(2)).send(anyObject())
@@ -83,20 +84,21 @@ class ActionNotificationTest : TestBase() {
     }
 
     @Test fun hasDialogTest() {
-        Assertions.assertTrue(sut.hasDialog())
+        assertThat(sut.hasDialog())
     }
 
     @Test fun toJSONTest() {
         sut.text = InputString("Asd")
-        Assertions.assertEquals(
-            "{\"data\":{\"text\":\"Asd\"},\"type\":\"ActionNotification\"}",
-            sut.toJSON()
+        JSONAssert.assertEquals(
+            """{"data":{"text":"Asd"},"type":"ActionNotification"}""",
+            sut.toJSON(),
+            true,
         )
     }
 
     @Test fun fromJSONTest() {
         sut.text = InputString("Asd")
-        sut.fromJSON("{\"text\":\"Asd\"}")
-        Assertions.assertEquals("Asd", sut.text.value)
+        sut.fromJSON("""{"text":"Asd"}""")
+        assertThat(sut.text.value).isEqualTo("Asd")
     }
 }
