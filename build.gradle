@@ -13,7 +13,7 @@ buildscript {
         lifecycle_version = '2.6.2'
         dagger_version = '2.48'
         coroutines_version = '1.7.3'
-        activity_version = '1.7.2'
+        activity_version = '1.8.0'
         fragmentktx_version = '1.6.1'
         ormLite_version = '4.46'
         gson_version = '2.10.1'
