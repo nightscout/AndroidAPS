@@ -30,7 +30,7 @@
     <string name="today">היום</string>
     <string name="yesterday">אתמול</string>
     <!-- Rx -->
-    <string name="connecting_for">חיבור אל %1$s</string>
+    <string name="connecting_for">מתחבר במשך %1$d שניות</string>
     <string name="handshaking">לוחץ יד</string>
     <string name="connected">מחובר</string>
     <string name="disconnecting">מתנתק</string>

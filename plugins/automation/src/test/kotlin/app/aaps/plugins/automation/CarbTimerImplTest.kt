@@ -16,9 +16,9 @@ import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.ui.TimerUtil
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -52,25 +52,22 @@ class CarbTimerImplTest : TestBase() {
 
     private lateinit var automationPlugin: AutomationPlugin
 
-    @BeforeEach
-    fun init() {
+    @BeforeEach fun init() {
         Mockito.`when`(rh.gs(anyInt())).thenReturn("")
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtilImpl(context)
         timerUtil = TimerUtil(context)
         automationPlugin = AutomationPlugin(
-            injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil,
-            activePlugin, timerUtil
+            injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin, timerUtil
         )
     }
 
-    @Test
-    fun doTest() {
-        Assertions.assertEquals(0, automationPlugin.size())
+    @Test fun doTest() {
+        assertThat(automationPlugin.size()).isEqualTo(0)
         automationPlugin.scheduleAutomationEventEatReminder()
-        Assertions.assertEquals(1, automationPlugin.size())
+        assertThat(automationPlugin.size()).isEqualTo(1)
         automationPlugin.removeAutomationEventEatReminder()
-        Assertions.assertEquals(0, automationPlugin.size())
+        assertThat(automationPlugin.size()).isEqualTo(0)
 
         automationPlugin.scheduleTimeToEatReminder(1)
         Mockito.verify(context, Mockito.times(1)).startActivity(any())

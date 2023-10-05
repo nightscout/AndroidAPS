@@ -457,6 +457,7 @@
     <string name="cobvsiob">פחמ\' פעילות לעומת אינ\' פעיל</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!!! זוהתה ספיגת פחמימות איטית: %2$d%% מהזמן הצפוי. הערכת כמות הפחמימות הפעילות עלולה להיות ביתר ולכן תיתכן הזרקת אינסולין עודפת !!!!!!</font>]]></string>
     <string name="partialboluswizard">ספק את חלק זה מתוצאת אשף הבולוס [%]</string>
+    <string name="partialboluswizard_reset_time">סף זמן נתונים ישנים [דק\']</string>
     <string name="bolus_constraint_applied_warn">מגבלת בולוס יושמה: %1$.2f עד %2$.2f יח\'</string>
     <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
@@ -586,7 +587,22 @@
     <string name="cleanup_db_confirm_sync">האם ברצונכם לנקות את מסד הנתונים?\nשינויים הנמצאים במעקב ונתונים היסטוריים הישנים מ-3 חודשים יימחקו.\nפעולה זו תזרז משמעותית את מהירות הסינכרון המלא.</string>
     <string name="cleared_entries">רשומות שנמחקו</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">א׳</string>
+    <string name="weekday_saturday_short">ש\'</string>
+    <string name="weekday_friday_short">ו׳</string>
+    <string name="weekday_thursday_short">ה\'</string>
+    <string name="weekday_wednesday_short">ד\'</string>
+    <string name="weekday_tuesday_short">ג\'</string>
+    <string name="weekday_monday_short">ב\'</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">ב\'</string>
+    <string name="tuesday_short">ג\'</string>
+    <string name="wednesday_short">ד\'</string>
+    <string name="thursday_short">ה\'</string>
+    <string name="friday_short">ו\'</string>
+    <string name="saturday_short">ש\'</string>
+    <string name="sunday_short">א\'</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f יח\'</string>
     <string name="format_insulin_units">%1$.2f יח\'</string>
 </resources>

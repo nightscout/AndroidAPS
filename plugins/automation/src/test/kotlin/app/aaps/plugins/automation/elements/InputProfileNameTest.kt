@@ -1,15 +1,15 @@
 package app.aaps.plugins.automation.elements
 
 import app.aaps.plugins.automation.triggers.TriggerTestBase
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 class InputProfileNameTest : TriggerTestBase() {
 
     @Test fun setValue() {
         val inputProfileName = InputProfileName(rh, activePlugin, "Test")
-        Assertions.assertEquals("Test", inputProfileName.value)
+        assertThat(inputProfileName.value).isEqualTo("Test")
         inputProfileName.value = "Test2"
-        Assertions.assertEquals("Test2", inputProfileName.value)
+        assertThat(inputProfileName.value).isEqualTo("Test2")
     }
 }

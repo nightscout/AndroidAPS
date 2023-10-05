@@ -7,7 +7,7 @@
     <string name="invalid_input">Ugyldige verdier</string>
     <string name="bolus_delivering">Leverer %1$.2f E</string>
     <string name="constraint_applied">Begrensning benyttet!</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Totalt IOB:</string>
     <string name="tt_label">TT</string>
     <string name="pump_unreachable">Pumpe er utilgjengelig</string>
     <string name="insulin_unit_shortname">E</string>
@@ -64,7 +64,7 @@
     <string name="carbs">Karbo</string>
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
-    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Dato</string>
     <string name="units_label">Enheter</string>
     <string name="dia_label">DIA</string>
@@ -136,7 +136,7 @@
     <string name="a11y_low">lavt</string>
     <string name="average">Gjennomsnitt</string>
     <string name="tir">TIR</string>
-    <string name="none"><![CDATA[<none>]]></string>
+    <string name="none"><![CDATA[<ingen>]]></string>
     <string name="remove_label">FJERN</string>
     <string name="activate_profile">Aktiver profil</string>
     <string name="reset">tilbakestill</string>
@@ -231,7 +231,7 @@
     <string name="eatingsoon">Spise snart</string>
     <string name="hypo">Hypo</string>
     <string name="activity">Aktivitet</string>
-    <string name="wear">Wear</string>
+    <string name="wear">Klokke</string>
     <string name="automation">Automatisering</string>
     <string name="custom">Egendefinert</string>
     <string name="loop">Loop</string>

@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -20,24 +20,24 @@ class ActionStopProcessingTest : ActionsTestBase() {
 
     @Test
     fun friendlyNameTest() {
-        Assertions.assertEquals(R.string.stop_processing, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(R.string.stop_processing)
     }
 
     @Test
     fun shortDescriptionTest() {
-        Assertions.assertEquals("Stop processing", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Stop processing")
     }
 
     @Test
     fun iconTest() {
-        Assertions.assertEquals(R.drawable.ic_stop_24dp, sut.icon())
+        assertThat(sut.icon()).isEqualTo(R.drawable.ic_stop_24dp)
     }
 
     @Test
     fun doActionTest() {
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
+                assertThat(result.success).isTrue()
             }
         })
     }

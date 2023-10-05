@@ -157,7 +157,7 @@
     <string name="actions">Handlinger</string>
     <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
     <string name="actions_shortname">ACT</string>
-    <string name="tempbasal_button">MidlBasal</string>
+    <string name="tempbasal_button">Midlertidig basal</string>
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
     <string name="tools">Verktøy</string>
@@ -170,8 +170,8 @@
     <string name="cannula">Kanyle</string>
     <string name="ebstopsloop">Bruk av forlenget bolusfunksjon vil deaktivere lukket loop i perioden med forlenget bolus. Vil du virkelig dette?</string>
     <string name="statuslights_cannula_age">kanyle alder</string>
-    <string name="statuslights_patch_pump_age">patch pumpe alder</string>
-    <string name="patch_pump">Patch pumpe</string>
+    <string name="statuslights_patch_pump_age">pumpealder</string>
+    <string name="patch_pump">Pumpe</string>
     <!-- Overview -->
     <string name="show_statuslights">Vis statusindikatorer på hjem-skjermen</string>
     <string name="statuslights_cage_warning">Terskel for advarsel om alder på slangesett [h]</string>
@@ -266,7 +266,7 @@
     <string name="overview_show_abs_insulin">Absolutt insulinmengde</string>
     <string name="prediction_shortname">PROGN</string>
     <string name="basal_shortname">BAS</string>
-    <string name="deviation_shortname">DEV</string>
+    <string name="deviation_shortname">AVVIK</string>
     <string name="activity_shortname">AKT</string>
     <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
@@ -332,7 +332,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsforskyving: %1$d$\nProsent: %2$d%%\"</string>
+    <string name="profile_message">Profil:\n\nTidsforskyving: %1$d\nProsent: %2$d%%</string>
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Ingen profil valgt</string>
     <string name="aps_only">Bare bruk i APS-modus!</string>

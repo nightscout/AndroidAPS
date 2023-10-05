@@ -16,9 +16,9 @@ import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.ui.TimerUtil
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -63,10 +63,10 @@ class BolusTimerImplTest : TestBase() {
 
     @Test
     fun doTest() {
-        Assertions.assertEquals(0, automationPlugin.size())
+        assertThat(automationPlugin.size()).isEqualTo(0)
         automationPlugin.scheduleAutomationEventBolusReminder()
-        Assertions.assertEquals(1, automationPlugin.size())
+        assertThat(automationPlugin.size()).isEqualTo(1)
         automationPlugin.removeAutomationEventBolusReminder()
-        Assertions.assertEquals(0, automationPlugin.size())
+        assertThat(automationPlugin.size()).isEqualTo(0)
     }
 }
