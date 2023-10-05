@@ -2,7 +2,7 @@ package app.aaps.plugins.automation.elements
 
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.plugins.automation.triggers.TriggerTestBase
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 class InputTempTargetTest : TriggerTestBase() {
@@ -11,10 +11,10 @@ class InputTempTargetTest : TriggerTestBase() {
         val i = InputTempTarget(profileFunction)
         i.units = GlucoseUnit.MMOL
         i.value = 5.0
-        Assertions.assertEquals(5.0, i.value, 0.01)
+        assertThat(i.value).isWithin(0.01).of(5.0)
         i.units = GlucoseUnit.MGDL
         i.value = 100.0
-        Assertions.assertEquals(100.0, i.value, 0.01)
-        Assertions.assertEquals(GlucoseUnit.MGDL, i.units)
+        assertThat(i.value).isWithin(0.01).of(100.0)
+        assertThat(i.units).isEqualTo(GlucoseUnit.MGDL)
     }
 }
