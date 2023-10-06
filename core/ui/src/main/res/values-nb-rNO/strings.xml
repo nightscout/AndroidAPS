@@ -73,7 +73,7 @@
     <string name="basal_label">Basal</string>
     <string name="target_label">Målverdi</string>
     <string name="dia_long_label">Insulinets virkningstid (DIA)</string>
-    <string name="ic_long_label">Insulin- til karbohydratfaktor</string>
+    <string name="ic_long_label">Insulin-karbohydratfaktor (IK)</string>
     <string name="isf_long_label">Insulin sensitivitetsfaktor (ISF)</string>
     <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">Blodsukkermål</string>
