@@ -70,6 +70,7 @@
     <string name="step_retry_activation">Įjungiama</string>
     <string name="unexpected_state">Netikėta būsena: %1$s</string>
     <string name="no_profile_selected">Nepasirinktas profilis. Pasirinkite profilį ir bandykite dar kartą.</string>
+    <string name="no_sn_in_settings">Nežinomas SN. Įveskite pompos pagrindo serijos numerį nustatymuose ir bandykite vėl.</string>
     <string name="base_serial">Pompos pagrindo SN: %1$X</string>
     <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Kitas</b> ir pradėkite aktyvavimą.</string>
     <string name="patch_not_active_note">Neprijunkite pagrindo prie rezervuaro iki kito žingsnio!</string>
