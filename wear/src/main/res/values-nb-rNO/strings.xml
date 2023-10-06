@@ -174,7 +174,7 @@
     <string name="simple_ui_charging">Under lading</string>
     <string name="simple_ui_always_on">Alltid På modus</string>
     <string name="simple_ui_always_on_charging">Alltid på under lading</string>
-    <string name="temp_target_eating_soon">Spising</string>
+    <string name="temp_target_eating_soon">Spise snart</string>
     <string name="temp_target_hypo">Hypo</string>
     <string name="temp_target_activity">Aktivitet</string>
     <string name="temp_target_manual">Manuell</string>
