@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">Rodyti GĮ</string>
     <string name="pref_show_direction_arrow">Rodyti krypties rodyklę</string>
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
+    <string name="pref_show_temp_basal">Rodyti LB</string>
+    <string name="pref_show_bolus">Rodyti bolusus &amp; SMB</string>
+    <string name="pref_show_grid">Rodyti tinklelį</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tamsus</string>
     <string name="pref_highlight_basals">Paryškinti valandines bazes</string>
     <string name="pref_prediction_lines">Rodyti prognozes</string>
