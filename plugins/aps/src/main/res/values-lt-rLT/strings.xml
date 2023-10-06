@@ -83,6 +83,7 @@
     <string name="smb_disabled_in_preferences">SMB išjungti nustatymuose</string>
     <string name="uam_disabled_in_preferences">NDM nustatymas išjungtas nustatymuose</string>
     <string name="autosens_disabled_in_preferences">Autosens funkcija išjungta nustatymuose</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens neveikia DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Ribojamas AIO iki %1$.1f V dėl %2$s</string>
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
