@@ -44,6 +44,9 @@
     <string name="pref_show_bgi">Отображать ГКИ (BGI)</string>
     <string name="pref_show_direction_arrow">Показывать стрелку тренда</string>
     <string name="pref_show_ago">Показывать ретро события</string>
+    <string name="pref_show_temp_basal">Показывать ВБС</string>
+    <string name="pref_show_bolus">Показывать болюс &amp; СМБ</string>
+    <string name="pref_show_grid">Показывать сетку</string>
     <string name="pref_dark" comment="Enables dark visual theme">Тёмная</string>
     <string name="pref_highlight_basals">Выделить базалы</string>
     <string name="pref_prediction_lines">Показывать прогноз</string>
