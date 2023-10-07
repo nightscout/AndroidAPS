@@ -8,8 +8,6 @@
     <string name="label_watchface_no_chart">AAPS(无图)</string>
     <string name="label_watchface_circle">AAPS(圆形)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(驾驶)</string>
-    <string name="label_watchface_steampunk">AAPS(机械)</string>
     <string name="label_watchface_digital_style">AAPS(数字风格)</string>
     <string name="label_actions_tile">AAPS(操作)</string>
     <string name="label_temp_target_tile">AAPS(临时目标)</string>
@@ -48,7 +46,6 @@
     <string name="pref_quick_righty">快速右对齐</string>
     <string name="pref_quick_lefty">快速左对齐</string>
     <string name="pref_modern_sparse">现代场景</string>
-    <string name="pref_delta_granularity">变化量详细程度 (Steampunk)</string>
     <string name="pref_low">低</string>
     <string name="pref_medium">中等</string>
     <string name="pref_high">高</string>
