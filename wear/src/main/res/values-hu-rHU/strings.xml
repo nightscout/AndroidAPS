@@ -7,8 +7,6 @@
     <string name="label_watchface_big_chart">AAPS(NagyGrafikon)</string>
     <string name="label_watchface_no_chart">AAPS(NincsGrafikon)</string>
     <string name="label_watchface_circle">AAPS(Kör)</string>
-    <string name="label_watchface_cockpit">AAPS(Pilótafülke)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(Digitális)</string>
     <string name="label_warning_sync">Nincs adat!</string>
     <string name="label_warning_old">Régi adat!</string>
