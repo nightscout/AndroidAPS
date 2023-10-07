@@ -986,7 +986,9 @@ class DataHandlerMobile @Inject constructor(
             sgv = glucoseValue.recalculated,
             high = highLine,
             low = lowLine,
-            color = 0
+            color = 0,
+            deltaMgdl = glucoseStatus?.delta,
+            avgDeltaMgdl = glucoseStatus?.shortAvgDelta
         )
     }
 

@@ -148,6 +148,7 @@
     <string name="cob3_longer">Å sette profilen til 150% vil gjøre den beregnede karbohydrat absorpsjonstiden lengre</string>
     <string name="cob3_shorter">Å sette profilen til 150% vil gjøre den beregnede karbohydrat absorpsjonstiden kortere</string>
     <string name="cob3_no_effect">Ved å sette profilen til 150% påvirkes ikke beregningen av absorbering av karbohydrater</string>
+    <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">IOB verdi påvirkes av midlertidige temp basaler.</string>
     <string name="iob_hightemp">Høy temp basal vil ikke bli gitt når ditt blodsukker er under målverdi.</string>
     <string name="iob_negiob">Negativ IOB i en lengre periode selv om du ikke trener tyder på at profilen din gir for mye insulin og kanskje bør reduseres i innstillingene.</string>

@@ -83,6 +83,7 @@
     <string name="smb_disabled_in_preferences">SMB deaktiveret i præferencer</string>
     <string name="uam_disabled_in_preferences">UAM deaktiveret i præferencer</string>
     <string name="autosens_disabled_in_preferences">Autosens deaktiveret i præferencer</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens deaktiveret i DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Begrænser IOB til %1$.1f IE på grund af %2$s</string>
     <string name="maxvalueinpreferences">max værdi i præferencer</string>

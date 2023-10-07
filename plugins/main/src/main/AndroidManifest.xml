@@ -17,7 +17,7 @@
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name=".general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+                <action android:name="app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
