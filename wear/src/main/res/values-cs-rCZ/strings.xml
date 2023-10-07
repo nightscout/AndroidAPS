@@ -8,8 +8,6 @@
     <string name="label_watchface_no_chart">AAPS(BezGrafu)</string>
     <string name="label_watchface_circle">AAPS(Kruhový)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Kokpit)</string>
-    <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS (vlastní)</string>
     <string name="label_actions_tile">AAPS(Akce)</string>
@@ -62,7 +60,6 @@
     <string name="pref_quick_righty">Rychle zprava</string>
     <string name="pref_quick_lefty">Rychle zleva</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_delta_granularity">Míra podrobnosti delty (Steampunk)</string>
     <string name="pref_low">Nízká</string>
     <string name="pref_medium">Střední</string>
     <string name="pref_high">Vysoká</string>
@@ -185,8 +182,6 @@
     <string name="wear_control_no_data">Žádná data k dispozici</string>
     <string name="increment">zvýšení</string>
     <string name="decrement">snížení</string>
-    <string name="first_char_high">V</string>
-    <string name="first_char_low">N</string>
     <string name="abbreviation_average">prům</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
