@@ -61,7 +61,7 @@
     <string name="objectives">Opplæringsmål</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="stop">Stopp</string>
-    <string name="carbs">Karbo</string>
+    <string name="carbs">Karbohydrater</string>
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
@@ -146,7 +146,7 @@
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
-    <string name="wear_wizard_settings">Innstillinger for veiviser</string>
+    <string name="wear_wizard_settings">Innstillinger for boluskalkulator</string>
     <string name="bg_trend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
@@ -223,7 +223,7 @@
     <string name="temporary_target">Midlertidig BS-mål</string>
     <string name="careportal_temporarytargetvalue">Midlertidig målverdi</string>
     <string name="careportal_temporarytargetcancel">Avbryt midl. mål</string>
-    <string name="boluswizard">Bolusassistent</string>
+    <string name="boluswizard">Boluskalkulator</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="manual">Manuell</string>
