@@ -8,8 +8,6 @@
     <string name="label_watchface_no_chart">AAPS(KeinGraph)</string>
     <string name="label_watchface_circle">AAPS(Kreis)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
     <string name="label_actions_tile">AAPS(Aktionen)</string>
@@ -53,7 +51,6 @@
     <string name="pref_quick_righty">Schnell rechts</string>
     <string name="pref_quick_lefty">Schnell links</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_delta_granularity">Genauigkeit (Steampunk)</string>
     <string name="pref_low">Niedrig</string>
     <string name="pref_medium">Mittel</string>
     <string name="pref_high">Hoch</string>
@@ -176,8 +173,6 @@
     <string name="wear_control_no_data">Keine Daten vorhanden</string>
     <string name="increment">erhöhen</string>
     <string name="decrement">verringern</string>
-    <string name="first_char_high">H</string>
-    <string name="first_char_low">L</string>
     <string name="abbreviation_average">Ø</string>
     <string name="no_iob_u">--IE</string>
     <string name="no_cob_g">--g</string>
