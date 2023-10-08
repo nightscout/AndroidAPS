@@ -164,6 +164,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 handleConnectionStateChange(connectionState)
             }
         }
+        scope.launch {
+            medtrumPump.pumpWarningFlow.collect { pumpWarning ->
+                notifyPumpWarning(pumpWarning)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -583,6 +588,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         when (state) {
             MedtrumPumpState.NONE,
             MedtrumPumpState.STOPPED              -> {
+                rxBus.send(EventDismissNotification(Notification.PUMP_WARNING))
                 rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
                 rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
                 uiInteraction.addNotification(
@@ -631,20 +637,22 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
 
             MedtrumPumpState.HOURLY_MAX_SUSPENDED -> {
-                uiInteraction.addNotification(
+                uiInteraction.addNotificationWithSound(
                     Notification.PUMP_SUSPENDED,
                     rh.gs(R.string.pump_is_suspended_hour_max),
-                    Notification.NORMAL,
+                    Notification.URGENT,
+                    app.aaps.core.ui.R.raw.alarm
                 )
                 // Pump will report proper TBR for this from loadEvents()
                 commandQueue.loadEvents(null)
             }
 
             MedtrumPumpState.DAILY_MAX_SUSPENDED  -> {
-                uiInteraction.addNotification(
+                uiInteraction.addNotificationWithSound(
                     Notification.PUMP_SUSPENDED,
                     rh.gs(R.string.pump_is_suspended_day_max),
-                    Notification.NORMAL,
+                    Notification.URGENT,
+                    app.aaps.core.ui.R.raw.alarm
                 )
                 // Pump will report proper TBR for this from loadEvents()
                 commandQueue.loadEvents(null)
@@ -686,6 +694,23 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 ConnectionState.CONNECTING    -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
                 ConnectionState.DISCONNECTING -> rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
             }
+        }
+    }
+
+    private fun notifyPumpWarning(alarmState: AlarmState) {
+        // Notification on pump warning
+        if (sp.getBoolean(R.string.key_pump_warning_notification, true) && alarmState != AlarmState.NONE) {
+            uiInteraction.addNotification(
+                Notification.PUMP_WARNING,
+                rh.gs(R.string.pump_warning, medtrumPump.alarmStateToString(alarmState)),
+                Notification.ANNOUNCEMENT,
+            )
+            pumpSync.insertAnnouncement(
+                medtrumPump.alarmStateToString(alarmState),
+                null,
+                medtrumPump.pumpType(),
+                medtrumPump.pumpSN.toString(radix = 16)
+            )
         }
     }
 

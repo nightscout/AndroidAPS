@@ -71,6 +71,15 @@ class MedtrumPump @Inject constructor(
             _activeAlarms = value
         }
 
+    // New pump warnings
+    private val _pumpWarning = MutableStateFlow(AlarmState.NONE)
+    val pumpWarningFlow: StateFlow<AlarmState> = _pumpWarning
+    var pumpWarning: AlarmState
+        get() = _pumpWarning.value
+        set(value) {
+            _pumpWarning.value = value
+        }
+
     // Prime progress as state flow
     private val _primeProgress = MutableStateFlow(0)
     val primeProgressFlow: StateFlow<Int> = _primeProgress
