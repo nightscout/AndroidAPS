@@ -8,6 +8,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -44,6 +45,7 @@ class LocalAlertUtilsImpl @Inject constructor(
     private val smsCommunicator: SmsCommunicator,
     private val config: Config,
     private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger
 ) : LocalAlertUtils {
@@ -121,7 +123,7 @@ class LocalAlertUtilsImpl @Inject constructor(
     }
 
     override fun checkStaleBGAlert() {
-        val bgReadingWrapped = repository.getLastGlucoseValueWrapped().blockingGet()
+        val bgReadingWrapped = persistenceLayer.getLastGlucoseValue().blockingGet()
         val bgReading = if (bgReadingWrapped is ValueWrapper.Existing) bgReadingWrapped.value else return
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_enable_missed_bg_readings_alert, false)
             && bgReading.timestamp + missedReadingsThreshold() < System.currentTimeMillis()

@@ -16,7 +16,6 @@ import app.aaps.core.main.iob.round
 import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.ValueWrapper
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject
@@ -109,8 +108,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
 
     fun doCalc(profile: Profile, profileName: String, lastBG: InMemoryGlucoseValue): BolusWizard {
-        val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         //BG
         var bg = 0.0
         if (useBG() == YES) {

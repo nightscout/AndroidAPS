@@ -4,7 +4,7 @@ import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 
 /**
- * Simplified [app.aaps.database.entities.GlucoseValue] for storing in memory and calculations
+ * Simplified [app.aaps.core.data.db.GV] for storing in memory and calculations
  * It may correspond to GlucoseValue value in db
  * but because of 5 min recalculations and smoothing it may not
  */

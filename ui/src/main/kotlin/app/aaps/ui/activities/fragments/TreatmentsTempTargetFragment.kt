@@ -40,7 +40,6 @@ import app.aaps.core.main.extensions.lowValueToUnitsToString
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.ValueWrapper
 import app.aaps.ui.R
 import app.aaps.ui.activities.fragments.TreatmentsTempTargetFragment.RecyclerViewAdapter.TempTargetsViewHolder
 import app.aaps.ui.databinding.TreatmentsTemptargetFragmentBinding
@@ -134,8 +133,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
 
     private inner class RecyclerViewAdapter(private var tempTargetList: List<TT>) : RecyclerView.Adapter<TempTargetsViewHolder>() {
 
-        private val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        private val currentlyActiveTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
+        private val currentlyActiveTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TempTargetsViewHolder =
             TempTargetsViewHolder(LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_temptarget_item, viewGroup, false))

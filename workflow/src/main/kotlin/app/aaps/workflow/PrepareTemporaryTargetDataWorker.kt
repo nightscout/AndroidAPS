@@ -15,7 +15,6 @@ import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.ValueWrapper
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.coroutines.Dispatchers
@@ -61,9 +60,9 @@ class PrepareTemporaryTargetDataWorker(
             if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt(), null))
-            val tt = persistenceLayer.getTemporaryTargetActiveAt(time).blockingGet()
-            val value: Double = if (tt is ValueWrapper.Existing) {
-                profileUtil.fromMgdlToUnits(tt.value.target())
+            val tt = persistenceLayer.getTemporaryTargetActiveAt(time)
+            val value: Double = if (tt != null) {
+                profileUtil.fromMgdlToUnits(tt.target())
             } else {
                 profileUtil.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2)
             }

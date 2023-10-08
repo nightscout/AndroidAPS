@@ -4,7 +4,9 @@ import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.main.extensions.contentEqualsTo
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
+import app.aaps.plugins.sync.nsShared.extensions.contentEqualsTo
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
@@ -26,8 +28,8 @@ internal class GlucoseValueExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        val glucoseValue2 = glucoseValue.toNSSvgV3().convertToRemoteAndBack()?.toTransactionGlucoseValue()?.toGlucoseValue()
+        val glucoseValue2 = glucoseValue.toNSSvgV3().convertToRemoteAndBack()?.toGV()
         assertThat(glucoseValue.contentEqualsTo(glucoseValue2!!)).isTrue()
-        assertThat(glucoseValue.interfaceIdsEqualsTo(glucoseValue2)).isTrue()
+        assertThat(glucoseValue.ids.contentEqualsTo(glucoseValue2.ids)).isTrue()
     }
 }

@@ -21,7 +21,6 @@ import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
@@ -80,6 +79,7 @@ class PersistenceLayerImpl @Inject constructor(
             )
     }
 
+    // BO
     override fun insertOrUpdateBolus(bolus: Bolus) {
         disposable += repository.runTransactionForResult(InsertOrUpdateBolusTransaction(bolus))
             .subscribe(
@@ -87,6 +87,42 @@ class PersistenceLayerImpl @Inject constructor(
                 { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
             )
     }
+
+    // CB
+    override fun insertOrUpdateCarbs(carbs: Carbs, callback: Callback?, injector: HasAndroidInjector?) {
+        disposable += repository.runTransactionForResult(InsertOrUpdateCarbsTransaction(carbs))
+            .subscribe(
+                { result ->
+                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
+                    injector?.let { injector ->
+                        callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
+                    }
+
+                }, {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
+                    injector?.let { injector ->
+                        callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                    }
+                }
+            )
+    }
+
+    // GV
+    override fun getLastGlucoseValue(): Single<ValueWrapper<GV>> = repository.getLastGlucoseValueWrapped().fromDb(GlucoseValue::fromDb)
+    override fun getNextSyncElementGlucoseValue(id: Long): Maybe<Pair<GV, GV>> =
+        repository.getNextSyncElementGlucoseValue(id)
+            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+
+    override fun getBgReadingsDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<GV>> =
+        repository.compatGetBgReadingsDataFromTime(start, end, ascending)
+            .map { list -> list.map { glucoseValue -> glucoseValue.fromDb() } }
+
+    override fun getBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GV>> =
+        repository.compatGetBgReadingsDataFromTime(timestamp, ascending)
+            .map { list -> list.map { glucoseValue -> glucoseValue.fromDb() } }
+
+    override fun getBgReadingByNSId(nsId: String): GV? =
+        repository.findBgReadingByNSId(nsId)?.fromDb()
 
     override fun invalidateGlucoseValue(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<GV>> =
         repository.runTransactionForResult(InvalidateGlucoseValueTransaction(id))
@@ -162,41 +198,50 @@ class PersistenceLayerImpl @Inject constructor(
                 transactionResult
             }
 
-    override fun getLastGlucoseValue(): Single<ValueWrapper<GV>> = repository.getLastGlucoseValueWrapped().fromDb(GlucoseValue::fromDb)
-    override fun getNextSyncElementGlucoseValue(id: Long): Maybe<Pair<GV, GV>> =
-        repository.getNextSyncElementGlucoseValue(id)
-            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
-
-    override fun getBgReadingsDataFromTime(start: Long, end: Long, ascending: Boolean): Single<List<GV>> =
-        repository.compatGetBgReadingsDataFromTime(start, end, ascending)
-            .map { list -> list.map { glucoseValue -> glucoseValue.fromDb() } }
-
-    override fun getBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GV>> =
-        repository.compatGetBgReadingsDataFromTime(timestamp, ascending)
-            .map { list -> list.map { glucoseValue -> glucoseValue.fromDb() } }
-
-    override fun insertOrUpdateCarbs(carbs: Carbs, callback: Callback?, injector: HasAndroidInjector?) {
-        disposable += repository.runTransactionForResult(InsertOrUpdateCarbsTransaction(carbs))
-            .subscribe(
-                { result ->
-                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") }
-                    injector?.let { injector ->
-                        callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run()
-                    }
-
-                }, {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                    injector?.let { injector ->
-                        callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
-                    }
-                }
-            )
-    }
-
-    override fun getTemporaryTargetActiveAt(timestamp: Long): Single<ValueWrapper<TT>> =
-        repository.getTemporaryTargetActiveAt(timestamp).fromDb(TemporaryTarget::fromDb)
-
+    // EPS
     override fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Single<ValueWrapper<EffectiveProfileSwitch>> = repository.getEffectiveProfileSwitchActiveAt(timestamp)
+
+    // TT
+    override fun getTemporaryTargetActiveAt(timestamp: Long): TT? =
+        repository.getTemporaryTargetActiveAt(timestamp).blockingGet()?.fromDb()
+
+    override fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
+        repository.getTemporaryTargetDataFromTime(timestamp, ascending).map { list -> list.map { it.fromDb() } }
+
+    override fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
+        repository.getTemporaryTargetDataIncludingInvalidFromTime(timestamp, ascending).map { list -> list.map { it.fromDb() } }
+
+    override fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>)
+        : Single<PersistenceLayer.TransactionResult<TT>> =
+        repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(id))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryTarget", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<TT>()
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                    log(action = action, source = source, note = note, listValues = listValues)
+                }
+                transactionResult
+            }
+
+    override fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>)
+        : Single<PersistenceLayer.TransactionResult<TT>> =
+        repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(temporaryTarget.toDb()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while inserting TemporaryTarget", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<TT>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $it")
+                    transactionResult.inserted.add(it.fromDb())
+                    log(action = action, source = source, note = note, listValues = listValues)
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
 
     // TE
     override fun getLastTherapyRecordUpToNow(type: TE.Type): Single<ValueWrapper<TE>> =
@@ -254,44 +299,6 @@ class PersistenceLayerImpl @Inject constructor(
                     aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $it")
                     transactionResult.invalidated.add(it.fromDb())
                     log(action = action, source = source, note = note)
-                }
-                transactionResult
-            }
-
-    override fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
-        repository.getTemporaryTargetDataFromTime(timestamp, ascending).map { list -> list.map { it.fromDb() } }
-
-    override fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
-        repository.getTemporaryTargetDataIncludingInvalidFromTime(timestamp, ascending).map { list -> list.map { it.fromDb() } }
-
-    override fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>)
-        : Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryTarget", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TT>()
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $it")
-                    transactionResult.invalidated.add(it.fromDb())
-                    log(action = action, source = source, note = note, listValues = listValues)
-                }
-                transactionResult
-            }
-
-    override fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>)
-        : Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(temporaryTarget.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while inserting TemporaryTarget", it) }
-            .map { result ->
-                val transactionResult = PersistenceLayer.TransactionResult<TT>()
-                result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $it")
-                    transactionResult.inserted.add(it.fromDb())
-                    log(action = action, source = source, note = note, listValues = listValues)
-                }
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $it")
-                    transactionResult.updated.add(it.fromDb())
                 }
                 transactionResult
             }

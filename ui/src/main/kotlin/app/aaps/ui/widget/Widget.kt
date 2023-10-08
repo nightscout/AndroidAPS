@@ -33,10 +33,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.directionToIcon
+import app.aaps.core.main.extensions.end
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.displayText
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.database.entities.interfaces.end
 import app.aaps.ui.R
 import dagger.android.HasAndroidInjector
 import java.util.Locale
@@ -212,7 +212,7 @@ class Widget : AppWidgetProvider() {
             views.setTextColor(R.id.temp_target, rh.gc(app.aaps.core.ui.R.color.widget_ribbonWarning))
             views.setTextViewText(
                 R.id.temp_target,
-                profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
+                profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end(), rh)
             )
         } else {
             // If the target is not the same as set in the profile then oref has overridden it

@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.tidepool.comm
 
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -37,6 +38,7 @@ class UploadChunk @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
     private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil
 ) {
 
@@ -121,7 +123,7 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getBgReadings(start: Long, end: Long): List<SensorGlucoseElement> {
-        val readings = repository.compatGetBgReadingsDataFromTime(start, end, true)
+        val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(start, end, true)
             .blockingGet()
         val selection = SensorGlucoseElement.fromBgReadings(readings, dateUtil)
         if (selection.isNotEmpty())

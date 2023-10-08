@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
 import app.aaps.core.interfaces.aps.AutosensDataStore
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
@@ -20,6 +21,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var automationPlugin: AutomationPlugin
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var persistenceLayer: PersistenceLayer
 
     @BeforeEach
     fun prepareMock1() {

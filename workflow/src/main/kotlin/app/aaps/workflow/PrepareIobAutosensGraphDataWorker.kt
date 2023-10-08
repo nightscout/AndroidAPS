@@ -9,6 +9,7 @@ import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.OverviewMenus
@@ -24,8 +25,6 @@ import app.aaps.core.main.iob.copy
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.DeviationDataPoint
 import app.aaps.interfaces.graph.data.FixedLineGraphSeries
@@ -51,7 +50,7 @@ class PrepareIobAutosensGraphDataWorker(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var overviewMenus: OverviewMenus
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var decimalFormatter: DecimalFormatter
     private var ctx: Context
@@ -263,7 +262,7 @@ class PrepareIobAutosensGraphDataWorker(
         if (overviewMenus.setting[0][OverviewMenus.CharType.PRE.ordinal]) {
             val autosensData = adsData.getLastAutosensData("GraphData", aapsLogger, dateUtil)
             val lastAutosensResult = autosensData?.autosensResult ?: AutosensResult()
-            val isTempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+            val isTempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) != null
             val iobPrediction: MutableList<DataPointWithLabelInterface> = ArrayList()
             val iobPredictionArray = data.iobCobCalculator.calculateIobArrayForSMB(lastAutosensResult, SMBDefaults.exercise_mode, SMBDefaults.half_basal_exercise_target, isTempTarget)
             for (i in iobPredictionArray) {

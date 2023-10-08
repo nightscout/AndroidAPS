@@ -82,6 +82,7 @@ import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.directionToIcon
+import app.aaps.core.main.extensions.end
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.displayText
 import app.aaps.core.main.profile.ProfileSealed
@@ -91,7 +92,6 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.elements.SingleClickButton
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.interfaces.end
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewFragmentBinding
@@ -956,7 +956,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.tempTarget,
                     app.aaps.core.ui.R.attr.ribbonTextWarningColor,
                     app.aaps.core.ui.R.attr.ribbonWarningColor,
-                    profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
+                    profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end(), rh)
                 )
             } else {
                 // If the target is not the same as set in the profile then oref has overridden it

@@ -43,7 +43,6 @@ import app.aaps.database.impl.transactions.InvalidateBolusTransaction
 import app.aaps.database.impl.transactions.InvalidateCarbsTransaction
 import app.aaps.database.impl.transactions.InvalidateEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
-import app.aaps.database.impl.transactions.InvalidateGlucoseValueTransaction
 import app.aaps.database.impl.transactions.InvalidateOfflineEventTransaction
 import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
@@ -73,6 +72,9 @@ import app.aaps.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTherapyEventTransaction
 import app.aaps.plugins.sync.R
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -138,6 +140,7 @@ class StoreDataForDbImpl @Inject constructor(
         if (containsKey(key)) merge(key, 1, Long::plus)
         else put(key, 1)
 
+    private val disposable = CompositeDisposable()
     override fun storeGlucoseValuesToDb() {
         if (glucoseValues.isNotEmpty())
             persistenceLayer.insertCgmSourceData(Sources.NSClient, glucoseValues, emptyList(), null)
@@ -1104,19 +1107,20 @@ class StoreDataForDbImpl @Inject constructor(
 
     override fun updateDeletedGlucoseValuesInDb() {
         deleteGlucoseValue.forEach { id ->
-            repository.findBgReadingByNSId(id)?.let { gv ->
-                repository.runTransactionForResult(InvalidateGlucoseValueTransaction(gv.id))
-                    .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating GlucoseValue", it) }
-                    .blockingGet()
-                    .also { result ->
-                        result.invalidated.forEach {
-                            aapsLogger.debug(LTag.DATABASE, "Invalidated GlucoseValue $it")
-                            invalidated.inc(GlucoseValue::class.java.simpleName)
-                        }
+            persistenceLayer.getBgReadingByNSId(id)?.let { gv ->
+                disposable += persistenceLayer.invalidateGlucoseValue(
+                    id = gv.id,
+                    action = Action.BG_REMOVED,
+                    source = Sources.NSClient,
+                    note = null,
+                    listValues = listOf(ValueWithUnit.Timestamp(gv.timestamp))
+                )
+                    .subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(GlucoseValue::class.java.simpleName) }
+                        sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
                     }
             }
         }
-        sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
     }
 
     private fun sendLog(item: String, clazz: String) {

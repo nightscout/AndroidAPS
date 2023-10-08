@@ -47,6 +47,7 @@ import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.main.extensions.end
 import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint
@@ -63,7 +64,6 @@ import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TotalDailyDose
-import app.aaps.database.entities.interfaces.end
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
@@ -407,8 +407,7 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_cob))
             return
         }
-        val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
         val bolusWizard = BolusWizard(injector).doCalc(
             profile = profile,
@@ -1004,11 +1003,11 @@ class DataHandlerMobile @Inject constructor(
             }
             val profile = profileFunction.getProfile() ?: return rh.gs(R.string.no_profile)
             //Check for Temp-Target:
-            val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-            if (tempTarget is ValueWrapper.Existing) {
-                val target = profileUtil.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, GlucoseUnit.MGDL)
+            val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+            if (tempTarget != null) {
+                val target = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.lowTarget, GlucoseUnit.MGDL)
                 ret += rh.gs(R.string.temp_target) + ": " + target
-                ret += "\n" + rh.gs(R.string.until) + ": " + dateUtil.timeString(tempTarget.value.end)
+                ret += "\n" + rh.gs(R.string.until) + ": " + dateUtil.timeString(tempTarget.end())
                 ret += "\n\n"
             }
             ret += rh.gs(R.string.default_range) + ": "

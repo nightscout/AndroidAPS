@@ -92,7 +92,7 @@ open class AutotuneIob @Inject constructor(
     }
 
     private fun initializeBgReadings(from: Long, to: Long) {
-        glucose = persistenceLayer.getBgReadingsDataFromTime(from, to, false).blockingGet()
+        glucose = persistenceLayer.getBgReadingsDataFromTimeToTime(from, to, false).blockingGet()
     }
 
     //nsTreatment is used only for export data, meals is used in AutotunePrep

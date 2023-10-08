@@ -30,7 +30,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.target
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.ValueWrapper
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -147,26 +146,26 @@ class OpenAPSAMAPlugin @Inject constructor(
         var targetBg =
             hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
         var isTempTarget = false
-        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        if (tempTarget is ValueWrapper.Existing) {
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+        if (tempTarget != null) {
             isTempTarget = true
             minBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.lowTarget,
+                    tempTarget.lowTarget,
                     app.aaps.core.ui.R.string.temp_target_low_target,
                     HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble()
                 )
             maxBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.highTarget,
+                    tempTarget.highTarget,
                     app.aaps.core.ui.R.string.temp_target_high_target,
                     HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1].toDouble()
                 )
             targetBg =
                 hardLimits.verifyHardLimits(
-                    tempTarget.value.target(),
+                    tempTarget.target(),
                     app.aaps.core.ui.R.string.temp_target_value,
                     HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1].toDouble()

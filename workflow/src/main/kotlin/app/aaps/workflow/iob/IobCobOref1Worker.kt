@@ -28,7 +28,6 @@ import app.aaps.core.main.extensions.target
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.ValueWrapper
 import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
@@ -296,9 +295,9 @@ class IobCobOref1Worker(
                 // TODO AS-FIX
                 @Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
                 if (false && sp.getBoolean(app.aaps.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
-                    val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-                    if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
-                        autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)
+                    val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+                    if (tempTarget != null && tempTarget.target() >= 100) {
+                        autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20)
                     }
                 }
 

@@ -40,7 +40,7 @@ class LoadBgDataWorker(
             // there can be some readings with time in close future (caused by wrong time setting on sensor)
             // so add 2 minutes
             bgReadings = persistenceLayer
-                .getBgReadingsDataFromTime(start, to + T.mins(2).msecs(), false)
+                .getBgReadingsDataFromTimeToTime(start, to + T.mins(2).msecs(), false)
                 .blockingGet()
             aapsLogger.debug(LTag.AUTOSENS) { "BG data loaded. Size: ${bgReadings.size} Start date: ${dateUtil.dateAndTimeString(start)} End date: ${dateUtil.dateAndTimeString(to)}" }
             createBucketedData(aapsLogger, dateUtil)

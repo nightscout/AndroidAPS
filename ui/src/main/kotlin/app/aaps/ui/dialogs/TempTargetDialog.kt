@@ -13,6 +13,8 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.DefaultValueHelper
@@ -23,7 +25,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
@@ -48,6 +49,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var ctx: Context
     @Inject lateinit var protectionCheck: ProtectionCheck
 
@@ -98,10 +100,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
 
         // temp target
         context?.let { context ->
-            if (repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing)
-                binding.targetCancel.visibility = View.VISIBLE
-            else
-                binding.targetCancel.visibility = View.GONE
+            binding.targetCancel.visibility = (persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) != null).toVisibility()
 
             reasonList = Lists.newArrayList(
                 rh.gs(app.aaps.core.ui.R.string.manual),

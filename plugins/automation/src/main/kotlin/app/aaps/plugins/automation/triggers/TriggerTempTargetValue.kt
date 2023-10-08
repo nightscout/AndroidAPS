@@ -4,7 +4,6 @@ import android.widget.LinearLayout
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.ValueWrapper
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputBg
@@ -46,12 +45,12 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val tt = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        if (tt is ValueWrapper.Absent && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
+        val tt = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+        if (tt == null && comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-        if (tt is ValueWrapper.Existing && comparator.value.check(tt.value.lowTarget, profileUtil.convertToMgdl(ttValue.value, ttValue.units))) {
+        if (tt != null && comparator.value.check(tt.lowTarget, profileUtil.convertToMgdl(ttValue.value, ttValue.units))) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }

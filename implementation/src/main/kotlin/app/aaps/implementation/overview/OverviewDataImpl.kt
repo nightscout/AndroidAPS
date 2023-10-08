@@ -6,6 +6,7 @@ import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.iob.IobTotal
@@ -30,7 +31,6 @@ import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.round
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.DeviationDataPoint
@@ -260,12 +260,9 @@ class OverviewDataImpl @Inject constructor(
      * TEMP TARGET
      */
 
-    override val temporaryTarget: TemporaryTarget?
+    override val temporaryTarget: TT?
         get() =
-            repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet().let { tempTarget ->
-                if (tempTarget is ValueWrapper.Existing) tempTarget.value
-                else null
-            }
+            persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
     /*
      * SENSITIVITY

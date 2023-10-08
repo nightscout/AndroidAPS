@@ -219,10 +219,9 @@ import kotlin.math.roundToInt
         database.temporaryTargetDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getTemporaryTargetActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryTarget>> =
+    fun getTemporaryTargetActiveAt(timestamp: Long): Maybe<TemporaryTarget> =
         database.temporaryTargetDao.getTemporaryTargetActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
     fun deleteAllTempTargetEntries() =
         database.temporaryTargetDao.deleteAllEntries()

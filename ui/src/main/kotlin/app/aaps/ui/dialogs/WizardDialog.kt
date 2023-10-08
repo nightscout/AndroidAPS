@@ -307,7 +307,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
-        binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()) != null
         binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
         if (buttonView.id == binding.cobCheckbox.id)
             processCobCheckBox()
@@ -370,7 +370,7 @@ class WizardDialog : DaggerDialogFragment() {
     private fun initDialog() {
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileSource.profile
-        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
         if (profile == null || profileStore == null) {
             ToastUtils.errorToast(ctx, app.aaps.core.ui.R.string.noprofile)
@@ -405,7 +405,7 @@ class WizardDialog : DaggerDialogFragment() {
             // Set BG if not old
             binding.bgInput.value = iobCobCalculator.ads.actualBg()?.valueToUnits(units) ?: 0.0
 
-            binding.ttCheckbox.isEnabled = tempTarget is ValueWrapper.Existing
+            binding.ttCheckbox.isEnabled = tempTarget != null
             binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
             binding.iobInsulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, -bolusIob.iob - basalIob.basaliob)
 
@@ -452,8 +452,7 @@ class WizardDialog : DaggerDialogFragment() {
         }
 
         bg = if (binding.bgCheckbox.isChecked) bg else 0.0
-        val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
-        val tempTarget = if (binding.ttCheckbox.isChecked && dbRecord is ValueWrapper.Existing) dbRecord.value else null
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
 
         // COB
         var cob = 0.0

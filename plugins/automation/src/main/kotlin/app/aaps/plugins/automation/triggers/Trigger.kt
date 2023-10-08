@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -40,6 +41,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
     @Inject lateinit var sp: SP
     @Inject lateinit var locationDataContainer: LastLocationDataContainer
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider

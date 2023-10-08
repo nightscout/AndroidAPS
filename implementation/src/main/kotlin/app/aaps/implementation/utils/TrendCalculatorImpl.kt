@@ -4,17 +4,17 @@ import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.fromGv
-import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TrendCalculatorImpl @Inject constructor(
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val rh: ResourceHelper,
     private val iobCobCalculator: IobCobCalculator
 ) : TrendCalculator {
@@ -49,7 +49,7 @@ class TrendCalculatorImpl @Inject constructor(
     private fun calculateDirection(glucoseValue: InMemoryGlucoseValue): TrendArrow {
 
         val toTime = glucoseValue.timestamp
-        val readings = repository.compatGetBgReadingsDataFromTime(toTime - T.mins(10).msecs(), toTime, false).blockingGet()
+        val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(toTime - T.mins(10).msecs(), toTime, false).blockingGet()
 
         if (readings.size < 2)
             return TrendArrow.NONE

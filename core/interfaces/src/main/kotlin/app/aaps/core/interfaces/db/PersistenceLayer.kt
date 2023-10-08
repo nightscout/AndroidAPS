@@ -23,20 +23,33 @@ interface PersistenceLayer {
     fun clearDatabases()
     fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String
     fun insertOrUpdate(bolusCalculatorResult: BolusCalculatorResult)
-    fun insertOrUpdateCarbs(carbs: Carbs, callback: Callback? = null, injector: HasAndroidInjector? = null)
+
+    // BO
     fun insertOrUpdateBolus(bolus: Bolus)
 
+    // CB
+    fun insertOrUpdateCarbs(carbs: Carbs, callback: Callback? = null, injector: HasAndroidInjector? = null)
+
     // GV
-    fun invalidateGlucoseValue(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<GV>>
-    fun insertCgmSourceData(caller: Sources, glucoseValues: List<GV>, calibrations: List<Calibration>, sensorInsertionTime: Long?): Single<TransactionResult<GV>>
-    fun updateGlucoseValuesNsIds(glucoseValues: List<GV>): Single<TransactionResult<GV>>
     fun getLastGlucoseValue(): Single<ValueWrapper<GV>>
     fun getNextSyncElementGlucoseValue(id: Long): Maybe<Pair<GV, GV>>
-    fun getBgReadingsDataFromTime(start: Long, end: Long, ascending: Boolean): Single<List<GV>>
+    fun getBgReadingsDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<GV>>
     fun getBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GV>>
+    fun getBgReadingByNSId(nsId: String): GV?
 
-    fun getTemporaryTargetActiveAt(timestamp: Long): Single<ValueWrapper<TT>>
+    fun invalidateGlucoseValue(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<GV>>
+    fun insertCgmSourceData(caller: Sources, glucoseValues: List<GV>, calibrations: List<Calibration>, sensorInsertionTime: Long?): Single<TransactionResult<GV>>
+    fun updateGlucoseValuesNsIds(glucoseValues: List<GV>): Single<TransactionResult<GV>>
+
+    // EPS
     fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Single<ValueWrapper<EffectiveProfileSwitch>>
+
+    // TT
+    fun getTemporaryTargetActiveAt(timestamp: Long): TT?
+    fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
+    fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
+    fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
+    fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
 
     // TE
     fun getLastTherapyRecordUpToNow(type: TE.Type): Single<ValueWrapper<TE>>
@@ -47,12 +60,6 @@ interface PersistenceLayer {
     fun insertIfNewByTimestampTherapyEvent(therapyEvent: TE, action: Action, source: Sources, note: String, listValues: List<ValueWithUnit?>): Single<TransactionResult<TE>>
     fun invalidateTherapyEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TE>>
     fun invalidateTherapyEventsWithNote(note: String, action: Action, source: Sources): Single<TransactionResult<TE>>
-
-    // TT
-    fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
-    fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
-    fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
-    fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
 
     // UE
     fun insertUserEntries(entries: List<UE>): Single<TransactionResult<UE>>
