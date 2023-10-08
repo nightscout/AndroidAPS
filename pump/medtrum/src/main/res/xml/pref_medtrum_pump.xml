@@ -14,7 +14,7 @@
             android:title="@string/sn_input_title" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_patch_expiration"
             android:title="@string/patch_expiration_title"
             android:summary="@string/patch_expiration_summary" />
