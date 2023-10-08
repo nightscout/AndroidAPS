@@ -420,6 +420,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         var communicationLost = false
         var connectionRetryCounter = 0
         var checkTime = medtrumPump.bolusProgressLastTimeStamp
+        var lastSentBolusAmount: Double? = null
 
         while (!medtrumPump.bolusStopped && !medtrumPump.bolusDone && !communicationLost) {
             SystemClock.sleep(100)
@@ -436,10 +437,15 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     disconnect("Communication stopped")
                 }
             } else {
-                bolusingEvent.t = medtrumPump.bolusingTreatment
-                bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, medtrumPump.bolusingTreatment?.insulin, medtrumPump.bolusAmountToBeDelivered)
-                bolusingEvent.percent = round((medtrumPump.bolusingTreatment?.insulin?.div(medtrumPump.bolusAmountToBeDelivered) ?: 0.0) * 100).toInt() - 1
-                rxBus.send(bolusingEvent)
+                val currentBolusAmount = medtrumPump.bolusingTreatment?.insulin
+
+                if (currentBolusAmount != null && currentBolusAmount != lastSentBolusAmount) {
+                    bolusingEvent.t = medtrumPump.bolusingTreatment
+                    bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, medtrumPump.bolusingTreatment?.insulin, medtrumPump.bolusAmountToBeDelivered)
+                    bolusingEvent.percent = round(currentBolusAmount.div(medtrumPump.bolusAmountToBeDelivered) * 100).toInt() - 1
+                    rxBus.send(bolusingEvent)
+                    lastSentBolusAmount = currentBolusAmount
+                }
             }
         }
 
