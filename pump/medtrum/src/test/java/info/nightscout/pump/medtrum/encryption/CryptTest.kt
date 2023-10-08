@@ -1,6 +1,6 @@
 package info.nightscout.pump.medtrum.encryption
 
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 class CryptTest {
@@ -10,9 +10,9 @@ class CryptTest {
         val crypt = Crypt()
 
         val input = 2859923929
-        val expect = 3364239851
+        val expected = 3364239851L
         val output: Long = crypt.keyGen(input)
-        Assertions.assertEquals(expect, output)
+        assertThat(output).isEqualTo(expected)
     }
 
     @Test
@@ -20,8 +20,8 @@ class CryptTest {
         val crypt = Crypt()
 
         val input = 2859923929
-        val expect: Long = 126009121
+        val expected = 126009121L
         val output: Long = crypt.simpleDecrypt(input)
-        Assertions.assertEquals(expect, output)
+        assertThat(output).isEqualTo(expected)
     }
 }
