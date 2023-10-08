@@ -51,7 +51,7 @@ class TriggerTempTargetValueTest : TriggerTestBase() {
         assertThat(t.shouldRun()).isFalse()
         t = TriggerTempTargetValue(injector).comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         assertThat(t.shouldRun()).isFalse()
-        `when`(repository.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(null)
+        `when`(persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())).thenReturn(null)
         assertThat(t.shouldRun()).isTrue()
     }
 

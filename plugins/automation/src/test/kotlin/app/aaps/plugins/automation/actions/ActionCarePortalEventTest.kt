@@ -1,14 +1,14 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.queue.Callback
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
-import app.aaps.database.impl.transactions.Transaction
 import app.aaps.plugins.automation.elements.InputCarePortalMenu
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputString
-import io.reactivex.rxjava3.core.Single
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -25,8 +25,8 @@ class ActionCarePortalEventTest : ActionsTestBase() {
         `when`(rh.gs(app.aaps.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
         `when`(dateUtil.now()).thenReturn(0)
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        `when`(repository.runTransactionForResult(anyObject<Transaction<InsertIfNewByTimestampTherapyEventTransaction.TransactionResult>>()))
-            .thenReturn(Single.just(InsertIfNewByTimestampTherapyEventTransaction.TransactionResult().apply {
+        `when`(persistenceLayer.insertIfNewByTimestampTherapyEvent(anyObject(), anyObject(), anyObject(), anyObject(), anyObject()))
+            .thenReturn(Single.just(PersistenceLayer.TransactionResult<TE>().apply {
             }))
         sut = ActionCarePortalEvent(injector)
         sut.cpEvent = InputCarePortalMenu(rh)

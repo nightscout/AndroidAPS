@@ -38,6 +38,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.sp = sp
                 it.locationDataContainer = locationDataContainer
                 it.repository = repository
+                it.persistenceLayer = persistenceLayer
                 it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator
                 it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter)

@@ -6,6 +6,10 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
 import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.IDs
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -20,8 +24,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
@@ -144,15 +146,15 @@ internal class LoadBgWorkerTest : TestBase() {
     @Test
     fun testThereAreNewerDataFirstLoadListReturn() = runTest {
 
-        val glucoseValue = GlucoseValue(
+        val glucoseValue = GV(
             timestamp = 10000,
             isValid = true,
             raw = 101.0,
             value = 99.0,
-            trendArrow = GlucoseValue.TrendArrow.DOUBLE_UP,
+            trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
-            sourceSensor = GlucoseValue.SourceSensor.DEXCOM_G4_WIXEL,
-            interfaceIDs_backing = InterfaceIDs(
+            sourceSensor = SourceSensor.DEXCOM_G4_WIXEL,
+            ids = IDs(
                 nightscoutId = "nightscoutId"
             )
         )

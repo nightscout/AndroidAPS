@@ -3,6 +3,10 @@ package app.aaps.plugins.main.general.smsCommunicator
 import android.telephony.SmsManager
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TT
+import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.iob.IobTotal
@@ -11,6 +15,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -21,11 +26,9 @@ import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.fromGv
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.Transaction
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.main.R
@@ -57,6 +60,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var xDripBroadcast: XDripBroadcast
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var dateUtilMocked: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var smsManager: SmsManager
@@ -85,8 +89,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     private val modeUnknown = "unknown"
 
     @BeforeEach fun prepareTests() {
-        val reading = GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT)
-        val bgList: MutableList<GlucoseValue> = ArrayList()
+        val reading = GV(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = SourceSensor.UNKNOWN, trendArrow = TrendArrow.FLAT)
+        val bgList: MutableList<GV> = ArrayList()
         bgList.add(reading)
 
         `when`(iobCobCalculator.getCobInfo("SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0))
@@ -96,8 +100,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
 
         `when`(
-            repository.runTransactionForResult(anyObject<InsertAndCancelCurrentTemporaryTargetTransaction>())
-        ).thenReturn(Single.just(InsertAndCancelCurrentTemporaryTargetTransaction.TransactionResult().apply {
+            persistenceLayer.insertAndCancelCurrentTemporaryTarget(anyObject(), anyObject(), anyObject(), anyObject(), anyObject())
+        ).thenReturn(Single.just(PersistenceLayer.TransactionResult<TT>().apply {
         }))
         val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtilMocked, decimalFormatter)
 
@@ -105,7 +109,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
             loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
-            glucoseStatusProvider, repository, decimalFormatter
+            glucoseStatusProvider, repository, persistenceLayer, decimalFormatter
         )
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->

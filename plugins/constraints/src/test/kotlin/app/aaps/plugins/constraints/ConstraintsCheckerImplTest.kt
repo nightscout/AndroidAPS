@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profiling.Profiler
@@ -17,7 +18,6 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -58,7 +58,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var profiler: Profiler
-    @Mock lateinit var repository: AppRepository
+    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
     @Mock lateinit var ruffyScripter: RuffyScripter
@@ -165,7 +165,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
                 profiler,
                 sp,
                 dateUtil,
-                repository,
+                persistenceLayer,
                 glucoseStatusProvider,
                 bgQualityCheck,
                 tddCalculator
@@ -185,7 +185,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
                 profiler,
                 sp,
                 dateUtil,
-                repository,
+                persistenceLayer,
                 glucoseStatusProvider,
                 bgQualityCheck,
                 tddCalculator
@@ -205,7 +205,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
                 profiler,
                 fabricPrivacy,
                 dateUtil,
-                repository,
+                persistenceLayer,
                 glucoseStatusProvider,
                 sp
             )
