@@ -5,6 +5,7 @@ import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TE
+import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -29,7 +30,6 @@ import app.aaps.database.entities.Food
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
@@ -132,7 +132,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
             sourceSensor = SourceSensor.DEXCOM_G4_WIXEL,
-            ids = IDs(                nightscoutId = "nightscoutId"            )
+            ids = IDs(nightscoutId = "nightscoutId")
         )
         val dataPair = DataSyncSelector.PairGlucoseValue(glucoseValue, 1000)
         // create
@@ -441,17 +441,17 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTemporaryTarget() = runTest {
-        val temporaryTarget = TemporaryTarget(
+        val temporaryTarget = TT(
             timestamp = 10000,
             isValid = true,
-            reason = TemporaryTarget.Reason.ACTIVITY,
+            reason = TT.Reason.ACTIVITY,
             highTarget = 100.0,
             lowTarget = 99.0,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )

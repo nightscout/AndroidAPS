@@ -25,10 +25,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogTemptargetBinding
 import com.google.common.base.Joiner
@@ -240,25 +238,30 @@ class TempTargetDialog : DialogFragmentWithDate() {
                                        aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                                    })
                 } else {
-                    disposable += repository.runTransactionForResult(
-                        InsertAndCancelCurrentTemporaryTargetTransaction(
+                    disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                        TT(
                             timestamp = eventTime,
                             duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                             reason = when (reason) {
-                                rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
-                                rh.gs(app.aaps.core.ui.R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
-                                rh.gs(app.aaps.core.ui.R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
-                                else                                        -> TemporaryTarget.Reason.CUSTOM
+                                rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> TT.Reason.EATING_SOON
+                                rh.gs(app.aaps.core.ui.R.string.activity)   -> TT.Reason.ACTIVITY
+                                rh.gs(app.aaps.core.ui.R.string.hypo)       -> TT.Reason.HYPOGLYCEMIA
+                                else                                        -> TT.Reason.CUSTOM
                             },
                             lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
                             highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
+                        ),
+                        action = Action.TT,
+                        source = Sources.TTDialog,
+                        note = null,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
+                            ValueWithUnit.fromGlucoseUnit(target, units),
+                            ValueWithUnit.Minute(duration)
                         )
-                    ).subscribe({ result ->
-                                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                }, {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                })
+
+                    ).subscribe()
                 }
 
                 if (duration == 10) sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveusetemptarget, true)

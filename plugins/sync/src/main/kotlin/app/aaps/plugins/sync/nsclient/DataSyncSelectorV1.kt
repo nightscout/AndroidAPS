@@ -321,24 +321,24 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.ttsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
+            persistenceLayer.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryTarget data Start: $startId ${tt.first} forID: ${tt.second.id} ")
                 val dataPair = DataSyncSelector.PairTemporaryTarget(tt.first, tt.second.id)
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    tt.first.id == tt.second.id && tt.first.interfaceIDs.nightscoutId != null ->
+                    tt.first.id == tt.second.id && tt.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Loaded from NS: ${tt.second.id} ")
                     // only NsId changed, no need to upload
-                    tt.first.onlyNsIdAdded(tt.second)                                         ->
+                    tt.first.onlyNsIdAdded(tt.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Only NS id changed ID: ${tt.second.id} ")
                     // without nsId = create new
-                    tt.first.interfaceIDs.nightscoutId == null                                -> {
+                    tt.first.ids.nightscoutId == null                                -> {
                         activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                     // existing with nsId = update
-                    tt.first.interfaceIDs.nightscoutId != null                                -> {
+                    tt.first.ids.nightscoutId != null                                -> {
                         activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed

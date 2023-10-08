@@ -228,7 +228,9 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                     lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
                                     highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
                                 ),
-                                action = Action.TT, source = Sources.TTDialog, note = null,
+                                action = Action.TT,
+                                source = Sources.TTDialog,
+                                note = null,
                                 listValues = listOf(
                                     ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                     ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),

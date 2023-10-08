@@ -18,6 +18,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
@@ -37,9 +38,6 @@ import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogCarbsBinding
 import com.google.common.base.Joiner
@@ -64,7 +62,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var automation: Automation
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
@@ -300,82 +298,29 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (carbsAfterConstraints > 0 || activitySelected || eatingSoonSelected || hypoSelected) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.carbs), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
-                    when {
-                        activitySelected -> {
-                            uel.log(
-                                action = Action.TT, source = Sources.CarbDialog,
-                                listValues = listOf(
-                                    ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
-                                    ValueWithUnit.fromGlucoseUnit(activityTT, units),
-                                    ValueWithUnit.Minute(activityTTDuration)
-                                )
-                            )
-                            disposable += repository.runTransactionForResult(
-                                InsertAndCancelCurrentTemporaryTargetTransaction(
-                                    timestamp = System.currentTimeMillis(),
-                                    duration = TimeUnit.MINUTES.toMillis(activityTTDuration.toLong()),
-                                    reason = TemporaryTarget.Reason.ACTIVITY,
-                                    lowTarget = profileUtil.convertToMgdl(activityTT, profileUtil.units),
-                                    highTarget = profileUtil.convertToMgdl(activityTT, profileUtil.units)
-                                )
-                            ).subscribe({ result ->
-                                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                        }, {
-                                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                        })
-                        }
-
-                        eatingSoonSelected -> {
-                            uel.log(
-                                action = Action.TT, source = Sources.CarbDialog,
-                                listValues = listOf(
-                                    ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
-                                    ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
-                                    ValueWithUnit.Minute(eatingSoonTTDuration)
-                                )
-                            )
-                            disposable += repository.runTransactionForResult(
-                                InsertAndCancelCurrentTemporaryTargetTransaction(
-                                    timestamp = System.currentTimeMillis(),
-                                    duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                                    reason = TemporaryTarget.Reason.EATING_SOON,
-                                    lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
-                                    highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)
-                                )
-                            ).subscribe({ result ->
-                                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                        }, {
-                                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                        })
-                        }
-
-                        hypoSelected -> {
-                            uel.log(
-                                action = Action.TT, source = Sources.CarbDialog,
-                                listValues = listOf(
-                                    ValueWithUnit.TETTReason(TT.Reason.HYPOGLYCEMIA),
-                                    ValueWithUnit.fromGlucoseUnit(hypoTT, units),
-                                    ValueWithUnit.Minute(hypoTTDuration)
-                                )
-                            )
-                            disposable += repository.runTransactionForResult(
-                                InsertAndCancelCurrentTemporaryTargetTransaction(
-                                    timestamp = System.currentTimeMillis(),
-                                    duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
-                                    reason = TemporaryTarget.Reason.HYPOGLYCEMIA,
-                                    lowTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units),
-                                    highTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units)
-                                )
-                            ).subscribe({ result ->
-                                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                        }, {
-                                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                        })
-                        }
+                    val reason = when {
+                        activitySelected -> TT.Reason.ACTIVITY
+                        eatingSoonSelected -> TT.Reason.EATING_SOON
+                        hypoSelected -> TT.Reason.HYPOGLYCEMIA
+                        else -> TT.Reason.CUSTOM
                     }
+                    disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                        temporaryTarget = TT(
+                            timestamp = System.currentTimeMillis(),
+                            duration = TimeUnit.MINUTES.toMillis(hypoTTDuration.toLong()),
+                            reason = reason,
+                            lowTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units),
+                            highTarget = profileUtil.convertToMgdl(hypoTT, profileUtil.units)
+                        ),
+                        action = Action.TT,
+                        source = Sources.CarbDialog,
+                        note = null,
+                        listValues = listOf(
+                            ValueWithUnit.TETTReason(reason),
+                            ValueWithUnit.fromGlucoseUnit(hypoTT, units),
+                            ValueWithUnit.Minute(hypoTTDuration)
+                        )
+                    ).subscribe()
                     if (carbsAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
                         detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS

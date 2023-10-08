@@ -48,8 +48,12 @@ interface PersistenceLayer {
     fun getTemporaryTargetActiveAt(timestamp: Long): TT?
     fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
     fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
+    fun getNextSyncElementTemporaryTarget(id: Long): Maybe<Pair<TT, TT>>
     fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
     fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
+    fun cancelCurrentTemporaryTargetIfAny(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
+    fun syncNsTemporaryTargets(temporaryTargets: List<TT>, action: Action, source: Sources, note: String?): Single<TransactionResult<TT>>
+    fun updateTemporaryTargetsNsIds(temporaryTargets: List<TT>): Single<TransactionResult<TT>>
 
     // TE
     fun getLastTherapyRecordUpToNow(type: TE.Type): Single<ValueWrapper<TE>>
@@ -72,6 +76,8 @@ interface PersistenceLayer {
         val updated = mutableListOf<T>()
         val invalidated = mutableListOf<T>()
         val updatedNsId = mutableListOf<T>()
+        val ended = mutableListOf<T>()
+        val updatedDuration = mutableListOf<T>()
 
         val calibrationsInserted = mutableListOf<TE>()
         val sensorInsertionsInserted = mutableListOf<TE>()

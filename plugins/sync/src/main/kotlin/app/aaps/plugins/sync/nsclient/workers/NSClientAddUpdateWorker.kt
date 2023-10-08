@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclient.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.TT
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
@@ -23,7 +24,6 @@ import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.extendedBolusFromJson
@@ -100,7 +100,7 @@ class NSClientAddUpdateWorker(
                 insulin > 0 || carbs > 0                                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
                     if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
-                        TemporaryTarget.fromJson(json, profileUtil)?.let { temporaryTarget ->
+                        TT.fromJson(json, profileUtil)?.let { temporaryTarget ->
                             storeDataForDb.temporaryTargets.add(temporaryTarget)
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }

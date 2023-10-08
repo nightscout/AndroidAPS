@@ -13,6 +13,7 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TT
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -22,6 +23,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -58,12 +60,10 @@ import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.validators.ValidatingEditTextPreference
 import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
@@ -107,6 +107,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val uel: UserEntryLogger,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
@@ -978,20 +979,23 @@ class SmsCommunicatorPlugin @Inject constructor(
                                                         currentProfile.units == GlucoseUnit.MMOL -> Constants.defaultEatingSoonTTmmol
                                                         else                                     -> Constants.defaultEatingSoonTTmgdl
                                                     }
-                                                disposable += repository.runTransactionForResult(
-                                                    InsertAndCancelCurrentTemporaryTargetTransaction(
+                                                disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                                                    temporaryTarget = TT(
                                                         timestamp = dateUtil.now(),
                                                         duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                                                        reason = TemporaryTarget.Reason.EATING_SOON,
+                                                        reason = TT.Reason.EATING_SOON,
                                                         lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units),
                                                         highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)
+                                                    ),
+                                                    action = Action.TT,
+                                                    source = Sources.SMS,
+                                                    note = null,
+                                                    listValues = listOf(
+                                                        ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
+                                                        ValueWithUnit.Mgdl(profileUtil.convertToMgdl(eatingSoonTT, profileUtil.units)),
+                                                        ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong())).toInt())
                                                     )
-                                                ).subscribe({ result ->
-                                                                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                                                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                                            }, {
-                                                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                                            })
+                                                ).subscribe()
                                                 val tt = if (currentProfile.units == GlucoseUnit.MMOL) {
                                                     decimalFormatter.to1Decimal(eatingSoonTT)
                                                 } else decimalFormatter.to0Decimal(eatingSoonTT)
@@ -1101,7 +1105,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var keyTarget = 0
                     var defaultTargetMMOL = 0.0
                     var defaultTargetMGDL = 0.0
-                    var reason = TemporaryTarget.Reason.EATING_SOON
+                    var reason = TT.Reason.EATING_SOON
                     when {
                         isMeal     -> {
                             keyDuration = app.aaps.core.utils.R.string.key_eatingsoon_duration
@@ -1109,7 +1113,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                             keyTarget = app.aaps.core.utils.R.string.key_eatingsoon_target
                             defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
                             defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
-                            reason = TemporaryTarget.Reason.EATING_SOON
+                            reason = TT.Reason.EATING_SOON
                         }
 
                         isActivity -> {
@@ -1118,7 +1122,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                             keyTarget = app.aaps.core.utils.R.string.key_activity_target
                             defaultTargetMMOL = Constants.defaultActivityTTmmol
                             defaultTargetMGDL = Constants.defaultActivityTTmgdl
-                            reason = TemporaryTarget.Reason.ACTIVITY
+                            reason = TT.Reason.ACTIVITY
                         }
 
                         isHypo     -> {
@@ -1127,7 +1131,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                             keyTarget = app.aaps.core.utils.R.string.key_hypo_target
                             defaultTargetMMOL = Constants.defaultHypoTTmmol
                             defaultTargetMGDL = Constants.defaultHypoTTmgdl
-                            reason = TemporaryTarget.Reason.HYPOGLYCEMIA
+                            reason = TT.Reason.HYPOGLYCEMIA
                         }
                     }
                     var ttDuration = sp.getInt(keyDuration, defaultTargetDuration)
@@ -1135,31 +1139,25 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var tt = sp.getDouble(keyTarget, if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL)
                     tt = profileUtil.valueInCurrentUnitsDetect(tt)
                     tt = if (tt > 0) tt else if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL
-                    disposable += repository.runTransactionForResult(
-                        InsertAndCancelCurrentTemporaryTargetTransaction(
+                    disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                        temporaryTarget = TT(
                             timestamp = dateUtil.now(),
                             duration = TimeUnit.MINUTES.toMillis(ttDuration.toLong()),
                             reason = reason,
                             lowTarget = profileUtil.convertToMgdl(tt, profileUtil.units),
                             highTarget = profileUtil.convertToMgdl(tt, profileUtil.units)
-                        )
-                    ).subscribe({ result ->
-                                    result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                }, {
-                                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                })
-                    val ttString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(tt) else decimalFormatter.to0Decimal(tt)
-                    val replyText = rh.gs(R.string.smscommunicator_tt_set, ttString, ttDuration)
-                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
-                    uel.log(
+                        ),
                         action = Action.TT,
                         source = Sources.SMS,
+                        note = null,
                         listValues = listOf(
                             ValueWithUnit.fromGlucoseUnit(tt, units),
                             ValueWithUnit.Minute(ttDuration)
                         )
-                    )
+                    ).subscribe()
+                    val ttString = if (units == GlucoseUnit.MMOL) decimalFormatter.to1Decimal(tt) else decimalFormatter.to0Decimal(tt)
+                    val replyText = rh.gs(R.string.smscommunicator_tt_set, ttString, ttDuration)
+                    sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                 }
             })
         } else if (isStop) {

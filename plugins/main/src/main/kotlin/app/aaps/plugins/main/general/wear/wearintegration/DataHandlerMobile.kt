@@ -62,11 +62,8 @@ import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
@@ -1145,42 +1142,34 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun doTempTarget(command: EventData.ActionTempTargetConfirmed) {
-        if (command.duration != 0) {
-            disposable += repository.runTransactionForResult(
-                InsertAndCancelCurrentTemporaryTargetTransaction(
+        if (command.duration != 0)
+            disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                temporaryTarget = TT(
                     timestamp = System.currentTimeMillis(),
                     duration = TimeUnit.MINUTES.toMillis(command.duration.toLong()),
-                    reason = TemporaryTarget.Reason.WEAR,
+                    reason = TT.Reason.WEAR,
                     lowTarget = profileUtil.convertToMgdl(command.low, profileFunction.getUnits()),
                     highTarget = profileUtil.convertToMgdl(command.high, profileFunction.getUnits())
-                )
-            ).subscribe({ result ->
-                            result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                        }, {
-                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                        })
-            uel.log(
-                action = Action.TT, source = Sources.Wear,
+                ),
+                action = Action.TT,
+                source = Sources.Wear,
+                note = null,
                 listValues = listOf(
                     ValueWithUnit.TETTReason(TT.Reason.WEAR),
                     ValueWithUnit.fromGlucoseUnit(command.low, profileFunction.getUnits()),
                     ValueWithUnit.fromGlucoseUnit(command.high, profileFunction.getUnits()).takeIf { command.low != command.high },
                     ValueWithUnit.Minute(command.duration)
                 )
+            ).subscribe()
+        else
+            disposable += persistenceLayer.cancelCurrentTemporaryTargetIfAny(
+                timestamp = dateUtil.now(),
+                action = Action.CANCEL_TT,
+                source = Sources.Wear,
+                note = null,
+                listValues = listOf(ValueWithUnit.TETTReason(TT.Reason.WEAR))
             )
-        } else {
-            disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
-                .subscribe({ result ->
-                               result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                           }, {
-                               aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                           })
-            uel.log(
-                action = Action.CANCEL_TT, source = Sources.Wear,
-                value = ValueWithUnit.TETTReason(TT.Reason.WEAR)
-            )
-        }
+                .subscribe()
     }
 
     private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BolusCalculatorResult?) {

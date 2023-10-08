@@ -865,7 +865,7 @@ class NSClientV3Plugin @Inject constructor(
                             }
 
                             is DataSyncSelector.PairTemporaryTarget        -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
                             }
 

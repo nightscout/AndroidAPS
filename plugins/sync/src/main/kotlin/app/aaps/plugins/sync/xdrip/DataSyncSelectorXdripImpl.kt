@@ -280,7 +280,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.ttsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
+            persistenceLayer.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
                 aapsLogger.info(LTag.XDRIP, "Loading TemporaryTarget data Start: $startId ${tt.first} forID: ${tt.second.id} ")
                 if (!isOld(tt.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairTemporaryTarget(tt.first, tt.second.id))

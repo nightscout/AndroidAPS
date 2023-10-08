@@ -2,8 +2,8 @@ package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
 import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.TE
+import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -31,11 +31,9 @@ import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
@@ -57,7 +55,6 @@ import app.aaps.database.impl.transactions.SyncNsFoodTransaction
 import app.aaps.database.impl.transactions.SyncNsOfflineEventTransaction
 import app.aaps.database.impl.transactions.SyncNsProfileSwitchTransaction
 import app.aaps.database.impl.transactions.SyncNsTemporaryBasalTransaction
-import app.aaps.database.impl.transactions.SyncNsTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.SyncNsTherapyEventTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusTransaction
@@ -69,7 +66,6 @@ import app.aaps.database.impl.transactions.UpdateNsIdFoodTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdOfflineEventTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTherapyEventTransaction
 import app.aaps.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -99,7 +95,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val glucoseValues: MutableList<GV> = mutableListOf()
     override val boluses: MutableList<Bolus> = mutableListOf()
     override val carbs: MutableList<Carbs> = mutableListOf()
-    override val temporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
+    override val temporaryTargets: MutableList<TT> = mutableListOf()
     override val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
     override val therapyEvents: MutableList<TE> = mutableListOf()
@@ -112,7 +108,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
     override val nsIdBoluses: MutableList<Bolus> = mutableListOf()
     override val nsIdCarbs: MutableList<Carbs> = mutableListOf()
-    override val nsIdTemporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
+    override val nsIdTemporaryTargets: MutableList<TT> = mutableListOf()
     override val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
     override val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
@@ -149,19 +145,19 @@ class StoreDataForDbImpl @Inject constructor(
                     glucoseValues.clear()
                     result.updated.forEach {
                         nsClientSource.detectSource(it)
-                        updated.inc(GlucoseValue::class.java.simpleName)
+                        updated.inc(GV::class.java.simpleName)
                     }
                     result.inserted.forEach {
                         nsClientSource.detectSource(it)
-                        inserted.inc(GlucoseValue::class.java.simpleName)
+                        inserted.inc(GV::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         nsClientSource.detectSource(it)
-                        nsIdUpdated.inc(GlucoseValue::class.java.simpleName)
+                        nsIdUpdated.inc(GV::class.java.simpleName)
                     }
                 }
 
-        sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
+        sendLog("GlucoseValue", GV::class.java.simpleName)
         SystemClock.sleep(pause)
         rxBus.send(EventNSClientNewLog("● DONE PROCESSING BG", ""))
     }
@@ -300,78 +296,22 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         if (temporaryTargets.isNotEmpty())
-            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTargets))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsTemporaryTargets(
+                temporaryTargets = temporaryTargets,
+                action = Action.TT,
+                source = Sources.NSClient,
+                note = ""
+            )
+                .subscribeBy { result ->
                     temporaryTargets.clear()
-                    result.inserted.forEach { tt ->
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.TT,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.TETTReason(tt.reason.fromDb()),
-                                    ValueWithUnit.fromGlucoseUnit(tt.lowTarget, GlucoseUnit.MGDL),
-                                    ValueWithUnit.fromGlucoseUnit(tt.highTarget, GlucoseUnit.MGDL).takeIf { tt.lowTarget != tt.highTarget },
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryTarget $tt")
-                        inserted.inc(TemporaryTarget::class.java.simpleName)
-                    }
-                    result.invalidated.forEach { tt ->
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.TT_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.TETTReason(tt.reason.fromDb()),
-                                    ValueWithUnit.Mgdl(tt.lowTarget),
-                                    ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $tt")
-                        invalidated.inc(TemporaryTarget::class.java.simpleName)
-                    }
-                    result.ended.forEach { tt ->
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.CANCEL_TT,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.TETTReason(tt.reason.fromDb()),
-                                    ValueWithUnit.Mgdl(tt.lowTarget),
-                                    ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget $tt")
-                        ended.inc(TemporaryTarget::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryTarget $it")
-                        nsIdUpdated.inc(TemporaryTarget::class.java.simpleName)
-                    }
-                    result.updatedDuration.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryTarget $it")
-                        durationUpdated.inc(TemporaryTarget::class.java.simpleName)
-                    }
+                    repeat(result.inserted.size) { inserted.inc(TT::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(TT::class.java.simpleName) }
+                    repeat(result.ended.size) { ended.inc(TT::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(TT::class.java.simpleName) }
+                    repeat(result.updatedDuration.size) { durationUpdated.inc(TT::class.java.simpleName) }
+                    sendLog("TemporaryTarget", TT::class.java.simpleName)
                 }
 
-        sendLog("TemporaryTarget", TemporaryTarget::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (temporaryBasals.isNotEmpty())
@@ -795,24 +735,16 @@ class StoreDataForDbImpl @Inject constructor(
 
     @Synchronized
     override fun updateNsIds() {
-        repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(nsIdTemporaryTargets))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryTarget failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateTemporaryTargetsNsIds(nsIdTemporaryTargets)
+            .subscribeBy { result ->
                 nsIdTemporaryTargets.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryTarget $it")
-                    nsIdUpdated.inc(TemporaryTarget::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(TT::class.java.simpleName) }
             }
 
-        persistenceLayer.updateGlucoseValuesNsIds(nsIdGlucoseValues)
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateGlucoseValuesNsIds(nsIdGlucoseValues)
+            .subscribeBy { result ->
                 nsIdGlucoseValues.clear()
-                repeat(result.updatedNsId.size) { nsIdUpdated.inc(GlucoseValue::class.java.simpleName) }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(GV::class.java.simpleName) }
             }
 
         repository.runTransactionForResult(UpdateNsIdFoodTransaction(nsIdFoods))
@@ -957,10 +889,10 @@ class StoreDataForDbImpl @Inject constructor(
                     nsIdUpdated.inc(OfflineEvent::class.java.simpleName)
                 }
             }
-        sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
+        sendLog("GlucoseValue", GV::class.java.simpleName)
         sendLog("Bolus", Bolus::class.java.simpleName)
         sendLog("Carbs", Carbs::class.java.simpleName)
-        sendLog("TemporaryTarget", TemporaryTarget::class.java.simpleName)
+        sendLog("TemporaryTarget", TT::class.java.simpleName)
         sendLog("TemporaryBasal", TemporaryBasal::class.java.simpleName)
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
@@ -1005,7 +937,7 @@ class StoreDataForDbImpl @Inject constructor(
                         .also { result ->
                             result.invalidated.forEach {
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $it")
-                                invalidated.inc(TemporaryTarget::class.java.simpleName)
+                                invalidated.inc(TT::class.java.simpleName)
                             }
                         }
                 }
@@ -1095,7 +1027,7 @@ class StoreDataForDbImpl @Inject constructor(
         }
         sendLog("Bolus", Bolus::class.java.simpleName)
         sendLog("Carbs", Carbs::class.java.simpleName)
-        sendLog("TemporaryTarget", TemporaryTarget::class.java.simpleName)
+        sendLog("TemporaryTarget", TT::class.java.simpleName)
         sendLog("TemporaryBasal", TemporaryBasal::class.java.simpleName)
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
@@ -1116,8 +1048,8 @@ class StoreDataForDbImpl @Inject constructor(
                     listValues = listOf(ValueWithUnit.Timestamp(gv.timestamp))
                 )
                     .subscribeBy { result ->
-                        repeat(result.invalidated.size) { invalidated.inc(GlucoseValue::class.java.simpleName) }
-                        sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
+                        repeat(result.invalidated.size) { invalidated.inc(GV::class.java.simpleName) }
+                        sendLog("GlucoseValue", GV::class.java.simpleName)
                     }
             }
         }

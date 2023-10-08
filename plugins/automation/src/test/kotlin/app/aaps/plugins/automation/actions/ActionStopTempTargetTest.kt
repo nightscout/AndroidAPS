@@ -1,12 +1,12 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.data.db.TT
 import app.aaps.core.interfaces.queue.Callback
-import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.database.impl.transactions.Transaction
 import app.aaps.plugins.automation.R
-import io.reactivex.rxjava3.core.Single
 import com.google.common.truth.Truth.assertThat
+import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -37,10 +37,10 @@ class ActionStopTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun doActionTest() {
-        val inserted = mutableListOf<TemporaryTarget>().apply {
+        val inserted = mutableListOf<TT>().apply {
             // insert all inserted TTs
         }
-        val updated = mutableListOf<TemporaryTarget>().apply {
+        val updated = mutableListOf<TT>().apply {
             // add(TemporaryTarget(id = 0, version = 0, dateCreated = 0, isValid = false, referenceId = null, interfaceIDs_backing = null, timestamp = 0, utcOffset = 0, reason =, highTarget = 0.0, lowTarget = 0.0, duration = 0))
             // insert all updated TTs
         }

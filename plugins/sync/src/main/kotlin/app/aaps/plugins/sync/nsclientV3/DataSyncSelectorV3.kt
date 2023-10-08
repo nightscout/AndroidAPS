@@ -282,19 +282,19 @@ class DataSyncSelectorV3 @Inject constructor(
             }
             queueCounter.ttsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
+            persistenceLayer.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    tt.first.id == tt.second.id && tt.first.interfaceIDs.nightscoutId != null ->
+                    tt.first.id == tt.second.id && tt.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Loaded from NS: ${tt.second.id} ")
                     // only NsId changed, no need to upload
-                    tt.first.onlyNsIdAdded(tt.second)                                         ->
+                    tt.first.onlyNsIdAdded(tt.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Only NS id changed ID: ${tt.second.id} ")
                     // without nsId = create new
-                    tt.first.interfaceIDs.nightscoutId == null                                ->
+                    tt.first.ids.nightscoutId == null                                ->
                         cont = activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairTemporaryTarget(tt.first, tt.second.id), "$startId/$lastDbId") ?: false
                     // existing with nsId = update
-                    tt.first.interfaceIDs.nightscoutId != null                                ->
+                    tt.first.ids.nightscoutId != null                                ->
                         cont = activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairTemporaryTarget(tt.first, tt.second.id), "$startId/$lastDbId") ?: false
                 }
                 if (cont) confirmLastTempTargetsIdIfGreater(tt.second.id)

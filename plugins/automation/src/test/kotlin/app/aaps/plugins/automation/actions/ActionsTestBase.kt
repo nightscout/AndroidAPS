@@ -6,6 +6,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -68,6 +69,7 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var loopPlugin: TestLoopPlugin
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var persistenceLayer: PersistenceLayer
 
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -82,7 +84,7 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.activePlugin = activePlugin
-                it.repository = repository
+                it.persistenceLayer = persistenceLayer
                 it.profileFunction = profileFunction
                 it.uel = uel
                 it.dateUtil = dateUtil
@@ -148,11 +150,10 @@ ActionsTestBase : TestBaseWithProfile() {
             }
             if (it is ActionCarePortalEvent) {
                 it.rh = rh
-                it.repository = repository
+                it.persistenceLayer = persistenceLayer
                 it.sp = sp
                 it.dateUtil = dateUtil
                 it.profileFunction = profileFunction
-                it.uel = uel
             }
             if (it is ActionStopProcessing) {
                 it.rh = rh
