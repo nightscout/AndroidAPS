@@ -322,6 +322,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
             // Resume suspended pump
             if (result) result = sendPacketAndGetResponse(ResumePumpPacket(injector))
+            if (result) medtrumPump.clearAlarmState()
         }
         return result
     }
@@ -619,7 +620,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
             MedtrumPumpState.ACTIVE_ALT           -> {
                 rxBus.send(EventDismissNotification(Notification.PATCH_NOT_ACTIVE))
                 rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
-                medtrumPump.clearAlarmState()
             }
 
             MedtrumPumpState.LOW_BG_SUSPENDED,
