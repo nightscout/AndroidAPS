@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.xdrip
 
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -25,7 +26,8 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val xdripBroadcast: Lazy<XDripBroadcast>,
-    private val appRepository: AppRepository
+    private val appRepository: AppRepository,
+    private val persistenceLayer: PersistenceLayer
 ) : DataSyncSelectorXdrip {
 
     class QueueCounter(
@@ -137,7 +139,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.gvsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
+            persistenceLayer.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
                 aapsLogger.info(LTag.XDRIP, "Loading GlucoseValue data Start: $startId ${gv.first} forID: ${gv.second.id} ")
                 if (!isOld(gv.first.timestamp))
                     preparedEntries.add(DataSyncSelector.PairGlucoseValue(gv.first, gv.second.id))
@@ -337,7 +339,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.tesRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementTherapyEvent(startId).blockingGet()?.let { te ->
+            persistenceLayer.getNextSyncElementTherapyEvent(startId).blockingGet()?.let { te ->
                 aapsLogger.info(LTag.XDRIP, "Loading TherapyEvents data Start: $startId ${te.first} forID: ${te.second.id} ")
                 if (!isOld(te.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairTherapyEvent(te.first, te.second.id))

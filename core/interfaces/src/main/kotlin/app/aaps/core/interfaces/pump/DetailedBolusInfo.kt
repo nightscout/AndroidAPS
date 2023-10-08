@@ -1,11 +1,12 @@
 package app.aaps.core.interfaces.pump
 
 import android.content.Context
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs
 
 class DetailedBolusInfo {
@@ -44,11 +45,11 @@ class DetailedBolusInfo {
         SENSOR("Sensor"),
         MANUAL("Manual");
 
-        fun toDbMeterType(): TherapyEvent.MeterType =
+        fun toDbMeterType(): TE.MeterType =
             when (this) {
-                FINGER -> TherapyEvent.MeterType.FINGER
-                SENSOR -> TherapyEvent.MeterType.SENSOR
-                MANUAL -> TherapyEvent.MeterType.MANUAL
+                FINGER -> TE.MeterType.FINGER
+                SENSOR -> TE.MeterType.SENSOR
+                MANUAL -> TE.MeterType.MANUAL
             }
     }
 
@@ -75,24 +76,24 @@ class DetailedBolusInfo {
         PUMP_BATTERY_CHANGE,
         NOTE;
 
-        fun toDBbEventType(): TherapyEvent.Type =
+        fun toDBbEventType(): TE.Type =
             when (this) {
-                MEAL_BOLUS          -> TherapyEvent.Type.MEAL_BOLUS
-                BOLUS_WIZARD        -> TherapyEvent.Type.BOLUS_WIZARD
-                CORRECTION_BOLUS    -> TherapyEvent.Type.CORRECTION_BOLUS
-                CARBS_CORRECTION    -> TherapyEvent.Type.CARBS_CORRECTION
-                CANNULA_CHANGE      -> TherapyEvent.Type.CANNULA_CHANGE
-                INSULIN_CHANGE      -> TherapyEvent.Type.INSULIN_CHANGE
-                PUMP_BATTERY_CHANGE -> TherapyEvent.Type.PUMP_BATTERY_CHANGE
-                NOTE                -> TherapyEvent.Type.NOTE
+                MEAL_BOLUS          -> TE.Type.MEAL_BOLUS
+                BOLUS_WIZARD        -> TE.Type.BOLUS_WIZARD
+                CORRECTION_BOLUS    -> TE.Type.CORRECTION_BOLUS
+                CARBS_CORRECTION    -> TE.Type.CARBS_CORRECTION
+                CANNULA_CHANGE      -> TE.Type.CANNULA_CHANGE
+                INSULIN_CHANGE      -> TE.Type.INSULIN_CHANGE
+                PUMP_BATTERY_CHANGE -> TE.Type.PUMP_BATTERY_CHANGE
+                NOTE                -> TE.Type.NOTE
             }
     }
 
-    fun createTherapyEvent(): TherapyEvent =
-        TherapyEvent(
+    fun createTherapyEvent(): TE =
+        TE(
             timestamp = timestamp,
             type = eventType.toDBbEventType(),
-            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+            glucoseUnit = GlucoseUnit.MGDL,
             note = notes,
             glucose = mgdlGlucose,
             glucoseType = glucoseType?.toDbMeterType()

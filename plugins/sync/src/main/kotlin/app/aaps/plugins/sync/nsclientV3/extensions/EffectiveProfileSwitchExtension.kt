@@ -3,12 +3,12 @@ package app.aaps.plugins.sync.nsclientV3.extensions
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSEffectiveProfileSwitch
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.embedments.InterfaceIDs
-import app.aaps.plugins.sync.nsclient.extensions.fromConstant
 import java.security.InvalidParameterException
 
 fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): EffectiveProfileSwitch? {
@@ -23,7 +23,7 @@ fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): Effec
         isfBlocks = profileSealed.isfBlocks,
         icBlocks = profileSealed.icBlocks,
         targetBlocks = profileSealed.targetBlocks,
-        glucoseUnit = EffectiveProfileSwitch.GlucoseUnit.fromConstant(profileSealed.units),
+        glucoseUnit = profileSealed.units.toDb(),
         originalProfileName = originalProfileName,
         originalCustomizedName = originalCustomizedName,
         originalTimeshift = originalTimeshift,

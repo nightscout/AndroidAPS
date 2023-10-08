@@ -8,6 +8,10 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TT
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -21,8 +25,6 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
@@ -187,33 +189,49 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 val units = profileFunction.getUnits()
                 when (reason) {
                     rh.gs(app.aaps.core.ui.R.string.eatingsoon) -> uel.log(
-                        UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.EATING_SOON
-                        ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                        action = Action.TT, source = Sources.TTDialog,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
+                            ValueWithUnit.fromGlucoseUnit(target, units),
+                            ValueWithUnit.Minute(duration)
+                        )
                     )
 
                     rh.gs(app.aaps.core.ui.R.string.activity) -> uel.log(
-                        UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.ACTIVITY
-                        ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                        action = Action.TT, source = Sources.TTDialog,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TETTReason(TT.Reason.ACTIVITY),
+                            ValueWithUnit.fromGlucoseUnit(target, units),
+                            ValueWithUnit.Minute(duration)
+                        )
                     )
 
                     rh.gs(app.aaps.core.ui.R.string.hypo) -> uel.log(
-                        UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.HYPOGLYCEMIA
-                        ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                        action = Action.TT, source = Sources.TTDialog,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TETTReason(TT.Reason.HYPOGLYCEMIA),
+                            ValueWithUnit.fromGlucoseUnit(target, units),
+                            ValueWithUnit.Minute(duration)
+                        )
                     )
 
                     rh.gs(app.aaps.core.ui.R.string.manual) -> uel.log(
-                        UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
-                            TemporaryTarget.Reason.CUSTOM
-                        ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
+                        action = Action.TT, source = Sources.TTDialog,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                            ValueWithUnit.TETTReason(TT.Reason.CUSTOM),
+                            ValueWithUnit.fromGlucoseUnit(target, units),
+                            ValueWithUnit.Minute(duration)
+                        )
                     )
 
                     rh.gs(app.aaps.core.ui.R.string.stoptemptarget) -> uel.log(
-                        UserEntry.Action.CANCEL_TT,
-                        UserEntry.Sources.TTDialog,
-                        ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                        action = Action.CANCEL_TT,
+                        source = Sources.TTDialog,
+                        value = ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
                 }
                 if (target == 0.0 || duration == 0) {
                     disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(eventTime))

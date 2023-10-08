@@ -27,6 +27,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.automation.Automation
@@ -89,8 +91,6 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.elements.SingleClickButton
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.interfaces.end
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.main.R

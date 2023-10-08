@@ -2,33 +2,21 @@ package app.aaps.database.impl.transactions
 
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.transactions.TransactionGlucoseValue
+import app.aaps.database.entities.data.GlucoseUnit
 
 /**
  * Inserts data from a CGM source into the database
  */
 class CgmSourceTransaction(
-    private val glucoseValues: List<TransactionGlucoseValue>,
+    private val glucoseValues: List<GlucoseValue>,
     private val calibrations: List<Calibration>,
     private val sensorInsertionTime: Long?
 ) : Transaction<CgmSourceTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
-        glucoseValues.forEach {
-            val current = database.glucoseValueDao.findByTimestampAndSensor(it.timestamp, it.sourceSensor)
-            val glucoseValue = GlucoseValue(
-                timestamp = it.timestamp,
-                raw = it.raw,
-                value = it.value,
-                noise = it.noise,
-                trendArrow = it.trendArrow,
-                sourceSensor = it.sourceSensor,
-                isValid = it.isValid,
-                utcOffset = it.utcOffset
-            ).also { gv ->
-                gv.interfaceIDs.nightscoutId = it.nightscoutId
-            }
+        glucoseValues.forEach { glucoseValue ->
+            val current = database.glucoseValueDao.findByTimestampAndSensor(glucoseValue.timestamp, glucoseValue.sourceSensor)
             // if nsId is not provided in new record, copy from current if exists
             if (glucoseValue.interfaceIDs.nightscoutId == null)
                 current?.let { existing -> glucoseValue.interfaceIDs.nightscoutId = existing.interfaceIDs.nightscoutId }
@@ -36,19 +24,19 @@ class CgmSourceTransaction(
             current?.let { existing -> glucoseValue.isValid = existing.isValid }
             when {
                 // new record, create new
-                current == null                                                      -> {
+                current == null                                                                             -> {
                     database.glucoseValueDao.insertNewEntry(glucoseValue)
                     result.inserted.add(glucoseValue)
                 }
                 // different record, update
-                !current.contentEqualsTo(glucoseValue)                               -> {
+                !current.contentEqualsTo(glucoseValue)                                                      -> {
                     glucoseValue.id = current.id
                     database.glucoseValueDao.updateExistingEntry(glucoseValue)
                     result.updated.add(glucoseValue)
                 }
                 // update NS id if didn't exist and now provided
-                current.interfaceIDs.nightscoutId == null && it.nightscoutId != null -> {
-                    current.interfaceIDs.nightscoutId = it.nightscoutId
+                current.interfaceIDs.nightscoutId == null && glucoseValue.interfaceIDs.nightscoutId != null -> {
+                    current.interfaceIDs.nightscoutId = glucoseValue.interfaceIDs.nightscoutId
                     database.glucoseValueDao.updateExistingEntry(current)
                     result.updatedNsId.add(glucoseValue)
                 }
@@ -71,7 +59,7 @@ class CgmSourceTransaction(
                 val therapyEvent = TherapyEvent(
                     timestamp = it,
                     type = TherapyEvent.Type.SENSOR_CHANGE,
-                    glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                    glucoseUnit = GlucoseUnit.MGDL
                 )
                 database.therapyEventDao.insertNewEntry(therapyEvent)
                 result.sensorInsertionsInserted.add(therapyEvent)
@@ -83,7 +71,7 @@ class CgmSourceTransaction(
     data class Calibration(
         val timestamp: Long,
         val value: Double,
-        val glucoseUnit: TherapyEvent.GlucoseUnit
+        val glucoseUnit: GlucoseUnit
     )
 
     class TransactionResult {

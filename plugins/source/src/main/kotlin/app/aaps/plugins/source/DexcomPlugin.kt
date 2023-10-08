@@ -1,19 +1,23 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -22,18 +26,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.DexcomBoyda
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.fromConstant
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.impl.transactions.InvalidateGlucoseValueTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
 import app.aaps.plugins.source.activities.RequestDexcomPermissionActivity
 import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import dagger.android.HasAndroidInjector
@@ -85,10 +79,11 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var persistenceLayer: PersistenceLayer
         @Inject lateinit var uel: UserEntryLogger
         @Inject lateinit var profileUtil: ProfileUtil
 
+        @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
@@ -101,7 +96,7 @@ class DexcomPlugin @Inject constructor(
                     "G5" -> SourceSensor.DEXCOM_G5_NATIVE
                     else -> SourceSensor.DEXCOM_NATIVE_UNKNOWN
                 }
-                val calibrations = mutableListOf<CgmSourceTransaction.Calibration>()
+                val calibrations = mutableListOf<PersistenceLayer.Calibration>()
                 bundle.getBundle("meters")?.let { meters ->
                     for (i in 0 until meters.size()) {
                         meters.getBundle(i.toString())?.let {
@@ -110,10 +105,10 @@ class DexcomPlugin @Inject constructor(
                             val value = it.getInt("meterValue").toDouble()
                             if (timestamp > now - T.months(1).msecs() && timestamp < now) {
                                 calibrations.add(
-                                    CgmSourceTransaction.Calibration(
+                                    PersistenceLayer.Calibration(
                                         timestamp = it.getLong("timestamp") * 1000,
                                         value = value,
-                                        glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(profileUtil.unitsDetect(value))
+                                        glucoseUnit = profileUtil.unitsDetect(value)
                                     )
                                 )
                             }
@@ -123,7 +118,7 @@ class DexcomPlugin @Inject constructor(
                 val now = dateUtil.now()
                 val glucoseValuesBundle = bundle.getBundle("glucoseValues")
                     ?: return Result.failure(workDataOf("Error" to "missing glucoseValues"))
-                val glucoseValues = mutableListOf<TransactionGlucoseValue>()
+                val glucoseValues = mutableListOf<GV>()
                 for (i in 0 until glucoseValuesBundle.size()) {
                     val glucoseValueBundle = glucoseValuesBundle.getBundle(i.toString())!!
                     val timestamp = glucoseValueBundle.getLong("timestamp") * 1000
@@ -135,13 +130,13 @@ class DexcomPlugin @Inject constructor(
                     if (sourceSensor == SourceSensor.DEXCOM_G6_NATIVE)
                         if ((now - timestamp) > T.hours(20).msecs()) valid = false
                     if (valid)
-                        glucoseValues += TransactionGlucoseValue(
+                        glucoseValues += GV(
                             timestamp = timestamp,
                             value = glucoseValueBundle.getInt("glucoseValue").toDouble(),
                             noise = null,
                             raw = null,
-                            trendArrow = TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!).toDb(),
-                            sourceSensor = sourceSensor.toDb()
+                            trendArrow = TrendArrow.fromString(glucoseValueBundle.getString("trendArrow")!!),
+                            sourceSensor = sourceSensor
                         )
                 }
                 var sensorStartTime = if (sp.getBoolean(R.string.key_dexcom_log_ns_sensor_change, false) && bundle.containsKey("sensorInsertionTime")) {
@@ -153,11 +148,8 @@ class DexcomPlugin @Inject constructor(
                 sensorStartTime?.let {
                     if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null
                 }
-                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, sensorStartTime))
-                    .doOnError {
-                        aapsLogger.error(LTag.DATABASE, "Error while saving values from Dexcom App", it)
-                        ret = Result.failure(workDataOf("Error" to it.toString()))
-                    }
+                persistenceLayer.insertCgmSourceData(Sources.Dexcom, glucoseValues, calibrations, sensorStartTime)
+                    .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
                     .blockingGet()
                     .also { result ->
                         // G6 calibration bug workaround (2 additional GVs are created within 1 minute)
@@ -165,45 +157,14 @@ class DexcomPlugin @Inject constructor(
                             if (sourceSensor == SourceSensor.DEXCOM_G6_NATIVE) {
                                 if (i < result.inserted.size - 1) {
                                     if (abs(result.inserted[i].timestamp - result.inserted[i + 1].timestamp) < T.mins(1).msecs()) {
-                                        repository.runTransactionForResult(InvalidateGlucoseValueTransaction(result.inserted[i].id))
-                                            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BG value", it) }
-                                            .blockingGet()
-                                            .also { result1 -> result1.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted and invalidated bg $it") } }
-                                        repository.runTransactionForResult(InvalidateGlucoseValueTransaction(result.inserted[i + 1].id))
-                                            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BG value", it) }
-                                            .blockingGet()
-                                            .also { result1 -> result1.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted and invalidated bg $it") } }
+                                        persistenceLayer.invalidateGlucoseValue(result.inserted[i].id, Action.BG_REMOVED, Sources.Dexcom, note = null, listValues = listOf()).blockingGet()
+                                        persistenceLayer.invalidateGlucoseValue(result.inserted[i + 1].id, Action.BG_REMOVED, Sources.Dexcom, note = null, listValues = listOf()).blockingGet()
                                         result.inserted.removeAt(i + 1)
                                         result.inserted.removeAt(i)
                                         continue
                                     }
                                 }
                             }
-                            aapsLogger.debug(LTag.DATABASE, "Inserted bg ${result.inserted[i]}")
-                        }
-                        result.updated.forEach {
-                            aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
-                        }
-                        result.sensorInsertionsInserted.forEach {
-                            uel.log(
-                                Action.CAREPORTAL,
-                                Sources.Dexcom,
-                                ValueWithUnit.Timestamp(it.timestamp),
-                                ValueWithUnit.TherapyEventType(it.type)
-                            )
-                            aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it")
-                        }
-                        result.calibrationsInserted.forEach { calibration ->
-                            calibration.glucose?.let { glucoseValue ->
-                                uel.log(
-                                    Action.CALIBRATION,
-                                    Sources.Dexcom,
-                                    ValueWithUnit.Timestamp(calibration.timestamp),
-                                    ValueWithUnit.TherapyEventType(calibration.type),
-                                    ValueWithUnit.fromGlucoseUnit(glucoseValue, calibration.glucoseUnit.toString)
-                                )
-                            }
-                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
                         }
                     }
             } catch (e: Exception) {

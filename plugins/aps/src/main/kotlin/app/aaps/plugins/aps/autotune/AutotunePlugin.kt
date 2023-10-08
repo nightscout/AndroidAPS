@@ -6,6 +6,9 @@ import android.view.View
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.autotune.Autotune
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
@@ -27,8 +30,6 @@ import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
@@ -228,10 +229,10 @@ class AutotunePlugin @Inject constructor(
                 tunedP.profileName = pumpProfile.profileName
                 updateProfile(tunedP)
                 uel.log(
-                    UserEntry.Action.STORE_PROFILE,
-                    UserEntry.Sources.Automation,
-                    rh.gs(app.aaps.core.ui.R.string.autotune),
-                    ValueWithUnit.SimpleString(tunedP.profileName)
+                    action = Action.STORE_PROFILE,
+                    source = Sources.Automation,
+                    note = rh.gs(app.aaps.core.ui.R.string.autotune),
+                    value = ValueWithUnit.SimpleString(tunedP.profileName)
                 )
                 updateButtonVisibility = View.GONE
                 tunedP.profileStore(circadian)?.let { profileStore ->
@@ -246,10 +247,10 @@ class AutotunePlugin @Inject constructor(
                     ) {
                         log("Profile Switch succeed ${tunedP.profileName}")
                         uel.log(
-                            UserEntry.Action.PROFILE_SWITCH,
-                            UserEntry.Sources.Automation,
-                            rh.gs(app.aaps.core.ui.R.string.autotune),
-                            ValueWithUnit.SimpleString(tunedP.profileName)
+                            action = Action.PROFILE_SWITCH,
+                            source = Sources.Automation,
+                            note = rh.gs(app.aaps.core.ui.R.string.autotune),
+                            value = ValueWithUnit.SimpleString(tunedP.profileName)
                         )
                     }
                     rxBus.send(EventLocalProfileChanged())
@@ -392,7 +393,7 @@ class AutotunePlugin @Inject constructor(
             }
         }
         for (i in days.weekdays.indices) {
-            json.put(WeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+            json.put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
         }
         json.put("result", result)
         json.put("updateButtonVisibility", updateButtonVisibility)
@@ -429,7 +430,7 @@ class AutotunePlugin @Inject constructor(
                 }
             }
             for (i in days.weekdays.indices)
-                days.weekdays[i] = JsonHelper.safeGetBoolean(json, WeekDay.DayOfWeek.values()[i].name, true)
+                days.weekdays[i] = JsonHelper.safeGetBoolean(json, WeekDay.DayOfWeek.entries[i].name, true)
             result = JsonHelper.safeGetString(json, "result", "")
             updateButtonVisibility = JsonHelper.safeGetInt(json, "updateButtonVisibility")
             lastRunSuccess = true

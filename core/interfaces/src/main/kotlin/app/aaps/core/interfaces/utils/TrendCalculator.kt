@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.utils
 
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
-import app.aaps.database.entities.GlucoseValue
 
 /**
  *  Convert BG direction value to trend arrow or calculate it if not provided
@@ -16,7 +16,7 @@ interface TrendCalculator {
      * @param glucoseValue BG
      * @return TrendArrow
      */
-    fun getTrendArrow(glucoseValue: GlucoseValue?): TrendArrow
+    fun getTrendArrow(glucoseValue: GV?): TrendArrow
 
     /**
      * Provide or calculate trend
@@ -39,7 +39,7 @@ interface TrendCalculator {
      * @param glucoseValue BG
      * @return string description of TrendArrow
      */
-    fun getTrendDescription(glucoseValue: GlucoseValue?): String
+    fun getTrendDescription(glucoseValue: GV?): String
 
     /**
      * Provide or calculate trend from newest bucketed data

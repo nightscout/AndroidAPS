@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclient
 
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -16,6 +17,7 @@ import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
+import app.aaps.plugins.sync.nsShared.extensions.onlyNsIdAdded
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,6 +33,7 @@ class DataSyncSelectorV1 @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val appRepository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val rxBus: RxBus
 ) : DataSyncSelector {
 
@@ -414,25 +417,25 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.gvsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
+            persistenceLayer.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading GlucoseValue data Start: $startId ${gv.first} forID: ${gv.second.id} ")
                 val dataPair = DataSyncSelector.PairGlucoseValue(gv.first, gv.second.id)
                 if (bgUploadEnabled) {
                     when {
                         // new record with existing NS id => must be coming from NS => ignore
-                        gv.first.id == gv.second.id && gv.first.interfaceIDs.nightscoutId != null ->
+                        gv.first.id == gv.second.id && gv.first.ids.nightscoutId != null ->
                             aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Loaded from NS: ${gv.second.id} ")
                         // only NsId changed, no need to upload
-                        gv.first.onlyNsIdAdded(gv.second)                                         ->
+                        gv.first.onlyNsIdAdded(gv.second)                                ->
                             aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Only NS id changed ID: ${gv.second.id} ")
                         // without nsId = create new
-                        gv.first.interfaceIDs.nightscoutId == null                                -> {
+                        gv.first.ids.nightscoutId == null                                -> {
                             activePlugin.activeNsClient?.nsAdd("entries", dataPair, "$startId/$lastDbId")
                             synchronized(dataPair) { dataPair.waitMillis(60000) }
                             cont = dataPair.confirmed
                         }
                         // with nsId = update
-                        else                                                                      -> {//  gv.first.interfaceIDs.nightscoutId != null
+                        else                                                             -> {//  gv.first.interfaceIDs.nightscoutId != null
                             activePlugin.activeNsClient?.nsUpdate("entries", dataPair, "$startId/$lastDbId")
                             synchronized(dataPair) { dataPair.waitMillis(60000) }
                             cont = dataPair.confirmed
@@ -464,24 +467,24 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.tesRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementTherapyEvent(startId).blockingGet()?.let { te ->
+            persistenceLayer.getNextSyncElementTherapyEvent(startId).blockingGet()?.let { te ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading TherapyEvents data Start: $startId ${te.first} forID: ${te.second.id} ")
                 val dataPair = DataSyncSelector.PairTherapyEvent(te.first, te.second.id)
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    te.first.id == te.second.id && te.first.interfaceIDs.nightscoutId != null ->
+                    te.first.id == te.second.id && te.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvent. Loaded from NS: ${te.second.id} ")
                     // only NsId changed, no need to upload
-                    te.first.onlyNsIdAdded(te.second)                                         ->
+                    te.first.onlyNsIdAdded(te.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvent. Only NS id changed ID: ${te.second.id} ")
                     // without nsId = create new
-                    te.first.interfaceIDs.nightscoutId == null                                -> {
+                    te.first.ids.nightscoutId == null                                -> {
                         activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                     // nsId = update
-                    te.first.interfaceIDs.nightscoutId != null                                -> {
+                    te.first.ids.nightscoutId != null                                -> {
                         activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed

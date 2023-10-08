@@ -511,6 +511,7 @@ enum class PumpType {
         fun getByDescription(desc: String): PumpType =
             entries.firstOrNull { it.description == desc } ?: GENERIC_AAPS
 
+        fun fromString(name: String?) = entries.firstOrNull { it.name == name }
     }
 
     constructor(description: String, model: String, parent: PumpType, pumpCapability: PumpCapability? = null, source: Source? = null) {

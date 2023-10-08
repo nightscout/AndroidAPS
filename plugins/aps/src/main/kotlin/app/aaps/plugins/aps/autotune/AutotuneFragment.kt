@@ -19,6 +19,9 @@ import android.widget.TableRow
 import android.widget.TextView
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -41,8 +44,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.elements.WeekDay
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
@@ -160,9 +161,9 @@ class AutotuneFragment : DaggerFragment() {
                                               profilePlugin.addProfile(profilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
                                               rxBus.send(EventLocalProfileChanged())
                                               uel.log(
-                                                  UserEntry.Action.NEW_PROFILE,
-                                                  UserEntry.Sources.Autotune,
-                                                  ValueWithUnit.SimpleString(localName)
+                                                  action = Action.NEW_PROFILE,
+                                                  source = Sources.Autotune,
+                                                  value = ValueWithUnit.SimpleString(localName)
                                               )
                                               updateGui()
                                           })
@@ -180,9 +181,9 @@ class AutotuneFragment : DaggerFragment() {
                                           autotunePlugin.updateButtonVisibility = View.GONE
                                           autotunePlugin.saveLastRun()
                                           uel.log(
-                                              UserEntry.Action.STORE_PROFILE,
-                                              UserEntry.Sources.Autotune,
-                                              ValueWithUnit.SimpleString(localName)
+                                              action = Action.STORE_PROFILE,
+                                              source = Sources.Autotune,
+                                              value = ValueWithUnit.SimpleString(localName)
                                           )
                                           updateGui()
                                       }
@@ -200,9 +201,9 @@ class AutotuneFragment : DaggerFragment() {
                                           autotunePlugin.updateButtonVisibility = View.VISIBLE
                                           autotunePlugin.saveLastRun()
                                           uel.log(
-                                              UserEntry.Action.STORE_PROFILE,
-                                              UserEntry.Sources.Autotune,
-                                              ValueWithUnit.SimpleString(localName)
+                                              action = Action.STORE_PROFILE,
+                                              source = Sources.Autotune,
+                                              value = ValueWithUnit.SimpleString(localName)
                                           )
                                           updateGui()
                                       }
@@ -255,9 +256,9 @@ class AutotuneFragment : DaggerFragment() {
                                               rh.gs(app.aaps.core.ui.R.string.activate_profile) + ": " + tunedP.profileName + " ?",
                                               {
                                                   uel.log(
-                                                      UserEntry.Action.STORE_PROFILE,
-                                                      UserEntry.Sources.Autotune,
-                                                      ValueWithUnit.SimpleString(tunedP.profileName)
+                                                      action = Action.STORE_PROFILE,
+                                                      source = Sources.Autotune,
+                                                      value = ValueWithUnit.SimpleString(tunedP.profileName)
                                                   )
                                                   val now = dateUtil.now()
                                                   if (profileFunction.createProfileSwitch(
@@ -270,8 +271,8 @@ class AutotuneFragment : DaggerFragment() {
                                                       )
                                                   ) {
                                                       uel.log(
-                                                          UserEntry.Action.PROFILE_SWITCH,
-                                                          UserEntry.Sources.Autotune,
+                                                          Action.PROFILE_SWITCH,
+                                                          Sources.Autotune,
                                                           "Autotune AutoSwitch",
                                                           ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName)
                                                       )

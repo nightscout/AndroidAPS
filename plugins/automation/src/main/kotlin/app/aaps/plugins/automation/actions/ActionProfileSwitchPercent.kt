@@ -2,15 +2,14 @@ package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import app.aaps.plugins.automation.elements.InputDuration
@@ -44,11 +43,13 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     override fun doAction(callback: Callback) {
         if (profileFunction.createProfileSwitch(duration.value, pct.value.toInt(), 0)) {
             uel.log(
-                UserEntry.Action.PROFILE_SWITCH,
-                Sources.Automation,
-                title + ": " + rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value),
-                ValueWithUnit.Percent(pct.value.toInt()),
-                ValueWithUnit.Minute(duration.value)
+                action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
+                source = Sources.Automation,
+                note = title + ": " + rh.gs(app.aaps.core.ui.R.string.startprofile, pct.value.toInt(), duration.value),
+                listValues = listOf(
+                    ValueWithUnit.Percent(pct.value.toInt()),
+                    ValueWithUnit.Minute(duration.value)
+                )
             )
             callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {

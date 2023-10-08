@@ -19,6 +19,9 @@ import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.Loop.LastRun
@@ -66,9 +69,6 @@ import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
@@ -366,9 +366,13 @@ class LoopPlugin @Inject constructor(
                                 // mId allows you to update the notification later on.
                                 mNotificationManager.notify(Constants.notificationID, builder.build())
                                 uel.log(
-                                    Action.CAREPORTAL, Sources.Loop, rh.gs(app.aaps.core.ui.R.string.carbsreq, resultAfterConstraints.carbsReq, resultAfterConstraints.carbsReqWithin),
-                                    ValueWithUnit.Gram(resultAfterConstraints.carbsReq),
-                                    ValueWithUnit.Minute(resultAfterConstraints.carbsReqWithin)
+                                    action = Action.CAREPORTAL,
+                                    source = Sources.Loop,
+                                    note = rh.gs(app.aaps.core.ui.R.string.carbsreq, resultAfterConstraints.carbsReq, resultAfterConstraints.carbsReqWithin),
+                                    listValues = listOf(
+                                        ValueWithUnit.Gram(resultAfterConstraints.carbsReq),
+                                        ValueWithUnit.Minute(resultAfterConstraints.carbsReqWithin)
+                                    )
                                 )
                                 rxBus.send(EventNewOpenLoopNotification())
 
@@ -591,9 +595,12 @@ class LoopPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: tempBasalPercent()")
                 uel.log(
-                    Action.TEMP_BASAL, Sources.Loop,
-                    ValueWithUnit.Percent(request.percent),
-                    ValueWithUnit.Minute(request.duration)
+                    action = Action.TEMP_BASAL,
+                    source = Sources.Loop,
+                    listValues = listOf(
+                        ValueWithUnit.Percent(request.percent),
+                        ValueWithUnit.Minute(request.duration)
+                    )
                 )
                 commandQueue.tempBasalPercent(request.percent, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
             }
@@ -614,9 +621,12 @@ class LoopPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: setTempBasalAbsolute()")
                 uel.log(
-                    Action.TEMP_BASAL, Sources.Loop,
-                    ValueWithUnit.UnitPerHour(request.rate),
-                    ValueWithUnit.Minute(request.duration)
+                    action = Action.TEMP_BASAL,
+                    source = Sources.Loop,
+                    listValues = listOf(
+                        ValueWithUnit.UnitPerHour(request.rate),
+                        ValueWithUnit.Minute(request.duration)
+                    )
                 )
                 commandQueue.tempBasalAbsolute(request.rate, request.duration, false, profile, PumpSync.TemporaryBasalType.NORMAL, callback)
             }
@@ -660,7 +670,7 @@ class LoopPlugin @Inject constructor(
         detailedBolusInfo.deliverAtTheLatest = request.deliverAt
         aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()")
         if (request.smb > 0.0)
-            uel.log(Action.SMB, Sources.Loop, ValueWithUnit.Insulin(detailedBolusInfo.insulin))
+            uel.log(action = Action.SMB, source = Sources.Loop, value = ValueWithUnit.Insulin(detailedBolusInfo.insulin))
         commandQueue.bolus(detailedBolusInfo, callback)
     }
 

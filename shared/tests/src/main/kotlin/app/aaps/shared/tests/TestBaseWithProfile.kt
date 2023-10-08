@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.embedments.InsulinConfiguration
@@ -96,7 +97,7 @@ open class TestBaseWithProfile : TestBase() {
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = EffectiveProfileSwitch.GlucoseUnit.MMOL,
+            glucoseUnit = GlucoseUnit.MMOL.toDb(),
             originalProfileName = "",
             originalCustomizedName = "",
             originalTimeshift = 0,

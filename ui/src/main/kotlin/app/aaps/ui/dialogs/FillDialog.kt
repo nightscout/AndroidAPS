@@ -1,11 +1,16 @@
 package app.aaps.ui.dialogs
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -22,11 +27,6 @@ import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogFillBinding
 import com.google.common.base.Joiner
@@ -41,11 +41,10 @@ class FillDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var ctx: Context
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var decimalFormatter: DecimalFormatter
@@ -150,51 +149,44 @@ class FillDialog : DialogFragmentWithDate() {
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.prime_fill), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (insulinAfterConstraints > 0) {
                         uel.log(
-                            UserEntry.Action.PRIME_BOLUS, UserEntry.Sources.FillDialog,
-                            notes,
-                            ValueWithUnit.Insulin(insulinAfterConstraints)
+                            action = Action.PRIME_BOLUS, source = Sources.FillDialog,
+                            note = notes,
+                            value = ValueWithUnit.Insulin(insulinAfterConstraints)
                         )
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
-                    if (siteChange) {
-                        uel.log(
-                            UserEntry.Action.SITE_CHANGE, UserEntry.Sources.FillDialog,
-                            notes,
-                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.CANNULA_CHANGE)
-                        )
-                        disposable += repository.runTransactionForResult(
-                            InsertIfNewByTimestampTherapyEventTransaction(
+                    if (siteChange)
+                        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+                            therapyEvent = TE(
                                 timestamp = eventTime,
-                                type = TherapyEvent.Type.CANNULA_CHANGE,
+                                type = TE.Type.CANNULA_CHANGE,
                                 note = notes,
-                                glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                                glucoseUnit = GlucoseUnit.MGDL
+                            ),
+                            action = Action.SITE_CHANGE, source = Sources.FillDialog,
+                            note = notes,
+                            listValues = listOf(
+                                ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                                ValueWithUnit.TEType(TE.Type.CANNULA_CHANGE)
                             )
-                        ).subscribe(
-                            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
-                            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
-                        )
-                    }
-                    if (insulinChange) {
-                        // add a second for case of both checked
-                        uel.log(
-                            UserEntry.Action.RESERVOIR_CHANGE, UserEntry.Sources.FillDialog,
-                            notes,
-                            ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
-                            ValueWithUnit.TherapyEventType(TherapyEvent.Type.INSULIN_CHANGE)
-                        )
-                        disposable += repository.runTransactionForResult(
-                            InsertIfNewByTimestampTherapyEventTransaction(
+                        ).subscribe()
+                    if (insulinChange)
+                    // add a second for case of both checked
+                        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+                            therapyEvent = TE(
                                 timestamp = eventTime + 1000,
-                                type = TherapyEvent.Type.INSULIN_CHANGE,
+                                type = TE.Type.INSULIN_CHANGE,
                                 note = notes,
-                                glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
+                                glucoseUnit = GlucoseUnit.MGDL
+                            ),
+                            action = Action.RESERVOIR_CHANGE, source = Sources.FillDialog,
+                            note = notes,
+                            listValues = listOf(
+                                ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
+                                ValueWithUnit.TEType(TE.Type.INSULIN_CHANGE)
                             )
-                        ).subscribe(
-                            { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted therapy event $it") } },
-                            { aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it) }
-                        )
-                    }
+
+                        ).subscribe()
                 }, null)
             }
         } else {
@@ -229,7 +221,7 @@ class FillDialog : DialogFragmentWithDate() {
                 val cancelFail = {
                     queryingProtection = false
                     aapsLogger.debug(LTag.APS, "Dialog canceled on resume protection: ${this.javaClass.simpleName}")
-                    ToastUtils.warnToast(ctx, R.string.dialog_canceled)
+                    ToastUtils.warnToast(activity, R.string.dialog_canceled)
                     dismiss()
                 }
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, { queryingProtection = false }, cancelFail, cancelFail)

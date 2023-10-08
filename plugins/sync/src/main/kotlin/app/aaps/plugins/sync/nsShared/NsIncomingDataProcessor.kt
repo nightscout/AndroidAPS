@@ -2,6 +2,8 @@ package app.aaps.plugins.sync.nsShared
 
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.time.T
@@ -19,7 +21,6 @@ import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.localmodel.entry.NSSgvV3
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.localmodel.treatment.NSBolus
@@ -35,7 +36,6 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.Food
-import app.aaps.database.transactions.TransactionGlucoseValue
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolus
@@ -44,12 +44,12 @@ import app.aaps.plugins.sync.nsclientV3.extensions.toCarbs
 import app.aaps.plugins.sync.nsclientV3.extensions.toEffectiveProfileSwitch
 import app.aaps.plugins.sync.nsclientV3.extensions.toExtendedBolus
 import app.aaps.plugins.sync.nsclientV3.extensions.toFood
+import app.aaps.plugins.sync.nsclientV3.extensions.toGV
 import app.aaps.plugins.sync.nsclientV3.extensions.toOfflineEvent
 import app.aaps.plugins.sync.nsclientV3.extensions.toProfileSwitch
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryBasal
 import app.aaps.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import app.aaps.plugins.sync.nsclientV3.extensions.toTherapyEvent
-import app.aaps.plugins.sync.nsclientV3.extensions.toTransactionGlucoseValue
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -70,16 +70,16 @@ class NsIncomingDataProcessor @Inject constructor(
     private val profileSource: ProfileSource
 ) {
 
-    private fun toGv(jsonObject: JSONObject): TransactionGlucoseValue? {
+    private fun toGv(jsonObject: JSONObject): GV? {
         val sgv = NSSgvObject(jsonObject)
-        return TransactionGlucoseValue(
+        return GV(
             timestamp = sgv.mills ?: return null,
             value = sgv.mgdl?.toDouble() ?: return null,
             noise = null,
             raw = sgv.filtered?.toDouble(),
-            trendArrow = TrendArrow.fromString(sgv.direction).toDb(),
-            nightscoutId = sgv.id,
-            sourceSensor = SourceSensor.fromString(sgv.device).toDb()
+            trendArrow = TrendArrow.fromString(sgv.direction),
+            ids = IDs(nightscoutId = sgv.id),
+            sourceSensor = SourceSensor.fromString(sgv.device)
         )
     }
 
@@ -90,7 +90,7 @@ class NsIncomingDataProcessor @Inject constructor(
 
         var latestDateInReceivedData: Long = 0
         aapsLogger.debug(LTag.NSCLIENT, "Received NS Data: $sgvs")
-        val glucoseValues = mutableListOf<TransactionGlucoseValue>()
+        val glucoseValues = mutableListOf<GV>()
 
         if (sgvs is JSONArray) { // V1 client
             for (i in 0 until sgvs.length()) {
@@ -101,7 +101,7 @@ class NsIncomingDataProcessor @Inject constructor(
         } else if (sgvs is List<*>) { // V3 client
 
             for (i in 0 until sgvs.size) {
-                val sgv = (sgvs[i] as NSSgvV3).toTransactionGlucoseValue()
+                val sgv = (sgvs[i] as NSSgvV3).toGV()
                 if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
                 glucoseValues += sgv
             }

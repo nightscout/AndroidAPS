@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps
 
 import android.text.Spanned
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.IobTotal
@@ -19,10 +20,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.convertedToPercent
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.ui.R
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.GlucoseValue
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject
@@ -166,9 +165,9 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
         return json
     }
 
-    override val predictions: MutableList<GlucoseValue>
+    override val predictions: MutableList<GV>
         get() {
-            val array: MutableList<GlucoseValue> = ArrayList()
+            val array: MutableList<GV> = ArrayList()
             val startTime = date
             json?.let { json ->
                 if (json.has("predBGs")) {
@@ -176,13 +175,13 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                     if (predBGs.has("IOB")) {
                         val iob = predBGs.getJSONArray("IOB")
                         for (i in 1 until iob.length()) {
-                            val gv = GlucoseValue(
+                            val gv = GV(
                                 raw = 0.0,
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.IOB_PREDICTION.toDb(),
-                                trendArrow = TrendArrow.NONE.toDb()
+                                sourceSensor = SourceSensor.IOB_PREDICTION,
+                                trendArrow = TrendArrow.NONE
                             )
                             array.add(gv)
                         }
@@ -190,13 +189,13 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                     if (predBGs.has("aCOB")) {
                         val iob = predBGs.getJSONArray("aCOB")
                         for (i in 1 until iob.length()) {
-                            val gv = GlucoseValue(
+                            val gv = GV(
                                 raw = 0.0,
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.A_COB_PREDICTION.toDb(),
-                                trendArrow = TrendArrow.NONE.toDb()
+                                sourceSensor = SourceSensor.A_COB_PREDICTION,
+                                trendArrow = TrendArrow.NONE
                             )
                             array.add(gv)
                         }
@@ -204,13 +203,13 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                     if (predBGs.has("COB")) {
                         val iob = predBGs.getJSONArray("COB")
                         for (i in 1 until iob.length()) {
-                            val gv = GlucoseValue(
+                            val gv = GV(
                                 raw = 0.0,
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.COB_PREDICTION.toDb(),
-                                trendArrow = TrendArrow.NONE.toDb()
+                                sourceSensor = SourceSensor.COB_PREDICTION,
+                                trendArrow = TrendArrow.NONE
                             )
                             array.add(gv)
                         }
@@ -218,13 +217,13 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                     if (predBGs.has("UAM")) {
                         val iob = predBGs.getJSONArray("UAM")
                         for (i in 1 until iob.length()) {
-                            val gv = GlucoseValue(
+                            val gv = GV(
                                 raw = 0.0,
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.UAM_PREDICTION.toDb(),
-                                trendArrow = TrendArrow.NONE.toDb()
+                                sourceSensor = SourceSensor.UAM_PREDICTION,
+                                trendArrow = TrendArrow.NONE
                             )
                             array.add(gv)
                         }
@@ -232,13 +231,13 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
                     if (predBGs.has("ZT")) {
                         val iob = predBGs.getJSONArray("ZT")
                         for (i in 1 until iob.length()) {
-                            val gv = GlucoseValue(
+                            val gv = GV(
                                 raw = 0.0,
                                 noise = 0.0,
                                 value = iob.getInt(i).toDouble(),
                                 timestamp = startTime + i * 5 * 60 * 1000L,
-                                sourceSensor = SourceSensor.ZT_PREDICTION.toDb(),
-                                trendArrow = TrendArrow.NONE.toDb()
+                                sourceSensor = SourceSensor.ZT_PREDICTION,
+                                trendArrow = TrendArrow.NONE
                             )
                             array.add(gv)
                         }

@@ -4,9 +4,9 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.main.extensions.getCustomizedName
 import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
@@ -29,7 +29,7 @@ fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUt
         isfBlocks = profileSealed.isfBlocks,
         icBlocks = profileSealed.icBlocks,
         targetBlocks = profileSealed.targetBlocks,
-        glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(profileSealed.units),
+        glucoseUnit = profileSealed.units.toDb(),
         profileName = originalProfileName ?: profile,
         timeshift = timeShift ?: 0,
         percentage = percentage ?: 100,

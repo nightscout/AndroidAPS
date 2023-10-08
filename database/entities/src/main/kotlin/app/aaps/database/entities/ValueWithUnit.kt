@@ -54,16 +54,4 @@ sealed class ValueWithUnit {
             UNKNOWN                  -> null
         }
     }
-
-    companion object {
-
-        const val MGDL = "mg/dl" // This is Nightscout's representation
-        const val MMOL = "mmol"
-
-        fun fromGlucoseUnit(value: Double, string: String): ValueWithUnit? = when (string) {
-            MGDL, "mgdl"   -> Mgdl(value)
-            MMOL, "mmol/l" -> Mmoll(value)
-            else           -> null
-        }
-    }
 }

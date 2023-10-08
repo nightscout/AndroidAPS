@@ -3,17 +3,16 @@ package app.aaps.core.main.graph.data
 import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.main.extensions.toDb
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.Shape
 
 class GlucoseValueDataPoint(
-    val data: GlucoseValue,
+    val data: GV,
     private val profileUtil: ProfileUtil,
     private val rh: ResourceHelper,
 ) : DataPointWithLabelInterface {
@@ -40,20 +39,20 @@ class GlucoseValueDataPoint(
 
     private fun predictionColor(context: Context?): Int {
         return when (data.sourceSensor) {
-            SourceSensor.IOB_PREDICTION.toDb()   -> rh.gac(context, app.aaps.core.ui.R.attr.iobColor)
-            SourceSensor.COB_PREDICTION.toDb()   -> rh.gac(context, app.aaps.core.ui.R.attr.cobColor)
-            SourceSensor.A_COB_PREDICTION.toDb() -> -0x7f000001 and rh.gac(context, app.aaps.core.ui.R.attr.cobColor)
-            SourceSensor.UAM_PREDICTION.toDb()   -> rh.gac(context, app.aaps.core.ui.R.attr.uamColor)
-            SourceSensor.ZT_PREDICTION.toDb()    -> rh.gac(context, app.aaps.core.ui.R.attr.ztColor)
-            else                                 -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
+            SourceSensor.IOB_PREDICTION   -> rh.gac(context, app.aaps.core.ui.R.attr.iobColor)
+            SourceSensor.COB_PREDICTION   -> rh.gac(context, app.aaps.core.ui.R.attr.cobColor)
+            SourceSensor.A_COB_PREDICTION -> -0x7f000001 and rh.gac(context, app.aaps.core.ui.R.attr.cobColor)
+            SourceSensor.UAM_PREDICTION   -> rh.gac(context, app.aaps.core.ui.R.attr.uamColor)
+            SourceSensor.ZT_PREDICTION    -> rh.gac(context, app.aaps.core.ui.R.attr.ztColor)
+            else                          -> rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
         }
     }
 
     private val isPrediction: Boolean
-        get() = data.sourceSensor == SourceSensor.IOB_PREDICTION.toDb() ||
-            data.sourceSensor == SourceSensor.COB_PREDICTION.toDb() ||
-            data.sourceSensor == SourceSensor.A_COB_PREDICTION.toDb() ||
-            data.sourceSensor == SourceSensor.UAM_PREDICTION.toDb() ||
-            data.sourceSensor == SourceSensor.ZT_PREDICTION.toDb()
+        get() = data.sourceSensor == SourceSensor.IOB_PREDICTION ||
+            data.sourceSensor == SourceSensor.COB_PREDICTION ||
+            data.sourceSensor == SourceSensor.A_COB_PREDICTION ||
+            data.sourceSensor == SourceSensor.UAM_PREDICTION ||
+            data.sourceSensor == SourceSensor.ZT_PREDICTION
 
 }

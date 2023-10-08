@@ -4,8 +4,12 @@ import android.app.NotificationManager
 import android.content.Context
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -55,13 +59,10 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TotalDailyDose
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.entities.interfaces.end
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
@@ -406,7 +407,7 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_cob))
             return
         }
-        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+        val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         val bolusWizard = BolusWizard(injector).doCalc(
@@ -878,7 +879,7 @@ class DataHandlerMobile @Inject constructor(
         val finalLastRun = loop.lastRun
         if (finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
             val predArray = finalLastRun.constraintsProcessed!!.predictions
-                .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, profileUtil, rh) }
+                .stream().map { bg -> GlucoseValueDataPoint(bg, profileUtil, rh) }
                 .collect(Collectors.toList())
             if (predArray.isNotEmpty())
                 for (bg in predArray) if (bg.data.value > 39)
@@ -1161,11 +1162,13 @@ class DataHandlerMobile @Inject constructor(
                             aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                         })
             uel.log(
-                UserEntry.Action.TT, UserEntry.Sources.Wear,
-                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR),
-                ValueWithUnit.fromGlucoseUnit(command.low, profileFunction.getUnits().asText),
-                ValueWithUnit.fromGlucoseUnit(command.high, profileFunction.getUnits().asText).takeIf { command.low != command.high },
-                ValueWithUnit.Minute(command.duration)
+                action = Action.TT, source = Sources.Wear,
+                listValues = listOf(
+                    ValueWithUnit.TETTReason(TT.Reason.WEAR),
+                    ValueWithUnit.fromGlucoseUnit(command.low, profileFunction.getUnits()),
+                    ValueWithUnit.fromGlucoseUnit(command.high, profileFunction.getUnits()).takeIf { command.low != command.high },
+                    ValueWithUnit.Minute(command.duration)
+                )
             )
         } else {
             disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(System.currentTimeMillis()))
@@ -1175,8 +1178,8 @@ class DataHandlerMobile @Inject constructor(
                                aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                            })
             uel.log(
-                UserEntry.Action.CANCEL_TT, UserEntry.Sources.Wear,
-                ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.WEAR)
+                action = Action.CANCEL_TT, source = Sources.Wear,
+                value = ValueWithUnit.TETTReason(TT.Reason.WEAR)
             )
         }
     }
@@ -1190,15 +1193,17 @@ class DataHandlerMobile @Inject constructor(
         detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             val action = when {
-                amount == 0.0     -> UserEntry.Action.CARBS
-                carbs == 0        -> UserEntry.Action.BOLUS
-                carbsDuration > 0 -> UserEntry.Action.EXTENDED_CARBS
-                else              -> UserEntry.Action.TREATMENT
+                amount == 0.0     -> Action.CARBS
+                carbs == 0        -> Action.BOLUS
+                carbsDuration > 0 -> Action.EXTENDED_CARBS
+                else              -> Action.TREATMENT
             }
-            uel.log(action, UserEntry.Sources.Wear,
-                    ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },
-                    ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
-                    ValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 })
+            uel.log(
+                action = action, source = Sources.Wear,
+                listValues = listOf(ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 },
+                                    ValueWithUnit.Gram(carbs).takeIf { carbs != 0 },
+                                    ValueWithUnit.Hour(carbsDuration).takeIf { carbsDuration != 0 })
+            )
             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                 override fun run() {
                     if (!result.success)
@@ -1214,8 +1219,9 @@ class DataHandlerMobile @Inject constructor(
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
         uel.log(
-            UserEntry.Action.PRIME_BOLUS, UserEntry.Sources.Wear,
-            ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
+            action = Action.PRIME_BOLUS, source = Sources.Wear,
+            listValues = listOf(ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })
+        )
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {
                 if (!result.success) {
@@ -1226,10 +1232,13 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun doECarbs(carbs: Int, carbsTime: Long, duration: Int) {
-        uel.log(if (duration == 0) UserEntry.Action.CARBS else UserEntry.Action.EXTENDED_CARBS, UserEntry.Sources.Wear,
-                ValueWithUnit.Timestamp(carbsTime),
-                ValueWithUnit.Gram(carbs),
-                ValueWithUnit.Hour(duration).takeIf { duration != 0 })
+        uel.log(
+            action = if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS,
+            source = Sources.Wear,
+            listValues = listOf(ValueWithUnit.Timestamp(carbsTime),
+                                ValueWithUnit.Gram(carbs),
+                                ValueWithUnit.Hour(duration).takeIf { duration != 0 })
+        )
         doBolus(0.0, carbs, carbsTime, duration, null)
     }
 
@@ -1242,9 +1251,12 @@ class DataHandlerMobile @Inject constructor(
         profileFunction.getProfile() ?: return
         //send profile to pump
         uel.log(
-            UserEntry.Action.PROFILE_SWITCH, UserEntry.Sources.Wear,
-            ValueWithUnit.Percent(command.percentage),
-            ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 })
+            action = Action.PROFILE_SWITCH, source = Sources.Wear,
+            listValues = listOf(
+                ValueWithUnit.Percent(command.percentage),
+                ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 }
+            )
+        )
         profileFunction.createProfileSwitch(0, command.percentage, command.timeShift)
     }
 

@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.sync
 
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.TE
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
@@ -7,12 +9,10 @@ import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.TherapyEvent
 import org.json.JSONObject
 
 interface DataSyncSelector {
@@ -25,8 +25,8 @@ interface DataSyncSelector {
     }
 
     data class PairTemporaryTarget(override val value: TemporaryTarget, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairGlucoseValue(override val value: GlucoseValue, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairTherapyEvent(override val value: TherapyEvent, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairGlucoseValue(override val value: GV, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairTherapyEvent(override val value: TE, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairFood(override val value: Food, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairBolus(override val value: Bolus, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairCarbs(override val value: Carbs, override val id: Long, override var confirmed: Boolean = false) : DataPair

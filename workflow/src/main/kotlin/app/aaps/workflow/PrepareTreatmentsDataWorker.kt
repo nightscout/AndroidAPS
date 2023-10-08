@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -25,7 +27,6 @@ import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
@@ -44,6 +45,7 @@ class PrepareTreatmentsDataWorker(
     @Inject lateinit var translator: Translator
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var decimalFormatter: DecimalFormatter
 
@@ -91,7 +93,7 @@ class PrepareTreatmentsDataWorker(
         repository.getOfflineEventDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
             .map {
                 TherapyEventDataPoint(
-                    TherapyEvent(timestamp = it.timestamp, duration = it.duration, type = TherapyEvent.Type.APS_OFFLINE, glucoseUnit = TherapyEvent.GlucoseUnit.MMOL),
+                    TE(timestamp = it.timestamp, duration = it.duration, type = TE.Type.APS_OFFLINE, glucoseUnit = GlucoseUnit.MMOL),
                     rh,
                     profileUtil,
                     translator
@@ -111,7 +113,7 @@ class PrepareTreatmentsDataWorker(
         }
 
         // Careportal
-        repository.compatGetTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
+        persistenceLayer.getTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
             .map { TherapyEventDataPoint(it, rh, profileUtil, translator) }
             .filterTimeframe(fromTime, endTime)
             .forEach {

@@ -1,10 +1,9 @@
 package app.aaps.plugins.aps.autotune.data
 
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.fromDb
-import app.aaps.database.entities.GlucoseValue
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.TimeZone
@@ -25,7 +24,7 @@ class BGDatum {
     var mealCarbs = 0
     var uamAbsorption = ""
     var avgDelta = 0.0
-    var bgReading: GlucoseValue? = null
+    var bgReading: GV? = null
         private set
     var dateUtil: DateUtil
 
@@ -49,11 +48,11 @@ class BGDatum {
         }
     }
 
-    constructor(glucoseValue: GlucoseValue, dateUtil: DateUtil) {
+    constructor(glucoseValue: GV, dateUtil: DateUtil) {
         this.dateUtil = dateUtil
         date = glucoseValue.timestamp
         value = glucoseValue.value
-        direction = glucoseValue.trendArrow.fromDb()
+        direction = glucoseValue.trendArrow
         id = glucoseValue.id
         this.bgReading = glucoseValue
     }

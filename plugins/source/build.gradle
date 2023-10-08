@@ -18,8 +18,6 @@ android {
 
 dependencies {
     implementation project(':shared:impl')
-    implementation project(':database:entities')
-    implementation project(':database:impl')
     implementation project(':core:interfaces')
     implementation project(':core:main')
     implementation project(':core:nssdk')

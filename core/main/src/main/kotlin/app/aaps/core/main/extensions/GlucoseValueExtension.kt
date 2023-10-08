@@ -1,6 +1,7 @@
 package app.aaps.core.main.extensions
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
@@ -10,16 +11,16 @@ import app.aaps.core.main.R
 import app.aaps.database.entities.GlucoseValue
 import org.json.JSONObject
 
-fun GlucoseValue.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun GV.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("device", sourceSensor.fromDb().text)
+        .put("device", sourceSensor.text)
         .put("date", timestamp)
         .put("dateString", dateUtil.toISOString(timestamp))
         .put("isValid", isValid)
         .put("sgv", value)
-        .put("direction", trendArrow.fromDb().text)
+        .put("direction", trendArrow.text)
         .put("type", "sgv")
-        .also { if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId) }
+        .also { if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId) }
 
 fun InMemoryGlucoseValue.valueToUnits(units: GlucoseUnit): Double =
     if (units == GlucoseUnit.MGDL) recalculated
@@ -154,3 +155,37 @@ fun SourceSensor.toDb(): GlucoseValue.SourceSensor =
         SourceSensor.UAM_PREDICTION            -> GlucoseValue.SourceSensor.UAM_PREDICTION
         SourceSensor.ZT_PREDICTION             -> GlucoseValue.SourceSensor.ZT_PREDICTION
     }
+
+fun GlucoseValue.fromDb(): GV =
+    GV(
+        id = this.id,
+        version = this.version,
+        dateCreated = this.dateCreated,
+        isValid = this.isValid,
+        referenceId = this.referenceId,
+        timestamp = this.timestamp,
+        utcOffset = this.utcOffset,
+        raw = this.raw,
+        value = this.value,
+        trendArrow = this.trendArrow.fromDb(),
+        noise = this.noise,
+        sourceSensor = this.sourceSensor.fromDb(),
+        ids = this.interfaceIDs.fromDb()
+    )
+
+fun GV.toDb(): GlucoseValue =
+    GlucoseValue(
+        id = this.id,
+        version = this.version,
+        dateCreated = this.dateCreated,
+        isValid = this.isValid,
+        referenceId = this.referenceId,
+        timestamp = this.timestamp,
+        utcOffset = this.utcOffset,
+        raw = this.raw,
+        value = this.value,
+        trendArrow = this.trendArrow.toDb(),
+        noise = this.noise,
+        sourceSensor = this.sourceSensor.toDb(),
+        interfaceIDs_backing = this.ids.toDb()
+    )

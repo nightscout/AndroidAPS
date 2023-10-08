@@ -51,9 +51,6 @@ data class TemporaryTarget(
             duration == other.duration &&
             isValid == other.isValid
 
-    fun isRecordDeleted(other: TemporaryTarget): Boolean =
-        isValid && !other.isValid
-
     fun onlyNsIdAdded(previous: TemporaryTarget): Boolean =
         previous.id != id &&
             contentEqualsTo(previous) &&

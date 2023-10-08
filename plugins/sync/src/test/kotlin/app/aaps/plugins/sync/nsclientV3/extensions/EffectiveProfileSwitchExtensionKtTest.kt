@@ -1,12 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.interfaces.insulin.Insulin
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.localmodel.treatment.NSEffectiveProfileSwitch
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
-import app.aaps.plugins.sync.nsclient.extensions.fromConstant
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -36,7 +36,7 @@ internal class EffectiveProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = EffectiveProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            glucoseUnit = validProfile.units.toDb(),
             originalProfileName = "SomeProfile",
             originalCustomizedName = "SomeProfile (150%, 1h)",
             originalTimeshift = 3600000,

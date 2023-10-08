@@ -1,12 +1,16 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -14,13 +18,8 @@ import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.XDripSource
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -47,14 +46,14 @@ class XdripSourcePlugin @Inject constructor(
 
     override fun advancedFilteringSupported(): Boolean = advancedFiltering
 
-    private fun detectSource(glucoseValue: GlucoseValue) {
+    private fun detectSource(glucoseValue: GV) {
         advancedFiltering = arrayOf(
-            SourceSensor.DEXCOM_NATIVE_UNKNOWN.toDb(),
-            SourceSensor.DEXCOM_G6_NATIVE.toDb(),
-            SourceSensor.DEXCOM_G5_NATIVE.toDb(),
-            SourceSensor.DEXCOM_G6_NATIVE_XDRIP.toDb(),
-            SourceSensor.DEXCOM_G5_NATIVE_XDRIP.toDb(),
-            SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP.toDb()
+            SourceSensor.DEXCOM_NATIVE_UNKNOWN,
+            SourceSensor.DEXCOM_G6_NATIVE,
+            SourceSensor.DEXCOM_G5_NATIVE,
+            SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
+            SourceSensor.DEXCOM_G5_NATIVE_XDRIP,
+            SourceSensor.DEXCOM_G6_G5_NATIVE_XDRIP
         ).any { it == glucoseValue.sourceSensor }
     }
 
@@ -65,9 +64,10 @@ class XdripSourcePlugin @Inject constructor(
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var xdripSourcePlugin: XdripSourcePlugin
-        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var persistenceLayer: PersistenceLayer
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
+        @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
@@ -76,27 +76,19 @@ class XdripSourcePlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
             aapsLogger.debug(LTag.BGSOURCE, "Received xDrip data: $bundle")
-            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
-            glucoseValues += TransactionGlucoseValue(
+            val glucoseValues = mutableListOf<GV>()
+            glucoseValues += GV(
                 timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP, 0),
                 value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0),
                 raw = bundle.getDouble(Intents.EXTRA_RAW, 0.0),
                 noise = null,
-                trendArrow = TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)).toDb(),
-                sourceSensor = SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION) ?: "").toDb()
+                trendArrow = TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)),
+                sourceSensor = SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION) ?: "")
             )
-            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Xdrip", it)
-                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                }
+            persistenceLayer.insertCgmSourceData(Sources.Xdrip, glucoseValues, emptyList(), null)
+                .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
                 .blockingGet()
-                .also { savedValues ->
-                    savedValues.all().forEach {
-                        xdripSourcePlugin.detectSource(it)
-                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                    }
-                }
+                .also { savedValues -> savedValues.all().forEach { xdripSourcePlugin.detectSource(it) } }
             xdripSourcePlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
             return ret
         }

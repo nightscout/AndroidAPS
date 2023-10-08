@@ -16,6 +16,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -37,9 +40,6 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CutCarbsTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
@@ -431,9 +431,11 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                 selectedItems.forEach { _, ml ->
                     ml.bolus?.let { bolus ->
                         uel.log(
-                            Action.BOLUS_REMOVED, Sources.Treatments,
-                            ValueWithUnit.Timestamp(bolus.timestamp),
-                            ValueWithUnit.Insulin(bolus.amount)
+                            action = Action.BOLUS_REMOVED, source = Sources.Treatments,
+                            listValues = listOf(
+                                ValueWithUnit.Timestamp(bolus.timestamp),
+                                ValueWithUnit.Insulin(bolus.amount)
+                            )
                         )
                         disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
                             .subscribe(
@@ -443,9 +445,11 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                     }
                     ml.carbs?.let { carb ->
                         uel.log(
-                            Action.CARBS_REMOVED, Sources.Treatments,
-                            ValueWithUnit.Timestamp(carb.timestamp),
-                            ValueWithUnit.Gram(carb.amount.toInt())
+                            action = Action.CARBS_REMOVED, source = Sources.Treatments,
+                            listValues = listOf(
+                                ValueWithUnit.Timestamp(carb.timestamp),
+                                ValueWithUnit.Gram(carb.amount.toInt())
+                            )
                         )
                         disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
                             .subscribe(
@@ -455,8 +459,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                     }
                     ml.bolusCalculatorResult?.let { bolusCalculatorResult ->
                         uel.log(
-                            Action.BOLUS_CALCULATOR_RESULT_REMOVED, Sources.Treatments,
-                            ValueWithUnit.Timestamp(bolusCalculatorResult.timestamp)
+                            action = Action.BOLUS_CALCULATOR_RESULT_REMOVED, source = Sources.Treatments,
+                            value = ValueWithUnit.Timestamp(bolusCalculatorResult.timestamp)
                         )
                         disposable += repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(bolusCalculatorResult.id))
                             .subscribe(

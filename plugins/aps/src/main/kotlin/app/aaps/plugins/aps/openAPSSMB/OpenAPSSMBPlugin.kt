@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -33,7 +34,6 @@ import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.target
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
@@ -59,7 +59,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val profiler: Profiler,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val bgQualityCheck: BgQualityCheck,
     private val tddCalculator: TddCalculator
@@ -162,7 +162,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         var targetBg =
             hardLimits.verifyHardLimits(profile.getTargetMgdl(), app.aaps.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
         var isTempTarget = false
-        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tempTarget is ValueWrapper.Existing) {
             isTempTarget = true
             minBg =

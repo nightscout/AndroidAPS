@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.autotune
 
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
@@ -7,7 +8,6 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.BGDatum
 import app.aaps.plugins.aps.autotune.data.CRDatum
@@ -145,7 +145,7 @@ class AutotunePrep @Inject constructor(
         val boluses: MutableList<Bolus> = autotuneIob.boluses
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
         val glucose = autotuneIob.glucose
-        val glucoseData: MutableList<GlucoseValue> = ArrayList()
+        val glucoseData: MutableList<GV> = ArrayList()
         for (i in glucose.indices) {
             if (glucose[i].value > 39) {
                 glucoseData.add(glucose[i])

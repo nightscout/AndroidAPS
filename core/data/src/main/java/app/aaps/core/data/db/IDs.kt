@@ -2,7 +2,7 @@ package app.aaps.core.data.db
 
 import app.aaps.core.data.pump.defs.PumpType
 
-data class InterfaceIDs(
+data class IDs(
     var nightscoutSystemId: String? = null,
     var nightscoutId: String? = null,
     var pumpType: PumpType? = null, // if == USER pumpSerial & pumpId can be null

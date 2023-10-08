@@ -20,6 +20,7 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -49,7 +50,6 @@ import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogWizardBinding
 import dagger.android.HasAndroidInjector
@@ -75,7 +75,7 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var decimalFormatter: DecimalFormatter
@@ -179,7 +179,7 @@ class WizardDialog : DaggerDialogFragment() {
         // because loop doesn't add missing insulin
         var percentage = sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
         val time = sp.getLong(app.aaps.core.utils.R.string.key_reset_boluswizard_percentage_time, 16)
-        repository.getLastGlucoseValueWrapped().blockingGet().let {
+        persistenceLayer.getLastGlucoseValue().blockingGet().let {
             // if last value is older or there is no bg
             if (it is ValueWrapper.Existing) {
                 if (it.value.timestamp < dateUtil.now() - T.mins(time).msecs())
@@ -307,7 +307,7 @@ class WizardDialog : DaggerDialogFragment() {
 
     private fun onCheckedChanged(buttonView: CompoundButton, @Suppress("UNUSED_PARAMETER") state: Boolean) {
         saveCheckedStates()
-        binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        binding.ttCheckbox.isEnabled = binding.bgCheckbox.isChecked && persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
         binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
         if (buttonView.id == binding.cobCheckbox.id)
             processCobCheckBox()
@@ -370,7 +370,7 @@ class WizardDialog : DaggerDialogFragment() {
     private fun initDialog() {
         val profile = profileFunction.getProfile()
         val profileStore = activePlugin.activeProfileSource.profile
-        val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
 
         if (profile == null || profileStore == null) {
             ToastUtils.errorToast(ctx, app.aaps.core.ui.R.string.noprofile)
@@ -452,7 +452,7 @@ class WizardDialog : DaggerDialogFragment() {
         }
 
         bg = if (binding.bgCheckbox.isChecked) bg else 0.0
-        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+        val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         val tempTarget = if (binding.ttCheckbox.isChecked && dbRecord is ValueWrapper.Existing) dbRecord.value else null
 
         // COB

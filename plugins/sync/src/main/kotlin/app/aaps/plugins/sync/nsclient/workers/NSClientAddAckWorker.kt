@@ -65,11 +65,11 @@ class NSClientAddAckWorker(
 
             is PairGlucoseValue                  -> {
                 val pair = ack.originalObject
-                pair.value.interfaceIDs.nightscoutId = ack.id
+                pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
                 storeDataForDb.nsIdGlucoseValues.add(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked GlucoseValue " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked GlucoseValue " + pair.value.ids.nightscoutId))
             }
 
             is PairFood                          -> {
@@ -84,11 +84,11 @@ class NSClientAddAckWorker(
 
             is PairTherapyEvent                  -> {
                 val pair = ack.originalObject
-                pair.value.interfaceIDs.nightscoutId = ack.id
+                pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
                 storeDataForDb.nsIdTherapyEvents.add(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TherapyEvent " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TherapyEvent " + pair.value.ids.nightscoutId))
             }
 
             is PairBolus                         -> {

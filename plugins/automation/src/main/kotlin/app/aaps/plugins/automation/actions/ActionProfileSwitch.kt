@@ -2,6 +2,8 @@ package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -10,9 +12,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
 import app.aaps.plugins.automation.elements.LabelWithElement
@@ -59,9 +58,13 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             return
         }
         uel.log(
-            UserEntry.Action.PROFILE_SWITCH, Sources.Automation, title,
-            ValueWithUnit.SimpleString(inputProfileName.value),
-            ValueWithUnit.Percent(100)
+            action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
+            source = Sources.Automation,
+            note = title,
+            listValues = listOf(
+                ValueWithUnit.SimpleString(inputProfileName.value),
+                ValueWithUnit.Percent(100)
+            )
         )
         val result = profileFunction.createProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, dateUtil.now())
         callback.result(PumpEnactResult(injector).success(result).comment(app.aaps.core.ui.R.string.ok)).run()

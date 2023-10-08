@@ -3,15 +3,16 @@ package app.aaps.core.main.graph.data
 import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.Shape
 
 class TherapyEventDataPoint(
-    val data: TherapyEvent,
+    val data: TE,
     private val rh: ResourceHelper,
     private val profileUtil: ProfileUtil,
     private val translator: Translator
@@ -22,11 +23,11 @@ class TherapyEventDataPoint(
     override fun getX(): Double = data.timestamp.toDouble()
 
     override fun getY(): Double {
-        if (data.type == TherapyEvent.Type.NS_MBG) return profileUtil.fromMgdlToUnits(data.glucose!!)
+        if (data.type == TE.Type.NS_MBG) return profileUtil.fromMgdlToUnits(data.glucose!!)
         if (data.glucose != null && data.glucose != 0.0) {
             val mgdl: Double = when (data.glucoseUnit) {
-                TherapyEvent.GlucoseUnit.MGDL -> data.glucose!!
-                TherapyEvent.GlucoseUnit.MMOL -> data.glucose!! * Constants.MMOLL_TO_MGDL
+                GlucoseUnit.MGDL -> data.glucose!!
+                GlucoseUnit.MMOL -> data.glucose!! * Constants.MMOLL_TO_MGDL
             }
             return profileUtil.fromMgdlToUnits(mgdl)
         }
@@ -42,11 +43,11 @@ class TherapyEventDataPoint(
     override val shape
         get() =
             when {
-                data.type == TherapyEvent.Type.NS_MBG                -> Shape.MBG
-                data.type == TherapyEvent.Type.FINGER_STICK_BG_VALUE -> Shape.BGCHECK
-                data.type == TherapyEvent.Type.ANNOUNCEMENT          -> Shape.ANNOUNCEMENT
-                data.type == TherapyEvent.Type.APS_OFFLINE           -> Shape.OPENAPS_OFFLINE
-                data.type == TherapyEvent.Type.EXERCISE              -> Shape.EXERCISE
+                data.type == TE.Type.NS_MBG                -> Shape.MBG
+                data.type == TE.Type.FINGER_STICK_BG_VALUE -> Shape.BGCHECK
+                data.type == TE.Type.ANNOUNCEMENT          -> Shape.ANNOUNCEMENT
+                data.type == TE.Type.APS_OFFLINE           -> Shape.OPENAPS_OFFLINE
+                data.type == TE.Type.EXERCISE              -> Shape.EXERCISE
                 duration > 0                                         -> Shape.GENERAL_WITH_DURATION
                 else                                                 -> Shape.GENERAL
             }
@@ -55,11 +56,11 @@ class TherapyEventDataPoint(
     override val size get() = if (rh.gb(app.aaps.core.ui.R.bool.isTablet)) 12.0f else 10.0f
     override fun color(context: Context?): Int {
         return when (data.type) {
-            TherapyEvent.Type.ANNOUNCEMENT          -> rh.gac(context, app.aaps.core.ui.R.attr.notificationAnnouncement)
-            TherapyEvent.Type.NS_MBG                -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_NS_MBG)
-            TherapyEvent.Type.FINGER_STICK_BG_VALUE -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_FINGER_STICK_BG_VALUE)
-            TherapyEvent.Type.EXERCISE              -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_EXERCISE)
-            TherapyEvent.Type.APS_OFFLINE           -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_APS_OFFLINE) and -0x7f000001
+            TE.Type.ANNOUNCEMENT          -> rh.gac(context, app.aaps.core.ui.R.attr.notificationAnnouncement)
+            TE.Type.NS_MBG                -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_NS_MBG)
+            TE.Type.FINGER_STICK_BG_VALUE -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_FINGER_STICK_BG_VALUE)
+            TE.Type.EXERCISE              -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_EXERCISE)
+            TE.Type.APS_OFFLINE           -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_APS_OFFLINE) and -0x7f000001
             else                                    -> rh.gac(context, app.aaps.core.ui.R.attr.therapyEvent_Default)
         }
     }

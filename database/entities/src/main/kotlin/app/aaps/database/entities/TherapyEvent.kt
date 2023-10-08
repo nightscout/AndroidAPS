@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.entities.interfaces.DBEntryWithTimeAndDuration
 import app.aaps.database.entities.interfaces.TraceableDBEntry
@@ -63,13 +64,6 @@ data class TherapyEvent(
             contentEqualsTo(previous) &&
             previous.interfaceIDs.nightscoutId == null &&
             interfaceIDs.nightscoutId != null
-
-    enum class GlucoseUnit(val toString: String) {
-        MGDL(ValueWithUnit.MGDL),
-        MMOL(ValueWithUnit.MMOL);
-
-        companion object
-    }
 
     enum class MeterType(val text: String) {
         FINGER("Finger"),

@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -9,8 +10,6 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.NSClientSource
-import app.aaps.core.main.extensions.toDb
-import app.aaps.database.entities.GlucoseValue
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,14 +38,14 @@ class NSClientSourcePlugin @Inject constructor(
 
     override fun advancedFilteringSupported(): Boolean = isAdvancedFilteringEnabled
 
-    override fun detectSource(glucoseValue: GlucoseValue) {
+    override fun detectSource(glucoseValue: GV) {
         if (glucoseValue.timestamp > lastBGTimeStamp) {
             isAdvancedFilteringEnabled = arrayOf(
-                SourceSensor.DEXCOM_NATIVE_UNKNOWN.toDb(),
-                SourceSensor.DEXCOM_G6_NATIVE.toDb(),
-                SourceSensor.DEXCOM_G5_NATIVE.toDb(),
-                SourceSensor.DEXCOM_G6_NATIVE_XDRIP.toDb(),
-                SourceSensor.DEXCOM_G5_NATIVE_XDRIP.toDb()
+                SourceSensor.DEXCOM_NATIVE_UNKNOWN,
+                SourceSensor.DEXCOM_G6_NATIVE,
+                SourceSensor.DEXCOM_G5_NATIVE,
+                SourceSensor.DEXCOM_G6_NATIVE_XDRIP,
+                SourceSensor.DEXCOM_G5_NATIVE_XDRIP
             ).any { it == glucoseValue.sourceSensor }
             lastBGTimeStamp = glucoseValue.timestamp
         }

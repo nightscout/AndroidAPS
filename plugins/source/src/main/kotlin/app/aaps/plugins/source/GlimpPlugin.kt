@@ -1,23 +1,23 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -48,33 +48,26 @@ class GlimpPlugin @Inject constructor(
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var glimpPlugin: GlimpPlugin
-        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var persistenceLayer: PersistenceLayer
 
+        @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!glimpPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             aapsLogger.debug(LTag.BGSOURCE, "Received Glimp Data: $inputData}")
-            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
-            glucoseValues += TransactionGlucoseValue(
+            val glucoseValues = mutableListOf<GV>()
+            glucoseValues += GV(
                 timestamp = inputData.getLong("myTimestamp", 0),
                 value = inputData.getDouble("mySGV", 0.0),
                 raw = inputData.getDouble("mySGV", 0.0),
                 noise = null,
-                trendArrow = TrendArrow.fromString(inputData.getString("myTrend")).toDb(),
-                sourceSensor = SourceSensor.LIBRE_1_GLIMP.toDb()
+                trendArrow = TrendArrow.fromString(inputData.getString("myTrend")),
+                sourceSensor = SourceSensor.LIBRE_1_GLIMP
             )
-            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Glimp App", it)
-                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                }
+            persistenceLayer.insertCgmSourceData(Sources.Glimp, glucoseValues, emptyList(), null)
+                .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
                 .blockingGet()
-                .also { savedValues ->
-                    savedValues.inserted.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                    }
-                }
             return ret
         }
     }

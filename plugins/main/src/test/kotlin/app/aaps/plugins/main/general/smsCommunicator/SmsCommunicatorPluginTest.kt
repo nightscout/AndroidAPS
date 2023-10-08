@@ -20,7 +20,7 @@ import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.extensions.fromDb
+import app.aaps.core.main.extensions.fromGv
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
@@ -91,7 +91,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(iobCobCalculator.getCobInfo("SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0))
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        `when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue.fromDb(reading))
+        `when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue.fromGv(reading))
 
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
 

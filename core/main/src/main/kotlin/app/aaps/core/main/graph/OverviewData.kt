@@ -5,6 +5,7 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import app.aaps.core.data.aps.AutosensData
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.database.entities.GlucoseValue
@@ -96,7 +97,7 @@ interface OverviewData {
      * Graphs
      */
 
-    var bgReadingsArray: List<GlucoseValue>
+    var bgReadingsArray: List<GV>
     var maxBgValue: Double
     var bucketedGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface>
     var bgReadingGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface>

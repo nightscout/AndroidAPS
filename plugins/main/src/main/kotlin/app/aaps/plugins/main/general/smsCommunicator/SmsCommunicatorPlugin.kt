@@ -16,6 +16,9 @@ import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -56,9 +59,6 @@ import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.validators.ValidatingEditTextPreference
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
@@ -751,17 +751,23 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (result.isPercent)
                                         uel.log(
-                                            Action.TEMP_BASAL, Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
-                                            ValueWithUnit.Percent(result.percent),
-                                            ValueWithUnit.Minute(result.duration)
+                                            action = Action.TEMP_BASAL, source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.Percent(result.percent),
+                                                ValueWithUnit.Minute(result.duration)
+                                            )
+
                                         )
                                     else
                                         uel.log(
-                                            Action.TEMP_BASAL, Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
-                                            ValueWithUnit.UnitPerHour(result.absolute),
-                                            ValueWithUnit.Minute(result.duration)
+                                            action = Action.TEMP_BASAL,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.UnitPerHour(result.absolute),
+                                                ValueWithUnit.Minute(result.duration)
+                                            )
                                         )
                                 } else {
                                     var replyText = rh.gs(R.string.smscommunicator_tempbasal_failed)
@@ -802,19 +808,23 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (result.isPercent)
                                         uel.log(
-                                            Action.TEMP_BASAL,
-                                            Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
-                                            ValueWithUnit.Percent(result.percent),
-                                            ValueWithUnit.Minute(result.duration)
+                                            action = Action.TEMP_BASAL,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set_percent, result.percent, result.duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.Percent(result.percent),
+                                                ValueWithUnit.Minute(result.duration)
+                                            )
                                         )
                                     else
                                         uel.log(
-                                            Action.TEMP_BASAL,
-                                            Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
-                                            ValueWithUnit.UnitPerHour(result.absolute),
-                                            ValueWithUnit.Minute(result.duration)
+                                            action = Action.TEMP_BASAL,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_tempbasal_set, result.absolute, result.duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.UnitPerHour(result.absolute),
+                                                ValueWithUnit.Minute(result.duration)
+                                            )
                                         )
                                 } else {
                                     var replyText = rh.gs(R.string.smscommunicator_tempbasal_failed)
@@ -881,22 +891,28 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (config.APS)
                                         uel.log(
-                                            Action.EXTENDED_BOLUS,
-                                            Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(
+                                            action = Action.EXTENDED_BOLUS,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(
                                                 R.string.smscommunicator_extended_set,
                                                 aDouble,
                                                 duration
                                             ) + " / " + rh.gs(app.aaps.core.ui.R.string.loopsuspended),
-                                            ValueWithUnit.Insulin(aDouble ?: 0.0),
-                                            ValueWithUnit.Minute(duration),
-                                            ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.loopsuspended))
+                                            listValues = listOf(
+                                                ValueWithUnit.Insulin(aDouble ?: 0.0),
+                                                ValueWithUnit.Minute(duration),
+                                                ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.loopsuspended))
+                                            )
                                         )
                                     else
                                         uel.log(
-                                            Action.EXTENDED_BOLUS, Sources.SMS, activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_extended_set, aDouble, duration),
-                                            ValueWithUnit.Insulin(aDouble ?: 0.0),
-                                            ValueWithUnit.Minute(duration)
+                                            action = Action.EXTENDED_BOLUS,
+                                            source = Sources.SMS,
+                                            note = activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_extended_set, aDouble, duration),
+                                            listValues = listOf(
+                                                ValueWithUnit.Insulin(aDouble ?: 0.0),
+                                                ValueWithUnit.Minute(duration)
+                                            )
                                         )
                                 } else {
                                     var replyText = rh.gs(R.string.smscommunicator_extended_failed)
@@ -1002,9 +1018,9 @@ class SmsCommunicatorPlugin @Inject constructor(
         } else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
     }
 
-    private fun toTodayTime(hh_colon_mm: String): Long {
+    private fun toTodayTime(hhColonMm: String): Long {
         val p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)")
-        val m = p.matcher(hh_colon_mm)
+        val m = p.matcher(hhColonMm)
         var retVal: Long = 0
         if (m.find()) {
             var hours = SafeParse.stringToInt(m.group(1))
@@ -1137,9 +1153,12 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val replyText = rh.gs(R.string.smscommunicator_tt_set, ttString, ttDuration)
                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                     uel.log(
-                        Action.TT, Sources.SMS,
-                        ValueWithUnit.fromGlucoseUnit(tt, units.asText),
-                        ValueWithUnit.Minute(ttDuration)
+                        action = Action.TT,
+                        source = Sources.SMS,
+                        listValues = listOf(
+                            ValueWithUnit.fromGlucoseUnit(tt, units),
+                            ValueWithUnit.Minute(ttDuration)
+                        )
                     )
                 }
             })

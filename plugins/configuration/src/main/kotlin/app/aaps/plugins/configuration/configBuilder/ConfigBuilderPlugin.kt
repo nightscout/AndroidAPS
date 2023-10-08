@@ -15,6 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.APS
 import app.aaps.core.interfaces.aps.Sensitivity
 import app.aaps.core.interfaces.configuration.ConfigBuilder
@@ -40,9 +43,6 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.configBuilder.events.EventConfigBuilderUpdateGui
 import dagger.android.HasAndroidInjector
@@ -173,8 +173,10 @@ class ConfigBuilderPlugin @Inject constructor(
                 pumpSync.connectNewPump()
                 sp.putBoolean("allow_hardware_pump", true)
                 uel.log(
-                    Action.HW_PUMP_ALLOWED, Sources.ConfigBuilder, rh.gs(changedPlugin.pluginDescription.pluginName),
-                    ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
+                    action = Action.HW_PUMP_ALLOWED,
+                    source = Sources.ConfigBuilder,
+                    note = rh.gs(changedPlugin.pluginDescription.pluginName),
+                    value = ValueWithUnit.SimpleString(rh.gsNotLocalised(changedPlugin.pluginDescription.pluginName))
                 )
                 aapsLogger.debug(LTag.PUMP, "First time HW pump allowed!")
             }, {

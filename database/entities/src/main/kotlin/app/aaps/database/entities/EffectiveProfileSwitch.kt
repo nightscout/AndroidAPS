@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import app.aaps.database.entities.data.Block
+import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.data.TargetBlock
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
@@ -75,13 +76,6 @@ data class EffectiveProfileSwitch(
             contentEqualsTo(previous) &&
             previous.interfaceIDs.nightscoutId == null &&
             interfaceIDs.nightscoutId != null
-
-    enum class GlucoseUnit {
-        MGDL,
-        MMOL;
-
-        companion object
-    }
 
     companion object
 }

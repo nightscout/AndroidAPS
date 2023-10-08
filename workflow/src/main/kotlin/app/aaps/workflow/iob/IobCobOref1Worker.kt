@@ -9,6 +9,7 @@ import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.objects.Instantiator
@@ -54,6 +55,7 @@ class IobCobOref1Worker(
     @Inject lateinit var profiler: Profiler
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var instantiator: Instantiator
     @Inject lateinit var decimalFormatter: DecimalFormatter
@@ -294,7 +296,7 @@ class IobCobOref1Worker(
                 // TODO AS-FIX
                 @Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
                 if (false && sp.getBoolean(app.aaps.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
-                    val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+                    val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
                     if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
                         autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)
                     }

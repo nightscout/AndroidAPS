@@ -11,7 +11,11 @@ import app.aaps.core.data.configuration.Constants.INSULIN_PLUS1_DEFAULT
 import app.aaps.core.data.configuration.Constants.INSULIN_PLUS2_DEFAULT
 import app.aaps.core.data.configuration.Constants.INSULIN_PLUS3_DEFAULT
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TT
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -37,11 +41,7 @@ import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogInsulinBinding
 import app.aaps.ui.extensions.toSignedString
@@ -235,27 +235,22 @@ class InsulinDialog : DialogFragmentWithDate() {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.bolus), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (eatingSoonChecked) {
-                        uel.log(
-                            UserEntry.Action.TT, UserEntry.Sources.InsulinDialog,
-                            notes,
-                            ValueWithUnit.TherapyEventTTReason(TemporaryTarget.Reason.EATING_SOON),
-                            ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units.asText),
-                            ValueWithUnit.Minute(eatingSoonTTDuration)
-                        )
-                        disposable += repository.runTransactionForResult(
-                            InsertAndCancelCurrentTemporaryTargetTransaction(
+                        disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
+                            TT(
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
-                                reason = TemporaryTarget.Reason.EATING_SOON,
+                                reason = TT.Reason.EATING_SOON,
                                 lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits()),
                                 highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits())
+                            ),
+                            action = Action.TT, source = Sources.InsulinDialog,
+                            note = notes,
+                            listValues = listOf(
+                                ValueWithUnit.TETTReason(TT.Reason.EATING_SOON),
+                                ValueWithUnit.fromGlucoseUnit(eatingSoonTT, units),
+                                ValueWithUnit.Minute(eatingSoonTTDuration)
                             )
-                        ).subscribe({ result ->
-                                        result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }
-                                        result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
-                                    }, {
-                                        aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                                    })
+                        ).subscribe()
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
@@ -265,17 +260,20 @@ class InsulinDialog : DialogFragmentWithDate() {
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
-                            uel.log(UserEntry.Action.BOLUS, UserEntry.Sources.InsulinDialog,
-                                    rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else "",
+                            uel.log(
+                                action = Action.BOLUS, source = Sources.InsulinDialog,
+                                note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else "",
+                                listValues = listOf(
                                     ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.record)),
                                     ValueWithUnit.Insulin(insulinAfterConstraints),
                                     ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 })
+                            )
                             persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()
                         } else {
                             uel.log(
-                                UserEntry.Action.BOLUS, UserEntry.Sources.InsulinDialog,
+                                Action.BOLUS, Sources.InsulinDialog,
                                 notes,
                                 ValueWithUnit.Insulin(insulinAfterConstraints)
                             )

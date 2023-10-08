@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.nsclient
 
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.TE
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
@@ -7,36 +9,33 @@ import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.transactions.TransactionGlucoseValue
 
 interface StoreDataForDb {
 
-    val glucoseValues: MutableList<TransactionGlucoseValue>
+    val glucoseValues: MutableList<GV>
     val boluses: MutableList<Bolus>
     val carbs: MutableList<Carbs>
     val temporaryTargets: MutableList<TemporaryTarget>
     val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch>
     val bolusCalculatorResults: MutableList<BolusCalculatorResult>
-    val therapyEvents: MutableList<TherapyEvent>
+    val therapyEvents: MutableList<TE>
     val extendedBoluses: MutableList<ExtendedBolus>
     val temporaryBasals: MutableList<TemporaryBasal>
     val profileSwitches: MutableList<ProfileSwitch>
     val offlineEvents: MutableList<OfflineEvent>
     val foods: MutableList<Food>
 
-    val nsIdGlucoseValues: MutableList<GlucoseValue>
+    val nsIdGlucoseValues: MutableList<GV>
     val nsIdBoluses: MutableList<Bolus>
     val nsIdCarbs: MutableList<Carbs>
     val nsIdTemporaryTargets: MutableList<TemporaryTarget>
     val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch>
     val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult>
-    val nsIdTherapyEvents: MutableList<TherapyEvent>
+    val nsIdTherapyEvents: MutableList<TE>
     val nsIdExtendedBoluses: MutableList<ExtendedBolus>
     val nsIdTemporaryBasals: MutableList<TemporaryBasal>
     val nsIdProfileSwitches: MutableList<ProfileSwitch>

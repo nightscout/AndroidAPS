@@ -1,13 +1,13 @@
 package app.aaps.implementation.utils
 
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.TrendCalculator
-import app.aaps.core.main.extensions.fromDb
-import app.aaps.database.entities.GlucoseValue
+import app.aaps.core.main.extensions.fromGv
 import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,11 +19,11 @@ class TrendCalculatorImpl @Inject constructor(
     private val iobCobCalculator: IobCobCalculator
 ) : TrendCalculator {
 
-    override fun getTrendArrow(glucoseValue: GlucoseValue?): TrendArrow =
+    override fun getTrendArrow(glucoseValue: GV?): TrendArrow =
         when {
-            glucoseValue?.trendArrow == null                    -> TrendArrow.NONE
-            glucoseValue.trendArrow.fromDb() != TrendArrow.NONE -> glucoseValue.trendArrow.fromDb()
-            else                                                -> calculateDirection(InMemoryGlucoseValue.fromDb(glucoseValue))
+            glucoseValue?.trendArrow == null           -> TrendArrow.NONE
+            glucoseValue.trendArrow != TrendArrow.NONE -> glucoseValue.trendArrow
+            else                                       -> calculateDirection(InMemoryGlucoseValue.fromGv(glucoseValue))
         }
 
     override fun getTrendArrow(glucoseValue: InMemoryGlucoseValue?): TrendArrow =
@@ -33,7 +33,7 @@ class TrendCalculatorImpl @Inject constructor(
             else                                       -> calculateDirection(glucoseValue)
         }
 
-    override fun getTrendDescription(glucoseValue: GlucoseValue?): String =
+    override fun getTrendDescription(glucoseValue: GV?): String =
         when (getTrendArrow(glucoseValue)) {
             TrendArrow.DOUBLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_double_down)
             TrendArrow.SINGLE_DOWN     -> rh.gs(app.aaps.core.ui.R.string.a11y_arrow_single_down)

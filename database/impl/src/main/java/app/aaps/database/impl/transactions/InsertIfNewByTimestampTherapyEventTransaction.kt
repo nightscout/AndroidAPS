@@ -1,6 +1,7 @@
 package app.aaps.database.impl.transactions
 
 import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.data.GlucoseUnit
 
 class InsertIfNewByTimestampTherapyEventTransaction(
     val therapyEvent: TherapyEvent
@@ -14,7 +15,7 @@ class InsertIfNewByTimestampTherapyEventTransaction(
         enteredBy: String? = null,
         glucose: Double? = null,
         glucoseType: TherapyEvent.MeterType? = null,
-        glucoseUnit: TherapyEvent.GlucoseUnit
+        glucoseUnit: GlucoseUnit
     ) :
         this(TherapyEvent(timestamp = timestamp, type = type, duration = duration, note = note, enteredBy = enteredBy, glucose = glucose, glucoseType = glucoseType, glucoseUnit = glucoseUnit))
 

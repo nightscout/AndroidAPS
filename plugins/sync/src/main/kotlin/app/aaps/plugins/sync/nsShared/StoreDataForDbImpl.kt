@@ -1,8 +1,15 @@
 package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
+import app.aaps.core.data.db.UE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -15,6 +22,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.extensions.fromDb
+import app.aaps.core.main.extensions.toDb
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
@@ -28,10 +37,7 @@ import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusTransaction
 import app.aaps.database.impl.transactions.InvalidateCarbsTransaction
@@ -61,13 +67,11 @@ import app.aaps.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdExtendedBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdFoodTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdGlucoseValueTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdOfflineEventTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTherapyEventTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
 import app.aaps.plugins.sync.R
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -80,6 +84,7 @@ class StoreDataForDbImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val sp: SP,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
@@ -89,26 +94,26 @@ class StoreDataForDbImpl @Inject constructor(
     private val uiInteraction: UiInteraction
 ) : StoreDataForDb {
 
-    override val glucoseValues: MutableList<TransactionGlucoseValue> = mutableListOf()
+    override val glucoseValues: MutableList<GV> = mutableListOf()
     override val boluses: MutableList<Bolus> = mutableListOf()
     override val carbs: MutableList<Carbs> = mutableListOf()
     override val temporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
     override val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
-    override val therapyEvents: MutableList<TherapyEvent> = mutableListOf()
+    override val therapyEvents: MutableList<TE> = mutableListOf()
     override val extendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
     override val temporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
     override val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     override val offlineEvents: MutableList<OfflineEvent> = mutableListOf()
     override val foods: MutableList<Food> = mutableListOf()
 
-    override val nsIdGlucoseValues: MutableList<GlucoseValue> = mutableListOf()
+    override val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
     override val nsIdBoluses: MutableList<Bolus> = mutableListOf()
     override val nsIdCarbs: MutableList<Carbs> = mutableListOf()
     override val nsIdTemporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
     override val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
-    override val nsIdTherapyEvents: MutableList<TherapyEvent> = mutableListOf()
+    override val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
     override val nsIdExtendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
     override val nsIdTemporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
     override val nsIdProfileSwitches: MutableList<ProfileSwitch> = mutableListOf()
@@ -118,7 +123,7 @@ class StoreDataForDbImpl @Inject constructor(
 
     override val deleteTreatment: MutableList<String> = mutableListOf()
     override val deleteGlucoseValue: MutableList<String> = mutableListOf()
-    private val userEntries: MutableList<UserEntry> = mutableListOf()
+    private val userEntries: MutableList<UE> = mutableListOf()
 
     private val inserted = HashMap<String, Long>()
     private val updated = HashMap<String, Long>()
@@ -135,26 +140,20 @@ class StoreDataForDbImpl @Inject constructor(
 
     override fun storeGlucoseValuesToDb() {
         if (glucoseValues.isNotEmpty())
-            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from NSClient App", it)
-                }
+            persistenceLayer.insertCgmSourceData(Sources.NSClient, glucoseValues, emptyList(), null)
                 .blockingGet()
                 .also { result ->
                     glucoseValues.clear()
                     result.updated.forEach {
                         nsClientSource.detectSource(it)
-                        aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         updated.inc(GlucoseValue::class.java.simpleName)
                     }
                     result.inserted.forEach {
                         nsClientSource.detectSource(it)
-                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         inserted.inc(GlucoseValue::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
                         nsClientSource.detectSource(it)
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId bg $it")
                         nsIdUpdated.inc(GlucoseValue::class.java.simpleName)
                     }
                 }
@@ -203,10 +202,10 @@ class StoreDataForDbImpl @Inject constructor(
                     boluses.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.BOLUS,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.BOLUS,
+                                source = Sources.NSClient,
                                 note = it.notes ?: "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
                             )
@@ -216,10 +215,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.BOLUS_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.BOLUS_REMOVED,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
                             )
@@ -250,10 +249,10 @@ class StoreDataForDbImpl @Inject constructor(
                     carbs.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.CARBS,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.CARBS,
+                                source = Sources.NSClient,
                                 note = it.notes ?: "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                             )
@@ -263,10 +262,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.CARBS_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.CARBS_REMOVED,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                             )
@@ -276,10 +275,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.updated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.CARBS,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.CARBS,
+                                source = Sources.NSClient,
                                 note = it.notes ?: "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
                             )
@@ -307,15 +306,15 @@ class StoreDataForDbImpl @Inject constructor(
                     temporaryTargets.clear()
                     result.inserted.forEach { tt ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.TT,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.TT,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
-                                    ValueWithUnit.TherapyEventTTReason(tt.reason),
-                                    ValueWithUnit.fromGlucoseUnit(tt.lowTarget, GlucoseUnit.MGDL.asText),
-                                    ValueWithUnit.fromGlucoseUnit(tt.highTarget, GlucoseUnit.MGDL.asText).takeIf { tt.lowTarget != tt.highTarget },
+                                    ValueWithUnit.TETTReason(tt.reason.fromDb()),
+                                    ValueWithUnit.fromGlucoseUnit(tt.lowTarget, GlucoseUnit.MGDL),
+                                    ValueWithUnit.fromGlucoseUnit(tt.highTarget, GlucoseUnit.MGDL).takeIf { tt.lowTarget != tt.highTarget },
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                                 )
                             )
@@ -325,13 +324,13 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach { tt ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.TT_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.TT_REMOVED,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
-                                    ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                    ValueWithUnit.TETTReason(tt.reason.fromDb()),
                                     ValueWithUnit.Mgdl(tt.lowTarget),
                                     ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
@@ -343,13 +342,13 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.ended.forEach { tt ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.CANCEL_TT,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.CANCEL_TT,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
-                                    ValueWithUnit.TherapyEventTTReason(tt.reason),
+                                    ValueWithUnit.TETTReason(tt.reason.fromDb()),
                                     ValueWithUnit.Mgdl(tt.lowTarget),
                                     ValueWithUnit.Mgdl(tt.highTarget).takeIf { tt.lowTarget != tt.highTarget },
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
@@ -382,10 +381,10 @@ class StoreDataForDbImpl @Inject constructor(
                     temporaryBasals.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.TEMP_BASAL,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.TEMP_BASAL,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
@@ -399,10 +398,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.TEMP_BASAL_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.TEMP_BASAL_REMOVED,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
@@ -416,10 +415,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.ended.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.CANCEL_TEMP_BASAL,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.CANCEL_TEMP_BASAL,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
@@ -454,10 +453,10 @@ class StoreDataForDbImpl @Inject constructor(
                     effectiveProfileSwitches.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.PROFILE_SWITCH,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.PROFILE_SWITCH,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                             )
@@ -467,10 +466,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.PROFILE_SWITCH_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.PROFILE_SWITCH_REMOVED,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                             )
@@ -497,10 +496,10 @@ class StoreDataForDbImpl @Inject constructor(
                     profileSwitches.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.PROFILE_SWITCH,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.PROFILE_SWITCH,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                             )
@@ -510,10 +509,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.PROFILE_SWITCH_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.PROFILE_SWITCH_REMOVED,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(ValueWithUnit.Timestamp(it.timestamp))
                             )
@@ -556,7 +555,7 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
-            therapyEvents.filter { it.type == TherapyEvent.Type.ANNOUNCEMENT }.forEach {
+            therapyEvents.filter { it.type == TE.Type.ANNOUNCEMENT }.forEach {
                 if (it.timestamp > dateUtil.now() - 15 * 60 * 1000L &&
                     it.note?.isNotEmpty() == true &&
                     it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
@@ -566,7 +565,7 @@ class StoreDataForDbImpl @Inject constructor(
                 }
             }
         if (therapyEvents.isNotEmpty())
-            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvents, config.NSCLIENT))
+            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvents.map { it.toDb() }, config.NSCLIENT))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
                 }
@@ -575,20 +574,20 @@ class StoreDataForDbImpl @Inject constructor(
                     therapyEvents.clear()
                     result.inserted.forEach { therapyEvent ->
                         val action = when (therapyEvent.type) {
-                            TherapyEvent.Type.CANNULA_CHANGE -> UserEntry.Action.SITE_CHANGE
-                            TherapyEvent.Type.INSULIN_CHANGE -> UserEntry.Action.RESERVOIR_CHANGE
-                            else                             -> UserEntry.Action.CAREPORTAL
+                            TherapyEvent.Type.CANNULA_CHANGE -> Action.SITE_CHANGE
+                            TherapyEvent.Type.INSULIN_CHANGE -> Action.RESERVOIR_CHANGE
+                            else                             -> Action.CAREPORTAL
                         }
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
                                 action = action,
-                                source = UserEntry.Sources.NSClient,
+                                source = Sources.NSClient,
                                 note = therapyEvent.note ?: "",
                                 values = listOf(
                                     ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                    ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                    ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null })
+                                    ValueWithUnit.TEType(therapyEvent.type.fromDb()),
+                                    ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.fromDb()).takeIf { therapyEvent.glucose != null })
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
@@ -596,15 +595,15 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach { therapyEvent ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.CAREPORTAL_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.CAREPORTAL_REMOVED,
+                                source = Sources.NSClient,
                                 note = therapyEvent.note ?: "",
                                 values = listOf(
                                     ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                    ValueWithUnit.TherapyEventType(therapyEvent.type),
-                                    ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.toString).takeIf { therapyEvent.glucose != null })
+                                    ValueWithUnit.TEType(therapyEvent.type.fromDb()),
+                                    ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.fromDb()).takeIf { therapyEvent.glucose != null })
                             )
                         )
                         aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")
@@ -633,13 +632,13 @@ class StoreDataForDbImpl @Inject constructor(
                     offlineEvents.clear()
                     result.inserted.forEach { oe ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.LOOP_CHANGE,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.LOOP_CHANGE,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
-                                    ValueWithUnit.OfflineEventReason(oe.reason),
+                                    ValueWithUnit.OEReason(oe.reason.fromDb()),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
                                 )
                             )
@@ -649,13 +648,13 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach { oe ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.LOOP_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.LOOP_REMOVED,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
-                                    ValueWithUnit.OfflineEventReason(oe.reason),
+                                    ValueWithUnit.OEReason(oe.reason.fromDb()),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
                                 )
                             )
@@ -665,13 +664,13 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.ended.forEach { oe ->
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.LOOP_CHANGE,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.LOOP_CHANGE,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
-                                    ValueWithUnit.OfflineEventReason(oe.reason),
+                                    ValueWithUnit.OEReason(oe.reason.fromDb()),
                                     ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
                                 )
                             )
@@ -702,10 +701,10 @@ class StoreDataForDbImpl @Inject constructor(
                     extendedBoluses.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.EXTENDED_BOLUS,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.EXTENDED_BOLUS,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
@@ -721,10 +720,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.invalidated.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.EXTENDED_BOLUS_REMOVED,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.EXTENDED_BOLUS_REMOVED,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
@@ -739,10 +738,10 @@ class StoreDataForDbImpl @Inject constructor(
                     }
                     result.ended.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
-                            UserEntry(
+                            UE(
                                 timestamp = dateUtil.now(),
-                                action = UserEntry.Action.CANCEL_EXTENDED_BOLUS,
-                                source = UserEntry.Sources.NSClient,
+                                action = Action.CANCEL_EXTENDED_BOLUS,
+                                source = Sources.NSClient,
                                 note = "",
                                 values = listOf(
                                     ValueWithUnit.Timestamp(it.timestamp),
@@ -806,17 +805,11 @@ class StoreDataForDbImpl @Inject constructor(
                 }
             }
 
-        repository.runTransactionForResult(UpdateNsIdGlucoseValueTransaction(nsIdGlucoseValues))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of GlucoseValue failed", error)
-            }
+        persistenceLayer.updateGlucoseValuesNsIds(nsIdGlucoseValues)
             .blockingGet()
             .also { result ->
                 nsIdGlucoseValues.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of GlucoseValue $it")
-                    nsIdUpdated.inc(GlucoseValue::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(GlucoseValue::class.java.simpleName) }
             }
 
         repository.runTransactionForResult(UpdateNsIdFoodTransaction(nsIdFoods))
@@ -832,7 +825,7 @@ class StoreDataForDbImpl @Inject constructor(
                 }
             }
 
-        repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(nsIdTherapyEvents))
+        repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(nsIdTherapyEvents.map { it.toDb() }))
             .doOnError { error ->
                 aapsLogger.error(LTag.DATABASE, "Updated nsId of TherapyEvent failed", error)
             }

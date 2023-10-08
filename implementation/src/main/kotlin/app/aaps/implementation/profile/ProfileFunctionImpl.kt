@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.fromConstant
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.ProfileSwitch
@@ -153,7 +153,7 @@ class ProfileFunctionImpl @Inject constructor(
             isfBlocks = pureProfile.isfBlocks,
             icBlocks = pureProfile.icBlocks,
             targetBlocks = pureProfile.targetBlocks,
-            glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(pureProfile.glucoseUnit),
+            glucoseUnit = pureProfile.glucoseUnit.toDb(),
             profileName = profileName,
             timeshift = T.hours(timeShiftInHours.toLong()).msecs(),
             percentage = percentage,

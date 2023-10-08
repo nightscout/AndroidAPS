@@ -4,9 +4,9 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.main.extensions.fromConstant
 import app.aaps.core.main.extensions.getCustomizedName
 import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.ProfileSwitch
@@ -86,7 +86,7 @@ fun ProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil,
         isfBlocks = profileSealed.isfBlocks,
         icBlocks = profileSealed.icBlocks,
         targetBlocks = profileSealed.targetBlocks,
-        glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(profileSealed.units),
+        glucoseUnit = profileSealed.units.toDb(),
         profileName = originalProfileName ?: profileName,
         timeshift = timeshift,
         percentage = percentage,

@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.blockValueBySeconds
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.extensions.highTargetBlockValueBySeconds
 import app.aaps.core.main.extensions.lowTargetBlockValueBySeconds
 import app.aaps.core.main.extensions.shiftBlock
@@ -208,8 +209,8 @@ sealed class ProfileSealed(
 
     override val units: GlucoseUnit
         get() = when (this) {
-            is PS   -> if (value.glucoseUnit == ProfileSwitch.GlucoseUnit.MMOL) GlucoseUnit.MMOL else GlucoseUnit.MGDL
-            is EPS  -> if (value.glucoseUnit == EffectiveProfileSwitch.GlucoseUnit.MMOL) GlucoseUnit.MMOL else GlucoseUnit.MGDL
+            is PS   -> if (value.glucoseUnit.fromDb() == GlucoseUnit.MMOL) GlucoseUnit.MMOL else GlucoseUnit.MGDL
+            is EPS  -> if (value.glucoseUnit.fromDb() == GlucoseUnit.MMOL) GlucoseUnit.MMOL else GlucoseUnit.MGDL
             is Pure -> value.glucoseUnit
         }
     override val dia: Double

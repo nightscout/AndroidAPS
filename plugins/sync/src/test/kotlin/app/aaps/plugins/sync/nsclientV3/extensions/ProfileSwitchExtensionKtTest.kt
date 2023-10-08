@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.core.main.extensions.fromConstant
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.localmodel.treatment.NSProfileSwitch
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import app.aaps.database.entities.ProfileSwitch
@@ -36,7 +36,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            glucoseUnit = validProfile.units.toDb(),
             profileName = "SomeProfile",
             timeshift = 0,
             percentage = 100,
@@ -63,7 +63,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            glucoseUnit = validProfile.units.toDb(),
             profileName = "SomeProfile",
             timeshift = -3600000,
             percentage = 150,

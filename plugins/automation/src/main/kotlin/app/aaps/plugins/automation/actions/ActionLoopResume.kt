@@ -1,6 +1,7 @@
 package app.aaps.plugins.automation.actions
 
 import androidx.annotation.DrawableRes
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.LTag
@@ -10,8 +11,6 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.plugins.automation.R
@@ -44,7 +43,7 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
                                aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
                            })
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
-            uel.log(UserEntry.Action.RESUME, Sources.Automation, title)
+            uel.log(app.aaps.core.data.ue.Action.RESUME, Sources.Automation, title)
             callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended)).run()

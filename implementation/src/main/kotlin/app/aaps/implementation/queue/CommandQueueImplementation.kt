@@ -8,6 +8,7 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -42,11 +43,11 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.getCustomizedName
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.interfaces.end
 import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.R
@@ -133,7 +134,7 @@ class CommandQueueImplementation @Inject constructor(
                                                isfBlocks = nonCustomized.isfBlocks,
                                                icBlocks = nonCustomized.icBlocks,
                                                targetBlocks = nonCustomized.targetBlocks,
-                                               glucoseUnit = if (it.glucoseUnit == ProfileSwitch.GlucoseUnit.MGDL) EffectiveProfileSwitch.GlucoseUnit.MGDL else EffectiveProfileSwitch.GlucoseUnit.MMOL,
+                                               glucoseUnit = if (it.glucoseUnit == GlucoseUnit.MGDL.toDb()) GlucoseUnit.MGDL.toDb() else GlucoseUnit.MMOL.toDb(),
                                                originalProfileName = it.profileName,
                                                originalCustomizedName = it.getCustomizedName(decimalFormatter),
                                                originalTimeshift = it.timeshift,

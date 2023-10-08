@@ -1,5 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.IDs
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TE
+import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -9,7 +16,7 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.extensions.fromConstant
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.database.entities.Bolus
@@ -19,12 +26,10 @@ import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
@@ -32,7 +37,6 @@ import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
-import app.aaps.plugins.sync.nsclient.extensions.fromConstant
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
@@ -79,7 +83,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, repository, sp, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, repository, persistenceLayer, sp, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
@@ -120,17 +124,15 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddEntries() = runTest {
-        val glucoseValue = GlucoseValue(
+        val glucoseValue = GV(
             timestamp = 10000,
             isValid = true,
             raw = 101.0,
             value = 99.0,
-            trendArrow = GlucoseValue.TrendArrow.DOUBLE_UP,
+            trendArrow = TrendArrow.DOUBLE_UP,
             noise = 1.0,
-            sourceSensor = GlucoseValue.SourceSensor.DEXCOM_G4_WIXEL,
-            interfaceIDs_backing = InterfaceIDs(
-                nightscoutId = "nightscoutId"
-            )
+            sourceSensor = SourceSensor.DEXCOM_G4_WIXEL,
+            ids = IDs(                nightscoutId = "nightscoutId"            )
         )
         val dataPair = DataSyncSelector.PairGlucoseValue(glucoseValue, 1000)
         // create
@@ -291,7 +293,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = EffectiveProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            glucoseUnit = validProfile.units.toDb(),
             originalProfileName = "SomeProfile",
             originalCustomizedName = "SomeProfile (150%, 1h)",
             originalTimeshift = 3600000,
@@ -329,7 +331,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            glucoseUnit = validProfile.units.toDb(),
             profileName = "SomeProfile",
             timeshift = 0,
             percentage = 100,
@@ -467,20 +469,20 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTherapyEvent() = runTest {
-        val therapyEvent = TherapyEvent(
+        val therapyEvent = TE(
             timestamp = 10000,
             isValid = true,
-            type = TherapyEvent.Type.ANNOUNCEMENT,
+            type = TE.Type.ANNOUNCEMENT,
             note = "ccccc",
             enteredBy = "dddd",
             glucose = 101.0,
-            glucoseType = TherapyEvent.MeterType.FINGER,
-            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+            glucoseType = TE.MeterType.FINGER,
+            glucoseUnit = GlucoseUnit.MGDL,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )

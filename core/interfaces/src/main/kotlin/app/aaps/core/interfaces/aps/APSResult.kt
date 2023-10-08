@@ -1,9 +1,9 @@
 package app.aaps.core.interfaces.aps
 
 import android.text.Spanned
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.constraints.Constraint
-import app.aaps.database.entities.GlucoseValue
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
@@ -24,7 +24,7 @@ interface APSResult {
     var targetBG: Double
     var hasPredictions: Boolean
 
-    val predictions: MutableList<GlucoseValue>
+    val predictions: MutableList<GV>
     val latestPredictionsTime: Long
     val isChangeRequested: Boolean
     var isTempBasalRequested: Boolean

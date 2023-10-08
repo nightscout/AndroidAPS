@@ -13,11 +13,15 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -30,13 +34,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateAAPSStartedTherapyEventTransaction
-import app.aaps.database.impl.transactions.InvalidateTherapyEventTransaction
 import app.aaps.ui.R
 import app.aaps.ui.activities.fragments.TreatmentsCareportalFragment.RecyclerViewAdapter.TherapyEventsViewHolder
 import app.aaps.ui.databinding.TreatmentsCareportalFragmentBinding
@@ -58,7 +55,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var uel: UserEntryLogger
 
     private var _binding: TreatmentsCareportalFragmentBinding? = null
@@ -68,7 +65,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
     private var menu: Menu? = null
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.days(30).msecs()
-    private lateinit var actionHelper: ActionModeHelper<TherapyEvent>
+    private lateinit var actionHelper: ActionModeHelper<TE>
     private var showInvalidated = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -89,12 +86,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
     private fun removeStartedEvents() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.careportal), rh.gs(R.string.careportal_remove_started_events), Runnable {
-                uel.log(Action.RESTART_EVENTS_REMOVED, Sources.Treatments)
-                disposable += repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(rh.gs(app.aaps.core.ui.R.string.androidaps_start)))
-                    .subscribe(
-                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
-                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
-                    )
+                disposable += persistenceLayer.invalidateTherapyEventsWithNote(rh.gs(app.aaps.core.ui.R.string.androidaps_start), Action.RESTART_EVENTS_REMOVED, Sources.Treatments).subscribe()
             })
         }
     }
@@ -104,12 +96,12 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
         binding.recyclerview.isLoading = true
         disposable +=
             if (showInvalidated)
-                repository
+                persistenceLayer
                     .getTherapyEventDataIncludingInvalidFromTime(now - millsToThePast, false)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
             else
-                repository
+                persistenceLayer
                     .getTherapyEventDataFromTime(now - millsToThePast, false)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list -> binding.recyclerview.swapAdapter(RecyclerViewAdapter(list), true) }
@@ -140,7 +132,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
         _binding = null
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var therapyList: List<TherapyEvent>) : RecyclerView.Adapter<TherapyEventsViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var therapyList: List<TE>) : RecyclerView.Adapter<TherapyEventsViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): TherapyEventsViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.treatments_careportal_item, viewGroup, false)
@@ -149,7 +141,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
 
         override fun onBindViewHolder(holder: TherapyEventsViewHolder, position: Int) {
             val therapyEvent = therapyList[position]
-            holder.binding.ns.visibility = (therapyEvent.interfaceIDs.nightscoutId != null).toVisibility()
+            holder.binding.ns.visibility = (therapyEvent.ids.nightscoutId != null).toVisibility()
             holder.binding.invalid.visibility = therapyEvent.isValid.not().toVisibility()
             val newDay = position == 0 || !dateUtil.isSameDayGroup(therapyEvent.timestamp, therapyList[position - 1].timestamp)
             holder.binding.date.visibility = newDay.toVisibility()
@@ -217,7 +209,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
             else                           -> false
         }
 
-    private fun getConfirmationText(selectedItems: SparseArray<TherapyEvent>): String {
+    private fun getConfirmationText(selectedItems: SparseArray<TE>): String {
         if (selectedItems.size() == 1) {
             val therapyEvent = selectedItems.valueAt(0)
             return rh.gs(app.aaps.core.ui.R.string.event_type) + ": " + translator.translate(therapyEvent.type) + "\n" +
@@ -227,20 +219,18 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
         return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
-    private fun removeSelected(selectedItems: SparseArray<TherapyEvent>) {
+    private fun removeSelected(selectedItems: SparseArray<TE>) {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, therapyEvent ->
-                    uel.log(
-                        Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note,
-                        ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                        ValueWithUnit.TherapyEventType(therapyEvent.type)
-                    )
-                    disposable += repository.runTransactionForResult(InvalidateTherapyEventTransaction(therapyEvent.id))
-                        .subscribe(
-                            { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
-                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
+                    disposable += persistenceLayer.invalidateTherapyEvent(
+                        id = therapyEvent.id,
+                        action = Action.CAREPORTAL_REMOVED, source = Sources.Treatments, note = therapyEvent.note,
+                        listValues = listOf(
+                            ValueWithUnit.Timestamp(therapyEvent.timestamp),
+                            ValueWithUnit.TEType(therapyEvent.type)
                         )
+                    ).subscribe()
                 }
                 actionHelper.finish()
             })

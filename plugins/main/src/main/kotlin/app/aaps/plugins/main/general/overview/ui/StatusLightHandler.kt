@@ -5,8 +5,10 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.widget.TextView
 import androidx.annotation.StringRes
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.WarnColors
@@ -16,8 +18,6 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.main.R
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -31,7 +31,7 @@ class StatusLightHandler @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val warnColors: WarnColors,
     private val config: Config,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val tddCalculator: TddCalculator,
     private val decimalFormatter: DecimalFormatter
 ) {
@@ -55,7 +55,7 @@ class StatusLightHandler @Inject constructor(
         val bgSource = activePlugin.activeBgSource
         handleAge(
             cannulaAge,
-            TherapyEvent.Type.CANNULA_CHANGE,
+            TE.Type.CANNULA_CHANGE,
             app.aaps.core.utils.R.string.key_statuslights_cage_warning,
             48.0,
             app.aaps.core.utils.R.string.key_statuslights_cage_critical,
@@ -63,7 +63,7 @@ class StatusLightHandler @Inject constructor(
         )
         handleAge(
             insulinAge,
-            TherapyEvent.Type.INSULIN_CHANGE,
+            TE.Type.INSULIN_CHANGE,
             app.aaps.core.utils.R.string.key_statuslights_iage_warning,
             72.0,
             app.aaps.core.utils.R.string.key_statuslights_iage_critical,
@@ -71,7 +71,7 @@ class StatusLightHandler @Inject constructor(
         )
         handleAge(
             sensorAge,
-            TherapyEvent.Type.SENSOR_CHANGE,
+            TE.Type.SENSOR_CHANGE,
             app.aaps.core.utils.R.string.key_statuslights_sage_warning,
             216.0,
             app.aaps.core.utils.R.string.key_statuslights_sage_critical,
@@ -80,7 +80,7 @@ class StatusLightHandler @Inject constructor(
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
             handleAge(
                 batteryAge,
-                TherapyEvent.Type.PUMP_BATTERY_CHANGE,
+                TE.Type.PUMP_BATTERY_CHANGE,
                 app.aaps.core.utils.R.string.key_statuslights_bage_warning,
                 216.0,
                 app.aaps.core.utils.R.string.key_statuslights_bage_critical,
@@ -126,10 +126,10 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
-    private fun handleAge(view: TextView?, type: TherapyEvent.Type, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
+    private fun handleAge(view: TextView?, type: TE.Type, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
         val warn = sp.getDouble(warnSettings, defaultWarnThreshold)
         val urgent = sp.getDouble(urgentSettings, defaultUrgentThreshold)
-        val therapyEvent = repository.getLastTherapyRecordUpToNow(type).blockingGet()
+        val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(type).blockingGet()
         if (therapyEvent is ValueWrapper.Existing) {
             warnColors.setColorByAge(view, therapyEvent.value, warn, urgent)
             view?.text = therapyEvent.value.age(rh.shortTextMode(), rh, dateUtil)
@@ -163,8 +163,8 @@ class StatusLightHandler @Inject constructor(
 
     private fun handleUsage(view: TextView?, units: String) {
         handler.post {
-            val therapyEvent = repository.getLastTherapyRecordUpToNow(TherapyEvent.Type.CANNULA_CHANGE).blockingGet()
-            var usage =
+            val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE).blockingGet()
+            val usage =
                 if (therapyEvent is ValueWrapper.Existing) {
                     tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
                 } else 0.0
@@ -174,7 +174,7 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
-    private fun TherapyEvent.age(useShortText: Boolean, rh: ResourceHelper, dateUtil: DateUtil): String {
+    private fun TE.age(useShortText: Boolean, rh: ResourceHelper, dateUtil: DateUtil): String {
         val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
         var days = " " + rh.gs(app.aaps.core.interfaces.R.string.days) + " "
         var hours = " " + rh.gs(app.aaps.core.interfaces.R.string.hours) + " "

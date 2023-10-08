@@ -25,10 +25,6 @@ fun ProfileSwitch.getCustomizedName(decimalFormatter: DecimalFormatter): String 
     return name
 }
 
-fun ProfileSwitch.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): ProfileSwitch.GlucoseUnit =
-    if (units == GlucoseUnit.MGDL) ProfileSwitch.GlucoseUnit.MGDL
-    else ProfileSwitch.GlucoseUnit.MMOL
-
 /**
  * Pure profile doesn't contain timestamp, percentage, timeshift, profileName
  */

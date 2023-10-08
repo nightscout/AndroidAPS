@@ -1,6 +1,7 @@
 package app.aaps.database.impl.transactions
 
 import app.aaps.database.entities.TherapyEvent
+import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.embedments.InterfaceIDs
 
 class InsertTherapyEventAnnouncementTransaction(
@@ -16,7 +17,7 @@ class InsertTherapyEventAnnouncementTransaction(
                 enteredBy = "AAPS",
                 glucose = null,
                 glucoseType = null,
-                glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+                glucoseUnit = GlucoseUnit.MGDL,
                 interfaceIDs_backing = InterfaceIDs(
                     pumpId = pumpId,
                     pumpType = pumpType,

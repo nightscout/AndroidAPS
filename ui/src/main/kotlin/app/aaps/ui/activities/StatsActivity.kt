@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.widget.TextView
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -14,8 +16,6 @@ import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.activityMonitor.ActivityMonitor

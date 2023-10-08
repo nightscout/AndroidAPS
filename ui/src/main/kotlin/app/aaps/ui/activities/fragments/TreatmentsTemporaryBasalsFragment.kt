@@ -16,6 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -38,9 +41,6 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.entities.interfaces.end
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
@@ -295,11 +295,13 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
                         }
                         if (isFakeExtended && extendedBolus != null) {
                             uel.log(
-                                Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(extendedBolus.timestamp),
-                                ValueWithUnit.Insulin(extendedBolus.amount),
-                                ValueWithUnit.UnitPerHour(extendedBolus.rate),
-                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                                action = Action.EXTENDED_BOLUS_REMOVED, source = Sources.Treatments,
+                                listValues = listOf(
+                                    ValueWithUnit.Timestamp(extendedBolus.timestamp),
+                                    ValueWithUnit.Insulin(extendedBolus.amount),
+                                    ValueWithUnit.UnitPerHour(extendedBolus.rate),
+                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(extendedBolus.duration).toInt())
+                                )
                             )
                             disposable += repository.runTransactionForResult(InvalidateExtendedBolusTransaction(extendedBolus.id))
                                 .subscribe(
@@ -307,10 +309,12 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
                                     { aapsLogger.error(LTag.DATABASE, "Error while invalidating extended bolus", it) })
                         } else if (!isFakeExtended) {
                             uel.log(
-                                Action.TEMP_BASAL_REMOVED, Sources.Treatments,
-                                ValueWithUnit.Timestamp(tempBasal.timestamp),
-                                if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
-                                ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
+                                action = Action.TEMP_BASAL_REMOVED, source = Sources.Treatments,
+                                listValues = listOf(
+                                    ValueWithUnit.Timestamp(tempBasal.timestamp),
+                                    if (tempBasal.isAbsolute) ValueWithUnit.UnitPerHour(tempBasal.rate) else ValueWithUnit.Percent(tempBasal.rate.toInt()),
+                                    ValueWithUnit.Minute(T.msecs(tempBasal.duration).mins().toInt())
+                                )
                             )
                             disposable += repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(tempBasal.id))
                                 .subscribe(

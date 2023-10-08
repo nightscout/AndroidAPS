@@ -1,7 +1,11 @@
 package app.aaps.implementation.alerts
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,10 +22,6 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -69,7 +69,7 @@ class LocalAlertUtilsImpl @Inject constructor(
                     it.soundId =
                         app.aaps.core.ui.R.raw.alarm
                 }))
-                uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(app.aaps.core.ui.R.string.pump_unreachable), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
+                uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(app.aaps.core.ui.R.string.pump_unreachable), ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                 if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true))
                     disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(rh.gs(app.aaps.core.ui.R.string.pump_unreachable))).subscribe()
             }
@@ -131,7 +131,7 @@ class LocalAlertUtilsImpl @Inject constructor(
             n.soundId = app.aaps.core.ui.R.raw.alarm
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
-            uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(app.aaps.core.ui.R.string.missed_bg_readings), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
+            uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(app.aaps.core.ui.R.string.missed_bg_readings), ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true)) {
                 disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(n.text)).subscribe()
             }

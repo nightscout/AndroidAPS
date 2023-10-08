@@ -3,10 +3,8 @@ package app.aaps.database.impl
 import androidx.room.TypeConverter
 import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
@@ -14,6 +12,7 @@ import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.entities.data.Block
+import app.aaps.database.entities.data.GlucoseUnit
 import app.aaps.database.entities.data.TargetBlock
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.serialisation.SealedClassHelper
@@ -88,22 +87,10 @@ class Converters {
     fun toGlucoseType(meterType: String?) = meterType?.let { TherapyEvent.MeterType.valueOf(it) }
 
     @TypeConverter
-    fun fromProfileSwitchGlucoseUnit(glucoseUnit: ProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
+    fun fromGlucoseUnit(glucoseUnit: GlucoseUnit?) = glucoseUnit?.name
 
     @TypeConverter
-    fun toProfileSwitchGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { ProfileSwitch.GlucoseUnit.valueOf(it) }
-
-    @TypeConverter
-    fun fromEffectiveProfileSwitchGlucoseUnit(glucoseUnit: EffectiveProfileSwitch.GlucoseUnit?) = glucoseUnit?.name
-
-    @TypeConverter
-    fun toEffectiveProfileSwitchGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { EffectiveProfileSwitch.GlucoseUnit.valueOf(it) }
-
-    @TypeConverter
-    fun fromTherapyGlucoseUnit(glucoseUnit: TherapyEvent.GlucoseUnit?) = glucoseUnit?.name
-
-    @TypeConverter
-    fun toTherapyGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { TherapyEvent.GlucoseUnit.valueOf(it) }
+    fun toGlucoseUnit(glucoseUnit: String?) = glucoseUnit?.let { GlucoseUnit.valueOf(it) }
 
     @TypeConverter
     fun fromPumpType(pumpType: InterfaceIDs.PumpType?) = pumpType?.name

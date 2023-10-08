@@ -53,12 +53,6 @@ data class GlucoseValue(
             noise == other.noise &&
             sourceSensor == other.sourceSensor
 
-    fun onlyNsIdAdded(previous: GlucoseValue): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
     enum class TrendArrow {
         NONE,
         TRIPLE_UP,

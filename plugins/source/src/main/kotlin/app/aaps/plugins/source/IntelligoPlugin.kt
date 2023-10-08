@@ -1,5 +1,6 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -7,27 +8,23 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.toDb
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
 import app.aaps.shared.impl.extensions.safeGetInstalledPackages
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -41,9 +38,8 @@ class IntelligoPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val sp: SP,
     private val context: Context,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil,
-    private val uel: UserEntryLogger,
     private val fabricPrivacy: FabricPrivacy
 ) : PluginBase(
     PluginDescription()
@@ -89,6 +85,7 @@ class IntelligoPlugin @Inject constructor(
         disposable.clear()
     }
 
+    @SuppressLint("CheckResult")
     private fun handleNewData() {
         if (!isEnabled()) return
 
@@ -102,8 +99,8 @@ class IntelligoPlugin @Inject constructor(
         }
 
         context.contentResolver.query(contentUri, null, null, null, null)?.let { cr ->
-            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
-            val calibrations = mutableListOf<CgmSourceTransaction.Calibration>()
+            val glucoseValues = mutableListOf<GV>()
+            val calibrations = mutableListOf<PersistenceLayer.Calibration>()
             cr.moveToFirst()
 
             while (!cr.isAfterLast) {
@@ -130,20 +127,20 @@ class IntelligoPlugin @Inject constructor(
                 }
 
                 if (curr != 0.0)
-                    glucoseValues += TransactionGlucoseValue(
+                    glucoseValues += GV(
                         timestamp = timestamp,
                         value = value * Constants.MMOLL_TO_MGDL,
                         raw = 0.0,
                         noise = null,
-                        trendArrow = TrendArrow.NONE.toDb(),
-                        sourceSensor = SourceSensor.INTELLIGO_NATIVE.toDb()
+                        trendArrow = TrendArrow.NONE,
+                        sourceSensor = SourceSensor.INTELLIGO_NATIVE
                     )
                 else
                     calibrations.add(
-                        CgmSourceTransaction.Calibration(
+                        PersistenceLayer.Calibration(
                             timestamp = timestamp,
                             value = value,
-                            glucoseUnit = TherapyEvent.GlucoseUnit.MMOL
+                            glucoseUnit = GlucoseUnit.MMOL
                         )
                     )
                 sp.putLong(R.string.key_last_processed_intelligo_timestamp, timestamp)
@@ -152,28 +149,8 @@ class IntelligoPlugin @Inject constructor(
             cr.close()
 
             if (glucoseValues.isNotEmpty() || calibrations.isNotEmpty())
-                repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, calibrations, null))
-                    .doOnError {
-                        aapsLogger.error(LTag.DATABASE, "Error while saving values from IntelliGO App", it)
-                    }
+                persistenceLayer.insertCgmSourceData(Sources.Intelligo, glucoseValues, calibrations, null)
                     .blockingGet()
-                    .also { savedValues ->
-                        savedValues.inserted.forEach {
-                            aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                        }
-                        savedValues.calibrationsInserted.forEach { calibration ->
-                            calibration.glucose?.let { glucoseValue ->
-                                uel.log(
-                                    UserEntry.Action.CALIBRATION,
-                                    UserEntry.Sources.Dexcom,
-                                    ValueWithUnit.Timestamp(calibration.timestamp),
-                                    ValueWithUnit.TherapyEventType(calibration.type),
-                                    ValueWithUnit.fromGlucoseUnit(glucoseValue, calibration.glucoseUnit.toString)
-                                )
-                            }
-                            aapsLogger.debug(LTag.DATABASE, "Inserted calibration $calibration")
-                        }
-                    }
         }
     }
 

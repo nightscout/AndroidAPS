@@ -226,14 +226,14 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairFood                   -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairGlucoseValue           -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairTherapyEvent           -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairGlucoseValue           -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairTherapyEvent           -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairOfflineEvent           -> dataPair.value.interfaceIDs.nightscoutId
-            else                                           -> throw IllegalStateException()
+            else                                           -> error("Unsupported data type")
         }
         when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(false, dateUtil)

@@ -18,7 +18,10 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.UE
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -49,9 +52,6 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dialogs.TwoMessagesAlertDialog
 import app.aaps.core.ui.dialogs.WarningDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.plugins.configuration.maintenance.data.PrefFileNotFoundError
@@ -437,7 +437,7 @@ class ImportExportPrefsImpl @Inject constructor(
             return ret
         }
 
-        private fun saveCsv(file: File, userEntries: List<UserEntry>) {
+        private fun saveCsv(file: File, userEntries: List<UE>) {
             try {
                 val contents = userEntryPresentationHelper.userEntriesToCsv(userEntries)
                 storage.putFileContents(file, contents)
@@ -447,6 +447,5 @@ class ImportExportPrefsImpl @Inject constructor(
                 throw PrefIOError(file.absolutePath)
             }
         }
-
     }
 }

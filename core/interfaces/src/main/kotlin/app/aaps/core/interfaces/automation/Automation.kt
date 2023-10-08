@@ -6,7 +6,7 @@ interface Automation {
     fun processEvent(someEvent: AutomationEvent)
 
     /**
-     * Generate reminder via [info.nightscout.interfaces.utils.TimerUtil]
+     * Generate reminder via [app.aaps.plugins.automation.ui.TimerUtil]
      *
      */
     fun scheduleAutomationEventBolusReminder()
@@ -18,7 +18,7 @@ interface Automation {
     fun removeAutomationEventBolusReminder()
 
     /**
-     * Generate reminder via [info.nightscout.interfaces.utils.TimerUtil]
+     * Generate reminder via [app.aaps.plugins.automation.ui.TimerUtil]
      *
      * @param seconds seconds to the future
      */

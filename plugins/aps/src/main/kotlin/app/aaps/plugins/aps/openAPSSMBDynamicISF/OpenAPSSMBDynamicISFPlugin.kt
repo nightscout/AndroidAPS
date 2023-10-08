@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -18,7 +19,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -43,7 +43,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     profiler: Profiler,
     sp: SP,
     dateUtil: DateUtil,
-    repository: AppRepository,
+    persistenceLayer: PersistenceLayer,
     glucoseStatusProvider: GlucoseStatusProvider,
     bgQualityCheck: BgQualityCheck,
     tddCalculator: TddCalculator
@@ -61,7 +61,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     profiler,
     sp,
     dateUtil,
-    repository,
+    persistenceLayer,
     glucoseStatusProvider,
     bgQualityCheck,
     tddCalculator

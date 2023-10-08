@@ -2,9 +2,13 @@ package app.aaps.core.main.wizard
 
 import android.content.Context
 import android.text.Spanned
+import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
@@ -41,10 +45,6 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.TemporaryTarget
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import java.util.LinkedList
@@ -132,7 +132,7 @@ class BolusWizard @Inject constructor(
     // Input
     lateinit var profile: Profile
     lateinit var profileName: String
-    var tempTarget: TemporaryTarget? = null
+    var tempTarget: TT? = null
     var carbs: Int = 0
     var cob: Double = 0.0
     var bg: Double = 0.0
@@ -155,7 +155,7 @@ class BolusWizard @Inject constructor(
     fun doCalc(
         profile: Profile,
         profileName: String,
-        tempTarget: TemporaryTarget?,
+        tempTarget: TT?,
         carbs: Int,
         cob: Double,
         bg: Double,
@@ -403,11 +403,13 @@ class BolusWizard @Inject constructor(
                 bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
                 uel.log(
-                    Action.BOLUS_ADVISOR,
-                    if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
-                    notes,
-                    ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
-                    ValueWithUnit.Insulin(insulinAfterConstraints)
+                    action = Action.BOLUS_ADVISOR,
+                    source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                    note = notes,
+                    listValues = listOf(
+                        ValueWithUnit.TEType(eventType.toDBbEventType()),
+                        ValueWithUnit.Insulin(insulinAfterConstraints)
+                    )
                 )
                 if (insulin > 0) {
                     commandQueue.bolus(this, object : Callback() {
@@ -494,12 +496,16 @@ class BolusWizard @Inject constructor(
                             carbs == 0.0                   -> Action.BOLUS
                             else                           -> Action.TREATMENT
                         }
-                        uel.log(action, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
-                                notes,
-                                ValueWithUnit.TherapyEventType(eventType.toDBbEventType()),
+                        uel.log(
+                            action = action,
+                            source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
+                            note = notes,
+                            listValues = listOf(
+                                ValueWithUnit.TEType(eventType.toDBbEventType()),
                                 ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
                                 ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
                                 ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })
+                        )
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {

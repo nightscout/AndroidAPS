@@ -1,9 +1,11 @@
 package app.aaps.plugins.aps.autotune
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.iob.Iob
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
@@ -20,7 +22,6 @@ import app.aaps.core.utils.MidnightUtils
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.ExtendedBolus
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs
@@ -37,6 +38,7 @@ import kotlin.math.ceil
 open class AutotuneIob @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
     private val dateUtil: DateUtil,
@@ -47,7 +49,7 @@ open class AutotuneIob @Inject constructor(
     private var dia: Double = Constants.defaultDIA
     var boluses: ArrayList<Bolus> = ArrayList()
     var meals = ArrayList<Carbs>()
-    lateinit var glucose: List<GlucoseValue> // newest at index 0
+    lateinit var glucose: List<GV> // newest at index 0
     private lateinit var tempBasals: ArrayList<TemporaryBasal>
     var startBG: Long = 0
     private var endBG: Long = 0
@@ -90,7 +92,7 @@ open class AutotuneIob @Inject constructor(
     }
 
     private fun initializeBgReadings(from: Long, to: Long) {
-        glucose = repository.compatGetBgReadingsDataFromTime(from, to, false).blockingGet()
+        glucose = persistenceLayer.getBgReadingsDataFromTime(from, to, false).blockingGet()
     }
 
     //nsTreatment is used only for export data, meals is used in AutotunePrep

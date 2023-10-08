@@ -1,23 +1,22 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CgmSourceTransaction
-import app.aaps.database.transactions.TransactionGlucoseValue
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -49,33 +48,25 @@ class TomatoPlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var tomatoPlugin: TomatoPlugin
         @Inject lateinit var sp: SP
-        @Inject lateinit var repository: AppRepository
+        @Inject lateinit var persistenceLayer: PersistenceLayer
 
-        @Suppress("SpellCheckingInspection")
+        @SuppressLint("CheckResult")
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!tomatoPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
-            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
-            glucoseValues += TransactionGlucoseValue(
+            val glucoseValues = mutableListOf<GV>()
+            glucoseValues += GV(
                 timestamp = inputData.getLong("com.fanqies.tomatofn.Extras.Time", 0),
                 value = inputData.getDouble("com.fanqies.tomatofn.Extras.BgEstimate", 0.0),
                 raw = 0.0,
                 noise = null,
-                trendArrow = TrendArrow.NONE.toDb(),
-                sourceSensor = SourceSensor.LIBRE_1_TOMATO.toDb()
+                trendArrow = TrendArrow.NONE,
+                sourceSensor = SourceSensor.LIBRE_1_TOMATO
             )
-            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving values from Tomato App", it)
-                    ret = Result.failure(workDataOf("Error" to it.toString()))
-                }
+            persistenceLayer.insertCgmSourceData(Sources.Tomato, glucoseValues, emptyList(), null)
+                .doOnError { ret = Result.failure(workDataOf("Error" to it.toString())) }
                 .blockingGet()
-                .also { savedValues ->
-                    savedValues.inserted.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                    }
-                }
             return ret
         }
     }

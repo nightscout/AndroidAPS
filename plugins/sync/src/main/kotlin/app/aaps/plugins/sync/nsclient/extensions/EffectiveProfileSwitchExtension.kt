@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.EffectiveProfileSwitch
@@ -61,7 +61,7 @@ fun EffectiveProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: 
         isfBlocks = profileSealed.isfBlocks,
         icBlocks = profileSealed.icBlocks,
         targetBlocks = profileSealed.targetBlocks,
-        glucoseUnit = EffectiveProfileSwitch.GlucoseUnit.fromConstant(profileSealed.units),
+        glucoseUnit = profileSealed.units.toDb(),
         originalProfileName = originalProfileName,
         originalCustomizedName = originalCustomizedName,
         originalTimeshift = originalTimeshift,
@@ -77,9 +77,5 @@ fun EffectiveProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: 
         it.interfaceIDs.pumpSerial = pumpSerial
     }
 }
-
-fun EffectiveProfileSwitch.GlucoseUnit.Companion.fromConstant(units: GlucoseUnit): EffectiveProfileSwitch.GlucoseUnit =
-    if (units == GlucoseUnit.MGDL) EffectiveProfileSwitch.GlucoseUnit.MGDL
-    else EffectiveProfileSwitch.GlucoseUnit.MMOL
 
 fun JSONObject.isEffectiveProfileSwitch() = has("originalProfileName")

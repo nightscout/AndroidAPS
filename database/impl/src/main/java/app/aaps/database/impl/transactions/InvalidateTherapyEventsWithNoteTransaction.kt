@@ -2,7 +2,7 @@ package app.aaps.database.impl.transactions
 
 import app.aaps.database.entities.TherapyEvent
 
-class InvalidateAAPSStartedTherapyEventTransaction(private val note: String) : Transaction<InvalidateAAPSStartedTherapyEventTransaction.TransactionResult>() {
+class InvalidateTherapyEventsWithNoteTransaction(private val note: String) : Transaction<InvalidateTherapyEventsWithNoteTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()

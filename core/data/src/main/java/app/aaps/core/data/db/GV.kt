@@ -8,7 +8,7 @@ data class GV(
     var dateCreated: Long = -1,
     var isValid: Boolean = true,
     var referenceId: Long? = null,
-    var interfaceIDs_backing: InterfaceIDs? = InterfaceIDs(),
+    var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var raw: Double?,

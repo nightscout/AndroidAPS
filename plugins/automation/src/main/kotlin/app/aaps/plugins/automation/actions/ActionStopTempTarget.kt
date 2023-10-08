@@ -1,12 +1,11 @@
 package app.aaps.plugins.automation.actions
 
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.UserEntry.Sources
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.plugins.automation.R
@@ -30,7 +29,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(dateUtil.now()))
             .subscribe({ result ->
-                           uel.log(UserEntry.Action.CANCEL_TT, Sources.Automation, title)
+                           uel.log(app.aaps.core.data.ue.Action.CANCEL_TT, Sources.Automation, title)
                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated temp target $it") }
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)

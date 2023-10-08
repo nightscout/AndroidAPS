@@ -2,8 +2,8 @@ package app.aaps.plugins.sync.tidepool.elements
 
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.database.entities.TherapyEvent
-import app.aaps.plugins.sync.nsclient.extensions.toMainUnit
 import com.google.gson.annotations.Expose
 import java.util.LinkedList
 import java.util.UUID
@@ -24,7 +24,7 @@ class BloodGlucoseElement(therapyEvent: TherapyEvent, dateUtil: DateUtil, profil
         type = "smbg"
         subType = "manual"
         value = if (therapyEvent.glucose != null)
-            profileUtil.convertToMgdl(therapyEvent.glucose!!, therapyEvent.glucoseUnit.toMainUnit()).toInt()
+            profileUtil.convertToMgdl(therapyEvent.glucose!!, therapyEvent.glucoseUnit.fromDb()).toInt()
         else 0
     }
 

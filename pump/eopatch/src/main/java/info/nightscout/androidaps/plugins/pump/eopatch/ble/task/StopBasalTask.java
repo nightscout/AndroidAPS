@@ -2,11 +2,14 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ble.task;
 
 import android.os.SystemClock;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.ue.Action;
+import app.aaps.core.data.ue.Sources;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.logging.UserEntryLogger;
@@ -14,7 +17,6 @@ import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.queue.Callback;
 import app.aaps.core.interfaces.queue.Command;
 import app.aaps.core.interfaces.queue.CommandQueue;
-import app.aaps.core.interfaces.userEntry.UserEntryMapper;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalStopResponse;
@@ -34,7 +36,7 @@ public class StopBasalTask extends TaskBase {
 
     private final BasalStop BASAL_STOP;
     private final BehaviorSubject<Boolean> bolusCheckSubject = BehaviorSubject.create();
-    private final BehaviorSubject<Boolean> exbolusCheckSubject = BehaviorSubject.create();
+    private final BehaviorSubject<Boolean> extBolusCheckSubject = BehaviorSubject.create();
     private final BehaviorSubject<Boolean> basalCheckSubject = BehaviorSubject.create();
 
     @Inject
@@ -44,41 +46,41 @@ public class StopBasalTask extends TaskBase {
         BASAL_STOP = new BasalStop();
     }
 
-    private Observable<Boolean> getBolusSebject() {
+    private Observable<Boolean> getBolusSubject() {
         return bolusCheckSubject.hide();
     }
 
-    private Observable<Boolean> getExbolusSebject() {
-        return exbolusCheckSubject.hide();
+    private Observable<Boolean> getExtBolusSubject() {
+        return extBolusCheckSubject.hide();
     }
 
-    private Observable<Boolean> getBasalSebject() {
+    private Observable<Boolean> getBasalSubject() {
         return basalCheckSubject.hide();
     }
 
     public Single<BasalStopResponse> stop() {
 
         if (commandQueue.isRunning(Command.CommandType.BOLUS)) {
-            uel.log(UserEntryMapper.Action.CANCEL_BOLUS, UserEntryMapper.Sources.EOPatch2);
+            uel.log(Action.CANCEL_BOLUS, Sources.EOPatch2, "", new ArrayList<>());
             commandQueue.cancelAllBoluses(null);
             SystemClock.sleep(650);
         }
         bolusCheckSubject.onNext(true);
 
         if (pumpSync.expectedPumpState().getExtendedBolus() != null) {
-            uel.log(UserEntryMapper.Action.CANCEL_EXTENDED_BOLUS, UserEntryMapper.Sources.EOPatch2);
+            uel.log(Action.CANCEL_EXTENDED_BOLUS, Sources.EOPatch2, "", new ArrayList<>());
             commandQueue.cancelExtended(new Callback() {
                 @Override
                 public void run() {
-                    exbolusCheckSubject.onNext(true);
+                    extBolusCheckSubject.onNext(true);
                 }
             });
         } else {
-            exbolusCheckSubject.onNext(true);
+            extBolusCheckSubject.onNext(true);
         }
 
         if (pumpSync.expectedPumpState().getTemporaryBasal() != null) {
-            uel.log(UserEntryMapper.Action.CANCEL_TEMP_BASAL, UserEntryMapper.Sources.EOPatch2);
+            uel.log(Action.CANCEL_TEMP_BASAL, Sources.EOPatch2, "", new ArrayList<>());
             commandQueue.cancelTempBasal(true, new Callback() {
                 @Override
                 public void run() {
@@ -89,8 +91,8 @@ public class StopBasalTask extends TaskBase {
             basalCheckSubject.onNext(true);
         }
 
-        return Observable.zip(getBolusSebject(), getExbolusSebject(), getBasalSebject(), (bolusReady, exbolusReady, basalReady)
-                        -> (bolusReady && exbolusReady && basalReady))
+        return Observable.zip(getBolusSubject(), getExtBolusSubject(), getBasalSubject(), (bolusReady, extBolusReady, basalReady)
+                        -> (bolusReady && extBolusReady && basalReady))
                 .filter(ready -> ready)
                 .flatMap(v -> isReady())
                 .concatMapSingle(v -> BASAL_STOP.stop())
@@ -108,7 +110,7 @@ public class StopBasalTask extends TaskBase {
                     .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
                     .subscribe(v -> {
                         bolusCheckSubject.onNext(false);
-                        exbolusCheckSubject.onNext(false);
+                        extBolusCheckSubject.onNext(false);
                         basalCheckSubject.onNext(false);
                     });
         }

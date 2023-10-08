@@ -8,16 +8,16 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import app.aaps.core.data.db.TE
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.database.entities.TherapyEvent
 
 class InputCarePortalMenu(private val rh: ResourceHelper) : Element {
 
-    enum class EventType(val therapyEventType: TherapyEvent.Type) {
-        NOTE(TherapyEvent.Type.NOTE),
-        EXERCISE(TherapyEvent.Type.EXERCISE),
-        QUESTION(TherapyEvent.Type.QUESTION),
-        ANNOUNCEMENT(TherapyEvent.Type.ANNOUNCEMENT);
+    enum class EventType(val therapyEventType: TE.Type) {
+        NOTE(TE.Type.NOTE),
+        EXERCISE(TE.Type.EXERCISE),
+        QUESTION(TE.Type.QUESTION),
+        ANNOUNCEMENT(TE.Type.ANNOUNCEMENT);
 
         @get:StringRes val stringResWithValue: Int
             get() = when (this) {
@@ -46,7 +46,7 @@ class InputCarePortalMenu(private val rh: ResourceHelper) : Element {
 
             fun labels(rh: ResourceHelper): List<String> {
                 val list: MutableList<String> = ArrayList()
-                for (e in values()) {
+                for (e in entries) {
                     list.add(rh.gs(e.stringRes))
                 }
                 return list
@@ -72,7 +72,7 @@ class InputCarePortalMenu(private val rh: ResourceHelper) : Element {
 
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                        value = EventType.values()[position]
+                        value = EventType.entries.toTypedArray()[position]
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {}

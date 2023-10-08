@@ -16,6 +16,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -38,9 +41,6 @@ import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.UserEntry.Action
-import app.aaps.database.entities.UserEntry.Sources
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
 import app.aaps.ui.R
@@ -215,10 +215,12 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                             rh.gs(app.aaps.core.ui.R.string.copytolocalprofile) + "\n" + profileSwitch.getCustomizedName(decimalFormatter) + "\n" + dateUtil.dateAndTimeString(profileSwitch.timestamp),
                             Runnable {
                                 uel.log(
-                                    Action.PROFILE_SWITCH_CLONED, Sources.Treatments,
-                                    profileSwitch.getCustomizedName(decimalFormatter) + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_"),
-                                    ValueWithUnit.Timestamp(profileSwitch.timestamp),
-                                    ValueWithUnit.SimpleString(profileSwitch.profileName)
+                                    action = Action.PROFILE_SWITCH_CLONED, source = Sources.Treatments,
+                                    note = profileSwitch.getCustomizedName(decimalFormatter) + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_"),
+                                    listValues = listOf(
+                                        ValueWithUnit.Timestamp(profileSwitch.timestamp),
+                                        ValueWithUnit.SimpleString(profileSwitch.profileName)
+                                    )
                                 )
                                 val nonCustomized = profileSealed.convertToNonCustomizedProfile(dateUtil)
                                 activePlugin.activeProfileSource.addProfile(

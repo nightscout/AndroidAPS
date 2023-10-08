@@ -14,6 +14,9 @@ import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -41,8 +44,6 @@ import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.entities.OfflineEvent
-import app.aaps.database.entities.UserEntry
-import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
@@ -282,28 +283,28 @@ class LoopDialog : DaggerDialogFragment() {
     private fun onClick(v: View): Boolean {
         when (v.id) {
             R.id.overview_closeloop                       -> {
-                uel.log(UserEntry.Action.CLOSED_LOOP_MODE, UserEntry.Sources.LoopDialog)
+                uel.log(Action.CLOSED_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop                         -> {
-                uel.log(UserEntry.Action.LGS_LOOP_MODE, UserEntry.Sources.LoopDialog)
+                uel.log(Action.LGS_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop                        -> {
-                uel.log(UserEntry.Action.OPEN_LOOP_MODE, UserEntry.Sources.LoopDialog)
+                uel.log(Action.OPEN_LOOP_MODE, Sources.LoopDialog)
                 sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_disable                         -> {
-                uel.log(UserEntry.Action.LOOP_DISABLED, UserEntry.Sources.LoopDialog)
+                uel.log(Action.LOOP_DISABLED, Sources.LoopDialog)
                 (loop as PluginBase).setPluginEnabled(PluginType.LOOP, false)
                 (loop as PluginBase).setFragmentVisible(PluginType.LOOP, false)
                 configBuilder.storeSettings("DisablingLoop")
@@ -326,7 +327,7 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_enable                          -> {
-                uel.log(UserEntry.Action.LOOP_ENABLED, UserEntry.Sources.LoopDialog)
+                uel.log(Action.LOOP_ENABLED, Sources.LoopDialog)
                 (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
                 (loop as PluginBase).setFragmentVisible(PluginType.LOOP, true)
                 configBuilder.storeSettings("EnablingLoop")
@@ -341,7 +342,7 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_resume, R.id.overview_reconnect -> {
-                uel.log(if (v.id == R.id.overview_resume) UserEntry.Action.RESUME else UserEntry.Action.RECONNECT, UserEntry.Sources.LoopDialog)
+                uel.log(if (v.id == R.id.overview_resume) Action.RESUME else Action.RECONNECT, Sources.LoopDialog)
                 disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
                     .subscribe({ result ->
                                    result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
@@ -361,28 +362,28 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_suspend_1h                      -> {
-                uel.log(UserEntry.Action.SUSPEND, UserEntry.Sources.LoopDialog, ValueWithUnit.Hour(1))
+                uel.log(Action.SUSPEND, Sources.LoopDialog, value = ValueWithUnit.Hour(1))
                 loop.suspendLoop(T.hours(1).mins().toInt())
                 rxBus.send(EventRefreshOverview("suspend_menu"))
                 return true
             }
 
             R.id.overview_suspend_2h                      -> {
-                uel.log(UserEntry.Action.SUSPEND, UserEntry.Sources.LoopDialog, ValueWithUnit.Hour(2))
+                uel.log(Action.SUSPEND, Sources.LoopDialog, value = ValueWithUnit.Hour(2))
                 loop.suspendLoop(T.hours(2).mins().toInt())
                 rxBus.send(EventRefreshOverview("suspend_menu"))
                 return true
             }
 
             R.id.overview_suspend_3h                      -> {
-                uel.log(UserEntry.Action.SUSPEND, UserEntry.Sources.LoopDialog, ValueWithUnit.Hour(3))
+                uel.log(Action.SUSPEND, Sources.LoopDialog, value = ValueWithUnit.Hour(3))
                 loop.suspendLoop(T.hours(3).mins().toInt())
                 rxBus.send(EventRefreshOverview("suspend_menu"))
                 return true
             }
 
             R.id.overview_suspend_10h                     -> {
-                uel.log(UserEntry.Action.SUSPEND, UserEntry.Sources.LoopDialog, ValueWithUnit.Hour(10))
+                uel.log(Action.SUSPEND, Sources.LoopDialog, value = ValueWithUnit.Hour(10))
                 loop.suspendLoop(T.hours(10).mins().toInt())
                 rxBus.send(EventRefreshOverview("suspend_menu"))
                 return true
@@ -390,7 +391,7 @@ class LoopDialog : DaggerDialogFragment() {
 
             R.id.overview_disconnect_15m                  -> {
                 profileFunction.getProfile()?.let { profile ->
-                    uel.log(UserEntry.Action.DISCONNECT, UserEntry.Sources.LoopDialog, ValueWithUnit.Minute(15))
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, value = ValueWithUnit.Minute(15))
                     loop.goToZeroTemp(T.mins(15).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                     rxBus.send(EventRefreshOverview("suspend_menu"))
                 }
@@ -399,7 +400,7 @@ class LoopDialog : DaggerDialogFragment() {
 
             R.id.overview_disconnect_30m                  -> {
                 profileFunction.getProfile()?.let { profile ->
-                    uel.log(UserEntry.Action.DISCONNECT, UserEntry.Sources.LoopDialog, ValueWithUnit.Minute(30))
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, value = ValueWithUnit.Minute(30))
                     loop.goToZeroTemp(T.mins(30).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                     rxBus.send(EventRefreshOverview("suspend_menu"))
                 }
@@ -408,7 +409,7 @@ class LoopDialog : DaggerDialogFragment() {
 
             R.id.overview_disconnect_1h                   -> {
                 profileFunction.getProfile()?.let { profile ->
-                    uel.log(UserEntry.Action.DISCONNECT, UserEntry.Sources.LoopDialog, ValueWithUnit.Hour(1))
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, value = ValueWithUnit.Hour(1))
                     loop.goToZeroTemp(T.hours(1).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                     rxBus.send(EventRefreshOverview("suspend_menu"))
                 }
@@ -418,7 +419,7 @@ class LoopDialog : DaggerDialogFragment() {
 
             R.id.overview_disconnect_2h                   -> {
                 profileFunction.getProfile()?.let { profile ->
-                    uel.log(UserEntry.Action.DISCONNECT, UserEntry.Sources.LoopDialog, ValueWithUnit.Hour(2))
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, value = ValueWithUnit.Hour(2))
                     loop.goToZeroTemp(T.hours(2).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                     rxBus.send(EventRefreshOverview("suspend_menu"))
                 }
@@ -427,7 +428,7 @@ class LoopDialog : DaggerDialogFragment() {
 
             R.id.overview_disconnect_3h                   -> {
                 profileFunction.getProfile()?.let { profile ->
-                    uel.log(UserEntry.Action.DISCONNECT, UserEntry.Sources.LoopDialog, ValueWithUnit.Hour(3))
+                    uel.log(Action.DISCONNECT, Sources.LoopDialog, value = ValueWithUnit.Hour(3))
                     loop.goToZeroTemp(T.hours(3).mins().toInt(), profile, OfflineEvent.Reason.DISCONNECT_PUMP)
                     rxBus.send(EventRefreshOverview("suspend_menu"))
                 }

@@ -1,11 +1,11 @@
 package app.aaps.implementation.pump
 
 import android.widget.TextView
+import app.aaps.core.data.db.TE
 import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.isOlderThan
-import app.aaps.database.entities.TherapyEvent
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -37,7 +37,7 @@ import javax.inject.Singleton
         )
     }
 
-    override fun setColorByAge(view: TextView?, therapyEvent: TherapyEvent, warnThreshold: Double, urgentThreshold: Double) {
+    override fun setColorByAge(view: TextView?, therapyEvent: TE, warnThreshold: Double, urgentThreshold: Double) {
         view?.setTextColor(
             rh.gac(
                 view.context, when {

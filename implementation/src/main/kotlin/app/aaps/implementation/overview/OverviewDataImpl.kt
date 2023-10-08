@@ -5,10 +5,12 @@ import androidx.annotation.AttrRes
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import app.aaps.core.data.aps.AutosensData
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -20,7 +22,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.main.R
 import app.aaps.core.main.extensions.convertedToPercent
-import app.aaps.core.main.extensions.fromDb
+import app.aaps.core.main.extensions.fromGv
 import app.aaps.core.main.extensions.isInProgress
 import app.aaps.core.main.extensions.toStringFull
 import app.aaps.core.main.extensions.toStringShort
@@ -28,7 +30,6 @@ import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.round
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
@@ -55,6 +56,7 @@ class OverviewDataImpl @Inject constructor(
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
     private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter,
     private val iobCobCalculator: Lazy<IobCobCalculator>
 ) : OverviewData {
@@ -143,8 +145,8 @@ class OverviewDataImpl @Inject constructor(
 
     override fun lastBg(): InMemoryGlucoseValue? =
         iobCobCalculator.get().ads.bucketedData?.firstOrNull()
-            ?: repository.getLastGlucoseValueWrapped().blockingGet().let { gvWrapped ->
-                if (gvWrapped is ValueWrapper.Existing) InMemoryGlucoseValue.fromDb(gvWrapped.value)
+            ?: persistenceLayer.getLastGlucoseValue().blockingGet().let { gvWrapped ->
+                if (gvWrapped is ValueWrapper.Existing) InMemoryGlucoseValue.fromGv(gvWrapped.value)
                 else null
             }
 
@@ -275,7 +277,7 @@ class OverviewDataImpl @Inject constructor(
      * Graphs
      */
 
-    override var bgReadingsArray: List<GlucoseValue> = ArrayList()
+    override var bgReadingsArray: List<GV> = ArrayList()
     override var maxBgValue = Double.MIN_VALUE
     override var bucketedGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> =
         PointsWithLabelGraphSeries()

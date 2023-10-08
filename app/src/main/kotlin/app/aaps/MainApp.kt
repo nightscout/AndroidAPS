@@ -13,9 +13,14 @@ import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.ConfigBuilder
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -28,10 +33,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.database.entities.TherapyEvent
-import app.aaps.database.entities.UserEntry
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import app.aaps.database.impl.transactions.VersionChangeTransaction
 import app.aaps.di.DaggerAppComponent
 import app.aaps.implementation.db.CompatDBHelper
@@ -77,6 +79,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
     @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector// better avoid, here fake only to initialize
     @Inject lateinit var uel: UserEntryLogger
@@ -131,16 +134,16 @@ class MainApp : DaggerApplication() {
                     disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
                     // log app start
                     if (sp.getBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
-                        disposable += repository
-                            .runTransaction(
-                                InsertIfNewByTimestampTherapyEventTransaction(
-                                    timestamp = dateUtil.now(),
-                                    type = TherapyEvent.Type.NOTE,
-                                    note = rh.get().gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
-                                    glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
-                                )
-                            )
-                            .subscribe()
+                        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+                            therapyEvent = TE(
+                                timestamp = dateUtil.now(),
+                                type = TE.Type.NOTE,
+                                note = rh.get().gs(app.aaps.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                                glucoseUnit = GlucoseUnit.MGDL
+                            ),
+                            action = Action.START_AAPS,
+                            source = Sources.Aaps, note = "", listValues = listOf()
+                        ).subscribe()
                 }, 10000
             )
             WorkManager.getInstance(this@MainApp).enqueueUniquePeriodicWork(
@@ -154,7 +157,6 @@ class MainApp : DaggerApplication() {
             localAlertUtils.shortenSnoozeInterval()
             localAlertUtils.preSnoozeAlarms()
             doMigrations()
-            uel.log(UserEntry.Action.START_AAPS, UserEntry.Sources.Aaps)
 
             //  schedule widget update
             refreshWidget = Runnable {

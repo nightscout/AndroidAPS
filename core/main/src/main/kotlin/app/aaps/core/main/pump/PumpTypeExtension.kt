@@ -1,6 +1,7 @@
 package app.aaps.core.main.pump
 
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.data.ue.Sources
 import app.aaps.database.entities.UserEntry
 import app.aaps.database.entities.embedments.InterfaceIDs
 
@@ -25,8 +26,30 @@ fun PumpType.Companion.fromDbSource(s: UserEntry.Sources): PumpType.Source =
         else                          -> PumpType.Source.Unknown
     }
 
-fun PumpType.Companion.fromDbPumpType(pt: InterfaceIDs.PumpType): PumpType =
-    when (pt) {
+fun PumpType.Source.toUeSource(): Sources =
+    when (this) {
+        PumpType.Source.Dana        -> Sources.Dana
+        PumpType.Source.DanaR       -> Sources.DanaR
+        PumpType.Source.DanaRC      -> Sources.DanaRC
+        PumpType.Source.DanaRv2     -> Sources.DanaRv2
+        PumpType.Source.DanaRS      -> Sources.DanaRS
+        PumpType.Source.DanaI       -> Sources.DanaI
+        PumpType.Source.DiaconnG8   -> Sources.DiaconnG8
+        PumpType.Source.Insight     -> Sources.Insight
+        PumpType.Source.Combo       -> Sources.Combo
+        PumpType.Source.Medtronic   -> Sources.Medtronic
+        PumpType.Source.Omnipod     -> Sources.Omnipod
+        PumpType.Source.OmnipodEros -> Sources.OmnipodEros
+        PumpType.Source.OmnipodDash -> Sources.OmnipodDash
+        PumpType.Source.EOPatch2    -> Sources.EOPatch2
+        PumpType.Source.Medtrum     -> Sources.Medtrum
+        PumpType.Source.MDI         -> Sources.MDI
+        PumpType.Source.VirtualPump -> Sources.VirtualPump
+        else                        -> Sources.Unknown
+    }
+
+fun InterfaceIDs.PumpType.fromDb(): PumpType =
+    when (this) {
         InterfaceIDs.PumpType.GENERIC_AAPS                -> PumpType.GENERIC_AAPS
         InterfaceIDs.PumpType.CELLNOVO                    -> PumpType.CELLNOVO
         InterfaceIDs.PumpType.ACCU_CHEK_COMBO             -> PumpType.ACCU_CHEK_COMBO
@@ -65,29 +88,7 @@ fun PumpType.Companion.fromDbPumpType(pt: InterfaceIDs.PumpType): PumpType =
         InterfaceIDs.PumpType.CACHE                       -> PumpType.CACHE
     }
 
-fun PumpType.Source.toDbSource(): UserEntry.Sources =
-    when (this) {
-        PumpType.Source.Dana        -> UserEntry.Sources.Dana
-        PumpType.Source.DanaR       -> UserEntry.Sources.DanaR
-        PumpType.Source.DanaRC      -> UserEntry.Sources.DanaRC
-        PumpType.Source.DanaRv2     -> UserEntry.Sources.DanaRv2
-        PumpType.Source.DanaRS      -> UserEntry.Sources.DanaRS
-        PumpType.Source.DanaI       -> UserEntry.Sources.DanaI
-        PumpType.Source.DiaconnG8   -> UserEntry.Sources.DiaconnG8
-        PumpType.Source.Insight     -> UserEntry.Sources.Insight
-        PumpType.Source.Combo       -> UserEntry.Sources.Combo
-        PumpType.Source.Medtronic   -> UserEntry.Sources.Medtronic
-        PumpType.Source.Omnipod     -> UserEntry.Sources.Omnipod
-        PumpType.Source.OmnipodEros -> UserEntry.Sources.OmnipodEros
-        PumpType.Source.OmnipodDash -> UserEntry.Sources.OmnipodDash
-        PumpType.Source.EOPatch2    -> UserEntry.Sources.EOPatch2
-        PumpType.Source.Medtrum     -> UserEntry.Sources.Medtrum
-        PumpType.Source.MDI         -> UserEntry.Sources.MDI
-        PumpType.Source.VirtualPump -> UserEntry.Sources.VirtualPump
-        else                        -> UserEntry.Sources.Unknown
-    }
-
-fun PumpType.toDbPumpType(): InterfaceIDs.PumpType =
+fun PumpType.toDb(): InterfaceIDs.PumpType =
     when (this) {
         PumpType.GENERIC_AAPS              -> InterfaceIDs.PumpType.GENERIC_AAPS
         PumpType.CELLNOVO                  -> InterfaceIDs.PumpType.CELLNOVO

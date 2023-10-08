@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -13,7 +14,6 @@ import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +28,7 @@ class PrepareBgDataWorker(
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     class PrepareBgData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
@@ -43,7 +43,7 @@ class PrepareBgDataWorker(
         val toTime = data.overviewData.toTime
         val fromTime = data.overviewData.fromTime
         data.overviewData.maxBgValue = Double.MIN_VALUE
-        data.overviewData.bgReadingsArray = repository.compatGetBgReadingsDataFromTime(fromTime, toTime, false).blockingGet()
+        data.overviewData.bgReadingsArray = persistenceLayer.getBgReadingsDataFromTime(fromTime, toTime, false).blockingGet()
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (bg in data.overviewData.bgReadingsArray) {
             if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
