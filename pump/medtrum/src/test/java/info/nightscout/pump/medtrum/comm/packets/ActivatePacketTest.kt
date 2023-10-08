@@ -2,10 +2,10 @@ package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
 import info.nightscout.pump.medtrum.comm.enums.BasalType
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ActivatePacketTest : MedtrumTestBase() {
@@ -38,7 +38,7 @@ class ActivatePacketTest : MedtrumTestBase() {
 
         // Expected values
         val expectedByteArray = byteArrayOf(18, 0, 12, 1, 6, 0, 0, 30, 32, 3, 16, 14, 0, 0, 1, 3, 16, 14, 0, 0, 1, 2, 12, 12, 12)
-        Assertions.assertEquals(expectedByteArray.contentToString(), result.contentToString())
+        assertThat(result.contentToString()).isEqualTo(expectedByteArray.contentToString())
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
@@ -64,15 +64,15 @@ class ActivatePacketTest : MedtrumTestBase() {
         val expectedBasalPatchId = 41L
         val expectedBasalStart = 1675605528000L
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(expectedPatchId, medtrumPump.patchId)
-        Assertions.assertEquals(expectedTime, medtrumPump.lastTimeReceivedFromPump)
-        Assertions.assertEquals(expectedBasalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(expectedBasalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(expectedBasalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(expectedBasalStart, medtrumPump.lastBasalStartTime)
-        Assertions.assertEquals(basalProfile, medtrumPump.actualBasalProfile)
+        assertThat(result).isTrue()
+        assertThat(medtrumPump.patchId).isEqualTo(expectedPatchId)
+        assertThat(medtrumPump.lastTimeReceivedFromPump).isEqualTo(expectedTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(expectedBasalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(expectedBasalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(expectedBasalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(expectedBasalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(expectedBasalStart)
+        assertThat(medtrumPump.actualBasalProfile).isEqualTo(basalProfile)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -84,6 +84,6 @@ class ActivatePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertFalse(result)
+        assertThat(result).isFalse()
     }
 }
