@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import app.aaps.core.utils.toHex
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.Random
 
@@ -22,7 +22,7 @@ class PayloadSplitJoinTest {
                 joiner.accumulate(p.toByteArray())
             }
             val got = joiner.finalize()
-            Assertions.assertEquals(got.toHex(), payload.toHex())
+            assertThat(got.toHex()).isEqualTo(payload.toHex())
         }
     }
 }

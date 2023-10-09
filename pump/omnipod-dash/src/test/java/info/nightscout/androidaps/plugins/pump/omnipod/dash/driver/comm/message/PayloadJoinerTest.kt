@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import app.aaps.core.utils.toHex
+import com.google.common.truth.Truth.assertThat
 import com.google.crypto.tink.subtle.Hex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class PayloadJoinerTest {
@@ -14,7 +14,7 @@ class PayloadJoinerTest {
         val payload = "54,57,10,23,03,00,00,c0,ff,ff,ff,fe,08,20,2e,a8,50,30,3d,00,01,a5".replace(",", "")
         val joiner = PayloadJoiner(f1)
         joiner.accumulate(f2)
-        val actual = joiner.finalize()
-        Assertions.assertEquals(payload, actual.toHex())
+        val result = joiner.finalize()
+        assertThat(result.toHex()).isEqualTo(payload)
     }
 }
