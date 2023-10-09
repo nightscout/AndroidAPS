@@ -38,9 +38,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="horizontal"
-            android:padding="3dp">
+            android:padding="3dp"
+            android:gravity="center">
 
             <EditText
                 android:id="@+id/button_edit"
@@ -85,8 +85,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -98,18 +98,59 @@
 
             <app.aaps.core.ui.elements.NumberPicker
                 android:id="@+id/carbs_edit"
+                android:gravity="center"
                 android:layout_width="200dp"
                 android:layout_height="40dp"
-                android:gravity="center"
                 app:customContentDescription="@string/carbs" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/device_label"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="7dp"
+                android:gravity="center"
+                android:text="@string/overview_edit_quickwizard_show_on_device"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <RadioGroup
+                android:id="@+id/device"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device_all" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device_phone" />
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device_watch" />
+
+            </RadioGroup>
 
         </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="7dp"
             android:gravity="center"
-            android:paddingTop="9dp"
             android:text="@string/overview_edit_quickwizard_useforcalculation"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -131,7 +172,7 @@
                     android:id="@+id/use_bg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:text="@string/overview_edit_quickwizard_use_bg"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -139,7 +180,7 @@
                     android:id="@+id/use_temp_target"
                     android:layout_width="155dp"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:text="@string/overview_editquickwizard_usetemptarget"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -153,20 +194,49 @@
                 android:layout_marginBottom="5dp">
 
                 <CheckBox
-                    android:id="@+id/use_iob"
+                    android:id="@+id/use_bolus_iob"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
-                    android:text="@string/overview_edit_quickwizard_use_iob"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/overview_edit_quickwizard_use_bolus_iob"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginBottom="5dp">
+
                 <CheckBox
-                    android:id="@+id/use_positive_iob_only"
+                    android:id="@+id/use_basal_iobX"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
-                    android:text="@string/overview_edit_quickwizard_use_positive_iob_only"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/defaultTextColor"
+                    android:text="@string/overview_edit_quickwizard_use_basal_iob"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <LinearLayout
+                    android:layout_width="155dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <Spinner
+                        android:id="@+id/use_basal_iob"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/yes_no_positiveonly_negativeonly"
+                        android:gravity="left" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@android:color/darker_gray" />
+                </LinearLayout>
 
             </TableRow>
 
@@ -181,7 +251,7 @@
                     android:id="@+id/use_cob"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:text="@string/overview_editquickwizard_usecob"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -195,10 +265,13 @@
                 android:layout_marginBottom="5dp">
 
                 <CheckBox
-                    android:id="@+id/use_trend_checkbox"
+                    android:id="@+id/use_trendX"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
+                    android:checked="true"
+                    android:enabled="false"
+                    android:gravity="left|center_vertical"
+                    android:textColor="@color/defaultTextColor"
                     android:text="@string/overview_edit_quickwizard_use_trend"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -206,19 +279,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
-
                     <Spinner
                         android:id="@+id/use_trend"
-                        android:layout_width="153dp"
+                        android:layout_width="155dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
                         android:entries="@array/yes_no_positiveonly_negativeonly"
-                        android:gravity="start" />
+                        android:gravity="left" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginStart="6dp"
                         android:background="@android:color/darker_gray" />
                 </LinearLayout>
             </TableRow>
@@ -235,7 +305,7 @@
                     android:id="@+id/use_super_bolus"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:text="@string/overview_edit_quickwizard_use_superbolus"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -248,50 +318,33 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="5dp">
 
+                <CheckBox
+                    android:id="@+id/use_percentage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="left|center_vertical"
+                    android:text="@string/overview_edit_quickwizard_custom"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
 
-                    <CheckBox
-                        android:id="@+id/use_percentage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="start|center_vertical"
-                        android:text="@string/overview_edit_quickwizard_custom"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <EditText
-                        android:id="@+id/custom_percentage_edittext"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="32dp"
-                        android:gravity="center"
-                        android:hint="%"
-                        android:inputType="number"
-                        android:visibility="gone" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center">
 
                     <SeekBar
                         android:id="@+id/custom_percentage_seekbar"
                         android:layout_width="145dp"
                         android:layout_height="match_parent"
-                        android:max="40"
-                        android:min="2"
+                        android:max="30"
                         android:progress="20" />
 
                     <TextView
                         android:id="@+id/default_percentage_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="@string/app_default" />
+                        android:text="@string/app_default"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
 
                 </RelativeLayout>
 
@@ -308,7 +361,7 @@
                     android:id="@+id/use_ecarbs"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
+                    android:gravity="left|center_vertical"
                     android:text="@string/additional_ecarbs"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -317,8 +370,8 @@
 
         <TableLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp">
 
             <TableRow
@@ -433,6 +486,7 @@
 
                 <TextView
                     android:id="@+id/g_label"
+                    android:inputType="number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="start"

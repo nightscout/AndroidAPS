@@ -38,6 +38,7 @@ import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
@@ -48,8 +49,9 @@ import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.defs.PumpType
-import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -76,6 +78,8 @@ import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
@@ -83,16 +87,22 @@ import app.aaps.core.main.extensions.directionToIcon
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.displayText
 import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.main.wizard.QuickWizard
+import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.elements.SingleClickButton
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.utils.JsonHelper
+import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.UserEntry.Action
 import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.entities.interfaces.end
 import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.databinding.OverviewFragmentBinding
 import app.aaps.plugins.main.general.overview.graphData.GraphData
@@ -100,16 +110,20 @@ import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.events.EventUpdateOverviewNotification
 import app.aaps.plugins.main.general.overview.ui.StatusLightHandler
 import app.aaps.plugins.main.skins.SkinProvider
+import com.google.common.base.Joiner
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.util.LinkedList
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
+import java.util.Calendar
+import app.aaps.core.interfaces.queue.CommandQueue
 
 class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickListener {
 
@@ -525,7 +539,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         OKDialog.show(it, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
                         return
                     }
-                    wizard.confirmAndExecute(it, quickWizardEntry)
+                    wizard.confirmAndExecute(it)
+
+                    if (quickWizardEntry != null) {
+                        scheduleECarbsFromQuickWizzard(quickWizardEntry)
+                    }
                 }
             }
         }
@@ -1134,5 +1152,44 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateNotification() {
         _binding ?: return
         binding.notifications.let { notificationStore.updateNotifications(it) }
+    }
+
+    fun scheduleECarbsFromQuickWizzard(quickWizardEntry: QuickWizardEntry) {
+        val eCarbsYesNo = quickWizardEntry.storage.get("useEcarbs")
+        if (eCarbsYesNo == QuickWizardEntry.YES) {
+            val timeOffset = SafeParse.stringToInt(quickWizardEntry.storage.get("time").toString())
+            val duration = SafeParse.stringToInt(quickWizardEntry.storage.get("duration").toString())
+            val carbs2 = SafeParse.stringToInt(quickWizardEntry.storage.get("carbs2").toString())
+
+            val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs2, aapsLogger)).value()
+
+            val currentTime = Calendar.getInstance().timeInMillis
+            val eventTime: Long = currentTime + (timeOffset * 60000)
+
+            if (carbsAfterConstraints > 0) {
+                val detailedBolusInfo = DetailedBolusInfo()
+                detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+                detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
+                detailedBolusInfo.context = context
+                detailedBolusInfo.notes = quickWizardEntry.storage.get("buttonText").toString()
+                detailedBolusInfo.carbsDuration = T.hours(duration.toLong()).msecs()
+                detailedBolusInfo.carbsTimestamp = eventTime
+                uel.log(if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, Sources.CarbDialog,
+                        "",
+                        ValueWithUnit.Timestamp(eventTime),
+                        ValueWithUnit.Gram(carbsAfterConstraints),
+                        ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 },
+                        ValueWithUnit.Hour(duration).takeIf { duration != 0 })
+                commandQueue.bolus(detailedBolusInfo, object : Callback() {
+                    override fun run() {
+                        automation.removeAutomationEventEatReminder()
+                        if (!result.success) {
+                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
+                        }
+                    }
+                })
+            }
+        }
+
     }
 }

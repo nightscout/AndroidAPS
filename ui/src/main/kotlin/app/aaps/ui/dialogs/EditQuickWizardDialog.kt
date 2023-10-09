@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.SeekBar
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -23,6 +21,8 @@ import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
+import app.aaps.core.ui.extensions.selectedItemPosition
+import app.aaps.core.ui.extensions.setSelection
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogEditQuickwizardBinding
@@ -45,7 +45,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     @Inject lateinit var ctx: Context
 
     var position = -1
-    private var seekBarMoving = false
     private var fromSeconds: Int = 0
     private var toSeconds: Int = 0
 
@@ -71,6 +70,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
+            binding.deviceLabel.visibility = View.VISIBLE
+            binding.device.visibility = View.VISIBLE
+        } else {
+            binding.deviceLabel.visibility = View.GONE
+            binding.device.visibility = View.GONE
+        }
 
         binding.okcancel.ok.setOnClickListener {
             try {
@@ -80,8 +86,9 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 entry.storage.put("validTo", toSeconds)
                 entry.storage.put("useBG", binding.useBg.isChecked)
                 entry.storage.put("useCOB", booleanToInt(binding.useCob.isChecked))
-                entry.storage.put("useIOB", booleanToInt(binding.useIob.isChecked))
-                entry.storage.put("usePositiveIOBOnly", booleanToInt(binding.usePositiveIobOnly.isChecked))
+                entry.storage.put("useBolusIOB", booleanToInt(binding.useBolusIob.isChecked))
+                entry.storage.put("device", binding.device.selectedItemPosition)
+                entry.storage.put("useBasalIOB", binding.useBasalIob.selectedItemPosition)
                 entry.storage.put("useTrend", binding.useTrend.selectedItemPosition)
                 entry.storage.put("useSuperBolus", booleanToInt(binding.useSuperBolus.isChecked))
                 entry.storage.put("useTempTarget", booleanToInt(binding.useTempTarget.isChecked))
@@ -140,19 +147,16 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 binding.defaultPercentageTextview.visibility = View.GONE
                 binding.customPercentageSeekbar.visibility = View.VISIBLE
                 val customPercentage = binding.customPercentageSeekbar.progress * 5
-                binding.usePercentage.text = ""
-                binding.customPercentageEdittext.setText("$customPercentage")
-                binding.customPercentageEdittext.visibility = View.VISIBLE
+                binding.usePercentage.text = customPercentage.toString() + "%"
             } else {
                 binding.customPercentageSeekbar.visibility = View.GONE
                 binding.defaultPercentageTextview.visibility = View.VISIBLE
                 binding.usePercentage.text = context?.getString(R.string.overview_edit_quickwizard_custom) + " %"
-                binding.customPercentageEdittext.visibility = View.GONE
             }
         }
 
-        fun useECarbs(yes: Boolean) {
-            if (yes) {
+        fun useECarbs(custom: Boolean) {
+            if (custom) {
                 binding.timeLabel.visibility = View.VISIBLE
                 binding.time.visibility = View.VISIBLE
                 binding.durationLabel.visibility = View.VISIBLE
@@ -175,15 +179,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         }
 
-        fun useIOB(checked: Boolean) {
-            if (checked) {
-                binding.usePositiveIobOnly.isEnabled = true
-            } else {
-                binding.usePositiveIobOnly.isChecked = false
-                binding.usePositiveIobOnly.isEnabled = false
-            }
-        }
-
         binding.usePercentage.setOnCheckedChangeListener { _, checkedId ->
             usePercentage(checkedId)
         }
@@ -192,32 +187,23 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             useECarbs(checkedId)
         }
 
-        binding.useIob.setOnCheckedChangeListener { _, checkedId ->
-            useIOB(checkedId)
-        }
-
-        binding.customPercentageSeekbar.setOnSeekBarChangeListener(object :
-                                                                       SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(
-                seek: SeekBar,
-                progress: Int, fromUser: Boolean
-            ) {
-                if (seekBarMoving) {
-                    usePercentage(true)
-                }
+        binding.customPercentageSeekbar.setOnSeekBarChangeListener (object :
+                                                                        SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seek: SeekBar,
+                                           progress: Int, fromUser: Boolean) {
+                usePercentage(true)
             }
 
             override fun onStartTrackingTouch(seek: SeekBar) {
                 // write custom code for progress is started
-                seekBarMoving = true
             }
 
             override fun onStopTrackingTouch(seek: SeekBar) {
                 // write custom code for progress is stopped
-                seekBarMoving = false
             }
         })
 
+        //ecarb - checker - based on CarbDialog code
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         binding.time.setParams(
             savedInstanceState?.getDouble("time")
@@ -238,6 +224,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             savedInstanceState?.getDouble("carbs2")
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
+        //EOF ecarb - checker - based on CarbDialog code
 
         toSeconds = entry.validTo()
         binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
@@ -247,12 +234,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         binding.useBg.isChecked = intToBoolean(entry.useBG())
         binding.useCob.isChecked = intToBoolean(entry.useCOB())
-        binding.useIob.isChecked = intToBoolean(entry.useIOB())
-        binding.usePositiveIobOnly.isChecked = intToBoolean(entry.usePositiveIOBOnly())
+        binding.useBolusIob.isChecked = intToBoolean(entry.useBolusIOB())
+        binding.useBasalIob.setSelection(entry.useBasalIOB())
+        binding.device.setSelection(entry.device())
         binding.useTrend.setSelection(entry.useTrend())
-        binding.useSuperBolus.isChecked = intToBoolean(entry.useSuperBolus())
-        binding.useTempTarget.isChecked = intToBoolean(entry.useTempTarget())
-        binding.usePercentage.isChecked = intToBoolean(entry.usePercentage())
+        binding.useSuperBolus.isChecked=intToBoolean(entry.useSuperBolus())
+        binding.useTempTarget.isChecked=intToBoolean(entry.useTempTarget())
+        binding.usePercentage.isChecked=intToBoolean(entry.usePercentage())
         val defaultPercentage = entry.percentage() / 5
         binding.customPercentageSeekbar.progress = defaultPercentage
         usePercentage(intToBoolean(entry.usePercentage()))
@@ -263,67 +251,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.duration.value = SafeParse.stringToDouble(entry.duration().toString())
         useECarbs(intToBoolean(entry.useEcarbs()))
 
-        binding.useCob.setOnCheckedChangeListener { _, checkedId ->
-            processCob()
-        }
-
-        binding.useTrendCheckbox.setOnCheckedChangeListener { _, checkedId ->
-            processTrend()
-        }
-
-        //set hard limits for custom percentage edittext + update seekbar position
-        binding.customPercentageEdittext.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(s: Editable) {
-                val customPercentageInt: Int = SafeParse.stringToInt(s.toString())
-
-                if (customPercentageInt > 200) {
-                    binding.customPercentageEdittext.setText("200")
-                }
-                if (!binding.customPercentageEdittext.text.isEmpty()) {
-                    binding.customPercentageSeekbar.progress = SafeParse.stringToInt(binding.customPercentageEdittext.text.toString()) / 5
-                }
-            }
-
-            override fun beforeTextChanged(
-                s: CharSequence, start: Int,
-                count: Int, after: Int
-            ) {
-            }
-
-            override fun onTextChanged(
-                s: CharSequence, start: Int,
-                before: Int, count: Int
-            ) {
-            }
-        })
-
-        binding.customPercentageEdittext.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
-            if (!hasFocus) {
-                // code to execute when EditText loses focus
-                if (!binding.customPercentageEdittext.text.isEmpty()) {
-                    val customPercentageInt: Int = SafeParse.stringToInt(binding.customPercentageEdittext.text.toString())
-                    if (customPercentageInt < 10) {
-                        binding.customPercentageEdittext.setText("10")
-                    }
-                } else {
-                    binding.customPercentageEdittext.setText("10")
-                }
-            }
-        })
-
+        binding.useCob.setOnClickListener(this)
+        //binding.useEcarbs.setOnClickListener(this)
         processCob()
-
-        binding.useTrend.setOnItemSelectedListener(object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                binding.useTrendCheckbox.isChecked = binding.useTrend.selectedItemPosition != QuickWizardEntry.NO
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
     }
 
     override fun onClick(v: View?) {
-        //
+        processCob()
     }
 
     override fun onResume() {
@@ -343,18 +277,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
     private fun processCob() {
         if (binding.useCob.isChecked) {
-            binding.useIob.setEnabled(false)
-            binding.useIob.isChecked = true
+            binding.useBolusIob.setEnabled(false)
+            binding.useBasalIob.setEnabled(false)
+            binding.useBolusIob.isChecked = true
+            binding.useBasalIob.setSelection(QuickWizardEntry.YES)
         } else {
-            binding.useIob.setEnabled(true)
-        }
-    }
-
-    private fun processTrend() {
-        if (binding.useTrendCheckbox.isChecked) {
-            if (binding.useTrend.selectedItemPosition == QuickWizardEntry.NO) binding.useTrend.setSelection(QuickWizardEntry.YES)
-        } else {
-            binding.useTrend.setSelection(QuickWizardEntry.NO)
+            binding.useBolusIob.setEnabled(true)
+            binding.useBasalIob.setEnabled(true)
         }
     }
 
@@ -393,13 +322,11 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     }
 
-    //Radio Group to CheckBox transition - backward JSON compatibility
-    private fun booleanToInt(bool: Boolean): Int {
-        return if (bool == true) 0 else 1
+    fun booleanToInt(bool: Boolean):Int{
+        return if (bool==true) 0 else 1
     }
 
-    //Radio Group to CheckBox transition - backward JSON compatibility
-    private fun intToBoolean(theInt: Int): Boolean {
-        return theInt == 0
+    fun intToBoolean(theInt: Int):Boolean{
+        return theInt==0
     }
 }
