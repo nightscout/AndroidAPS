@@ -1,12 +1,12 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SynchronizePacketTest : MedtrumTestBase() {
@@ -35,8 +35,7 @@ class SynchronizePacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        Assertions.assertEquals(1, result.size)
-        Assertions.assertEquals(opCode.toByte(), result[0])
+        assertThat(result).asList().containsExactly(opCode.toByte())
     }
 
     @Test fun handleResponseGivenResponseWhenMessageIsCorrectLengthThenResultTrue() {
@@ -53,9 +52,9 @@ class SynchronizePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
-        Assertions.assertEquals(state, packet.medtrumPump.pumpState.state)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
+        assertThat(packet.medtrumPump.pumpState.state).isEqualTo(state)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -71,13 +70,13 @@ class SynchronizePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertEquals(false, result)
-        Assertions.assertEquals(true, packet.failed)
+        assertThat(result).isFalse()
+        assertThat(packet.failed).isTrue()
     }
 
     @Test fun handleResponseContainingSyncDataThenDataSaved() {
         // Inputs
-        val data =
+        val byteData =
             byteArrayOf(
                 47,
                 3,
@@ -130,21 +129,21 @@ class SynchronizePacketTest : MedtrumTestBase() {
 
         // Call
         val packet = SynchronizePacket(packetInjector)
-        val result = packet.handleResponse(data)
+        val result = packet.handleResponse(byteData)
 
         // Expected values
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
-        Assertions.assertEquals(MedtrumPumpState.ACTIVE, packet.medtrumPump.pumpState)
-        Assertions.assertEquals(BasalType.ABSOLUTE_TEMP, packet.medtrumPump.lastBasalType)
-        Assertions.assertEquals(0.85, packet.medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(25, packet.medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(14, packet.medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(1685126612000, packet.medtrumPump.lastBasalStartTime)
-        Assertions.assertEquals(8123, packet.medtrumPump.patchAge)
-        Assertions.assertEquals(186.80, packet.medtrumPump.reservoir, 0.01)
-        Assertions.assertEquals(1685120120000, packet.medtrumPump.patchStartTime)
-        Assertions.assertEquals(5.96875, packet.medtrumPump.batteryVoltage_A, 0.01)
-        Assertions.assertEquals(2.8125, packet.medtrumPump.batteryVoltage_B, 0.01)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
+        assertThat(packet.medtrumPump.pumpState).isEqualTo(MedtrumPumpState.ACTIVE)
+        assertThat(packet.medtrumPump.lastBasalType).isEqualTo(BasalType.ABSOLUTE_TEMP)
+        assertThat(packet.medtrumPump.lastBasalRate).isWithin(0.01).of(0.85)
+        assertThat(packet.medtrumPump.lastBasalSequence).isEqualTo(25)
+        assertThat(packet.medtrumPump.lastBasalPatchId).isEqualTo(14)
+        assertThat(packet.medtrumPump.lastBasalStartTime).isEqualTo(1685126612000)
+        assertThat(packet.medtrumPump.patchAge).isEqualTo(8123)
+        assertThat(packet.medtrumPump.reservoir).isWithin(0.01).of(186.80)
+        assertThat(packet.medtrumPump.patchStartTime).isEqualTo(1685120120000)
+        assertThat(packet.medtrumPump.batteryVoltage_A).isWithin(0.01).of(5.96875)
+        assertThat(packet.medtrumPump.batteryVoltage_B).isWithin(0.01).of(2.8125)
     }
 }

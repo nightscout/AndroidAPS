@@ -70,6 +70,7 @@
     <string name="step_retry_activation">Aktivácia prebieha</string>
     <string name="unexpected_state">Neočakávaný stav: %1$s</string>
     <string name="no_profile_selected">Žiadny vybraný profil. Prosím vyberte si profil a skúste to znovu.</string>
+    <string name="no_sn_in_settings">Nie je zadané žiadne sériové číslo. Zadajte sériové číslo pumpy v nastaveniach a skúste to znova.</string>
     <string name="base_serial">Sériové číslo základne pumpy: %1$X</string>
     <string name="patch_begin_activation">Žiadny aktívny Patch. Stlačte <b>Ďalšia</b> pre zahájenie aktivačného procesu.</string>
     <string name="patch_not_active_note">Základňa by nemala byť pripojená ku kanyle až do dalšieho kroku!</string>

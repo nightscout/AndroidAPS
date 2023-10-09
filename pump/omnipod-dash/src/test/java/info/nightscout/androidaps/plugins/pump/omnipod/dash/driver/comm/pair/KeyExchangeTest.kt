@@ -4,9 +4,9 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.utils.toHex
 import app.aaps.shared.tests.AAPSLoggerTest
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.RandomByteGenerator
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.util.X25519KeyGenerator
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
@@ -20,7 +20,7 @@ class KeyExchangeTest : TestBase() {
     private val keyGenerator = X25519KeyGenerator()
     private val keyGeneratorSpy: X25519KeyGenerator = spy(keyGenerator)
 
-    private var randomByteGenerator: RandomByteGenerator = mock(RandomByteGenerator::class.java)
+    private var randomByteGenerator = mock<RandomByteGenerator>()
 
     @Mock lateinit var config: Config
 
@@ -43,9 +43,9 @@ class KeyExchangeTest : TestBase() {
         val podPublicKey = Hex.decode("2fe57da347cd62431528daac5fbb290730fff684afc4cfc2ed90995f58cb3b74")
         val podNonce = Hex.decode("00000000000000000000000000000000")
         ke.updatePodPublicData(podPublicKey + podNonce)
-        Assertions.assertEquals(ke.pdmPublic.toHex(), "f2b6940243aba536a66e19fb9a39e37f1e76a1cd50ab59b3e05313b4fc93975e")
-        Assertions.assertEquals(ke.pdmConf.toHex(), "5fc3b4da865e838ceaf1e9e8bb85d1ac")
+        assertThat("f2b6940243aba536a66e19fb9a39e37f1e76a1cd50ab59b3e05313b4fc93975e").isEqualTo(ke.pdmPublic.toHex())
+        assertThat("5fc3b4da865e838ceaf1e9e8bb85d1ac").isEqualTo(ke.pdmConf.toHex())
         ke.validatePodConf(Hex.decode("af4f10db5f96e5d9cd6cfc1f54f4a92f"))
-        Assertions.assertEquals(ke.ltk.toHex(), "341e16d13f1cbf73b19d1c2964fee02b")
+        assertThat("341e16d13f1cbf73b19d1c2964fee02b").isEqualTo(ke.ltk.toHex())
     }
 }

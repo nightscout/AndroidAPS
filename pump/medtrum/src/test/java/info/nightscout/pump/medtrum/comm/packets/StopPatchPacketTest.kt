@@ -1,9 +1,9 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class StopPatchPacketTest : MedtrumTestBase() {
@@ -28,8 +28,7 @@ class StopPatchPacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        Assertions.assertEquals(1, result.size)
-        Assertions.assertEquals(opCode.toByte(), result[0])
+        assertThat(result).asList().containsExactly(opCode.toByte())
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
@@ -43,9 +42,9 @@ class StopPatchPacketTest : MedtrumTestBase() {
         // Expected values
         val expectedPatchId = 146L
         val expectedStopSequence = 23
-        Assertions.assertTrue(result)
-        Assertions.assertEquals(expectedPatchId, medtrumPump.lastStopPatchId)
-        Assertions.assertEquals(expectedStopSequence, medtrumPump.lastStopSequence)
+        assertThat(result).isTrue()
+        assertThat(medtrumPump.lastStopPatchId).isEqualTo(expectedPatchId)
+        assertThat(medtrumPump.lastStopSequence).isEqualTo(expectedStopSequence)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -57,7 +56,7 @@ class StopPatchPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertFalse(result)
-        Assertions.assertTrue(packet.failed)
+        assertThat(result).isFalse()
+        assertThat(packet.failed).isTrue()
     }
 }

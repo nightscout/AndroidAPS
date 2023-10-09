@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -49,7 +49,7 @@ class VirtualPumpPluginUTest : TestBase() {
     fun refreshConfiguration() {
         `when`(sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
-        Assertions.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
+        assertThat(virtualPumpPlugin.pumpType).isEqualTo(PumpType.ACCU_CHEK_COMBO)
     }
 
     @Test
@@ -58,6 +58,6 @@ class VirtualPumpPluginUTest : TestBase() {
         virtualPumpPlugin.refreshConfiguration()
         `when`(sp.getString(app.aaps.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
-        Assertions.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
+        assertThat(virtualPumpPlugin.pumpType).isEqualTo(PumpType.ACCU_CHEK_COMBO)
     }
 }

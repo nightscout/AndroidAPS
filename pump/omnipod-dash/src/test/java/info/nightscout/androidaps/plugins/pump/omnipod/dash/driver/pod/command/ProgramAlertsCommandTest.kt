@@ -1,18 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertConfiguration
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertTrigger
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepRepetitionType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
-import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ProgramAlertsCommandTest {
 
-    @Test @Throws(DecoderException::class) fun testExpirationAlerts() {
+    @Test fun testExpirationAlerts() {
         val configurations: MutableList<AlertConfiguration> = ArrayList()
         configurations.add(
             AlertConfiguration(
@@ -46,10 +45,10 @@ class ProgramAlertsCommandTest {
             .build()
             .encoded
 
-        Assertions.assertArrayEquals(Hex.decodeHex("024200038C121910494E532E79A410D1050228001275060280F5"), encoded)
+        assertThat(encoded).asList().containsExactlyElementsIn(Hex.decodeHex("024200038C121910494E532E79A410D1050228001275060280F5").asList()).inOrder()
     }
 
-    @Test @Throws(DecoderException::class) fun testLowReservoirAlert() {
+    @Test fun testLowReservoirAlert() {
         val configurations: MutableList<AlertConfiguration> = ArrayList()
         configurations.add(
             AlertConfiguration(
@@ -71,10 +70,10 @@ class ProgramAlertsCommandTest {
             .build()
             .encoded
 
-        Assertions.assertArrayEquals(Hex.decodeHex("02420003200C190A494E532E4C0000C801020149"), encoded)
+        assertThat(encoded).asList().containsExactlyElementsIn(Hex.decodeHex("02420003200C190A494E532E4C0000C801020149").asList()).inOrder()
     }
 
-    @Test @Throws(DecoderException::class) fun testUserExpirationAlert() {
+    @Test fun testUserExpirationAlert() {
         val configurations: MutableList<AlertConfiguration> = ArrayList()
         configurations.add(
             AlertConfiguration(
@@ -96,10 +95,10 @@ class ProgramAlertsCommandTest {
             .build()
             .encoded
 
-        Assertions.assertArrayEquals(Hex.decodeHex("024200033C0C190A494E532E38000FEF030203E2"), encoded)
+        assertThat(encoded).asList().containsExactlyElementsIn(Hex.decodeHex("024200033C0C190A494E532E38000FEF030203E2").asList()).inOrder()
     }
 
-    @Test @Throws(DecoderException::class) fun testLumpOfCoalAlert() {
+    @Test fun testLumpOfCoalAlert() {
         val configurations: MutableList<AlertConfiguration> = ArrayList()
         configurations.add(
             AlertConfiguration(
@@ -122,6 +121,6 @@ class ProgramAlertsCommandTest {
             .build()
             .encoded
 
-        Assertions.assertArrayEquals(Hex.decodeHex("02420003280C190A494E532E7837000508020356"), encoded)
+        assertThat(encoded).asList().containsExactlyElementsIn(Hex.decodeHex("02420003280C190A494E532E7837000508020356").asList()).inOrder()
     }
 }

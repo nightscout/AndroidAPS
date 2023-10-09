@@ -1,10 +1,10 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class MedtrumPacketTest : MedtrumTestBase() {
@@ -29,8 +29,7 @@ class MedtrumPacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        Assertions.assertEquals(result.size, 1)
-        Assertions.assertEquals(result[0], opCode.toByte())
+        assertThat(result).asList().containsExactly(opCode.toByte())
     }
 
     @Test fun handleResponseGivenResponseWhenOpcodeIsCorrectThenResultTrue() {
@@ -45,8 +44,8 @@ class MedtrumPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertEquals(result, true)
-        Assertions.assertEquals(packet.failed, false)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenResponseWhenOpcodeIsIncorrectThenResultFalse() {
@@ -61,8 +60,8 @@ class MedtrumPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertEquals(result, false)
-        Assertions.assertEquals(packet.failed, true)
+        assertThat(result).isFalse()
+        assertThat(packet.failed).isTrue()
     }
 
     @Test fun handleResponseGivenResponseWhenResponseCodeIsWaitingThenResultFalse() {
@@ -77,8 +76,8 @@ class MedtrumPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertEquals(result, false)
-        Assertions.assertEquals(packet.failed, false)
+        assertThat(result).isFalse()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenResponseWhenResponseCodeIsErrorThenResultFalse() {
@@ -93,8 +92,8 @@ class MedtrumPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertEquals(false, result)
-        Assertions.assertEquals(true, packet.failed)
+        assertThat(result).isFalse()
+        assertThat(packet.failed).isTrue()
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -108,7 +107,7 @@ class MedtrumPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertEquals(false, result)
-        Assertions.assertEquals(true, packet.failed)
+        assertThat(result).isFalse()
+        assertThat(packet.failed).isTrue()
     }
 }
