@@ -1,8 +1,10 @@
 package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
+import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.UE
@@ -28,10 +30,8 @@ import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusTransaction
@@ -47,19 +47,15 @@ import app.aaps.database.impl.transactions.SyncNsBolusCalculatorResultTransactio
 import app.aaps.database.impl.transactions.SyncNsBolusTransaction
 import app.aaps.database.impl.transactions.SyncNsCarbsTransaction
 import app.aaps.database.impl.transactions.SyncNsEffectiveProfileSwitchTransaction
-import app.aaps.database.impl.transactions.SyncNsExtendedBolusTransaction
 import app.aaps.database.impl.transactions.SyncNsFoodTransaction
 import app.aaps.database.impl.transactions.SyncNsProfileSwitchTransaction
-import app.aaps.database.impl.transactions.SyncNsTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdCarbsTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdExtendedBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdFoodTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
 import app.aaps.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -92,8 +88,8 @@ class StoreDataForDbImpl @Inject constructor(
     override val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
     override val therapyEvents: MutableList<TE> = mutableListOf()
-    override val extendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
-    override val temporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
+    override val extendedBoluses: MutableList<EB> = mutableListOf()
+    override val temporaryBasals: MutableList<TB> = mutableListOf()
     override val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     override val offlineEvents: MutableList<OE> = mutableListOf()
     override val foods: MutableList<Food> = mutableListOf()
@@ -105,8 +101,8 @@ class StoreDataForDbImpl @Inject constructor(
     override val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
     override val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
-    override val nsIdExtendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
-    override val nsIdTemporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
+    override val nsIdExtendedBoluses: MutableList<EB> = mutableListOf()
+    override val nsIdTemporaryBasals: MutableList<TB> = mutableListOf()
     override val nsIdProfileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     override val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
     override val nsIdDeviceStatuses: MutableList<DeviceStatus> = mutableListOf()
@@ -303,75 +299,17 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         if (temporaryBasals.isNotEmpty())
-            repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasals, config.NSCLIENT))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving temporary basal", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsTemporaryBasals(temporaryBasals)
+                .subscribeBy { result ->
                     temporaryBasals.clear()
-                    result.inserted.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.TEMP_BASAL,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(it.timestamp),
-                                    if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Inserted TemporaryBasal $it")
-                        inserted.inc(TemporaryBasal::class.java.simpleName)
-                    }
-                    result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.TEMP_BASAL_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(it.timestamp),
-                                    if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                        invalidated.inc(TemporaryBasal::class.java.simpleName)
-                    }
-                    result.ended.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.CANCEL_TEMP_BASAL,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(it.timestamp),
-                                    if (it.isAbsolute) ValueWithUnit.UnitPerHour(it.rate) else ValueWithUnit.Percent(it.rate.toInt()),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Ended TemporaryBasal $it")
-                        ended.inc(TemporaryBasal::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TemporaryBasal $it")
-                        nsIdUpdated.inc(TemporaryBasal::class.java.simpleName)
-                    }
-                    result.updatedDuration.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated duration TemporaryBasal $it")
-                        durationUpdated.inc(TemporaryBasal::class.java.simpleName)
-                    }
+                    repeat(result.inserted.size) { inserted.inc(TB::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(TB::class.java.simpleName) }
+                    repeat(result.ended.size) { ended.inc(TB::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(TB::class.java.simpleName) }
+                    repeat(result.updatedDuration.size) { durationUpdated.inc(TB::class.java.simpleName) }
+                    sendLog("TemporaryBasal", TB::class.java.simpleName)
                 }
 
-        sendLog("TemporaryBasal", TemporaryBasal::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (effectiveProfileSwitches.isNotEmpty())
@@ -503,9 +441,9 @@ class StoreDataForDbImpl @Inject constructor(
                     repeat(result.invalidated.size) { invalidated.inc(TE::class.java.simpleName) }
                     repeat(result.updatedNsId.size) { nsIdUpdated.inc(TE::class.java.simpleName) }
                     repeat(result.updatedDuration.size) { durationUpdated.inc(TE::class.java.simpleName) }
+                    sendLog("TherapyEvent", TE::class.java.simpleName)
                 }
 
-        sendLog("TherapyEvent", TE::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (offlineEvents.isNotEmpty())
@@ -523,79 +461,20 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         if (extendedBoluses.isNotEmpty())
-            repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBoluses, config.NSCLIENT))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving extended bolus", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsExtendedBoluses(extendedBoluses)
+                .subscribeBy { result ->
                     extendedBoluses.clear()
                     result.inserted.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.EXTENDED_BOLUS,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(it.timestamp),
-                                    ValueWithUnit.Insulin(it.amount),
-                                    ValueWithUnit.UnitPerHour(it.rate),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                )
-                            )
-                        )
                         if (it.isEmulatingTempBasal) virtualPump.fakeDataDetected = true
-                        aapsLogger.debug(LTag.DATABASE, "Inserted ExtendedBolus $it")
-                        inserted.inc(ExtendedBolus::class.java.simpleName)
+                        inserted.inc(EB::class.java.simpleName)
                     }
-                    result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.EXTENDED_BOLUS_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(it.timestamp),
-                                    ValueWithUnit.Insulin(it.amount),
-                                    ValueWithUnit.UnitPerHour(it.rate),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus $it")
-                        invalidated.inc(ExtendedBolus::class.java.simpleName)
-                    }
-                    result.ended.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.CANCEL_EXTENDED_BOLUS,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(it.timestamp),
-                                    ValueWithUnit.Insulin(it.amount),
-                                    ValueWithUnit.UnitPerHour(it.rate),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
-                        ended.inc(ExtendedBolus::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId ExtendedBolus $it")
-                        nsIdUpdated.inc(ExtendedBolus::class.java.simpleName)
-                    }
-                    result.updatedDuration.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated duration ExtendedBolus $it")
-                        durationUpdated.inc(ExtendedBolus::class.java.simpleName)
-                    }
+                    repeat(result.invalidated.size) { invalidated.inc(EB::class.java.simpleName) }
+                    repeat(result.ended.size) { ended.inc(EB::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(EB::class.java.simpleName) }
+                    repeat(result.updatedDuration.size) { durationUpdated.inc(EB::class.java.simpleName) }
+                    sendLog("ExtendedBolus", EB::class.java.simpleName)
                 }
 
-        sendLog("ExtendedBolus", ExtendedBolus::class.java.simpleName)
         SystemClock.sleep(pause)
 
         uel.log(userEntries)
@@ -693,30 +572,16 @@ class StoreDataForDbImpl @Inject constructor(
                 }
             }
 
-        repository.runTransactionForResult(UpdateNsIdTemporaryBasalTransaction(nsIdTemporaryBasals))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryBasal failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateTemporaryBasalsNsIds(nsIdTemporaryBasals)
+            .subscribeBy { result ->
                 nsIdTemporaryBasals.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryBasal $it")
-                    nsIdUpdated.inc(TemporaryBasal::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(TB::class.java.simpleName) }
             }
 
-        repository.runTransactionForResult(UpdateNsIdExtendedBolusTransaction(nsIdExtendedBoluses))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of ExtendedBolus failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateExtendedBolusesNsIds(nsIdExtendedBoluses)
+            .subscribeBy { result ->
                 nsIdExtendedBoluses.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of ExtendedBolus $it")
-                    nsIdUpdated.inc(ExtendedBolus::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(EB::class.java.simpleName) }
             }
 
         repository.runTransactionForResult(UpdateNsIdProfileSwitchTransaction(nsIdProfileSwitches))
@@ -768,13 +633,13 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("Bolus", Bolus::class.java.simpleName)
         sendLog("Carbs", Carbs::class.java.simpleName)
         sendLog("TemporaryTarget", TT::class.java.simpleName)
-        sendLog("TemporaryBasal", TemporaryBasal::class.java.simpleName)
+        sendLog("TemporaryBasal", TB::class.java.simpleName)
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
         sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
         sendLog("TherapyEvent", TE::class.java.simpleName)
         sendLog("OfflineEvent", OE::class.java.simpleName)
-        sendLog("ExtendedBolus", ExtendedBolus::class.java.simpleName)
+        sendLog("EB", EB::class.java.simpleName)
         rxBus.send(EventNSClientNewLog("● DONE NSIDs", ""))
     }
 
@@ -824,7 +689,7 @@ class StoreDataForDbImpl @Inject constructor(
                         .also { result ->
                             result.invalidated.forEach {
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                                invalidated.inc(TemporaryBasal::class.java.simpleName)
+                                invalidated.inc(TB::class.java.simpleName)
                             }
                         }
                 }
@@ -890,12 +755,12 @@ class StoreDataForDbImpl @Inject constructor(
             if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
                 repository.findExtendedBolusByNSId(id)?.let { gv ->
                     repository.runTransactionForResult(InvalidateExtendedBolusTransaction(gv.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating ExtendedBolus", it) }
+                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating EB", it) }
                         .blockingGet()
                         .also { result ->
                             result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated ExtendedBolus $it")
-                                invalidated.inc(ExtendedBolus::class.java.simpleName)
+                                aapsLogger.debug(LTag.DATABASE, "Invalidated EB $it")
+                                invalidated.inc(EB::class.java.simpleName)
                             }
                         }
                 }
@@ -903,13 +768,13 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("Bolus", Bolus::class.java.simpleName)
         sendLog("Carbs", Carbs::class.java.simpleName)
         sendLog("TemporaryTarget", TT::class.java.simpleName)
-        sendLog("TemporaryBasal", TemporaryBasal::class.java.simpleName)
+        sendLog("TemporaryBasal", TB::class.java.simpleName)
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
         sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
         sendLog("TherapyEvent", TE::class.java.simpleName)
         sendLog("OfflineEvent", OE::class.java.simpleName)
-        sendLog("ExtendedBolus", ExtendedBolus::class.java.simpleName)
+        sendLog("EB", EB::class.java.simpleName)
     }
 
     override fun updateDeletedGlucoseValuesInDb() {

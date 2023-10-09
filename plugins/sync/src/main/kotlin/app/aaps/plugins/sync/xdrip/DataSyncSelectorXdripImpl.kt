@@ -395,7 +395,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.tbrsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
+            persistenceLayer.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
                 aapsLogger.info(LTag.XDRIP, "Loading TemporaryBasal data Start: $startId ${tb.first} forID: ${tb.second.id} ")
                 if (!isOld(tb.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id))
@@ -425,7 +425,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.ebsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
+            persistenceLayer.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
                 aapsLogger.info(LTag.XDRIP, "Loading ExtendedBolus data Start: $startId ${eb.first} forID: ${eb.second.id} ")
                 val profile = profileFunction.getProfile(eb.first.timestamp)
                 if (profile != null && !isOld(eb.first.timestamp)) {

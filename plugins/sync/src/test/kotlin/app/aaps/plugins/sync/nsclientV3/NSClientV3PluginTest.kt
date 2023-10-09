@@ -1,10 +1,12 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.TrendArrow
@@ -26,10 +28,8 @@ import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
@@ -360,16 +360,16 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddExtendedBolus() = runTest {
-        val extendedBolus = ExtendedBolus(
+        val extendedBolus = EB(
             timestamp = 10000,
             isValid = true,
             amount = 2.0,
             isEmulatingTempBasal = false,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -413,17 +413,17 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTemporaryBasal() = runTest {
-        val temporaryBasal = TemporaryBasal(
+        val temporaryBasal = TB(
             timestamp = 10000,
             isValid = true,
-            type = TemporaryBasal.Type.NORMAL,
+            type = TB.Type.NORMAL,
             rate = 2.0,
             isAbsolute = true,
             duration = 3600000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )

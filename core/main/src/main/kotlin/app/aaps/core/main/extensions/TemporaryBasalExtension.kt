@@ -1,6 +1,7 @@
 package app.aaps.core.main.extensions
 
 import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
@@ -8,47 +9,45 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.interfaces.end
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
 import kotlin.math.roundToInt
 
-fun TemporaryBasal.getPassedDurationToTimeInMinutes(time: Long): Int =
+fun TB.getPassedDurationToTimeInMinutes(time: Long): Int =
     ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
 
-val TemporaryBasal.plannedRemainingMinutes: Int
+val TB.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
-fun TemporaryBasal.convertedToAbsolute(time: Long, profile: Profile): Double =
+fun TB.convertedToAbsolute(time: Long, profile: Profile): Double =
     if (isAbsolute) rate
     else profile.getBasal(time) * rate / 100
 
-fun TemporaryBasal.convertedToPercent(time: Long, profile: Profile): Int =
+fun TB.convertedToPercent(time: Long, profile: Profile): Int =
     if (!isAbsolute) rate.toInt()
     else (rate / profile.getBasal(time) * 100).toInt()
 
-private fun TemporaryBasal.netExtendedRate(profile: Profile) = rate - profile.getBasal(timestamp)
-val TemporaryBasal.durationInMinutes
+private fun TB.netExtendedRate(profile: Profile) = rate - profile.getBasal(timestamp)
+val TB.durationInMinutes
     get() = T.msecs(duration).mins()
 
-fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String {
+fun TB.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String {
     return when {
-        type == TemporaryBasal.Type.FAKE_EXTENDED -> {
+        type == TB.Type.FAKE_EXTENDED -> {
             decimalFormatter.to2Decimal(rate) + "U/h (" + decimalFormatter.to2Decimal(netExtendedRate(profile)) + "E) @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
-        isAbsolute                                -> {
+        isAbsolute                    -> {
             decimalFormatter.to2Decimal(rate) + "U/h @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
-        else                                      -> { // percent
+        else                          -> { // percent
             rate.toString() + "% @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
@@ -56,11 +55,11 @@ fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFor
     }
 }
 
-fun TemporaryBasal.toStringShort(decimalFormatter: DecimalFormatter): String =
-    if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) decimalFormatter.to2Decimal(rate) + "U/h"
+fun TB.toStringShort(decimalFormatter: DecimalFormatter): String =
+    if (isAbsolute || type == TB.Type.FAKE_EXTENDED) decimalFormatter.to2Decimal(rate) + "U/h"
     else "${decimalFormatter.to0Decimal(rate)}%"
 
-fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
+fun TB.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     if (!isValid) return IobTotal(time)
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
@@ -102,7 +101,7 @@ fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insul
     return result
 }
 
-fun TemporaryBasal.iobCalc(
+fun TB.iobCalc(
     time: Long,
     profile: Profile,
     lastAutosensResult: AutosensResult,

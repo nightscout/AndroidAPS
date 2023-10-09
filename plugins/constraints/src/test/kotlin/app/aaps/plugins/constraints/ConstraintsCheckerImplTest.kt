@@ -212,7 +212,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         safetyPlugin =
             SafetyPlugin(
                 injector, aapsLogger, rh, sp, constraintChecker, activePlugin, hardLimits,
-                config, iobCobCalculator, dateUtil, uiInteraction, decimalFormatter
+                config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter
             )
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)

@@ -714,32 +714,32 @@ import kotlin.math.roundToInt
         database.temporaryBasalDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getTemporaryBasalActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryBasal>> =
+    fun getTemporaryBasalActiveAt(timestamp: Long): Maybe<TemporaryBasal> =
         database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
-    fun getTemporaryBasalsDataActiveBetweenTimeAndTime(from: Long, to: Long): Single<List<TemporaryBasal>> =
+    fun getTemporaryBasalsActiveBetweenTimeAndTime(from: Long, to: Long): Single<List<TemporaryBasal>> =
         database.temporaryBasalDao.getTemporaryBasalActiveBetweenTimeAndTime(from, to)
             .subscribeOn(Schedulers.io())
 
-    fun getTemporaryBasalsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
+    fun getTemporaryBasalsStartingFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
         database.temporaryBasalDao.getTemporaryBasalDataFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getTemporaryBasalsDataFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
-        database.temporaryBasalDao.getTemporaryBasalDataFromTimeToTime(from, to)
+    fun getTemporaryBasalsStartingFromTimeToTime(from: Long, to: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
+        database.temporaryBasalDao.getTemporaryBasalStartingFromTimeToTime(from, to)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getTemporaryBasalsDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
+    fun getTemporaryBasalsStartingFromTimeIncludingInvalid(timestamp: Long, ascending: Boolean): Single<List<TemporaryBasal>> =
         database.temporaryBasalDao.getTemporaryBasalDataIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getOldestTemporaryBasalRecord(): TemporaryBasal? =
+    fun getOldestTemporaryBasalRecord(): Maybe<TemporaryBasal> =
         database.temporaryBasalDao.getOldestRecord()
+            .subscribeOn(Schedulers.io())
 
     fun getLastTemporaryBasalId(): Long? =
         database.temporaryBasalDao.getLastId()
@@ -773,28 +773,28 @@ import kotlin.math.roundToInt
         database.extendedBolusDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getExtendedBolusActiveAt(timestamp: Long): Single<ValueWrapper<ExtendedBolus>> =
+    fun getExtendedBolusActiveAt(timestamp: Long): Maybe<ExtendedBolus> =
         database.extendedBolusDao.getExtendedBolusActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
-    fun getExtendedBolusDataFromTime(timestamp: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
-        database.extendedBolusDao.getExtendedBolusDataFromTime(timestamp)
+    fun getExtendedBolusesStartingFromTime(timestamp: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
+        database.extendedBolusDao.getExtendedBolusesStartingFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getExtendedBolusDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
+    fun getExtendedBolusesStartingFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
         database.extendedBolusDao.getExtendedBolusDataFromTimeToTime(start, end)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getExtendedBolusDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
+    fun getExtendedBolusStartingFromTimeIncludingInvalid(timestamp: Long, ascending: Boolean): Single<List<ExtendedBolus>> =
         database.extendedBolusDao.getExtendedBolusDataIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getOldestExtendedBolusRecord(): ExtendedBolus? =
+    fun getOldestExtendedBolusRecord(): Maybe<ExtendedBolus> =
         database.extendedBolusDao.getOldestRecord()
+            .subscribeOn(Schedulers.io())
 
     fun getLastExtendedBolusId(): Long? =
         database.extendedBolusDao.getLastId()

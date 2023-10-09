@@ -103,7 +103,7 @@ class PrepareTreatmentsDataWorker(
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            repository.getExtendedBolusDataFromTimeToTime(fromTime, endTime, true).blockingGet()
+            persistenceLayer.getExtendedBolusesStartingFromTimeToTime(fromTime, endTime, true)
                 .map { ExtendedBolusDataPoint(it, rh, decimalFormatter) }
                 .filter { it.duration != 0L }
                 .forEach {

@@ -2,14 +2,14 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.core.data.db.EB
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.database.entities.ExtendedBolus
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.Shape
 
 class ExtendedBolusDataPoint(
-    val data: ExtendedBolus,
+    val data: EB,
     private val rh: ResourceHelper,
     private val decimalFormatter: DecimalFormatter
 ) : DataPointWithLabelInterface {
@@ -31,5 +31,5 @@ class ExtendedBolusDataPoint(
         yValue = y
     }
 
-    private fun ExtendedBolus.toStringTotal(): String = "${decimalFormatter.to2Decimal(amount)}U ( ${decimalFormatter.to2Decimal(rate)} U/h )"
+    private fun EB.toStringTotal(): String = "${decimalFormatter.to2Decimal(amount)}U ( ${decimalFormatter.to2Decimal(rate)} U/h )"
 }

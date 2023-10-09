@@ -546,26 +546,26 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.tbrsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
+            persistenceLayer.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryBasal data Start: $startId ${tb.first} forID: ${tb.second.id} ")
                 val dataPair = DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id)
                 val profile = profileFunction.getProfile(tb.first.timestamp)
                 if (profile != null) {
                     when {
                         // new record with existing NS id => must be coming from NS => ignore
-                        tb.first.id == tb.second.id && tb.first.interfaceIDs.nightscoutId != null ->
+                        tb.first.id == tb.second.id && tb.first.ids.nightscoutId != null ->
                             aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Loaded from NS: ${tb.second.id} ")
                         // only NsId changed, no need to upload
-                        tb.first.onlyNsIdAdded(tb.second)                                         ->
+                        tb.first.onlyNsIdAdded(tb.second)                                ->
                             aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.second.id} ")
                         // without nsId = create new
-                        tb.first.interfaceIDs.nightscoutId == null                                -> {
+                        tb.first.ids.nightscoutId == null                                -> {
                             activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId", profile)
                             synchronized(dataPair) { dataPair.waitMillis(60000) }
                             cont = dataPair.confirmed
                         }
                         // with nsId = update
-                        tb.first.interfaceIDs.nightscoutId != null                                -> {
+                        tb.first.ids.nightscoutId != null                                -> {
                             activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId", profile)
                             synchronized(dataPair) { dataPair.waitMillis(60000) }
                             cont = dataPair.confirmed
@@ -597,26 +597,26 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.ebsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
+            persistenceLayer.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading ExtendedBolus data Start: $startId ${eb.first} forID: ${eb.second.id} ")
                 val dataPair = DataSyncSelector.PairExtendedBolus(eb.first, eb.second.id)
                 val profile = profileFunction.getProfile(eb.first.timestamp)
                 if (profile != null) {
                     when {
                         // new record with existing NS id => must be coming from NS => ignore
-                        eb.first.id == eb.second.id && eb.first.interfaceIDs.nightscoutId != null ->
+                        eb.first.id == eb.second.id && eb.first.ids.nightscoutId != null ->
                             aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Loaded from NS: ${eb.second.id} ")
                         // only NsId changed, no need to upload
-                        eb.first.onlyNsIdAdded(eb.second)                                         ->
+                        eb.first.onlyNsIdAdded(eb.second)                                ->
                             aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Only NS id changed ID: ${eb.second.id} ")
                         // without nsId = create new
-                        eb.first.interfaceIDs.nightscoutId == null                                -> {
+                        eb.first.ids.nightscoutId == null                                -> {
                             activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId", profile)
                             synchronized(dataPair) { dataPair.waitMillis(60000) }
                             cont = dataPair.confirmed
                         }
                         // with nsId = update
-                        eb.first.interfaceIDs.nightscoutId != null                                -> {
+                        eb.first.ids.nightscoutId != null                                -> {
                             activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId", profile)
                             synchronized(dataPair) { dataPair.waitMillis(60000) }
                             cont = dataPair.confirmed

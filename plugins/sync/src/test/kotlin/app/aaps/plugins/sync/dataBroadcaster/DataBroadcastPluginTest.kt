@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.dataBroadcaster
 
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.InMemoryGlucoseValue
@@ -14,7 +15,6 @@ import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
-import app.aaps.database.entities.TemporaryBasal
 import app.aaps.shared.tests.BundleMock
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -55,7 +55,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
         Mockito.`when`(iobCobCalculator.getCobInfo("broadcast")).thenReturn(CobInfo(1000, 100.0, 10.0))
         Mockito.`when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
         Mockito.`when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(anyLong()))
-            .thenReturn(TemporaryBasal(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TemporaryBasal.Type.NORMAL))
+            .thenReturn(TB(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TB.Type.NORMAL))
         Mockito.`when`(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
         Mockito.`when`(loop.lastRun).thenReturn(Loop.LastRun().also {
             it.lastTBREnact = 1000

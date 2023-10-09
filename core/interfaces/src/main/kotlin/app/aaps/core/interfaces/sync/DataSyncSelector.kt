@@ -1,7 +1,9 @@
 package app.aaps.core.interfaces.sync
 
+import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.database.entities.Bolus
@@ -9,10 +11,8 @@ import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.TemporaryBasal
 import org.json.JSONObject
 
 interface DataSyncSelector {
@@ -31,8 +31,8 @@ interface DataSyncSelector {
     data class PairBolus(override val value: Bolus, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairCarbs(override val value: Carbs, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairBolusCalculatorResult(override val value: BolusCalculatorResult, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairTemporaryBasal(override val value: TemporaryBasal, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairExtendedBolus(override val value: ExtendedBolus, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairTemporaryBasal(override val value: TB, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairExtendedBolus(override val value: EB, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairProfileSwitch(override val value: ProfileSwitch, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairEffectiveProfileSwitch(override val value: EffectiveProfileSwitch, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairOfflineEvent(override val value: OE, override val id: Long, override var confirmed: Boolean = false) : DataPair

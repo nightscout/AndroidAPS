@@ -4,6 +4,7 @@ import android.app.NotificationManager
 import android.content.Context
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
@@ -47,7 +48,6 @@ import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.core.main.extensions.end
 import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint
@@ -61,7 +61,6 @@ import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.HeartRate
-import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
@@ -787,7 +786,7 @@ class DataHandlerMobile @Inject constructor(
         var beginBasalValue = profile.getBasal(beginBasalSegmentTime)
         var endBasalValue = beginBasalValue
         var tb1 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime)
-        var tb2: TemporaryBasal?
+        var tb2: TB?
         var tbBefore = beginBasalValue
         var tbAmount = beginBasalValue
         var tbStart = runningTime
@@ -1004,7 +1003,7 @@ class DataHandlerMobile @Inject constructor(
             if (tempTarget != null) {
                 val target = profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.lowTarget, GlucoseUnit.MGDL)
                 ret += rh.gs(R.string.temp_target) + ": " + target
-                ret += "\n" + rh.gs(R.string.until) + ": " + dateUtil.timeString(tempTarget.end())
+                ret += "\n" + rh.gs(R.string.until) + ": " + dateUtil.timeString(tempTarget.end)
                 ret += "\n\n"
             }
             ret += rh.gs(R.string.default_range) + ": "

@@ -10,6 +10,7 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.util.size
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -35,7 +36,8 @@ class TddCalculatorImpl @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val iobCobCalculator: IobCobCalculator,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer
 ) : TddCalculator {
 
     override fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TotalDailyDose>? {
@@ -108,7 +110,7 @@ class TddCalculatorImpl @Inject constructor(
             tdd.basalAmount += absoluteRate / 60.0 * 5.0
 
             if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-                val eb = iobCobCalculator.getExtendedBolus(t)
+                val eb = persistenceLayer.getExtendedBolusActiveAt(t)
                 val absoluteEbRate = eb?.rate ?: 0.0
                 tdd.bolusAmount += absoluteEbRate / 60.0 * 5.0
             }

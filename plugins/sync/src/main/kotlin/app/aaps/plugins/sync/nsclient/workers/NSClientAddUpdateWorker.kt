@@ -3,7 +3,9 @@ package app.aaps.plugins.sync.nsclient.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.interfaces.configuration.Config
@@ -22,9 +24,7 @@ import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.TemporaryBasal
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.extendedBolusFromJson
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
@@ -135,14 +135,14 @@ class NSClientAddUpdateWorker(
 
                 eventType == TE.Type.COMBO_BOLUS.text                             ->
                     if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
-                        ExtendedBolus.extendedBolusFromJson(json)?.let { extendedBolus ->
+                        EB.extendedBolusFromJson(json)?.let { extendedBolus ->
                             storeDataForDb.extendedBoluses.add(extendedBolus)
                         } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
                     }
 
                 eventType == TE.Type.TEMPORARY_BASAL.text                         ->
                     if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
-                        TemporaryBasal.temporaryBasalFromJson(json)?.let { temporaryBasal ->
+                        TB.temporaryBasalFromJson(json)?.let { temporaryBasal ->
                             storeDataForDb.temporaryBasals.add(temporaryBasal)
                         } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                     }

@@ -33,7 +33,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.end
 import app.aaps.core.main.extensions.friendlyDescription
 import app.aaps.core.main.extensions.highValueToUnitsToString
 import app.aaps.core.main.extensions.lowValueToUnitsToString
@@ -158,7 +157,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
             val newDay = position == 0 || !dateUtil.isSameDayGroup(tempTarget.timestamp, tempTargetList[position - 1].timestamp)
             holder.binding.date.visibility = newDay.toVisibility()
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(tempTarget.timestamp, rh) else ""
-            holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end())
+            holder.binding.time.text = dateUtil.timeRangeString(tempTarget.timestamp, tempTarget.end)
             holder.binding.duration.text = rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(tempTarget.duration).mins())
             holder.binding.low.text = tempTarget.lowValueToUnitsToString(units, decimalFormatter)
             holder.binding.high.text = tempTarget.highValueToUnitsToString(units, decimalFormatter)

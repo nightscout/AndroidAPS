@@ -1,11 +1,11 @@
 package app.aaps.core.interfaces.pump
 
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.database.entities.TemporaryBasal
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
@@ -284,17 +284,17 @@ interface PumpSync {
         PUMP_SUSPEND,           // Initiated on PUMP
         SUPERBOLUS;
 
-        fun toDbType(): TemporaryBasal.Type =
+        fun toDbType(): TB.Type =
             when (this) {
-                NORMAL                -> TemporaryBasal.Type.NORMAL
-                EMULATED_PUMP_SUSPEND -> TemporaryBasal.Type.EMULATED_PUMP_SUSPEND
-                PUMP_SUSPEND          -> TemporaryBasal.Type.PUMP_SUSPEND
-                SUPERBOLUS            -> TemporaryBasal.Type.SUPERBOLUS
+                NORMAL                -> TB.Type.NORMAL
+                EMULATED_PUMP_SUSPEND -> TB.Type.EMULATED_PUMP_SUSPEND
+                PUMP_SUSPEND          -> TB.Type.PUMP_SUSPEND
+                SUPERBOLUS            -> TB.Type.SUPERBOLUS
             }
 
         companion object {
 
-            fun fromDbType(dbType: TemporaryBasal.Type) = entries.firstOrNull { it.name == dbType.name }
+            fun fromDbType(dbType: TB.Type) = entries.firstOrNull { it.name == dbType.name }
                 ?: NORMAL
         }
 

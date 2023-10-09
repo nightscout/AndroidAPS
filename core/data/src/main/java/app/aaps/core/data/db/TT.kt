@@ -48,5 +48,8 @@ data class TT(
         }
     }
 
+    val end
+        get() = timestamp + duration
+
     companion object
 }

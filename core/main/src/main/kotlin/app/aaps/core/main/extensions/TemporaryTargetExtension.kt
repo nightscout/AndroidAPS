@@ -23,5 +23,3 @@ fun TT.friendlyDescription(units: GlucoseUnit, rh: ResourceHelper, profileUtil: 
     profileUtil.toTargetRangeString(lowTarget, highTarget, GlucoseUnit.MGDL, units) +
         units.asText +
         "@" + rh.gs(app.aaps.core.ui.R.string.format_mins, TimeUnit.MILLISECONDS.toMinutes(duration)) + "(" + reason.text + ")"
-
-fun TT.end() = timestamp + duration

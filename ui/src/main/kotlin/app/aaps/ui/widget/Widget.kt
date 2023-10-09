@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -33,7 +34,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.directionToIcon
-import app.aaps.core.main.extensions.end
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.displayText
 import app.aaps.core.main.profile.ProfileSealed
@@ -64,6 +64,7 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var sp: SP
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var decimalFormatter: DecimalFormatter
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     companion object {
 
@@ -181,7 +182,7 @@ class Widget : AppWidgetProvider() {
     private fun updateExtendedBolus(views: RemoteViews) {
         val pump = activePlugin.activePump
         views.setTextViewText(R.id.extended_bolus, overviewData.extendedBolusText())
-        views.setViewVisibility(R.id.extended_layout, (iobCobCalculator.getExtendedBolus(dateUtil.now()) != null && !pump.isFakingTempsByExtendedBoluses).toVisibility())
+        views.setViewVisibility(R.id.extended_layout, (persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) != null && !pump.isFakingTempsByExtendedBoluses).toVisibility())
     }
 
     private fun updateIobCob(views: RemoteViews) {
@@ -212,7 +213,7 @@ class Widget : AppWidgetProvider() {
             views.setTextColor(R.id.temp_target, rh.gc(app.aaps.core.ui.R.color.widget_ribbonWarning))
             views.setTextViewText(
                 R.id.temp_target,
-                profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end(), rh)
+                profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
             )
         } else {
             // If the target is not the same as set in the profile then oref has overridden it

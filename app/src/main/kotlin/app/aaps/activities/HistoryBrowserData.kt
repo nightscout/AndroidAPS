@@ -71,6 +71,7 @@ class HistoryBrowserData @Inject constructor(
                 fabricPrivacy,
                 dateUtil,
                 repository,
+                persistenceLayer,
                 overviewData,
                 calculationWorkflow,
                 decimalFormatter

@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tidepool.comm
 
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -11,7 +12,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
@@ -131,7 +131,7 @@ class UploadChunk @Inject constructor(
         return selection
     }
 
-    private fun fromTemporaryBasals(tbrList: List<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
+    private fun fromTemporaryBasals(tbrList: List<TB>, start: Long, end: Long): List<BasalElement> {
         val results = LinkedList<BasalElement>()
         for (tbr in tbrList) {
             if (tbr.timestamp in start..end)
@@ -143,7 +143,7 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getBasals(start: Long, end: Long): List<BasalElement> {
-        val temporaryBasals = repository.getTemporaryBasalsDataFromTimeToTime(start, end, true).blockingGet()
+        val temporaryBasals = persistenceLayer.getTemporaryBasalsStartingFromTimeToTime(start, end, true)
         val selection = fromTemporaryBasals(temporaryBasals, start, end)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} TBRs selected for upload"))

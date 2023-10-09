@@ -228,8 +228,8 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairFood                   -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairGlucoseValue           -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairTherapyEvent           -> dataPair.value.ids.nightscoutId
-            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairOfflineEvent           -> dataPair.value.ids.nightscoutId

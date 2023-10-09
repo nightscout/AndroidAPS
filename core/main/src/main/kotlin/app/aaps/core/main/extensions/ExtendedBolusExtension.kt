@@ -1,6 +1,8 @@
 package app.aaps.core.main.extensions
 
 import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.TB
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
@@ -8,43 +10,40 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.ExtendedBolus
-import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.interfaces.end
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
 import kotlin.math.roundToInt
 
-fun ExtendedBolus.isInProgress(dateUtil: DateUtil): Boolean =
+fun EB.isInProgress(dateUtil: DateUtil): Boolean =
     dateUtil.now() in timestamp..timestamp + duration
 
-val ExtendedBolus.plannedRemainingMinutes: Int
+val EB.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
-fun ExtendedBolus.toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
+fun EB.toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
     "E " + decimalFormatter.to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
         " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
 
-fun ExtendedBolus.toStringMedium(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
+fun EB.toStringMedium(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
     decimalFormatter.to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
 
-fun ExtendedBolus.getPassedDurationToTimeInMinutes(time: Long): Int =
+fun EB.getPassedDurationToTimeInMinutes(time: Long): Int =
     ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
 
-fun ExtendedBolus.toTemporaryBasal(profile: Profile): TemporaryBasal =
-    TemporaryBasal(
+fun EB.toTemporaryBasal(profile: Profile): TB =
+    TB(
         timestamp = timestamp,
         duration = duration,
         rate = profile.getBasal(timestamp) + rate,
         isAbsolute = true,
         isValid = isValid,
-        interfaceIDs_backing = interfaceIDs_backing,
-        type = TemporaryBasal.Type.FAKE_EXTENDED
+        ids = ids,
+        type = TB.Type.FAKE_EXTENDED
     )
 
-fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
+fun EB.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     if (!isValid) return IobTotal(time)
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
@@ -73,7 +72,7 @@ fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insuli
     return result
 }
 
-fun ExtendedBolus.iobCalc(
+fun EB.iobCalc(
     time: Long,
     profile: Profile,
     lastAutosensResult: AutosensResult,

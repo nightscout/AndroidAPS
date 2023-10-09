@@ -12,7 +12,6 @@ import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
@@ -61,7 +60,6 @@ open class VirtualPumpPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
-    private val iobCobCalculator: IobCobCalculator,
     commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
     private val config: Config,
@@ -357,13 +355,13 @@ open class VirtualPumpPlugin @Inject constructor(
                 extended.put("ActiveProfile", profileName)
             } catch (ignored: Exception) {
             }
-            val tb = iobCobCalculator.getTempBasal(now)
+            val tb = persistenceLayer.getTemporaryBasalActiveAt(now)
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.convertedToAbsolute(now, profile))
                 extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.timestamp))
                 extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
             }
-            val eb = iobCobCalculator.getExtendedBolus(now)
+            val eb = persistenceLayer.getExtendedBolusActiveAt(now)
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.rate)
                 extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.timestamp))

@@ -226,14 +226,14 @@ class OverviewDataImpl @Inject constructor(
     */
 
     override fun extendedBolusText(): String =
-        iobCobCalculator.get().getExtendedBolus(dateUtil.now())?.let { extendedBolus ->
+        persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())?.let { extendedBolus ->
             if (!extendedBolus.isInProgress(dateUtil)) ""
             else if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, extendedBolus.rate)
             else ""
         } ?: ""
 
     override fun extendedBolusDialogText(): String =
-        iobCobCalculator.get().getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter) ?: ""
+        persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter) ?: ""
 
     /*
      * IOB, COB

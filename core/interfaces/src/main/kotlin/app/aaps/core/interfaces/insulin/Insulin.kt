@@ -19,7 +19,7 @@ interface Insulin : ConfigExportImport {
 
         companion object {
 
-            private val map = values().associateBy(InsulinType::value)
+            private val map = entries.associateBy(InsulinType::value)
             fun fromInt(type: Int) = map[type]
         }
     }

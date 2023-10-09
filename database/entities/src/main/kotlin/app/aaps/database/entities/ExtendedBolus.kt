@@ -48,22 +48,6 @@ data class ExtendedBolus(
         require(duration > 0)
     }
 
-    fun contentEqualsTo(other: ExtendedBolus): Boolean =
-        isValid == other.isValid &&
-            timestamp == other.timestamp &&
-            utcOffset == other.utcOffset &&
-            isEmulatingTempBasal == other.isEmulatingTempBasal &&
-            duration == other.duration &&
-            rate == other.rate
-
-    fun onlyNsIdAdded(previous: ExtendedBolus): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
     val rate: Double // in U/h
         get() = amount * (60 * 60 * 1000.0) / duration
-
-    companion object
 }

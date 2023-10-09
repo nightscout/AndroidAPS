@@ -57,7 +57,7 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     fun getTemporaryBasalDataFromTime(timestamp: Long): Single<List<TemporaryBasal>>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :from AND timestamp <= :to AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getTemporaryBasalDataFromTimeToTime(from: Long, to: Long): Single<List<TemporaryBasal>>
+    fun getTemporaryBasalStartingFromTimeToTime(from: Long, to: Long): Single<List<TemporaryBasal>>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getTemporaryBasalDataIncludingInvalidFromTime(timestamp: Long): Single<List<TemporaryBasal>>
@@ -77,7 +77,7 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     fun getCurrentFromHistoric(referenceId: Long): Maybe<TemporaryBasal>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
-    fun getOldestRecord(): TemporaryBasal?
+    fun getOldestRecord(): Maybe<TemporaryBasal>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
     fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TemporaryBasal>

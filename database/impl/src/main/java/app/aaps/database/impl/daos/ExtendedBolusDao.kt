@@ -45,7 +45,7 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     fun getExtendedBolusActiveAt(timestamp: Long): Maybe<ExtendedBolus>
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getExtendedBolusDataFromTime(timestamp: Long): Single<List<ExtendedBolus>>
+    fun getExtendedBolusesStartingFromTime(timestamp: Long): Single<List<ExtendedBolus>>
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp >= :from AND timestamp <= :to AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getExtendedBolusDataFromTimeToTime(from: Long, to: Long): Single<List<ExtendedBolus>>
@@ -65,7 +65,7 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     fun getCurrentFromHistoric(referenceId: Long): Maybe<ExtendedBolus>
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
-    fun getOldestRecord(): ExtendedBolus?
+    fun getOldestRecord(): Maybe<ExtendedBolus>
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
     fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<ExtendedBolus>
