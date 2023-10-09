@@ -3,10 +3,6 @@
  ,{"minAndroid":24,"maxAndroid":25,"supported":"2.6.2"}
  ,{"minAndroid":26,"maxAndroid":27,"supported":"2.8.2"}
  ,{"minAndroid":28,"maxAndroid":99,"supported":"3.0.0"}
- ,{"endDate":"2023-02-25","version":"3.1.0.3-dev-f"}
- ,{"endDate":"2023-02-25","version":"3.1.0.3-dev-g"}
- ,{"endDate":"2023-04-23","version":"3.1.0.3-dev-h"}
- ,{"endDate":"2023-09-01","version":"3.2.0-dev-i"}
  ,{"endDate":"2023-09-05","version":"3.2.0-dev-j"}
  ,{"endDate":"2023-09-19","version":"3.2.0-dev-j-medtrum"}
  ,{"endDate":"2023-09-05","version":"3.2.0-dev-k"}
