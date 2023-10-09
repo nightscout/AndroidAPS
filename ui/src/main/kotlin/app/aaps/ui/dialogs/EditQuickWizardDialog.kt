@@ -5,12 +5,13 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.SeekBar
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -21,8 +22,6 @@ import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
-import app.aaps.core.ui.extensions.selectedItemPosition
-import app.aaps.core.ui.extensions.setSelection
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogEditQuickwizardBinding
@@ -70,13 +69,15 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
+        /* //posibility to choose
+
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
             binding.deviceLabel.visibility = View.VISIBLE
             binding.device.visibility = View.VISIBLE
         } else {
             binding.deviceLabel.visibility = View.GONE
             binding.device.visibility = View.GONE
-        }
+        }*/
 
         binding.okcancel.ok.setOnClickListener {
             try {
@@ -87,7 +88,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 entry.storage.put("useBG", binding.useBg.isChecked)
                 entry.storage.put("useCOB", booleanToInt(binding.useCob.isChecked))
                 entry.storage.put("useBolusIOB", booleanToInt(binding.useBolusIob.isChecked))
-                entry.storage.put("device", binding.device.selectedItemPosition)
+                entry.storage.put("device", QuickWizardEntry.DEVICE_ALL)
+                //entry.storage.put("device", binding.device.selectedItemPosition)
                 entry.storage.put("useBasalIOB", binding.useBasalIob.selectedItemPosition)
                 entry.storage.put("useTrend", binding.useTrend.selectedItemPosition)
                 entry.storage.put("useSuperBolus", booleanToInt(binding.useSuperBolus.isChecked))
@@ -155,8 +157,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         }
 
-        fun useECarbs(custom: Boolean) {
-            if (custom) {
+        fun useECarbs(yes: Boolean) {
+            if (yes) {
                 binding.timeLabel.visibility = View.VISIBLE
                 binding.time.visibility = View.VISIBLE
                 binding.durationLabel.visibility = View.VISIBLE
@@ -187,10 +189,12 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             useECarbs(checkedId)
         }
 
-        binding.customPercentageSeekbar.setOnSeekBarChangeListener (object :
-                                                                        SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seek: SeekBar,
-                                           progress: Int, fromUser: Boolean) {
+        binding.customPercentageSeekbar.setOnSeekBarChangeListener(object :
+                                                                       SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seek: SeekBar,
+                progress: Int, fromUser: Boolean
+            ) {
                 usePercentage(true)
             }
 
@@ -236,11 +240,11 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.useCob.isChecked = intToBoolean(entry.useCOB())
         binding.useBolusIob.isChecked = intToBoolean(entry.useBolusIOB())
         binding.useBasalIob.setSelection(entry.useBasalIOB())
-        binding.device.setSelection(entry.device())
+        //binding.device.setSelection(entry.device())
         binding.useTrend.setSelection(entry.useTrend())
-        binding.useSuperBolus.isChecked=intToBoolean(entry.useSuperBolus())
-        binding.useTempTarget.isChecked=intToBoolean(entry.useTempTarget())
-        binding.usePercentage.isChecked=intToBoolean(entry.usePercentage())
+        binding.useSuperBolus.isChecked = intToBoolean(entry.useSuperBolus())
+        binding.useTempTarget.isChecked = intToBoolean(entry.useTempTarget())
+        binding.usePercentage.isChecked = intToBoolean(entry.usePercentage())
         val defaultPercentage = entry.percentage() / 5
         binding.customPercentageSeekbar.progress = defaultPercentage
         usePercentage(intToBoolean(entry.usePercentage()))
@@ -251,13 +255,38 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.duration.value = SafeParse.stringToDouble(entry.duration().toString())
         useECarbs(intToBoolean(entry.useEcarbs()))
 
-        binding.useCob.setOnClickListener(this)
-        //binding.useEcarbs.setOnClickListener(this)
+        binding.useCob.setOnCheckedChangeListener { _, checkedId ->
+            processCob()
+        }
+        binding.useBasalIobCheckbox.setOnCheckedChangeListener { _, checkedId ->
+            processBasalIOB()
+        }
+
+        binding.useTrendCheckbox.setOnCheckedChangeListener { _, checkedId ->
+            processTrend()
+        }
+
         processCob()
+
+        binding.useBasalIob.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                binding.useBasalIobCheckbox.isChecked = binding.useBasalIob.selectedItemPosition!=QuickWizardEntry.NO
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
+
+        binding.useTrend.setOnItemSelectedListener(object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
+                binding.useTrendCheckbox.isChecked = binding.useTrend.selectedItemPosition!=QuickWizardEntry.NO
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        })
     }
 
     override fun onClick(v: View?) {
-        processCob()
+        //
     }
 
     override fun onResume() {
@@ -280,10 +309,29 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             binding.useBolusIob.setEnabled(false)
             binding.useBasalIob.setEnabled(false)
             binding.useBolusIob.isChecked = true
+            binding.useBasalIobCheckbox.isChecked = true
+            binding.useBasalIobCheckbox.setEnabled(false)
             binding.useBasalIob.setSelection(QuickWizardEntry.YES)
         } else {
             binding.useBolusIob.setEnabled(true)
             binding.useBasalIob.setEnabled(true)
+            binding.useBasalIobCheckbox.setEnabled(true)
+        }
+    }
+
+    private fun processBasalIOB() {
+        if (binding.useBasalIobCheckbox.isChecked) {
+            if (binding.useBasalIob.selectedItemPosition==QuickWizardEntry.NO) binding.useBasalIob.setSelection(QuickWizardEntry.YES)
+        } else {
+            binding.useBasalIob.setSelection(QuickWizardEntry.NO)
+        }
+    }
+
+    private fun processTrend() {
+        if (binding.useTrendCheckbox.isChecked) {
+            if (binding.useTrend.selectedItemPosition==QuickWizardEntry.NO) binding.useTrend.setSelection(QuickWizardEntry.YES)
+        } else {
+            binding.useTrend.setSelection(QuickWizardEntry.NO)
         }
     }
 
@@ -322,11 +370,11 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     }
 
-    fun booleanToInt(bool: Boolean):Int{
-        return if (bool==true) 0 else 1
+    fun booleanToInt(bool: Boolean): Int {
+        return if (bool == true) 0 else 1
     }
 
-    fun intToBoolean(theInt: Int):Boolean{
-        return theInt==0
+    fun intToBoolean(theInt: Int): Boolean {
+        return theInt == 0
     }
 }
