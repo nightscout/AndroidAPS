@@ -134,6 +134,8 @@
     <string name="reading_activation_status">Please wait, reading activation status from pump.</string>
 
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Unreachable alert forced enabled, because Medtrum patch can fail and be unreachable.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Advised to set to 30 minutes, because Medtrum patch can fail and be unreachable.</string>
     <string name="sn_input_title">Serial Number</string>
     <string name="sn_input_summary">Enter the serial number of your pump base.</string>
     <string name="sn_input_invalid">Invalid serial number!</string>
