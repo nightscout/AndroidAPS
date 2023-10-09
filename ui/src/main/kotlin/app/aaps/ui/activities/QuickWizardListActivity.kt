@@ -74,7 +74,12 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             holder.binding.from.text = dateUtil.timeString(entry.validFromDate())
             holder.binding.to.text = dateUtil.timeString(entry.validToDate())
             holder.binding.buttonText.text = entry.buttonText()
-            holder.binding.carbs.text = rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs())
+            var bindingCarbsTextFull = rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs())
+            if (entry.useEcarbs() == QuickWizardEntry.YES) {
+                bindingCarbsTextFull += " +" + rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs2())
+                bindingCarbsTextFull += "/" + entry.duration() + "h -> " + entry.time() + "min"
+            }
+            holder.binding.carbs.text = bindingCarbsTextFull
             if (entry.device() == QuickWizardEntry.DEVICE_ALL) {
                 holder.binding.device.visibility = View.GONE
             } else {
