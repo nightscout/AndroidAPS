@@ -2,7 +2,7 @@
 <resources>
     <!-- Omnipod - Keys -->
     <!-- Omnipod - Pod Management -->
-    <string name="omnipod_common_pod_management_title">Pod administrasjon</string>
+    <string name="omnipod_common_pod_management_title">Pod-administrasjon</string>
     <string name="omnipod_common_pod_management_heading_actions">Handlinger</string>
     <string name="omnipod_common_pod_management_heading_tools">Verktøy</string>
     <string name="omnipod_common_pod_management_button_activate_pod">Aktiver Pod</string>
