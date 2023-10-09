@@ -42,36 +42,13 @@ data class TemporaryTarget(
     override var duration: Long // in millis
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
-    fun contentEqualsTo(other: TemporaryTarget): Boolean =
-        timestamp == other.timestamp &&
-            utcOffset == other.utcOffset &&
-            reason == other.reason &&
-            highTarget == other.highTarget &&
-            lowTarget == other.lowTarget &&
-            duration == other.duration &&
-            isValid == other.isValid
-
-    fun onlyNsIdAdded(previous: TemporaryTarget): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
-    enum class Reason(val text: String) {
-        CUSTOM("Custom"),
-        HYPOGLYCEMIA("Hypo"),
-        ACTIVITY("Activity"),
-        EATING_SOON("Eating Soon"),
-        AUTOMATION("Automation"),
-        WEAR("Wear")
+    enum class Reason {
+        CUSTOM,
+        HYPOGLYCEMIA,
+        ACTIVITY,
+        EATING_SOON,
+        AUTOMATION,
+        WEAR
         ;
-
-        companion object {
-
-            fun fromString(reason: String?) = values().firstOrNull { it.text == reason }
-                ?: CUSTOM
-        }
     }
-
-    companion object
 }

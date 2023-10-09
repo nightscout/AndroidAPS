@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.utils.DateUtil
@@ -10,7 +11,6 @@ import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
@@ -25,7 +25,7 @@ fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil, decimalFormatter: D
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("isValid", isValid)
-        .put("eventType", TherapyEvent.Type.PROFILE_SWITCH.text)
+        .put("eventType", TE.Type.PROFILE_SWITCH.text)
         .also { // remove customization to store original profileJson in toPureNsJson call
             timeshift = 0
             percentage = 100

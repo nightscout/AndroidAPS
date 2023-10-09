@@ -1,4 +1,4 @@
-package app.aaps.core.main.extensions
+package app.aaps.database.persistence.converters
 
 import app.aaps.core.data.ue.Action
 import app.aaps.database.entities.UserEntry

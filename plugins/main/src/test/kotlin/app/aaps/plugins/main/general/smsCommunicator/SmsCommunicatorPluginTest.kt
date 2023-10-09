@@ -4,6 +4,7 @@ import android.telephony.SmsManager
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.TrendArrow
@@ -28,7 +29,6 @@ import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.fromGv
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import app.aaps.database.impl.transactions.Transaction
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.main.R
@@ -463,9 +463,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //LOOP SUSPEND 100 : suspend for 100 min + correct answer
         `when`(
-            repository.runTransactionForResult(anyObject<Transaction<InsertAndCancelCurrentOfflineEventTransaction.TransactionResult>>())
-        ).thenReturn(Single.just(InsertAndCancelCurrentOfflineEventTransaction.TransactionResult().apply {
-        }))
+            persistenceLayer.insertAndCancelCurrentOfflineEvent(anyObject(), anyObject(), anyObject(), anyObject(), anyObject())
+        ).thenReturn(Single.just(PersistenceLayer.TransactionResult<OE>().apply { }))
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP SUSPEND 100")
         smsCommunicatorPlugin.processSms(sms)

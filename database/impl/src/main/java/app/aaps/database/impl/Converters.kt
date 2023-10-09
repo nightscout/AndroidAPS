@@ -26,7 +26,7 @@ class Converters {
     fun fromAction(action: Action?) = action?.name
 
     @TypeConverter
-    fun toAction(action: String?) = action?.let { Action.fromString(it) }
+    fun toAction(action: String?) = action?.let { Action.valueOf(it) }
 
     @TypeConverter
     fun fromSource(source: Sources?) = source?.name

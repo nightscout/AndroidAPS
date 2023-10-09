@@ -156,16 +156,16 @@ class NSClientV3Plugin @Inject constructor(
     override val status
         get() =
             when {
-                sp.getBoolean(R.string.key_ns_paused, false)                                           -> rh.gs(app.aaps.core.ui.R.string.paused)
-                isAllowed.not()                                                                        -> blockingReason
+                sp.getBoolean(R.string.key_ns_paused, false)                                    -> rh.gs(app.aaps.core.ui.R.string.paused)
+                isAllowed.not()                                                                 -> blockingReason
                 sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true) && wsConnected  -> "WS: " + rh.gs(app.aaps.core.interfaces.R.string.connected)
                 sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true) && !wsConnected -> "WS: " + rh.gs(R.string.not_connected)
-                lastOperationError != null                                                             -> rh.gs(app.aaps.core.ui.R.string.error)
-                nsAndroidClient?.lastStatus == null                                                    -> rh.gs(R.string.not_connected)
-                workIsRunning()                                                                        -> rh.gs(R.string.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                          -> rh.gs(app.aaps.core.interfaces.R.string.connected)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                          -> rh.gs(R.string.read_only)
-                else                                                                                   -> rh.gs(app.aaps.core.ui.R.string.unknown)
+                lastOperationError != null                                                      -> rh.gs(app.aaps.core.ui.R.string.error)
+                nsAndroidClient?.lastStatus == null                                             -> rh.gs(R.string.not_connected)
+                workIsRunning()                                                                 -> rh.gs(R.string.working)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                   -> rh.gs(app.aaps.core.interfaces.R.string.connected)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                   -> rh.gs(R.string.read_only)
+                else                                                                            -> rh.gs(app.aaps.core.ui.R.string.unknown)
             }
     var lastOperationError: String? = null
 
@@ -895,7 +895,7 @@ class NSClientV3Plugin @Inject constructor(
                             }
 
                             is DataSyncSelector.PairOfflineEvent           -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
                             }
 

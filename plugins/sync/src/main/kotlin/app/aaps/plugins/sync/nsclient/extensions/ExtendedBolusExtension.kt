@@ -1,12 +1,12 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.toTemporaryBasal
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.ExtendedBolus
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
@@ -23,7 +23,7 @@ fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
-        .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
+        .put("eventType", TE.Type.COMBO_BOLUS.text)
         .put("duration", T.msecs(duration).mins())
         .put("durationInMilliseconds", duration)
         .put("splitNow", 0)

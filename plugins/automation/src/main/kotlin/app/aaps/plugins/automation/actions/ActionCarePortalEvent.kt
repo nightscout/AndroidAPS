@@ -73,7 +73,13 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
         }
         therapyEvent.note = note.value
         valuesWithUnit.add(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() })
-        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(therapyEvent, app.aaps.core.data.ue.Action.CAREPORTAL, Sources.Automation, title, valuesWithUnit).subscribe()
+        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+            therapyEvent = therapyEvent,
+            action = app.aaps.core.data.ue.Action.CAREPORTAL,
+            source = Sources.Automation,
+            note = title,
+            listValues = valuesWithUnit
+        ).subscribe()
     }
 
     override fun toJSON(): String {

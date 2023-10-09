@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
 import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.UE
@@ -22,8 +23,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.fromDb
-import app.aaps.core.main.extensions.toDb
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
@@ -31,10 +30,8 @@ import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
-import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusTransaction
@@ -52,10 +49,8 @@ import app.aaps.database.impl.transactions.SyncNsCarbsTransaction
 import app.aaps.database.impl.transactions.SyncNsEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.SyncNsExtendedBolusTransaction
 import app.aaps.database.impl.transactions.SyncNsFoodTransaction
-import app.aaps.database.impl.transactions.SyncNsOfflineEventTransaction
 import app.aaps.database.impl.transactions.SyncNsProfileSwitchTransaction
 import app.aaps.database.impl.transactions.SyncNsTemporaryBasalTransaction
-import app.aaps.database.impl.transactions.SyncNsTherapyEventTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdCarbsTransaction
@@ -63,10 +58,8 @@ import app.aaps.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdExtendedBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdFoodTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdOfflineEventTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdTherapyEventTransaction
 import app.aaps.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -102,7 +95,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val extendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
     override val temporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
     override val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
-    override val offlineEvents: MutableList<OfflineEvent> = mutableListOf()
+    override val offlineEvents: MutableList<OE> = mutableListOf()
     override val foods: MutableList<Food> = mutableListOf()
 
     override val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
@@ -115,7 +108,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val nsIdExtendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
     override val nsIdTemporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
     override val nsIdProfileSwitches: MutableList<ProfileSwitch> = mutableListOf()
-    override val nsIdOfflineEvents: MutableList<OfflineEvent> = mutableListOf()
+    override val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
     override val nsIdDeviceStatuses: MutableList<DeviceStatus> = mutableListOf()
     override val nsIdFoods: MutableList<Food> = mutableListOf()
 
@@ -296,12 +289,7 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         if (temporaryTargets.isNotEmpty())
-            disposable += persistenceLayer.syncNsTemporaryTargets(
-                temporaryTargets = temporaryTargets,
-                action = Action.TT,
-                source = Sources.NSClient,
-                note = ""
-            )
+            disposable += persistenceLayer.syncNsTemporaryTargets(temporaryTargets = temporaryTargets)
                 .subscribeBy { result ->
                     temporaryTargets.clear()
                     repeat(result.inserted.size) { inserted.inc(TT::class.java.simpleName) }
@@ -508,130 +496,30 @@ class StoreDataForDbImpl @Inject constructor(
                 }
             }
         if (therapyEvents.isNotEmpty())
-            repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvents.map { it.toDb() }, config.NSCLIENT))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving therapy event", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsTherapyEvents(therapyEvents)
+                .subscribeBy { result ->
                     therapyEvents.clear()
-                    result.inserted.forEach { therapyEvent ->
-                        val action = when (therapyEvent.type) {
-                            TherapyEvent.Type.CANNULA_CHANGE -> Action.SITE_CHANGE
-                            TherapyEvent.Type.INSULIN_CHANGE -> Action.RESERVOIR_CHANGE
-                            else                             -> Action.CAREPORTAL
-                        }
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = action,
-                                source = Sources.NSClient,
-                                note = therapyEvent.note ?: "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                    ValueWithUnit.TEType(therapyEvent.type.fromDb()),
-                                    ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.fromDb()).takeIf { therapyEvent.glucose != null })
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $therapyEvent")
-                        inserted.inc(TherapyEvent::class.java.simpleName)
-                    }
-                    result.invalidated.forEach { therapyEvent ->
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.CAREPORTAL_REMOVED,
-                                source = Sources.NSClient,
-                                note = therapyEvent.note ?: "",
-                                values = listOf(
-                                    ValueWithUnit.Timestamp(therapyEvent.timestamp),
-                                    ValueWithUnit.TEType(therapyEvent.type.fromDb()),
-                                    ValueWithUnit.fromGlucoseUnit(therapyEvent.glucose ?: 0.0, therapyEvent.glucoseUnit.fromDb()).takeIf { therapyEvent.glucose != null })
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $therapyEvent")
-                        invalidated.inc(TherapyEvent::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                        nsIdUpdated.inc(TherapyEvent::class.java.simpleName)
-                    }
-                    result.updatedDuration.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent $it")
-                        durationUpdated.inc(TherapyEvent::class.java.simpleName)
-                    }
+                    repeat(result.inserted.size) { inserted.inc(TE::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(TE::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(TE::class.java.simpleName) }
+                    repeat(result.updatedDuration.size) { durationUpdated.inc(TE::class.java.simpleName) }
                 }
 
-        sendLog("TherapyEvent", TherapyEvent::class.java.simpleName)
+        sendLog("TherapyEvent", TE::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (offlineEvents.isNotEmpty())
-            repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvents, config.NSCLIENT))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsOfflineEvents(offlineEvents)
+                .subscribeBy { result ->
                     offlineEvents.clear()
-                    result.inserted.forEach { oe ->
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.LOOP_CHANGE,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.OEReason(oe.reason.fromDb()),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $oe")
-                        inserted.inc(OfflineEvent::class.java.simpleName)
-                    }
-                    result.invalidated.forEach { oe ->
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.LOOP_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.OEReason(oe.reason.fromDb()),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $oe")
-                        invalidated.inc(OfflineEvent::class.java.simpleName)
-                    }
-                    result.ended.forEach { oe ->
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.LOOP_CHANGE,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(
-                                    ValueWithUnit.OEReason(oe.reason.fromDb()),
-                                    ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
-                                )
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $oe")
-                        ended.inc(OfflineEvent::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId OfflineEvent $it")
-                        nsIdUpdated.inc(OfflineEvent::class.java.simpleName)
-                    }
-                    result.updatedDuration.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated duration OfflineEvent $it")
-                        durationUpdated.inc(OfflineEvent::class.java.simpleName)
-                    }
+                    repeat(result.inserted.size) { inserted.inc(OE::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(OE::class.java.simpleName) }
+                    repeat(result.ended.size) { ended.inc(OE::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(OE::class.java.simpleName) }
+                    repeat(result.updatedDuration.size) { durationUpdated.inc(OE::class.java.simpleName) }
+                    sendLog("OfflineEvent", OE::class.java.simpleName)
                 }
 
-        sendLog("OfflineEvent", OfflineEvent::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (extendedBoluses.isNotEmpty())
@@ -760,17 +648,10 @@ class StoreDataForDbImpl @Inject constructor(
                 }
             }
 
-        repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(nsIdTherapyEvents.map { it.toDb() }))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of TherapyEvent failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateTherapyEventsNsIds(nsIdTherapyEvents)
+            .subscribeBy { result ->
                 nsIdTherapyEvents.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TherapyEvent $it")
-                    nsIdUpdated.inc(TherapyEvent::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(TE::class.java.simpleName) }
             }
 
         repository.runTransactionForResult(UpdateNsIdBolusTransaction(nsIdBoluses))
@@ -877,18 +758,12 @@ class StoreDataForDbImpl @Inject constructor(
                 }
             }
 
-        repository.runTransactionForResult(UpdateNsIdOfflineEventTransaction(nsIdOfflineEvents))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of OfflineEvent failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateOfflineEventsNsIds(nsIdOfflineEvents)
+            .subscribeBy { result ->
                 nsIdOfflineEvents.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of OfflineEvent $it")
-                    nsIdUpdated.inc(OfflineEvent::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(OE::class.java.simpleName) }
             }
+
         sendLog("GlucoseValue", GV::class.java.simpleName)
         sendLog("Bolus", Bolus::class.java.simpleName)
         sendLog("Carbs", Carbs::class.java.simpleName)
@@ -897,8 +772,8 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
         sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
-        sendLog("TherapyEvent", TherapyEvent::class.java.simpleName)
-        sendLog("OfflineEvent", OfflineEvent::class.java.simpleName)
+        sendLog("TherapyEvent", TE::class.java.simpleName)
+        sendLog("OfflineEvent", OE::class.java.simpleName)
         sendLog("ExtendedBolus", ExtendedBolus::class.java.simpleName)
         rxBus.send(EventNSClientNewLog("● DONE NSIDs", ""))
     }
@@ -996,7 +871,7 @@ class StoreDataForDbImpl @Inject constructor(
                         .also { result ->
                             result.invalidated.forEach {
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $it")
-                                invalidated.inc(TherapyEvent::class.java.simpleName)
+                                invalidated.inc(TE::class.java.simpleName)
                             }
                         }
                 }
@@ -1008,7 +883,7 @@ class StoreDataForDbImpl @Inject constructor(
                         .also { result ->
                             result.invalidated.forEach {
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $it")
-                                invalidated.inc(OfflineEvent::class.java.simpleName)
+                                invalidated.inc(OE::class.java.simpleName)
                             }
                         }
                 }
@@ -1032,8 +907,8 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
         sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
-        sendLog("TherapyEvent", TherapyEvent::class.java.simpleName)
-        sendLog("OfflineEvent", OfflineEvent::class.java.simpleName)
+        sendLog("TherapyEvent", TE::class.java.simpleName)
+        sendLog("OfflineEvent", OE::class.java.simpleName)
         sendLog("ExtendedBolus", ExtendedBolus::class.java.simpleName)
     }
 

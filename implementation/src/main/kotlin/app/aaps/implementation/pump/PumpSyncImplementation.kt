@@ -1,10 +1,13 @@
 package app.aaps.implementation.pump
 
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.IDs
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -19,22 +22,19 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.extensions.toDb
-import app.aaps.core.main.pump.fromDb
-import app.aaps.core.main.pump.toDb
 import app.aaps.core.main.pump.toUeSource
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InsertBolusWithTempIdTransaction
 import app.aaps.database.impl.transactions.InsertIfNewByTimestampCarbsTransaction
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import app.aaps.database.impl.transactions.InsertTemporaryBasalWithTempIdTransaction
 import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
@@ -60,6 +60,7 @@ class PumpSyncImplementation @Inject constructor(
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val uel: UserEntryLogger,
     private val activePlugin: ActivePlugin
 ) : PumpSync {
@@ -260,35 +261,31 @@ class PumpSyncImplementation @Inject constructor(
 
     override fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val therapyEvent = TherapyEvent(
+        val therapyEvent = TE(
             timestamp = timestamp,
-            type = type.toDBbEventType().toDb(),
+            type = type.toDBbEventType(),
             duration = 0,
             note = note,
             enteredBy = "AndroidAPS",
             glucose = null,
             glucoseType = null,
-            glucoseUnit = GlucoseUnit.MGDL.toDb(),
-            interfaceIDs_backing = InterfaceIDs(
+            glucoseUnit = GlucoseUnit.MGDL,
+            ids = IDs(
                 pumpId = pumpId,
-                pumpType = pumpType.toDb(),
+                pumpType = pumpType,
                 pumpSerial = pumpSerial
             )
         )
-        uel.log(
+        persistenceLayer.insertIfNewByTimestampTherapyEvent(
+            therapyEvent = therapyEvent,
             action = Action.CAREPORTAL,
             source = pumpType.source.toUeSource(),
             note = note,
             timestamp = timestamp,
             listValues = listOf(ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TEType(type.toDBbEventType()))
         )
-        repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
-            .doOnError {
-                aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", it)
-            }
             .blockingGet()
             .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TherapyEvent $it") }
                 return result.inserted.size > 0
             }
     }

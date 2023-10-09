@@ -2,6 +2,7 @@ package app.aaps.plugins.aps.autotune
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.iob.Iob
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
@@ -23,7 +24,6 @@ import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.TemporaryBasal
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.autotune.data.ATProfile
@@ -329,7 +329,7 @@ open class AutotuneIob @Inject constructor(
 
     fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         JSONObject()
-            .put("eventType", if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text)
+            .put("eventType", if (type == Bolus.Type.SMB) TE.Type.CORRECTION_BOLUS.text else TE.Type.MEAL_BOLUS.text)
             .put("insulin", amount)
             .put("created_at", dateUtil.toISOString(timestamp))
             .put("date", timestamp)
@@ -372,7 +372,7 @@ open class AutotuneIob @Inject constructor(
     private inner class NsTreatment {
 
         var date: Long = 0
-        var eventType: TherapyEvent.Type? = null
+        var eventType: TE.Type? = null
         var carbsTreatment: Carbs? = null
         var bolusTreatment: Bolus? = null
         var temporaryBasal: TemporaryBasal? = null
@@ -381,32 +381,32 @@ open class AutotuneIob @Inject constructor(
         constructor(t: Carbs) {
             carbsTreatment = t
             date = t.timestamp
-            eventType = TherapyEvent.Type.CARBS_CORRECTION
+            eventType = TE.Type.CARBS_CORRECTION
         }
 
         constructor(t: Bolus) {
             bolusTreatment = t
             date = t.timestamp
-            eventType = TherapyEvent.Type.CORRECTION_BOLUS
+            eventType = TE.Type.CORRECTION_BOLUS
         }
 
         constructor(t: TemporaryBasal) {
             temporaryBasal = t
             date = t.timestamp
-            eventType = TherapyEvent.Type.TEMPORARY_BASAL
+            eventType = TE.Type.TEMPORARY_BASAL
         }
 
         constructor(t: ExtendedBolus) {
             extendedBolus = t
             date = t.timestamp
-            eventType = TherapyEvent.Type.COMBO_BOLUS
+            eventType = TE.Type.COMBO_BOLUS
         }
 
         fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil): JSONObject =
             JSONObject()
                 .put("created_at", dateUtil.toISOString(timestamp))
                 .put("enteredBy", "openaps://" + "AndroidAPS")
-                .put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.text)
+                .put("eventType", TE.Type.TEMPORARY_BASAL.text)
                 .put("isValid", isValid)
                 .put("duration", T.msecs(duration).mins())
                 .put("durationInMilliseconds", duration) // rounded duration leads to different basal IOB
@@ -433,7 +433,7 @@ open class AutotuneIob @Inject constructor(
             JSONObject()
                 .put("created_at", dateUtil.toISOString(timestamp))
                 .put("enteredBy", "openaps://" + "AndroidAPS")
-                .put("eventType", TherapyEvent.Type.COMBO_BOLUS.text)
+                .put("eventType", TE.Type.COMBO_BOLUS.text)
                 .put("duration", T.msecs(duration).mins())
                 .put("durationInMilliseconds", duration)
                 .put("splitNow", 0)
@@ -452,7 +452,7 @@ open class AutotuneIob @Inject constructor(
 
         fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             JSONObject()
-                .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
+                .put("eventType", if (amount < 12) TE.Type.CARBS_CORRECTION.text else TE.Type.MEAL_BOLUS.text)
                 .put("carbs", amount)
                 .put("notes", notes)
                 .put("created_at", dateUtil.toISOString(timestamp))
@@ -468,7 +468,7 @@ open class AutotuneIob @Inject constructor(
         fun toJson(): JSONObject? {
             val cpJson = JSONObject()
             return when (eventType) {
-                TherapyEvent.Type.TEMPORARY_BASAL  ->
+                TE.Type.TEMPORARY_BASAL  ->
                     temporaryBasal?.let { tbr ->
                         val profile = profileFunction.getProfile(tbr.timestamp)
                         profile?.let {
@@ -476,7 +476,7 @@ open class AutotuneIob @Inject constructor(
                         }
                     }
 
-                TherapyEvent.Type.COMBO_BOLUS      ->
+                TE.Type.COMBO_BOLUS      ->
                     extendedBolus?.let { ebr ->
                         val profile = profileFunction.getProfile(ebr.timestamp)
                         profile?.let {
@@ -484,9 +484,9 @@ open class AutotuneIob @Inject constructor(
                         }
                     }
 
-                TherapyEvent.Type.CORRECTION_BOLUS -> bolusTreatment?.toJson(true, dateUtil)
-                TherapyEvent.Type.CARBS_CORRECTION -> carbsTreatment?.toJson(true, dateUtil)
-                else                               -> cpJson
+                TE.Type.CORRECTION_BOLUS -> bolusTreatment?.toJson(true, dateUtil)
+                TE.Type.CARBS_CORRECTION -> carbsTreatment?.toJson(true, dateUtil)
+                else                     -> cpJson
             }
         }
     }

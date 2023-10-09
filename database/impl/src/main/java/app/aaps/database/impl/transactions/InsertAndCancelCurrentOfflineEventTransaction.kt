@@ -4,11 +4,8 @@ import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.interfaces.end
 
 class InsertAndCancelCurrentOfflineEventTransaction(
-    val offlineEvent: OfflineEvent
+    private val offlineEvent: OfflineEvent
 ) : Transaction<InsertAndCancelCurrentOfflineEventTransaction.TransactionResult>() {
-
-    constructor(timestamp: Long, duration: Long, reason: OfflineEvent.Reason) :
-        this(OfflineEvent(timestamp = timestamp, reason = reason, duration = duration))
 
     override fun run(): TransactionResult {
         val result = TransactionResult()

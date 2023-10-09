@@ -1,4 +1,4 @@
-package app.aaps.core.main.extensions
+package app.aaps.database.persistence.converters
 
 fun app.aaps.database.entities.ValueWithUnit.fromDb(): app.aaps.core.data.ue.ValueWithUnit =
     when (this) {

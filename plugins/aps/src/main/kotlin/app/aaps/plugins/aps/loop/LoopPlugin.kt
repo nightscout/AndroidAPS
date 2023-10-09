@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.OE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -28,6 +29,7 @@ import app.aaps.core.interfaces.aps.Loop.LastRun
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -66,11 +68,8 @@ import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.main.extensions.plannedRemainingMinutes
 import app.aaps.core.main.iob.json
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.DeviceStatus
-import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
@@ -105,6 +104,7 @@ class LoopPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger,
     private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
     private val runningConfiguration: RunningConfiguration,
     private val uiInteraction: UiInteraction,
 ) : PluginBase(
@@ -165,13 +165,13 @@ class LoopPlugin @Inject constructor(
     }
 
     override fun minutesToEndOfSuspend(): Int {
-        val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
-        return if (offlineEventWrapped is ValueWrapper.Existing) T.msecs(offlineEventWrapped.value.timestamp + offlineEventWrapped.value.duration - dateUtil.now()).mins().toInt()
+        val offlineEvent = persistenceLayer.getOfflineEventActiveAt(dateUtil.now())
+        return if (offlineEvent != null) T.msecs(offlineEvent.timestamp + offlineEvent.duration - dateUtil.now()).mins().toInt()
         else 0
     }
 
     override val isSuspended: Boolean
-        get() = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
+        get() = persistenceLayer.getOfflineEventActiveAt(dateUtil.now()) != null
 
     override var enabled: Boolean
         get() = isEnabled()
@@ -192,14 +192,14 @@ class LoopPlugin @Inject constructor(
 
     override val isSuperBolus: Boolean
         get() {
-            val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
-            return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.SUPER_BOLUS
+            val offlineEvent = persistenceLayer.getOfflineEventActiveAt(dateUtil.now())
+            return offlineEvent?.reason == OE.Reason.SUPER_BOLUS
         }
 
     override val isDisconnected: Boolean
         get() {
-            val offlineEventWrapped = repository.getOfflineEventActiveAt(dateUtil.now()).blockingGet()
-            return offlineEventWrapped is ValueWrapper.Existing && offlineEventWrapped.value.reason == OfflineEvent.Reason.DISCONNECT_PUMP
+            val offlineEvent = persistenceLayer.getOfflineEventActiveAt(dateUtil.now())
+            return offlineEvent?.reason == OE.Reason.DISCONNECT_PUMP
         }
 
     @Suppress("SameParameterValue")
@@ -678,15 +678,19 @@ class LoopPlugin @Inject constructor(
         return virtualPump.isEnabled()
     }
 
-    override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {
+    override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: Action, source: Sources, listValues: List<ValueWithUnit?>) {
         val pump = activePlugin.activePump
-        disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), reason))
-            .subscribe({ result ->
-                           result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
-                           result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
-                       }, {
-                           aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                       })
+        disposable += persistenceLayer.insertAndCancelCurrentOfflineEvent(
+            offlineEvent = OE(
+                timestamp = dateUtil.now(),
+                duration = T.mins(durationInMinutes.toLong()).msecs(),
+                reason = reason
+            ),
+            action = action,
+            source = source,
+            note = null,
+            listValues = listValues
+        ).subscribe()
         if (pump.pumpDescription.tempBasalStyle == PumpDescription.ABSOLUTE) {
             commandQueue.tempBasalAbsolute(0.0, durationInMinutes, true, profile, PumpSync.TemporaryBasalType.EMULATED_PUMP_SUSPEND, object : Callback() {
                 override fun run() {
@@ -715,14 +719,14 @@ class LoopPlugin @Inject constructor(
         }
     }
 
-    override fun suspendLoop(durationInMinutes: Int) {
-        disposable += repository.runTransactionForResult(InsertAndCancelCurrentOfflineEventTransaction(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), OfflineEvent.Reason.SUSPEND))
-            .subscribe({ result ->
-                           result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
-                           result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
-                       }, {
-                           aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                       })
+    override fun suspendLoop(durationInMinutes: Int, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) {
+        disposable += persistenceLayer.insertAndCancelCurrentOfflineEvent(
+            offlineEvent = OE(timestamp = dateUtil.now(), duration = T.mins(durationInMinutes.toLong()).msecs(), reason = OE.Reason.SUSPEND),
+            action = action,
+            source = source,
+            note = note,
+            listValues = listValues
+        ).subscribe()
         commandQueue.cancelTempBasal(true, object : Callback() {
             override fun run() {
                 if (!result.success) {

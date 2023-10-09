@@ -33,12 +33,14 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
 
     override fun doAction(callback: Callback) {
         if (!loop.isSuspended) {
-            loop.suspendLoop(minutes.getMinutes())
-            rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
-            uel.log(
-                action = app.aaps.core.data.ue.Action.SUSPEND, source = Sources.Automation, note = title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
-                value = ValueWithUnit.Minute(minutes.getMinutes())
+            loop.suspendLoop(
+                durationInMinutes = minutes.getMinutes(),
+                action = app.aaps.core.data.ue.Action.SUSPEND,
+                source = Sources.Automation,
+                note = title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
+                listValues = listOf(ValueWithUnit.Minute(minutes.getMinutes()))
             )
+            rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
             callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended)).run()

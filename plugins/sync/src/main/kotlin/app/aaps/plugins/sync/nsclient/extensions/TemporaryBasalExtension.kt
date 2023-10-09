@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
@@ -7,7 +8,6 @@ import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryBasal.Type.Companion.fromString
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
@@ -16,7 +16,7 @@ fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil)
         JSONObject()
             .put("created_at", dateUtil.toISOString(timestamp))
             .put("enteredBy", "openaps://" + "AndroidAPS")
-            .put("eventType", TherapyEvent.Type.TEMPORARY_BASAL.text)
+            .put("eventType", TE.Type.TEMPORARY_BASAL.text)
             .put("isValid", isValid)
             .put("duration", T.msecs(duration).mins())
             .put("durationInMilliseconds", duration) // rounded duration leads to different basal IOB

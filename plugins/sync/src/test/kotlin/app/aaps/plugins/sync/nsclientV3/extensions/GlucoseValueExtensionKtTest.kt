@@ -4,8 +4,8 @@ import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
-import app.aaps.core.main.extensions.contentEqualsTo
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
+import app.aaps.plugins.sync.extensions.contentEqualsTo
 import app.aaps.plugins.sync.nsShared.extensions.contentEqualsTo
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

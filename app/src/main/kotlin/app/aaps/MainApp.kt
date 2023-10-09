@@ -35,8 +35,8 @@ import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.VersionChangeTransaction
+import app.aaps.database.persistence.CompatDBHelper
 import app.aaps.di.DaggerAppComponent
-import app.aaps.implementation.db.CompatDBHelper
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.receivers.NetworkChangeReceiver

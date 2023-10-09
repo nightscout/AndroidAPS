@@ -232,7 +232,7 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.ids.nightscoutId
             else                                           -> error("Unsupported data type")
         }
         when (dataPair) {

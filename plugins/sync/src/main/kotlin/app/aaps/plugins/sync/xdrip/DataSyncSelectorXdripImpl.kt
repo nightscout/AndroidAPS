@@ -518,7 +518,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.oesRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
+            persistenceLayer.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
                 aapsLogger.info(LTag.XDRIP, "Loading OfflineEvent data Start: $startId ${oe.first} forID: ${oe.second.id} ")
                 if (!isOld(oe.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairOfflineEvent(oe.first, oe.second.id))

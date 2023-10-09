@@ -847,10 +847,9 @@ import kotlin.math.roundToInt
         database.offlineEventDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getOfflineEventActiveAt(timestamp: Long): Single<ValueWrapper<OfflineEvent>> =
+    fun getOfflineEventActiveAt(timestamp: Long): Maybe<OfflineEvent> =
         database.offlineEventDao.getOfflineEventActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
     @Suppress("unused")
     fun deleteAllOfflineEventEntries() =

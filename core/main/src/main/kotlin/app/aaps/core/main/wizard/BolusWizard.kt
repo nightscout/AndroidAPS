@@ -2,6 +2,7 @@ package app.aaps.core.main.wizard
 
 import android.content.Context
 import android.text.Spanned
+import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -44,7 +45,6 @@ import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.OfflineEvent
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import java.util.LinkedList
@@ -456,9 +456,8 @@ class BolusWizard @Inject constructor(
         OKDialog.showConfirmation(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
-                    uel.log(Action.SUPERBOLUS_TBR, Sources.WizardDialog)
                     if (loop.isEnabled()) {
-                        loop.goToZeroTemp(2 * 60, profile, OfflineEvent.Reason.SUPER_BOLUS)
+                        loop.goToZeroTemp(2 * 60, profile, OE.Reason.SUPER_BOLUS, Action.SUPERBOLUS_TBR, Sources.WizardDialog, listOf())
                         rxBus.send(EventRefreshOverview("WizardDialog"))
                     }
 

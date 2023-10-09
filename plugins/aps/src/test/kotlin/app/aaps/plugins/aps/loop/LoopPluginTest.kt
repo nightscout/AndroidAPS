@@ -7,6 +7,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -45,6 +46,7 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var notificationManager: NotificationManager
     @Mock lateinit var repository: AppRepository
+    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var runningConfiguration: RunningConfiguration
@@ -59,7 +61,7 @@ class LoopPluginTest : TestBase() {
         loopPlugin = LoopPlugin(
             injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-            repository, runningConfiguration, uiInteraction
+            repository, persistenceLayer, runningConfiguration, uiInteraction
         )
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)

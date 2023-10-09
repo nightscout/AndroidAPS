@@ -1,7 +1,6 @@
 package app.aaps.implementation.di
 
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -35,7 +34,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
-import app.aaps.implementation.db.PersistenceLayerImpl
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.implementation.logging.LoggerUtilsImpl
 import app.aaps.implementation.logging.UserEntryLoggerImpl
@@ -89,7 +87,6 @@ abstract class ImplementationModule {
     interface Bindings {
 
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
-        @Binds fun bindPersistenceLayer(persistenceLayerImpl: PersistenceLayerImpl): PersistenceLayer
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger

@@ -645,19 +645,19 @@ class DataSyncSelectorV3 @Inject constructor(
             }
             queueCounter.oesRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
+            persistenceLayer.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    oe.first.id == oe.second.id && oe.first.interfaceIDs.nightscoutId != null ->
+                    oe.first.id == oe.second.id && oe.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Loaded from NS: ${oe.second.id} ")
                     // only NsId changed, no need to upload
-                    oe.first.onlyNsIdAdded(oe.second)                                         ->
+                    oe.first.onlyNsIdAdded(oe.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Only NS id changed ID: ${oe.second.id} ")
                     // without nsId = create new
-                    oe.first.interfaceIDs.nightscoutId == null                                ->
+                    oe.first.ids.nightscoutId == null                                ->
                         cont = activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairOfflineEvent(oe.first, oe.second.id), "$startId/$lastDbId") ?: false
                     // existing with nsId = update
-                    oe.first.interfaceIDs.nightscoutId != null                                ->
+                    oe.first.ids.nightscoutId != null                                ->
                         cont = activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairOfflineEvent(oe.first, oe.second.id), "$startId/$lastDbId") ?: false
                 }
                 if (cont) confirmLastOfflineEventIdIfGreater(oe.second.id)

@@ -170,11 +170,11 @@ class NSClientAddAckWorker(
 
             is PairOfflineEvent                  -> {
                 val pair = ack.originalObject
-                pair.value.interfaceIDs.nightscoutId = ack.id
+                pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
                 storeDataForDb.nsIdOfflineEvents.add(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked OfflineEvent " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked OfflineEvent " + pair.value.ids.nightscoutId))
             }
 
         }

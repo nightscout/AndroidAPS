@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.db
 
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.UE
@@ -52,7 +53,7 @@ interface PersistenceLayer {
     fun invalidateTemporaryTarget(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
     fun insertAndCancelCurrentTemporaryTarget(temporaryTarget: TT, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
     fun cancelCurrentTemporaryTargetIfAny(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TT>>
-    fun syncNsTemporaryTargets(temporaryTargets: List<TT>, action: Action, source: Sources, note: String?): Single<TransactionResult<TT>>
+    fun syncNsTemporaryTargets(temporaryTargets: List<TT>): Single<TransactionResult<TT>>
     fun updateTemporaryTargetsNsIds(temporaryTargets: List<TT>): Single<TransactionResult<TT>>
 
     // TE
@@ -60,10 +61,28 @@ interface PersistenceLayer {
     fun getTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TE>>
     fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>>
     fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>>
+    fun getTherapyEventDataFromTime(timestamp: Long, type: TE.Type, ascending: Boolean): Single<List<TE>>
     fun getNextSyncElementTherapyEvent(id: Long): Maybe<Pair<TE, TE>>
-    fun insertIfNewByTimestampTherapyEvent(therapyEvent: TE, action: Action, source: Sources, note: String, listValues: List<ValueWithUnit?>): Single<TransactionResult<TE>>
+    fun insertIfNewByTimestampTherapyEvent(
+        therapyEvent: TE,
+        timestamp: Long = System.currentTimeMillis(),
+        action: Action,
+        source: Sources,
+        note: String?,
+        listValues: List<ValueWithUnit?>
+    ): Single<TransactionResult<TE>>
+
     fun invalidateTherapyEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<TE>>
     fun invalidateTherapyEventsWithNote(note: String, action: Action, source: Sources): Single<TransactionResult<TE>>
+    fun syncNsTherapyEvents(therapyEvents: List<TE>): Single<TransactionResult<TE>>
+    fun updateTherapyEventsNsIds(therapyEvents: List<TE>): Single<TransactionResult<TE>>
+
+    // OE
+    fun getOfflineEventActiveAt(timestamp: Long): OE?
+    fun getNextSyncElementOfflineEvent(id: Long): Maybe<Pair<OE, OE>>
+    fun insertAndCancelCurrentOfflineEvent(offlineEvent: OE, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?> = listOf()): Single<TransactionResult<OE>>
+    fun syncNsOfflineEvents(offlineEvents: List<OE>): Single<TransactionResult<OE>>
+    fun updateOfflineEventsNsIds(offlineEvents: List<OE>): Single<TransactionResult<OE>>
 
     // UE
     fun insertUserEntries(entries: List<UE>): Single<TransactionResult<UE>>

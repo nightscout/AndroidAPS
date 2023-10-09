@@ -114,7 +114,7 @@ class UploadChunk @Inject constructor(
     }
 
     private fun getBloodTests(start: Long, end: Long): List<BloodGlucoseElement> {
-        val readings = repository.compatGetTherapyEventDataFromToTime(start, end).blockingGet()
+        val readings = persistenceLayer.getTherapyEventDataFromToTime(start, end).blockingGet()
         val selection = BloodGlucoseElement.fromCareportalEvents(readings, dateUtil, profileUtil)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} BGs selected for upload"))

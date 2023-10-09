@@ -1,8 +1,11 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.OE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.Constraint
@@ -17,7 +20,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -54,8 +56,8 @@ ActionsTestBase : TestBaseWithProfile() {
         override fun invoke(initiator: String, allowNotification: Boolean, tempBasalFallback: Boolean) {}
         override fun acceptChangeRequest() {}
         override fun minutesToEndOfSuspend(): Int = 0
-        override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {}
-        override fun suspendLoop(durationInMinutes: Int) {}
+        override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OE.Reason, action: app.aaps.core.data.ue.Action, source: Sources, listValues: List<ValueWithUnit?>) {}
+        override fun suspendLoop(durationInMinutes: Int, action: app.aaps.core.data.ue.Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) {}
         override fun disableCarbSuggestions(durationMinutes: Int) {}
         override fun buildAndStoreDeviceStatus() {}
 

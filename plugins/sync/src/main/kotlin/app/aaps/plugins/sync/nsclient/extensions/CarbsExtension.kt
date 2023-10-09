@@ -1,15 +1,15 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.db.TE
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
 import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
 fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
-        .put("eventType", if (amount < 12) TherapyEvent.Type.CARBS_CORRECTION.text else TherapyEvent.Type.MEAL_BOLUS.text)
+        .put("eventType", if (amount < 12) TE.Type.CARBS_CORRECTION.text else TE.Type.MEAL_BOLUS.text)
         .put("carbs", amount)
         .put("notes", notes)
         .put("created_at", dateUtil.toISOString(timestamp))

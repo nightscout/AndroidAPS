@@ -18,7 +18,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.ProfileSwitch
@@ -97,12 +96,9 @@ class ProfileFunctionImpl @Inject constructor(
                 aapsLogger.debug("Profile cache cleared")
             }
             if (cache.containsKey(rounded)) {
-                //aapsLogger.debug(LTag.PROFILE, "Profile cache HIT for $rounded")
                 return cache[rounded]
             }
         }
-//        aapsLogger.debug("getProfile called for $time")
-        //aapsLogger.debug(LTag.PROFILE, "Profile cache MISS for $rounded")
         val ps = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()
         if (ps is ValueWrapper.Existing) {
             val sealed = ProfileSealed.EPS(ps.value)
@@ -144,6 +140,13 @@ class ProfileFunctionImpl @Inject constructor(
     override fun getUnits(): GlucoseUnit =
         if (sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
         else GlucoseUnit.MMOL
+
+    // Remove after migration
+    private fun GlucoseUnit.toDb(): app.aaps.database.entities.data.GlucoseUnit =
+        when (this) {
+            GlucoseUnit.MGDL -> app.aaps.database.entities.data.GlucoseUnit.MGDL
+            GlucoseUnit.MMOL -> app.aaps.database.entities.data.GlucoseUnit.MMOL
+        }
 
     override fun buildProfileSwitch(profileStore: ProfileStore, profileName: String, durationInMinutes: Int, percentage: Int, timeShiftInHours: Int, timestamp: Long): ProfileSwitch? {
         val pureProfile = profileStore.getSpecificProfile(profileName) ?: return null

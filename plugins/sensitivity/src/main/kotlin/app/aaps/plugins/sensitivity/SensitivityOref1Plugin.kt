@@ -4,12 +4,14 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Sensitivity.SensitivityType
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -18,7 +20,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
@@ -39,7 +40,8 @@ class SensitivityOref1Plugin @Inject constructor(
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository
+    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer
 ) : AbstractSensitivityPlugin(
     PluginDescription()
         .mainType(PluginType.SENSITIVITY)
@@ -70,7 +72,7 @@ class SensitivityOref1Plugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val siteChanges = repository.getTherapyEventDataFromTime(fromTime, TherapyEvent.Type.CANNULA_CHANGE, true).blockingGet()
+        val siteChanges = persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true).blockingGet()
         val profileSwitches = repository.getProfileSwitchDataFromTime(fromTime, true).blockingGet()
 
         //[0] = 8 hour

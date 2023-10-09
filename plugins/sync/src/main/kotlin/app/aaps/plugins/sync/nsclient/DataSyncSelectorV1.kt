@@ -744,24 +744,24 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.oesRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
+            persistenceLayer.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading OfflineEvent data Start: $startId ${oe.first} forID: ${oe.second.id} ")
                 val dataPair = DataSyncSelector.PairOfflineEvent(oe.first, oe.second.id)
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    oe.first.id == oe.second.id && oe.first.interfaceIDs.nightscoutId != null ->
+                    oe.first.id == oe.second.id && oe.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Loaded from NS: ${oe.second.id} ")
                     // only NsId changed, no need to upload
-                    oe.first.onlyNsIdAdded(oe.second)                                         ->
+                    oe.first.onlyNsIdAdded(oe.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Only NS id changed ID: ${oe.second.id} ")
                     // without nsId = create new
-                    oe.first.interfaceIDs.nightscoutId == null                                -> {
+                    oe.first.ids.nightscoutId == null                                -> {
                         activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                     // existing with nsId = update
-                    oe.first.interfaceIDs.nightscoutId != null                                -> {
+                    oe.first.ids.nightscoutId != null                                -> {
                         activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed

@@ -13,6 +13,7 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -59,11 +60,9 @@ import app.aaps.core.main.iob.round
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.core.validators.ValidatingEditTextPreference
-import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.events.EventSmsCommunicatorUpdateGui
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword
@@ -473,23 +472,14 @@ class SmsCommunicatorPlugin @Inject constructor(
                     receivedSms.processed = true
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, duration) {
                         override fun run() {
-                            uel.log(Action.SUSPEND, Sources.SMS)
                             commandQueue.cancelTempBasal(true, object : Callback() {
                                 override fun run() {
                                     if (result.success) {
-                                        disposable += repository.runTransactionForResult(
-                                            InsertAndCancelCurrentOfflineEventTransaction(
-                                                dateUtil.now(),
-                                                T.mins(anInteger().toLong()).msecs(),
-                                                OfflineEvent.Reason.SUSPEND
-                                            )
-                                        )
-                                            .subscribe({ result ->
-                                                           result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
-                                                           result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted OfflineEvent $it") }
-                                                       }, {
-                                                           aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                                                       })
+                                        disposable += persistenceLayer.insertAndCancelCurrentOfflineEvent(
+                                            offlineEvent = OE(timestamp = dateUtil.now(), duration = T.mins(anInteger().toLong()).msecs(), reason = OE.Reason.SUSPEND),
+                                            action = Action.SUSPEND,
+                                            source = Sources.SMS
+                                        ).subscribe()
                                         rxBus.send(EventRefreshOverview("SMS_LOOP_SUSPENDED"))
                                         val replyText = rh.gs(R.string.smscommunicator_loop_suspended) + " " +
                                             rh.gs(if (result.success) R.string.smscommunicator_tempbasal_canceled else R.string.smscommunicator_tempbasal_cancel_failed)
@@ -621,9 +611,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true) {
                     override fun run() {
-                        uel.log(Action.DISCONNECT, Sources.SMS)
                         val profile = profileFunction.getProfile() ?: return
-                        loop.goToZeroTemp(duration, profile, OfflineEvent.Reason.DISCONNECT_PUMP)
+                        loop.goToZeroTemp(durationInMinutes = duration, profile = profile, reason = OE.Reason.DISCONNECT_PUMP, action = Action.DISCONNECT, source = Sources.SMS)
                         rxBus.send(EventRefreshOverview("SMS_PUMP_DISCONNECT"))
                         sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_pump_disconnected)))
                     }

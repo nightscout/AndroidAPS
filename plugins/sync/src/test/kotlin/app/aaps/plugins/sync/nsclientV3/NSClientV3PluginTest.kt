@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclientV3
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.IDs
+import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
@@ -27,7 +28,6 @@ import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
-import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.embedments.InsulinConfiguration
@@ -387,15 +387,15 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddOffilineEvent() = runTest {
-        val offlineEvent = OfflineEvent(
+        val offlineEvent = OE(
             timestamp = 10000,
             isValid = true,
-            reason = OfflineEvent.Reason.DISCONNECT_PUMP,
+            reason = OE.Reason.DISCONNECT_PUMP,
             duration = 30000,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )

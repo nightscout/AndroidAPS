@@ -1,4 +1,4 @@
-package app.aaps.implementation.db
+package app.aaps.database.persistence
 
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger

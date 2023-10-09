@@ -113,11 +113,6 @@ data class UserEntry(
         PLUGIN_DISABLED,
         UNKNOWN
         ;
-
-        companion object {
-
-            fun fromString(source: String?) = entries.firstOrNull { it.name == source } ?: UNKNOWN
-        }
     }
 
     enum class Sources {

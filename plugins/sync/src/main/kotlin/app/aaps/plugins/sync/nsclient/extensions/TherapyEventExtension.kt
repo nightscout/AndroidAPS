@@ -5,7 +5,6 @@ import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.TherapyEvent
 import app.aaps.plugins.sync.nsclient.data.NSMbg
 import org.json.JSONObject
 
@@ -17,7 +16,7 @@ fun therapyEventFromNsMbg(mbg: NSMbg) =
         glucoseUnit = GlucoseUnit.MGDL
     )
 
-fun TherapyEvent.Companion.fromJson(jsonObject: JSONObject): TE? {
+fun TE.Companion.fromJson(jsonObject: JSONObject): TE? {
     val glucoseUnit = if (JsonHelper.safeGetString(jsonObject, "units", GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL else GlucoseUnit.MMOL
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)

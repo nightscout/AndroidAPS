@@ -4,6 +4,7 @@ import app.aaps.MainApp
 import app.aaps.core.main.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
 import app.aaps.database.impl.DatabaseModule
+import app.aaps.database.persistence.di.PersistenceModule
 import app.aaps.implementation.di.ImplementationModule
 import app.aaps.plugins.aps.di.ApsModule
 import app.aaps.plugins.automation.di.AutomationModule
@@ -48,6 +49,7 @@ import javax.inject.Singleton
         PluginsListModule::class,
         ActivitiesModule::class,
         ReceiversModule::class,
+        PersistenceModule::class,
 
         // Gradle modules
         AutomationModule::class,

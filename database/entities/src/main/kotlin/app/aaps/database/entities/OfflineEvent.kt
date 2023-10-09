@@ -40,19 +40,6 @@ data class OfflineEvent(
     override var duration: Long // in millis
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
-    fun contentEqualsTo(other: OfflineEvent): Boolean =
-        timestamp == other.timestamp &&
-            utcOffset == other.utcOffset &&
-            reason == other.reason &&
-            duration == other.duration &&
-            isValid == other.isValid
-
-    fun onlyNsIdAdded(previous: OfflineEvent): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
     enum class Reason {
         DISCONNECT_PUMP,
         SUSPEND,
@@ -60,12 +47,5 @@ data class OfflineEvent(
         SUPER_BOLUS,
         OTHER
         ;
-
-        companion object {
-
-            fun fromString(reason: String?) = values().firstOrNull { it.name == reason } ?: OTHER
-        }
     }
-
-    companion object
 }
