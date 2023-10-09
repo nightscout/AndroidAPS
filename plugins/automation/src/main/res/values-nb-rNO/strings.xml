@@ -113,7 +113,7 @@
     <string name="add_automation">Legg til regel</string>
     <string name="stop_processing">Stopp prosessering</string>
     <!--    Reminders-->
-    <string name="time_to_eat">Nå må du spise!\nBruk bolusveiviser og gjør beregning på nytt.</string>
-    <string name="time_to_bolus">Tid for bolus!\nStart bolusveiviser og gjør beregning på nytt.</string>
+    <string name="time_to_eat">Nå må du spise!\nBruk boluskalkulator og gjør beregning på nytt.</string>
+    <string name="time_to_bolus">Tid for bolus!\nStart boluskalkulator og gjør beregning på nytt.</string>
     <string name="error_setting_reminder">Feil under innstilling av fremtidig alarm</string>
 </resources>
