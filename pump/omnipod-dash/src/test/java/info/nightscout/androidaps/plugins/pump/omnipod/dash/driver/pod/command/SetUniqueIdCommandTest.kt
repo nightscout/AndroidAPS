@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
-import org.apache.commons.codec.DecoderException
+import com.google.common.truth.Truth.assertThat
 import org.apache.commons.codec.binary.Hex
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.Date
 
 class SetUniqueIdCommandTest {
 
-    @Test @Throws(DecoderException::class) fun testEncoding() {
+    @Test fun testEncoding() {
         @Suppress("DEPRECATION") val encoded = SetUniqueIdCommand.Builder()
             .setUniqueId(37879811)
             .setSequenceNumber(6.toShort())
@@ -18,6 +17,6 @@ class SetUniqueIdCommandTest {
             .build()
             .encoded
 
-        Assertions.assertArrayEquals(Hex.decodeHex("FFFFFFFF18150313024200031404020A150E2908146CC1000A67278344"), encoded)
+        assertThat(encoded).asList().containsExactlyElementsIn(Hex.decodeHex("FFFFFFFF18150313024200031404020A150E2908146CC1000A67278344").asList()).inOrder()
     }
 }
