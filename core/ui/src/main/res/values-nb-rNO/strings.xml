@@ -453,10 +453,10 @@
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusveiviser</string>
-    <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjons bolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltidsveiviseren igjen når vi gir deg en påminnelse.</string>
+    <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjonsbolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke boluskalkulatoren igjen når vi gir deg en påminnelse.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Advarsel: Oppdaget treg absorpsjon av karbohydrater: %2$d%% av tiden. Dobbeltsjekk din beregning. COB kan være misvisende og du risikerer å få for mye insulin !!</font>]]></string>
-    <string name="partialboluswizard">Doser denne delen av resultatet fra bolusveiviseren [%]</string>
+    <string name="partialboluswizard">Doser denne delen av resultatet fra boluskalkulatoren [%]</string>
     <string name="partialboluswizard_reset_time">Terskel for gammel BS-verdi [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
@@ -486,8 +486,8 @@
     <string name="resistant_adult">Insulinresistent voksen</string>
     <string name="pregnant">Graviditet</string>
     <string name="patient_age_summary">Velg pasienttype for oppsett av sikkerhetsgrenser</string>
-    <string name="max_bolus_title">Maks tillat bolus [U]</string>
-    <string name="max_carbs_title">Maks tillat karbo [g]</string>
+    <string name="max_bolus_title">Maks tillatt bolus [U]</string>
+    <string name="max_carbs_title">Maks tillatt karbohydrater [g]</string>
     <string name="patient_type">Pasienttype</string>
     <!--    Protection-->
     <string name="unlock_settings">Lås opp innstillinger</string>
