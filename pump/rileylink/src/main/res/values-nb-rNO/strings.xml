@@ -27,7 +27,7 @@
     <string name="rileylink_battery_level">Batterinivå:</string>
     <string name="rileylink_battery_level_value">%1$d%%</string>
     <string name="rileylink_connection_status">Tilkoblingsstatus:</string>
-    <string name="rileylink_connection_error">Tilkoblings feil:</string>
+    <string name="rileylink_connection_error">Tilkoblingsfeil:</string>
     <string name="rileylink_device">Enhet</string>
     <string name="rileylink_device_type">Enhets type:</string>
     <string name="rileylink_configured_device_model">Konfigurert enhetsmodell:</string>
@@ -42,7 +42,7 @@
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
     <!-- RL State -->
     <string name="rileylink_state_bt_init">Bluetooth initialiserer…</string>
-    <string name="rileylink_state_bt_error">Bluetooth feil</string>
+    <string name="rileylink_state_bt_error">Bluetoothfeil</string>
     <string name="rileylink_state_bt_ready">Bluetooth klar</string>
     <string name="rileylink_state_not_started">Ikke startet</string>
     <string name="rileylink_state_rl_init">RileyLink initialisering…</string>
