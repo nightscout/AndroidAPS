@@ -31,7 +31,7 @@ class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
     }
 
     override fun handleResponse(data: ByteArray): Boolean {
-        val success = super.handleResponse(data)
+        var success = super.handleResponse(data)
         if (success) {
             val state = MedtrumPumpState.fromByte(data[RESP_STATE_START])
 
@@ -63,7 +63,7 @@ class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
             }
 
             // Let the notification packet handle the rest of the sync data
-            NotificationPacket(injector).handleMaskedMessage(fieldMask.toByteArray(2) + syncData)
+            success = NotificationPacket(injector).handleMaskedMessage(fieldMask.toByteArray(2) + syncData)
         }
 
         return success
