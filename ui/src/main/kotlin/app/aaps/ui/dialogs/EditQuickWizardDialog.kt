@@ -1,12 +1,18 @@
 package app.aaps.ui.dialogs
 
+import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.text.format.DateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.SeekBar
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -16,8 +22,8 @@ import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.ui.extensions.selectedItemPosition
-import app.aaps.core.ui.extensions.setEnableForChildren
 import app.aaps.core.ui.extensions.setSelection
+import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogEditQuickwizardBinding
 import app.aaps.ui.events.EventQuickWizardChange
@@ -25,6 +31,7 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import dagger.android.support.DaggerDialogFragment
 import org.json.JSONException
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
@@ -34,6 +41,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     @Inject lateinit var quickWizard: QuickWizard
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sp: SP
+    @Inject lateinit var constraintChecker: ConstraintsChecker
+    @Inject lateinit var ctx: Context
 
     var position = -1
     private var fromSeconds: Int = 0
@@ -72,20 +81,26 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.okcancel.ok.setOnClickListener {
             try {
                 entry.storage.put("buttonText", binding.buttonEdit.text.toString())
-                entry.storage.put("carbs", SafeParse.stringToInt(binding.carbsEdit.text.toString()))
+                entry.storage.put("carbs", SafeParse.stringToInt(binding.carbsEdit.text))
                 entry.storage.put("validFrom", fromSeconds)
                 entry.storage.put("validTo", toSeconds)
-                entry.storage.put("useBG", binding.useBg.selectedItemPosition)
-                entry.storage.put("useCOB", binding.useCob.selectedItemPosition)
-                entry.storage.put("useBolusIOB", binding.useBolusIob.selectedItemPosition)
+                entry.storage.put("useBG", binding.useBg.isChecked)
+                entry.storage.put("useCOB", booleanToInt(binding.useCob.isChecked))
+                entry.storage.put("useBolusIOB", booleanToInt(binding.useBolusIob.isChecked))
                 entry.storage.put("device", binding.device.selectedItemPosition)
                 entry.storage.put("useBasalIOB", binding.useBasalIob.selectedItemPosition)
                 entry.storage.put("useTrend", binding.useTrend.selectedItemPosition)
-                entry.storage.put("useSuperBolus", binding.useSuperBolus.selectedItemPosition)
-                entry.storage.put("useTempTarget", binding.useTempTarget.selectedItemPosition)
-                entry.storage.put("usePercentage", binding.usePercentage.selectedItemPosition)
-                val percentage = SafeParse.stringToInt(binding.percentage.text.toString())
-                entry.storage.put("percentage", percentage)
+                entry.storage.put("useSuperBolus", booleanToInt(binding.useSuperBolus.isChecked))
+                entry.storage.put("useTempTarget", booleanToInt(binding.useTempTarget.isChecked))
+                entry.storage.put("usePercentage", booleanToInt(binding.usePercentage.isChecked))
+                //modified so you can only chose every 5% on Seekbar so 30 option from 0 to 150%.
+                val customPercentage = binding.customPercentageSeekbar.progress * 5
+                entry.storage.put("percentage", customPercentage)
+
+                entry.storage.put("useEcarbs", booleanToInt(binding.useEcarbs.isChecked))
+                entry.storage.put("time", binding.time.value.toInt())
+                entry.storage.put("duration", SafeParse.stringToInt(binding.duration.text))
+                entry.storage.put("carbs2", SafeParse.stringToInt(binding.carbs2.text))
             } catch (e: JSONException) {
                 aapsLogger.error("Unhandled exception", e)
             }
@@ -129,37 +144,115 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         fun usePercentage(custom: Boolean) {
             if (custom) {
-                binding.percentageLabel.visibility = View.VISIBLE
-                binding.percentage.visibility = View.VISIBLE
+                binding.defaultPercentageTextview.visibility = View.GONE
+                binding.customPercentageSeekbar.visibility = View.VISIBLE
+                val customPercentage = binding.customPercentageSeekbar.progress * 5
+                binding.usePercentage.text = customPercentage.toString() + "%"
             } else {
-                binding.percentageLabel.visibility = View.GONE
-                binding.percentage.visibility = View.GONE
+                binding.customPercentageSeekbar.visibility = View.GONE
+                binding.defaultPercentageTextview.visibility = View.VISIBLE
+                binding.usePercentage.text = context?.getString(R.string.overview_edit_quickwizard_custom) + " %"
+            }
+        }
+
+        fun useECarbs(custom: Boolean) {
+            if (custom) {
+                binding.timeLabel.visibility = View.VISIBLE
+                binding.time.visibility = View.VISIBLE
+                binding.durationLabel.visibility = View.VISIBLE
+                binding.duration.visibility = View.VISIBLE
+                binding.carbs2Label.visibility = View.VISIBLE
+                binding.carbs2.visibility = View.VISIBLE
+                binding.minLabel.visibility = View.VISIBLE
+                binding.hLabel.visibility = View.VISIBLE
+                binding.gLabel.visibility = View.VISIBLE
+            } else {
+                binding.timeLabel.visibility = View.GONE
+                binding.time.visibility = View.GONE
+                binding.durationLabel.visibility = View.GONE
+                binding.duration.visibility = View.GONE
+                binding.carbs2Label.visibility = View.GONE
+                binding.carbs2.visibility = View.GONE
+                binding.minLabel.visibility = View.GONE
+                binding.hLabel.visibility = View.GONE
+                binding.gLabel.visibility = View.GONE
             }
         }
 
         binding.usePercentage.setOnCheckedChangeListener { _, checkedId ->
-            usePercentage(checkedId == R.id.use_percentage_custom)
+            usePercentage(checkedId)
         }
+
+        binding.useEcarbs.setOnCheckedChangeListener { _, checkedId ->
+            useECarbs(checkedId)
+        }
+
+        binding.customPercentageSeekbar.setOnSeekBarChangeListener (object :
+                                                                        SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seek: SeekBar,
+                                           progress: Int, fromUser: Boolean) {
+                usePercentage(true)
+            }
+
+            override fun onStartTrackingTouch(seek: SeekBar) {
+                // write custom code for progress is started
+            }
+
+            override fun onStopTrackingTouch(seek: SeekBar) {
+                // write custom code for progress is stopped
+            }
+        })
+
+        //ecarb - checker - based on CarbDialog code
+        val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
+        binding.time.setParams(
+            savedInstanceState?.getDouble("time")
+                ?: 0.0, -7 * 24 * 60.0, 12 * 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+        )
+
+        binding.duration.setParams(
+            savedInstanceState?.getDouble("duration")
+                ?: 0.0, 0.0, 10.0, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+        )
+
+        binding.carbs2.setParams(
+            savedInstanceState?.getDouble("carbs2")
+                ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+        )
+
+        binding.carbsEdit.setParams(
+            savedInstanceState?.getDouble("carbs2")
+                ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
+        )
+        //EOF ecarb - checker - based on CarbDialog code
 
         toSeconds = entry.validTo()
         binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
 
         binding.buttonEdit.setText(entry.buttonText())
-        binding.carbsEdit.setText(entry.carbs().toString())
+        binding.carbsEdit.value = SafeParse.stringToDouble(entry.carbs().toString())
 
-        binding.useBg.setSelection(entry.useBG())
-        binding.useCob.setSelection(entry.useCOB())
-        binding.useBolusIob.setSelection(entry.useBolusIOB())
+        binding.useBg.isChecked = intToBoolean(entry.useBG())
+        binding.useCob.isChecked = intToBoolean(entry.useCOB())
+        binding.useBolusIob.isChecked = intToBoolean(entry.useBolusIOB())
         binding.useBasalIob.setSelection(entry.useBasalIOB())
         binding.device.setSelection(entry.device())
         binding.useTrend.setSelection(entry.useTrend())
-        binding.useSuperBolus.setSelection(entry.useSuperBolus())
-        binding.useTempTarget.setSelection(entry.useTempTarget())
-        binding.usePercentage.setSelection(entry.usePercentage())
-        usePercentage(entry.usePercentage() == QuickWizardEntry.CUSTOM)
-        binding.percentage.setText(entry.percentage().toString())
-        binding.useCobYes.setOnClickListener(this)
-        binding.useCobNo.setOnClickListener(this)
+        binding.useSuperBolus.isChecked=intToBoolean(entry.useSuperBolus())
+        binding.useTempTarget.isChecked=intToBoolean(entry.useTempTarget())
+        binding.usePercentage.isChecked=intToBoolean(entry.usePercentage())
+        val defaultPercentage = entry.percentage() / 5
+        binding.customPercentageSeekbar.progress = defaultPercentage
+        usePercentage(intToBoolean(entry.usePercentage()))
+
+        binding.useEcarbs.isChecked = intToBoolean(entry.useEcarbs())
+        binding.carbs2.value = SafeParse.stringToDouble(entry.carbs2().toString())
+        binding.time.value = SafeParse.stringToDouble(entry.time().toString())
+        binding.duration.value = SafeParse.stringToDouble(entry.duration().toString())
+        useECarbs(intToBoolean(entry.useEcarbs()))
+
+        binding.useCob.setOnClickListener(this)
+        //binding.useEcarbs.setOnClickListener(this)
         processCob()
     }
 
@@ -183,14 +276,57 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     }
 
     private fun processCob() {
-        if (binding.useCob.selectedItemPosition == QuickWizardEntry.YES) {
-            binding.useBolusIob.setEnableForChildren(false)
-            binding.useBasalIob.setEnableForChildren(false)
-            binding.useBolusIob.setSelection(QuickWizardEntry.YES)
+        if (binding.useCob.isChecked) {
+            binding.useBolusIob.setEnabled(false)
+            binding.useBasalIob.setEnabled(false)
+            binding.useBolusIob.isChecked = true
             binding.useBasalIob.setSelection(QuickWizardEntry.YES)
         } else {
-            binding.useBolusIob.setEnableForChildren(true)
-            binding.useBasalIob.setEnableForChildren(true)
+            binding.useBolusIob.setEnabled(true)
+            binding.useBasalIob.setEnabled(true)
         }
+    }
+
+    private fun validateInputs() {
+        val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
+        val time = binding.time.value.toInt()
+        if (time > 12 * 60 || time < -7 * 24 * 60) {
+            binding.time.value = 0.0
+            ToastUtils.warnToast(ctx, app.aaps.core.ui.R.string.constraint_applied)
+        }
+        if (binding.duration.value > 10) {
+            binding.duration.value = 0.0
+            ToastUtils.warnToast(ctx, app.aaps.core.ui.R.string.constraint_applied)
+        }
+        if (binding.carbs2.value.toInt() > maxCarbs) {
+            binding.carbs2.value = 0.0
+            ToastUtils.warnToast(ctx, R.string.carbs_constraint_applied)
+        }
+
+        //validate input for normal carbs
+        if (binding.carbsEdit.value.toInt() > maxCarbs) {
+            binding.carbsEdit.value = 0.0
+            ToastUtils.warnToast(ctx, R.string.carbs_constraint_applied)
+        }
+
+    }
+
+    private val textWatcher: TextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable) {
+            _binding?.let {
+                validateInputs()
+            }
+        }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    }
+
+    fun booleanToInt(bool: Boolean):Int{
+        return if (bool==true) 0 else 1
+    }
+
+    fun intToBoolean(theInt: Int):Boolean{
+        return theInt==0
     }
 }

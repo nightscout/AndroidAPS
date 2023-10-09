@@ -206,7 +206,15 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     fun useTempTarget(): Int = safeGetInt(storage, "useTempTarget", NO)
 
-    fun usePercentage(): Int = safeGetInt(storage, "usePercentage", DEFAULT)
+    fun usePercentage(): Int = safeGetInt(storage, "usePercentage", CUSTOM)
 
     fun percentage(): Int = safeGetInt(storage, "percentage", 100)
+
+    fun useEcarbs(): Int = safeGetInt(storage, "useEcarbs", NO)
+
+    fun carbs2(): Int = safeGetInt(storage, "carbs2")
+
+    fun time(): Int = safeGetInt(storage, "time")
+
+    fun duration(): Int = safeGetInt(storage, "duration")
 }
