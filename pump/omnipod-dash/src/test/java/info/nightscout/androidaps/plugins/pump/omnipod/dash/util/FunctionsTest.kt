@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
 import app.aaps.core.interfaces.profile.Profile
+import com.google.common.truth.Truth.assertThat
 import app.aaps.core.interfaces.profile.Profile.ProfileValue
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -25,19 +25,19 @@ class FunctionsTest {
 
         val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
         val entries: List<BasalProgram.Segment> = basalProgram.segments
-        Assertions.assertEquals(3, entries.size)
+        assertThat(entries).hasSize(3)
         val entry1: BasalProgram.Segment = entries[0]
-        Assertions.assertEquals(0.toShort(), entry1.startSlotIndex)
-        Assertions.assertEquals(50, entry1.basalRateInHundredthUnitsPerHour)
-        Assertions.assertEquals(10.toShort(), entry1.endSlotIndex)
+        assertThat(entry1.startSlotIndex).isEqualTo(0.toShort())
+        assertThat(entry1.basalRateInHundredthUnitsPerHour).isEqualTo(50)
+        assertThat(entry1.endSlotIndex).isEqualTo(10.toShort())
         val entry2: BasalProgram.Segment = entries[1]
-        Assertions.assertEquals(10.toShort(), entry2.startSlotIndex)
-        Assertions.assertEquals(100, entry2.basalRateInHundredthUnitsPerHour)
-        Assertions.assertEquals(28.toShort(), entry2.endSlotIndex)
+        assertThat(entry2.startSlotIndex).isEqualTo(10.toShort())
+        assertThat(entry2.basalRateInHundredthUnitsPerHour).isEqualTo(100)
+        assertThat(entry2.endSlotIndex).isEqualTo(28.toShort())
         val entry3: BasalProgram.Segment = entries[2]
-        Assertions.assertEquals(28.toShort(), entry3.startSlotIndex)
-        Assertions.assertEquals(305, entry3.basalRateInHundredthUnitsPerHour)
-        Assertions.assertEquals(48.toShort(), entry3.endSlotIndex)
+        assertThat(entry3.startSlotIndex).isEqualTo(28.toShort())
+        assertThat(entry3.basalRateInHundredthUnitsPerHour).isEqualTo(305)
+        assertThat(entry3.endSlotIndex).isEqualTo(48.toShort())
     }
 
     @Test fun invalidProfileZeroEntries() {
@@ -104,6 +104,6 @@ class FunctionsTest {
 
         val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
         val basalProgramElement: BasalProgram.Segment = basalProgram.segments[0]
-        Assertions.assertEquals(5, basalProgramElement.basalRateInHundredthUnitsPerHour)
+        assertThat(basalProgramElement.basalRateInHundredthUnitsPerHour).isEqualTo(5)
     }
 }
