@@ -14,7 +14,7 @@
             android:title="@string/sn_input_title" />
 
         <SwitchPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="@string/key_patch_expiration"
             android:title="@string/patch_expiration_title"
             android:summary="@string/patch_expiration_summary" />
@@ -26,6 +26,12 @@
             android:dialogTitle="@string/alarm_setting_summary"
             android:entries="@array/alarmSettings"
             android:entryValues="@array/alarmSettingsValues" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_pump_warning_notification"
+            android:title="@string/pump_warning_notification_title"
+            android:summary="@string/pump_warning_notification_summary" />
 
         <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="25"
