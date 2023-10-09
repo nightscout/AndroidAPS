@@ -6,6 +6,7 @@
     <string name="medtrum_pump_description">Integracja z pompami Medtrum Nano i Medtrum 300U</string>
     <string name="medtrum_pump_setting">Ustawienia pompy Medtrum</string>
     <string name="pump_error">Błąd pompy: %1$s!! </string>
+    <string name="pump_warning">Ostrzeżenie pompy: %1$s </string>
     <string name="pump_is_suspended">Pompa jest wstrzymana</string>
     <string name="pump_is_suspended_hour_max">Pompa jest wstrzymana z powodu przekroczenia maksymalnej godzinowej dawki insuliny</string>
     <string name="pump_is_suspended_day_max">Pompa jest wstrzymana z powodu przekroczenia maksymalnej dziennej dawki insuliny</string>
@@ -106,6 +107,8 @@
     <string name="pump_unsupported">Pompa nieprzetestowana: %1$d! Skontaktuj się z nami na Discordzie lub github, aby uzyskać wsparcie</string>
     <string name="alarm_setting_title">Ustawienia alarmu</string>
     <string name="alarm_setting_summary">Wybierz preferowaną konfigurację alarmu pompy.</string>
+    <string name="pump_warning_notification_title">Powiadomienie o ostrzeżeniu pompy</string>
+    <string name="pump_warning_notification_summary">Pokaż powiadomienia o niekrytycznych ostrzeżeniach pompy takich jak: niski poziom baterii, niski poziom zbiornika (20 jednostek) i wkrótce wygasa. Zalecane zostawianie włączonych powiadomień, gdy alarmy pompy są wyciszone.</string>
     <string name="patch_expiration_title">Wygaśnięcie Patcha</string>
     <string name="patch_expiration_summary">Po uruchomieniu Patch wygaśnie po 3 dniach, z dodatkowym 8 godzinowym okresem karencji.</string>
     <string name="hourly_max_insulin_title">Maksymalna Insulina w godzinę</string>
