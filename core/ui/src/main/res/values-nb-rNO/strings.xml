@@ -61,7 +61,7 @@
     <string name="objectives">Opplæringsmål</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="stop">Stopp</string>
-    <string name="carbs">Karbohydrater</string>
+    <string name="carbs">Karbo</string>
     <string name="invalid_profile">Ugyldig profil!</string>
     <string name="no_profile_set">INGEN PROFIL VALGT</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
@@ -155,7 +155,7 @@
     <string name="login">Login</string>
     <string name="prime_fill">Prime/fylling</string>
     <string name="overview_insulin_label">Insulin</string>
-    <string name="stoptemptarget">Avbryt temp target</string>
+    <string name="stoptemptarget">Avbryt midlertidig målverdi</string>
     <string name="closedloop">Lukket Loop</string>
     <string name="openloop">Åpen Loop</string>
     <string name="lowglucosesuspend">Stopp ved lavt BS</string>
