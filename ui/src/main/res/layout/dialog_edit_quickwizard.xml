@@ -109,6 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <TextView
@@ -130,6 +131,7 @@
                 <RadioButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:checked="true"
                     android:text="@string/device_all" />
 
                 <RadioButton
@@ -149,7 +151,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="7dp"
+            android:paddingTop="9dp"
             android:gravity="center"
             android:text="@string/overview_edit_quickwizard_useforcalculation"
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -211,13 +213,11 @@
                 android:layout_marginBottom="5dp">
 
                 <CheckBox
-                    android:id="@+id/use_basal_iobX"
+                    android:id="@+id/use_basal_iob_checkbox"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="false"
                     android:gravity="left|center_vertical"
-                    android:textColor="@color/defaultTextColor"
+                    android:checked="true"
                     android:text="@string/overview_edit_quickwizard_use_basal_iob"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -265,13 +265,10 @@
                 android:layout_marginBottom="5dp">
 
                 <CheckBox
-                    android:id="@+id/use_trendX"
+                    android:id="@+id/use_trend_checkbox"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:checked="true"
-                    android:enabled="false"
                     android:gravity="left|center_vertical"
-                    android:textColor="@color/defaultTextColor"
                     android:text="@string/overview_edit_quickwizard_use_trend"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
