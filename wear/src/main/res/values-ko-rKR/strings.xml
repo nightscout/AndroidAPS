@@ -8,8 +8,6 @@
     <string name="label_watchface_no_chart">AAPS(차트없음)</string>
     <string name="label_watchface_circle">AAPS(원형)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(조종석)</string>
-    <string name="label_watchface_steampunk">AAPS(스팀펑크)</string>
     <string name="label_watchface_digital_style">AAPS(디지털방식)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
@@ -53,7 +51,6 @@
     <string name="pref_quick_righty">오른손잡이</string>
     <string name="pref_quick_lefty">왼손잡이</string>
     <string name="pref_modern_sparse">모던스타일</string>
-    <string name="pref_delta_granularity">증분 밀도(스팀펑크)</string>
     <string name="pref_low">저</string>
     <string name="pref_medium">중</string>
     <string name="pref_high">고</string>
@@ -176,8 +173,6 @@
     <string name="wear_control_no_data">사용할 수 있는 데이터 없음</string>
     <string name="increment">증가</string>
     <string name="decrement">감소</string>
-    <string name="first_char_high">H</string>
-    <string name="first_char_low">L</string>
     <string name="abbreviation_average">평균</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
