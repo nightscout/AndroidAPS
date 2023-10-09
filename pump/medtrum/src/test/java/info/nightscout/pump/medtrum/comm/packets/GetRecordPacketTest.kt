@@ -4,10 +4,10 @@ import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.utils.T
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -42,7 +42,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
         // Expected values
         val expected = byteArrayOf(99, 4, 0, -110, 0)
-        Assertions.assertEquals(expected.contentToString(), result.contentToString())
+        assertThat(result).asList().containsExactlyElementsIn(expected.toList()).inOrder()
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
@@ -54,8 +54,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -67,8 +67,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        Assertions.assertEquals(false, result)
-        Assertions.assertEquals(true, packet.failed)
+        assertThat(result).isFalse()
+        assertThat(packet.failed).isTrue()
     }
 
     @Test fun handleResponseGivenBolusRecordWhenAndDetailedBolusInfoPresentThenExpectPumpSyncWithTempId() {
@@ -100,10 +100,10 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
-        Assertions.assertEquals(timestamp, medtrumPump.lastBolusTime)
-        Assertions.assertEquals(amount, medtrumPump.lastBolusAmount, 0.01)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
+        assertThat(medtrumPump.lastBolusTime).isEqualTo(timestamp)
+        assertThat(medtrumPump.lastBolusAmount).isWithin(0.01).of(amount)
     }
 
     @Test fun handleResponseGivenBolusRecordWhenAndNoDetailedBolusInfoPresentThenExpectPumpSyncWithPumpId() {
@@ -129,10 +129,10 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
-        Assertions.assertEquals(timestamp, medtrumPump.lastBolusTime)
-        Assertions.assertEquals(amount, medtrumPump.lastBolusAmount, 0.01)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
+        assertThat(medtrumPump.lastBolusTime).isEqualTo(timestamp)
+        assertThat(medtrumPump.lastBolusAmount).isWithin(0.01).of(amount)
     }
 
     @Test fun handleResponseGivenExtendedBolusRecordThenExpectPumpSyncWithPumpId() {
@@ -157,8 +157,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenComboBolusRecordWhenAndNoDetailedBolusInfoPresentThenExpectPumpSyncWithPumpId() {
@@ -195,8 +195,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenBasalRecordWhenAbsoluteTempThenExpectPumpSync() {
@@ -223,8 +223,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenBasalRecordWhenRelativeTempThenExpectPumpSync() {
@@ -251,8 +251,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenBasalRecordWhenSuspendThenExpectPumpSync() {
@@ -279,8 +279,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenBasalRecordWhenStandardAndSuspendEndReasonThenExpectPumpSync() {
@@ -315,8 +315,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenBasalRecordWhenTempAndSuspendEndReasonThenExpectPumpSync() {
@@ -351,8 +351,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenBasalRecordWhenStandardAndSuspendEndReasonAndNewerExistingTBRThenExpectNoPumpSync() {
@@ -391,8 +391,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 
     @Test fun handleResponseGivenTDDRecordThenExpectPumpSync() {
@@ -421,7 +421,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(true, result)
-        Assertions.assertEquals(false, packet.failed)
+        assertThat(result).isTrue()
+        assertThat(packet.failed).isFalse()
     }
 }

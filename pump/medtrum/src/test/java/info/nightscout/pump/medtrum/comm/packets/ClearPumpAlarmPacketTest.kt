@@ -1,10 +1,10 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toInt
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ClearPumpAlarmPacketTest : MedtrumTestBase() {
@@ -29,8 +29,8 @@ class ClearPumpAlarmPacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        Assertions.assertEquals(3, result.size)
-        Assertions.assertEquals(opCode.toByte(), result[0])
-        Assertions.assertEquals(clearCode, result.copyOfRange(1, 3).toInt())
+        assertThat(result).hasLength(3)
+        assertThat(result[0]).isEqualTo(opCode.toByte())
+        assertThat(result.copyOfRange(1, 3).toInt()).isEqualTo(clearCode)
     }
 }
