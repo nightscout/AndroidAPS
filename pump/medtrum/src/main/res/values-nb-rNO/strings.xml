@@ -108,7 +108,7 @@
     <string name="alarm_setting_title">Alarminnstillinger</string>
     <string name="alarm_setting_summary">Velg dine foretrukne alarminnstillinger.</string>
     <string name="pump_warning_notification_title">Varsel om pumpeadvarsel</string>
-    <string name="pump_warning_notification_summary">Vis varsel om ikke kritisk puppe advarsel: lavt batteri, lavt reservoar (20 enheter) og utløper snart. Anbefalt og la være aktivert når pumpe alarmer er satt til stille modus.</string>
+    <string name="pump_warning_notification_summary">Vis varsel om ikke-kritisk pumpeadvarsel: lavt batteri, lavt reservoar (20 enheter) og utløper snart. Anbefales og la være aktivert når pumpealarmer er satt til stillemodus.</string>
     <string name="patch_expiration_title">Patch utløpsdato</string>
     <string name="patch_expiration_summary">Når aktivert vil plasteret utløpe etter 3 dager, med en nådeperiode på 8 timer etter det.</string>
     <string name="hourly_max_insulin_title">Maksimal insulin per time</string>
