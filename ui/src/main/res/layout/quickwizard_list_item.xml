@@ -69,16 +69,6 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/device"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="false"
-                    android:contentDescription="@string/a11y_only_on_phone"
-                    android:cropToPadding="false"
-                    android:scaleType="fitStart"
-                    app:srcCompat="@drawable/ic_smartphone" />
-
-                <ImageView
                     android:id="@+id/sortHandle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -69,15 +69,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
-        /* //posibility to choose
-
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
-            binding.deviceLabel.visibility = View.VISIBLE
-            binding.device.visibility = View.VISIBLE
-        } else {
-            binding.deviceLabel.visibility = View.GONE
-            binding.device.visibility = View.GONE
-        }*/
 
         binding.okcancel.ok.setOnClickListener {
             try {
@@ -88,8 +79,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 entry.storage.put("useBG", binding.useBg.isChecked)
                 entry.storage.put("useCOB", booleanToInt(binding.useCob.isChecked))
                 entry.storage.put("useBolusIOB", booleanToInt(binding.useBolusIob.isChecked))
-                entry.storage.put("device", QuickWizardEntry.DEVICE_ALL)
-                //entry.storage.put("device", binding.device.selectedItemPosition)
                 entry.storage.put("useBasalIOB", binding.useBasalIob.selectedItemPosition)
                 entry.storage.put("useTrend", binding.useTrend.selectedItemPosition)
                 entry.storage.put("useSuperBolus", booleanToInt(binding.useSuperBolus.isChecked))
@@ -240,7 +229,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.useCob.isChecked = intToBoolean(entry.useCOB())
         binding.useBolusIob.isChecked = intToBoolean(entry.useBolusIOB())
         binding.useBasalIob.setSelection(entry.useBasalIOB())
-        //binding.device.setSelection(entry.device())
         binding.useTrend.setSelection(entry.useTrend())
         binding.useSuperBolus.isChecked = intToBoolean(entry.useSuperBolus())
         binding.useTempTarget.isChecked = intToBoolean(entry.useTempTarget())
