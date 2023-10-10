@@ -256,8 +256,8 @@
     <string name="overview_show_treatments">Behandlinger</string>
     <string name="overview_show_heartRate">Puls</string>
     <string name="overview_show_deviation_slope">Avvikskurve</string>
-    <string name="overview_show_activity">Aktivitet</string>
-    <string name="overview_show_bgi">Blodsukkerpåvirkning</string>
+    <string name="overview_show_activity">Insulinaktivitet</string>
+    <string name="overview_show_bgi">BS-påvirkning (BGI)</string>
     <string name="overview_show_sensitivity">Sensitivitet</string>
     <string name="overview_show_deviations">Avvik</string>
     <string name="overview_show_cob">Aktive KH (COB)</string>
@@ -274,7 +274,7 @@
     <string name="treatments_shortname">BEH</string>
     <string name="heartRate_shortname">HR</string>
     <string name="sensitivity_shortname">SENS</string>
-    <string name="graph_scale">Graf skala</string>
+    <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
     <string name="classic_description">Opprinnelig visningstema</string>
