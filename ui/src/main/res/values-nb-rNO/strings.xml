@@ -137,6 +137,7 @@
     <string name="overview_edit_quickwizard_list_activity_add">Legg til</string>
     <string name="overview_quickwizard_item_edit_button">Rediger</string>
     <string name="overview_edit_quickwizard_show_on_device">Vis oppføring på enhet:</string>
+    <string name="overview_edit_quickwizard_use_bg">BS beregning</string>
     <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB beregning</string>
     <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB beregning</string>
     <string name="overview_edit_quickwizard_use_trend">Trendberegning</string>
