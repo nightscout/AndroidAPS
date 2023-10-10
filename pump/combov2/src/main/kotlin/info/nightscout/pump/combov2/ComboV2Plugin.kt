@@ -8,6 +8,8 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -976,7 +978,7 @@ class ComboV2Plugin @Inject constructor(
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting reservoir change therapy event")
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
-                        type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                        type = TE.Type.INSULIN_CHANGE,
                         pumpId = null,
                         pumpType = PumpType.ACCU_CHEK_COMBO,
                         pumpSerial = serialNumber()
@@ -1000,7 +1002,7 @@ class ComboV2Plugin @Inject constructor(
                     aapsLogger.debug(LTag.PUMP, "Auto-inserting battery change therapy event")
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
-                        type = DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
+                        type = TE.Type.PUMP_BATTERY_CHANGE,
                         pumpId = null,
                         pumpType = PumpType.ACCU_CHEK_COMBO,
                         pumpSerial = serialNumber()
@@ -1034,9 +1036,9 @@ class ComboV2Plugin @Inject constructor(
 
         val requestedBolusAmount = detailedBolusInfo.insulin.iuToCctlBolus()
         val bolusReason = when (detailedBolusInfo.bolusType) {
-            DetailedBolusInfo.BolusType.NORMAL  -> ComboCtlPump.StandardBolusReason.NORMAL
-            DetailedBolusInfo.BolusType.SMB     -> ComboCtlPump.StandardBolusReason.SUPERBOLUS
-            DetailedBolusInfo.BolusType.PRIMING -> ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET
+            BS.Type.NORMAL -> ComboCtlPump.StandardBolusReason.NORMAL
+            BS.Type.SMB    -> ComboCtlPump.StandardBolusReason.SUPERBOLUS
+            BS.Type.PRIMING -> ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET
         }
 
         val pumpEnactResult = PumpEnactResult(injector)
@@ -1060,7 +1062,7 @@ class ComboV2Plugin @Inject constructor(
         EventOverviewBolusProgress.t = Treatment(
             insulin = 0.0,
             carbs = 0,
-            isSMB = detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB,
+            isSMB = detailedBolusInfo.bolusType === BS.Type.SMB,
             id = detailedBolusInfo.id
         )
 
@@ -2030,7 +2032,7 @@ class ComboV2Plugin @Inject constructor(
                 pumpSync.syncBolusWithPumpId(
                     event.timestamp.toEpochMilliseconds(),
                     event.bolusAmount.cctlBolusToIU(),
-                    DetailedBolusInfo.BolusType.NORMAL,
+                    BS.Type.NORMAL,
                     event.bolusId,
                     PumpType.ACCU_CHEK_COMBO,
                     serialNumber()
@@ -2039,9 +2041,9 @@ class ComboV2Plugin @Inject constructor(
 
             is ComboCtlPump.Event.StandardBolusInfused -> {
                 val bolusType = when (event.standardBolusReason) {
-                    ComboCtlPump.StandardBolusReason.NORMAL               -> DetailedBolusInfo.BolusType.NORMAL
-                    ComboCtlPump.StandardBolusReason.SUPERBOLUS           -> DetailedBolusInfo.BolusType.SMB
-                    ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET -> DetailedBolusInfo.BolusType.PRIMING
+                    ComboCtlPump.StandardBolusReason.NORMAL               -> BS.Type.NORMAL
+                    ComboCtlPump.StandardBolusReason.SUPERBOLUS           -> BS.Type.SMB
+                    ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET -> BS.Type.PRIMING
                 }
                 pumpSync.syncBolusWithPumpId(
                     event.timestamp.toEpochMilliseconds(),

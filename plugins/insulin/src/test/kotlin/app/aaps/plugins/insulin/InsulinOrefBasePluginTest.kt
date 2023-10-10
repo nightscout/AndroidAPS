@@ -1,6 +1,7 @@
 package app.aaps.plugins.insulin
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.BS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -9,7 +10,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.database.entities.Bolus
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -91,7 +91,7 @@ class InsulinOrefBasePluginTest {
 
     @Test
     fun testIobCalcForTreatment() {
-        val treatment = Bolus(timestamp = 0, amount = 10.0, type = Bolus.Type.NORMAL)
+        val treatment = BS(timestamp = 0, amount = 10.0, type = BS.Type.NORMAL)
         testPeak = 30
         testUserDefinedDia = 4.0
         val time = System.currentTimeMillis()

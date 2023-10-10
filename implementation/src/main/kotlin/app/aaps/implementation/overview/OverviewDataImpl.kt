@@ -145,10 +145,7 @@ class OverviewDataImpl @Inject constructor(
 
     override fun lastBg(): InMemoryGlucoseValue? =
         iobCobCalculator.get().ads.bucketedData?.firstOrNull()
-            ?: persistenceLayer.getLastGlucoseValue().blockingGet().let { gvWrapped ->
-                if (gvWrapped is ValueWrapper.Existing) InMemoryGlucoseValue.fromGv(gvWrapped.value)
-                else null
-            }
+            ?: persistenceLayer.getLastGlucoseValue()?.let { InMemoryGlucoseValue.fromGv(it) }
 
     override fun isLow(): Boolean =
         lastBg()?.let { lastBg ->

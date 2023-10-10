@@ -157,10 +157,10 @@ import kotlin.math.roundToInt
     fun getLastGlucoseValueId(): Long? =
         database.glucoseValueDao.getLastId()
 
-    fun getLastGlucoseValueWrapped(): Single<ValueWrapper<GlucoseValue>> =
+    fun getLastGlucoseValue(): GlucoseValue? =
         database.glucoseValueDao.getLast()
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
+            .blockingGet()
 
     /*
        * returns a Pair of the next entity to sync and the ID of the "update".
@@ -462,8 +462,8 @@ import kotlin.math.roundToInt
         database.foodDao.getLastId()
 
     // BOLUS
-    fun findBolusByNSId(nsId: String): Bolus? =
-        database.bolusDao.findByNSId(nsId)
+    fun getBolusByNSId(nsId: String): Bolus? =
+        database.bolusDao.getByNSId(nsId)
 
     /*
       * returns a Pair of the next entity to sync and the ID of the "update".
@@ -497,10 +497,9 @@ import kotlin.math.roundToInt
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
 
-    fun getLastBolusRecordOfTypeWrapped(type: Bolus.Type): Single<ValueWrapper<Bolus>> =
+    fun getLastBolusRecordOfType(type: Bolus.Type): Maybe<Bolus> =
         database.bolusDao.getLastBolusRecordOfType(type)
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
     fun getOldestBolusRecord(): Bolus? =
         database.bolusDao.getOldestBolusRecord()
@@ -527,8 +526,8 @@ import kotlin.math.roundToInt
         database.bolusDao.getLastId()
     // CARBS
 
-    fun findCarbsByNSId(nsId: String): Carbs? =
-        database.carbsDao.findByNSId(nsId)
+    fun getCarbsByNSId(nsId: String): Carbs? =
+        database.carbsDao.getByNSId(nsId)
 
     private fun expandCarbs(carbs: Carbs): List<Carbs> =
         if (carbs.duration == 0L) {

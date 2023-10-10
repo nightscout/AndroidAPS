@@ -8,7 +8,11 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -274,7 +278,15 @@ class CommandQueueImplementation @Inject constructor(
             carbsRunnable = Runnable {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Going to store carbs")
                 detailedBolusInfo.carbs = originalCarbs
-                persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createCarbs(), callback, injector)
+                disposable += persistenceLayer.insertOrUpdateCarbs(
+                    carbs = detailedBolusInfo.createCarbs(),
+                    action = Action.CARBS,
+                    source = Sources.TreatmentDialog,
+                    listValues = listOf(ValueWithUnit.Gram(originalCarbs.toInt()))
+                ).subscribe(
+                    { callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run() },
+                    { callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run() }
+                )
             }
             // Do not process carbs anymore
             detailedBolusInfo.carbs = 0.0
@@ -285,14 +297,14 @@ class CommandQueueImplementation @Inject constructor(
             }
 
         }
-        var type = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
+        var type = if (detailedBolusInfo.bolusType == BS.Type.SMB) CommandType.SMB_BOLUS else CommandType.BOLUS
         if (type == CommandType.SMB_BOLUS) {
             if (bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
                 callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
                 return false
             }
-            val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+            val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
             if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
                 callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
@@ -315,7 +327,7 @@ class CommandQueueImplementation @Inject constructor(
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
         detailedBolusInfo.carbs = constraintChecker.applyCarbsConstraints(ConstraintObject(detailedBolusInfo.carbs.toInt(), aapsLogger)).value().toDouble()
         // add new command to queue
-        if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) {
+        if (detailedBolusInfo.bolusType == BS.Type.SMB) {
             add(CommandSMBBolus(injector, detailedBolusInfo, callback))
         } else {
             add(CommandBolus(injector, detailedBolusInfo, callback, type, carbsRunnable))

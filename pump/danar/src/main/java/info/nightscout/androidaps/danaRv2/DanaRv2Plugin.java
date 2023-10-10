@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import app.aaps.annotations.OpenForTesting;
+import app.aaps.core.data.db.BS;
 import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.constraints.ConstraintsChecker;
@@ -187,7 +188,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
             detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
 
-            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
+            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == BS.Type.SMB, detailedBolusInfo.getId());
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, carbTimeStamp, t);

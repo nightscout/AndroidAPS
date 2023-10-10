@@ -11,6 +11,7 @@ import app.aaps.core.data.configuration.Constants.CARBS_FAV1_DEFAULT
 import app.aaps.core.data.configuration.Constants.CARBS_FAV2_DEFAULT
 import app.aaps.core.data.configuration.Constants.CARBS_FAV3_DEFAULT
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -323,7 +324,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                     ).subscribe()
                     if (carbsAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
-                        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+                        detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
                         detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes

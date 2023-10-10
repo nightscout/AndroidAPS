@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.db.TE;
 import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import app.aaps.core.interfaces.pump.PumpSync;
@@ -253,7 +254,7 @@ public class PatchManager implements IPatchManager {
                         Thread.sleep(1000);
                         pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 System.currentTimeMillis(),
-                                DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                                TE.Type.CANNULA_CHANGE,
                                 null,
                                 null,
                                 PumpType.EOFLOW_EOPATCH2,
@@ -261,7 +262,7 @@ public class PatchManager implements IPatchManager {
                         );
                         pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 System.currentTimeMillis(),
-                                DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                                TE.Type.INSULIN_CHANGE,
                                 null,
                                 null,
                                 PumpType.EOFLOW_EOPATCH2,

@@ -79,19 +79,19 @@ class DataSyncSelectorV3 @Inject constructor(
     override suspend fun doUpload() {
         rxBus.send(EventNSClientUpdateGuiStatus())
         if ((config.NSCLIENT || sp.getBoolean(R.string.key_ns_upload, true)) && !isPaused) {
-            queueCounter.bolusesRemaining = (appRepository.getLastBolusId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
-            queueCounter.carbsRemaining = (appRepository.getLastCarbsId() ?: 0L) - sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
+            queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
+            queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
             queueCounter.bcrRemaining = (appRepository.getLastBolusCalculatorResultId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
-            queueCounter.ttsRemaining = (appRepository.getLastTempTargetId() ?: 0L) - sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
+            queueCounter.ttsRemaining = (persistenceLayer.getLastTemporaryTargetId() ?: 0L) - sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
             queueCounter.foodsRemaining = (appRepository.getLastFoodId() ?: 0L) - sp.getLong(R.string.key_ns_food_last_synced_id, 0)
-            queueCounter.gvsRemaining = (appRepository.getLastGlucoseValueId() ?: 0L) - sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
-            queueCounter.tesRemaining = (appRepository.getLastTherapyEventId() ?: 0L) - sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
+            queueCounter.gvsRemaining = (persistenceLayer.getLastGlucoseValueId() ?: 0L) - sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
+            queueCounter.tesRemaining = (persistenceLayer.getLastTherapyEventId() ?: 0L) - sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
             queueCounter.dssRemaining = (appRepository.getLastDeviceStatusId() ?: 0L) - sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
-            queueCounter.tbrsRemaining = (appRepository.getLastTemporaryBasalId() ?: 0L) - sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
-            queueCounter.ebsRemaining = (appRepository.getLastExtendedBolusId() ?: 0L) - sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
+            queueCounter.tbrsRemaining = (persistenceLayer.getLastTemporaryBasalId() ?: 0L) - sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
+            queueCounter.ebsRemaining = (persistenceLayer.getLastExtendedBolusId() ?: 0L) - sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
             queueCounter.pssRemaining = (appRepository.getLastProfileSwitchId() ?: 0L) - sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
             queueCounter.epssRemaining = (appRepository.getLastEffectiveProfileSwitchId() ?: 0L) - sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
-            queueCounter.oesRemaining = (appRepository.getLastOfflineEventId() ?: 0L) - sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
+            queueCounter.oesRemaining = (persistenceLayer.getLastOfflineEventId() ?: 0L) - sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
             rxBus.send(EventNSClientUpdateGuiQueue())
             processChangedGlucoseValues()
             processChangedBoluses()
@@ -142,7 +142,7 @@ class DataSyncSelectorV3 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastBolusId() ?: 0L
+            val lastDbId = persistenceLayer.getLastBolusId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
             if (startId > lastDbId) {
                 aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
@@ -151,19 +151,19 @@ class DataSyncSelectorV3 @Inject constructor(
             }
             queueCounter.bolusesRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementBolus(startId).blockingGet()?.let { bolus ->
+            persistenceLayer.getNextSyncElementBolus(startId).blockingGet()?.let { bolus ->
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    bolus.first.id == bolus.second.id && bolus.first.interfaceIDs.nightscoutId != null ->
+                    bolus.first.id == bolus.second.id && bolus.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Loaded from NS: ${bolus.second.id} ")
                     // only NsId changed, no need to upload
-                    bolus.first.onlyNsIdAdded(bolus.second)                                            ->
+                    bolus.first.onlyNsIdAdded(bolus.second)                                   ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Only NS id changed: ${bolus.second.id} ")
                     // without nsId = create new
-                    bolus.first.interfaceIDs.nightscoutId == null                                      ->
+                    bolus.first.ids.nightscoutId == null                                      ->
                         cont = activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairBolus(bolus.first, bolus.second.id), " $startId/$lastDbId") ?: false
                     // with nsId = update if it's modified record
-                    bolus.first.interfaceIDs.nightscoutId != null && bolus.first.id != bolus.second.id ->
+                    bolus.first.ids.nightscoutId != null && bolus.first.id != bolus.second.id ->
                         cont = activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairBolus(bolus.first, bolus.second.id), "$startId/$lastDbId") ?: false
                 }
                 if (cont) confirmLastBolusIdIfGreater(bolus.second.id)
@@ -183,7 +183,7 @@ class DataSyncSelectorV3 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastCarbsId() ?: 0L
+            val lastDbId = persistenceLayer.getLastCarbsId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
             if (startId > lastDbId) {
                 aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
@@ -192,19 +192,19 @@ class DataSyncSelectorV3 @Inject constructor(
             }
             queueCounter.carbsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementCarbs(startId).blockingGet()?.let { carb ->
+            persistenceLayer.getNextSyncElementCarbs(startId).blockingGet()?.let { carb ->
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    carb.first.id == carb.second.id && carb.first.interfaceIDs.nightscoutId != null ->
+                    carb.first.id == carb.second.id && carb.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Loaded from NS: ${carb.second.id} ")
                     // only NsId changed, no need to upload
-                    carb.first.onlyNsIdAdded(carb.second)                                           ->
+                    carb.first.onlyNsIdAdded(carb.second)                                  ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Only NS id changed ID: ${carb.second.id} ")
                     // without nsId = create new
-                    carb.first.interfaceIDs.nightscoutId == null                                    ->
+                    carb.first.ids.nightscoutId == null                                    ->
                         cont = activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairCarbs(carb.first, carb.second.id), "$startId/$lastDbId") ?: false
                     // with nsId = update if it's modified record
-                    carb.first.interfaceIDs.nightscoutId != null && carb.first.id != carb.second.id ->
+                    carb.first.ids.nightscoutId != null && carb.first.id != carb.second.id ->
                         cont = activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairCarbs(carb.first, carb.second.id), "$startId/$lastDbId") ?: false
                 }
                 if (cont) confirmLastCarbsIdIfGreater(carb.second.id)
@@ -273,7 +273,7 @@ class DataSyncSelectorV3 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastTempTargetId() ?: 0L
+            val lastDbId = persistenceLayer.getLastTemporaryTargetId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
             if (startId > lastDbId) {
                 aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
@@ -355,7 +355,7 @@ class DataSyncSelectorV3 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastGlucoseValueId() ?: 0L
+            val lastDbId = persistenceLayer.getLastGlucoseValueId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
             if (startId > lastDbId) {
                 aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
@@ -398,7 +398,7 @@ class DataSyncSelectorV3 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastTherapyEventId() ?: 0L
+            val lastDbId = persistenceLayer.getLastTherapyEventId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
             if (startId > lastDbId) {
                 aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
@@ -468,7 +468,7 @@ class DataSyncSelectorV3 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastTemporaryBasalId() ?: 0L
+            val lastDbId = persistenceLayer.getLastTemporaryBasalId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
             if (startId > lastDbId) {
                 aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
@@ -510,7 +510,7 @@ class DataSyncSelectorV3 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastExtendedBolusId() ?: 0L
+            val lastDbId = persistenceLayer.getLastExtendedBolusId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
             if (startId > lastDbId) {
                 aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
@@ -636,7 +636,7 @@ class DataSyncSelectorV3 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastOfflineEventId() ?: 0L
+            val lastDbId = persistenceLayer.getLastOfflineEventId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
             if (startId > lastDbId) {
                 aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")

@@ -19,6 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.db.BS;
 import app.aaps.core.data.plugin.PluginDescription;
 import app.aaps.core.data.plugin.PluginType;
 import app.aaps.core.data.pump.defs.ManufacturerType;
@@ -560,7 +561,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
                 return new PumpEnactResult(getInjector()).success(true).enacted(false);
             }
 
-            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
+            EventOverviewBolusProgress.Treatment treatment = new EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.getBolusType() == BS.Type.SMB, detailedBolusInfo.getId());
             EventOverviewBolusProgress.INSTANCE.setT(treatment);
 
             // start bolus delivery
@@ -671,7 +672,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
             );
         } catch (Exception e) {
             getAapsLogger().error("Adding treatment record failed", e);
-            if (detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
+            if (detailedBolusInfo.getBolusType() == BS.Type.SMB) {
                 uiInteraction.addNotification(Notification.COMBO_PUMP_ALARM,
                         getRh().gs(R.string.combo_error_updating_treatment_record), Notification.URGENT);
             }

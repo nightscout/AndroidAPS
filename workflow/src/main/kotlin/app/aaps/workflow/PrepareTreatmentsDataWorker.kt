@@ -3,6 +3,7 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
@@ -26,7 +27,6 @@ import app.aaps.core.main.graph.data.TherapyEventDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.Bolus
 import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
@@ -67,14 +67,14 @@ class PrepareTreatmentsDataWorker(
         val filteredTherapyEvents: MutableList<DataPointWithLabelInterface> = ArrayList()
         val filteredEps: MutableList<DataPointWithLabelInterface> = ArrayList()
 
-        repository.getBolusesDataFromTimeToTime(fromTime, endTime, true).blockingGet()
+        persistenceLayer.getBolusesFromTimeToTime(fromTime, endTime, true)
             .map { BolusDataPoint(it, rh, activePlugin.activePump.pumpDescription.bolusStep, defaultValueHelper, decimalFormatter) }
-            .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
+            .filter { it.data.type == BS.Type.NORMAL || it.data.type == BS.Type.SMB }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())
                 filteredTreatments.add(it)
             }
-        repository.getCarbsDataFromTimeToTimeExpanded(fromTime, endTime, true).blockingGet()
+        persistenceLayer.getCarbsFromTimeToTimeExpanded(fromTime, endTime, true)
             .map { CarbsDataPoint(it, rh) }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())

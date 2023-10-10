@@ -73,7 +73,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
         }
         therapyEvent.note = note.value
         valuesWithUnit.add(ValueWithUnit.SimpleString(note.value).takeIf { note.value.isNotBlank() })
-        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = therapyEvent,
             action = app.aaps.core.data.ue.Action.CAREPORTAL,
             source = Sources.Automation,

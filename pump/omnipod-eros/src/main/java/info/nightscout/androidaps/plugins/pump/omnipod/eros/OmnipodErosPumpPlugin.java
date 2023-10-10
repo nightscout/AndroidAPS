@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.db.BS;
 import app.aaps.core.data.plugin.PluginDescription;
 import app.aaps.core.data.plugin.PluginType;
 import app.aaps.core.data.pump.defs.ManufacturerType;
@@ -1114,7 +1115,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         PumpEnactResult result = executeCommand(OmnipodCommandType.SET_BOLUS, () -> aapsOmnipodErosManager.bolus(detailedBolusInfo));
 
         if (result.getSuccess()) {
-            incrementStatistics(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
+            incrementStatistics(detailedBolusInfo.getBolusType() == BS.Type.SMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
                     : OmnipodErosStorageKeys.Statistics.STANDARD_BOLUSES_DELIVERED);
         }
 

@@ -9,6 +9,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.util.size
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -21,7 +22,6 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
@@ -92,8 +92,8 @@ class TddCalculatorImpl @Inject constructor(
         val endTimeAligned = endTime - endTime % (5 * 60 * 1000)
         val tdd = TotalDailyDose(timestamp = startTimeAligned)
         var tbrFound = false
-        repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet()
-            .filter { it.type != Bolus.Type.PRIMING }
+        persistenceLayer.getBolusesFromTimeToTime(startTime, endTime, true)
+            .filter { it.type != BS.Type.PRIMING }
             .forEach { t ->
                 tdd.bolusAmount += t.amount
             }

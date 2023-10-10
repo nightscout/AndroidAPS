@@ -49,7 +49,6 @@ import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.ValueWrapper
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogWizardBinding
 import dagger.android.HasAndroidInjector
@@ -179,10 +178,10 @@ class WizardDialog : DaggerDialogFragment() {
         // because loop doesn't add missing insulin
         var percentage = sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
         val time = sp.getLong(app.aaps.core.utils.R.string.key_reset_boluswizard_percentage_time, 16)
-        persistenceLayer.getLastGlucoseValue().blockingGet().let {
+        persistenceLayer.getLastGlucoseValue().let {
             // if last value is older or there is no bg
-            if (it is ValueWrapper.Existing) {
-                if (it.value.timestamp < dateUtil.now() - T.mins(time).msecs())
+            if (it != null) {
+                if (it.timestamp < dateUtil.now() - T.mins(time).msecs())
                     percentage = 100.0
             } else percentage = 100.0
         }

@@ -2,14 +2,14 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.core.data.db.CA
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.main.R
-import app.aaps.database.entities.Carbs
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.Shape
 
 class CarbsDataPoint(
-    val data: Carbs,
+    val data: CA,
     private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 

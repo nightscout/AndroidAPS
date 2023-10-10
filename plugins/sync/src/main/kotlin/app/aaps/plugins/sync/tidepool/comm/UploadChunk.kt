@@ -100,13 +100,11 @@ class UploadChunk @Inject constructor(
 
     private fun getTreatments(start: Long, end: Long): List<BaseElement> {
         val result = LinkedList<BaseElement>()
-        repository.getBolusesDataFromTimeToTime(start, end, true)
-            .blockingGet()
+        persistenceLayer.getBolusesFromTimeToTime(start, end, true)
             .forEach { bolus ->
                 result.add(BolusElement(bolus, dateUtil))
             }
-        repository.getCarbsDataFromTimeToTimeExpanded(start, end, true)
-            .blockingGet()
+        persistenceLayer.getCarbsFromTimeToTimeExpanded(start, end, true)
             .forEach { carb ->
                 result.add(WizardElement(carb, dateUtil))
             }
@@ -124,7 +122,6 @@ class UploadChunk @Inject constructor(
 
     private fun getBgReadings(start: Long, end: Long): List<SensorGlucoseElement> {
         val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(start, end, true)
-            .blockingGet()
         val selection = SensorGlucoseElement.fromBgReadings(readings, dateUtil)
         if (selection.isNotEmpty())
             rxBus.send(EventTidepoolStatus("${selection.size} CGMs selected for upload"))

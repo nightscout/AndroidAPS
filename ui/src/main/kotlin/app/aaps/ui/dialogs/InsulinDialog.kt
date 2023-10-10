@@ -11,6 +11,7 @@ import app.aaps.core.data.configuration.Constants.INSULIN_PLUS1_DEFAULT
 import app.aaps.core.data.configuration.Constants.INSULIN_PLUS2_DEFAULT
 import app.aaps.core.data.configuration.Constants.INSULIN_PLUS3_DEFAULT
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -136,8 +137,8 @@ class InsulinDialog : DialogFragmentWithDate() {
         )
         binding.amount.setParams(
             savedInstanceState?.getDouble("amount")
-                ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep), false, binding
-                .okcancel.ok, textWatcher
+                ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep),
+            false, binding.okcancel.ok, textWatcher
         )
 
         val plus05Text = sp.getDouble(rh.gs(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
@@ -254,21 +255,22 @@ class InsulinDialog : DialogFragmentWithDate() {
                     }
                     if (insulinAfterConstraints > 0) {
                         val detailedBolusInfo = DetailedBolusInfo()
-                        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+                        detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
                         detailedBolusInfo.insulin = insulinAfterConstraints
                         detailedBolusInfo.context = context
                         detailedBolusInfo.notes = notes
                         detailedBolusInfo.timestamp = time
                         if (recordOnlyChecked) {
-                            uel.log(
-                                action = Action.BOLUS, source = Sources.InsulinDialog,
+                            persistenceLayer.insertOrUpdateBolus(
+                                bolus = detailedBolusInfo.createBolus(),
+                                action = Action.BOLUS,
+                                source = Sources.InsulinDialog,
                                 note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else "",
                                 listValues = listOf(
                                     ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.record)),
                                     ValueWithUnit.Insulin(insulinAfterConstraints),
                                     ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 })
                             )
-                            persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()
                         } else {

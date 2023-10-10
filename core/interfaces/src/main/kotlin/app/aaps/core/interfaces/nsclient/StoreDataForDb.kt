@@ -1,14 +1,14 @@
 package app.aaps.core.interfaces.nsclient
 
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.Food
@@ -17,8 +17,8 @@ import app.aaps.database.entities.ProfileSwitch
 interface StoreDataForDb {
 
     val glucoseValues: MutableList<GV>
-    val boluses: MutableList<Bolus>
-    val carbs: MutableList<Carbs>
+    val boluses: MutableList<BS>
+    val carbs: MutableList<CA>
     val temporaryTargets: MutableList<TT>
     val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch>
     val bolusCalculatorResults: MutableList<BolusCalculatorResult>
@@ -30,8 +30,8 @@ interface StoreDataForDb {
     val foods: MutableList<Food>
 
     val nsIdGlucoseValues: MutableList<GV>
-    val nsIdBoluses: MutableList<Bolus>
-    val nsIdCarbs: MutableList<Carbs>
+    val nsIdBoluses: MutableList<BS>
+    val nsIdCarbs: MutableList<CA>
     val nsIdTemporaryTargets: MutableList<TT>
     val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch>
     val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult>

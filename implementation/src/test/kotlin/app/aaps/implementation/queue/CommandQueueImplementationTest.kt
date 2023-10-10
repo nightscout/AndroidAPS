@@ -3,6 +3,7 @@ package app.aaps.implementation.queue
 import android.content.Context
 import android.os.Handler
 import android.os.PowerManager
+import app.aaps.core.data.db.BS
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -26,7 +27,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
 import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCustomCommand
@@ -131,10 +131,10 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(repository.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(Single.just(ValueWrapper.Existing(effectiveProfileSwitch)))
-        `when`(repository.getLastBolusRecord()).thenReturn(
-            Bolus(
+        `when`(persistenceLayer.getLastBolus()).thenReturn(
+            BS(
                 timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
-                type = Bolus.Type.NORMAL,
+                type = BS.Type.NORMAL,
                 amount = 0.0
             )
         )
@@ -268,7 +268,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         assertThat(commandQueue.size()).isEqualTo(0)
         val smb = DetailedBolusInfo()
         smb.lastKnownBolusTime = System.currentTimeMillis()
-        smb.bolusType = DetailedBolusInfo.BolusType.SMB
+        smb.bolusType = BS.Type.SMB
         commandQueue.bolus(smb, null)
         commandQueue.bolus(DetailedBolusInfo(), null)
         assertThat(commandQueue.size()).isEqualTo(2)
@@ -288,7 +288,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // when
         commandQueue.bolus(DetailedBolusInfo(), null)
         val smb = DetailedBolusInfo()
-        smb.bolusType = DetailedBolusInfo.BolusType.SMB
+        smb.bolusType = BS.Type.SMB
         val queued: Boolean = commandQueue.bolus(smb, null)
 
         // then
@@ -303,7 +303,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         // when
         val bolus = DetailedBolusInfo()
-        bolus.bolusType = DetailedBolusInfo.BolusType.SMB
+        bolus.bolusType = BS.Type.SMB
         bolus.lastKnownBolusTime = 0
         val queued: Boolean = commandQueue.bolus(bolus, null)
 

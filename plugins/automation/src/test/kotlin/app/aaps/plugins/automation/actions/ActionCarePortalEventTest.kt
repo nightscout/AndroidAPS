@@ -26,7 +26,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
         `when`(rh.gs(app.aaps.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
         `when`(dateUtil.now()).thenReturn(0)
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        `when`(persistenceLayer.insertIfNewByTimestampTherapyEvent(anyObject(), anyLong(), anyObject(), anyObject(), anyObject(), anyObject()))
+        `when`(persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(anyObject(), anyLong(), anyObject(), anyObject(), anyObject(), anyObject()))
             .thenReturn(Single.just(PersistenceLayer.TransactionResult<TE>().apply {
             }))
         sut = ActionCarePortalEvent(injector)

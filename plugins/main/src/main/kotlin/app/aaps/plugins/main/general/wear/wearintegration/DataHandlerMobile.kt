@@ -3,6 +3,7 @@ package app.aaps.plugins.main.general.wear.wearintegration
 import android.app.NotificationManager
 import android.content.Context
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TT
@@ -58,7 +59,6 @@ import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.TotalDailyDose
@@ -451,7 +451,6 @@ class DataHandlerMobile @Inject constructor(
         val profile = profileFunction.getProfile()
         val profileName = profileFunction.getProfileName()
         val quickWizardEntry = quickWizard.get(command.guid)
-        //Log.i("QuickWizard", "handleInitiate: quick_wizard " + quickWizardEntry?.buttonText() + " c " + quickWizardEntry?.carbs())
         if (quickWizardEntry == null) {
             sendError(rh.gs(R.string.quick_wizard_not_available))
             return
@@ -865,10 +864,10 @@ class DataHandlerMobile @Inject constructor(
                 temps.add(EventData.TreatmentData.TempBasal(now - 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount))
             }
         }
-        repository.getBolusesIncludingInvalidFromTime(startTimeWindow, true).blockingGet()
+        persistenceLayer.getBolusesFromTimeIncludingInvalid(startTimeWindow, true).blockingGet()
             .stream()
-            .filter { (_, _, _, _, _, _, _, _, _, type) -> type !== Bolus.Type.PRIMING }
-            .forEach { (_, _, _, isValid, _, _, timestamp, _, amount, type) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, amount, 0.0, type === Bolus.Type.SMB, isValid)) }
+            .filter { (_, _, _, _, _, _, _, _, _, type) -> type !== BS.Type.PRIMING }
+            .forEach { (_, _, _, isValid, _, _, timestamp, _, amount, type) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, amount, 0.0, type === BS.Type.SMB, isValid)) }
         repository.getCarbsDataFromTimeExpanded(startTimeWindow, true).blockingGet()
             .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
         val finalLastRun = loop.lastRun
@@ -1175,7 +1174,7 @@ class DataHandlerMobile @Inject constructor(
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
-        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.NORMAL
+        detailedBolusInfo.bolusType = BS.Type.NORMAL
         detailedBolusInfo.carbsTimestamp = carbsTime
         detailedBolusInfo.carbsDuration = T.hours(carbsDuration.toLong()).msecs()
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
@@ -1204,7 +1203,7 @@ class DataHandlerMobile @Inject constructor(
     private fun doFillBolus(amount: Double) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
-        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
+        detailedBolusInfo.bolusType = BS.Type.PRIMING
         uel.log(
             action = Action.PRIME_BOLUS, source = Sources.Wear,
             listValues = listOf(ValueWithUnit.Insulin(amount).takeIf { amount != 0.0 })

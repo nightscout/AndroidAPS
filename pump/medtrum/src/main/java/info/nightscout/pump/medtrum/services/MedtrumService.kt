@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -240,8 +241,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
             if (detailedBolusInfo != null) {
                 detailedBolusInfoStorage.add(detailedBolusInfo) // Reinsert
             }
-            medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo?.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo?.id ?: 0)
-            if (detailedBolusInfo?.bolusType == DetailedBolusInfo.BolusType.SMB) {
+            medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo?.bolusType == BS.Type.SMB, detailedBolusInfo?.id ?: 0)
+            if (detailedBolusInfo?.bolusType == BS.Type.SMB) {
                 rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.smb_bolus_u, detailedBolusInfo.insulin)))
             } else {
                 rxBus.send(EventPumpStatusChanged(rh.gs(app.aaps.core.ui.R.string.bolus_u_min, detailedBolusInfo?.insulin ?: 0.0)))
@@ -450,7 +451,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             SystemClock.sleep(1000)
         }
 
-        // Allow time for notification packet with new sequnce number to arrive
+        // Allow time for notification packet with new sequence number to arrive
         SystemClock.sleep(2000)
 
         bolusingEvent.t = medtrumPump.bolusingTreatment

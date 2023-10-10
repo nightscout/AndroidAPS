@@ -225,7 +225,7 @@ class CareDialog : DialogFragmentWithDate() {
             OKDialog.showConfirmation(activity, rh.gs(event), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 valuesWithUnit.add(0, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
                 valuesWithUnit.add(1, ValueWithUnit.TEType(therapyEvent.type))
-                disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+                disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                     therapyEvent = therapyEvent,
                     action = Action.CAREPORTAL,
                     source = source,

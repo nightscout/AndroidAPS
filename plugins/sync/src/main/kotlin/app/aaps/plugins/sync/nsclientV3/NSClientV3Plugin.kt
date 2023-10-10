@@ -56,7 +56,6 @@ import app.aaps.core.nssdk.mapper.toNSFood
 import app.aaps.core.nssdk.mapper.toNSSgvV3
 import app.aaps.core.nssdk.mapper.toNSTreatment
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.interfaces.TraceableDBEntry
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSAlarmObject
@@ -260,12 +259,10 @@ class NSClientV3Plugin @Inject constructor(
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()
             if (nsClientSource.isEnabled())
-                persistenceLayer.getLastGlucoseValue().blockingGet().let {
+                persistenceLayer.getLastGlucoseValue()?.let {
                     // if last value is older than 5 min or there is no bg
-                    if (it is ValueWrapper.Existing) {
-                        if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
-                            refreshInterval = T.mins(1).msecs()
-                        }
+                    if (it.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
+                        refreshInterval = T.mins(1).msecs()
                     }
                 }
             if (!sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true))
@@ -850,12 +847,12 @@ class NSClientV3Plugin @Inject constructor(
                     result.identifier?.let {
                         when (dataPair) {
                             is DataSyncSelector.PairBolus                  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdBoluses.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairCarbs                  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdCarbs.add(dataPair.value)
                             }
 

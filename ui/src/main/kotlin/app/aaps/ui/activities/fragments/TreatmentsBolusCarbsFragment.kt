@@ -15,11 +15,14 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -37,9 +40,7 @@ import app.aaps.core.main.extensions.iobCalc
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CutCarbsTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
@@ -49,7 +50,6 @@ import app.aaps.ui.R
 import app.aaps.ui.databinding.TreatmentsBolusCarbsFragmentBinding
 import app.aaps.ui.databinding.TreatmentsBolusCarbsItemBinding
 import app.aaps.ui.dialogs.WizardInfoDialog
-import app.aaps.ui.extensions.isPumpHistory
 import com.google.gson.Gson
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -70,6 +70,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var activePlugin: ActivePlugin
 
     private var _binding: TreatmentsBolusCarbsFragmentBinding? = null
@@ -79,8 +80,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
     private var menu: Menu? = null
 
     class MealLink(
-        val bolus: Bolus? = null,
-        val carbs: Carbs? = null,
+        val bolus: BS? = null,
+        val carbs: CA? = null,
         val bolusCalculatorResult: BolusCalculatorResult? = null
     )
 
@@ -105,24 +106,24 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun bolusMealLinksWithInvalid(now: Long) = repository
-        .getBolusesIncludingInvalidFromTime(now - millsToThePast, false)
+    private fun bolusMealLinksWithInvalid(now: Long) = persistenceLayer
+        .getBolusesFromTimeIncludingInvalid(now - millsToThePast, false)
         .map { bolus -> bolus.map { MealLink(bolus = it) } }
 
-    private fun carbsMealLinksWithInvalid(now: Long) = repository
-        .getCarbsIncludingInvalidFromTime(now - millsToThePast, false)
+    private fun carbsMealLinksWithInvalid(now: Long) = persistenceLayer
+        .getCarbsFromTimeIncludingInvalid(now - millsToThePast, false)
         .map { carb -> carb.map { MealLink(carbs = it) } }
 
     private fun calcResultMealLinksWithInvalid(now: Long) = repository
         .getBolusCalculatorResultsIncludingInvalidFromTime(now - millsToThePast, false)
         .map { calc -> calc.map { MealLink(bolusCalculatorResult = it) } }
 
-    private fun bolusMealLinks(now: Long) = repository
-        .getBolusesDataFromTime(now - millsToThePast, false)
+    private fun bolusMealLinks(now: Long) = persistenceLayer
+        .getBolusesFromTime(now - millsToThePast, false)
         .map { bolus -> bolus.map { MealLink(bolus = it) } }
 
-    private fun carbsMealLinks(now: Long) = repository
-        .getCarbsDataFromTime(now - millsToThePast, false)
+    private fun carbsMealLinks(now: Long) = persistenceLayer
+        .getCarbsFromTime(now - millsToThePast, false)
         .map { carb -> carb.map { MealLink(carbs = it) } }
 
     private fun calcResultMealLinks(now: Long) = repository
@@ -227,8 +228,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             ml.bolus?.let { bolus ->
                 holder.binding.bolusTime.text = dateUtil.timeString(bolus.timestamp)
                 holder.binding.insulin.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolus.amount)
-                holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
-                holder.binding.bolusPump.visibility = bolus.interfaceIDs.isPumpHistory().toVisibility()
+                holder.binding.bolusNs.visibility = (bolus.ids.nightscoutId != null).toVisibility()
+                holder.binding.bolusPump.visibility = bolus.ids.isPumpHistory().toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 if (iob.iobContrib > 0.01) {
@@ -246,9 +247,9 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                     holder.binding.date.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.scheduledColor)) else holder.binding.date.setTextColor(holder.binding.carbs.currentTextColor)
                 holder.binding.mealOrCorrection.text =
                     when (ml.bolus.type) {
-                        Bolus.Type.SMB     -> "SMB"
-                        Bolus.Type.NORMAL  -> rh.gs(R.string.meal_bolus)
-                        Bolus.Type.PRIMING -> rh.gs(R.string.prime)
+                        BS.Type.SMB     -> "SMB"
+                        BS.Type.NORMAL  -> rh.gs(R.string.meal_bolus)
+                        BS.Type.PRIMING -> rh.gs(R.string.prime)
                     }
                 holder.binding.cbBolusRemove.visibility = (ml.bolus.isValid && actionHelper.isRemoving).toVisibility()
                 if (actionHelper.isRemoving) {
@@ -268,8 +269,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                 holder.binding.carbsTime.text = dateUtil.timeString(carbs.timestamp)
                 holder.binding.carbs.text = rh.gs(app.aaps.core.main.R.string.format_carbs, carbs.amount.toInt())
                 holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
-                holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
-                holder.binding.carbsPump.visibility = carbs.interfaceIDs.isPumpHistory().toVisibility()
+                holder.binding.carbsNs.visibility = (carbs.ids.nightscoutId != null).toVisibility()
+                holder.binding.carbsPump.visibility = carbs.ids.isPumpHistory().toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()
                 holder.binding.cbCarbsRemove.visibility = (ml.carbs.isValid && actionHelper.isRemoving).toVisibility()
                 if (actionHelper.isRemoving) {

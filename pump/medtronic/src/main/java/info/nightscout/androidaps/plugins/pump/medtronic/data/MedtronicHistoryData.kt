@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data
 
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -429,7 +429,7 @@ class MedtronicHistoryData @Inject constructor(
             uploadCareportalEventIfFoundInHistory(
                 lastPrimeRecord,
                 MedtronicConst.Statistics.LastPrime,
-                DetailedBolusInfo.EventType.CANNULA_CHANGE
+                TE.Type.CANNULA_CHANGE
             )
         }
     }
@@ -450,12 +450,12 @@ class MedtronicHistoryData @Inject constructor(
             uploadCareportalEventIfFoundInHistory(
                 lastRewindRecord,
                 MedtronicConst.Statistics.LastRewind,
-                DetailedBolusInfo.EventType.INSULIN_CHANGE
+                TE.Type.INSULIN_CHANGE
             )
         }
     }
 
-    private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: DetailedBolusInfo.EventType) {
+    private fun uploadCareportalEventIfFoundInHistory(historyRecord: PumpHistoryEntry, eventSP: String, eventType: TE.Type) {
         val lastPrimeFromAAPS = sp.getLong(eventSP, 0L)
         if (historyRecord.atechDateTime != lastPrimeFromAAPS) {
             val result = pumpSync.insertTherapyEventIfNewWithTimestamp(
@@ -518,7 +518,7 @@ class MedtronicHistoryData @Inject constructor(
         for (bolus in entryList) {
 
             val bolusDTO = bolus.decodedData["Object"] as BolusDTO
-            //var type: DetailedBolusInfo.BolusType = DetailedBolusInfo.BolusType.NORMAL
+            //var type: BS.Type = BS.Type.NORMAL
             var multiwave = false
 
             if (bolusDTO.bolusType == PumpBolusType.Extended) {

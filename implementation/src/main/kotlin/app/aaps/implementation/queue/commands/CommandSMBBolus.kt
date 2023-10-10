@@ -1,6 +1,7 @@
 package app.aaps.implementation.queue.commands
 
 import app.aaps.core.data.time.T
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -8,7 +9,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -20,11 +20,11 @@ class CommandSMBBolus(
 
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     override fun execute() {
         val r: PumpEnactResult
-        val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+        val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
         aapsLogger.debug(LTag.PUMPQUEUE, "Last bolus: $lastBolusTime ${dateUtil.dateAndTimeAndSecondsString(lastBolusTime)}")
         if (lastBolusTime != 0L && lastBolusTime + T.mins(3).msecs() > dateUtil.now()) {
             aapsLogger.debug(LTag.PUMPQUEUE, "SMB requested but still in 3 min interval")

@@ -1,5 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
@@ -23,9 +25,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.Food
@@ -178,17 +178,17 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddBolus() = runTest {
-        val bolus = Bolus(
+        val bolus = BS(
             timestamp = 10000,
             isValid = true,
             amount = 1.0,
-            type = Bolus.Type.SMB,
+            type = BS.Type.SMB,
             notes = "aaaa",
             isBasalInsulin = false,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -206,16 +206,16 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddCarbs() = runTest {
-        val carbs = Carbs(
+        val carbs = CA(
             timestamp = 10000,
             isValid = true,
             amount = 1.0,
             duration = 0,
             notes = "aaaa",
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )

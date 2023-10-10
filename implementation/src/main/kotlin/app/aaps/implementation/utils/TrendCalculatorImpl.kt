@@ -49,7 +49,7 @@ class TrendCalculatorImpl @Inject constructor(
     private fun calculateDirection(glucoseValue: InMemoryGlucoseValue): TrendArrow {
 
         val toTime = glucoseValue.timestamp
-        val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(toTime - T.mins(10).msecs(), toTime, false).blockingGet()
+        val readings = persistenceLayer.getBgReadingsDataFromTimeToTime(toTime - T.mins(10).msecs(), toTime, false)
 
         if (readings.size < 2)
             return TrendArrow.NONE

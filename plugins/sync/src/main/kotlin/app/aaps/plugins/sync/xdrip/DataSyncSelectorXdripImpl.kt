@@ -129,7 +129,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun processChangedGlucoseValues() {
         var progress: String
-        val lastDbId = appRepository.getLastGlucoseValueId() ?: 0L
+        val lastDbId = persistenceLayer.getLastGlucoseValueId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_glucose_value_last_synced_id, 0)
@@ -180,7 +180,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun processChangedBoluses() {
         var progress: String
-        val lastDbId = appRepository.getLastBolusId() ?: 0L
+        val lastDbId = persistenceLayer.getLastBolusId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_bolus_last_synced_id, 0)
@@ -190,7 +190,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.bolusesRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementBolus(startId).blockingGet()?.let { bolus ->
+            persistenceLayer.getNextSyncElementBolus(startId).blockingGet()?.let { bolus ->
                 aapsLogger.info(LTag.XDRIP, "Loading Bolus data Start: $startId ${bolus.first} forID: ${bolus.second.id} ")
                 if (!isOld(bolus.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairBolus(bolus.first, bolus.second.id))
@@ -210,7 +210,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun processChangedCarbs() {
         var progress: String
-        val lastDbId = appRepository.getLastCarbsId() ?: 0L
+        val lastDbId = persistenceLayer.getLastCarbsId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_carbs_last_synced_id, 0)
@@ -220,7 +220,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.carbsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementCarbs(startId).blockingGet()?.let { carb ->
+            persistenceLayer.getNextSyncElementCarbs(startId).blockingGet()?.let { carb ->
                 aapsLogger.info(LTag.XDRIP, "Loading Carbs data Start: $startId ${carb.first} forID: ${carb.second.id} ")
                 if (!isOld(carb.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairCarbs(carb.first, carb.second.id))
@@ -270,7 +270,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun processChangedTempTargets() {
         var progress: String
-        val lastDbId = appRepository.getLastTempTargetId() ?: 0L
+        val lastDbId = persistenceLayer.getLastTemporaryTargetId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_temporary_target_last_synced_id, 0)
@@ -329,7 +329,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun processChangedTherapyEvents() {
         var progress: String
-        val lastDbId = appRepository.getLastTherapyEventId() ?: 0L
+        val lastDbId = persistenceLayer.getLastTherapyEventId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_therapy_event_last_synced_id, 0)
@@ -385,7 +385,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun processChangedTemporaryBasals() {
         var progress: String
-        val lastDbId = appRepository.getLastTemporaryBasalId() ?: 0L
+        val lastDbId = persistenceLayer.getLastTemporaryBasalId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_temporary_basal_last_synced_id, 0)
@@ -415,7 +415,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun processChangedExtendedBoluses() {
         var progress: String
-        val lastDbId = appRepository.getLastExtendedBolusId() ?: 0L
+        val lastDbId = persistenceLayer.getLastExtendedBolusId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_extended_bolus_last_synced_id, 0)
@@ -508,7 +508,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun processChangedOfflineEvents() {
         var progress: String
-        val lastDbId = appRepository.getLastOfflineEventId() ?: 0L
+        val lastDbId = persistenceLayer.getLastOfflineEventId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_offline_event_last_synced_id, 0)

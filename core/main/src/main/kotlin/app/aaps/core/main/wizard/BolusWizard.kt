@@ -3,6 +3,7 @@ package app.aaps.core.main.wizard
 import android.content.Context
 import android.text.Spanned
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -393,12 +394,12 @@ class BolusWizard @Inject constructor(
         val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = true)
         OKDialog.showConfirmation(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), confirmMessage, {
             DetailedBolusInfo().apply {
-                eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+                eventType = TE.Type.CORRECTION_BOLUS
                 insulin = insulinAfterConstraints
                 carbs = 0.0
                 context = ctx
                 mgdlGlucose = profileUtil.convertToMgdl(bg, profile.units)
-                glucoseType = DetailedBolusInfo.MeterType.MANUAL
+                glucoseType = TE.MeterType.MANUAL
                 carbTime = 0
                 bolusCalculatorResult = createBolusCalculatorResult()
                 notes = this@BolusWizard.notes
@@ -407,7 +408,7 @@ class BolusWizard @Inject constructor(
                     source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
                     note = notes,
                     listValues = listOf(
-                        ValueWithUnit.TEType(eventType.toDBbEventType()),
+                        ValueWithUnit.TEType(eventType),
                         ValueWithUnit.Insulin(insulinAfterConstraints)
                     )
                 )
@@ -480,12 +481,12 @@ class BolusWizard @Inject constructor(
                     }
                 }
                 DetailedBolusInfo().apply {
-                    eventType = DetailedBolusInfo.EventType.BOLUS_WIZARD
+                    eventType = TE.Type.BOLUS_WIZARD
                     insulin = insulinAfterConstraints
                     carbs = this@BolusWizard.carbs.toDouble()
                     context = ctx
                     mgdlGlucose = profileUtil.convertToMgdl(bg, profile.units)
-                    glucoseType = DetailedBolusInfo.MeterType.MANUAL
+                    glucoseType = TE.MeterType.MANUAL
                     carbsTimestamp = dateUtil.now() + T.mins(this@BolusWizard.carbTime.toLong()).msecs()
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
@@ -500,7 +501,7 @@ class BolusWizard @Inject constructor(
                             source = if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
                             note = notes,
                             listValues = listOf(
-                                ValueWithUnit.TEType(eventType.toDBbEventType()),
+                                ValueWithUnit.TEType(eventType),
                                 ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
                                 ValueWithUnit.Gram(this@BolusWizard.carbs).takeIf { this@BolusWizard.carbs != 0 },
                                 ValueWithUnit.Minute(carbTime).takeIf { carbTime != 0 })

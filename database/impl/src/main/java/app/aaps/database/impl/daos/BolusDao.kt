@@ -30,7 +30,7 @@ internal interface BolusDao : TraceableDao<Bolus> {
     fun findByTimestamp(timestamp: Long): Bolus?
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE nightscoutId = :nsId AND referenceId IS NULL")
-    fun findByNSId(nsId: String): Bolus?
+    fun getByNSId(nsId: String): Bolus?
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE pumpId = :pumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
     fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus?

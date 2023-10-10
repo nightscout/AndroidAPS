@@ -1,5 +1,6 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -75,7 +76,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val data = byteArrayOf(47, 99, 10, 1, 0, 0, -86, 40, 1, -1, 38, 105, -77, 57, 56, 0, 29, 0, 1, 0, 0, 0, -82, -85, 62, 18, 22, 0, 22, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 76)
 
         val timestamp = 1694631470000L
-        val bolusType = DetailedBolusInfo.BolusType.SMB
+        val bolusType = BS.Type.SMB
         val amount = 1.1
 
         // Mocks

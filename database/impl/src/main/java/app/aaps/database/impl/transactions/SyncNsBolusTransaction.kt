@@ -13,7 +13,7 @@ class SyncNsBolusTransaction(private val boluses: List<Bolus>) : Transaction<Syn
         for (bolus in boluses) {
             val current: Bolus? =
                 bolus.interfaceIDs.nightscoutId?.let {
-                    database.bolusDao.findByNSId(it)
+                    database.bolusDao.getByNSId(it)
                 }
 
             if (current != null) {

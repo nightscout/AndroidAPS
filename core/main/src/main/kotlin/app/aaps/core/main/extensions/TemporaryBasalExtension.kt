@@ -1,6 +1,7 @@
 package app.aaps.core.main.extensions
 
 import app.aaps.core.data.aps.AutosensResult
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
@@ -8,7 +9,6 @@ import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.database.entities.Bolus
 import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.math.min
@@ -82,10 +82,10 @@ fun TB.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTota
             if (calcDate > diaAgo && calcDate <= time) {
                 val tempBolusSize = netBasalRate * tempBolusSpacing / 60.0
                 netBasalAmount += tempBolusSize
-                val tempBolusPart = Bolus(
+                val tempBolusPart = BS(
                     timestamp = calcDate,
                     amount = tempBolusSize,
-                    type = Bolus.Type.NORMAL
+                    type = BS.Type.NORMAL
                 )
                 val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia)
                 result.basaliob += aIOB.iobContrib
@@ -142,10 +142,10 @@ fun TB.iobCalc(
             if (calcDate > diaAgo && calcDate <= time) {
                 val tempBolusSize = netBasalRate * tempBolusSpacing / 60.0
                 netBasalAmount += tempBolusSize
-                val tempBolusPart = Bolus(
+                val tempBolusPart = BS(
                     timestamp = calcDate,
                     amount = tempBolusSize,
-                    type = Bolus.Type.NORMAL
+                    type = BS.Type.NORMAL
                 )
                 val aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia)
                 result.basaliob += aIOB.iobContrib

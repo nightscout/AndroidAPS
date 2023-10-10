@@ -22,7 +22,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.events.EventNewNotification
-import app.aaps.database.ValueWrapper
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -123,8 +122,7 @@ class LocalAlertUtilsImpl @Inject constructor(
     }
 
     override fun checkStaleBGAlert() {
-        val bgReadingWrapped = persistenceLayer.getLastGlucoseValue().blockingGet()
-        val bgReading = if (bgReadingWrapped is ValueWrapper.Existing) bgReadingWrapped.value else return
+        val bgReading = persistenceLayer.getLastGlucoseValue() ?: return
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_enable_missed_bg_readings_alert, false)
             && bgReading.timestamp + missedReadingsThreshold() < System.currentTimeMillis()
             && sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()

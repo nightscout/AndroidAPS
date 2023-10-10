@@ -134,7 +134,7 @@ class MainApp : DaggerApplication() {
                     disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
                     // log app start
                     if (sp.getBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
-                        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+                        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                             therapyEvent = TE(
                                 timestamp = dateUtil.now(),
                                 type = TE.Type.NOTE,

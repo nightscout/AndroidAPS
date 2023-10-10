@@ -3,6 +3,8 @@ package app.aaps.plugins.sync.nsclient.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TB
@@ -20,9 +22,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.plugins.sync.R
@@ -73,14 +73,14 @@ class NSClientAddUpdateWorker(
 
             if (insulin > 0) {
                 if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
-                    Bolus.fromJson(json)?.let { bolus ->
+                    BS.fromJson(json)?.let { bolus ->
                         storeDataForDb.boluses.add(bolus)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
             if (carbs > 0) {
                 if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
-                    Carbs.fromJson(json)?.let { carb ->
+                    CA.fromJson(json)?.let { carb ->
                         storeDataForDb.carbs.add(carb)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }

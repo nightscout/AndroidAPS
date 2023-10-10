@@ -15,7 +15,9 @@ import androidx.core.app.NotificationCompat
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
@@ -206,7 +208,7 @@ class LoopPlugin @Inject constructor(
     private fun treatmentTimeThreshold(durationMinutes: Int): Boolean {
         val threshold = System.currentTimeMillis() + durationMinutes * 60 * 1000
         var bool = false
-        val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+        val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
         val lastCarbsTime = repository.getLastCarbsRecord()?.timestamp ?: 0L
         if (lastBolusTime > threshold || lastCarbsTime > threshold) bool = true
         return bool
@@ -283,7 +285,7 @@ class LoopPlugin @Inject constructor(
             resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint!!).value()
 
             // safety check for multiple SMBs
-            val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+            val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
             if (lastBolusTime != 0L && lastBolusTime + T.mins(3).msecs() > System.currentTimeMillis()) {
                 aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
                 resultAfterConstraints.smb = 0.0
@@ -639,7 +641,7 @@ class LoopPlugin @Inject constructor(
             return
         }
         val pump = activePlugin.activePump
-        val lastBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
+        val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
         if (lastBolusTime != 0L && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
             callback?.result(
@@ -663,10 +665,10 @@ class LoopPlugin @Inject constructor(
 
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
-        detailedBolusInfo.lastKnownBolusTime = repository.getLastBolusRecord()?.timestamp ?: 0L
-        detailedBolusInfo.eventType = DetailedBolusInfo.EventType.CORRECTION_BOLUS
+        detailedBolusInfo.lastKnownBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
+        detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
         detailedBolusInfo.insulin = request.smb
-        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.SMB
+        detailedBolusInfo.bolusType = BS.Type.SMB
         detailedBolusInfo.deliverAtTheLatest = request.deliverAt
         aapsLogger.debug(LTag.APS, "applyAPSRequest: bolus()")
         if (request.smb > 0.0)

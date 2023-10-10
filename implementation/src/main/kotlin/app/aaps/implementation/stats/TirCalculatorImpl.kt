@@ -34,7 +34,7 @@ class TirCalculatorImpl @Inject constructor(
         val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
         val endTime = MidnightTime.calc(dateUtil.now())
 
-        val bgReadings = persistenceLayer.getBgReadingsDataFromTimeToTime(startTime, endTime, true).blockingGet()
+        val bgReadings = persistenceLayer.getBgReadingsDataFromTimeToTime(startTime, endTime, true)
         val result = LongSparseArray<TIR>()
         for (bg in bgReadings) {
             val midnight = MidnightTime.calc(bg.timestamp)

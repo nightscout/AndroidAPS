@@ -39,21 +39,4 @@ data class Carbs(
     override var duration: Long, // in milliseconds
     var amount: Double,
     var notes: String? = null
-) : TraceableDBEntry, DBEntryWithTimeAndDuration {
-
-    fun contentEqualsTo(other: Carbs): Boolean =
-        isValid == other.isValid &&
-            timestamp == other.timestamp &&
-            utcOffset == other.utcOffset &&
-            amount == other.amount &&
-            notes == other.notes &&
-            duration == other.duration
-
-    fun onlyNsIdAdded(previous: Carbs): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
-    companion object
-}
+) : TraceableDBEntry, DBEntryWithTimeAndDuration

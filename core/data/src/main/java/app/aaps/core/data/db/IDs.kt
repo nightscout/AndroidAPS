@@ -11,4 +11,7 @@ data class IDs(
     var pumpId: Long? = null,
     var startId: Long? = null,
     var endId: Long? = null
-)
+) {
+
+    fun isPumpHistory() = pumpSerial != null && pumpId != null
+}

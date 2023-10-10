@@ -3,6 +3,7 @@ package app.aaps.pump.virtual
 import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -10,6 +11,9 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -186,7 +190,7 @@ open class VirtualPumpPlugin @Inject constructor(
             .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
             .comment(rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok))
         val bolusingEvent = EventOverviewBolusProgress
-        bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+        bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == BS.Type.SMB, detailedBolusInfo.id)
         var delivering = 0.0
         while (delivering < detailedBolusInfo.insulin) {
             SystemClock.sleep(200)
@@ -210,7 +214,12 @@ open class VirtualPumpPlugin @Inject constructor(
         lastDataTime = System.currentTimeMillis()
         if (detailedBolusInfo.insulin > 0) {
             if (config.NSCLIENT) // do not store pump serial (record will not be marked PH)
-                persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
+                disposable += persistenceLayer.insertOrUpdateBolus(
+                    bolus = detailedBolusInfo.createBolus(),
+                    action = Action.BOLUS,
+                    source = Sources.Pump,
+                    listValues = listOf(ValueWithUnit.Insulin(detailedBolusInfo.insulin))
+                ).subscribe()
             else
                 pumpSync.syncBolusWithPumpId(
                     timestamp = detailedBolusInfo.timestamp,

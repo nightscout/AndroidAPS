@@ -1,5 +1,7 @@
 package app.aaps.implementation.pump
 
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.IDs
@@ -15,7 +17,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -25,20 +26,13 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.pump.toUeSource
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertBolusWithTempIdTransaction
-import app.aaps.database.impl.transactions.InsertIfNewByTimestampCarbsTransaction
 import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransactionWithPumpId
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalWithTempIdTransaction
-import app.aaps.database.impl.transactions.SyncBolusWithTempIdTransaction
-import app.aaps.database.impl.transactions.SyncPumpBolusTransaction
 import app.aaps.database.impl.transactions.SyncPumpCancelExtendedBolusIfAnyTransaction
 import app.aaps.database.impl.transactions.SyncPumpCancelTemporaryBasalIfAnyTransaction
 import app.aaps.database.impl.transactions.SyncPumpTotalDailyDoseTransaction
@@ -122,7 +116,7 @@ class PumpSyncImplementation @Inject constructor(
     }
 
     override fun expectedPumpState(): PumpSync.PumpState {
-        val bolus = repository.getLastBolusRecordWrapped().blockingGet()
+        val bolus = persistenceLayer.getLastBolus()
         val temporaryBasal = persistenceLayer.getTemporaryBasalActiveAt(dateUtil.now())
         val extendedBolus = persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())
 
@@ -141,8 +135,7 @@ class PumpSyncImplementation @Inject constructor(
                     pumpSerial = temporaryBasal.ids.pumpSerial ?: "",
                 )
             else null,
-            extendedBolus =
-            if (extendedBolus != null)
+            extendedBolus = extendedBolus?.let {
                 PumpSync.PumpState.ExtendedBolus(
                     timestamp = extendedBolus.timestamp,
                     duration = extendedBolus.duration,
@@ -151,112 +144,92 @@ class PumpSyncImplementation @Inject constructor(
                     pumpType = extendedBolus.ids.pumpType ?: PumpType.USER,
                     pumpSerial = extendedBolus.ids.pumpSerial ?: ""
                 )
-            else null,
-            bolus =
-            if (bolus is ValueWrapper.Existing)
-                bolus.value.let {
-                    PumpSync.PumpState.Bolus(
-                        timestamp = bolus.value.timestamp,
-                        amount = bolus.value.amount
-                    )
-                }
-            else null,
+            },
+            bolus = bolus?.let {
+                PumpSync.PumpState.Bolus(
+                    timestamp = bolus.timestamp,
+                    amount = bolus.amount
+                )
+            },
             profile = profileFunction.getProfile(),
             serialNumber = sp.getString(app.aaps.core.utils.R.string.key_active_pump_serial_number, "")
         )
     }
 
-    override fun addBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType, pumpType: PumpType, pumpSerial: String): Boolean {
+    override fun addBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: BS.Type, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val bolus = Bolus(
+        val bolus = BS(
             timestamp = timestamp,
             amount = amount,
-            type = type.toDBbBolusType(),
-            interfaceIDs_backing = InterfaceIDs(
+            type = type,
+            ids = IDs(
                 temporaryId = temporaryId,
-                pumpType = pumpType.toDb(),
+                pumpType = pumpType,
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(InsertBolusWithTempIdTransaction(bolus))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
+        return persistenceLayer.insertBolusWithTempId(bolus)
+            .map { result -> result.inserted.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it") }
-                return result.inserted.size > 0
-            }
     }
 
-    override fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: DetailedBolusInfo.BolusType?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
+    override fun syncBolusWithTempId(timestamp: Long, amount: Double, temporaryId: Long, type: BS.Type?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val bolus = Bolus(
+        val bolus = BS(
             timestamp = timestamp,
             amount = amount,
-            type = Bolus.Type.NORMAL, // not used for update
-            interfaceIDs_backing = InterfaceIDs(
+            type = BS.Type.NORMAL, // not used for update
+            ids = IDs(
                 temporaryId = temporaryId,
                 pumpId = pumpId,
-                pumpType = pumpType.toDb(),
+                pumpType = pumpType,
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(SyncBolusWithTempIdTransaction(bolus, type?.toDBbBolusType()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
+        return persistenceLayer.syncPumpBolusWithTempId(bolus, type)
+            .map { result -> result.updated.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it") }
-                return result.updated.size > 0
-            }
     }
 
-    override fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: DetailedBolusInfo.BolusType?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
+    override fun syncBolusWithPumpId(timestamp: Long, amount: Double, type: BS.Type?, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val bolus = Bolus(
+        val bolus = BS(
             timestamp = timestamp,
             amount = amount,
-            type = type?.toDBbBolusType() ?: Bolus.Type.NORMAL,
-            interfaceIDs_backing = InterfaceIDs(
+            type = type ?: BS.Type.NORMAL,
+            ids = IDs(
                 pumpId = pumpId,
-                pumpType = pumpType.toDb(),
+                pumpType = pumpType,
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(SyncPumpBolusTransaction(bolus, type?.toDBbBolusType()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
+        return persistenceLayer.syncPumpBolus(bolus, type)
+            .map { result -> result.inserted.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it") }
-                return result.inserted.size > 0
-            }
     }
 
     override fun syncCarbsWithTimestamp(timestamp: Long, amount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        val carbs = Carbs(
+        val carbs = CA(
             timestamp = timestamp,
             amount = amount,
             duration = 0,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 pumpId = pumpId,
-                pumpType = pumpType.toDb(),
+                pumpType = pumpType,
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(InsertIfNewByTimestampCarbsTransaction(carbs))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Carbs", it) }
+        return persistenceLayer.insertPumpCarbsIfNewByTimestamp(carbs)
+            .map { result -> result.inserted.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it") }
-                return result.inserted.size > 0
-            }
     }
 
-    override fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: DetailedBolusInfo.EventType, note: String?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
+    override fun insertTherapyEventIfNewWithTimestamp(timestamp: Long, type: TE.Type, note: String?, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
         val therapyEvent = TE(
             timestamp = timestamp,
-            type = type.toDBbEventType(),
+            type = type,
             duration = 0,
             note = note,
             enteredBy = "AndroidAPS",
@@ -269,13 +242,13 @@ class PumpSyncImplementation @Inject constructor(
                 pumpSerial = pumpSerial
             )
         )
-        return persistenceLayer.insertIfNewByTimestampTherapyEvent(
+        return persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
             therapyEvent = therapyEvent,
             action = Action.CAREPORTAL,
             source = pumpType.source.toUeSource(),
             note = note,
             timestamp = timestamp,
-            listValues = listOf(ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TEType(type.toDBbEventType()))
+            listValues = listOf(ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TEType(type))
         )
             .map { result -> result.inserted.size > 0 }
             .blockingGet()

@@ -43,7 +43,7 @@ class PrepareBgDataWorker(
         val toTime = data.overviewData.toTime
         val fromTime = data.overviewData.fromTime
         data.overviewData.maxBgValue = Double.MIN_VALUE
-        data.overviewData.bgReadingsArray = persistenceLayer.getBgReadingsDataFromTimeToTime(fromTime, toTime, false).blockingGet()
+        data.overviewData.bgReadingsArray = persistenceLayer.getBgReadingsDataFromTimeToTime(fromTime, toTime, false)
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (bg in data.overviewData.bgReadingsArray) {
             if (bg.timestamp < fromTime || bg.timestamp > toTime) continue

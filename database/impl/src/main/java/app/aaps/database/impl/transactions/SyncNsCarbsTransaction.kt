@@ -14,7 +14,7 @@ class SyncNsCarbsTransaction(private val carbs: List<Carbs>, private val nsClien
         for (carb in carbs) {
             val current: Carbs? =
                 carb.interfaceIDs.nightscoutId?.let {
-                    database.carbsDao.findByNSId(it)
+                    database.carbsDao.getByNSId(it)
                 }
 
             if (current != null) {

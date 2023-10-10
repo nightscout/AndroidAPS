@@ -6,6 +6,7 @@ import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.IobTotal
@@ -47,7 +48,6 @@ import app.aaps.core.main.iob.plus
 import app.aaps.core.main.iob.round
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
@@ -333,8 +333,8 @@ class IobCobCalculatorPlugin @Inject constructor(
             result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation
             result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact
         }
-        val lastBolus = repository.getLastBolusRecordWrapped().blockingGet()
-        result.lastBolusTime = if (lastBolus is ValueWrapper.Existing) lastBolus.value.timestamp else 0L
+        val lastBolus = persistenceLayer.getLastBolus()
+        result.lastBolusTime = lastBolus?.timestamp ?: 0L
         return result
     }
 
@@ -493,7 +493,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         val divisor = sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_bolus_snooze_dia_divisor, 2.0)
         assert(divisor > 0)
 
-        val boluses = repository.getBolusesDataFromTime(toTime - range(), true).blockingGet()
+        val boluses = persistenceLayer.getBolusesFromTime(toTime - range(), true).blockingGet()
 
         boluses.forEach { t ->
             if (t.isValid && t.timestamp < toTime) {
@@ -501,7 +501,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                 total.iob += tIOB.iobContrib
                 total.activity += tIOB.activityContrib
                 if (t.amount > 0 && t.timestamp > total.lastBolusTime) total.lastBolusTime = t.timestamp
-                if (t.type != Bolus.Type.SMB) {
+                if (t.type != BS.Type.SMB) {
                     // instead of dividing the DIA that only worked on the bilinear curves,
                     // multiply the time the treatment is seen active.
                     val timeSinceTreatment = toTime - t.timestamp
@@ -570,10 +570,10 @@ class IobCobCalculatorPlugin @Inject constructor(
                 continue
             }
             val running = profile.getBasal(i)
-            val bolus = Bolus(
+            val bolus = BS(
                 timestamp = i,
                 amount = running * 5.0 / 60.0,
-                type = Bolus.Type.NORMAL,
+                type = BS.Type.NORMAL,
                 isBasalInsulin = true
             )
             val iob = bolus.iobCalc(activePlugin, toTime, profile.dia)

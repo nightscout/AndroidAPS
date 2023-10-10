@@ -1,8 +1,8 @@
 package info.nightscout.pump.medtrum
 
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.main.extensions.pureProfileFromJson
@@ -731,7 +731,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         // Expected values
         Mockito.verify(pumpSync, Mockito.times(1)).insertTherapyEventIfNewWithTimestamp(
             newStartTime,
-            DetailedBolusInfo.EventType.CANNULA_CHANGE,
+            TE.Type.CANNULA_CHANGE,
             null,
             null,
             medtrumPump.pumpType(),
@@ -740,7 +740,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
 
         Mockito.verify(pumpSync, Mockito.times(1)).insertTherapyEventIfNewWithTimestamp(
             newStartTime,
-            DetailedBolusInfo.EventType.INSULIN_CHANGE,
+            TE.Type.INSULIN_CHANGE,
             null,
             null,
             medtrumPump.pumpType(),

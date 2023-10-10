@@ -1,8 +1,8 @@
 package info.nightscout.pump.danars.comm
 
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -290,7 +290,7 @@ open class DanaRSPacketAPSHistoryEvents(
                 if (sp.getBoolean(R.string.key_rs_loginsulinchange, true)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
-                        type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                        type = TE.Type.INSULIN_CHANGE,
                         pumpId = pumpId,
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber
@@ -338,7 +338,7 @@ open class DanaRSPacketAPSHistoryEvents(
                 if (sp.getBoolean(R.string.key_rs_logcanulachange, true)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
-                        type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                        type = TE.Type.CANNULA_CHANGE,
                         pumpId = pumpId,
                         pumpType = danaPump.pumpType(),
                         pumpSerial = danaPump.serialNumber

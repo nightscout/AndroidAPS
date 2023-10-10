@@ -26,7 +26,7 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE nightscoutId = :nsId AND referenceId IS NULL")
-    fun findByNSId(nsId: String): Carbs?
+    fun getByNSId(nsId: String): Carbs?
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): Carbs?

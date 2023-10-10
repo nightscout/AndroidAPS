@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -292,7 +293,7 @@ class EopatchPumpPlugin @Inject constructor(
             )
 
             val tr = detailedBolusInfo.let {
-                EventOverviewBolusProgress.Treatment(it.insulin, it.carbs.toInt(), it.bolusType === DetailedBolusInfo.BolusType.SMB, it.id)
+                EventOverviewBolusProgress.Treatment(it.insulin, it.carbs.toInt(), it.bolusType === BS.Type.SMB, it.id)
             }
 
             do {

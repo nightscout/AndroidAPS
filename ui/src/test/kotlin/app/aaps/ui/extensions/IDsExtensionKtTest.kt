@@ -1,15 +1,15 @@
 package app.aaps.ui.extensions
 
-import app.aaps.database.entities.embedments.InterfaceIDs
+import app.aaps.core.data.db.IDs
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
-class InterfaceIDsExtensionKtTest : TestBase() {
+class IDsExtensionKtTest : TestBase() {
 
     @Test
     fun isPumpHistory() {
-        val sut = InterfaceIDs()
+        val sut = IDs()
         assertThat(sut.isPumpHistory()).isFalse()
         sut.pumpId = 123
         assertThat(sut.isPumpHistory()).isFalse()

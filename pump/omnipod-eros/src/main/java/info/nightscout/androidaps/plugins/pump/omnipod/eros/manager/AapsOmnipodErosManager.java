@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.manager;
 
-import android.content.Context;
-
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 
@@ -13,6 +11,8 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.db.BS;
+import app.aaps.core.data.db.TE;
 import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.logging.AAPSLogger;
@@ -98,7 +98,6 @@ public class AapsOmnipodErosManager {
     private final SP sp;
     private final OmnipodManager delegate;
     private final OmnipodAlertUtil omnipodAlertUtil;
-    private final Context context;
     private final PumpSync pumpSync;
     private final UiInteraction uiInteraction;
 
@@ -129,7 +128,6 @@ public class AapsOmnipodErosManager {
                                   ResourceHelper rh,
                                   HasAndroidInjector injector,
                                   OmnipodAlertUtil omnipodAlertUtil,
-                                  Context context,
                                   PumpSync pumpSync,
                                   UiInteraction uiInteraction) {
 
@@ -142,7 +140,6 @@ public class AapsOmnipodErosManager {
         this.rh = rh;
         this.injector = injector;
         this.omnipodAlertUtil = omnipodAlertUtil;
-        this.context = context;
         this.pumpSync = pumpSync;
         this.uiInteraction = uiInteraction;
 
@@ -156,9 +153,6 @@ public class AapsOmnipodErosManager {
             throw new IllegalArgumentException("Profile can not be null");
         }
         Profile.ProfileValue[] basalValues = profile.getBasalValues();
-        if (basalValues == null) {
-            throw new IllegalArgumentException("Basal values can not be null");
-        }
         List<BasalScheduleEntry> entries = new ArrayList<>();
         for (Profile.ProfileValue basalValue : basalValues) {
             entries.add(new BasalScheduleEntry(PumpTypeExtensionKt.determineCorrectBasalSize(PumpType.OMNIPOD_EROS, basalValue.getValue()),
@@ -232,8 +226,8 @@ public class AapsOmnipodErosManager {
         if (result.getSuccess()) {
             pumpSync.connectNewPump(true);
 
-            uploadCareportalEvent(System.currentTimeMillis() - 1000, DetailedBolusInfo.EventType.INSULIN_CHANGE);
-            uploadCareportalEvent(System.currentTimeMillis(), DetailedBolusInfo.EventType.CANNULA_CHANGE);
+            uploadCareportalEvent(System.currentTimeMillis() - 1000, TE.Type.INSULIN_CHANGE);
+            uploadCareportalEvent(System.currentTimeMillis(), TE.Type.CANNULA_CHANGE);
 
             dismissNotification(Notification.OMNIPOD_POD_NOT_ATTACHED);
 
@@ -390,14 +384,14 @@ public class AapsOmnipodErosManager {
     public PumpEnactResult bolus(DetailedBolusInfo detailedBolusInfo) {
         OmnipodManager.BolusCommandResult bolusCommandResult;
 
-        boolean beepsEnabled = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
+        boolean beepsEnabled = detailedBolusInfo.getBolusType() == BS.Type.SMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
 
-        EventOverviewBolusProgress.INSTANCE.setT(new EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId()));
+        EventOverviewBolusProgress.INSTANCE.setT(new EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0, detailedBolusInfo.getBolusType() == BS.Type.SMB, detailedBolusInfo.getId()));
 
         Date bolusStarted;
         try {
             bolusCommandResult = executeCommand(() -> delegate.bolus(PumpTypeExtensionKt.determineCorrectBolusSize(PumpType.OMNIPOD_EROS, detailedBolusInfo.insulin), beepsEnabled, beepsEnabled,
-                    detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? null :
+                    detailedBolusInfo.getBolusType() == BS.Type.SMB ? null :
                             (estimatedUnitsDelivered, percentage) -> {
                                 EventOverviewBolusProgress progressUpdateEvent = EventOverviewBolusProgress.INSTANCE;
                                 progressUpdateEvent.setStatus(getStringResource(info.nightscout.pump.common.R.string.bolus_delivered_so_far, estimatedUnitsDelivered, detailedBolusInfo.insulin));
@@ -414,7 +408,7 @@ public class AapsOmnipodErosManager {
 
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
-            if (detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
+            if (detailedBolusInfo.getBolusType() == BS.Type.SMB) {
                 showNotification(Notification.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, isNotificationUncertainSmbSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
             } else {
                 showErrorDialog(getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : 0);
@@ -1010,7 +1004,7 @@ public class AapsOmnipodErosManager {
         return rh.gs(id, args);
     }
 
-    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
+    private void uploadCareportalEvent(long date, TE.Type event) {
         pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.OMNIPOD_EROS, Integer.toString(podStateManager.getAddress()));
     }
 

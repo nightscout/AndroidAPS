@@ -1,13 +1,13 @@
 package app.aaps.plugins.aps.autotune
 
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.Carbs
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.BGDatum
 import app.aaps.plugins.aps.autotune.data.CRDatum
@@ -141,8 +141,8 @@ class AutotunePrep @Inject constructor(
     //    private static Logger log = LoggerFactory.getLogger(AutotunePlugin.class);
     fun categorizeBGDatums(tunedProfile: ATProfile, localInsulin: LocalInsulin, verbose: Boolean = true): PreppedGlucose? {
         //lib/meals is called before to get only meals data (in AAPS it's done in AutotuneIob)
-        val treatments: MutableList<Carbs> = autotuneIob.meals
-        val boluses: MutableList<Bolus> = autotuneIob.boluses
+        val treatments: MutableList<CA> = autotuneIob.meals
+        val boluses: MutableList<BS> = autotuneIob.boluses
         // Bloc between #21 and # 54 replaced by bloc below (just remove BG value below 39, Collections.sort probably not necessary because BG values already sorted...)
         val glucose = autotuneIob.glucose
         val glucoseData: MutableList<GV> = ArrayList()
@@ -539,7 +539,7 @@ class AutotunePrep @Inject constructor(
     }
 
     //dosed.js full
-    private fun dosed(start: Long, end: Long, treatments: List<Bolus>): Double {
+    private fun dosed(start: Long, end: Long, treatments: List<BS>): Double {
         var insulinDosed = 0.0
         //aapsLogger.debug(LTag.AUTOTUNE, "No treatments to process.")
         if (treatments.isEmpty()) {

@@ -1,5 +1,6 @@
 package app.aaps.plugins.insulin
 
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.iob.Iob
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -14,7 +15,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import dagger.android.HasAndroidInjector
 import kotlin.math.exp
@@ -74,7 +74,7 @@ abstract class InsulinOrefBasePlugin(
             return profile?.dia ?: hardLimits.minDia()
         }
 
-    override fun iobCalcForTreatment(bolus: Bolus, time: Long, dia: Double): Iob {
+    override fun iobCalcForTreatment(bolus: BS, time: Long, dia: Double): Iob {
         assert(dia != 0.0)
         assert(peak != 0)
         val result = Iob()

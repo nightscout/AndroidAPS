@@ -221,8 +221,8 @@ class NSClientPlugin @Inject constructor(
 
     override suspend fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, profile: Profile?): Boolean {
         val id = when (dataPair) {
-            is DataSyncSelector.PairBolus                  -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairCarbs                  -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairBolus                  -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairCarbs                  -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairFood                   -> dataPair.value.interfaceIDs.nightscoutId

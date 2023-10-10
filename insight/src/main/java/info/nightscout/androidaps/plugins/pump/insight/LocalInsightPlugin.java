@@ -26,6 +26,8 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.data.db.BS;
+import app.aaps.core.data.db.TE;
 import app.aaps.core.data.plugin.PluginDescription;
 import app.aaps.core.data.plugin.PluginType;
 import app.aaps.core.data.pump.defs.ManufacturerType;
@@ -584,12 +586,12 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
                     bolusMessage.setDuration(0);
                     bolusMessage.setExtendedAmount(0);
                     bolusMessage.setImmediateAmount(insulin);
-                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? R.string.key_insight_disable_vibration_auto : R.string.key_insight_disable_vibration, false));
+                    bolusMessage.setVibration(sp.getBoolean(detailedBolusInfo.getBolusType() == BS.Type.SMB ? R.string.key_insight_disable_vibration_auto : R.string.key_insight_disable_vibration, false));
                     bolusID = connectionService.requestMessage(bolusMessage).await().getBolusId();
                     bolusCancelled = false;
                 }
                 result.success(true).enacted(true);
-                EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
+                EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == BS.Type.SMB, detailedBolusInfo.getId());
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
                 bolusingEvent.setStatus(rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, 0d, insulin));
@@ -1271,7 +1273,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
         if (event.getAmount() > 0.0)                 // Don't record event if amount is null => Fix Site Change with Insight v3 (event is always sent when Reservoir is changed)
-            uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.CANNULA_CHANGE);
+            uploadCareportalEvent(timestamp, TE.Type.CANNULA_CHANGE);
     }
 
     private void processTotalDailyDoseEvent(String serial, TotalDailyDoseEvent event) {
@@ -1302,14 +1304,14 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         if (!sp.getBoolean(R.string.key_insight_log_reservoir_changes, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.INSULIN_CHANGE);
+        uploadCareportalEvent(timestamp, TE.Type.INSULIN_CHANGE);
     }
 
     private void processPowerUpEvent(String serial, PowerUpEvent event) {
         if (!sp.getBoolean(R.string.key_insight_log_battery_changes, false)) return;
         long timestamp = parseDate(event.getEventYear(), event.getEventMonth(), event.getEventDay(),
                 event.getEventHour(), event.getEventMinute(), event.getEventSecond()) + timeOffset;
-        uploadCareportalEvent(timestamp, DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE);
+        uploadCareportalEvent(timestamp, TE.Type.PUMP_BATTERY_CHANGE);
     }
 
     private void processOperatingModeChangedEvent(String serial, List<InsightPumpID> pumpStartedEvents, OperatingModeChangedEvent event) {
@@ -1565,7 +1567,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     private void logNote(long date, String note) {
-        pumpSync.insertTherapyEventIfNewWithTimestamp(date, DetailedBolusInfo.EventType.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
+        pumpSync.insertTherapyEventIfNewWithTimestamp(date, TE.Type.NOTE, note, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
     }
 
     private long parseRelativeDate(int year, int month, int day, int hour, int minute, int second, int relativeHour, int relativeMinute, int relativeSecond) {
@@ -1581,7 +1583,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         return calendar.getTimeInMillis() - dayOffset;
     }
 
-    private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {
+    private void uploadCareportalEvent(long date, TE.Type event) {
         pumpSync.insertTherapyEventIfNewWithTimestamp(date, event, null, null, PumpType.ACCU_CHEK_INSIGHT, serialNumber());
     }
 

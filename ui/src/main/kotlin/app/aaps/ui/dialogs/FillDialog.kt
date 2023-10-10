@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.ue.Action
@@ -156,7 +157,7 @@ class FillDialog : DialogFragmentWithDate() {
                         requestPrimeBolus(insulinAfterConstraints, notes)
                     }
                     if (siteChange)
-                        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+                        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                             therapyEvent = TE(
                                 timestamp = eventTime,
                                 type = TE.Type.CANNULA_CHANGE,
@@ -172,7 +173,7 @@ class FillDialog : DialogFragmentWithDate() {
                         ).subscribe()
                     if (insulinChange)
                     // add a second for case of both checked
-                        disposable += persistenceLayer.insertIfNewByTimestampTherapyEvent(
+                        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
                             therapyEvent = TE(
                                 timestamp = eventTime + 1000,
                                 type = TE.Type.INSULIN_CHANGE,
@@ -202,7 +203,7 @@ class FillDialog : DialogFragmentWithDate() {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = insulin
         detailedBolusInfo.context = context
-        detailedBolusInfo.bolusType = DetailedBolusInfo.BolusType.PRIMING
+        detailedBolusInfo.bolusType = BS.Type.PRIMING
         detailedBolusInfo.notes = notes
         commandQueue.bolus(detailedBolusInfo, object : Callback() {
             override fun run() {

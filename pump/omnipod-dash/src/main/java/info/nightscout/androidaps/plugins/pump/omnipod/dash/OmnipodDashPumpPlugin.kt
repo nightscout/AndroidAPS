@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType
@@ -584,10 +585,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     .comment(rh.gs(R.string.omnipod_dash_bolus_already_in_progress))
             }
 
-            EventOverviewBolusProgress.t = EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+            EventOverviewBolusProgress.t = EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0, detailedBolusInfo.bolusType == BS.Type.SMB, detailedBolusInfo.id)
             var deliveredBolusAmount = 0.0
 
-            val beepsConfigurationKey = if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB)
+            val beepsConfigurationKey = if (detailedBolusInfo.bolusType == BS.Type.SMB)
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_smb_beeps_enabled
             else
                 info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_bolus_beeps_enabled
@@ -625,7 +626,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     }
                     .ignoreElement()
             ).doFinally {
-                if (detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB) {
+                if (detailedBolusInfo.bolusType == BS.Type.SMB) {
                     notifyOnUnconfirmed(
                         Notification.OMNIPOD_UNCERTAIN_SMB,
                         "Unable to verify whether SMB bolus ($requestedBolusAmount U) succeeded. " +
@@ -676,7 +677,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun waitForBolusDeliveryToComplete(
         requestedBolusAmount: Double,
-        bolusType: DetailedBolusInfo.BolusType
+        bolusType: BS.Type
     ): Single<Double> = Single.defer {
 
         if (bolusCanceled && podStateManager.activeCommand != null) {
@@ -704,7 +705,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         while (waited < estimatedDeliveryTimeSeconds && !bolusCanceled) {
             waited += 1
             Thread.sleep(1000)
-            if (bolusType == DetailedBolusInfo.BolusType.SMB) {
+            if (bolusType == BS.Type.SMB) {
                 continue
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
@@ -772,7 +773,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun pumpSyncBolusStart(
         requestedBolusAmount: Double,
-        bolusType: DetailedBolusInfo.BolusType
+        bolusType: BS.Type
     ): Boolean {
         require(requestedBolusAmount > 0) { "requestedBolusAmount has to be positive" }
 

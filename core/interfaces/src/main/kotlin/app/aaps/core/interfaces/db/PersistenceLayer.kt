@@ -1,5 +1,7 @@
 package app.aaps.core.interfaces.db
 
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
@@ -11,13 +13,9 @@ import app.aaps.core.data.db.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.core.interfaces.queue.Callback
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.EffectiveProfileSwitch
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
@@ -27,14 +25,217 @@ interface PersistenceLayer {
     fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String
     fun insertOrUpdate(bolusCalculatorResult: BolusCalculatorResult)
 
-    // BO
-    fun insertOrUpdateBolus(bolus: Bolus)
+    // BS
+    /**
+     * Get last bolus
+     *
+     * @return bolus record
+     */
+    fun getLastBolus(): BS?
 
-    // CB
-    fun insertOrUpdateCarbs(carbs: Carbs, callback: Callback? = null, injector: HasAndroidInjector? = null)
+    /**
+     * Get last bolus of specified type
+     *
+     * @param type bolus type
+     * @return bolus record
+     */
+    fun getLastBolusOfType(type: BS.Type): BS?
+
+    /**
+     *  Get highest id in database
+     *  @return id
+     */
+    fun getLastBolusId(): Long?
+
+    /**
+     *  Get bolus by NS id
+     *  @return bolus
+     */
+    fun getBolusByNSId(nsId: String): BS?
+
+    /**
+     * Get boluses from time
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of boluses
+     */
+    fun getBolusesFromTime(startTime: Long, ascending: Boolean): Single<List<BS>>
+
+    /**
+     * Get boluses in time interval
+     *
+     * @param startTime from
+     * @param endTime to
+     * @param ascending sort order
+     * @return List of boluses
+     */
+    fun getBolusesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<BS>
+
+    /**
+     * Get boluses from time including invalidated
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of boluses
+     */
+    fun getBolusesFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<BS>>
+
+    /**
+     * Get next changed record after id
+     *
+     * @param id record id
+     * @return database record
+     */
+    fun getNextSyncElementBolus(id: Long): Maybe<Pair<BS, BS>>
+
+    /**
+     * Insert or update if exists record
+     *
+     * @param bolus record
+     * @param action Action for UserEntry logging
+     * @param note note for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<BS>>
+
+    /**
+     * Insert record
+     *
+     * @param bolus record
+     * @return List of inserted records
+     */
+    fun insertBolusWithTempId(bolus: BS): Single<TransactionResult<BS>>
+
+    /**
+     * Sync record coming from pump to database
+     *
+     * @param bolus record to sync
+     * @param type record type because filed is not nullable in class
+     * @return List of inserted/updated records
+     */
+    fun syncPumpBolus(bolus: BS, type: BS.Type?): Single<TransactionResult<BS>>
+
+    /**
+     * Sync record coming from pump to database based on pump temporary id
+     *
+     * @param bolus record to sync
+     * @param type record type because filed is not nullable in class
+     * @return List of updated records
+     */
+    fun syncPumpBolusWithTempId(bolus: BS, type: BS.Type?): Single<TransactionResult<BS>>
+
+    /**
+     * Store records coming from NS to database
+     *
+     * @param boluses list of records
+     * @return List of inserted/updated/invalidated records
+     */
+    fun syncNsBolus(boluses: List<BS>): Single<TransactionResult<BS>>
+
+    /**
+     * Update NS id' in database
+     *
+     * @param boluses records containing NS id'
+     * @return List of modified records
+     */
+    fun updateBolusesNsIds(boluses: List<BS>): Single<TransactionResult<BS>>
+
+    // CA
+    /**
+     *  Get highest id in database
+     *  @return id
+     */
+    fun getLastCarbsId(): Long?
+
+    /**
+     *  Get carbs by NS id
+     *  @return carbs
+     */
+    fun getCarbsByNSId(nsId: String): CA?
+
+    /**
+     * Get carbs from time
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of carbs
+     */
+    fun getCarbsFromTime(startTime: Long, ascending: Boolean): Single<List<CA>>
+
+    /**
+     * Get carbs from time including invalidated
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of boluses
+     */
+    fun getCarbsFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<CA>>
+
+    /**
+     * Get carbs in time interval with expanded extended carbs to multiple records
+     *
+     * @param startTime from
+     * @param endTime to
+     * @param ascending sort order
+     * @return List of carbs
+     */
+    fun getCarbsFromTimeToTimeExpanded(startTime: Long, endTime: Long, ascending: Boolean): List<CA>
+
+    /**
+     * Get next changed record after id
+     *
+     * @param id record id
+     * @return database record
+     */
+    fun getNextSyncElementCarbs(id: Long): Maybe<Pair<CA, CA>>
+
+    /**
+     * Insert or update if exists record
+     *
+     * @param carbs record
+     * @param action Action for UserEntry logging
+     * @param note note for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateCarbs(carbs: CA, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<CA>>
+
+    /**
+     * Insert carbs if not exists
+     *
+     * @param carbs record
+     * @return List of inserted records
+     */
+    fun insertPumpCarbsIfNewByTimestamp(carbs: CA): Single<TransactionResult<CA>>
+
+    /**
+     * Store records coming from NS to database
+     *
+     * @param carbs list of records
+     * @return List of inserted/updated/invalidated records
+     */
+    fun syncNsCarbs(carbs: List<CA>): Single<TransactionResult<CA>>
+
+    /**
+     * Update NS id' in database
+     *
+     * @param carbs records containing NS id'
+     * @return List of modified records
+     */
+    fun updateCarbsNsIds(carbs: List<CA>): Single<TransactionResult<CA>>
 
     // GV
-    fun getLastGlucoseValue(): Single<ValueWrapper<GV>>
+    fun getLastGlucoseValue(): GV?
+
+    /**
+     *  Get highest id in database
+     *  @return id
+     */
+    fun getLastGlucoseValueId(): Long?
 
     /**
      * Get next changed record after id
@@ -43,7 +244,7 @@ interface PersistenceLayer {
      * @return database record
      */
     fun getNextSyncElementGlucoseValue(id: Long): Maybe<Pair<GV, GV>>
-    fun getBgReadingsDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<GV>>
+    fun getBgReadingsDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): List<GV>
     fun getBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GV>>
     fun getBgReadingByNSId(nsId: String): GV?
 
@@ -82,6 +283,12 @@ interface PersistenceLayer {
      * @return temporary basal or null if none in db
      */
     fun getOldestTemporaryBasalRecord(): TB?
+
+    /**
+     *  Get highest id in database
+     *  @return id
+     */
+    fun getLastTemporaryBasalId(): Long?
 
     /**
      * Get running temporary basal in time interval
@@ -143,7 +350,7 @@ interface PersistenceLayer {
     /**
      * Store records coming from NS to database
      *
-     * @param offlineEvents list of records
+     * @param temporaryBasals list of records
      * @return List of inserted/updated/invalidated records
      */
     fun syncNsTemporaryBasals(temporaryBasals: List<TB>): Single<TransactionResult<TB>>
@@ -197,6 +404,12 @@ interface PersistenceLayer {
      * @return extended bolus or null if none in db
      */
     fun getOldestExtendedBolusRecord(): EB?
+
+    /**
+     *  Get highest id in database
+     *  @return id
+     */
+    fun getLastExtendedBolusId(): Long?
 
     /**
      * Get running extended bolus starting in time interval
@@ -278,6 +491,13 @@ interface PersistenceLayer {
      * @return running temporary target or null if none is running
      */
     fun getTemporaryTargetActiveAt(timestamp: Long): TT?
+
+    /**
+     *  Get highest id in database
+     *  @return id
+     */
+    fun getLastTemporaryTargetId(): Long?
+
     fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
     fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
 
@@ -320,6 +540,12 @@ interface PersistenceLayer {
     fun updateTemporaryTargetsNsIds(temporaryTargets: List<TT>): Single<TransactionResult<TT>>
 
     // TE
+    /**
+     *  Get highest id in database
+     *  @return id
+     */
+    fun getLastTherapyEventId(): Long?
+
     fun getLastTherapyRecordUpToNow(type: TE.Type): Single<ValueWrapper<TE>>
     fun getTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TE>>
     fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>>
@@ -333,7 +559,18 @@ interface PersistenceLayer {
      * @return database record
      */
     fun getNextSyncElementTherapyEvent(id: Long): Maybe<Pair<TE, TE>>
-    fun insertIfNewByTimestampTherapyEvent(
+
+    /**
+     * Insert record if not exists
+     *
+     * @param therapyEvent record
+     * @param action Action for UserEntry logging
+     * @param note note for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of inserted records
+     */
+    fun insertPumpTherapyEventIfNewByTimestamp(
         therapyEvent: TE,
         timestamp: Long = System.currentTimeMillis(),
         action: Action,
@@ -381,6 +618,12 @@ interface PersistenceLayer {
 
     // OE
     fun getOfflineEventActiveAt(timestamp: Long): OE?
+
+    /**
+     *  Get highest id in database
+     *  @return id
+     */
+    fun getLastOfflineEventId(): Long?
 
     /**
      * Get next changed record after id

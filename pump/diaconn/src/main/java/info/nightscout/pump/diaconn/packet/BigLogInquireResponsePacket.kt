@@ -1,12 +1,12 @@
 package info.nightscout.pump.diaconn.packet
 
 import android.content.Context
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
@@ -549,7 +549,7 @@ class BigLogInquireResponsePacket(
                         if (sp.getBoolean(R.string.key_diaconn_g8_loginsulinchange, true)) {
                             val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = logDateTime,
-                                type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                                type = TE.Type.INSULIN_CHANGE,
                                 pumpId = logDateTime,
                                 pumpType = PumpType.DIACONN_G8,
                                 pumpSerial = diaconnG8Pump.serialNo.toString()
@@ -578,7 +578,7 @@ class BigLogInquireResponsePacket(
                         if (sp.getBoolean(R.string.key_diaconn_g8_logtubechange, true)) {
                             val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = logDateTime,
-                                type = DetailedBolusInfo.EventType.NOTE,
+                                type = TE.Type.NOTE,
                                 note = rh.gs(R.string.diaconn_g8_logtubeprime, logItem.primeAmount / 100.0),
                                 pumpId = logDateTime,
                                 pumpType = PumpType.DIACONN_G8,
@@ -708,7 +708,7 @@ class BigLogInquireResponsePacket(
                         if (sp.getBoolean(R.string.key_diaconn_g8_logneedlechange, true)) {
                             val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                 timestamp = logDateTime,
-                                type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                                type = TE.Type.CANNULA_CHANGE,
                                 pumpId = logDateTime,
                                 pumpType = PumpType.DIACONN_G8,
                                 pumpSerial = diaconnG8Pump.serialNo.toString()
@@ -875,7 +875,7 @@ class BigLogInquireResponsePacket(
                             if (sp.getBoolean(R.string.key_diaconn_g8_logbatterychange, true)) {
                                 val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                                     timestamp = logDateTime,
-                                    type = DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
+                                    type = TE.Type.PUMP_BATTERY_CHANGE,
                                     pumpId = logDateTime,
                                     pumpType = PumpType.DIACONN_G8,
                                     pumpSerial = diaconnG8Pump.serialNo.toString()

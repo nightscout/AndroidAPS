@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activation.viewmodel.action
 
 import androidx.annotation.StringRes
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -115,13 +115,13 @@ class DashInsertCannulaViewModel @Inject constructor(
 
                         pumpSync.insertTherapyEventIfNewWithTimestamp(
                             timestamp = System.currentTimeMillis(),
-                            type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                            type = TE.Type.CANNULA_CHANGE,
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                         )
                         pumpSync.insertTherapyEventIfNewWithTimestamp(
                             timestamp = System.currentTimeMillis(),
-                            type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                            type = TE.Type.INSULIN_CHANGE,
                             pumpType = PumpType.OMNIPOD_DASH,
                             pumpSerial = podStateManager.uniqueId?.toString() ?: "n/a"
                         )

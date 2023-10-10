@@ -1,6 +1,8 @@
 package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
@@ -25,9 +27,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.Food
@@ -44,14 +44,10 @@ import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InvalidateTherapyEventTransaction
 import app.aaps.database.impl.transactions.SyncNsBolusCalculatorResultTransaction
-import app.aaps.database.impl.transactions.SyncNsBolusTransaction
-import app.aaps.database.impl.transactions.SyncNsCarbsTransaction
 import app.aaps.database.impl.transactions.SyncNsEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.SyncNsFoodTransaction
 import app.aaps.database.impl.transactions.SyncNsProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdBolusTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdCarbsTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdFoodTransaction
@@ -82,8 +78,8 @@ class StoreDataForDbImpl @Inject constructor(
 ) : StoreDataForDb {
 
     override val glucoseValues: MutableList<GV> = mutableListOf()
-    override val boluses: MutableList<Bolus> = mutableListOf()
-    override val carbs: MutableList<Carbs> = mutableListOf()
+    override val boluses: MutableList<BS> = mutableListOf()
+    override val carbs: MutableList<CA> = mutableListOf()
     override val temporaryTargets: MutableList<TT> = mutableListOf()
     override val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
@@ -95,8 +91,8 @@ class StoreDataForDbImpl @Inject constructor(
     override val foods: MutableList<Food> = mutableListOf()
 
     override val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
-    override val nsIdBoluses: MutableList<Bolus> = mutableListOf()
-    override val nsIdCarbs: MutableList<Carbs> = mutableListOf()
+    override val nsIdBoluses: MutableList<BS> = mutableListOf()
+    override val nsIdCarbs: MutableList<CA> = mutableListOf()
     override val nsIdTemporaryTargets: MutableList<TT> = mutableListOf()
     override val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
@@ -181,107 +177,29 @@ class StoreDataForDbImpl @Inject constructor(
 
     override fun storeTreatmentsToDb() {
         if (boluses.isNotEmpty())
-            repository.runTransactionForResult(SyncNsBolusTransaction(boluses))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsBolus(boluses)
+                .subscribeBy { result ->
                     boluses.clear()
-                    result.inserted.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.BOLUS,
-                                source = Sources.NSClient,
-                                note = it.notes ?: "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it")
-                        inserted.inc(Bolus::class.java.simpleName)
-                    }
-                    result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.BOLUS_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it")
-                        invalidated.inc(Bolus::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId of bolus $it")
-                        nsIdUpdated.inc(Bolus::class.java.simpleName)
-                    }
-                    result.updated.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated amount of bolus $it")
-                        updated.inc(Bolus::class.java.simpleName)
-                    }
+                    repeat(result.inserted.size) { inserted.inc(BS::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(BS::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(BS::class.java.simpleName) }
+                    repeat(result.updated.size) { updated.inc(BS::class.java.simpleName) }
+                    sendLog("Bolus", BS::class.java.simpleName)
                 }
 
-        sendLog("Bolus", Bolus::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (carbs.isNotEmpty())
-            repository.runTransactionForResult(SyncNsCarbsTransaction(carbs, config.NSCLIENT))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsCarbs(carbs)
+                .subscribeBy { result ->
                     carbs.clear()
-                    result.inserted.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.CARBS,
-                                source = Sources.NSClient,
-                                note = it.notes ?: "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it")
-                        inserted.inc(Carbs::class.java.simpleName)
-                    }
-                    result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.CARBS_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it")
-                        invalidated.inc(Carbs::class.java.simpleName)
-                    }
-                    result.updated.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.CARBS,
-                                source = Sources.NSClient,
-                                note = it.notes ?: "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Updated carbs $it")
-                        updated.inc(Carbs::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId carbs $it")
-                        nsIdUpdated.inc(Carbs::class.java.simpleName)
-                    }
-
+                    repeat(result.inserted.size) { inserted.inc(CA::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(CA::class.java.simpleName) }
+                    repeat(result.updated.size) { updated.inc(CA::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(CA::class.java.simpleName) }
+                    sendLog("Carbs", CA::class.java.simpleName)
                 }
 
-        sendLog("Carbs", Carbs::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (temporaryTargets.isNotEmpty())
@@ -533,30 +451,16 @@ class StoreDataForDbImpl @Inject constructor(
                 repeat(result.updatedNsId.size) { nsIdUpdated.inc(TE::class.java.simpleName) }
             }
 
-        repository.runTransactionForResult(UpdateNsIdBolusTransaction(nsIdBoluses))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of Bolus failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateBolusesNsIds(nsIdBoluses)
+            .subscribeBy { result ->
                 nsIdBoluses.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Bolus $it")
-                    nsIdUpdated.inc(Bolus::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(BS::class.java.simpleName) }
             }
 
-        repository.runTransactionForResult(UpdateNsIdCarbsTransaction(nsIdCarbs))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of Carbs failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateCarbsNsIds(nsIdCarbs)
+            .subscribeBy { result ->
                 nsIdCarbs.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Carbs $it")
-                    nsIdUpdated.inc(Carbs::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(CA::class.java.simpleName) }
             }
 
         repository.runTransactionForResult(UpdateNsIdBolusCalculatorResultTransaction(nsIdBolusCalculatorResults))
@@ -630,8 +534,8 @@ class StoreDataForDbImpl @Inject constructor(
             }
 
         sendLog("GlucoseValue", GV::class.java.simpleName)
-        sendLog("Bolus", Bolus::class.java.simpleName)
-        sendLog("Carbs", Carbs::class.java.simpleName)
+        sendLog("Bolus", BS::class.java.simpleName)
+        sendLog("Carbs", CA::class.java.simpleName)
         sendLog("TemporaryTarget", TT::class.java.simpleName)
         sendLog("TemporaryBasal", TB::class.java.simpleName)
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
@@ -646,26 +550,26 @@ class StoreDataForDbImpl @Inject constructor(
     override fun updateDeletedTreatmentsInDb() {
         deleteTreatment.forEach { id ->
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
-                repository.findBolusByNSId(id)?.let { bolus ->
+                persistenceLayer.getBolusByNSId(id)?.let { bolus ->
                     repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Bolus", it) }
                         .blockingGet()
                         .also { result ->
                             result.invalidated.forEach {
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated Bolus $it")
-                                invalidated.inc(Bolus::class.java.simpleName)
+                                invalidated.inc(BS::class.java.simpleName)
                             }
                         }
                 }
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
-                repository.findCarbsByNSId(id)?.let { carb ->
+                repository.getCarbsByNSId(id)?.let { carb ->
                     repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
                         .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Carbs", it) }
                         .blockingGet()
                         .also { result ->
                             result.invalidated.forEach {
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated Carbs $it")
-                                invalidated.inc(Carbs::class.java.simpleName)
+                                invalidated.inc(CA::class.java.simpleName)
                             }
                         }
                 }
@@ -765,8 +669,8 @@ class StoreDataForDbImpl @Inject constructor(
                         }
                 }
         }
-        sendLog("Bolus", Bolus::class.java.simpleName)
-        sendLog("Carbs", Carbs::class.java.simpleName)
+        sendLog("Bolus", BS::class.java.simpleName)
+        sendLog("Carbs", CA::class.java.simpleName)
         sendLog("TemporaryTarget", TT::class.java.simpleName)
         sendLog("TemporaryBasal", TB::class.java.simpleName)
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)

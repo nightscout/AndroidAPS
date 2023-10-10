@@ -1,6 +1,8 @@
 package app.aaps.plugins.aps.autotune
 
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.IDs
@@ -23,10 +25,6 @@ import app.aaps.core.main.extensions.toJson
 import app.aaps.core.main.extensions.toTemporaryBasal
 import app.aaps.core.main.iob.round
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.entities.Bolus
-import app.aaps.database.entities.Carbs
-import app.aaps.database.entities.embedments.InterfaceIDs
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin
 import org.json.JSONArray
@@ -38,7 +36,6 @@ import kotlin.math.ceil
 @Singleton
 open class AutotuneIob @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
@@ -48,8 +45,8 @@ open class AutotuneIob @Inject constructor(
 
     private var nsTreatments = ArrayList<NsTreatment>()
     private var dia: Double = Constants.defaultDIA
-    var boluses: ArrayList<Bolus> = ArrayList()
-    var meals = ArrayList<Carbs>()
+    var boluses: ArrayList<BS> = ArrayList()
+    var meals = ArrayList<CA>()
     lateinit var glucose: List<GV> // newest at index 0
     private lateinit var tempBasals: ArrayList<TB>
     var startBG: Long = 0
@@ -89,11 +86,11 @@ open class AutotuneIob @Inject constructor(
 
     @Synchronized
     private fun sortBoluses() {
-        boluses = ArrayList(boluses.toList().sortedWith { o1: Bolus, o2: Bolus -> (o2.timestamp - o1.timestamp).toInt() })
+        boluses = ArrayList(boluses.toList().sortedWith { o1: BS, o2: BS -> (o2.timestamp - o1.timestamp).toInt() })
     }
 
     private fun initializeBgReadings(from: Long, to: Long) {
-        glucose = persistenceLayer.getBgReadingsDataFromTimeToTime(from, to, false).blockingGet()
+        glucose = persistenceLayer.getBgReadingsDataFromTimeToTime(from, to, false)
     }
 
     //nsTreatment is used only for export data, meals is used in AutotunePrep
@@ -103,7 +100,7 @@ open class AutotuneIob @Inject constructor(
             LTag.AUTOTUNE,
             "Check BG date: BG Size: " + glucose.size + " OldestBG: " + dateUtil.dateAndTimeAndSecondsString(oldestBgDate) + " to: " + dateUtil.dateAndTimeAndSecondsString(to)
         )
-        val tmpCarbs = repository.getCarbsDataFromTimeToTimeExpanded(from, to, false).blockingGet()
+        val tmpCarbs = persistenceLayer.getCarbsFromTimeToTimeExpanded(from, to, false)
         aapsLogger.debug(LTag.AUTOTUNE, "Nb treatments after query: " + tmpCarbs.size)
         var nbCarbs = 0
         for (i in tmpCarbs.indices) {
@@ -116,17 +113,17 @@ open class AutotuneIob @Inject constructor(
                     nbCarbs++
             }
         }
-        val tmpBolus = repository.getBolusesDataFromTimeToTime(from, to, false).blockingGet()
+        val tmpBolus = persistenceLayer.getBolusesFromTimeToTime(from, to, false)
         var nbSMB = 0
         var nbBolus = 0
         for (i in tmpBolus.indices) {
             val tp = tmpBolus[i]
-            if (tp.isValid && tp.type != Bolus.Type.PRIMING) {
+            if (tp.isValid && tp.type != BS.Type.PRIMING) {
                 boluses.add(tp)
                 nsTreatments.add(NsTreatment(tp))
                 //only carbs after first BGReadings are taken into account in calculation of Autotune
                 if (tp.timestamp < to) {
-                    if (tp.type == Bolus.Type.SMB)
+                    if (tp.type == BS.Type.SMB)
                         nbSMB++
                     else if (tp.amount > 0.0)
                         nbBolus++
@@ -251,8 +248,8 @@ open class AutotuneIob @Inject constructor(
         getCalculationToTimeTreatments(time, localInsulin).round()
 
     // Add specific calculation for Autotune (reference localInsulin for Peak/dia)
-    private fun Bolus.iobCalc(time: Long, localInsulin: LocalInsulin): Iob {
-        if (!isValid || type == Bolus.Type.PRIMING) return Iob()
+    private fun BS.iobCalc(time: Long, localInsulin: LocalInsulin): Iob {
+        if (!isValid || type == BS.Type.PRIMING) return Iob()
         return localInsulin.iobCalcForTreatment(this, time)
     }
 
@@ -266,10 +263,8 @@ open class AutotuneIob @Inject constructor(
             val tIOB = t.iobCalc(time, localInsulin)
             if (detailedLog)
                 log(
-                    "iobCalc;${t.interfaceIDs.nightscoutId};$time;${t.timestamp};${tIOB.iobContrib};${tIOB.activityContrib};${dateUtil.dateAndTimeAndSecondsString(time)};${
-                        dateUtil.dateAndTimeAndSecondsString(
-                            t.timestamp
-                        )
+                    "iobCalc;${t.ids.nightscoutId};$time;${t.timestamp};${tIOB.iobContrib};${tIOB.activityContrib};${dateUtil.dateAndTimeAndSecondsString(time)};${
+                        dateUtil.dateAndTimeAndSecondsString(t.timestamp)
                     }"
                 )
             total.iob += tIOB.iobContrib
@@ -278,28 +273,28 @@ open class AutotuneIob @Inject constructor(
         return total
     }
 
-    private fun convertToBoluses(eb: EB): MutableList<Bolus> {
-        val result: MutableList<Bolus> = ArrayList()
+    private fun convertToBoluses(eb: EB): MutableList<BS> {
+        val result: MutableList<BS> = ArrayList()
         val aboutFiveMinIntervals = ceil(eb.duration / 5.0).toInt()
         val spacing = eb.duration / aboutFiveMinIntervals.toDouble()
         for (j in 0L until aboutFiveMinIntervals) {
             // find middle of the interval
             val calcDate = (eb.timestamp + j * spacing * 60 * 1000 + 0.5 * spacing * 60 * 1000).toLong()
             val tempBolusSize: Double = eb.amount / aboutFiveMinIntervals
-            val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = eb.ids.nightscoutId + "_eb_$j" }
-            val tempBolusPart = Bolus(
-                interfaceIDs_backing = bolusInterfaceIDs,
+            val bolusInterfaceIDs = IDs().also { it.nightscoutId = eb.ids.nightscoutId + "_eb_$j" }
+            val tempBolusPart = BS(
+                ids = bolusInterfaceIDs,
                 timestamp = calcDate,
                 amount = tempBolusSize,
-                type = Bolus.Type.NORMAL
+                type = BS.Type.NORMAL
             )
             result.add(tempBolusPart)
         }
         return result
     }
 
-    private fun convertToBoluses(tbr: TB, profile: Profile, tunedProfile: Profile): MutableList<Bolus> {
-        val result: MutableList<Bolus> = ArrayList()
+    private fun convertToBoluses(tbr: TB, profile: Profile, tunedProfile: Profile): MutableList<BS> {
+        val result: MutableList<BS> = ArrayList()
         val realDuration = tbr.durationInMinutes
         val basalRate = profile.getBasal(tbr.timestamp)
         val tunedRate = tunedProfile.getBasal(tbr.timestamp)
@@ -316,32 +311,32 @@ open class AutotuneIob @Inject constructor(
             // find middle of the interval
             val calcDate = (tbr.timestamp + j * tempBolusSpacing * 60 * 1000 + 0.5 * tempBolusSpacing * 60 * 1000).toLong()
             val tempBolusSize = netBasalRate * tempBolusSpacing / 60.0
-            val bolusInterfaceIDs = InterfaceIDs().also { it.nightscoutId = tbr.ids.nightscoutId + "_tbr_$j" }
-            val tempBolusPart = Bolus(
-                interfaceIDs_backing = bolusInterfaceIDs,
+            val bolusInterfaceIDs = IDs().also { it.nightscoutId = tbr.ids.nightscoutId + "_tbr_$j" }
+            val tempBolusPart = BS(
+                ids = bolusInterfaceIDs,
                 timestamp = calcDate,
                 amount = tempBolusSize,
-                type = Bolus.Type.NORMAL
+                type = BS.Type.NORMAL
             )
             result.add(tempBolusPart)
         }
         return result
     }
 
-    fun Bolus.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+    fun BS.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         JSONObject()
-            .put("eventType", if (type == Bolus.Type.SMB) TE.Type.CORRECTION_BOLUS.text else TE.Type.MEAL_BOLUS.text)
+            .put("eventType", if (type == BS.Type.SMB) TE.Type.CORRECTION_BOLUS.text else TE.Type.MEAL_BOLUS.text)
             .put("insulin", amount)
             .put("created_at", dateUtil.toISOString(timestamp))
             .put("date", timestamp)
             .put("type", type.name)
             .put("notes", notes)
             .put("isValid", isValid)
-            .put("isSMB", type == Bolus.Type.SMB).also {
-                if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
-                if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
-                if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-                if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            .put("isSMB", type == BS.Type.SMB).also {
+                if (ids.pumpId != null) it.put("pumpId", ids.pumpId)
+                if (ids.pumpType != null) it.put("pumpType", ids.pumpType!!.name)
+                if (ids.pumpSerial != null) it.put("pumpSerial", ids.pumpSerial)
+                if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
             }
 
     @Synchronized
@@ -374,18 +369,18 @@ open class AutotuneIob @Inject constructor(
 
         var date: Long = 0
         var eventType: TE.Type? = null
-        var carbsTreatment: Carbs? = null
-        var bolusTreatment: Bolus? = null
+        var carbsTreatment: CA? = null
+        var bolusTreatment: BS? = null
         var temporaryBasal: TB? = null
         var extendedBolus: EB? = null
 
-        constructor(t: Carbs) {
+        constructor(t: CA) {
             carbsTreatment = t
             date = t.timestamp
             eventType = TE.Type.CARBS_CORRECTION
         }
 
-        constructor(t: Bolus) {
+        constructor(t: BS) {
             bolusTreatment = t
             date = t.timestamp
             eventType = TE.Type.CORRECTION_BOLUS
@@ -451,7 +446,7 @@ open class AutotuneIob @Inject constructor(
                     if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
                 }
 
-        fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+        fun CA.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             JSONObject()
                 .put("eventType", if (amount < 12) TE.Type.CARBS_CORRECTION.text else TE.Type.MEAL_BOLUS.text)
                 .put("carbs", amount)
@@ -460,10 +455,10 @@ open class AutotuneIob @Inject constructor(
                 .put("isValid", isValid)
                 .put("date", timestamp).also {
                     if (duration != 0L) it.put("duration", duration)
-                    if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
-                    if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
-                    if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-                    if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+                    if (ids.pumpId != null) it.put("pumpId", ids.pumpId)
+                    if (ids.pumpType != null) it.put("pumpType", ids.pumpType!!.name)
+                    if (ids.pumpSerial != null) it.put("pumpSerial", ids.pumpSerial)
+                    if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
                 }
 
         fun toJson(): JSONObject? {

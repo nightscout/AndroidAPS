@@ -3,9 +3,9 @@ package app.aaps.core.main.graph
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import app.aaps.core.data.db.BS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
-import app.aaps.database.entities.Bolus
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
@@ -22,10 +22,10 @@ class ActivityGraph : GraphView {
         val dia = diaSample ?: insulin.dia
         mSecondScale = null
         val hours = floor(dia + 1).toLong()
-        val bolus = Bolus(
+        val bolus = BS(
             timestamp = 0,
             amount = 1.0,
-            type = Bolus.Type.NORMAL
+            type = BS.Type.NORMAL
         )
         val activityArray: MutableList<DataPoint> = ArrayList()
         val iobArray: MutableList<DataPoint> = ArrayList()

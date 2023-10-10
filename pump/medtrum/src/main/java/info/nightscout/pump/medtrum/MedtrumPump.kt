@@ -1,12 +1,12 @@
 package info.nightscout.pump.medtrum
 
 import android.util.Base64
+import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -578,13 +578,13 @@ class MedtrumPump @Inject constructor(
         // Sync cannula change
         pumpSync.insertTherapyEventIfNewWithTimestamp(
             timestamp = newStartTime,
-            type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+            type = TE.Type.CANNULA_CHANGE,
             pumpType = pumpType(),
             pumpSerial = pumpSN.toString(radix = 16)
         )
         pumpSync.insertTherapyEventIfNewWithTimestamp(
             timestamp = newStartTime,
-            type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+            type = TE.Type.INSULIN_CHANGE,
             pumpType = pumpType(),
             pumpSerial = pumpSN.toString(radix = 16)
         )
