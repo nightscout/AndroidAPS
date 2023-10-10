@@ -212,7 +212,7 @@
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Opplaster</string>
     <string name="data_status">BS data status</string>
-    <string name="quickwizard_settings">Innstillinger for hurtigveiviser</string>
+    <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
     <string name="keep_screen_on_title">Hold skjermen påslått</string>
     <string name="keep_screen_on_summary">Forhindre Android fra å slå av skjermen. Mobilen vil bruke mye batteri hvis den ikke kobles til strømledning.</string>
     <string name="treatments">Behandlinger</string>
@@ -292,8 +292,8 @@
     <string name="pump_status">Pumpestatus</string>
     <string name="loop_status">Loopstatus</string>
     <string name="wizard_result">Boluskalkulator:\nInsulin: %1$.2fE\nKarbo: %2$dg</string>
-    <string name="quick_wizard_not_available">Den valgte hurtigveiviseren er ikke tilgjengelig lenger, oppdater klokkeurskive</string>
-    <string name="quick_wizard_message">Hurtigveiviser: %1$s\ninsulin: %2$.2fE\nKarbo: %3$dg</string>
+    <string name="quick_wizard_not_available">Den valgte hurtigknappen er ikke lenger tilgjengelig, oppdater klokkeflis</string>
+    <string name="quick_wizard_message">Hurtigknapp: %1$s\ninsulin: %2$.2fE\nKarbo: %3$dg</string>
     <string name="wear_action_tempt_preset_error">Ukjent forhåndsinnstilling midl. mål: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende midl. mål?</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
