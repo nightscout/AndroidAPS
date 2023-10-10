@@ -339,7 +339,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         if (!sendBolusCommand(insulin)) {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
-            commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+            commandQueue.readStatus(rh.gs(R.string.bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
             t.insulin = 0.0
             return false
         }
@@ -735,9 +735,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
         currentState.onIndication(indication)
     }
 
-    override fun onSendMessageError(reason: String) {
+    override fun onSendMessageError(reason: String, isRetryAble: Boolean) {
         aapsLogger.debug(LTag.PUMPCOMM, "<<<<< error during send message $reason")
-        currentState.onSendMessageError(reason)
+        currentState.onSendMessageError(reason, isRetryAble)
     }
 
     /** Service stuff */
@@ -822,10 +822,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
             return responseSuccess
         }
 
-        fun onSendMessageError(reason: String) {
+        fun onSendMessageError(reason: String, isRetryAble: Boolean) {
             aapsLogger.warn(LTag.PUMPCOMM, "onSendMessageError: " + this.toString() + "reason: $reason")
             // Retry 3 times
-            if (sendRetryCounter < 3) {
+            if (sendRetryCounter < 3 && isRetryAble) {
                 sendRetryCounter++
                 mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             } else {

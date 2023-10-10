@@ -12,8 +12,6 @@ import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import javax.inject.Inject
 
-typealias MaskHandler = (ByteArray, Int) -> Int
-
 class NotificationPacket(val injector: HasAndroidInjector) {
 
     /**
@@ -81,7 +79,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         private const val SIZE_UNUSED_LEGACY = 2
     }
 
-    val maskHandlers: Map<Int, MaskHandler> = mapOf(
+    val maskHandlers: Map<Int, (ByteArray, Int) -> Int> = mapOf(
         MASK_SUSPEND to ::handleSuspend,
         MASK_NORMAL_BOLUS to ::handleNormalBolus,
         MASK_EXTENDED_BOLUS to ::handleExtendedBolus,
@@ -126,27 +124,27 @@ class NotificationPacket(val injector: HasAndroidInjector) {
     fun handleMaskedMessage(data: ByteArray): Boolean {
         val fieldMask = data.copyOfRange(0, 2).toInt()
         var offset = 2
-    
+
         val expectedLength = calculateExpectedLengthBasedOnFieldMask(fieldMask)
         if (data.size < expectedLength) {
             aapsLogger.error(LTag.PUMPCOMM, "Incorrect message length. Expected at least $expectedLength bytes.")
             return false
         }
-    
+
         aapsLogger.debug(LTag.PUMPCOMM, "Message field mask: $fieldMask")
-    
+
         for ((mask, handler) in maskHandlers) {
             if (fieldMask and mask != 0) {
                 offset = handler(data, offset)
             }
         }
-    
+
         return true
     }
 
     private fun calculateExpectedLengthBasedOnFieldMask(fieldMask: Int): Int {
         var expectedLength = SIZE_FIELD_MASK
-        
+
         val sizeMap = mapOf(
             MASK_SUSPEND to SIZE_SUSPEND,
             MASK_NORMAL_BOLUS to SIZE_NORMAL_BOLUS,
@@ -165,13 +163,13 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             MASK_UNUSED_AUTO_STATUS to SIZE_UNUSED_AUTO_STATUS,
             MASK_UNUSED_LEGACY to SIZE_UNUSED_LEGACY
         )
-    
+
         for ((mask, size) in sizeMap) {
             if (fieldMask and mask != 0) {
                 expectedLength += size
             }
         }
-    
+
         return expectedLength
     }
 
@@ -181,7 +179,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         aapsLogger.debug(LTag.PUMPCOMM, "Suspend time: ${medtrumPump.suspendTime}")
         return offset + SIZE_SUSPEND
     }
-    
+
     private fun handleNormalBolus(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Normal bolus notification received")
         val bolusData = data.copyOfRange(offset, offset + 1).toInt()
@@ -192,13 +190,13 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, bolusDelivered)
         return offset + SIZE_NORMAL_BOLUS
     }
-    
+
     private fun handleExtendedBolus(data: ByteArray, offset: Int): Int {
         aapsLogger.error(LTag.PUMPCOMM, "Extended bolus notification received, extended bolus not supported!")
         aapsLogger.debug(LTag.PUMPCOMM, "Extended bolus data: ${data.copyOfRange(offset, offset + SIZE_EXTENDED_BOLUS).toLong()}")
         return offset + SIZE_EXTENDED_BOLUS
     }
-    
+
     private fun handleBasal(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Basal notification received")
         val basalType = enumValues<BasalType>()[data.copyOfRange(offset, offset + 1).toInt()]
@@ -218,21 +216,21 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         }
         return offset + SIZE_BASAL
     }
-    
+
     private fun handleSetup(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Setup notification received")
         medtrumPump.primeProgress = data.copyOfRange(offset, offset + 1).toInt()
         aapsLogger.debug(LTag.PUMPCOMM, "Prime progress: ${medtrumPump.primeProgress}")
         return offset + SIZE_SETUP
     }
-    
+
     private fun handleReservoir(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Reservoir notification received")
         medtrumPump.reservoir = data.copyOfRange(offset, offset + 2).toInt() * 0.05
         aapsLogger.debug(LTag.PUMPCOMM, "Reservoir: ${medtrumPump.reservoir}")
         return offset + SIZE_RESERVOIR
     }
-    
+
     private fun handleStartTime(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Start time notification received")
         newPatchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
@@ -243,7 +241,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         aapsLogger.debug(LTag.PUMPCOMM, "Patch start time: $newPatchStartTime")
         return offset + SIZE_START_TIME
     }
-    
+
     private fun handleBattery(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Battery notification received")
         val parameter = data.copyOfRange(offset, offset + 3).toInt()
@@ -253,7 +251,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         aapsLogger.debug(LTag.PUMPCOMM, "Battery voltage A: ${medtrumPump.batteryVoltage_A}, battery voltage B: ${medtrumPump.batteryVoltage_B}")
         return offset + SIZE_BATTERY
     }
-    
+
     private fun handleStorage(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Storage notification received")
         val sequence = data.copyOfRange(offset, offset + 2).toInt()
@@ -272,7 +270,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         aapsLogger.debug(LTag.PUMPCOMM, "Last known sequence number: ${medtrumPump.currentSequenceNumber}, patch id: ${patchId}")
         return offset + SIZE_STORAGE
     }
-    
+
     private fun handleAlarm(data: ByteArray, offset: Int): Int {
         val alarmFlags = data.copyOfRange(offset, offset + 2).toInt()
         val alarmParameter = data.copyOfRange(offset + 2, offset + 4).toInt()
@@ -300,39 +298,39 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         }
         return offset + SIZE_ALARM
     }
-    
+
     private fun handleAge(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Age notification received")
         medtrumPump.patchAge = data.copyOfRange(offset, offset + 4).toLong()
         aapsLogger.debug(LTag.PUMPCOMM, "Patch age: ${medtrumPump.patchAge}")
         return offset + SIZE_AGE
     }
-    
+
     private fun handleUnknown1(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Magneto placement notification received!")
         val magnetoPlacement = data.copyOfRange(offset, offset + 2).toInt()
         aapsLogger.debug(LTag.PUMPCOMM, "Magneto placement: $magnetoPlacement")
         return offset + SIZE_MAGNETO_PLACE
     }
-    
+
     private fun handleUnusedCGM(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Unused CGM notification received, not handled!")
         aapsLogger.debug(LTag.PUMPCOMM, "Unused CGM data: ${data.copyOfRange(offset, offset + SIZE_UNUSED_CGM).toLong()}")
         return offset + SIZE_UNUSED_CGM
     }
-    
+
     private fun handleUnusedCommandConfirm(data: ByteArray, offset: Int): Int {
         aapsLogger.warn(LTag.PUMPCOMM, "Unused command confirm notification received, not handled!")
         aapsLogger.debug(LTag.PUMPCOMM, "Unused command confirm data: ${data.copyOfRange(offset, offset + SIZE_UNUSED_COMMAND_CONFIRM).toLong()}")
         return offset + SIZE_UNUSED_COMMAND_CONFIRM
     }
-    
+
     private fun handleUnusedAutoStatus(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Unused auto status notification received, not handled!")
         aapsLogger.debug(LTag.PUMPCOMM, "Unused auto status data: ${data.copyOfRange(offset, offset + SIZE_UNUSED_AUTO_STATUS).toLong()}")
         return offset + SIZE_UNUSED_AUTO_STATUS
     }
-    
+
     private fun handleUnusedLegacy(data: ByteArray, offset: Int): Int {
         aapsLogger.debug(LTag.PUMPCOMM, "Unused legacy notification received, not handled!")
         aapsLogger.debug(LTag.PUMPCOMM, "Unused legacy data: ${data.copyOfRange(offset, offset + SIZE_UNUSED_LEGACY).toLong()}")
