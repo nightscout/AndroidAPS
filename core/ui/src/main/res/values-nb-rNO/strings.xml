@@ -146,7 +146,7 @@
     <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
     <string name="overview_treatment_label">Behandling</string>
     <string name="copytolocalprofile">Opprett ny profil fra denne profilen?</string>
-    <string name="wear_wizard_settings">Innstillinger for boluskalkulator</string>
+    <string name="wear_wizard_settings">Kalkulatorinnstillinger</string>
     <string name="bg_trend_label">15 min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="bolus_iob_label">Bolus IOB</string>
