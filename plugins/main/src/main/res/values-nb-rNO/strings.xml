@@ -225,7 +225,7 @@
     <string name="secondcarbsincrement">Andre økning knapp for karbohydrater</string>
     <string name="thirdcarbsincrement">Tredje økning knapp for karbohydrater</string>
     <string name="cgm">CGM</string>
-    <string name="default_temptargets">Standard midlertidig BS-mål</string>
+    <string name="default_temptargets">Standard midlertidig mål</string>
     <string name="eatingsoon_duration">Spise snart varighet (min)</string>
     <string name="eatingsoon_target">Spise snart målverdi</string>
     <string name="activity_duration">Aktivitet varighet (min)</string>
