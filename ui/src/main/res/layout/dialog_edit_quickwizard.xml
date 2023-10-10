@@ -105,49 +105,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/device_label"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="7dp"
-                android:gravity="center"
-                android:text="@string/overview_edit_quickwizard_show_on_device"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
-
-            <RadioGroup
-                android:id="@+id/device"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="@string/device_all" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/device_phone" />
-
-                <RadioButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/device_watch" />
-
-            </RadioGroup>
-
-        </LinearLayout>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

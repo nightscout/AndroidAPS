@@ -53,9 +53,6 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         const val NO = 1
         private const val POSITIVE_ONLY = 2
         private const val NEGATIVE_ONLY = 3
-        const val DEVICE_ALL = 0
-        const val DEVICE_PHONE = 1
-        const val DEVICE_WATCH = 2
         const val DEFAULT = 0
         const val CUSTOM = 1
     }
@@ -69,7 +66,6 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
                 "carbs": 0,
                 "validFrom": 0,
                 "validTo": 86340,
-                "device": "all",
                 "usePercentage": "default",
                 "percentage": 100
             }""".trimMargin()
@@ -106,7 +102,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         return this
     }
 
-    fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
+    fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo()
 
     fun doCalc(profile: Profile, profileName: String, lastBG: InMemoryGlucoseValue): BolusWizard {
         val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
@@ -175,10 +171,6 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     }
 
     fun guid(): String = safeGetString(storage, "guid", "")
-
-    fun device(): Int = safeGetInt(storage, "device", DEVICE_ALL)
-
-    fun forDevice(device: Int) = device() == device || device() == DEVICE_ALL
 
     fun buttonText(): String = safeGetString(storage, "buttonText", "")
 

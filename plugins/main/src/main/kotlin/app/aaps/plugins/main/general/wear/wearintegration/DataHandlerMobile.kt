@@ -761,7 +761,7 @@ class DataHandlerMobile @Inject constructor(
         rxBus.send(
             EventMobileToWear(
                 EventData.QuickWizard(
-                    ArrayList(quickWizard.list().filter { it.forDevice(QuickWizardEntry.DEVICE_WATCH) }.map { it.toWear() })
+                    ArrayList(quickWizard.list().map { it.toWear() })
                 )
             )
         )
