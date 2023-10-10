@@ -73,7 +73,7 @@
     <string name="medtronic_cmd_desc_set_basal_profile">Angi basal profil</string>
     <string name="medtronic_cmd_desc_get_tbr">Henter Temp Basal</string>
     <string name="medtronic_cmd_desc_set_tbr">Angi Temp Basal</string>
-    <string name="medtronic_cmd_desc_cancel_tbr">Avbryt temp basal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Avbryt midlertidig basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Angi Bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Oppdater status insulinvolum</string>
     <string name="medtronic_pump_status_pump_unreachable">Pumpe utilgjengelig</string>

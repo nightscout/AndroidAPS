@@ -9,7 +9,7 @@
     <string name="objectives_0_gate">Kontroller at BS er tilgjengelig i Nightscout og at insulindata fra pumpen lastes opp</string>
     <string name="objectives_0_learned">Du har gjort et grunnleggende oppsett av AAPS økosystem. Nightscout (NS) er ikke nødvendig for at AAPS skal kunne kjøres, men det er svært nyttig for å lage rapporter eller gi innsyn i dine data. Det er ikke nødvendig å være tilkoblet NS hele tiden hvis du bruker NS kun for deg selv. Du kan lage innstillinger for å laste opp dine data til NS når du er tilkoblet hjemme wifi og spare batteri.</string>
     <string name="objectives_openloop_objective">Starter med åpen loop</string>
-    <string name="objectives_openloop_gate">Kjør i \"Åpen Loop\" modus i noen dager og aktiver flere temp basaler. Konfigurer og aktiver flere midlertidige og default temp BS mål (f.eks. for Aktivitet eller Hypo behandling)</string>
+    <string name="objectives_openloop_gate">Kjør i \"Åpen Loop\"-modus i noen dager og aktiver flere midlertidige basaler. Konfigurer og aktiver flere midlertidige mål og standard midlertidige mål (f.eks. for Aktivitet og Hypo)</string>
     <string name="objectives_openloop_learned">Åpen loop kan brukes til anbefalinger hvis du ikke har en kompatibel pumpe eller hvis du ikke er klar til å kjøre i lukket loop.</string>
     <string name="objectives_maxbasal_objective">Forstå din åpen loop, inkludert den temp basal anbefalingen</string>
     <string name="objectives_maxbasal_gate">Ut ifra hva du har erfart og lært, avgjør hva din max basal skal være og still den inn i både pumpen og AAPS innstillinger</string>
@@ -42,7 +42,7 @@
     <string name="objectives_useprofileswitch">Angi profil 90% for 10 min (langt-trykk på profilnavn i Oversikt)</string>
     <string name="objectives_usedisconnectpump">Simuler dusjing. Frakoble pumpen i 1t (langt trykk på Åpen Loop)</string>
     <string name="objectives_usereconnectpump">... og koble til igjen på samme måte</string>
-    <string name="objectives_usetemptarget">Opprett egendefinerte midlertidige BS mål med 10 min varighet (langt-trykk på gjeldende mål)</string>
+    <string name="objectives_usetemptarget">Opprett egendefinerte midlertidige mål med 10 min varighet (langt-trykk på gjeldende mål)</string>
     <string name="objectives_useactions">I Konfigurasjonsverktøyet aktiverer du Hendelser plugin, og gjør det synlig og viser innholdet fra menyen i øverste linje</string>
     <string name="objectives_useloop">Vis innholdet i Loop plugin</string>
     <string name="objectives_usescale">Test skaleringsfunksjonen ved et langt trykk på BS grafen</string>

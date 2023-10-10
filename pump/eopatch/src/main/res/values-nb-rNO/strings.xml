@@ -86,7 +86,7 @@
     <string name="patch_communication_check_status_1">Kontrollerer Patch kommunikasjon…</string>
     <string name="patch_communication_check_helper_1">Flytt smartenheten din nærmere Patch.</string>
     <string name="patch_communication_check_helper_2">Gå til en annen lokasjon og prøv på nytt.</string>
-    <string name="patch_communication_failed">Kommunikasjons feil</string>
+    <string name="patch_communication_failed">Kommunikasjonsfeil</string>
     <string name="patch_communication_succeed">Kommunikasjon vellykket</string>
     <string name="patch_communication_succeed_message">Sammenkoblet med Patch.</string>
     <string name="patch_cancel_pairing">Avbryt paringen</string>
