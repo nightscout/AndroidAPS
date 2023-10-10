@@ -174,8 +174,11 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
 
     private fun removeSelected(selectedItems: SparseArray<QuickWizardEntry>) {
         OKDialog.showConfirmation(this, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            //fix for bug with removal of QuickWizardEntries. Everytime and item is deleted you have to shift the position of to-be-deleted QW to left
+            var shiftPostionToLeftFor = 0
             selectedItems.forEach { _, item ->
-                quickWizard.remove(item.position)
+                quickWizard.remove(item.position - shiftPostionToLeftFor)
+                shiftPostionToLeftFor++
                 rxBus.send(EventQuickWizardChange())
             }
             actionHelper.finish()
