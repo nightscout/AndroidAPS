@@ -9,11 +9,12 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputTempTarget
 import io.reactivex.rxjava3.core.Single
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionStartTempTargetTest : ActionsTestBase() {
 
@@ -27,18 +28,18 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(R.string.starttemptarget, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(R.string.starttemptarget)
     }
 
     @Test fun shortDescriptionTest() {
         sut.value = InputTempTarget(profileFunction)
         sut.value.value = 100.0
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assertions.assertEquals("Start temp target: 100mg/dl@null(Automation)", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Start temp target: 100mg/dl@null(Automation)")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(app.aaps.core.main.R.drawable.ic_temptarget_high, sut.icon())
+        assertThat(sut.icon()).isEqualTo(app.aaps.core.main.R.drawable.ic_temptarget_high)
     }
 
     @Test fun doActionTest() {
@@ -78,27 +79,27 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
+                assertThat(result.success).isTrue()
             }
         })
         Mockito.verify(repository, Mockito.times(1)).runTransactionForResult(anyObject<Transaction<InsertAndCancelCurrentTemporaryTargetTransaction.TransactionResult>>())
     }
 
     @Test fun hasDialogTest() {
-        Assertions.assertTrue(sut.hasDialog())
+        assertThat(sut.hasDialog()).isTrue()
     }
 
     @Test fun toJSONTest() {
         sut.value = InputTempTarget(profileFunction)
         sut.value.value = 100.0
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assertions.assertEquals("{\"data\":{\"durationInMinutes\":30,\"units\":\"mg/dl\",\"value\":100},\"type\":\"ActionStartTempTarget\"}", sut.toJSON())
+        JSONAssert.assertEquals("""{"data":{"durationInMinutes":30,"units":"mg/dl","value":100},"type":"ActionStartTempTarget"}""", sut.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {
-        sut.fromJSON("{\"value\":100,\"durationInMinutes\":30,\"units\":\"mg/dl\"}")
-        Assertions.assertEquals(GlucoseUnit.MGDL, sut.value.units)
-        Assertions.assertEquals(100.0, sut.value.value, 0.001)
-        Assertions.assertEquals(30.0, sut.duration.getMinutes().toDouble(), 0.001)
+        sut.fromJSON("""{"value":100,"durationInMinutes":30,"units":"mg/dl"}""")
+        assertThat(sut.value.units).isEqualTo(GlucoseUnit.MGDL)
+        assertThat(sut.value.value).isWithin(0.001).of(100.0)
+        assertThat(sut.duration.getMinutes().toDouble()).isWithin(0.001).of(30.0)
     }
 }

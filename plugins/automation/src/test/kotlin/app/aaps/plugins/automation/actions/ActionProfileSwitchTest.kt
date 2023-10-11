@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.actions
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputProfileName
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyLong
@@ -11,12 +11,13 @@ import org.mockito.Mockito
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
+
+private const val STRING_JSON = """{"data":{"profileToSwitchTo":"Test"},"type":"ActionProfileSwitch"}"""
 
 class ActionProfileSwitchTest : ActionsTestBase() {
 
     private lateinit var sut: ActionProfileSwitch
-
-    private val stringJson = "{\"data\":{\"profileToSwitchTo\":\"Test\"},\"type\":\"ActionProfileSwitch\"}"
 
     @BeforeEach fun setUp() {
         `when`(rh.gs(R.string.profilename)).thenReturn("Change profile to")
@@ -30,11 +31,11 @@ class ActionProfileSwitchTest : ActionsTestBase() {
     }
 
     @Test fun friendlyName() {
-        Assertions.assertEquals(R.string.profilename, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(R.string.profilename)
     }
 
     @Test fun shortDescriptionTest() {
-        Assertions.assertEquals("Change profile to ", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Change profile to ")
     }
 
     @Test fun doAction() {
@@ -43,7 +44,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         sut.inputProfileName = InputProfileName(rh, activePlugin, "")
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertFalse(result.success)
+                assertThat(result.success).isFalse()
             }
         })
 
@@ -52,7 +53,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         sut.inputProfileName = InputProfileName(rh, activePlugin, "someProfile")
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertFalse(result.success)
+                assertThat(result.success).isFalse()
             }
         })
 
@@ -62,8 +63,8 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         sut.inputProfileName = InputProfileName(rh, activePlugin, "Test")
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
-                Assertions.assertEquals("Already set", result.comment)
+                assertThat(result.success).isTrue()
+                assertThat(result.comment).isEqualTo("Already set")
             }
         })
 
@@ -72,8 +73,8 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         sut.inputProfileName = InputProfileName(rh, activePlugin, "Test")
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertFalse(result.success)
-                Assertions.assertEquals("not exists", result.comment)
+                assertThat(result.success).isFalse()
+                assertThat(result.comment).isEqualTo("not exists")
             }
         })
 
@@ -83,29 +84,28 @@ class ActionProfileSwitchTest : ActionsTestBase() {
         sut.inputProfileName = InputProfileName(rh, activePlugin, TESTPROFILENAME)
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
-                Assertions.assertEquals("OK", result.comment)
+                assertThat(result.success).isTrue()
+                assertThat(result.comment).isEqualTo("OK")
             }
         })
         Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())
     }
 
     @Test fun hasDialogTest() {
-        Assertions.assertTrue(sut.hasDialog())
+        assertThat(sut.hasDialog()).isTrue()
     }
 
     @Test fun toJSONTest() {
         sut.inputProfileName = InputProfileName(rh, activePlugin, "Test")
-        Assertions.assertEquals(stringJson, sut.toJSON())
+        JSONAssert.assertEquals(STRING_JSON, sut.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {
-        val data = "{\"profileToSwitchTo\":\"Test\"}"
-        sut.fromJSON(data)
-        Assertions.assertEquals("Test", sut.inputProfileName.value)
+        sut.fromJSON("""{"profileToSwitchTo":"Test"}""")
+        assertThat(sut.inputProfileName.value).isEqualTo("Test")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.drawable.ic_actions_profileswitch, sut.icon())
+        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch)
     }
 }

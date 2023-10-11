@@ -1,44 +1,44 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class AlarmStatusResponseTest {
 
-    @Test @Throws(DecoderException::class) fun testValidResponse() {
+    @Test fun testValidResponse() {
         val encoded = Hex.decodeHex("021602080100000501BD00000003FF01950000000000670A")
         val response = AlarmStatusResponse(encoded)
 
-        Assertions.assertArrayEquals(encoded, response.encoded)
-        Assertions.assertNotSame(encoded, response.encoded)
-        Assertions.assertEquals(ResponseType.ADDITIONAL_STATUS_RESPONSE, response.responseType)
-        Assertions.assertEquals(ResponseType.ADDITIONAL_STATUS_RESPONSE.value, response.messageType)
-        Assertions.assertEquals(ResponseType.StatusResponseType.ALARM_STATUS, response.statusResponseType)
-        Assertions.assertEquals(ResponseType.StatusResponseType.ALARM_STATUS.value, response.additionalStatusResponseType)
-        Assertions.assertEquals(PodStatus.RUNNING_ABOVE_MIN_VOLUME, response.podStatus)
-        Assertions.assertEquals(DeliveryStatus.BASAL_ACTIVE, response.deliveryStatus)
-        Assertions.assertEquals(0.toShort(), response.bolusPulsesRemaining)
-        Assertions.assertEquals(5.toShort(), response.sequenceNumberOfLastProgrammingCommand)
-        Assertions.assertEquals(445.toShort(), response.totalPulsesDelivered)
-        Assertions.assertEquals(AlarmType.NONE, response.alarmType)
-        Assertions.assertEquals(0.toShort(), response.alarmTime)
-        Assertions.assertEquals(1023.toShort(), response.reservoirPulsesRemaining)
-        Assertions.assertEquals(405.toShort(), response.minutesSinceActivation)
-        Assertions.assertEquals(0, response.activeAlerts.size)
-        Assertions.assertFalse(response.occlusionAlarm)
-        Assertions.assertFalse(response.pulseInfoInvalid)
-        Assertions.assertEquals(PodStatus.UNINITIALIZED, response.podStatusWhenAlarmOccurred)
-        Assertions.assertFalse(response.immediateBolusWhenAlarmOccurred)
-        Assertions.assertEquals(0x00.toByte(), response.occlusionType)
-        Assertions.assertFalse(response.occurredWhenFetchingImmediateBolusActiveInformation)
-        Assertions.assertEquals(0.toShort(), response.rssi)
-        Assertions.assertEquals(0.toShort(), response.receiverLowerGain)
-        Assertions.assertEquals(PodStatus.UNINITIALIZED, response.podStatusWhenAlarmOccurred2)
-        Assertions.assertEquals(26378.toShort(), response.returnAddressOfPodAlarmHandlerCaller)
+        assertThat(response.encoded).asList().containsExactlyElementsIn(encoded.asList()).inOrder()
+        assertThat(response.encoded).isNotSameInstanceAs(encoded)
+        assertThat(response.responseType).isEqualTo(ResponseType.ADDITIONAL_STATUS_RESPONSE)
+        assertThat(response.messageType).isEqualTo(ResponseType.ADDITIONAL_STATUS_RESPONSE.value)
+        assertThat(response.statusResponseType).isEqualTo(ResponseType.StatusResponseType.ALARM_STATUS)
+        assertThat(response.additionalStatusResponseType).isEqualTo(ResponseType.StatusResponseType.ALARM_STATUS.value)
+        assertThat(response.podStatus).isEqualTo(PodStatus.RUNNING_ABOVE_MIN_VOLUME)
+        assertThat(response.deliveryStatus).isEqualTo(DeliveryStatus.BASAL_ACTIVE)
+        assertThat(response.bolusPulsesRemaining).isEqualTo(0.toShort())
+        assertThat(response.sequenceNumberOfLastProgrammingCommand).isEqualTo(5.toShort())
+        assertThat(response.totalPulsesDelivered).isEqualTo(445.toShort())
+        assertThat(response.alarmType).isEqualTo(AlarmType.NONE)
+        assertThat(response.alarmTime).isEqualTo(0.toShort())
+        assertThat(response.reservoirPulsesRemaining).isEqualTo(1023.toShort())
+        assertThat(response.minutesSinceActivation).isEqualTo(405.toShort())
+        assertThat(response.activeAlerts.size).isEqualTo(0)
+        assertThat(response.occlusionAlarm).isFalse()
+        assertThat(response.pulseInfoInvalid).isFalse()
+        assertThat(response.podStatusWhenAlarmOccurred).isEqualTo(PodStatus.UNINITIALIZED)
+        assertThat(response.immediateBolusWhenAlarmOccurred).isFalse()
+        assertThat(response.occlusionType).isEqualTo(0x00.toByte())
+        assertThat(response.occurredWhenFetchingImmediateBolusActiveInformation).isFalse()
+        assertThat(response.rssi).isEqualTo(0.toShort())
+        assertThat(response.receiverLowerGain).isEqualTo(0.toShort())
+        assertThat(response.podStatusWhenAlarmOccurred2).isEqualTo(PodStatus.UNINITIALIZED)
+        assertThat(response.returnAddressOfPodAlarmHandlerCaller).isEqualTo(26378.toShort())
     }
 }

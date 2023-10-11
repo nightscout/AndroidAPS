@@ -3,7 +3,7 @@
     <string name="resetpairing">Slett sammenkobling</string>
     <string name="diaconn_no_device_available">Ingen enheter er tilgjengelige</string>
     <string name="diaconn_pairing">Diaconn pumpe sammenkobling</string>
-    <string name="pumperror">Pumpe feil</string>
+    <string name="pumperror">Pumpefeil</string>
     <string name="diaconn_g8_history_alarm">Alarmer</string>
     <string name="diaconn_g8_history_basalhours">Basal timer</string>
     <string name="diaconn_g8_history_bolus">Boluser</string>
@@ -33,7 +33,7 @@
     <string name="diaconn_g8_pump">Diaconn G8</string>
     <string name="diaconn_g8_pump_shortname">Diaconn G8</string>
     <string name="maxbolusviolation">Max bolus nådd</string>
-    <string name="commanderror">Kommando feil</string>
+    <string name="commanderror">Kommandofeil</string>
     <string name="speederror">Hastighetsfeil</string>
     <string name="insulinlimitviolation">Insulingrense nådd</string>
     <string name="boluserrorcode">Forespurt: %1$.2fE Levert: %2$.2fE Feilkode: %3$s</string>

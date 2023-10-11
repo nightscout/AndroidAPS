@@ -54,7 +54,7 @@
     <string name="pref_show_basal_rate">Vis basalrate</string>
     <string name="pref_show_loop_status">Vis loop status</string>
     <string name="pref_show_bg">Vis BS</string>
-    <string name="pref_show_bgi">Vis BS</string>
+    <string name="pref_show_bgi">Vis BGI</string>
     <string name="pref_show_direction_arrow">Vis retningspil</string>
     <string name="pref_show_ago">Vis tid siden</string>
     <string name="pref_show_week_number">Vis ukenummer</string>

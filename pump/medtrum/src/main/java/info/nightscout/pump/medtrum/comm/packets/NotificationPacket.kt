@@ -200,7 +200,11 @@ class NotificationPacket(val injector: HasAndroidInjector) {
                     val alarmState = AlarmState.values()[i]
                     if ((alarmFlags shr i) and 1 != 0) {
                         // If the alarm bit is set, add the corresponding alarm to activeAlarms
-                        medtrumPump.addAlarm(alarmState)
+                        if (!medtrumPump.activeAlarms.contains(alarmState)) {
+                            aapsLogger.debug(LTag.PUMPCOMM, "Adding alarm $alarmState to active alarms")
+                            medtrumPump.addAlarm(alarmState)
+                            medtrumPump.pumpWarning = alarmState
+                        }
                     } else if (medtrumPump.activeAlarms.contains(alarmState)) {
                         // If the alarm bit is not set, and the corresponding alarm is in activeAlarms, remove it
                         medtrumPump.removeAlarm(alarmState)

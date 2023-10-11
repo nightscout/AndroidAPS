@@ -39,6 +39,8 @@
     <string name="alarm_low_bg_suspended">Приостановка на низкой ГК</string>
     <string name="alarm_low_bg_suspended2">Приостановка на низкой ГК 2</string>
     <string name="alarm_auto_suspended">Автоматическая приостановка</string>
+    <string name="alarm_hourly_max_suspended">почасовой максимальный приостановлен</string>
+    <string name="alarm_daily_max_suspended">суточный максимальный приостановлен</string>
     <string name="alarm_suspended">Приостановлено</string>
     <string name="alarm_paused">На паузе</string>
     <string name="alarm_occlusion">Окклюзия</string>
@@ -68,6 +70,7 @@
     <string name="step_retry_activation">Выполняется активация</string>
     <string name="unexpected_state">Непредвиденное состояние: %1$s</string>
     <string name="no_profile_selected">Профиль не выбран. Выберите профиль и повторите попытку.</string>
+    <string name="no_sn_in_settings">Серийный номер не известен. Введите серийный номер помпы в настройках и повторите попытку.</string>
     <string name="base_serial">Серийный номер основания: %1$X</string>
     <string name="patch_begin_activation">Активный патч отсутствует. Нажмите <b>Далее</b> для начала процесса активации.</string>
     <string name="patch_not_active_note">Не соединяйте основание и патч до следующего шага!</string>

@@ -190,20 +190,20 @@
     <string name="ic_different">IK vil være forskjellig hvis du regner en skive brød som 10g eller 12g.</string>
     <string name="ic_meaning">IK faktor betyr: Hvor mange brødenheter som dekkes av 1E insulin?</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
-    <string name="profileswitch_label">Profil bytte</string>
+    <string name="profileswitch_label">Profilbytte</string>
     <string name="profileswitch_pctwillchange">Når du spesifiserer et profilbytte på 90%, hvilke svar er korrekte?</string>
     <string name="profileswitch_basallower">Basaldoser vil være 10% lavere.</string>
     <string name="profileswitch_isfhigher">ISF verdien vil være 10% høyere.</string>
     <string name="profileswitch_iclower">Verdien av KH ratio vil være 10 % lavere.</string>
     <string name="profileswitch_unchanged">ISF og KH ratio er uendret.</string>
     <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/en/latest/Usage/Profiles.html#profile-switch</string>
-    <string name="profileswitch2_label">Profil bytte</string>
+    <string name="profileswitch2_label">Profilbytte</string>
     <string name="profileswitch2_pctwillchange">Når du spesifiserer et profilbytte på 120%, hvilke svar er korrekte?</string>
     <string name="profileswitch2_bghigher">Blodsukkermålet vil være 20% høyere.</string>
     <string name="profileswitch2_basalhigher">Basaldoser vil være 20% høyere.</string>
     <string name="profileswitch2_bgunchanged">Blodsukkermålet vil være uforandret.</string>
     <string name="profileswitch2_isfhigher">ISF vil være 20% høyere.</string>
-    <string name="profileswitchtime_label">Profil bytte</string>
+    <string name="profileswitchtime_label">Profilbytte</string>
     <string name="profileswitchtime_iwant">Hvis du står opp 2 timer tidligere enn vanlig, hvordan forteller du AndroidAPS om endringen i døgnrytmen din?</string>
     <string name="profileswitchtime_2">Gjør et profilbytte med en tidsforskyvning på 2</string>
     <string name="profileswitchtime__2">Gjør et profilbytte med en tidsforskyvning på -2</string>

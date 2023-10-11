@@ -1,10 +1,10 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SubscribePacketTest : MedtrumTestBase() {
@@ -28,8 +28,7 @@ class SubscribePacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        val expectedByteArray = byteArrayOf(opCode.toByte()) + 4095.toByteArray(2)
-        Assertions.assertEquals(3, result.size)
-        Assertions.assertEquals(expectedByteArray.contentToString(), result.contentToString())
+        val expected = byteArrayOf(opCode.toByte()) + 4095.toByteArray(2)
+        assertThat(result).asList().containsExactlyElementsIn(expected.toList()).inOrder()
     }
 }

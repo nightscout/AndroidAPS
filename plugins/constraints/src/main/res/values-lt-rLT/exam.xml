@@ -148,6 +148,7 @@
     <string name="cob3_longer">Nustačius 150% profilį, sistemos apskaičiuotas angliavandenių įsisavinimo laikas pailgėja</string>
     <string name="cob3_shorter">Nustačius 150% profilį, sistemos apskaičiuotas angliavandenių įsisavinimo laikas sutrumpėja</string>
     <string name="cob3_no_effect">Nustačius 150% profilį, sistemos apskaičiuotas angliavandenių įsisavinimo laikas nepakinta</string>
+    <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">AIO keičia nustatyta laikina valandinė bazė.</string>
     <string name="iob_hightemp">Padidinta laikina bazė nebus nustatyta, jei glikemija yra žemiau numatyto tikslo.</string>
     <string name="iob_negiob">Jei ilgą laiką stebima neigiama AIO reikšmė ir nėra fizinio aktyvumo, tai rodo, kad Jūsų nustatymai yra per „agresyvūs“ ir Jums reikia mažiau insulino.</string>

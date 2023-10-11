@@ -8,13 +8,11 @@
     <string name="label_watchface_no_chart">AAPS (ingen graf)</string>
     <string name="label_watchface_circle">AAPS (sirkel)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
     <string name="label_watchface_custom">AAPS(Tilpasset)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
+    <string name="label_quick_wizard_tile">AAPS(Hurtigknapp)</string>
     <string name="label_warning_sync">Ingen data!</string>
     <string name="label_warning_old">Gamle data!</string>
     <string name="label_warning_since">Siden %1$s</string>
@@ -62,7 +60,6 @@
     <string name="pref_quick_righty">Raskt høyre</string>
     <string name="pref_quick_lefty">Raskt venstre</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_delta_granularity">Deltagranularitet (Steampunk)</string>
     <string name="pref_low">Lav</string>
     <string name="pref_medium">Middels</string>
     <string name="pref_high">Høy</string>
@@ -80,7 +77,7 @@
     <string name="pref_version">Versjon:</string>
     <string name="pref_moreWatchfaceSettings">Flere innstillinger for urskive</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Vennligst sjekk urskiveinnstillinger.</string>
-    <string name="menu_tempt">MidlMål</string>
+    <string name="menu_tempt">Midl. mål</string>
     <string name="menu_wizard">Kalkulator</string>
     <string name="menu_wizard_short">Kalk</string>
     <string name="menu_treatment">Behandling</string>
@@ -98,7 +95,7 @@
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Varighet</string>
     <string name="action_tempt_confirmation">Midl. mål forespurt</string>
-    <string name="action_quick_wizard_confirmation">Quick Wizard forespurt</string>
+    <string name="action_quick_wizard_confirmation">Hurtigknapp forespurt</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>
     <string name="action_wizard_confirmation">Beregning forespurt</string>
@@ -174,7 +171,7 @@
     <string name="simple_ui_charging">Under lading</string>
     <string name="simple_ui_always_on">Alltid På modus</string>
     <string name="simple_ui_always_on_charging">Alltid på under lading</string>
-    <string name="temp_target_eating_soon">Spising</string>
+    <string name="temp_target_eating_soon">Spise snart</string>
     <string name="temp_target_hypo">Hypo</string>
     <string name="temp_target_activity">Aktivitet</string>
     <string name="temp_target_manual">Manuell</string>
@@ -185,8 +182,6 @@
     <string name="wear_control_no_data">Ingen data tilgjengelig</string>
     <string name="increment">økning</string>
     <string name="decrement">reduksjon</string>
-    <string name="first_char_high">H</string>
-    <string name="first_char_low">L</string>
     <string name="abbreviation_average">snitt</string>
     <string name="no_iob_u">--E</string>
     <string name="no_cob_g">--g</string>

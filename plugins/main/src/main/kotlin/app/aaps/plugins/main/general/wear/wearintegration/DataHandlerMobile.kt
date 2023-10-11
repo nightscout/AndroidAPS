@@ -495,11 +495,12 @@ class DataHandlerMobile @Inject constructor(
         val message = rh.gs(R.string.quick_wizard_message, quickWizardEntry.buttonText(), wizard.calculatedTotalInsulin, quickWizardEntry.carbs()) +
             "\n_____________\n" + wizard.explainShort()
 
+        lastBolusWizard = wizard
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
                     rh.gs(app.aaps.core.ui.R.string.confirm).uppercase(), message,
-                    returnCommand = EventData.ActionBolusConfirmed(insulinAfterConstraints, carbsAfterConstraints)
+                    returnCommand = EventData.ActionWizardConfirmed(wizard.timeStamp)
                 )
             )
         )

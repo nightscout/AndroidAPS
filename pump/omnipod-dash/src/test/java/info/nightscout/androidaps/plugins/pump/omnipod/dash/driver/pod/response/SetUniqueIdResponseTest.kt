@@ -1,39 +1,39 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SetUniqueIdResponseTest {
 
-    @Test @Throws(DecoderException::class) fun testValidResponse() {
+    @Test fun testValidResponse() {
         val encoded = Hex.decodeHex("011B13881008340A50040A00010300040308146CC1000954D402420001")
         val response = SetUniqueIdResponse(encoded)
 
-        Assertions.assertArrayEquals(encoded, response.encoded)
-        Assertions.assertNotSame(encoded, response.encoded)
-        Assertions.assertEquals(ResponseType.ACTIVATION_RESPONSE, response.responseType)
-        Assertions.assertEquals(ResponseType.ActivationResponseType.SET_UNIQUE_ID_RESPONSE, response.activationResponseType)
-        Assertions.assertEquals(ResponseType.ACTIVATION_RESPONSE.value, response.messageType)
-        Assertions.assertEquals(27.toShort(), response.messageLength)
-        Assertions.assertEquals(5000.toShort(), response.pulseVolumeInTenThousandthMicroLiter)
-        Assertions.assertEquals(16.toShort(), response.pumpRate)
-        Assertions.assertEquals(8.toShort(), response.primePumpRate)
-        Assertions.assertEquals(52.toShort(), response.numberOfEngagingClutchDrivePulses)
-        Assertions.assertEquals(10.toShort(), response.numberOfPrimePulses)
-        Assertions.assertEquals(80.toShort(), response.podExpirationTimeInHours)
-        Assertions.assertEquals(4.toShort(), response.firmwareVersionMajor)
-        Assertions.assertEquals(10.toShort(), response.firmwareVersionMinor)
-        Assertions.assertEquals(0.toShort(), response.firmwareVersionInterim)
-        Assertions.assertEquals(1.toShort(), response.bleVersionMajor)
-        Assertions.assertEquals(3.toShort(), response.bleVersionMinor)
-        Assertions.assertEquals(0.toShort(), response.bleVersionInterim)
-        Assertions.assertEquals(4.toShort(), response.productId)
-        Assertions.assertEquals(PodStatus.UID_SET, response.podStatus)
-        Assertions.assertEquals(135556289L, response.lotNumber)
-        Assertions.assertEquals(611540L, response.podSequenceNumber)
-        Assertions.assertEquals(37879809L, response.uniqueIdReceivedInCommand)
+        assertThat(response.encoded).asList().containsExactlyElementsIn(encoded.asList()).inOrder()
+        assertThat(response.encoded).isNotSameInstanceAs(encoded)
+        assertThat(response.responseType).isEqualTo(ResponseType.ACTIVATION_RESPONSE)
+        assertThat(response.activationResponseType).isEqualTo(ResponseType.ActivationResponseType.SET_UNIQUE_ID_RESPONSE)
+        assertThat(response.messageType).isEqualTo(ResponseType.ACTIVATION_RESPONSE.value)
+        assertThat(response.messageLength).isEqualTo(27.toShort())
+        assertThat(response.pulseVolumeInTenThousandthMicroLiter).isEqualTo(5000.toShort())
+        assertThat(response.pumpRate).isEqualTo(16.toShort())
+        assertThat(response.primePumpRate).isEqualTo(8.toShort())
+        assertThat(response.numberOfEngagingClutchDrivePulses).isEqualTo(52.toShort())
+        assertThat(response.numberOfPrimePulses).isEqualTo(10.toShort())
+        assertThat(response.podExpirationTimeInHours).isEqualTo(80.toShort())
+        assertThat(response.firmwareVersionMajor).isEqualTo(4.toShort())
+        assertThat(response.firmwareVersionMinor).isEqualTo(10.toShort())
+        assertThat(response.firmwareVersionInterim).isEqualTo(0.toShort())
+        assertThat(response.bleVersionMajor).isEqualTo(1.toShort())
+        assertThat(response.bleVersionMinor).isEqualTo(3.toShort())
+        assertThat(response.bleVersionInterim).isEqualTo(0.toShort())
+        assertThat(response.productId).isEqualTo(4.toShort())
+        assertThat(response.podStatus).isEqualTo(PodStatus.UID_SET)
+        assertThat(response.lotNumber).isEqualTo(135556289L)
+        assertThat(response.podSequenceNumber).isEqualTo(611540L)
+        assertThat(response.uniqueIdReceivedInCommand).isEqualTo(37879809L)
     }
 }

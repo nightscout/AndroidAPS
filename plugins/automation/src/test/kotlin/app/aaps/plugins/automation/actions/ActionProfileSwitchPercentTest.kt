@@ -4,11 +4,12 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputDuration
 import app.aaps.plugins.automation.elements.InputPercent
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionProfileSwitchPercentTest : ActionsTestBase() {
 
@@ -24,17 +25,17 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(R.string.profilepercentage, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(R.string.profilepercentage)
     }
 
     @Test fun shortDescriptionTest() {
         sut.pct = InputPercent(100.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assertions.assertEquals("Start profile 100% for 30 min", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Start profile 100% for 30 min")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.drawable.ic_actions_profileswitch, sut.icon())
+        assertThat(sut.icon()).isEqualTo(app.aaps.core.ui.R.drawable.ic_actions_profileswitch)
     }
 
     @Test fun doActionTest() {
@@ -43,25 +44,25 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
+                assertThat(result.success).isTrue()
             }
         })
         Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(30, 110, 0)
     }
 
     @Test fun hasDialogTest() {
-        Assertions.assertTrue(sut.hasDialog())
+        assertThat(sut.hasDialog()).isTrue()
     }
 
     @Test fun toJSONTest() {
         sut.pct = InputPercent(100.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assertions.assertEquals("{\"data\":{\"percentage\":100,\"durationInMinutes\":30},\"type\":\"ActionProfileSwitchPercent\"}", sut.toJSON())
+        JSONAssert.assertEquals("""{"data":{"percentage":100,"durationInMinutes":30},"type":"ActionProfileSwitchPercent"}""", sut.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {
-        sut.fromJSON("{\"percentage\":100,\"durationInMinutes\":30}")
-        Assertions.assertEquals(100.0, sut.pct.value, 0.001)
-        Assertions.assertEquals(30.0, sut.duration.getMinutes().toDouble(), 0.001)
+        sut.fromJSON("""{"percentage":100,"durationInMinutes":30}""")
+        assertThat(sut.pct.value).isWithin(0.001).of(100.0)
+        assertThat(sut.duration.getMinutes().toDouble()).isWithin(0.001).of(30.0)
     }
 }

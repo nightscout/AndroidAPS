@@ -9,7 +9,7 @@
     <string name="delta">Delta</string>
     <string name="profile_label">Profil</string>
     <string name="save">Lagre</string>
-    <string name="reloadprofile">Les inn profil på nytt</string>
+    <string name="reloadprofile">Last inn profil på nytt</string>
     <string name="correctionbous">Korreksjon</string>
     <string name="ns_upload_only">(FARLIG Å DEAKTIVERE) Kun NS opplasting</string>
     <string name="ns_upload_only_summary">Kun NS opplasting (deaktivert sync). Ikke effektiv på SGV med mindre en lokal kilde som xDrip+ er valgt. Ikke effektiv på Profiler mens NS-Profiler brukes.\n!!! ADVARSEL !!! Deaktivering av dette alternativet kan føre til funksjonsfeil og overdosering av insulin hvis noen av dine komponenter (AAPS, NS, xDrip+) er feil konfigurert. Observer at data som vises i AAPS samsvarer med pumpestatus!</string>
