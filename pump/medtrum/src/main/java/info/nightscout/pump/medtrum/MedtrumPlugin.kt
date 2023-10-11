@@ -11,6 +11,7 @@ import android.text.format.DateFormat
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -39,6 +40,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -67,6 +69,7 @@ import kotlin.math.abs
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
+    private val sp: SP,
     private val constraintChecker: ConstraintsChecker,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -102,6 +105,9 @@ import kotlin.math.abs
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+
+        // Force enable pump unreachable alert due to some failure modes of Medtrum pump
+        sp.putBoolean(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert, true)
     }
 
     override fun onStop() {
@@ -134,6 +140,7 @@ import kotlin.math.abs
         preprocessSerialSettings(preferenceFragment)
         preprocessAlarmSettings(preferenceFragment)
         preprocessMaxInsulinSettings(preferenceFragment)
+        preprocessConnectionAlertSettings(preferenceFragment)
     }
 
     private fun preprocessSerialSettings(preferenceFragment: PreferenceFragmentCompat) {
@@ -238,6 +245,21 @@ import kotlin.math.abs
                 dailyCurrentValue < newDailyMaxMinValue     -> text = newDailyMaxMinValue.toString()
                 dailyCurrentValue > pumpTypeSettings.second -> text = pumpTypeSettings.second.toString()
             }
+        }
+    }
+
+    private fun preprocessConnectionAlertSettings(preferenceFragment: PreferenceFragmentCompat) {
+        val unreachableAlertSetting = preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert))
+        val unreachableThresholdSetting = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(app.aaps.core.utils.R.string.key_pump_unreachable_threshold_minutes))
+
+        unreachableAlertSetting?.apply {
+            isSelectable = false
+            summary = rh.gs(R.string.enable_pump_unreachable_alert_summary)
+        }
+
+        unreachableThresholdSetting?.apply {
+            val currentValue = text
+            summary = "${rh.gs(R.string.pump_unreachable_threshold_minutes_summary)}\n${currentValue}"
         }
     }
 
