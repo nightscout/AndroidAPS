@@ -515,7 +515,7 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.dssRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
+            persistenceLayer.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading DeviceStatus data Start: $startId $deviceStatus")
                 val dataPair = DataSyncSelector.PairDeviceStatus(deviceStatus, lastDbId)
                 activePlugin.activeNsClient?.nsAdd("devicestatus", dataPair, "$startId/$lastDbId")

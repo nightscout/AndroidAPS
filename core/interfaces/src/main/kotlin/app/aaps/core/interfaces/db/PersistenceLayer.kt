@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.db
 
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
+import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
@@ -649,6 +650,25 @@ interface PersistenceLayer {
      * @return List of modified records
      */
     fun updateOfflineEventsNsIds(offlineEvents: List<OE>): Single<TransactionResult<OE>>
+
+    // DS
+    /**
+     * Get next changed record after id
+     *
+     * @param id record id
+     * @return database record
+     */
+    fun getNextSyncElementDeviceStatus(id: Long): Maybe<DS>
+
+    fun insert(deviceStatus: DS)
+
+    /**
+     * Update NS id' in database
+     *
+     * @param deviceStatuses records containing NS id'
+     * @return List of modified records
+     */
+    fun updateDeviceStatusesNsIds(deviceStatuses: List<DS>): Single<TransactionResult<DS>>
 
     // UE
     fun insertUserEntries(entries: List<UE>): Single<TransactionResult<UE>>

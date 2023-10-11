@@ -2,6 +2,7 @@ package app.aaps.database.persistence
 
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
+import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
@@ -56,6 +57,7 @@ import app.aaps.database.impl.transactions.SyncPumpTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.SyncTemporaryBasalWithTempIdTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdCarbsTransaction
+import app.aaps.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdExtendedBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdGlucoseValueTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdOfflineEventTransaction
@@ -1079,6 +1081,26 @@ class PersistenceLayerImpl @Inject constructor(
                 val transactionResult = PersistenceLayer.TransactionResult<OE>()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of OfflineEvent $it")
+                    transactionResult.updatedNsId.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    // DS
+    override fun getNextSyncElementDeviceStatus(id: Long): Maybe<DS> =
+        repository.getNextSyncElementDeviceStatus(id).map { it.fromDb() }
+
+    override fun insert(deviceStatus: DS) {
+        repository.insert(deviceStatus.toDb())
+    }
+
+    override fun updateDeviceStatusesNsIds(deviceStatuses: List<DS>): Single<PersistenceLayer.TransactionResult<DS>> =
+        repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatuses.map { it.toDb() }))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of DeviceStatus failed", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<DS>()
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of DeviceStatus $it")
                     transactionResult.updatedNsId.add(it.fromDb())
                 }
                 transactionResult

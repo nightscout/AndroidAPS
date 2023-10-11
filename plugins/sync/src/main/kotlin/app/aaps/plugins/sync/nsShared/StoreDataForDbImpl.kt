@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsShared
 import android.os.SystemClock
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
+import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
@@ -28,7 +29,6 @@ import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.ProfileSwitch
@@ -48,7 +48,6 @@ import app.aaps.database.impl.transactions.SyncNsEffectiveProfileSwitchTransacti
 import app.aaps.database.impl.transactions.SyncNsFoodTransaction
 import app.aaps.database.impl.transactions.SyncNsProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdFoodTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
@@ -101,7 +100,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val nsIdTemporaryBasals: MutableList<TB> = mutableListOf()
     override val nsIdProfileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     override val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
-    override val nsIdDeviceStatuses: MutableList<DeviceStatus> = mutableListOf()
+    override val nsIdDeviceStatuses: MutableList<DS> = mutableListOf()
     override val nsIdFoods: MutableList<Food> = mutableListOf()
 
     override val deleteTreatment: MutableList<String> = mutableListOf()
@@ -514,17 +513,10 @@ class StoreDataForDbImpl @Inject constructor(
                 }
             }
 
-        repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(nsIdDeviceStatuses))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of DeviceStatus failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateDeviceStatusesNsIds(nsIdDeviceStatuses)
+            .subscribeBy { result ->
                 nsIdDeviceStatuses.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of DeviceStatus $it")
-                    nsIdUpdated.inc(DeviceStatus::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(DS::class.java.simpleName) }
             }
 
         disposable += persistenceLayer.updateOfflineEventsNsIds(nsIdOfflineEvents)
@@ -543,7 +535,8 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
         sendLog("TherapyEvent", TE::class.java.simpleName)
         sendLog("OfflineEvent", OE::class.java.simpleName)
-        sendLog("EB", EB::class.java.simpleName)
+        sendLog("ExtendedBolus", EB::class.java.simpleName)
+        sendLog("DeviceStatus", DS::class.java.simpleName)
         rxBus.send(EventNSClientNewLog("● DONE NSIDs", ""))
     }
 

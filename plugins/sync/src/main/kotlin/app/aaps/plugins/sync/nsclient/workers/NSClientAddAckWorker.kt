@@ -155,11 +155,11 @@ class NSClientAddAckWorker(
 
             is DataSyncSelector.PairDeviceStatus -> {
                 val pair = ack.originalObject
-                pair.value.interfaceIDs.nightscoutId = ack.id
+                pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
                 storeDataForDb.nsIdDeviceStatuses.add(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked DeviceStatus " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked DeviceStatus " + pair.value.ids.nightscoutId))
             }
 
             is PairProfileStore                  -> {

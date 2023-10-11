@@ -2,6 +2,7 @@ package app.aaps.core.interfaces.nsclient
 
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
+import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
@@ -9,7 +10,6 @@ import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.DeviceStatus
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.ProfileSwitch
@@ -40,7 +40,7 @@ interface StoreDataForDb {
     val nsIdTemporaryBasals: MutableList<TB>
     val nsIdProfileSwitches: MutableList<ProfileSwitch>
     val nsIdOfflineEvents: MutableList<OE>
-    val nsIdDeviceStatuses: MutableList<DeviceStatus>
+    val nsIdDeviceStatuses: MutableList<DS>
     val nsIdFoods: MutableList<Food>
 
     val deleteTreatment: MutableList<String>

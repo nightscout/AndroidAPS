@@ -16,6 +16,7 @@ import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.plugin.PluginDescription
@@ -70,7 +71,7 @@ import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.main.extensions.plannedRemainingMinutes
 import app.aaps.core.main.iob.json
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.database.entities.DeviceStatus
+
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import app.aaps.plugins.aps.R
@@ -776,8 +777,8 @@ class LoopPlugin @Inject constructor(
                 iob.put("time", dateUtil.toISOString(dateUtil.now()))
             }
         }
-        repository.insert(
-            DeviceStatus(
+        persistenceLayer.insert(
+            DS(
                 timestamp = dateUtil.now(),
                 suggested = apsResult?.toString(),
                 iob = iob?.toString(),

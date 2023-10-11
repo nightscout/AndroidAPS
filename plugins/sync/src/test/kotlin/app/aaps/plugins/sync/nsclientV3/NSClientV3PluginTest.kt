@@ -26,7 +26,7 @@ import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.DeviceStatus
+
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.ProfileSwitch

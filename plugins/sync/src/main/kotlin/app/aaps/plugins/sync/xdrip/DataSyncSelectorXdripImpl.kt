@@ -382,7 +382,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
                 startId = 0
             }
             queueCounter.dssRemaining = lastDbId - startId
-            appRepository.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
+            persistenceLayer.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
                 aapsLogger.info(LTag.XDRIP, "Loading DeviceStatus data Start: $startId $deviceStatus")
                 if (!isOld(deviceStatus.timestamp))
                     xdripPlugin.sendToXdrip("devicestatus", DataSyncSelector.PairDeviceStatus(deviceStatus, lastDbId), "$startId/$lastDbId")

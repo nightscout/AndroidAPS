@@ -448,7 +448,7 @@ class DataSyncSelectorV3 @Inject constructor(
             }
             queueCounter.dssRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
+            persistenceLayer.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
                 cont = activePlugin.activeNsClient?.nsAdd("devicestatus", DataSyncSelector.PairDeviceStatus(deviceStatus, lastDbId), "$startId/$lastDbId") ?: false
                 if (cont) confirmLastDeviceStatusIdIfGreater(deviceStatus.id)
                 // with nsId = ignore
