@@ -1137,6 +1137,9 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     // HR
+    override fun getHeartRatesFromTime(startTime: Long): List<HR> =
+        repository.getHeartRatesFromTime(startTime).map { it.fromDb() }
+
     override fun getHeartRatesFromTimeToTime(startTime: Long, endTime: Long): List<HR> =
         repository.getHeartRatesFromTimeToTime(startTime, endTime).map { it.fromDb() }
 

@@ -857,9 +857,10 @@ import kotlin.math.roundToInt
     fun getLastOfflineEventId(): Long? =
         database.offlineEventDao.getLastId()
 
-    fun getHeartRatesFromTime(timeMillis: Long): Single<List<HeartRate>> =
+    fun getHeartRatesFromTime(timeMillis: Long): List<HeartRate> =
         database.heartRateDao.getFromTime(timeMillis)
             .subscribeOn(Schedulers.io())
+            .blockingGet()
 
     fun getHeartRatesFromTimeToTime(startMillis: Long, endMillis: Long) =
         database.heartRateDao.getFromTimeToTime(startMillis, endMillis)

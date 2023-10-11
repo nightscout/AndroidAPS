@@ -200,7 +200,6 @@ interface PersistenceLayer {
      * @param action Action for UserEntry logging
      * @param note note for UserEntry logging
      * @param source Source for UserEntry logging
-     * @param listValues Values for UserEntry logging
      * @return List of inserted/updated records
      */
     fun insertOrUpdateCarbs(carbs: CA, action: Action, source: Sources, note: String? = null): Single<TransactionResult<CA>>
@@ -671,6 +670,14 @@ interface PersistenceLayer {
     fun updateDeviceStatusesNsIds(deviceStatuses: List<DS>): Single<TransactionResult<DS>>
 
     // HR
+
+    /**
+     * Get heart rates from specified time
+     *
+     * @param startTime from
+     * @return List of heart rates
+     */
+    fun getHeartRatesFromTime(startTime: Long): List<HR>
 
     /**
      * Get heart rates in time interval
