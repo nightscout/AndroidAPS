@@ -4,6 +4,7 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.HR
@@ -695,6 +696,48 @@ interface PersistenceLayer {
      * @return List of inserted/updated records
      */
     fun insertOrUpdateHeartRate(heartRate: HR): Single<TransactionResult<HR>>
+
+    // FD
+    /**
+     * Get all food records
+     *
+     * @return List of records
+     */
+    fun getFoods(): Single<List<FD>>
+
+    /**
+     * Get next changed record after id
+     *
+     * @param id record id
+     * @return database record
+     */
+    fun getNextSyncElementFood(id: Long): Maybe<Pair<FD, FD>>
+
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @return List of changed records
+     */
+    fun invalidateFood(id: Long, action: Action, source: Sources): Single<TransactionResult<FD>>
+
+    /**
+     * Store records coming from NS to database
+     *
+     * @param foods list of records
+     * @return List of inserted/updated/invalidated records
+     */
+    fun syncNsFood(foods: List<FD>): Single<TransactionResult<FD>>
+
+    /**
+     * Update NS id' in database
+     *
+     * @param foods records containing NS id'
+     * @return List of modified records
+     */
+    fun updateFoodsNsIds(foods: List<FD>): Single<TransactionResult<FD>>
 
     // UE
     fun insertUserEntries(entries: List<UE>): Single<TransactionResult<UE>>

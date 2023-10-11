@@ -323,19 +323,19 @@ class DataSyncSelectorV3 @Inject constructor(
             }
             queueCounter.foodsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementFood(startId).blockingGet()?.let { food ->
+            persistenceLayer.getNextSyncElementFood(startId).blockingGet()?.let { food ->
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    food.first.id == food.second.id && food.first.interfaceIDs.nightscoutId != null ->
+                    food.first.id == food.second.id && food.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Loaded from NS: ${food.second.id} ")
                     // only NsId changed, no need to upload
-                    food.first.onlyNsIdAdded(food.second)                                           ->
+                    food.first.onlyNsIdAdded(food.second)                                  ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Only NS id changed ID: ${food.second.id} ")
                     // without nsId = create new
-                    food.first.interfaceIDs.nightscoutId == null                                    ->
+                    food.first.ids.nightscoutId == null                                    ->
                         cont = activePlugin.activeNsClient?.nsAdd("food", DataSyncSelector.PairFood(food.first, food.second.id), "$startId/$lastDbId") ?: false
                     // with nsId = update
-                    food.first.interfaceIDs.nightscoutId != null                                    ->
+                    food.first.ids.nightscoutId != null                                    ->
                         cont = activePlugin.activeNsClient?.nsUpdate("food", DataSyncSelector.PairFood(food.first, food.second.id), "$startId/$lastDbId") ?: false
                 }
                 if (cont) confirmLastFoodIdIfGreater(food.second.id)

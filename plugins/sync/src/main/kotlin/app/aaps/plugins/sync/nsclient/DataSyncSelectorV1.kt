@@ -185,7 +185,7 @@ class DataSyncSelectorV1 @Inject constructor(
                     bolus.first.id == bolus.second.id && bolus.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Loaded from NS: ${bolus.second.id} ")
                     // only NsId changed, no need to upload
-                    bolus.first.onlyNsIdAdded(bolus.second)                                            ->
+                    bolus.first.onlyNsIdAdded(bolus.second)                                   ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Only NS id changed: ${bolus.second.id} ")
                     // without nsId = create new
                     bolus.first.ids.nightscoutId == null                                      -> {
@@ -233,7 +233,7 @@ class DataSyncSelectorV1 @Inject constructor(
                     carb.first.id == carb.second.id && carb.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Loaded from NS: ${carb.second.id} ")
                     // only NsId changed, no need to upload
-                    carb.first.onlyNsIdAdded(carb.second)                                           ->
+                    carb.first.onlyNsIdAdded(carb.second)                                  ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Only NS id changed ID: ${carb.second.id} ")
                     // without nsId = create new
                     carb.first.ids.nightscoutId == null                                    -> {
@@ -369,24 +369,24 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.foodsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementFood(startId).blockingGet()?.let { food ->
+            persistenceLayer.getNextSyncElementFood(startId).blockingGet()?.let { food ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading Food data Start: $startId ${food.first} forID: ${food.second.id} ")
                 val dataPair = DataSyncSelector.PairFood(food.first, food.second.id)
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    food.first.id == food.second.id && food.first.interfaceIDs.nightscoutId != null ->
+                    food.first.id == food.second.id && food.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Loaded from NS: ${food.second.id} ")
                     // only NsId changed, no need to upload
-                    food.first.onlyNsIdAdded(food.second)                                           ->
+                    food.first.onlyNsIdAdded(food.second)                                  ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Only NS id changed ID: ${food.second.id} ")
                     // without nsId = create new
-                    food.first.interfaceIDs.nightscoutId == null                                    -> {
+                    food.first.ids.nightscoutId == null                                    -> {
                         activePlugin.activeNsClient?.nsAdd("food", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                     // with nsId = update
-                    food.first.interfaceIDs.nightscoutId != null                                    -> {
+                    food.first.ids.nightscoutId != null                                    -> {
                         activePlugin.activeNsClient?.nsUpdate("food", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed

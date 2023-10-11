@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
 import app.aaps.core.interfaces.rx.events.EventXdripNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.DataSyncSelector
@@ -325,7 +324,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.foodsRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementFood(startId).blockingGet()?.let { food ->
+            persistenceLayer.getNextSyncElementFood(startId).blockingGet()?.let { food ->
                 aapsLogger.info(LTag.XDRIP, "Loading Food data Start: $startId ${food.first} forID: ${food.second.id} ")
                 preparedFoods.add(DataSyncSelector.PairFood(food.first, food.second.id))
                 sendFoods(force = false, progress)

@@ -4,6 +4,7 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TB
@@ -12,7 +13,7 @@ import app.aaps.core.data.db.TT
 import app.aaps.database.entities.BolusCalculatorResult
 
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.Food
+
 import app.aaps.database.entities.ProfileSwitch
 import org.json.JSONObject
 
@@ -28,7 +29,7 @@ interface DataSyncSelector {
     data class PairTemporaryTarget(override val value: TT, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairGlucoseValue(override val value: GV, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairTherapyEvent(override val value: TE, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairFood(override val value: Food, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairFood(override val value: FD, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairBolus(override val value: BS, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairCarbs(override val value: CA, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairBolusCalculatorResult(override val value: BolusCalculatorResult, override val id: Long, override var confirmed: Boolean = false) : DataPair

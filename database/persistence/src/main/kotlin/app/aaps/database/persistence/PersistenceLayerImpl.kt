@@ -4,6 +4,7 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.HR
@@ -40,6 +41,7 @@ import app.aaps.database.impl.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.impl.transactions.InsertTemporaryBasalWithTempIdTransaction
 import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
+import app.aaps.database.impl.transactions.InvalidateFoodTransaction
 import app.aaps.database.impl.transactions.InvalidateGlucoseValueTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
@@ -49,6 +51,7 @@ import app.aaps.database.impl.transactions.SyncBolusWithTempIdTransaction
 import app.aaps.database.impl.transactions.SyncNsBolusTransaction
 import app.aaps.database.impl.transactions.SyncNsCarbsTransaction
 import app.aaps.database.impl.transactions.SyncNsExtendedBolusTransaction
+import app.aaps.database.impl.transactions.SyncNsFoodTransaction
 import app.aaps.database.impl.transactions.SyncNsOfflineEventTransaction
 import app.aaps.database.impl.transactions.SyncNsTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.SyncNsTemporaryTargetTransaction
@@ -61,6 +64,7 @@ import app.aaps.database.impl.transactions.UpdateNsIdBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdCarbsTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdExtendedBolusTransaction
+import app.aaps.database.impl.transactions.UpdateNsIdFoodTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdGlucoseValueTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdOfflineEventTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
@@ -1155,6 +1159,70 @@ class PersistenceLayerImpl @Inject constructor(
                 result.updated.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Inserted HeartRate $it")
                     transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun getFoods(): Single<List<FD>> =
+        repository.getFoodData().map { list -> list.map { it.fromDb() } }
+
+    override fun getNextSyncElementFood(id: Long): Maybe<Pair<FD, FD>> =
+        repository.getNextSyncElementFood(id)
+            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+
+    override fun invalidateFood(id: Long, action: Action, source: Sources): Single<PersistenceLayer.TransactionResult<FD>> =
+        repository.runTransactionForResult(InvalidateFoodTransaction(id))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Food", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<FD>()
+                result.invalidated.forEach {
+                    log(action = action, source = source, note = it.name)
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated Food from ${source.name} $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun syncNsFood(foods: List<FD>): Single<PersistenceLayer.TransactionResult<FD>> =
+        repository.runTransactionForResult(SyncNsFoodTransaction(foods.map { it.toDb() }))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Food", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<FD>()
+                result.inserted.forEach {
+                    log(
+                        timestamp = dateUtil.now(),
+                        action = Action.FOOD,
+                        source = Sources.NSClient,
+                        note = it.name
+                    )
+                    aapsLogger.debug(LTag.DATABASE, "Inserted Food $it")
+                    transactionResult.inserted.add(it.fromDb())
+                }
+                result.invalidated.forEach {
+                    log(
+                        timestamp = dateUtil.now(),
+                        action = Action.FOOD_REMOVED,
+                        source = Sources.NSClient,
+                        note = it.name
+                    )
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated Food $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated Food $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun updateFoodsNsIds(foods: List<FD>): Single<PersistenceLayer.TransactionResult<FD>> =
+        repository.runTransactionForResult(UpdateNsIdFoodTransaction(foods.map { it.toDb() }))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of Food failed", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<FD>()
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Food $it")
+                    transactionResult.updatedNsId.add(it.fromDb())
                 }
                 transactionResult
             }

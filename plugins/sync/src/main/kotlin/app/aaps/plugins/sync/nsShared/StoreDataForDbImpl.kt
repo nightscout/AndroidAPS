@@ -5,6 +5,7 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TB
@@ -30,7 +31,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.Food
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
@@ -45,11 +45,9 @@ import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InvalidateTherapyEventTransaction
 import app.aaps.database.impl.transactions.SyncNsBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.SyncNsEffectiveProfileSwitchTransaction
-import app.aaps.database.impl.transactions.SyncNsFoodTransaction
 import app.aaps.database.impl.transactions.SyncNsProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdFoodTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
 import app.aaps.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -87,7 +85,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val temporaryBasals: MutableList<TB> = mutableListOf()
     override val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     override val offlineEvents: MutableList<OE> = mutableListOf()
-    override val foods: MutableList<Food> = mutableListOf()
+    override val foods: MutableList<FD> = mutableListOf()
 
     override val nsIdGlucoseValues: MutableList<GV> = mutableListOf()
     override val nsIdBoluses: MutableList<BS> = mutableListOf()
@@ -101,7 +99,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val nsIdProfileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     override val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
     override val nsIdDeviceStatuses: MutableList<DS> = mutableListOf()
-    override val nsIdFoods: MutableList<Food> = mutableListOf()
+    override val nsIdFoods: MutableList<FD> = mutableListOf()
 
     override val deleteTreatment: MutableList<String> = mutableListOf()
     override val deleteGlucoseValue: MutableList<String> = mutableListOf()
@@ -139,37 +137,24 @@ class StoreDataForDbImpl @Inject constructor(
                         nsClientSource.detectSource(it)
                         nsIdUpdated.inc(GV::class.java.simpleName)
                     }
+                    sendLog("GlucoseValue", GV::class.java.simpleName)
                 }
 
-        sendLog("GlucoseValue", GV::class.java.simpleName)
         SystemClock.sleep(pause)
         rxBus.send(EventNSClientNewLog("● DONE PROCESSING BG", ""))
     }
 
     override fun storeFoodsToDb() {
         if (foods.isNotEmpty())
-            repository.runTransactionForResult(SyncNsFoodTransaction(foods))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving foods", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsFood(foods)
+                .subscribeBy { result ->
                     foods.clear()
-                    result.updated.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated food $it")
-                        updated.inc(Food::class.java.simpleName)
-                    }
-                    result.inserted.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Inserted food $it")
-                        inserted.inc(Food::class.java.simpleName)
-                    }
-                    result.invalidated.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated food $it")
-                        nsIdUpdated.inc(Food::class.java.simpleName)
-                    }
+                    repeat(result.updated.size) { updated.inc(FD::class.java.simpleName) }
+                    repeat(result.inserted.size) { inserted.inc(FD::class.java.simpleName) }
+                    repeat(result.invalidated.size) { nsIdUpdated.inc(FD::class.java.simpleName) }
+                    sendLog("Food", FD::class.java.simpleName)
                 }
 
-        sendLog("Food", Food::class.java.simpleName)
         SystemClock.sleep(pause)
         rxBus.send(EventNSClientNewLog("● DONE PROCESSING FOOD", ""))
     }
@@ -431,17 +416,10 @@ class StoreDataForDbImpl @Inject constructor(
                 repeat(result.updatedNsId.size) { nsIdUpdated.inc(GV::class.java.simpleName) }
             }
 
-        repository.runTransactionForResult(UpdateNsIdFoodTransaction(nsIdFoods))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of Food failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateFoodsNsIds(nsIdFoods)
+            .subscribeBy { result ->
                 nsIdFoods.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Food $it")
-                    nsIdUpdated.inc(Food::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(FD::class.java.simpleName) }
             }
 
         disposable += persistenceLayer.updateTherapyEventsNsIds(nsIdTherapyEvents)

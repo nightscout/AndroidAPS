@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.nsShared
 
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.SourceSensor
@@ -35,7 +36,7 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.Food
+
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolus
@@ -202,7 +203,7 @@ class NsIncomingDataProcessor @Inject constructor(
         aapsLogger.debug(LTag.DATABASE, "Received Food Data: $data")
 
         try {
-            val foods = mutableListOf<Food>()
+            val foods = mutableListOf<FD>()
             if (data is JSONArray) {
                 for (index in 0 until data.length()) {
                     val jsonFood: JSONObject = data.getJSONObject(index)
@@ -211,17 +212,17 @@ class NsIncomingDataProcessor @Inject constructor(
 
                     when (JsonHelper.safeGetString(jsonFood, "action")) {
                         "remove" -> {
-                            val delFood = Food(
+                            val delFood = FD(
                                 name = "",
                                 portion = 0.0,
                                 carbs = 0,
                                 isValid = false
-                            ).also { it.interfaceIDs.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
+                            ).also { it.ids.nightscoutId = JsonHelper.safeGetString(jsonFood, "_id") }
                             foods += delFood
                         }
 
                         else     -> {
-                            val food = Food.fromJson(jsonFood)
+                            val food = FD.fromJson(jsonFood)
                             if (food != null) foods += food
                             else aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
                         }

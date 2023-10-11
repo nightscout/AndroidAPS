@@ -4,6 +4,7 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.IDs
@@ -29,7 +30,7 @@ import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
 import app.aaps.database.entities.BolusCalculatorResult
 
 import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.Food
+
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
@@ -149,7 +150,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddFood() = runTest {
-        val food = Food(
+        val food = FD(
             isValid = true,
             name = "name",
             category = "category",
@@ -161,7 +162,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             energy = 23,
             unit = "g",
             gi = 25,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId"
             )
         )

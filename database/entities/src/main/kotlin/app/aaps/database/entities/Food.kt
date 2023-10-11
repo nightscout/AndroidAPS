@@ -62,12 +62,6 @@ data class Food(
         return unit == other.unit
     }
 
-    fun onlyNsIdAdded(previous: Food): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
     fun copyFrom(other: Food) {
         isValid = other.isValid
         name = other.name
@@ -82,6 +76,4 @@ data class Food(
         gi = other.gi
         interfaceIDs.nightscoutId = other.interfaceIDs.nightscoutId
     }
-
-    companion object
 }

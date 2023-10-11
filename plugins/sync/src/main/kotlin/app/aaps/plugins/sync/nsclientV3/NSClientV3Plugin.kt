@@ -767,7 +767,7 @@ class NSClientV3Plugin @Inject constructor(
         }
         try {
             val data = dataPair.value.toNSFood()
-            val id = dataPair.value.interfaceIDs.nightscoutId
+            val id = dataPair.value.ids.nightscoutId
             rxBus.send(
                 EventNSClientNewLog(
                     when (operation) {
@@ -793,7 +793,7 @@ class NSClientV3Plugin @Inject constructor(
                     }
                 }
                 result.identifier?.let {
-                    dataPair.value.interfaceIDs.nightscoutId = it
+                    dataPair.value.ids.nightscoutId = it
                     storeDataForDb.nsIdFoods.add(dataPair.value)
                 }
                 slowDown()
