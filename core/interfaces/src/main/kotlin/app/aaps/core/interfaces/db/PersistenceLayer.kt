@@ -6,6 +6,7 @@ import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.HR
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
@@ -97,10 +98,9 @@ interface PersistenceLayer {
      * @param action Action for UserEntry logging
      * @param note note for UserEntry logging
      * @param source Source for UserEntry logging
-     * @param listValues Values for UserEntry logging
      * @return List of inserted/updated records
      */
-    fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<BS>>
+    fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String? = null): Single<TransactionResult<BS>>
 
     /**
      * Insert record
@@ -203,7 +203,7 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      * @return List of inserted/updated records
      */
-    fun insertOrUpdateCarbs(carbs: CA, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<CA>>
+    fun insertOrUpdateCarbs(carbs: CA, action: Action, source: Sources, note: String? = null): Single<TransactionResult<CA>>
 
     /**
      * Insert carbs if not exists
@@ -660,7 +660,7 @@ interface PersistenceLayer {
      */
     fun getNextSyncElementDeviceStatus(id: Long): Maybe<DS>
 
-    fun insert(deviceStatus: DS)
+    fun insertDeviceStatus(deviceStatus: DS)
 
     /**
      * Update NS id' in database
@@ -669,6 +669,25 @@ interface PersistenceLayer {
      * @return List of modified records
      */
     fun updateDeviceStatusesNsIds(deviceStatuses: List<DS>): Single<TransactionResult<DS>>
+
+    // HR
+
+    /**
+     * Get heart rates in time interval
+     *
+     * @param startTime from
+     * @param endTime to
+     * @return List of heart rates
+     */
+    fun getHeartRatesFromTimeToTime(startTime: Long, endTime: Long): List<HR>
+
+    /**
+     * Insert or update if exists record
+     *
+     * @param heartRate record
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateHeartRate(heartRate: HR): Single<TransactionResult<HR>>
 
     // UE
     fun insertUserEntries(entries: List<UE>): Single<TransactionResult<UE>>

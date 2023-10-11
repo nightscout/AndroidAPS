@@ -192,24 +192,15 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                 bolus = detailedBolusInfo.createBolus(),
                                 action = action,
                                 source = Sources.TreatmentDialog,
-                                note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else "",
-                                listValues = listOf(
-                                    ValueWithUnit.Timestamp(detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
-                                    ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.record)).takeIf { insulinAfterConstraints != 0.0 },
-                                    ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
-                                )
+                                note = if (insulinAfterConstraints != 0.0) rh.gs(app.aaps.core.ui.R.string.record) else ""
                             ).subscribe()
                         if (detailedBolusInfo.carbs > 0)
-                            persistenceLayer.insertOrUpdateCarbs(
+                            disposable += persistenceLayer.insertOrUpdateCarbs(
                                 carbs = detailedBolusInfo.createCarbs(),
                                 action = action,
                                 source = Sources.TreatmentDialog,
-                                note = if (carbsAfterConstraints != 0) rh.gs(app.aaps.core.ui.R.string.record) else "",
-                                listValues = listOf(
-                                    ValueWithUnit.Timestamp(detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
-                                    ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 }
-                                )
-                            )
+                                note = if (carbsAfterConstraints != 0) rh.gs(app.aaps.core.ui.R.string.record) else ""
+                            ).subscribe()
                     } else {
                         if (detailedBolusInfo.insulin > 0) {
                             uel.log(
@@ -228,12 +219,11 @@ class TreatmentDialog : DialogFragmentWithDate() {
                             })
                         } else {
                             if (detailedBolusInfo.carbs > 0)
-                                persistenceLayer.insertOrUpdateCarbs(
+                                disposable += persistenceLayer.insertOrUpdateCarbs(
                                     detailedBolusInfo.createCarbs(),
                                     action = action,
-                                    source = Sources.TreatmentDialog,
-                                    listValues = listOf(ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
-                                )
+                                    source = Sources.TreatmentDialog
+                                ).subscribe()
                         }
                     }
                 })

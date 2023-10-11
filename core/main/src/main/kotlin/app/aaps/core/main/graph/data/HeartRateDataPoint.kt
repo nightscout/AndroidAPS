@@ -2,13 +2,14 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.core.data.db.HR
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.database.entities.HeartRate
+
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.Shape
 
 class HeartRateDataPoint(
-    private val data: HeartRate,
+    private val data: HR,
     private val rh: ResourceHelper,
 ) : DataPointWithLabelInterface {
 

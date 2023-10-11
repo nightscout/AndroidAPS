@@ -13,7 +13,6 @@ import app.aaps.core.data.pump.defs.TimeChangeType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -217,8 +216,7 @@ open class VirtualPumpPlugin @Inject constructor(
                 disposable += persistenceLayer.insertOrUpdateBolus(
                     bolus = detailedBolusInfo.createBolus(),
                     action = Action.BOLUS,
-                    source = Sources.Pump,
-                    listValues = listOf(ValueWithUnit.Insulin(detailedBolusInfo.insulin))
+                    source = Sources.Pump
                 ).subscribe()
             else
                 pumpSync.syncBolusWithPumpId(

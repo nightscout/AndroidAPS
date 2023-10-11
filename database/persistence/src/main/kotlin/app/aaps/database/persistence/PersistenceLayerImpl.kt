@@ -6,6 +6,7 @@ import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.HR
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
@@ -36,6 +37,7 @@ import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTra
 import app.aaps.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateCarbsTransaction
+import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.impl.transactions.InsertTemporaryBasalWithTempIdTransaction
 import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
 import app.aaps.database.impl.transactions.InvalidateGlucoseValueTransaction
@@ -138,17 +140,31 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getNextSyncElementBolus(id)
             .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
 
-    override fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<BS>> =
+    override fun insertOrUpdateBolus(bolus: BS, action: Action, source: Sources, note: String?): Single<PersistenceLayer.TransactionResult<BS>> =
         repository.runTransactionForResult(InsertOrUpdateBolusTransaction(bolus.toDb()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<BS>()
                 result.inserted.forEach {
+                    log(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = source,
+                        note = it.notes,
+                        listValues = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
+                    )
                     aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it")
                     transactionResult.inserted.add(it.fromDb())
                 }
                 result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted Bolus $it")
+                    log(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = source,
+                        note = it.notes,
+                        listValues = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Insulin(it.amount))
+                    )
+                    aapsLogger.debug(LTag.DATABASE, "Updated Bolus $it")
                     transactionResult.updated.add(it.fromDb())
                 }
                 transactionResult
@@ -265,16 +281,30 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getNextSyncElementCarbs(id)
             .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
 
-    override fun insertOrUpdateCarbs(carbs: CA, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<CA>> =
+    override fun insertOrUpdateCarbs(carbs: CA, action: Action, source: Sources, note: String?): Single<PersistenceLayer.TransactionResult<CA>> =
         repository.runTransactionForResult(InsertOrUpdateCarbsTransaction(carbs.toDb()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Carbs", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<CA>()
                 result.inserted.forEach {
+                    log(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = source,
+                        note = note,
+                        listValues = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
+                    )
                     aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
                     transactionResult.inserted.add(it.fromDb())
                 }
                 result.updated.forEach {
+                    log(
+                        timestamp = dateUtil.now(),
+                        action = action,
+                        source = source,
+                        note = note,
+                        listValues = listOf(ValueWithUnit.Timestamp(it.timestamp), ValueWithUnit.Gram(it.amount.toInt()))
+                    )
                     aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
                     transactionResult.updated.add(it.fromDb())
                 }
@@ -1090,7 +1120,7 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getNextSyncElementDeviceStatus(id: Long): Maybe<DS> =
         repository.getNextSyncElementDeviceStatus(id).map { it.fromDb() }
 
-    override fun insert(deviceStatus: DS) {
+    override fun insertDeviceStatus(deviceStatus: DS) {
         repository.insert(deviceStatus.toDb())
     }
 
@@ -1102,6 +1132,26 @@ class PersistenceLayerImpl @Inject constructor(
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of DeviceStatus $it")
                     transactionResult.updatedNsId.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    // HR
+    override fun getHeartRatesFromTimeToTime(startTime: Long, endTime: Long): List<HR> =
+        repository.getHeartRatesFromTimeToTime(startTime, endTime).map { it.fromDb() }
+
+    override fun insertOrUpdateHeartRate(heartRate: HR): Single<PersistenceLayer.TransactionResult<HR>> =
+        repository.runTransactionForResult(InsertOrUpdateHeartRateTransaction(heartRate.toDb()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving HeartRate", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<HR>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted HeartRate $it")
+                    transactionResult.inserted.add(it.fromDb())
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted HeartRate $it")
+                    transactionResult.updated.add(it.fromDb())
                 }
                 transactionResult
             }

@@ -265,11 +265,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                 bolus = detailedBolusInfo.createBolus(),
                                 action = Action.BOLUS,
                                 source = Sources.InsulinDialog,
-                                note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else "",
-                                listValues = listOf(
-                                    ValueWithUnit.SimpleString(rh.gsNotLocalised(app.aaps.core.ui.R.string.record)),
-                                    ValueWithUnit.Insulin(insulinAfterConstraints),
-                                    ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 })
+                                note = rh.gs(app.aaps.core.ui.R.string.record) + if (notes.isNotEmpty()) ": $notes" else ""
                             )
                             if (timeOffset == 0)
                                 automation.removeAutomationEventBolusReminder()

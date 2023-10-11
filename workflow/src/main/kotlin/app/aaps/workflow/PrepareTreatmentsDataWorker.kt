@@ -134,7 +134,7 @@ class PrepareTreatmentsDataWorker(
         data.overviewData.epsSeries = PointsWithLabelGraphSeries(filteredEps.toTypedArray())
 
         data.overviewData.heartRateGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>(
-            repository.getHeartRatesFromTimeToTime(fromTime, endTime)
+            persistenceLayer.getHeartRatesFromTimeToTime(fromTime, endTime)
                 .map { hr -> HeartRateDataPoint(hr, rh) }
                 .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.heartRateColor) }
 

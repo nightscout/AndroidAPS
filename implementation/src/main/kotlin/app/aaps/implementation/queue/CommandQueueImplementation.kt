@@ -12,7 +12,6 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
-import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -281,8 +280,7 @@ class CommandQueueImplementation @Inject constructor(
                 disposable += persistenceLayer.insertOrUpdateCarbs(
                     carbs = detailedBolusInfo.createCarbs(),
                     action = Action.CARBS,
-                    source = Sources.TreatmentDialog,
-                    listValues = listOf(ValueWithUnit.Gram(originalCarbs.toInt()))
+                    source = Sources.TreatmentDialog
                 ).subscribe(
                     { callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run() },
                     { callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run() }

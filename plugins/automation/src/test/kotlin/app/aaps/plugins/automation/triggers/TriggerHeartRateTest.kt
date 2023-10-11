@@ -1,6 +1,5 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.database.entities.HeartRate
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat

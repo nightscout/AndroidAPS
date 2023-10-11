@@ -5,6 +5,7 @@ import android.content.Context
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.HR
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.InMemoryGlucoseValue
@@ -60,10 +61,8 @@ import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.BolusCalculatorResult
-import app.aaps.database.entities.HeartRate
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -1254,13 +1253,13 @@ class DataHandlerMobile @Inject constructor(
     /** Stores heart rate events coming from the Wear device. */
     private fun handleHeartRate(actionHeartRate: EventData.ActionHeartRate) {
         aapsLogger.debug(LTag.WEAR, "Heart rate received $actionHeartRate from ${actionHeartRate.sourceNodeId}")
-        val hr = HeartRate(
+        val hr = HR(
             duration = actionHeartRate.duration,
             timestamp = actionHeartRate.timestamp,
             beatsPerMinute = actionHeartRate.beatsPerMinute,
             device = actionHeartRate.device
         )
-        repository.runTransaction(InsertOrUpdateHeartRateTransaction(hr)).blockingAwait()
+        disposable += persistenceLayer.insertOrUpdateHeartRate(hr).subscribe()
     }
 
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {

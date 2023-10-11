@@ -777,7 +777,7 @@ class LoopPlugin @Inject constructor(
                 iob.put("time", dateUtil.toISOString(dateUtil.now()))
             }
         }
-        persistenceLayer.insert(
+        persistenceLayer.insertDeviceStatus(
             DS(
                 timestamp = dateUtil.now(),
                 suggested = apsResult?.toString(),
