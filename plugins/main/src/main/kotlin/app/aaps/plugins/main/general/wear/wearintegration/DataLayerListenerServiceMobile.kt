@@ -93,7 +93,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         disposable += rxBus
             .toObservable(EventMobileDataToWear::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe { sendMessage(rxDataPath, it.payload.serializeByte()) }
+            .subscribe { sendMessage(rxDataPath, it.payload) }
     }
 
     override fun onCapabilityChanged(p0: CapabilityInfo) {
@@ -214,6 +214,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
 
     private fun sendMessage(path: String, data: ByteArray) {
         aapsLogger.debug(LTag.WEAR, "sendMessage: $path")
+        aapsLogger.debug("XXXXX: $path, ${data.size}")
         transcriptionNodeId?.also { nodeId ->
             messageClient
                 .sendMessage(nodeId, path, data).apply {

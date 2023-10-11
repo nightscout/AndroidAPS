@@ -1,6 +1,7 @@
 package app.aaps.core.interfaces.maintenance
 
 import app.aaps.core.interfaces.rx.weardata.CwfData
+import app.aaps.core.interfaces.rx.weardata.CwfFile
 import java.io.File
 
 interface PrefFileListProvider {
@@ -13,7 +14,7 @@ interface PrefFileListProvider {
     fun newExportCsvFile(): File
     fun newCwfFile(filename: String, withDate: Boolean = true): File
     fun listPreferenceFiles(loadMetadata: Boolean = false): MutableList<PrefsFile>
-    fun listCustomWatchfaceFiles(): MutableList<CwfData>
+    fun listCustomWatchfaceFiles(): MutableList<CwfFile>
     fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata>
     fun formatExportedAgo(utcTime: String): String
 }

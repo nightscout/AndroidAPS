@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.weardata.CwfData
+import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -97,11 +98,11 @@ class PrefFileListProviderImpl @Inject constructor(
         return prefFiles
     }
 
-    override fun listCustomWatchfaceFiles(): MutableList<CwfData> {
-        val customWatchfaceFiles = mutableListOf<CwfData>()
-        val customAwtchfaceAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+    override fun listCustomWatchfaceFiles(): MutableList<CwfFile> {
+        val customWatchfaceFiles = mutableListOf<CwfFile>()
+        val customWatchfaceAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
         exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENTION) }.forEach { file ->
-            ZipWatchfaceFormat.loadCustomWatchface(ZipInputStream(file.inputStream()), file.name, customAwtchfaceAuthorization)?.also { customWatchface ->
+            ZipWatchfaceFormat.loadCustomWatchface(ZipInputStream(file.inputStream()), file.name, customWatchfaceAuthorization)?.also { customWatchface ->
                 customWatchfaceFiles.add(customWatchface)
             }
         }
@@ -111,9 +112,9 @@ class PrefFileListProviderImpl @Inject constructor(
                 for (assetFileName in assetFiles) {
                     if (assetFileName.endsWith(ZipWatchfaceFormat.CWF_EXTENTION)) {
                         val assetInputStream = context.assets.open(assetFileName)
-                        ZipWatchfaceFormat.loadCustomWatchface(ZipInputStream(assetInputStream), assetFileName, customAwtchfaceAuthorization)?.also { customWatchface ->
+                        ZipWatchfaceFormat.loadCustomWatchface(ZipInputStream(assetInputStream), assetFileName, customWatchfaceAuthorization)?.also { customWatchface ->
                             customWatchfaceFiles.add(customWatchface)
-                            rxBus.send(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(customWatchface), exportFile = true, withDate = false))
+                            //rxBus.send(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(customWatchface.cwfData), exportFile = true, withDate = false))
                         }
                         assetInputStream.close()
                     }

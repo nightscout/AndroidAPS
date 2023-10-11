@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -70,6 +71,7 @@ import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -1267,6 +1269,23 @@ class DataHandlerMobile @Inject constructor(
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {
         val customWatchface = command.customWatchface
         aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}: ${customWatchface.customWatchfaceData.json}")
+        try {
+
+            var s = sp.getStringOrNull(app.aaps.core.utils.R.string.key_wear_custom_watchface_save_cwfData, null)
+            if (s != null) {
+                (EventData.deserialize(s) as EventData.ActionSetCustomWatchface).also { savedCwData ->
+                    if (customWatchface.customWatchfaceData.json != savedCwData.customWatchfaceData.json &&
+                        customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] &&
+                        customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]
+                    ) {
+                        // if different json but same name and author version, then resync json and metadata to watch to update filename and authorization
+                        rxBus.send(EventMobileToWear(EventData.ActionUpdateCustomWatchface(savedCwData.customWatchfaceData)))
+                    }
+                }
+            }
+        } catch (exception: Exception) {
+            aapsLogger.error(LTag.WEAR, exception.toString())
+        }
         rxBus.send(EventWearUpdateGui(customWatchface.customWatchfaceData, command.exportFile))
         if (command.exportFile)
             importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData, command.withDate)
