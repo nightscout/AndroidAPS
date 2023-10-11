@@ -53,6 +53,7 @@
     <string name="alarm_battery_out">Batteri er tatt ut</string>
     <string name="alarm_no_calibration">Ingen kalibrering</string>
     <string name="pump_time_update_failed">Kunne ikke oppdatere tidssone på pumpen. Bekreft meldingen og oppdater manuelt.</string>
+    <string name="bolus_error">Bolus feilet</string>
     <!-- wizard-->
     <string name="retry">Prøv igjen</string>
     <string name="next">Neste</string>
@@ -101,6 +102,8 @@
     <string name="press_retry_or_discard">Trykk <b>Neste</b> for å gjenoppta aktiveringen eller <b>Forkast</b> for å tilbakestille aktiveringsstatusen.</string>
     <string name="reading_activation_status">Vennligst vent, leser aktiveringsstatus fra pumpen.</string>
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Varsel om pumpe utilgjengelig tvinges aktivert, fordi Medtrum-patching kan mislykkes og bli utilgjengelig.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Anbefales å sette til 30 minutter, fordi Medtrum-patching kan mislykkes og bli utilgjengelig.</string>
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_summary">Skriv inn serienummeret til pumpens base.</string>
     <string name="sn_input_invalid">Ugyldig serienummer!</string>
