@@ -87,4 +87,17 @@ class NotificationPacketTest : MedtrumTestBase() {
         assertThat(medtrumPump.bolusingTreatment!!.insulin).isWithin(0.01).of(1.65)
         assertThat(medtrumPump.reservoir).isWithin(0.01).of(161.95)
     }
+
+    @Test fun handleNotificationGivenFieldMaskButMessageTooShortThenNothingSaved() {
+        // Inputs
+        val data = byteArrayOf(67, 41, 67, -1, 122, 95, 18, 0, 73, 1, 19, 0, 1, 0, 20, 0, 0, 0, 0, 16)
+
+        // Call
+        NotificationPacket(packetInjector).handleNotification(data)
+
+        // Expected values
+        assertThat(medtrumPump.suspendTime).isEqualTo(0)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(0)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(0)
+    }
 }

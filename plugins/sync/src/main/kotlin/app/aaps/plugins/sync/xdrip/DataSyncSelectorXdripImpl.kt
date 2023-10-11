@@ -6,6 +6,9 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventNSClientNewLog
+import app.aaps.core.interfaces.rx.events.EventXdripNewLog
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
@@ -27,7 +30,8 @@ class DataSyncSelectorXdripImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val xdripBroadcast: Lazy<XDripBroadcast>,
     private val appRepository: AppRepository,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val rxBus: RxBus
 ) : DataSyncSelectorXdrip {
 
     class QueueCounter(
@@ -74,7 +78,17 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     override fun queueSize(): Long = queueCounter.size()
 
+    private var running = false
+    private val sync = Any()
+
     override suspend fun doUpload() {
+        synchronized(sync) {
+            if (running) {
+                rxBus.send(EventXdripNewLog("RUN", "Already running"))
+                return
+            }
+            running = true
+        }
         if (isEnabled) {
             processChangedGlucoseValues()
             processChangedBoluses()
@@ -98,6 +112,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             // not supported at the moment
             //processChangedProfileStore()
         }
+        running = false
     }
 
     override fun resetToNextFullSync() {

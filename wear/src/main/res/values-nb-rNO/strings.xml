@@ -12,7 +12,7 @@
     <string name="label_watchface_custom">AAPS(Tilpasset)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
-    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
+    <string name="label_quick_wizard_tile">AAPS(Hurtigknapp)</string>
     <string name="label_warning_sync">Ingen data!</string>
     <string name="label_warning_old">Gamle data!</string>
     <string name="label_warning_since">Siden %1$s</string>
@@ -95,7 +95,7 @@
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Varighet</string>
     <string name="action_tempt_confirmation">Midl. mål forespurt</string>
-    <string name="action_quick_wizard_confirmation">Quick Wizard forespurt</string>
+    <string name="action_quick_wizard_confirmation">Hurtigknapp forespurt</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>
     <string name="action_wizard_confirmation">Beregning forespurt</string>
