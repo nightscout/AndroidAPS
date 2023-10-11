@@ -164,6 +164,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 handleConnectionStateChange(connectionState)
             }
         }
+        scope.launch {
+            medtrumPump.pumpWarningFlow.collect { pumpWarning ->
+                notifyPumpWarning(pumpWarning)
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -317,6 +322,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
             // Resume suspended pump
             if (result) result = sendPacketAndGetResponse(ResumePumpPacket(injector))
+            if (result) medtrumPump.clearAlarmState()
         }
         return result
     }
@@ -330,21 +336,22 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (!canSetBolus()) return false
 
         val insulin = detailedBolusInfo.insulin
+        medtrumPump.bolusDone = false
+        medtrumPump.bolusStopped = false
 
         if (!sendBolusCommand(insulin)) {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
-            commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+            commandQueue.readStatus(rh.gs(R.string.bolus_error), null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+            medtrumPump.bolusDone = true
             t.insulin = 0.0
             return false
         }
 
         val bolusStart = System.currentTimeMillis()
-        medtrumPump.bolusDone = false
-        medtrumPump.bolusingTreatment = t
-        medtrumPump.bolusAmountToBeDelivered = insulin
-        medtrumPump.bolusStopped = false
         medtrumPump.bolusProgressLastTimeStamp = bolusStart
         medtrumPump.bolusStartTime = bolusStart
+        medtrumPump.bolusingTreatment = t
+        medtrumPump.bolusAmountToBeDelivered = insulin
 
         detailedBolusInfo.timestamp = bolusStart // Make sure the timestamp is set to the start of the bolus
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
@@ -420,6 +427,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         var communicationLost = false
         var connectionRetryCounter = 0
         var checkTime = medtrumPump.bolusProgressLastTimeStamp
+        var lastSentBolusAmount: Double? = null
 
         while (!medtrumPump.bolusStopped && !medtrumPump.bolusDone && !communicationLost) {
             SystemClock.sleep(100)
@@ -436,10 +444,15 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     disconnect("Communication stopped")
                 }
             } else {
-                bolusingEvent.t = medtrumPump.bolusingTreatment
-                bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, medtrumPump.bolusingTreatment?.insulin, medtrumPump.bolusAmountToBeDelivered)
-                bolusingEvent.percent = round((medtrumPump.bolusingTreatment?.insulin?.div(medtrumPump.bolusAmountToBeDelivered) ?: 0.0) * 100).toInt() - 1
-                rxBus.send(bolusingEvent)
+                val currentBolusAmount = medtrumPump.bolusingTreatment?.insulin
+
+                if (currentBolusAmount != null && currentBolusAmount != lastSentBolusAmount) {
+                    bolusingEvent.t = medtrumPump.bolusingTreatment
+                    bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, medtrumPump.bolusingTreatment?.insulin, medtrumPump.bolusAmountToBeDelivered)
+                    bolusingEvent.percent = round(currentBolusAmount.div(medtrumPump.bolusAmountToBeDelivered) * 100).toInt() - 1
+                    rxBus.send(bolusingEvent)
+                    lastSentBolusAmount = currentBolusAmount
+                }
             }
         }
 
@@ -577,6 +590,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         when (state) {
             MedtrumPumpState.NONE,
             MedtrumPumpState.STOPPED              -> {
+                rxBus.send(EventDismissNotification(Notification.PUMP_WARNING))
                 rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
                 rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
                 uiInteraction.addNotification(
@@ -607,7 +621,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
             MedtrumPumpState.ACTIVE_ALT           -> {
                 rxBus.send(EventDismissNotification(Notification.PATCH_NOT_ACTIVE))
                 rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
-                medtrumPump.clearAlarmState()
             }
 
             MedtrumPumpState.LOW_BG_SUSPENDED,
@@ -625,20 +638,22 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
 
             MedtrumPumpState.HOURLY_MAX_SUSPENDED -> {
-                uiInteraction.addNotification(
+                uiInteraction.addNotificationWithSound(
                     Notification.PUMP_SUSPENDED,
                     rh.gs(R.string.pump_is_suspended_hour_max),
-                    Notification.NORMAL,
+                    Notification.URGENT,
+                    app.aaps.core.ui.R.raw.alarm
                 )
                 // Pump will report proper TBR for this from loadEvents()
                 commandQueue.loadEvents(null)
             }
 
             MedtrumPumpState.DAILY_MAX_SUSPENDED  -> {
-                uiInteraction.addNotification(
+                uiInteraction.addNotificationWithSound(
                     Notification.PUMP_SUSPENDED,
                     rh.gs(R.string.pump_is_suspended_day_max),
-                    Notification.NORMAL,
+                    Notification.URGENT,
+                    app.aaps.core.ui.R.raw.alarm
                 )
                 // Pump will report proper TBR for this from loadEvents()
                 commandQueue.loadEvents(null)
@@ -683,6 +698,23 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
     }
 
+    private fun notifyPumpWarning(alarmState: AlarmState) {
+        // Notification on pump warning
+        if (sp.getBoolean(R.string.key_pump_warning_notification, true) && alarmState != AlarmState.NONE) {
+            uiInteraction.addNotification(
+                Notification.PUMP_WARNING,
+                rh.gs(R.string.pump_warning, medtrumPump.alarmStateToString(alarmState)),
+                Notification.ANNOUNCEMENT,
+            )
+            pumpSync.insertAnnouncement(
+                medtrumPump.alarmStateToString(alarmState),
+                null,
+                medtrumPump.pumpType(),
+                medtrumPump.pumpSN.toString(radix = 16)
+            )
+        }
+    }
+
     /** BLECommCallbacks */
     override fun onBLEConnected() {
         aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onBLEConnected")
@@ -704,9 +736,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
         currentState.onIndication(indication)
     }
 
-    override fun onSendMessageError(reason: String) {
+    override fun onSendMessageError(reason: String, isRetryAble: Boolean) {
         aapsLogger.debug(LTag.PUMPCOMM, "<<<<< error during send message $reason")
-        currentState.onSendMessageError(reason)
+        currentState.onSendMessageError(reason, isRetryAble)
     }
 
     /** Service stuff */
@@ -791,10 +823,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
             return responseSuccess
         }
 
-        fun onSendMessageError(reason: String) {
+        fun onSendMessageError(reason: String, isRetryAble: Boolean) {
             aapsLogger.warn(LTag.PUMPCOMM, "onSendMessageError: " + this.toString() + "reason: $reason")
             // Retry 3 times
-            if (sendRetryCounter < 3) {
+            if (sendRetryCounter < 3 && isRetryAble) {
                 sendRetryCounter++
                 mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             } else {

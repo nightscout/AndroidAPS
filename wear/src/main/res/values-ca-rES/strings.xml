@@ -7,8 +7,6 @@
     <string name="label_watchface_big_chart">AAPS(GrafGrossa)</string>
     <string name="label_watchface_no_chart">AAPS(NoGraf)</string>
     <string name="label_watchface_circle">AAPS(Cercle)</string>
-    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
     <string name="label_warning_sync">Cap dada!</string>
     <string name="label_warning_old">Dades antigues!</string>
@@ -44,7 +42,6 @@
     <string name="pref_quick_righty">Ràpid dreta</string>
     <string name="pref_quick_lefty">Ràpid esquerra</string>
     <string name="pref_modern_sparse">Dispers modern</string>
-    <string name="pref_delta_granularity">Granularitat delta (Steampunk)</string>
     <string name="pref_low">Baix</string>
     <string name="pref_medium">Mig</string>
     <string name="pref_high">Alt</string>

@@ -1,10 +1,10 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.BasalType
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SetTempBasalPacketTest : MedtrumTestBase() {
@@ -31,7 +31,7 @@ class SetTempBasalPacketTest : MedtrumTestBase() {
 
         // Expected values
         val expected = byteArrayOf(24, 6, 25, 0, 60, 0)
-        Assertions.assertEquals(expected.contentToString(), result.contentToString())
+        assertThat(result.contentToString()).isEqualTo(expected.contentToString())
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
@@ -52,12 +52,12 @@ class SetTempBasalPacketTest : MedtrumTestBase() {
         val expectedStartTime = 1679575112000L
         val expectedPatchId = 146L
 
-        Assertions.assertTrue(result)
-        Assertions.assertEquals(expectedBasalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(expectedBasalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(expectedStartTime, medtrumPump.lastBasalStartTime)
-        Assertions.assertEquals(expectedPatchId, medtrumPump.lastBasalPatchId)
+        assertThat(result).isTrue()
+        assertThat(medtrumPump.lastBasalType).isEqualTo(expectedBasalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(expectedBasalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(expectedBasalSequence)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(expectedStartTime)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(expectedPatchId)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -72,6 +72,6 @@ class SetTempBasalPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        Assertions.assertFalse(result)
+        assertThat(result).isFalse()
     }
 }

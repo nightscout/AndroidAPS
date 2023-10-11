@@ -12,11 +12,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.pump.combo.ruffyscripter.history.Bolus
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -56,8 +56,8 @@ class ComboPluginTest : TestBase() {
         comboPlugin.setPluginEnabled(PluginType.PUMP, true)
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false)
         val c = comboPlugin.isLoopInvocationAllowed(ConstraintObject(true, aapsLogger))
-        Assertions.assertEquals("Combo: No valid basal rate read from pump", c.getReasons())
-        Assertions.assertEquals(false, c.value())
+        assertThat(c.getReasons()).isEqualTo("Combo: No valid basal rate read from pump")
+        assertThat(c.value()).isFalse()
         comboPlugin.setPluginEnabled(PluginType.PUMP, false)
     }
 
@@ -66,18 +66,16 @@ class ComboPluginTest : TestBase() {
         val now = System.currentTimeMillis()
         val pumpTimestamp = now - now % 1000
         // same timestamp, different bolus leads to different fake timestamp
-        Assertions.assertNotEquals(
-            comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.1, true)),
+        assertThat(
             comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.3, true))
-        )
+        ).isNotEqualTo(comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.1, true)))
         // different timestamp, same bolus leads to different fake timestamp
-        Assertions.assertNotEquals(
-            comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.3, true)),
+        assertThat(
             comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp + 60 * 1000, 0.3, true))
-        )
+        ).isNotEqualTo(comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.3, true)))
         // generated timestamp has second-precision
         val bolus = Bolus(pumpTimestamp, 0.2, true)
         val calculatedTimestamp = comboPlugin.generatePumpBolusId(bolus)
-        Assertions.assertEquals(calculatedTimestamp, calculatedTimestamp - calculatedTimestamp % 1000)
+        assertThat(calculatedTimestamp - calculatedTimestamp % 1000).isEqualTo(calculatedTimestamp)
     }
 }

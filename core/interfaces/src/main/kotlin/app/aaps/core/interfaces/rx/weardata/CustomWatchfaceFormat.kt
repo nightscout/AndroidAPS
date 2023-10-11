@@ -238,7 +238,23 @@ enum class JsonKeys(val key: String) {
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),
     MONTHFORMAT("monthFormat"),
-    BACKGROUND("background")
+    BACKGROUND("background"),       // Background image for textView
+    LEFTOFFSET("leftOffset"),
+    TOPOFFSET("topOffset"),
+    ROTATIONOFFSET("rotationOffset"),
+    DYNDATA("dynData"),             //Bloc of DynDatas definition, and DynData keyValue within view
+    VALUEKEY("valueKey"),           // Indentify which value (default is View Value)
+    MINDATA("minData"),             // Min data Value (default defined for each value, note unit mg/dl for all bg, deltas)
+    MAXDATA("maxData"),             // Max data idem min data (note all value below min or above max will be considered as equal min or mas)
+    MINVALUE("minValue"),           // min returned value (when data value equals minData
+    MAXVALUE("maxValue"),           //
+    INVALIDVALUE("invalidValue"),
+    IMAGE("image"),
+    INVALIDIMAGE("invalidImage"),
+    INVALIDCOLOR("invalidColor"),
+    TWINVIEW("twinView"),
+    TOPOFFSETTWINHIDDEN("topOffsetTwinHidden"),
+    LEFTOFFSETTWINHIDDEN("leftOffsetTwinHidden")
 }
 
 enum class JsonKeyValues(val key: String) {
@@ -260,7 +276,8 @@ enum class JsonKeyValues(val key: String) {
     BOLD("bold"),
     BOLD_ITALIC("bold_italic"),
     ITALIC("italic"),
-    BGCOLOR("bgColor")
+    BGCOLOR("bgColor"),
+    SGVLEVEL("sgvLevel")
 }
 
 class ZipWatchfaceFormat {

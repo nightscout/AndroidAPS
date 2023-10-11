@@ -1,20 +1,20 @@
 package app.aaps.plugins.automation.elements
 
 import app.aaps.plugins.automation.triggers.TriggerTestBase
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 class InputDurationTest : TriggerTestBase() {
 
     @Test fun setValueTest() {
         var i = InputDuration(5, InputDuration.TimeUnit.MINUTES)
-        Assertions.assertEquals(5, i.value)
-        Assertions.assertEquals(InputDuration.TimeUnit.MINUTES, i.unit)
+        assertThat(i.value).isEqualTo(5)
+        assertThat(i.unit).isEqualTo(InputDuration.TimeUnit.MINUTES)
         i = InputDuration(5, InputDuration.TimeUnit.HOURS)
-        Assertions.assertEquals(5, i.value)
-        Assertions.assertEquals(InputDuration.TimeUnit.HOURS, i.unit)
-        Assertions.assertEquals(5 * 60, i.getMinutes())
+        assertThat(i.value).isEqualTo(5)
+        assertThat(i.unit).isEqualTo(InputDuration.TimeUnit.HOURS)
+        assertThat(i.getMinutes()).isEqualTo(5 * 60)
         i.setMinutes(60)
-        Assertions.assertEquals(1, i.value)
+        assertThat(i.value).isEqualTo(1)
     }
 }

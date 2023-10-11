@@ -4,14 +4,14 @@ import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.plugins.automation.triggers.TriggerConnector
 import app.aaps.plugins.automation.triggers.TriggerDummy
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ComposeTriggerTest : TestBase() {
 
-    var injector: HasAndroidInjector = HasAndroidInjector { AndroidInjector { } }
+    val injector: HasAndroidInjector = HasAndroidInjector { AndroidInjector { } }
 
     @Test fun testTriggerList() {
         val root = TriggerConnector(injector)
@@ -23,16 +23,11 @@ class ComposeTriggerTest : TestBase() {
         root.list.add(t1)
         val t2: Trigger = TriggerDummy(injector)
         root.list.add(t2)
-        Assertions.assertEquals(3, root.size())
-        Assertions.assertEquals(t0, root.list[0])
-        Assertions.assertEquals(t1, root.list[1])
-        Assertions.assertEquals(t2, root.list[2])
+        assertThat(root.list).containsExactly(t0, t1, t2).inOrder()
 
         // remove a trigger
         root.list.remove(t1)
-        Assertions.assertEquals(2, root.size())
-        Assertions.assertEquals(t0, root.list[0])
-        Assertions.assertEquals(t2, root.list[1])
+        assertThat(root.list).containsExactly(t0, t2).inOrder()
     }
 
     @Test
@@ -44,6 +39,6 @@ class ComposeTriggerTest : TestBase() {
             t[i] = TriggerDummy(injector)
             root.list.add(t[i]!!)
         }
-        Assertions.assertEquals(4, root.size())
+        assertThat(root.size()).isEqualTo(4)
     }
 }

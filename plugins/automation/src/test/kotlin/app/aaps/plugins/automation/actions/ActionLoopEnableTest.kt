@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.actions
 import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -24,15 +24,15 @@ class ActionLoopEnableTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.string.enableloop, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.enableloop)
     }
 
     @Test fun shortDescriptionTest() {
-        Assertions.assertEquals("Enable loop", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Enable loop")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(R.drawable.ic_play_circle_outline_24dp, sut.icon())
+        assertThat(sut.icon()).isEqualTo(R.drawable.ic_play_circle_outline_24dp)
     }
 
     @Test fun doActionTest() {

@@ -6,11 +6,12 @@ import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTran
 import app.aaps.database.impl.transactions.Transaction
 import app.aaps.plugins.automation.R
 import io.reactivex.rxjava3.core.Single
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionStopTempTargetTest : ActionsTestBase() {
 
@@ -24,15 +25,15 @@ class ActionStopTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.string.stoptemptarget, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.stoptemptarget)
     }
 
     @Test fun shortDescriptionTest() {
-        Assertions.assertEquals("Stop temp target", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Stop temp target")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(R.drawable.ic_stop_24dp, sut.icon())
+        assertThat(sut.icon()).isEqualTo(R.drawable.ic_stop_24dp)
     }
 
     @Test fun doActionTest() {
@@ -52,22 +53,22 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
+                assertThat(result.success).isTrue()
             }
         })
         Mockito.verify(repository, Mockito.times(1)).runTransactionForResult((anyObject<Transaction<CancelCurrentTemporaryTargetIfAnyTransaction.TransactionResult>>()))
     }
 
     @Test fun hasDialogTest() {
-        Assertions.assertFalse(sut.hasDialog())
+        assertThat(sut.hasDialog()).isFalse()
     }
 
     @Test fun toJSONTest() {
-        Assertions.assertEquals("{\"type\":\"ActionStopTempTarget\"}", sut.toJSON())
+        JSONAssert.assertEquals("""{"type":"ActionStopTempTarget"}""", sut.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {
-        sut.fromJSON("{\"reason\":\"Test\"}")
-        Assertions.assertNotNull(sut)
+        sut.fromJSON("""{"reason":"Test"}""")
+        assertThat(sut).isNotNull()
     }
 }

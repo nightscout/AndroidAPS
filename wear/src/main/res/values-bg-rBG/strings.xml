@@ -8,8 +8,6 @@
     <string name="label_watchface_no_chart">AAPS(без Графика)</string>
     <string name="label_watchface_circle">AAPS(Кръгъл)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Самолет)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_watchface_custom">AAPS(Персонализиран)</string>
     <string name="label_actions_tile">AAPS(Действия)</string>
@@ -53,7 +51,6 @@
     <string name="pref_quick_righty">Десничар</string>
     <string name="pref_quick_lefty">Левичар</string>
     <string name="pref_modern_sparse">Модерен</string>
-    <string name="pref_delta_granularity">Делта грануларност (Steampunk)</string>
     <string name="pref_low">Ниска</string>
     <string name="pref_medium">Средна</string>
     <string name="pref_high">Висока</string>
@@ -176,8 +173,6 @@
     <string name="wear_control_no_data">Няма налични данни</string>
     <string name="increment">Нарастване</string>
     <string name="decrement">Намаляване</string>
-    <string name="first_char_high">В</string>
-    <string name="first_char_low">Н</string>
     <string name="abbreviation_average">средно</string>
     <string name="no_iob_u">--Е</string>
     <string name="no_cob_g">--гр</string>

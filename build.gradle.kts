@@ -12,20 +12,20 @@ buildscript {
         set("rxkotlin_version", "3.0.1")
         set("room_version", "2.5.2")
         set("lifecycle_version", "2.6.2")
-        set("dagger_version", "2.48")
+        set("dagger_version", "2.48.1")
         set("coroutines_version", "1.7.3")
-        set("activity_version", "1.7.2")
+        set("activity_version", "1.8.0")
         set("fragmentktx_version", "1.6.1")
         set("ormLite_version", "4.46")
         set("gson_version", "2.10.1")
-        set("nav_version", "2.7.3")
+        set("nav_version", "2.7.4")
         set("appcompat_version", "1.6.1")
-        set("material_version", "1.9.0")
+        set("material_version", "1.10.0")
         set("gridlayout_version", "1.0.0")
         set("constraintlayout_version", "2.1.4")
         set("preferencektx_version", "1.2.1")
         set("commonscodec_version", "1.16.0")
-        set("guava_version", "32.1.2-jre")
+        set("guava_version", "32.1.3-jre")
         set("jodatime_version", "2.12.5")
         set("work_version", "2.8.1")
         set("tink_version", "1.10.0")
@@ -35,7 +35,7 @@ buildscript {
 
         set("junit_version", "4.13.2")
         set("junit_jupiter_version", "5.10.0")
-        set("mockito_version", "5.5.0")
+        set("mockito_version", "5.6.0")
         set("dexmaker_version", "1.2")
         set("retrofit2_version", "2.9.0")
         set("okhttp3_version", "4.11.0")
@@ -74,7 +74,7 @@ buildscript {
 }
 
 plugins {
-    id("org.jlleitschuh.gradle.ktlint") version "11.6.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
     id("org.jetbrains.kotlin.android") version Libs.Kotlin.kotlin apply false
 }
 

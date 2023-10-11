@@ -148,6 +148,7 @@
     <string name="cob3_longer">Установка профиля на 150% увеличит расчетное время усвоения углеводов</string>
     <string name="cob3_shorter">Установка профиля на 150% уменьшит расчетное время усвоения углеводов</string>
     <string name="cob3_no_effect">Установка профиля на 150% не повлияет на расчетное время усвоения углеводов</string>
+    <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">На величину IOB влияют устанавливаемые ВБС.</string>
     <string name="iob_hightemp">Высокая ВБС не будет применяться, если уровень сахара в крови ниже целевого.</string>
     <string name="iob_negiob">Отрицательный IOB в течение длительного периода при отсутствии физнагрузки указывает на то, что ваш профиль завышен и требуется снизить кол-во инсулина в настройках.</string>

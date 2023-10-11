@@ -10,14 +10,15 @@ import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.InputString
 import app.aaps.plugins.automation.ui.TimerUtil
 import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionAlarmTest : TestBase() {
 
@@ -54,39 +55,39 @@ class ActionAlarmTest : TestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assertions.assertEquals(app.aaps.core.ui.R.string.alarm, sut.friendlyName())
+        assertThat(sut.friendlyName()).isEqualTo(app.aaps.core.ui.R.string.alarm)
     }
 
     @Test fun shortDescriptionTest() {
         sut.text = InputString("Asd")
-        Assertions.assertEquals("Alarm: %s", sut.shortDescription())
+        assertThat(sut.shortDescription()).isEqualTo("Alarm: %s")
     }
 
     @Test fun iconTest() {
-        Assertions.assertEquals(app.aaps.core.main.R.drawable.ic_access_alarm_24dp, sut.icon())
+        assertThat(sut.icon()).isEqualTo(app.aaps.core.main.R.drawable.ic_access_alarm_24dp)
     }
 
     @Test fun doActionTest() {
         sut.text = InputString("Asd")
         sut.doAction(object : Callback() {
             override fun run() {
-                Assertions.assertTrue(result.success)
+                assertThat(result.success).isTrue()
             }
         })
     }
 
     @Test fun hasDialogTest() {
-        Assertions.assertTrue(sut.hasDialog())
+        assertThat(sut.hasDialog()).isTrue()
     }
 
     @Test fun toJSONTest() {
         sut.text = InputString("Asd")
-        Assertions.assertEquals("{\"data\":{\"text\":\"Asd\"},\"type\":\"ActionAlarm\"}", sut.toJSON())
+        JSONAssert.assertEquals("""{"data":{"text":"Asd"},"type":"ActionAlarm"}""", sut.toJSON(), true)
     }
 
     @Test fun fromJSONTest() {
         sut.text = InputString("Asd")
-        sut.fromJSON("{\"text\":\"Asd\"}")
-        Assertions.assertEquals("Asd", sut.text.value)
+        sut.fromJSON("""{"text":"Asd"}""")
+        assertThat(sut.text.value).isEqualTo("Asd")
     }
 }

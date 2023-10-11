@@ -8,8 +8,6 @@
     <string name="label_watchface_no_chart">AAPS(χωρίς_γράφημα)</string>
     <string name="label_watchface_circle">AAPS(Κυκλικό)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Πιλοτήριο)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(ψηφιακό)</string>
     <string name="label_watchface_custom">AAPS(προσαρμοσμένα_χαρακτηριστικά)</string>
     <string name="label_actions_tile">AAPS( Ενέργειες)</string>
@@ -59,7 +57,6 @@
     <string name="pref_quick_righty">Γρήγορα δεξιά</string>
     <string name="pref_quick_lefty">Γρήγορα αριστερά</string>
     <string name="pref_modern_sparse">Σύγχρονο Sparse</string>
-    <string name="pref_delta_granularity">Διαφορά Βαθμού Λεπτομέρειας (Steampunk)</string>
     <string name="pref_low">Χαμηλή</string>
     <string name="pref_medium">Μέσο</string>
     <string name="pref_high">Υψηλό</string>
@@ -182,8 +179,6 @@
     <string name="wear_control_no_data">Δεν υπάρχουν διαθέσιμα δεδομένα</string>
     <string name="increment">αύξηση</string>
     <string name="decrement">μείωση</string>
-    <string name="first_char_high">H</string>
-    <string name="first_char_low">L</string>
     <string name="abbreviation_average">μέσος</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>

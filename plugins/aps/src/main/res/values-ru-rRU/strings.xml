@@ -83,6 +83,7 @@
     <string name="smb_disabled_in_preferences">Супер микро болюс SMB отключен в настройках</string>
     <string name="uam_disabled_in_preferences">Непредвиденный прием пищи UAM отключен в настройках</string>
     <string name="autosens_disabled_in_preferences">Автоматический подбор чувствительности Autosens отключен в настройках</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens отключён в DynISF</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>

@@ -40,7 +40,7 @@ interface BLECommCallback {
     fun onBLEDisconnected()
     fun onNotification(notification: ByteArray)
     fun onIndication(indication: ByteArray)
-    fun onSendMessageError(reason: String)
+    fun onSendMessageError(reason: String, isRetryAble: Boolean)
 }
 
 @Singleton
@@ -258,7 +258,11 @@ class BLEComm @Inject internal constructor(
                         mReadPacket?.addData(value)
                     }
                     if (mReadPacket?.allDataReceived() == true) {
-                        mReadPacket?.getData()?.let { mCallback?.onIndication(it) }
+                        if (mReadPacket?.failed() == true) {
+                            mCallback?.onSendMessageError("ReadDataPacket failed", false)
+                        } else {
+                            mReadPacket?.getData()?.let { mCallback?.onIndication(it) }
+                        }
                         mReadPacket = null
                     }
                 }
@@ -279,7 +283,7 @@ class BLEComm @Inject internal constructor(
                     }
                 }
             } else {
-                mCallback?.onSendMessageError("onCharacteristicWrite failure")
+                mCallback?.onSendMessageError("onCharacteristicWrite failure", true)
             }
         }
 
@@ -404,7 +408,7 @@ class BLEComm @Inject internal constructor(
             writeCharacteristic(uartWriteBTGattChar, value)
         } else {
             aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage error in writePacket!")
-            mCallback?.onSendMessageError("error in writePacket!")
+            mCallback?.onSendMessageError("error in writePacket!", false)
         }
     }
 
@@ -430,7 +434,7 @@ class BLEComm @Inject internal constructor(
                                     aapsLogger.debug(LTag.PUMPBTCOMM, "writeCharacteristic: ${Arrays.toString(data)}")
                                     val success = mBluetoothGatt?.writeCharacteristic(characteristic)
                                     if (success != true) {
-                                        mCallback?.onSendMessageError("Failed to write characteristic")
+                                        mCallback?.onSendMessageError("Failed to write characteristic", true)
                                     }
                                 }
                             }, WRITE_DELAY_MILLIS)

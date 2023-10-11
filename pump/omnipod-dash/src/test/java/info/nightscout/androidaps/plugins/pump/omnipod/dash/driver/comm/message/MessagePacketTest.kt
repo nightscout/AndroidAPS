@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import app.aaps.core.utils.toHex
+import com.google.common.truth.Truth.assertThat
 import com.google.crypto.tink.subtle.Hex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class MessagePacketTest {
@@ -16,19 +16,19 @@ class MessagePacketTest {
 
     @Test fun testParseMessagePacket() {
         val msg = MessagePacket.parse(Hex.decode(payload))
-        Assertions.assertEquals(msg.type, MessageType.ENCRYPTED)
-        Assertions.assertEquals(msg.source, Id.fromLong(136326824))
-        Assertions.assertEquals(msg.destination, Id.fromLong(136326825))
-        Assertions.assertEquals(msg.sequenceNumber, 7.toByte())
-        Assertions.assertEquals(msg.ackNumber, 0.toByte())
-        Assertions.assertEquals(msg.eqos, 1.toShort())
-        Assertions.assertEquals(msg.priority, false)
-        Assertions.assertEquals(msg.lastMessage, false)
-        Assertions.assertEquals(msg.gateway, false)
-        Assertions.assertEquals(msg.sas, true)
-        Assertions.assertEquals(msg.tfs, false)
-        Assertions.assertEquals(msg.version, 0.toShort())
-        Assertions.assertEquals(msg.payload.toHex(), payload.substring(32, payload.length))
+        assertThat(msg.type).isEqualTo(MessageType.ENCRYPTED)
+        assertThat(msg.source).isEqualTo(Id.fromLong(136326824))
+        assertThat(msg.destination).isEqualTo(Id.fromLong(136326825))
+        assertThat(msg.sequenceNumber).isEqualTo(7.toByte())
+        assertThat(msg.ackNumber).isEqualTo(0.toByte())
+        assertThat(msg.eqos).isEqualTo(1.toShort())
+        assertThat(msg.priority).isFalse()
+        assertThat(msg.lastMessage).isFalse()
+        assertThat(msg.gateway).isFalse()
+        assertThat(msg.sas).isTrue()
+        assertThat(msg.tfs).isFalse()
+        assertThat(msg.version).isEqualTo(0.toShort())
+        assertThat(payload.substring(32, payload.length)).isEqualTo(msg.payload.toHex())
     }
 
     @Test fun testSerializeMessagePacket() {
@@ -46,6 +46,6 @@ class MessagePacketTest {
             tfs = false,
             payload = Hex.decode(payload.substring(32, payload.length))
         )
-        Assertions.assertEquals(msg.asByteArray().toHex(), payload)
+        assertThat(msg.asByteArray().toHex()).isEqualTo(payload)
     }
 }

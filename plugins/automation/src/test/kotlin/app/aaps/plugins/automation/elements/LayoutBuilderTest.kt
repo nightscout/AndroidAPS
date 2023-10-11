@@ -3,7 +3,7 @@ package app.aaps.plugins.automation.elements
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 class LayoutBuilderTest : TestBase() {
@@ -14,15 +14,15 @@ class LayoutBuilderTest : TestBase() {
         val layoutBuilder = LayoutBuilder()
         val inputInsulin = InputInsulin()
         layoutBuilder.add(inputInsulin)
-        Assertions.assertEquals(1, layoutBuilder.mElements.size)
+        assertThat(layoutBuilder.mElements).hasSize(1)
     }
 
     @Test fun addConditionalTest() {
         val layoutBuilder = LayoutBuilder()
         val inputInsulin = InputInsulin()
         layoutBuilder.maybeAdd(inputInsulin, true)
-        Assertions.assertEquals(1, layoutBuilder.mElements.size)
+        assertThat(layoutBuilder.mElements).hasSize(1)
         layoutBuilder.maybeAdd(inputInsulin, false)
-        Assertions.assertEquals(1, layoutBuilder.mElements.size)
+        assertThat(layoutBuilder.mElements).hasSize(1)
     }
 }

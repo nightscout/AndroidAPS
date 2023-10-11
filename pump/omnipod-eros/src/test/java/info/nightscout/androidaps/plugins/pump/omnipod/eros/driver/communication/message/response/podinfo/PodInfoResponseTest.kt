@@ -3,35 +3,35 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType
 import info.nightscout.pump.common.utils.ByteUtil
-import org.junit.jupiter.api.Assertions
+import kotlin.test.assertIsNot
 import org.junit.jupiter.api.Test
 
 internal class PodInfoResponseTest {
 
     @Test fun testRawData() {
-        val encodedData = ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d")
+        val encodedData = ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d")!!
         val podInfoResponse = PodInfoResponse(encodedData)
-        Assertions.assertArrayEquals(encodedData, podInfoResponse.rawData)
+        assertThat(podInfoResponse.rawData.asList()).containsExactlyElementsIn(encodedData.asIterable()).inOrder()
     }
 
     @Test fun testRawDataWithLongerMessage() {
-        val encodedData = ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d01")
-        val expected = ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d")
+        val encodedData = ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d01")!!
+        val expected = ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d")!!
         val podInfoResponse = PodInfoResponse(encodedData)
-        Assertions.assertArrayEquals(expected, podInfoResponse.rawData)
+        assertThat(podInfoResponse.rawData.asList()).containsExactlyElementsIn(expected.asIterable()).inOrder()
     }
 
     @Test fun testMessageDecoding() {
         val podInfoResponse = PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d"))
-        Assertions.assertEquals(PodInfoType.DETAILED_STATUS, podInfoResponse.subType)
+        assertThat(podInfoResponse.subType).isEqualTo(PodInfoType.DETAILED_STATUS)
         val podInfo = podInfoResponse.podInfo as PodInfoDetailedStatus
-        Assertions.assertFalse(podInfo.isFaultAccessingTables)
-        Assertions.assertEquals(0x01, podInfo.errorEventInfo.internalVariable.toInt())
+        assertThat(podInfo.isFaultAccessingTables).isFalse()
+        assertThat(podInfo.errorEventInfo.internalVariable.toInt()).isEqualTo(0x01)
     }
 
     @Test fun testInvalidPodInfoTypeMessageDecoding() {
         val podInfoResponse = PodInfoResponse(ByteUtil.fromHexString("0216020d0000000000ab6a038403ff03860000285708030d"))
-        Assertions.assertEquals(PodInfoType.DETAILED_STATUS, podInfoResponse.subType)
-        assertThat(podInfoResponse.podInfo).isNotInstanceOf(PodInfoActiveAlerts::class.java)
+        assertThat(podInfoResponse.subType).isEqualTo(PodInfoType.DETAILED_STATUS)
+        assertIsNot<PodInfoActiveAlerts>(podInfoResponse.podInfo)
     }
 }

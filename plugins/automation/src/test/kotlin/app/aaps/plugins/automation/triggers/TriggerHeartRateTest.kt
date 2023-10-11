@@ -3,19 +3,20 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.database.entities.HeartRate
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
+import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.Mockito.`when`
+import org.skyscreamer.jsonassert.JSONAssert
 
 class TriggerHeartRateTest : TriggerTestBase() {
 
     @Test
     fun friendlyName() {
-        Assertions.assertEquals(R.string.triggerHeartRate, TriggerHeartRate(injector).friendlyName())
+        assertThat(TriggerHeartRate(injector).friendlyName()).isEqualTo(R.string.triggerHeartRate)
     }
 
     @Test
@@ -23,7 +24,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
         val t = TriggerHeartRate(injector)
         `when`(rh.gs(Comparator.Compare.IS_EQUAL_OR_GREATER.stringRes)).thenReturn(">")
         `when`(rh.gs(R.string.triggerHeartRateDesc, ">", 80.0)).thenReturn("test")
-        Assertions.assertEquals("test", t.friendlyDescription())
+        assertThat(t.friendlyDescription()).isEqualTo("test")
     }
 
     @Test
@@ -33,16 +34,16 @@ class TriggerHeartRateTest : TriggerTestBase() {
             comparator.value = Comparator.Compare.IS_GREATER
         }
         val dup = t.duplicate() as TriggerHeartRate
-        Assertions.assertNotSame(t, dup)
-        Assertions.assertEquals(100.0, dup.heartRate.value, 0.01)
-        Assertions.assertEquals(Comparator.Compare.IS_GREATER, dup.comparator.value)
+        assertThat(dup).isNotSameInstanceAs(t)
+        assertThat(dup.heartRate.value).isWithin(0.01).of(100.0)
+        assertThat(dup.comparator.value).isEqualTo(Comparator.Compare.IS_GREATER)
 
     }
 
     @Test
     fun shouldRunNotAvailable() {
         val t = TriggerHeartRate(injector).apply { comparator.value = Comparator.Compare.IS_NOT_AVAILABLE }
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         verifyNoMoreInteractions(repository)
     }
 
@@ -53,7 +54,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
             comparator.value = Comparator.Compare.IS_GREATER
         }
         `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(emptyList()))
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
         verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
         verifyNoMoreInteractions(repository)
     }
@@ -69,7 +70,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
             HeartRate(duration = 300_000, timestamp = now, beatsPerMinute = 60.0, device = "test"),
         )
         `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(hrs))
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
         verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
         verifyNoMoreInteractions(repository)
     }
@@ -84,7 +85,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
             HeartRate(duration = 300_000, timestamp = now, beatsPerMinute = 120.0, device = "test"),
         )
         `when`(repository.getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)).thenReturn(Single.just(hrs))
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         verify(repository).getHeartRatesFromTime(now - t.averageHeartRateDurationMillis)
         verifyNoMoreInteractions(repository)
     }
@@ -95,9 +96,9 @@ class TriggerHeartRateTest : TriggerTestBase() {
             heartRate.value = 100.0
             comparator.value = Comparator.Compare.IS_GREATER
         }
-        Assertions.assertEquals(Comparator.Compare.IS_GREATER, t.comparator.value)
+        assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_GREATER)
 
-        Assertions.assertEquals("""{"data":{"comparator":"IS_GREATER","heartRate":100},"type":"TriggerHeartRate"}""".trimMargin(), t.toJSON())
+        JSONAssert.assertEquals("""{"data":{"comparator":"IS_GREATER","heartRate":100},"type":"TriggerHeartRate"}""", t.toJSON(), true)
     }
 
     @Test
@@ -107,7 +108,7 @@ class TriggerHeartRateTest : TriggerTestBase() {
                 """{"data":{"comparator":"IS_GREATER","heartRate":100},"type":"TriggerHeartRate"}"""
             )
         ) as TriggerHeartRate
-        Assertions.assertEquals(Comparator.Compare.IS_GREATER, t.comparator.value)
-        Assertions.assertEquals(100.0, t.heartRate.value, 0.01)
+        assertThat(t.comparator.value).isEqualTo(Comparator.Compare.IS_GREATER)
+        assertThat(t.heartRate.value).isWithin(0.01).of(100.0)
     }
 }

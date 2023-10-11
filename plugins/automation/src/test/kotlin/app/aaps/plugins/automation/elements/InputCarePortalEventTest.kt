@@ -1,19 +1,19 @@
 package app.aaps.plugins.automation.elements
 
 import app.aaps.plugins.automation.triggers.TriggerTestBase
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 class InputCarePortalEventTest : TriggerTestBase() {
 
     @Test
     fun labelsTest() {
-        Assertions.assertEquals(4, InputCarePortalMenu.EventType.labels(rh).size)
+        assertThat(InputCarePortalMenu.EventType.labels(rh)).hasSize(4)
     }
 
     @Test
     fun setValueTest() {
         val cp = InputCarePortalMenu(rh, InputCarePortalMenu.EventType.EXERCISE)
-        Assertions.assertEquals(InputCarePortalMenu.EventType.EXERCISE, cp.value)
+        assertThat(cp.value).isEqualTo(InputCarePortalMenu.EventType.EXERCISE)
     }
 }
