@@ -21,96 +21,104 @@ repositories {
     google()
 }
 
-allOpen {
-    // allows mocking for classes w/o directly opening them for release builds
-    annotation("info.nightscout.androidaps.annotations.OpenForTesting")
+fun generateGitBuild(): String {
+    val stringBuilder: StringBuilder = StringBuilder()
+    try {
+        val stdout = ByteArrayOutputStream()
+        exec {
+            commandLine("git", "describe", "--always")
+            standardOutput = stdout
+        }
+        val commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored: Exception) {
+        stringBuilder.append("NoGitSystemAvailable")
+    }
+    return stringBuilder.toString()
 }
 
-fun generateGitBuild(): String =
+fun generateGitRemote(): String {
+    val stringBuilder: StringBuilder = StringBuilder()
     try {
-        ByteArrayOutputStream().let {
-            exec {
-                commandLine("git", "describe", "--always")
-                standardOutput = it
-            }
-            it.toString().trim()
+        val stdout = ByteArrayOutputStream()
+        exec {
+            commandLine("git", "remote", "get-url", "origin")
+            standardOutput = stdout
         }
+        val commitObject: String = stdout.toString().trim()
+        stringBuilder.append(commitObject)
     } catch (ignored: Exception) {
-        "NoGitSystemAvailable"
+        stringBuilder.append("NoGitSystemAvailable")
     }
+    return stringBuilder.toString()
+}
 
-fun generateGitRemote(): String =
-    try {
-        ByteArrayOutputStream().let {
-            exec {
-                commandLine("git", "remote", "get-url", "origin")
-                standardOutput = it
-            }
-            it.toString().trim()
-        }
-    } catch (ignored: Exception) {
-        "NoGitSystemAvailable"
-    }
-
-fun generateDate(): String =
+fun generateDate(): String {
+    val stringBuilder: StringBuilder = StringBuilder()
     // showing only date prevents app to rebuild everytime
-    SimpleDateFormat("yyyy.MM.dd").format(Date())
+    stringBuilder.append(SimpleDateFormat("yyyy.MM.dd").format(Date()))
+    return stringBuilder.toString()
+}
 
 fun isMaster(): Boolean = !Versions.appVersion.contains("-")
 
-fun gitAvailable(): Boolean =
+fun gitAvailable(): Boolean {
+    val stringBuilder: StringBuilder = StringBuilder()
     try {
-        ByteArrayOutputStream().let {
-            exec {
-                commandLine("git", "--version")
-                standardOutput = it
-            }
-            it.toString().trim().isNotEmpty()
+        val stdout = ByteArrayOutputStream()
+        exec {
+            commandLine("git", "--version")
+            standardOutput = stdout
         }
+        val commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
     } catch (ignored: Exception) {
-        false // NoGitSystemAvailable
+        return false // NoGitSystemAvailable
     }
+    return !stringBuilder.toString().isEmpty()
 
-fun allCommitted(): Boolean =
+}
+
+fun allCommitted(): Boolean {
+    val stringBuilder: StringBuilder = StringBuilder()
     try {
-        ByteArrayOutputStream().let {
-            exec {
-                commandLine("git", "status", "-s")
-                standardOutput = it
-            }
-            it.toString()
-                // ignore all changes done in .idea/codeStyles
-                .replace(Regex("(?m)^\\s*(M|A|D|\\?\\?)\\s*.*?\\.idea\\/codeStyles\\/.*?\\s*$"), "")
-                // ignore all files added to project dir but not staged/known to GIT
-                .replace(Regex("(?m)^\\s*(\\?\\?)\\s*.*?\\s*$"), "")
-                .trim().isEmpty()
+        val stdout = ByteArrayOutputStream()
+        exec {
+            commandLine("git", "status", "-s")
+            standardOutput = stdout
         }
+        // ignore all changes done in .idea/codeStyles
+        val cleanedList: String = stdout.toString().replace("/(?m)^\\s*(M|A|D|\\?\\?)\\s*.*?\\.idea\\/codeStyles\\/.*?\\s*\$/", "")
+            // ignore all files added to project dir but not staged/known to GIT
+            .replace("/(?m)^\\s*(\\?\\?)\\s*.*?\\s*\$/", "")
+        stringBuilder.append(cleanedList.trim())
     } catch (ignored: Exception) {
-        false // NoGitSystemAvailable
+        return false // NoGitSystemAvailable
     }
+    return stringBuilder.toString().isEmpty()
+}
 
 android {
 
-    namespace = "info.nightscout.androidaps"
+    namespace = "app.aaps"
     ndkVersion = Versions.ndkVersion
 
     defaultConfig {
         multiDexEnabled = true
         versionCode = Versions.versionCode
         version = Versions.appVersion
-        buildConfigField("String", "VERSION", "\"" + Versions.appVersion + "\"")
-        buildConfigField("String", "BUILDVERSION", "\"" + generateGitBuild() + "-" + generateDate() + "\"")
-        buildConfigField("String", "REMOTE", "\"" + generateGitRemote() + "\"")
-        buildConfigField("String", "HEAD", "\"" + generateGitBuild() + "\"")
-        buildConfigField("Boolean", "COMMITTED", allCommitted().toString())
+        buildConfigField("String", "VERSION", "\"$version\"")
+        buildConfigField("String", "BUILDVERSION", "\"${generateGitBuild()}-${generateDate()}\"")
+        buildConfigField("String", "REMOTE", "\"${generateGitRemote()}\"")
+        buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
+        buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
     }
 
-    val dim = "standard"
-    flavorDimensions.add(dim)
+    flavorDimensions.add("standard")
     productFlavors {
         create("full") {
             applicationId = "info.nightscout.androidaps"
-            dimension = dim
+            dimension = "standard"
             resValue("string", "app_name", "AAPS")
             versionName = Versions.appVersion
             manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
@@ -118,7 +126,7 @@ android {
         }
         create("pumpcontrol") {
             applicationId = "info.nightscout.aapspumpcontrol"
-            dimension = dim
+            dimension = "standard"
             resValue("string", "app_name", "Pumpcontrol")
             versionName = Versions.appVersion + "-pumpcontrol"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_pumpcontrol"
@@ -126,7 +134,7 @@ android {
         }
         create("aapsclient") {
             applicationId = "info.nightscout.aapsclient"
-            dimension = dim
+            dimension = "standard"
             resValue("string", "app_name", "AAPSClient")
             versionName = Versions.appVersion + "-aapsclient"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_yellowowl"
@@ -134,7 +142,7 @@ android {
         }
         create("aapsclient2") {
             applicationId = "info.nightscout.aapsclient2"
-            dimension = dim
+            dimension = "standard"
             resValue("string", "app_name", "AAPSClient2")
             versionName = Versions.appVersion + "-aapsclient"
             manifestPlaceholders["appIcon"] = "@mipmap/ic_blueowl"
@@ -142,23 +150,29 @@ android {
         }
     }
 
-    dataBinding {   //Deleting it causes a binding error
-        enable = true
+    useLibrary("org.apache.http.legacy")
+
+    //Deleting it causes a binding error
+    dataBinding { enable }
+}
+
+allprojects {
+    repositories {
     }
 }
 
 dependencies {
+    wearApp(project(":wear"))
+
     // in order to use internet"s versions you"d need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
-    implementation(project(":app-wear-shared:shared"))
-    implementation(project(":app-wear-shared:shared-impl"))
+    implementation(project(":shared:impl"))
     implementation(project(":core:main"))
-    implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:libraries"))
-    implementation(project(":core:ns-sdk"))
+    implementation(project(":core:nssdk"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":core:validators"))
@@ -187,7 +201,6 @@ dependencies {
     implementation(project(":insight"))
     implementation(project(":pump:medtronic"))
     implementation(project(":pump:pump-common"))
-    implementation(project(":pump:pump-core"))
     implementation(project(":pump:omnipod-common"))
     implementation(project(":pump:omnipod-eros"))
     implementation(project(":pump:omnipod-dash"))
@@ -195,31 +208,31 @@ dependencies {
     implementation(project(":pump:virtual"))
     implementation(project(":workflow"))
 
-    testImplementation(project(":app-wear-shared:shared-tests"))
+    testImplementation(project(":shared:tests"))
 
-    //implementation fileTree(include = listOf("*.jar"), dir = "libs")
+//    implementation(fileTree (include: listOf("*.jar"), dir = "libs"))
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include
      * the following dependencies */
-    kapt(Libs.Dagger.androidProcesssor)
+    kapt(Libs.Dagger.androidProcessor)
     kapt(Libs.Dagger.compiler)
 
     // MainApp
     api(Libs.Rx.rxDogTag)
-
 }
 
 apply(from = "${project.rootDir}/core/main/test_dependencies.gradle")
 
-println("--------------")
+println("-------------------")
 println("isMaster: ${isMaster()}")
 println("gitAvailable: ${gitAvailable()}")
 println("allCommitted: ${allCommitted()}")
-println("--------------")
+println("-------------------")
 if (isMaster() && !gitAvailable()) {
     throw GradleException("GIT system is not available. On Windows try to run Android Studio as an Administrator. Check if GIT is installed and Studio have permissions to use it")
 }
 if (isMaster() && !allCommitted()) {
     throw GradleException("There are uncommitted changes. Clone sources again as described in wiki and do not allow gradle update")
 }
+
