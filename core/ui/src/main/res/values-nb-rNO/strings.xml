@@ -155,7 +155,7 @@
     <string name="login">Login</string>
     <string name="prime_fill">Prime/fylling</string>
     <string name="overview_insulin_label">Insulin</string>
-    <string name="stoptemptarget">Avbryt midlertidig målverdi</string>
+    <string name="stoptemptarget">Avbryt midlertidig mål</string>
     <string name="closedloop">Lukket Loop</string>
     <string name="openloop">Åpen Loop</string>
     <string name="lowglucosesuspend">Stopp ved lavt BS</string>
