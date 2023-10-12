@@ -70,13 +70,13 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
                     root.isClickable = true
                     customWatchfaceImportListItemBinding.root.setOnClickListener {
                         val customWatchfaceFile = filelistName.tag as CwfFile
-                        val cwfData = CwfData(customWatchfaceFile.cwfData.json, customWatchfaceFile.cwfData.metadata, mutableMapOf())
-                        //Save json and metadata
-                        sp.putString(app.aaps.core.utils.R.string.key_wear_custom_watchface_save_cwfData, EventData.ActionSetCustomWatchface(cwfData).serialize())
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, customWatchfaceFile.cwfData.metadata[CWF_NAME] ?:"")
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, customWatchfaceFile.cwfData.metadata[CWF_AUTHOR_VERSION] ?:"")
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, customWatchfaceFile.cwfData.metadata[CWF_FILENAME] ?:"")
+
                         val i = Intent()
                         setResult(FragmentActivity.RESULT_OK, i)
                         rxBus.send(EventMobileDataToWear(customWatchfaceFile.zipByteArray))
-                        aapsLogger.debug("XXXXX: ${customWatchfaceFile.zipByteArray.size}")
                         finish()
                     }
                 }

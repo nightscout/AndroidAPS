@@ -135,9 +135,7 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
 
 typealias CwfResDataMap = MutableMap<String, ResData>
 typealias CwfMetadataMap = MutableMap<CwfMetadataKey, String>
-fun CwfResDataMap.sameRes(dataMap: CwfResDataMap) = (this.size == dataMap.size) && this.all { (key, resData) -> dataMap[key]?.value.contentEquals(resData.value) == true }
-fun CwfMetadataMap.sameMeta(metaDataMap: CwfMetadataMap) = (this.size == metaDataMap.size) && this.all { (key, string) -> metaDataMap[key] == string }
-
+fun CwfResDataMap.isEquals(dataMap: CwfResDataMap) = (this.size == dataMap.size) && this.all { (key, resData) -> dataMap[key]?.value.contentEquals(resData.value) == true }
 @Serializable
 data class CwfData(val json: String, var metadata: CwfMetadataMap, val resDatas: CwfResDataMap) {
     fun simplify(): CwfData? = resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.let {
@@ -295,24 +293,24 @@ class ZipWatchfaceFormat {
         const val CWF_EXTENTION = ".zip"
         const val CWF_JSON_FILE = "CustomWatchface.json"
 
-        fun loadCustomWatchface(zipInputStream: ZipInputStream, zipName: String, authorization: Boolean): CwfFile? {
+        fun loadCustomWatchface(byteArray: ByteArray, zipName: String, authorization: Boolean): CwfFile? {
             var json = JSONObject()
             var metadata: CwfMetadataMap = mutableMapOf()
             val resDatas: CwfResDataMap = mutableMapOf()
-            val testZip = byteArrayToZipInputStream(zipInputStreamToByteArray(zipInputStream))
+            val zipInputStream = byteArrayToZipInputStream(byteArray)
             try {
-                var zipEntry: ZipEntry? = testZip.nextEntry
+                var zipEntry: ZipEntry? = zipInputStream.nextEntry
                 while (zipEntry != null) {
                     val entryName = zipEntry.name
 
                     val buffer = ByteArray(2048)
                     val byteArrayOutputStream = ByteArrayOutputStream()
-                    var count = testZip.read(buffer)
+                    var count = zipInputStream.read(buffer)
                     while (count != -1) {
                         byteArrayOutputStream.write(buffer, 0, count)
-                        count = testZip.read(buffer)
+                        count = zipInputStream.read(buffer)
                     }
-                    testZip.closeEntry()
+                    zipInputStream.closeEntry()
 
                     if (entryName == CWF_JSON_FILE) {
                         val jsonString = byteArrayOutputStream.toByteArray().toString(Charsets.UTF_8)
@@ -328,12 +326,12 @@ class ZipWatchfaceFormat {
                         } else if (drawableFormat != ResFormat.UNKNOWN)
                             resDatas[entryName.substringBeforeLast(".")] = ResData(byteArrayOutputStream.toByteArray(), drawableFormat)
                     }
-                    zipEntry = testZip.nextEntry
+                    zipEntry = zipInputStream.nextEntry
                 }
 
                 // Valid CWF file must contains a valid json file with a name within metadata and a custom watchface image
                 return if (metadata.containsKey(CwfMetadataKey.CWF_NAME) && resDatas.containsKey(ResFileMap.CUSTOM_WATCHFACE.fileName))
-                    CwfFile(CwfData(json.toString(4), metadata, resDatas), zipInputStreamToByteArray(zipInputStream))
+                    CwfFile(CwfData(json.toString(4), metadata, resDatas), byteArray)
                 else
                     null
 
@@ -376,16 +374,6 @@ class ZipWatchfaceFormat {
                 }
             }
             return metadata
-        }
-
-        fun zipInputStreamToByteArray(zipInputStream: ZipInputStream): ByteArray {
-            val buffer = ByteArray(1024)
-            val byteArrayOutputStream = ByteArrayOutputStream()
-            var len: Int
-            while (zipInputStream.read(buffer).also { len = it } > 0) {
-                byteArrayOutputStream.write(buffer, 0, len)
-            }
-            return byteArrayOutputStream.toByteArray()
         }
 
         fun byteArrayToZipInputStream(byteArray: ByteArray): ZipInputStream {

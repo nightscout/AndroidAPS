@@ -102,7 +102,7 @@ class PrefFileListProviderImpl @Inject constructor(
         val customWatchfaceFiles = mutableListOf<CwfFile>()
         val customWatchfaceAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
         exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENTION) }.forEach { file ->
-            ZipWatchfaceFormat.loadCustomWatchface(ZipInputStream(file.inputStream()), file.name, customWatchfaceAuthorization)?.also { customWatchface ->
+            ZipWatchfaceFormat.loadCustomWatchface(file.readBytes(), file.name, customWatchfaceAuthorization)?.also { customWatchface ->
                 customWatchfaceFiles.add(customWatchface)
             }
         }
@@ -111,12 +111,11 @@ class PrefFileListProviderImpl @Inject constructor(
                 val assetFiles = context.assets.list("") ?: arrayOf()
                 for (assetFileName in assetFiles) {
                     if (assetFileName.endsWith(ZipWatchfaceFormat.CWF_EXTENTION)) {
-                        val assetInputStream = context.assets.open(assetFileName)
-                        ZipWatchfaceFormat.loadCustomWatchface(ZipInputStream(assetInputStream), assetFileName, customWatchfaceAuthorization)?.also { customWatchface ->
+                        val assetByteArray = context.assets.open(assetFileName).readBytes()
+                        ZipWatchfaceFormat.loadCustomWatchface(assetByteArray, assetFileName, customWatchfaceAuthorization)?.also { customWatchface ->
                             customWatchfaceFiles.add(customWatchface)
-                            //rxBus.send(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(customWatchface.cwfData), exportFile = true, withDate = false))
+                            rxBus.send(EventData.ActionGetCustomWatchface(EventData.ActionSetCustomWatchface(customWatchface.cwfData), exportFile = true, withDate = false))
                         }
-                        assetInputStream.close()
                     }
                 }
             } catch (e: Exception) {

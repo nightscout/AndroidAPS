@@ -203,8 +203,8 @@ open class Persistence @Inject constructor(
             if (customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] &&
                 customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]
             ) {
-                // if different json but same name and author version, then resync json and metadata to watch to update filename and authorization
-                val newCwfData = CwfData(customWatchface.customWatchfaceData.json, customWatchface.customWatchfaceData.metadata, savedCwData.customWatchfaceData.resDatas)
+                // if same name and author version, then resync metadata to watch to update filename and authorization
+                val newCwfData = CwfData(savedCwData.customWatchfaceData.json, customWatchface.customWatchfaceData.metadata, savedCwData.customWatchfaceData.resDatas)
                 EventData.ActionSetCustomWatchface(newCwfData).also {
                     putString(CUSTOM_WATCHFACE, it.serialize())
                     aapsLogger.debug(LTag.WEAR, "Update Custom Watchface ${it.customWatchfaceData} : $customWatchface")

@@ -44,8 +44,7 @@ import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.rx.weardata.ResFormat
 import app.aaps.core.interfaces.rx.weardata.ViewKeys
 import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
-import app.aaps.core.interfaces.rx.weardata.sameMeta
-import app.aaps.core.interfaces.rx.weardata.sameRes
+import app.aaps.core.interfaces.rx.weardata.isEquals
 import app.aaps.wear.R
 import app.aaps.wear.databinding.ActivityCustomBinding
 import app.aaps.wear.watchfaces.utils.BaseWatchFace
@@ -67,7 +66,6 @@ class CustomWatchface : BaseWatchFace() {
     private var lowBatColor = Color.RED
     private var resDataMap: CwfResDataMap = mutableMapOf()
     private var json = JSONObject()
-    private var metadata: CwfMetadataMap = mutableMapOf()
     private var jsonString = ""
     private val bgColor: Int
         get() = when (singleBg.sgvLevel) {
@@ -155,9 +153,8 @@ class CustomWatchface : BaseWatchFace() {
             updatePref(it.customWatchfaceData.metadata)
             try {
                 json = JSONObject(it.customWatchfaceData.json)
-                if (!resDataMap.sameRes(it.customWatchfaceData.resDatas) || !metadata.sameMeta(it.customWatchfaceData.metadata) || jsonString != it.customWatchfaceData.json) {
+                if (!resDataMap.isEquals(it.customWatchfaceData.resDatas) || jsonString != it.customWatchfaceData.json) {
                     resDataMap = it.customWatchfaceData.resDatas
-                    metadata = it.customWatchfaceData.metadata
                     jsonString = it.customWatchfaceData.json
                     FontMap.init(this)
                     ViewMap.init(this)

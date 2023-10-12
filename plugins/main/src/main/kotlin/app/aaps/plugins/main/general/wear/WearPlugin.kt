@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventDismissBolusProgressIfRunning
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
-import app.aaps.core.interfaces.rx.events.EventMobileDataToWear
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
@@ -112,14 +111,23 @@ class WearPlugin @Inject constructor(
 
     fun checkCustomWatchfacePreferences() {
         savedCustomWatchface?.let { cwf ->
-            val cwf_authorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
-            if (cwf_authorization != cwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()) {
-                // update new customWatchface to Watch with updated authorization for preferences update
-                CwfData(cwf.json, cwf.metadata, mutableMapOf()).also {
-                    it.metadata[CwfMetadataKey.CWF_AUTHORIZATION] = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false).toString()
-                    sp.putString(app.aaps.core.utils.R.string.key_wear_custom_watchface_save_cwfData, EventData.ActionSetCustomWatchface(it).serialize())
-                    rxBus.send(EventMobileToWear(EventData.ActionUpdateCustomWatchface(it)))
+            val cwfAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+            val cwfName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
+            val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
+            val fileName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_filename, "")
+            var toUpdate = false
+            CwfData("", cwf.metadata, mutableMapOf()).also {
+                if (cwfAuthorization != cwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()) {
+                    it.metadata[CwfMetadataKey.CWF_AUTHORIZATION] = cwfAuthorization.toString()
+                    toUpdate = true
                 }
+                if (cwfName == cwf.metadata[CwfMetadataKey.CWF_NAME] && authorVersion == cwf.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] && fileName != cwf.metadata[CwfMetadataKey.CWF_FILENAME]) {
+                    it.metadata[CwfMetadataKey.CWF_FILENAME] = fileName
+                    toUpdate = true
+                }
+
+                if (toUpdate)
+                    rxBus.send(EventMobileToWear(EventData.ActionUpdateCustomWatchface(it)))
             }
         }
     }

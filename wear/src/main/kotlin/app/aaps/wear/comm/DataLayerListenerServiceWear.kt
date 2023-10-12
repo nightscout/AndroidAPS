@@ -129,11 +129,9 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
             rxDataPath -> {
                 aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${messageEvent.data.size}")
-                ZipWatchfaceFormat.loadCustomWatchface(ZipWatchfaceFormat.byteArrayToZipInputStream(messageEvent.data), "NewWatchface", false)?.let {
+                ZipWatchfaceFormat.loadCustomWatchface(messageEvent.data, "", false)?.let {
                     val command = EventData.ActionSetCustomWatchface(it.cwfData)
                     rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
-
-                    aapsLogger.debug("XXXXX: ${it.cwfData.json}")
                 }
                 // Use this sender
                 transcriptionNodeId = messageEvent.sourceNodeId

@@ -1268,27 +1268,19 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {
         val customWatchface = command.customWatchface
-        aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}: ${customWatchface.customWatchfaceData.json}")
-        try {
-
-            var s = sp.getStringOrNull(app.aaps.core.utils.R.string.key_wear_custom_watchface_save_cwfData, null)
-            if (s != null) {
-                (EventData.deserialize(s) as EventData.ActionSetCustomWatchface).also { savedCwData ->
-                    if (customWatchface.customWatchfaceData.json != savedCwData.customWatchfaceData.json &&
-                        customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] &&
-                        customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]
-                    ) {
-                        // if different json but same name and author version, then resync json and metadata to watch to update filename and authorization
-                        rxBus.send(EventMobileToWear(EventData.ActionUpdateCustomWatchface(savedCwData.customWatchfaceData)))
-                    }
-                }
-            }
-        } catch (exception: Exception) {
-            aapsLogger.error(LTag.WEAR, exception.toString())
+        aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}")
+        val cwfData = customWatchface.customWatchfaceData
+        rxBus.send(EventWearUpdateGui(cwfData, command.exportFile))
+        val watchfaceName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
+        val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
+        if (cwfData.metadata[CwfMetadataKey.CWF_NAME] != watchfaceName || cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] != authorVersion) {
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?:"")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?:"")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?:"")
         }
-        rxBus.send(EventWearUpdateGui(customWatchface.customWatchfaceData, command.exportFile))
+
         if (command.exportFile)
-            importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData, command.withDate)
+            importExportPrefs.exportCustomWatchface(cwfData, command.withDate)
     }
 
 }

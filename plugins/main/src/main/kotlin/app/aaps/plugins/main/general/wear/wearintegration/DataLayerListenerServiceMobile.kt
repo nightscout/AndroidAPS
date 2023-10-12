@@ -214,7 +214,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
 
     private fun sendMessage(path: String, data: ByteArray) {
         aapsLogger.debug(LTag.WEAR, "sendMessage: $path")
-        aapsLogger.debug("XXXXX: $path, ${data.size}")
         transcriptionNodeId?.also { nodeId ->
             messageClient
                 .sendMessage(nodeId, path, data).apply {
