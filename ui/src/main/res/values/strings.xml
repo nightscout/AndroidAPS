@@ -168,6 +168,8 @@
     <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
     <string name="additional_ecarbs">Add eCarbs</string>
     <string name="overview_edit_quickwizard_useforcalculation">Use for calculation:</string>
+    <string name="constraints_violation">Constraints violation</string>
+    <string name="change_your_input">Change your input!</string>
 
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Yes</item>
