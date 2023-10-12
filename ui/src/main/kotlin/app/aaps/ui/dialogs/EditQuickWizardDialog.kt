@@ -1,5 +1,6 @@
 package app.aaps.ui.dialogs
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -133,12 +134,12 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
 
-        fun usePercentage(custom: Boolean) {
+        @SuppressLint("SetTextI18n") fun usePercentage(custom: Boolean) {
             if (custom) {
                 binding.defaultPercentageTextview.visibility = View.GONE
                 binding.customPercentageSeekbar.visibility = View.VISIBLE
                 val customPercentage = binding.customPercentageSeekbar.progress * 5
-                binding.usePercentage.text = customPercentage.toString() + "%"
+                binding.usePercentage.text = "$customPercentage%"
             } else {
                 binding.customPercentageSeekbar.visibility = View.GONE
                 binding.defaultPercentageTextview.visibility = View.VISIBLE
@@ -196,7 +197,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         })
 
-        //ecarb - checker - based on CarbDialog code
         val maxCarbs = constraintChecker.getMaxCarbsAllowed().value().toDouble()
         binding.time.setParams(
             savedInstanceState?.getDouble("time")
@@ -217,7 +217,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             savedInstanceState?.getDouble("carbs2")
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
-        //EOF ecarb - checker - based on CarbDialog code
 
         toSeconds = entry.validTo()
         binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
@@ -258,7 +257,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         binding.useBasalIob.setOnItemSelectedListener(object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                binding.useBasalIobCheckbox.isChecked = binding.useBasalIob.selectedItemPosition!=QuickWizardEntry.NO
+                binding.useBasalIobCheckbox.isChecked = binding.useBasalIob.selectedItemPosition != QuickWizardEntry.NO
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -266,7 +265,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         binding.useTrend.setOnItemSelectedListener(object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                binding.useTrendCheckbox.isChecked = binding.useTrend.selectedItemPosition!=QuickWizardEntry.NO
+                binding.useTrendCheckbox.isChecked = binding.useTrend.selectedItemPosition != QuickWizardEntry.NO
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -309,7 +308,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
     private fun processBasalIOB() {
         if (binding.useBasalIobCheckbox.isChecked) {
-            if (binding.useBasalIob.selectedItemPosition==QuickWizardEntry.NO) binding.useBasalIob.setSelection(QuickWizardEntry.YES)
+            if (binding.useBasalIob.selectedItemPosition == QuickWizardEntry.NO) binding.useBasalIob.setSelection(QuickWizardEntry.YES)
         } else {
             binding.useBasalIob.setSelection(QuickWizardEntry.NO)
         }
@@ -317,7 +316,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
     private fun processTrend() {
         if (binding.useTrendCheckbox.isChecked) {
-            if (binding.useTrend.selectedItemPosition==QuickWizardEntry.NO) binding.useTrend.setSelection(QuickWizardEntry.YES)
+            if (binding.useTrend.selectedItemPosition == QuickWizardEntry.NO) binding.useTrend.setSelection(QuickWizardEntry.YES)
         } else {
             binding.useTrend.setSelection(QuickWizardEntry.NO)
         }
@@ -358,11 +357,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     }
 
-    fun booleanToInt(bool: Boolean): Int {
+    //Radio Group to CheckBox transition - backward JSON compatibility
+    private fun booleanToInt(bool: Boolean): Int {
         return if (bool == true) 0 else 1
     }
 
-    fun intToBoolean(theInt: Int): Boolean {
+    //Radio Group to CheckBox transition - backward JSON compatibility
+    private fun intToBoolean(theInt: Int): Boolean {
         return theInt == 0
     }
 }
