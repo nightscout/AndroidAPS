@@ -11,7 +11,7 @@
     <string name="ns_allow_roaming">Tillat tilkobling i roaming</string>
     <string name="ns_create_announcements_from_errors_title">Lag meldinger ved feil</string>
     <string name="ns_create_announcements_from_carbs_req_title">Opprett varslinger hvis det er nødvendig med karbohydrater</string>
-    <string name="ns_create_announcements_from_errors_summary">Opprett varslinger i Nightscout ved feil eller meldinger (også synlig i Careportal under Behandlinger)</string>
+    <string name="ns_create_announcements_from_errors_summary">Opprett varslinger i Nightscout ved feil eller meldinger (også synlig i Helseportal under Behandlinger)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Opprett Nightscout-meldinger ved behov for karbohydrater</string>
     <string name="description_ns_client">Synkroniserer dine data med Nightscout v1 API</string>
     <string name="description_ns_client_v3">Synkroniserer dine data med Nightscout v3 API</string>
