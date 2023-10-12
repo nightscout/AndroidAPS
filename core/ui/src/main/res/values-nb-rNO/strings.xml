@@ -486,7 +486,7 @@
     <string name="resistant_adult">Insulinresistent voksen</string>
     <string name="pregnant">Graviditet</string>
     <string name="patient_age_summary">Velg pasienttype for oppsett av sikkerhetsgrenser</string>
-    <string name="max_bolus_title">Maks tillatt bolus [U]</string>
+    <string name="max_bolus_title">Maks tillatt bolus [E]</string>
     <string name="max_carbs_title">Maks tillatt karbohydrater [g]</string>
     <string name="patient_type">Pasienttype</string>
     <!--    Protection-->
