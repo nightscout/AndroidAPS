@@ -52,7 +52,7 @@
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Endring av tid mislyktes. Insulinlevering er pauset! Velg gjenoppta levering manuelt fra Omnipod-fanen.</string>
     <string name="omnipod_eros_error_failed_to_read_pulse_log">Feilet i å lese Pulsloggen</string>
     <string name="omnipod_eros_error_automatic_time_or_timezone_change_failed">Feilet i forsøket på å endre tid på Pod. Du må gå inn i Omnipod menyen og manuelt synkronisere tiden.</string>
-    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operasjon ikke mulig.\n\n Du må konfigurere Medtronic pumpen før du kan bruke denne funksjonen.</string>
+    <string name="omnipod_eros_error_operation_not_possible_no_configuration">Operasjon ikke mulig.\n\nDu må konfigurere Omnipod før du kan bruke denne funksjonen.</string>
     <string name="omnipod_eros_error_bolus_failed_uncertain">Kan ikke kontrollere om bolusdosen ble gitt. Kontroller at Pod\'en gir bolus ved å lytte etter klikkk. <b>Dersom du er sikker på at bolusen ikke var vellykket, bør du manuelt slette bolusoppføring fra Behandlingene, selv om du klikker \'Avbryt bolus\' nå!</b></string>
     <string name="omnipod_eros_error_bolus_failed_uncertain_smb">Klarte ikke å bekrefte om SMB bolus (%1$.2f E) ble gitt. <b>Hvis du er helt sikker på at Bolus ikke ble levert, da bør du manuelt slette SMB-oppføringen fra Behandlinger.</b></string>
     <string name="omnipod_eros_error_tbr_running_but_aaps_not_aware">En midlertidig basal utføres på Pod, men AAPS har ingen informasjon om denne midlertidige basalen. Vennligst avbryt midlertidig basal manuelt.</string>

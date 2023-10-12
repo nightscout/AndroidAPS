@@ -156,16 +156,16 @@ class NSClientV3Plugin @Inject constructor(
     override val status
         get() =
             when {
-                sp.getBoolean(R.string.key_ns_paused, false)                                           -> rh.gs(app.aaps.core.ui.R.string.paused)
-                isAllowed.not()                                                                        -> blockingReason
+                sp.getBoolean(R.string.key_ns_paused, false)                                    -> rh.gs(app.aaps.core.ui.R.string.paused)
+                isAllowed.not()                                                                 -> blockingReason
                 sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true) && wsConnected  -> "WS: " + rh.gs(app.aaps.core.interfaces.R.string.connected)
                 sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true) && !wsConnected -> "WS: " + rh.gs(R.string.not_connected)
-                lastOperationError != null                                                             -> rh.gs(app.aaps.core.ui.R.string.error)
-                nsAndroidClient?.lastStatus == null                                                    -> rh.gs(R.string.not_connected)
-                workIsRunning()                                                                        -> rh.gs(R.string.working)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                          -> rh.gs(app.aaps.core.interfaces.R.string.connected)
-                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                          -> rh.gs(R.string.read_only)
-                else                                                                                   -> rh.gs(app.aaps.core.ui.R.string.unknown)
+                lastOperationError != null                                                      -> rh.gs(app.aaps.core.ui.R.string.error)
+                nsAndroidClient?.lastStatus == null                                             -> rh.gs(R.string.not_connected)
+                workIsRunning()                                                                 -> rh.gs(R.string.working)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true                   -> rh.gs(app.aaps.core.interfaces.R.string.connected)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true                   -> rh.gs(R.string.read_only)
+                else                                                                            -> rh.gs(app.aaps.core.ui.R.string.unknown)
             }
     var lastOperationError: String? = null
 
@@ -197,8 +197,13 @@ class NSClientV3Plugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev ->
                            rxBus.send(EventNSClientNewLog("● CONNECTIVITY", ev.blockingReason))
-                           setClient("CONNECTIVITY")
-                           if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
+                           if (ev.connected) {
+                               when {
+                                   isAllowed && storageSocket == null  -> setClient("CONNECTIVITY") // socket must be created
+                                   !isAllowed && storageSocket != null -> shutdownWebsockets()
+                               }
+                               if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
+                           }
                            rxBus.send(EventNSClientUpdateGuiStatus())
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -211,8 +216,10 @@ class NSClientV3Plugin @Inject constructor(
                                ev.isChanged(rh.gs(R.string.key_ns_paused)) ||
                                ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_ns_alarms)) ||
                                ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_ns_announcements))
-                           )
+                           ) {
+                               shutdownWebsockets()
                                setClient("SETTING CHANGE")
+                           }
                            if (ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_local_profile_last_change)))
                                executeUpload("PROFILE_CHANGE", forceNew = true)
 
@@ -299,10 +306,7 @@ class NSClientV3Plugin @Inject constructor(
     override fun onStop() {
         handler.removeCallbacksAndMessages(null)
         disposable.clear()
-        storageSocket?.disconnect()
-        alarmSocket?.disconnect()
-        storageSocket = null
-        alarmSocket = null
+        shutdownWebsockets()
         super.onStop()
     }
 
@@ -331,19 +335,14 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private fun setClient(reason: String) {
-        nsAndroidClient = NSAndroidClientImpl(
-            baseUrl = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", "").replace(Regex("/$"), ""),
-            accessToken = sp.getString(R.string.key_ns_client_token, ""),
-            context = context,
-            logging = true,
-            logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
-        )
-        if (wsConnected) {
-            storageSocket?.disconnect()
-            alarmSocket?.disconnect()
-            storageSocket = null
-            alarmSocket = null
-        }
+        if (nsAndroidClient == null)
+            nsAndroidClient = NSAndroidClientImpl(
+                baseUrl = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", "").replace(Regex("/$"), ""),
+                accessToken = sp.getString(R.string.key_ns_client_token, ""),
+                context = context,
+                logging = config.isEngineeringMode() || config.isDev(),
+                logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
+            )
         SystemClock.sleep(2000)
         initializeWebSockets(reason)
         rxBus.send(EventSWSyncStatus(status))
@@ -354,8 +353,28 @@ class NSClientV3Plugin @Inject constructor(
      **********************/
     private var storageSocket: Socket? = null
     private var alarmSocket: Socket? = null
-    var wsConnected = false
+    internal var wsConnected = false
     internal var initialLoadFinished = false
+
+    private fun shutdownWebsockets() {
+        storageSocket?.on(Socket.EVENT_CONNECT, onConnectStorage)
+        storageSocket?.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
+        storageSocket?.on("create", onDataCreateUpdate)
+        storageSocket?.on("update", onDataCreateUpdate)
+        storageSocket?.on("delete", onDataDelete)
+        storageSocket?.disconnect()
+        alarmSocket?.on(Socket.EVENT_CONNECT, onConnectAlarms)
+        alarmSocket?.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
+        alarmSocket?.on("announcement", onAnnouncement)
+        alarmSocket?.on("alarm", onAlarm)
+        alarmSocket?.on("urgent_alarm", onUrgentAlarm)
+        alarmSocket?.on("clear_alarm", onClearAlarm)
+        alarmSocket?.disconnect()
+        wsConnected = false
+        storageSocket = null
+        alarmSocket = null
+    }
+
     private fun initializeWebSockets(reason: String) {
         if (!sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true)) return
         if (sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").isEmpty()) return
@@ -435,13 +454,8 @@ class NSClientV3Plugin @Inject constructor(
             rxBus.send(EventNSClientNewLog("► WS", "requesting auth for alarms"))
             socket.emit("subscribe", authMessage, Ack { args ->
                 val response = args[0] as JSONObject
-                wsConnected = if (response.optBoolean("success")) {
-                    rxBus.send(EventNSClientNewLog("◄ WS", response.optString("message")))
-                    true
-                } else {
-                    rxBus.send(EventNSClientNewLog("◄ WS", "Auth failed"))
-                    false
-                }
+                if (response.optBoolean("success")) rxBus.send(EventNSClientNewLog("◄ WS", response.optString("message")))
+                else rxBus.send(EventNSClientNewLog("◄ WS", "Auth failed"))
             })
         }
     }
