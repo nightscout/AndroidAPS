@@ -187,7 +187,9 @@ data class UserEntry(
         Overview,           //From OverViewPlugin
         Stats,               //From Stat Activity
         Aaps,               // MainApp
+        GarminDevice,
         Unknown             //if necessary
+        ,
         ;
 
         companion object {
