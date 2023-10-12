@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.sync
 
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
@@ -10,7 +11,6 @@ import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
-import app.aaps.database.entities.BolusCalculatorResult
 
 import app.aaps.database.entities.EffectiveProfileSwitch
 
@@ -32,7 +32,7 @@ interface DataSyncSelector {
     data class PairFood(override val value: FD, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairBolus(override val value: BS, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairCarbs(override val value: CA, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairBolusCalculatorResult(override val value: BolusCalculatorResult, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairBolusCalculatorResult(override val value: BCR, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairTemporaryBasal(override val value: TB, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairExtendedBolus(override val value: EB, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairProfileSwitch(override val value: ProfileSwitch, override val id: Long, override var confirmed: Boolean = false) : DataPair

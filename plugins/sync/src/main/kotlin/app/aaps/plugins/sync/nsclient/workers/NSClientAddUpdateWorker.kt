@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.nsclient.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
@@ -22,7 +23,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.entities.BolusCalculatorResult
+
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.plugins.sync.R
@@ -113,7 +114,7 @@ class NSClientAddUpdateWorker(
                     }
 
                 eventType == TE.Type.BOLUS_WIZARD.text                            ->
-                    BolusCalculatorResult.fromJson(json)?.let { bolusCalculatorResult ->
+                    BCR.fromJson(json)?.let { bolusCalculatorResult ->
                         storeDataForDb.bolusCalculatorResults.add(bolusCalculatorResult)
                     } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
 

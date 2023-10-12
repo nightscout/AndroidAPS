@@ -1,12 +1,12 @@
 package app.aaps.core.interfaces.pump
 
 import android.content.Context
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.database.entities.BolusCalculatorResult
 
 class DetailedBolusInfo {
 
@@ -23,7 +23,7 @@ class DetailedBolusInfo {
     @Transient var context: Context? = null // context for progress dialog
 
     // Prefilled info for storing to db
-    var bolusCalculatorResult: BolusCalculatorResult? = null
+    var bolusCalculatorResult: BCR? = null
     var eventType = TE.Type.MEAL_BOLUS
     var notes: String? = null
     var mgdlGlucose: Double? = null // Bg value in mgdl

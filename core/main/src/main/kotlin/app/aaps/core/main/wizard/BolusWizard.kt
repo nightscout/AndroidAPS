@@ -1,7 +1,9 @@
 package app.aaps.core.main.wizard
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Spanned
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
@@ -45,8 +47,6 @@ import app.aaps.core.main.iob.round
 import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.entities.BolusCalculatorResult
-import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import java.util.LinkedList
 import javax.inject.Inject
@@ -280,9 +280,9 @@ class BolusWizard @Inject constructor(
         return this
     }
 
-    fun createBolusCalculatorResult(): BolusCalculatorResult {
+    fun createBolusCalculatorResult(): BCR {
         val unit = profileFunction.getUnits()
-        return BolusCalculatorResult(
+        return BCR(
             timestamp = dateUtil.now(),
             targetBGLow = profileUtil.convertToMgdl(targetBGLow, unit),
             targetBGHigh = profileUtil.convertToMgdl(targetBGHigh, unit),
@@ -364,7 +364,7 @@ class BolusWizard @Inject constructor(
         if (advisor)
             actions.add(rh.gs(app.aaps.core.ui.R.string.advisoralarm).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
 
-        return HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))
+        return HtmlHelper.fromHtml(actions.joinToString("<br/>"))
     }
 
     fun confirmAndExecute(ctx: Context) {
@@ -449,6 +449,7 @@ class BolusWizard @Inject constructor(
         return message
     }
 
+    @SuppressLint("CheckResult")
     private fun commonProcessing(ctx: Context) {
         val profile = profileFunction.getProfile() ?: return
         val pump = activePlugin.activePump
@@ -514,7 +515,7 @@ class BolusWizard @Inject constructor(
                             }
                         })
                     }
-                    bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
+                    bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet() }
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
                     automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())

@@ -3,6 +3,7 @@ package app.aaps.plugins.main.general.wear.wearintegration
 import android.app.NotificationManager
 import android.content.Context
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.HR
@@ -60,7 +61,7 @@ import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.BolusCalculatorResult
+
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.main.R
@@ -1170,7 +1171,7 @@ class DataHandlerMobile @Inject constructor(
                 .subscribe()
     }
 
-    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BolusCalculatorResult?) {
+    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BCR?) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
@@ -1196,7 +1197,7 @@ class DataHandlerMobile @Inject constructor(
                         sendError(rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
                 }
             })
-            bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
+            bolusCalculatorResult?.let { persistenceLayer.insertOrUpdateBolusCalculatorResult(it).blockingGet() }
         }
     }
 

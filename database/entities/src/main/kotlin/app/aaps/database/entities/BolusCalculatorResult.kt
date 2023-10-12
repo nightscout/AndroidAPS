@@ -64,47 +64,4 @@ data class BolusCalculatorResult(
     var percentageCorrection: Int,
     var profileName: String,
     var note: String
-) : TraceableDBEntry, DBEntryWithTime {
-
-    fun contentEqualsTo(other: BolusCalculatorResult): Boolean =
-        isValid == other.isValid &&
-            timestamp == other.timestamp &&
-            utcOffset == other.utcOffset &&
-            targetBGLow == other.targetBGLow &&
-            targetBGHigh == other.targetBGHigh &&
-            isf == other.isf &&
-            ic == other.ic &&
-            bolusIOB == other.bolusIOB &&
-            wasBolusIOBUsed == other.wasBolusIOBUsed &&
-            basalIOB == other.basalIOB &&
-            wasBasalIOBUsed == other.wasBasalIOBUsed &&
-            glucoseValue == other.glucoseValue &&
-            wasGlucoseUsed == other.wasGlucoseUsed &&
-            glucoseDifference == other.glucoseDifference &&
-            glucoseInsulin == other.glucoseInsulin &&
-            glucoseTrend == other.glucoseTrend &&
-            wasTrendUsed == other.wasTrendUsed &&
-            trendInsulin == other.trendInsulin &&
-            cob == other.cob &&
-            wasCOBUsed == other.wasCOBUsed &&
-            cobInsulin == other.cobInsulin &&
-            carbs == other.carbs &&
-            wereCarbsUsed == other.wereCarbsUsed &&
-            carbsInsulin == other.carbsInsulin &&
-            otherCorrection == other.otherCorrection &&
-            wasSuperbolusUsed == other.wasSuperbolusUsed &&
-            superbolusInsulin == other.superbolusInsulin &&
-            wasTempTargetUsed == other.wasTempTargetUsed &&
-            totalInsulin == other.totalInsulin &&
-            percentageCorrection == other.percentageCorrection &&
-            profileName == other.profileName &&
-            note == other.note
-
-    fun onlyNsIdAdded(previous: BolusCalculatorResult): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
-    companion object
-}
+) : TraceableDBEntry, DBEntryWithTime

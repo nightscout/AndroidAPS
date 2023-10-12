@@ -1,18 +1,18 @@
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
- *
+ * <p>
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License,
  * with the "Linking Exception", which can be found at the license.txt
  * file in this program.
- *
+ * <p>
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License
  * with the "Linking Exception" along with this program; if not,
  * write to the author Jonas Gehring <g.jjoe64@gmail.com>.
@@ -69,13 +69,13 @@ public class Viewport {
             float center = mCurrentViewport.left + viewportWidth / 2;
             viewportWidth /= detector.getScaleFactor();
             mCurrentViewport.left = center - viewportWidth / 2;
-            mCurrentViewport.right = mCurrentViewport.left+viewportWidth;
+            mCurrentViewport.right = mCurrentViewport.left + viewportWidth;
 
             // viewportStart must not be < minX
             float minX = (float) getMinX(true);
             if (mCurrentViewport.left < minX) {
                 mCurrentViewport.left = minX;
-                mCurrentViewport.right = mCurrentViewport.left+viewportWidth;
+                mCurrentViewport.right = mCurrentViewport.left + viewportWidth;
             }
 
             // viewportStart + viewportSize must not be > maxX
@@ -86,9 +86,9 @@ public class Viewport {
             double overlap = mCurrentViewport.left + viewportWidth - maxX;
             if (overlap > 0) {
                 // scroll left
-                if (mCurrentViewport.left-overlap > minX) {
+                if (mCurrentViewport.left - overlap > minX) {
                     mCurrentViewport.left -= overlap;
-                    mCurrentViewport.right = mCurrentViewport.left+viewportWidth;
+                    mCurrentViewport.right = mCurrentViewport.left + viewportWidth;
                 } else {
                     // maximal scale
                     mCurrentViewport.left = minX;
@@ -182,8 +182,8 @@ public class Viewport {
             float viewportOffsetX = distanceX * mCurrentViewport.width() / mGraphView.getGraphContentWidth();
             float viewportOffsetY = -distanceY * mCurrentViewport.height() / mGraphView.getGraphContentHeight();
 
-            int completeWidth = (int)((mCompleteRange.width()/mCurrentViewport.width()) * (float) mGraphView.getGraphContentWidth());
-            int completeHeight = (int)((mCompleteRange.height()/mCurrentViewport.height()) * (float) mGraphView.getGraphContentHeight());
+            int completeWidth = (int) ((mCompleteRange.width() / mCurrentViewport.width()) * (float) mGraphView.getGraphContentWidth());
+            int completeHeight = (int) ((mCompleteRange.height() / mCurrentViewport.height()) * (float) mGraphView.getGraphContentHeight());
 
             int scrolledX = (int) (completeWidth
                     * (mCurrentViewport.left + viewportOffsetX - mCompleteRange.left)
@@ -198,12 +198,12 @@ public class Viewport {
 
             if (canScrollX) {
                 if (viewportOffsetX < 0) {
-                    float tooMuch = mCurrentViewport.left+viewportOffsetX - mCompleteRange.left;
+                    float tooMuch = mCurrentViewport.left + viewportOffsetX - mCompleteRange.left;
                     if (tooMuch < 0) {
                         viewportOffsetX -= tooMuch;
                     }
                 } else {
-                    float tooMuch = mCurrentViewport.right+viewportOffsetX - mCompleteRange.right;
+                    float tooMuch = mCurrentViewport.right + viewportOffsetX - mCompleteRange.right;
                     if (tooMuch > 0) {
                         viewportOffsetX -= tooMuch;
                     }
@@ -431,8 +431,7 @@ public class Viewport {
      *
      * @param graphView graphview
      */
-    @SuppressWarnings({"deprecation"})
-    Viewport(GraphView graphView) {
+    @SuppressWarnings({"deprecation"}) Viewport(GraphView graphView) {
         mScroller = new OverScroller(graphView.getContext());
         mEdgeEffectTop = new EdgeEffectCompat(graphView.getContext());
         mEdgeEffectBottom = new EdgeEffectCompat(graphView.getContext());
@@ -723,10 +722,10 @@ public class Viewport {
         releaseEdgeEffects();
         // Flings use math in pixels (as opposed to math based on the viewport).
         mScrollerStartViewport.set(mCurrentViewport);
-        int maxX = (int)((mCurrentViewport.width()/mCompleteRange.width())*(float)mGraphView.getGraphContentWidth()) - mGraphView.getGraphContentWidth();
-        int maxY = (int)((mCurrentViewport.height()/mCompleteRange.height())*(float)mGraphView.getGraphContentHeight()) - mGraphView.getGraphContentHeight();
-        int startX = (int)((mCurrentViewport.left - mCompleteRange.left)/mCompleteRange.width())*maxX;
-        int startY = (int)((mCurrentViewport.top - mCompleteRange.top)/mCompleteRange.height())*maxY;
+        int maxX = (int) ((mCurrentViewport.width() / mCompleteRange.width()) * (float) mGraphView.getGraphContentWidth()) - mGraphView.getGraphContentWidth();
+        int maxY = (int) ((mCurrentViewport.height() / mCompleteRange.height()) * (float) mGraphView.getGraphContentHeight()) - mGraphView.getGraphContentHeight();
+        int startX = (int) ((mCurrentViewport.left - mCompleteRange.left) / mCompleteRange.width()) * maxX;
+        int startY = (int) ((mCurrentViewport.top - mCompleteRange.top) / mCompleteRange.height()) * maxY;
         mScroller.forceFinished(true);
         mScroller.fling(
                 startX,
@@ -753,8 +752,8 @@ public class Viewport {
             // The scroller isn't finished, meaning a fling or programmatic pan operation is
             // currently active.
 
-            int completeWidth = (int)((mCompleteRange.width()/mCurrentViewport.width()) * (float) mGraphView.getGraphContentWidth());
-            int completeHeight = (int)((mCompleteRange.height()/mCurrentViewport.height()) * (float) mGraphView.getGraphContentHeight());
+            int completeWidth = (int) ((mCompleteRange.width() / mCurrentViewport.width()) * (float) mGraphView.getGraphContentWidth());
+            int completeHeight = (int) ((mCompleteRange.height() / mCurrentViewport.height()) * (float) mGraphView.getGraphContentHeight());
 
             int currX = mScroller.getCurrX();
             int currY = mScroller.getCurrY();
@@ -849,7 +848,7 @@ public class Viewport {
 
         if (!mEdgeEffectLeft.isFinished()) {
             final int restoreCount = canvas.save();
-            canvas.translate(mGraphView.getGraphContentLeft(), mGraphView.getGraphContentTop()+ mGraphView.getGraphContentHeight());
+            canvas.translate(mGraphView.getGraphContentLeft(), mGraphView.getGraphContentTop() + mGraphView.getGraphContentHeight());
             canvas.rotate(-90, 0, 0);
             mEdgeEffectLeft.setSize(mGraphView.getGraphContentHeight(), mGraphView.getGraphContentWidth());
             if (mEdgeEffectLeft.draw(canvas)) {
@@ -860,7 +859,7 @@ public class Viewport {
 
         if (!mEdgeEffectRight.isFinished()) {
             final int restoreCount = canvas.save();
-            canvas.translate(mGraphView.getGraphContentLeft()+ mGraphView.getGraphContentWidth(), mGraphView.getGraphContentTop());
+            canvas.translate(mGraphView.getGraphContentLeft() + mGraphView.getGraphContentWidth(), mGraphView.getGraphContentTop());
             canvas.rotate(90, 0, 0);
             mEdgeEffectRight.setSize(mGraphView.getGraphContentHeight(), mGraphView.getGraphContentWidth());
             if (mEdgeEffectRight.draw(canvas)) {
@@ -888,8 +887,8 @@ public class Viewport {
             c.drawRect(
                     mGraphView.getGraphContentLeft(),
                     mGraphView.getGraphContentTop(),
-                    mGraphView.getGraphContentLeft()+mGraphView.getGraphContentWidth(),
-                    mGraphView.getGraphContentTop()+mGraphView.getGraphContentHeight(),
+                    mGraphView.getGraphContentLeft() + mGraphView.getGraphContentWidth(),
+                    mGraphView.getGraphContentTop() + mGraphView.getGraphContentHeight(),
                     mPaint
             );
         }

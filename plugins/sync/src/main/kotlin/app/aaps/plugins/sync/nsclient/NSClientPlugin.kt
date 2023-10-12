@@ -223,7 +223,7 @@ class NSClientPlugin @Inject constructor(
         val id = when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairCarbs                  -> dataPair.value.ids.nightscoutId
-            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairFood                   -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairGlucoseValue           -> dataPair.value.ids.nightscoutId

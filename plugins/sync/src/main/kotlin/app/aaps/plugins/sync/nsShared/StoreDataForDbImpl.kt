@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsShared
 
 import android.os.SystemClock
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
@@ -29,7 +30,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.impl.AppRepository
@@ -43,10 +43,8 @@ import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InvalidateTherapyEventTransaction
-import app.aaps.database.impl.transactions.SyncNsBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.SyncNsEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.SyncNsProfileSwitchTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
 import app.aaps.plugins.sync.R
@@ -79,7 +77,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val carbs: MutableList<CA> = mutableListOf()
     override val temporaryTargets: MutableList<TT> = mutableListOf()
     override val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
-    override val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
+    override val bolusCalculatorResults: MutableList<BCR> = mutableListOf()
     override val therapyEvents: MutableList<TE> = mutableListOf()
     override val extendedBoluses: MutableList<EB> = mutableListOf()
     override val temporaryBasals: MutableList<TB> = mutableListOf()
@@ -92,7 +90,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val nsIdCarbs: MutableList<CA> = mutableListOf()
     override val nsIdTemporaryTargets: MutableList<TT> = mutableListOf()
     override val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
-    override val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
+    override val nsIdBolusCalculatorResults: MutableList<BCR> = mutableListOf()
     override val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
     override val nsIdExtendedBoluses: MutableList<EB> = mutableListOf()
     override val nsIdTemporaryBasals: MutableList<TB> = mutableListOf()
@@ -301,28 +299,15 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         if (bolusCalculatorResults.isNotEmpty())
-            repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResults))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsBolusCalculatorResults(bolusCalculatorResults)
+                .subscribeBy { result ->
                     bolusCalculatorResults.clear()
-                    result.inserted.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
-                        inserted.inc(BolusCalculatorResult::class.java.simpleName)
-                    }
-                    result.invalidated.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
-                        invalidated.inc(BolusCalculatorResult::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
-                        nsIdUpdated.inc(BolusCalculatorResult::class.java.simpleName)
-                    }
+                    repeat(result.inserted.size) { inserted.inc(BCR::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(BCR::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(BCR::class.java.simpleName) }
+                    sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
                 }
 
-        sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
@@ -440,17 +425,10 @@ class StoreDataForDbImpl @Inject constructor(
                 repeat(result.updatedNsId.size) { nsIdUpdated.inc(CA::class.java.simpleName) }
             }
 
-        repository.runTransactionForResult(UpdateNsIdBolusCalculatorResultTransaction(nsIdBolusCalculatorResults))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of BolusCalculatorResult failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateBolusCalculatorResultsNsIds(nsIdBolusCalculatorResults)
+            .subscribeBy { result ->
                 nsIdBolusCalculatorResults.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of BolusCalculatorResult $it")
-                    nsIdUpdated.inc(BolusCalculatorResult::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(BCR::class.java.simpleName) }
             }
 
         disposable += persistenceLayer.updateTemporaryBasalsNsIds(nsIdTemporaryBasals)
@@ -510,7 +488,7 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("TemporaryBasal", TB::class.java.simpleName)
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
-        sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
+        sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
         sendLog("TherapyEvent", TE::class.java.simpleName)
         sendLog("OfflineEvent", OE::class.java.simpleName)
         sendLog("ExtendedBolus", EB::class.java.simpleName)
@@ -599,7 +577,7 @@ class StoreDataForDbImpl @Inject constructor(
                     .also { result ->
                         result.invalidated.forEach {
                             aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
-                            invalidated.inc(BolusCalculatorResult::class.java.simpleName)
+                            invalidated.inc(BCR::class.java.simpleName)
                         }
                     }
             }
@@ -646,7 +624,7 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("TemporaryBasal", TB::class.java.simpleName)
         sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
-        sendLog("BolusCalculatorResult", BolusCalculatorResult::class.java.simpleName)
+        sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
         sendLog("TherapyEvent", TE::class.java.simpleName)
         sendLog("OfflineEvent", OE::class.java.simpleName)
         sendLog("EB", EB::class.java.simpleName)

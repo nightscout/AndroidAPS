@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3
 
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
@@ -27,7 +28,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
-import app.aaps.database.entities.BolusCalculatorResult
 
 import app.aaps.database.entities.EffectiveProfileSwitch
 
@@ -235,7 +235,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddBolusCalculatorResult() = runTest {
-        val bolus = BolusCalculatorResult(
+        val bolus = BCR(
             timestamp = 10000,
             isValid = true,
             targetBGLow = 110.0,
@@ -267,10 +267,10 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             percentageCorrection = 70,
             profileName = " sss",
             note = "ddd",
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )

@@ -264,7 +264,7 @@ class DataSyncSelectorXdripImpl @Inject constructor(
             }
             queueCounter.bcrRemaining = lastDbId - startId
             progress = "$startId/$lastDbId"
-            appRepository.getNextSyncElementBolusCalculatorResult(startId).blockingGet()?.let { bolusCalculatorResult ->
+            persistenceLayer.getNextSyncElementBolusCalculatorResult(startId).blockingGet()?.let { bolusCalculatorResult ->
                 aapsLogger.info(LTag.XDRIP, "Loading BolusCalculatorResult data Start: $startId ${bolusCalculatorResult.first} forID: ${bolusCalculatorResult.second.id} ")
                 if (!isOld(bolusCalculatorResult.first.timestamp))
                     preparedTreatments.add(DataSyncSelector.PairBolusCalculatorResult(bolusCalculatorResult.first, bolusCalculatorResult.second.id))

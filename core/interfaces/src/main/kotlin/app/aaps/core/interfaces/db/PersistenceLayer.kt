@@ -1,5 +1,6 @@
 package app.aaps.core.interfaces.db
 
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
@@ -17,7 +18,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.EffectiveProfileSwitch
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -26,7 +26,6 @@ interface PersistenceLayer {
 
     fun clearDatabases()
     fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String
-    fun insertOrUpdate(bolusCalculatorResult: BolusCalculatorResult)
 
     // BS
     /**
@@ -228,6 +227,57 @@ interface PersistenceLayer {
      * @return List of modified records
      */
     fun updateCarbsNsIds(carbs: List<CA>): Single<TransactionResult<CA>>
+
+    // BCR
+    /**
+     * Get BCRs starting from time
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of BCRs as Single
+     */
+    fun getBolusCalculatorResultsFromTime(startTime: Long, ascending: Boolean): Single<List<BCR>>
+
+    /**
+     * Get BCRs starting from time including invalided records
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of BCRs as Single
+     */
+    fun getBolusCalculatorResultsIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<BCR>>
+
+    /**
+     * Get next changed record after id
+     *
+     * @param id record id
+     * @return database record
+     */
+    fun getNextSyncElementBolusCalculatorResult(id: Long): Maybe<Pair<BCR, BCR>>
+
+    /**
+     * Insert or update if exists record
+     *
+     * @param bolusCalculatorResult record
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateBolusCalculatorResult(bolusCalculatorResult: BCR): Single<TransactionResult<BCR>>
+
+    /**
+     * Store records coming from NS to database
+     *
+     * @param bolusCalculatorResults list of records
+     * @return List of inserted/updated/invalidated records
+     */
+    fun syncNsBolusCalculatorResults(bolusCalculatorResults: List<BCR>): Single<TransactionResult<BCR>>
+
+    /**
+     * Update NS id' in database
+     *
+     * @param bolusCalculatorResults records containing NS id'
+     * @return List of modified records
+     */
+    fun updateBolusCalculatorResultsNsIds(bolusCalculatorResults: List<BCR>): Single<TransactionResult<BCR>>
 
     // GV
     fun getLastGlucoseValue(): GV?

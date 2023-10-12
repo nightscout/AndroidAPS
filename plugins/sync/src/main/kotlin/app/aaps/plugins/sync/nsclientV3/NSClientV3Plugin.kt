@@ -871,7 +871,7 @@ class NSClientV3Plugin @Inject constructor(
                             }
 
                             is DataSyncSelector.PairBolusCalculatorResult  -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdBolusCalculatorResults.add(dataPair.value)
                             }
 

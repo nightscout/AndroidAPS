@@ -15,6 +15,7 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.time.T
@@ -40,7 +41,6 @@ import app.aaps.core.main.extensions.iobCalc
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CutCarbsTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
@@ -82,7 +82,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
     class MealLink(
         val bolus: BS? = null,
         val carbs: CA? = null,
-        val bolusCalculatorResult: BolusCalculatorResult? = null
+        val bolusCalculatorResult: BCR? = null
     )
 
     private val disposable = CompositeDisposable()
@@ -114,7 +114,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
         .getCarbsFromTimeIncludingInvalid(now - millsToThePast, false)
         .map { carb -> carb.map { MealLink(carbs = it) } }
 
-    private fun calcResultMealLinksWithInvalid(now: Long) = repository
+    private fun calcResultMealLinksWithInvalid(now: Long) = persistenceLayer
         .getBolusCalculatorResultsIncludingInvalidFromTime(now - millsToThePast, false)
         .map { calc -> calc.map { MealLink(bolusCalculatorResult = it) } }
 
@@ -126,8 +126,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
         .getCarbsFromTime(now - millsToThePast, false)
         .map { carb -> carb.map { MealLink(carbs = it) } }
 
-    private fun calcResultMealLinks(now: Long) = repository
-        .getBolusCalculatorResultsDataFromTime(now - millsToThePast, false)
+    private fun calcResultMealLinks(now: Long) = persistenceLayer
+        .getBolusCalculatorResultsFromTime(now - millsToThePast, false)
         .map { calc -> calc.map { MealLink(bolusCalculatorResult = it) } }
 
     private fun swapAdapter() {
@@ -209,7 +209,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             holder.binding.metadataLayout.visibility = (ml.bolusCalculatorResult != null && (ml.bolusCalculatorResult.isValid || showInvalidated)).toVisibility()
             ml.bolusCalculatorResult?.let { bolusCalculatorResult ->
                 holder.binding.calcTime.text = dateUtil.timeString(bolusCalculatorResult.timestamp)
-                holder.binding.metadataNs.visibility = (bolusCalculatorResult.interfaceIDs.nightscoutId != null).toVisibility()
+                holder.binding.metadataNs.visibility = (bolusCalculatorResult.ids.nightscoutId != null).toVisibility()
                 holder.binding.cbMetadataRemove.visibility = (bolusCalculatorResult.isValid && actionHelper.isRemoving).toVisibility()
                 if (actionHelper.isRemoving) {
                     holder.binding.cbMetadataRemove.setOnCheckedChangeListener { _, value ->
@@ -360,8 +360,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.overview_treatment_label), rh.gs(app.aaps.core.ui.R.string.delete_future_treatments) + "?", Runnable {
                 uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
-                disposable += repository
-                    .getBolusesDataFromTime(dateUtil.now(), false)
+                disposable += persistenceLayer
+                    .getBolusesFromTime(dateUtil.now(), false)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list ->
                         list.forEach { bolus ->
@@ -395,8 +395,8 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                             }
                         }
                     }
-                disposable += repository
-                    .getBolusCalculatorResultsDataFromTime(dateUtil.now(), false)
+                disposable += persistenceLayer
+                    .getBolusCalculatorResultsFromTime(dateUtil.now(), false)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list ->
                         list.forEach { bolusCalc ->

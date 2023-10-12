@@ -273,24 +273,24 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.bcrRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementBolusCalculatorResult(startId).blockingGet()?.let { bolusCalculatorResult ->
+            persistenceLayer.getNextSyncElementBolusCalculatorResult(startId).blockingGet()?.let { bolusCalculatorResult ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading BolusCalculatorResult data Start: $startId ${bolusCalculatorResult.first} forID: ${bolusCalculatorResult.second.id} ")
                 val dataPair = DataSyncSelector.PairBolusCalculatorResult(bolusCalculatorResult.first, bolusCalculatorResult.second.id)
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    bolusCalculatorResult.first.id == bolusCalculatorResult.second.id && bolusCalculatorResult.first.interfaceIDs.nightscoutId != null ->
+                    bolusCalculatorResult.first.id == bolusCalculatorResult.second.id && bolusCalculatorResult.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Loaded from NS: ${bolusCalculatorResult.second.id} ")
                     // only NsId changed, no need to upload
-                    bolusCalculatorResult.first.onlyNsIdAdded(bolusCalculatorResult.second)                                                            ->
+                    bolusCalculatorResult.first.onlyNsIdAdded(bolusCalculatorResult.second)                                                   ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Only NS id changed ID: ${bolusCalculatorResult.second.id} ")
                     // without nsId = create new
-                    bolusCalculatorResult.first.interfaceIDs.nightscoutId == null                                                                      -> {
+                    bolusCalculatorResult.first.ids.nightscoutId == null                                                                      -> {
                         activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                     // with nsId = update if it's modified record
-                    bolusCalculatorResult.first.interfaceIDs.nightscoutId != null && bolusCalculatorResult.first.id != bolusCalculatorResult.second.id -> {
+                    bolusCalculatorResult.first.ids.nightscoutId != null && bolusCalculatorResult.first.id != bolusCalculatorResult.second.id -> {
                         activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed

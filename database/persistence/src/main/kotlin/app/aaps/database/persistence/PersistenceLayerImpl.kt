@@ -1,5 +1,6 @@
 package app.aaps.database.persistence
 
+import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
@@ -24,7 +25,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.fromDb
 import app.aaps.core.main.extensions.toDb
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
@@ -48,6 +48,7 @@ import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InvalidateTherapyEventTransaction
 import app.aaps.database.impl.transactions.InvalidateTherapyEventsWithNoteTransaction
 import app.aaps.database.impl.transactions.SyncBolusWithTempIdTransaction
+import app.aaps.database.impl.transactions.SyncNsBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.SyncNsBolusTransaction
 import app.aaps.database.impl.transactions.SyncNsCarbsTransaction
 import app.aaps.database.impl.transactions.SyncNsExtendedBolusTransaction
@@ -60,6 +61,7 @@ import app.aaps.database.impl.transactions.SyncPumpBolusTransaction
 import app.aaps.database.impl.transactions.SyncPumpExtendedBolusTransaction
 import app.aaps.database.impl.transactions.SyncPumpTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.SyncTemporaryBasalWithTempIdTransaction
+import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdCarbsTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
@@ -110,14 +112,6 @@ class PersistenceLayerImpl @Inject constructor(
     override fun clearDatabases() = repository.clearDatabases()
     override fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = repository.cleanupDatabase(keepDays, deleteTrackedChanges)
 
-    override fun insertOrUpdate(bolusCalculatorResult: BolusCalculatorResult) {
-        disposable += repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult))
-            .subscribe(
-                { result -> result.inserted.forEach { inserted -> aapsLogger.debug(LTag.DATABASE, "Inserted bolusCalculatorResult $inserted") } },
-                { aapsLogger.error(LTag.DATABASE, "Error while saving bolusCalculatorResult", it) }
-            )
-    }
-
     // BS
     override fun getLastBolus(): BS? = repository.getLastBolusRecord()?.fromDb()
 
@@ -129,16 +123,16 @@ class PersistenceLayerImpl @Inject constructor(
 
     override fun getBolusesFromTime(startTime: Long, ascending: Boolean): Single<List<BS>> =
         repository.getBolusesDataFromTime(startTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getBolusesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<BS> =
         repository.getBolusesDataFromTimeToTime(startTime, endTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
             .blockingGet()
 
     override fun getBolusesFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<BS>> =
         repository.getBolusesIncludingInvalidFromTime(startTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getNextSyncElementBolus(id: Long): Maybe<Pair<BS, BS>> =
         repository.getNextSyncElementBolus(id)
@@ -215,7 +209,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun syncNsBolus(boluses: List<BS>): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(SyncNsBolusTransaction(boluses.map { it.toDb() }))
+        repository.runTransactionForResult(SyncNsBolusTransaction(boluses.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<BS>()
@@ -253,7 +247,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateBolusesNsIds(boluses: List<BS>): Single<PersistenceLayer.TransactionResult<BS>> =
-        repository.runTransactionForResult(UpdateNsIdBolusTransaction(boluses.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdBolusTransaction(boluses.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of Bolus failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<BS>()
@@ -270,15 +264,15 @@ class PersistenceLayerImpl @Inject constructor(
 
     override fun getCarbsFromTime(startTime: Long, ascending: Boolean): Single<List<CA>> =
         repository.getCarbsDataFromTime(startTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getCarbsFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<CA>> =
         repository.getCarbsIncludingInvalidFromTime(startTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getCarbsFromTimeToTimeExpanded(startTime: Long, endTime: Long, ascending: Boolean): List<CA> =
         repository.getCarbsDataFromTimeToTimeExpanded(startTime, endTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
             .blockingGet()
 
     override fun getNextSyncElementCarbs(id: Long): Maybe<Pair<CA, CA>> =
@@ -328,7 +322,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun syncNsCarbs(carbs: List<CA>): Single<PersistenceLayer.TransactionResult<CA>> =
-        repository.runTransactionForResult(SyncNsCarbsTransaction(carbs.map { it.toDb() }, config.NSCLIENT))
+        repository.runTransactionForResult(SyncNsCarbsTransaction(carbs.asSequence().map { it.toDb() }.toList(), config.NSCLIENT))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<CA>()
@@ -373,12 +367,71 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateCarbsNsIds(carbs: List<CA>): Single<PersistenceLayer.TransactionResult<CA>> =
-        repository.runTransactionForResult(UpdateNsIdCarbsTransaction(carbs.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdCarbsTransaction(carbs.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of Carbs failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<CA>()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of Carbs $it")
+                    transactionResult.updatedNsId.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    // BCR
+    override fun getBolusCalculatorResultsFromTime(startTime: Long, ascending: Boolean): Single<List<BCR>> =
+        repository.getBolusCalculatorResultsDataFromTime(startTime, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+
+    override fun getBolusCalculatorResultsIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<BCR>> =
+        repository.getBolusCalculatorResultsIncludingInvalidFromTime(startTime, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+
+    override fun getNextSyncElementBolusCalculatorResult(id: Long): Maybe<Pair<BCR, BCR>> =
+        repository.getNextSyncElementBolusCalculatorResult(id)
+            .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
+
+    override fun insertOrUpdateBolusCalculatorResult(bolusCalculatorResult: BCR): Single<PersistenceLayer.TransactionResult<BCR>> =
+        repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult.toDb()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<BCR>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
+                    transactionResult.inserted.add(it.fromDb())
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated BolusCalculatorResult $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun syncNsBolusCalculatorResults(bolusCalculatorResults: List<BCR>): Single<PersistenceLayer.TransactionResult<BCR>> =
+        repository.runTransactionForResult(SyncNsBolusCalculatorResultTransaction(bolusCalculatorResults.asSequence().map { it.toDb() }.toList()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<BCR>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted BolusCalculatorResult $it")
+                    transactionResult.inserted.add(it.fromDb())
+                }
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                }
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
+                    transactionResult.updatedNsId.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun updateBolusCalculatorResultsNsIds(bolusCalculatorResults: List<BCR>): Single<PersistenceLayer.TransactionResult<BCR>> =
+        repository.runTransactionForResult(UpdateNsIdBolusCalculatorResultTransaction(bolusCalculatorResults.asSequence().map { it.toDb() }.toList()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving BolusCalculatorResult", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<BCR>()
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
                     transactionResult.updatedNsId.add(it.fromDb())
                 }
                 transactionResult
@@ -396,12 +449,12 @@ class PersistenceLayerImpl @Inject constructor(
 
     override fun getBgReadingsDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): List<GV> =
         repository.compatGetBgReadingsDataFromTime(start, end, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
             .blockingGet()
 
     override fun getBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GV>> =
         repository.compatGetBgReadingsDataFromTime(timestamp, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getBgReadingByNSId(nsId: String): GV? =
         repository.findBgReadingByNSId(nsId)?.fromDb()
@@ -422,7 +475,7 @@ class PersistenceLayerImpl @Inject constructor(
     private fun PersistenceLayer.Calibration.toDb() = CgmSourceTransaction.Calibration(timestamp, value, glucoseUnit.toDb())
     override fun insertCgmSourceData(caller: Sources, glucoseValues: List<GV>, calibrations: List<PersistenceLayer.Calibration>, sensorInsertionTime: Long?)
         : Single<PersistenceLayer.TransactionResult<GV>> =
-        repository.runTransactionForResult(CgmSourceTransaction(glucoseValues.map { it.toDb() }, calibrations.map { it.toDb() }, sensorInsertionTime))
+        repository.runTransactionForResult(CgmSourceTransaction(glucoseValues.asSequence().map { it.toDb() }.toList(), calibrations.asSequence().map { it.toDb() }.toList(), sensorInsertionTime))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving cgm values from ${caller.name}", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<GV>()
@@ -465,7 +518,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateGlucoseValuesNsIds(glucoseValues: List<GV>): Single<PersistenceLayer.TransactionResult<GV>> =
-        repository.runTransactionForResult(UpdateNsIdGlucoseValueTransaction(glucoseValues.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdGlucoseValueTransaction(glucoseValues.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of GlucoseValue failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<GV>()
@@ -477,7 +530,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateExtendedBolusesNsIds(extendedBoluses: List<EB>): Single<PersistenceLayer.TransactionResult<EB>> =
-        repository.runTransactionForResult(UpdateNsIdExtendedBolusTransaction(extendedBoluses.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdExtendedBolusTransaction(extendedBoluses.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of EB failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<EB>()
@@ -517,18 +570,18 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getLastTemporaryBasalId(): Long? = repository.getLastTemporaryBasalId()
 
     override fun getTemporaryBasalsActiveBetweenTimeAndTime(startTime: Long, endTime: Long): List<TB> =
-        repository.getTemporaryBasalsActiveBetweenTimeAndTime(startTime, endTime).blockingGet().map { it.fromDb() }
+        repository.getTemporaryBasalsActiveBetweenTimeAndTime(startTime, endTime).blockingGet().asSequence().map { it.fromDb() }.toList()
 
     override fun getTemporaryBasalsStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<TB> =
-        repository.getTemporaryBasalsStartingFromTimeToTime(startTime, endTime, ascending).blockingGet().map { it.fromDb() }
+        repository.getTemporaryBasalsStartingFromTimeToTime(startTime, endTime, ascending).blockingGet().asSequence().map { it.fromDb() }.toList()
 
     override fun getTemporaryBasalsStartingFromTime(startTime: Long, ascending: Boolean): Single<List<TB>> =
         repository.getTemporaryBasalsStartingFromTime(startTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getTemporaryBasalsStartingFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<TB>> =
         repository.getTemporaryBasalsStartingFromTimeIncludingInvalid(startTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getNextSyncElementTemporaryBasal(id: Long): Maybe<Pair<TB, TB>> =
         repository.getNextSyncElementTemporaryBasal(id)
@@ -548,7 +601,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun syncNsTemporaryBasals(temporaryBasals: List<TB>): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasals.map { it.toDb() }, config.NSCLIENT))
+        repository.runTransactionForResult(SyncNsTemporaryBasalTransaction(temporaryBasals.asSequence().map { it.toDb() }.toList(), config.NSCLIENT))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<TB>()
@@ -609,7 +662,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateTemporaryBasalsNsIds(temporaryBasals: List<TB>): Single<PersistenceLayer.TransactionResult<TB>> =
-        repository.runTransactionForResult(UpdateNsIdTemporaryBasalTransaction(temporaryBasals.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdTemporaryBasalTransaction(temporaryBasals.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryBasal failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<TB>()
@@ -670,15 +723,15 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getLastExtendedBolusId(): Long = getLastExtendedBolusId()
 
     override fun getExtendedBolusesStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EB> =
-        repository.getExtendedBolusesStartingFromTimeToTime(startTime, endTime, ascending).blockingGet().map { it.fromDb() }
+        repository.getExtendedBolusesStartingFromTimeToTime(startTime, endTime, ascending).blockingGet().asSequence().map { it.fromDb() }.toList()
 
     override fun getExtendedBolusesStartingFromTime(startTime: Long, ascending: Boolean): Single<List<EB>> =
         repository.getExtendedBolusesStartingFromTime(startTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getExtendedBolusStartingFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<EB>> =
         repository.getExtendedBolusStartingFromTimeIncludingInvalid(startTime, ascending)
-            .map { list -> list.map { it.fromDb() } }
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getNextSyncElementExtendedBolus(id: Long): Maybe<Pair<EB, EB>> =
         repository.getNextSyncElementExtendedBolus(id)
@@ -698,7 +751,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun syncNsExtendedBoluses(extendedBoluses: List<EB>): Single<PersistenceLayer.TransactionResult<EB>> =
-        repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBoluses.map { it.toDb() }, config.NSCLIENT))
+        repository.runTransactionForResult(SyncNsExtendedBolusTransaction(extendedBoluses.asSequence().map { it.toDb() }.toList(), config.NSCLIENT))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving ExtendedBolus", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<EB>()
@@ -768,10 +821,10 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getLastTemporaryTargetId(): Long? = repository.getLastTempTargetId()
 
     override fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
-        repository.getTemporaryTargetDataFromTime(timestamp, ascending).map { list -> list.map { it.fromDb() } }
+        repository.getTemporaryTargetDataFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
-        repository.getTemporaryTargetDataIncludingInvalidFromTime(timestamp, ascending).map { list -> list.map { it.fromDb() } }
+        repository.getTemporaryTargetDataIncludingInvalidFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getNextSyncElementTemporaryTarget(id: Long): Maybe<Pair<TT, TT>> =
         repository.getNextSyncElementTemporaryTarget(id)
@@ -823,7 +876,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun syncNsTemporaryTargets(temporaryTargets: List<TT>): Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTargets.map { it.toDb() }))
+        repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTargets.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryTarget", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<TT>()
@@ -887,7 +940,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateTemporaryTargetsNsIds(temporaryTargets: List<TT>): Single<PersistenceLayer.TransactionResult<TT>> =
-        repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(temporaryTargets.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(temporaryTargets.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while updating nsId TemporaryTarget", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<TT>()
@@ -905,16 +958,16 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getLastTherapyRecordUpToNow(type.toDb()).fromDb(TherapyEvent::fromDb)
 
     override fun getTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TE>> =
-        repository.compatGetTherapyEventDataFromToTime(from, to).map { list -> list.map { it.fromDb() } }
+        repository.compatGetTherapyEventDataFromToTime(from, to).map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>> =
-        repository.getTherapyEventDataIncludingInvalidFromTime(timestamp, ascending).map { list -> list.map { it.fromDb() } }
+        repository.getTherapyEventDataIncludingInvalidFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>> =
-        repository.getTherapyEventDataFromTime(timestamp, ascending).map { list -> list.map { it.fromDb() } }
+        repository.getTherapyEventDataFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getTherapyEventDataFromTime(timestamp: Long, type: TE.Type, ascending: Boolean): Single<List<TE>> =
-        repository.getTherapyEventDataFromTime(timestamp, type.toDb(), ascending).map { list -> list.map { it.fromDb() } }
+        repository.getTherapyEventDataFromTime(timestamp, type.toDb(), ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getNextSyncElementTherapyEvent(id: Long): Maybe<Pair<TE, TE>> =
         repository.getNextSyncElementTherapyEvent(id)
@@ -962,7 +1015,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun syncNsTherapyEvents(therapyEvents: List<TE>): Single<PersistenceLayer.TransactionResult<TE>> =
-        repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvents.map { it.toDb() }, config.NSCLIENT))
+        repository.runTransactionForResult(SyncNsTherapyEventTransaction(therapyEvents.asSequence().map { it.toDb() }.toList(), config.NSCLIENT))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<TE>()
@@ -1011,7 +1064,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateTherapyEventsNsIds(therapyEvents: List<TE>): Single<PersistenceLayer.TransactionResult<TE>> =
-        repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(therapyEvents.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(therapyEvents.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of TherapyEvent failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<TE>()
@@ -1051,7 +1104,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun syncNsOfflineEvents(offlineEvents: List<OE>): Single<PersistenceLayer.TransactionResult<OE>> =
-        repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvents.map { it.toDb() }, config.NSCLIENT))
+        repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvents.asSequence().map { it.toDb() }.toList(), config.NSCLIENT))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<OE>()
@@ -1109,7 +1162,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateOfflineEventsNsIds(offlineEvents: List<OE>): Single<PersistenceLayer.TransactionResult<OE>> =
-        repository.runTransactionForResult(UpdateNsIdOfflineEventTransaction(offlineEvents.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdOfflineEventTransaction(offlineEvents.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of OfflineEvent failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<OE>()
@@ -1129,7 +1182,7 @@ class PersistenceLayerImpl @Inject constructor(
     }
 
     override fun updateDeviceStatusesNsIds(deviceStatuses: List<DS>): Single<PersistenceLayer.TransactionResult<DS>> =
-        repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatuses.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatuses.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of DeviceStatus failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<DS>()
@@ -1142,10 +1195,10 @@ class PersistenceLayerImpl @Inject constructor(
 
     // HR
     override fun getHeartRatesFromTime(startTime: Long): List<HR> =
-        repository.getHeartRatesFromTime(startTime).map { it.fromDb() }
+        repository.getHeartRatesFromTime(startTime).asSequence().map { it.fromDb() }.toList()
 
     override fun getHeartRatesFromTimeToTime(startTime: Long, endTime: Long): List<HR> =
-        repository.getHeartRatesFromTimeToTime(startTime, endTime).map { it.fromDb() }
+        repository.getHeartRatesFromTimeToTime(startTime, endTime).asSequence().map { it.fromDb() }.toList()
 
     override fun insertOrUpdateHeartRate(heartRate: HR): Single<PersistenceLayer.TransactionResult<HR>> =
         repository.runTransactionForResult(InsertOrUpdateHeartRateTransaction(heartRate.toDb()))
@@ -1164,7 +1217,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun getFoods(): Single<List<FD>> =
-        repository.getFoodData().map { list -> list.map { it.fromDb() } }
+        repository.getFoodData().map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getNextSyncElementFood(id: Long): Maybe<Pair<FD, FD>> =
         repository.getNextSyncElementFood(id)
@@ -1184,7 +1237,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun syncNsFood(foods: List<FD>): Single<PersistenceLayer.TransactionResult<FD>> =
-        repository.runTransactionForResult(SyncNsFoodTransaction(foods.map { it.toDb() }))
+        repository.runTransactionForResult(SyncNsFoodTransaction(foods.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Food", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<FD>()
@@ -1216,7 +1269,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun updateFoodsNsIds(foods: List<FD>): Single<PersistenceLayer.TransactionResult<FD>> =
-        repository.runTransactionForResult(UpdateNsIdFoodTransaction(foods.map { it.toDb() }))
+        repository.runTransactionForResult(UpdateNsIdFoodTransaction(foods.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Updated nsId of Food failed", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<FD>()
@@ -1229,7 +1282,7 @@ class PersistenceLayerImpl @Inject constructor(
 
     // UE
     override fun insertUserEntries(entries: List<UE>): Single<PersistenceLayer.TransactionResult<UE>> =
-        repository.runTransactionForResult(UserEntryTransaction(entries.map { it.toDb() }))
+        repository.runTransactionForResult(UserEntryTransaction(entries.asSequence().map { it.toDb() }.toList()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving UserEntries $entries", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<UE>()
@@ -1241,9 +1294,9 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun getUserEntryDataFromTime(timestamp: Long): Single<List<UE>> =
-        repository.getUserEntryDataFromTime(timestamp).map { list -> list.map { it.fromDb() } }
+        repository.getUserEntryDataFromTime(timestamp).map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
     override fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UE>> =
-        repository.getUserEntryFilteredDataFromTime(timestamp).map { list -> list.map { it.fromDb() } }
+        repository.getUserEntryFilteredDataFromTime(timestamp).map { list -> list.asSequence().map { it.fromDb() }.toList() }
 
 }
