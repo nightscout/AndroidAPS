@@ -107,9 +107,9 @@
     <string name="bolusspeed">Bolus hastighet</string>
     <string name="selectedpump">Valgt pumpe</string>
     <string name="rs_loginsulinchange_title">Logg reservoar bytte</string>
-    <string name="rs_loginsulinchange_summary">Legg til \"Insulinbytte\" i Careportal når den oppdages i historikken</string>
+    <string name="rs_loginsulinchange_summary">Legg til \"Insulinbytte\" i Helseportal når den oppdages i historikken</string>
     <string name="rs_logcanulachange_title">Logg kanyle bytte</string>
-    <string name="rs_logcanulachange_summary">Legg til \"Kanylebytte\" i Careportal når den oppdages i historikken</string>
+    <string name="rs_logcanulachange_summary">Legg til \"Kanylebytte\" i Helseportal når den oppdages i historikken</string>
     <string name="pin1">PIN1</string>
     <string name="pin2">PIN2</string>
     <string name="press_ok_on_the_pump">Trykk OK på pumpen\nog skriv inn de 2 viste tallene\nHold skjermen på pumpen PÅ ved å trykke minus knappen til du fullfører inntastingen.</string>
