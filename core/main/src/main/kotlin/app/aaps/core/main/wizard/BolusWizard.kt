@@ -154,7 +154,6 @@ class BolusWizard @Inject constructor(
     private var carbTime: Int = 0
     private var quickWizard: Boolean = true
     var usePercentage: Boolean = false
-    var positiveIOBOnly: Boolean = false
 
     fun doCalc(
         profile: Profile,
@@ -177,8 +176,7 @@ class BolusWizard @Inject constructor(
         carbTime: Int = 0,
         usePercentage: Boolean = false,
         totalPercentage: Double = 100.0,
-        quickWizard: Boolean = false,
-        positiveIOBOnly: Boolean = false
+        quickWizard: Boolean = false
     ): BolusWizard {
 
         this.profile = profile
@@ -202,7 +200,6 @@ class BolusWizard @Inject constructor(
         this.quickWizard = quickWizard
         this.usePercentage = usePercentage
         this.totalPercentage = totalPercentage
-        this.positiveIOBOnly = positiveIOBOnly
 
         // Insulin from BG
         sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdl())
@@ -240,11 +237,8 @@ class BolusWizard @Inject constructor(
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
 
-        insulinFromBolusIOB = if (includeBolusIOB) bolusIob.iob else 0.0
-        insulinFromBasalIOB = if (includeBasalIOB) basalIob.basaliob else 0.0
-
-        var calculatedTotalIOB = insulinFromBolusIOB + insulinFromBasalIOB
-        calculatedTotalIOB = if (positiveIOBOnly && calculatedTotalIOB < 0.0) 0.0 else -calculatedTotalIOB
+        insulinFromBolusIOB = if (includeBolusIOB) -bolusIob.iob else 0.0
+        insulinFromBasalIOB = if (includeBasalIOB) -basalIob.basaliob else 0.0
 
         // Insulin from correction
         insulinFromCorrection = if (usePercentage) 0.0 else correction
@@ -258,7 +252,7 @@ class BolusWizard @Inject constructor(
         }
 
         // Total
-        calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + calculatedTotalIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
+        calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB
 
         val percentage = if (usePercentage) totalPercentage else percentageCorrection.toDouble()
 
@@ -524,12 +518,12 @@ class BolusWizard @Inject constructor(
                 }
             }
             if (quickWizardEntry != null) {
-                scheduleECarbsFromQuickWizard(ctx, quickWizardEntry)
+                scheduleECarbsFromQuickWizzard(ctx, quickWizardEntry)
             }
         })
     }
 
-    private fun scheduleECarbsFromQuickWizard(ctx: Context, quickWizardEntry: QuickWizardEntry) {
+    private fun scheduleECarbsFromQuickWizzard(ctx: Context, quickWizardEntry: QuickWizardEntry) {
         val eCarbsYesNo = quickWizardEntry.storage.get("useEcarbs")
         if (eCarbsYesNo == QuickWizardEntry.YES) {
             val timeOffset = SafeParse.stringToInt(quickWizardEntry.storage.get("time").toString())

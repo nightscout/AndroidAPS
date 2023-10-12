@@ -8,7 +8,6 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.forEach
 import androidx.core.view.MenuProvider
@@ -16,13 +15,23 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import app.aaps.core.interfaces.automation.Automation
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.extensions.toVisibility
+import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.UserEntryLogger
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
@@ -39,6 +48,7 @@ import app.aaps.ui.events.EventQuickWizardChange
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
+import kotlin.math.abs
 
 class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDragListener {
 
@@ -49,6 +59,15 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var sp: SP
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var activePlugin: ActivePlugin
+    @Inject lateinit var constraintChecker: ConstraintsChecker
+    @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var commandQueue: CommandQueue
+    @Inject lateinit var automation: Automation
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var actionHelper: ActionModeHelper<QuickWizardEntry>
@@ -76,8 +95,8 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             holder.binding.buttonText.text = entry.buttonText()
             var bindingCarbsTextFull = rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs())
             if (entry.useEcarbs() == QuickWizardEntry.YES) {
-                bindingCarbsTextFull += " +" + rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs2())
-                bindingCarbsTextFull += "/" + entry.duration() + "h -> " + entry.time() + "min"
+                bindingCarbsTextFull += "+" + rh.gs(app.aaps.core.main.R.string.format_carbs, entry.carbs2())
+                bindingCarbsTextFull += "/" + entry.duration() + "h ->" + entry.time() + "min"
             }
             holder.binding.carbs.text = bindingCarbsTextFull
 
@@ -93,6 +112,34 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
                     holder.binding.cbRemove.toggle()
                     actionHelper.updateSelection(position, entry, holder.binding.cbRemove.isChecked)
                 }
+            }
+            holder.binding.root.setOnLongClickListener {
+                if (actionHelper.isNoAction) {
+                    val actualBg = iobCobCalculator.ads.actualBg()
+                    val profile = profileFunction.getProfile()
+                    val profileName = profileFunction.getProfileName()
+                    val pump = activePlugin.activePump
+                    val quickWizardEntry = quickWizard[position]
+
+                    if (quickWizardEntry != null && actualBg != null && profile != null) {
+                        val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
+
+                        if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
+                            val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(quickWizardEntry.carbs(), aapsLogger)).value()
+                            if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
+                                OKDialog.show(
+                                    it.context, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(
+                                        R.string
+                                            .change_your_input
+                                    )
+                                )
+                            }
+                            wizard.confirmAndExecute(it.context, quickWizardEntry)
+                        }
+                    }
+                    return@setOnLongClickListener true
+                }
+                false
             }
             holder.binding.sortHandle.setOnTouchListener { _, event ->
                 if (event.actionMasked == MotionEvent.ACTION_DOWN) {
@@ -175,10 +222,10 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
     private fun removeSelected(selectedItems: SparseArray<QuickWizardEntry>) {
         OKDialog.showConfirmation(this, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
             //fix for bug with removal of QuickWizardEntries. Everytime and item is deleted you have to shift the position of to-be-deleted QW to left
-            var shiftPostionToLeftFor = 0
+            var shiftPositionToLeftFor = 0
             selectedItems.forEach { _, item ->
-                quickWizard.remove(item.position - shiftPostionToLeftFor)
-                shiftPostionToLeftFor++
+                quickWizard.remove(item.position - shiftPositionToLeftFor)
+                shiftPositionToLeftFor++
                 rxBus.send(EventQuickWizardChange())
             }
             actionHelper.finish()
