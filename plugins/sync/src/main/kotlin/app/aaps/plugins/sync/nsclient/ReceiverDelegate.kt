@@ -94,7 +94,7 @@ class ReceiverDelegate @Inject constructor(
         if (newAllowedState != allowed) {
             allowed = newAllowedState
             if (allowed) blockingReason = ""
-            rxBus.send(EventConnectivityOptionChanged(blockingReason))
+            rxBus.send(EventConnectivityOptionChanged(blockingReason, receiverStatusStore.isConnected))
         }
     }
 
