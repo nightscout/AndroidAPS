@@ -300,7 +300,7 @@
     <string name="uel_calibration">KALIBRERING</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
     <string name="uel_treatment">BEHANDLING</string>
-    <string name="uel_careportal_ns_refresh">HELSEPORTAL NS OPPDATERING</string>
+    <string name="uel_careportal_ns_refresh">HELSEPORTAL NS-OPPDATERING</string>
     <string name="uel_profile_switch_ns_refresh">PROFILBYTTE NS OPPDATERING</string>
     <string name="uel_treatments_ns_refresh">BEHANDLINGER NS OPPDATERING</string>
     <string name="uel_tt_ns_refresh">OPPDATER MIDL. MÅL NS</string>
