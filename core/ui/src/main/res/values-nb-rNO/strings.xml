@@ -193,7 +193,7 @@
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    Translator-->
-    <string name="careportal">Careportal</string>
+    <string name="careportal">Helseportal</string>
     <string name="careportal_bgcheck">BS-kontroll</string>
     <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
     <string name="careportal_announcement">Melding</string>
@@ -294,19 +294,19 @@
     <string name="uel_cancel_bolus">AVBRYT BOLUS</string>
     <string name="uel_cancel_extended_bolus">AVBRYT FORLENGET BOLUS</string>
     <string name="uel_cancel_tt">AVBRYT MIDL. MÅL</string>
-    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_careportal">HELSEPORTAL</string>
     <string name="uel_site_change">BYTTE SLANGESETT</string>
     <string name="uel_reservoir_change">BYTTE RESERVOAR</string>
     <string name="uel_calibration">KALIBRERING</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
     <string name="uel_treatment">BEHANDLING</string>
-    <string name="uel_careportal_ns_refresh">CAREPORTAL NS OPPDATERING</string>
+    <string name="uel_careportal_ns_refresh">HELSEPORTAL NS OPPDATERING</string>
     <string name="uel_profile_switch_ns_refresh">PROFILBYTTE NS OPPDATERING</string>
     <string name="uel_treatments_ns_refresh">BEHANDLINGER NS OPPDATERING</string>
     <string name="uel_tt_ns_refresh">OPPDATER MIDL. MÅL NS</string>
     <string name="uel_automation_removed">AUTOMASJON FJERNET</string>
     <string name="uel_bg_removed">BS FJERNET</string>
-    <string name="uel_careportal_removed">CAREPORTAL FJERNET</string>
+    <string name="uel_careportal_removed">HELSEPORTAL FJERNET</string>
     <string name="uel_bolus_removed">BOLUS FJERNET</string>
     <string name="uel_carbs_removed">KARBO FJERNET</string>
     <string name="uel_temp_basal_removed">MIDL. MÅL FJERNET</string>
