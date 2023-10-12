@@ -62,9 +62,6 @@ object Libs {
     const val joda = "net.danlew:android.joda:2.12.5"
     const val androidSvg = "com.caverock:androidsvg:1.4"
 
-    const val rxjava = "3.1.7"
-    const val rxandroid = "3.0.2"
-    const val rxkotlin = "3.0.1"
     const val room = "2.5.2"
     const val lifecycle = "2.6.2"
     const val coroutines = "1.7.3"

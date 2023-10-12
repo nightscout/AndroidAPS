@@ -5,10 +5,9 @@ plugins {
     id("kotlin-allopen")
     id("kotlin-parcelize")
     id("kotlinx-serialization")
+    id("android-module-dependencies")
 }
 
-apply(from = "${project.rootDir}/core/main/android_dependencies.gradle")
-apply(from = "${project.rootDir}/core/main/android_module_dependencies.gradle")
 apply(from = "${project.rootDir}/core/main/allopen_dependencies.gradle")
 apply(from = "${project.rootDir}/core/main/test_dependencies.gradle")
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
@@ -17,7 +16,7 @@ android {
 
     namespace = "app.aaps.core.interfaces"
     defaultConfig {
-        minSdk = 26  // for wear
+        minSdk = Versions.wearMinSdk  // for wear
     }
 }
 
