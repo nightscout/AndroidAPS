@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.garmin
+package app.aaps.plugins.sync.garmin
 
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.db.GlucoseUnit
@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.database.entities.GlucoseValue
-import app.aaps.plugins.main.R
+import app.aaps.plugins.sync.R
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -47,7 +47,7 @@ class GarminPlugin @Inject constructor(
     private val sp: SP,
 ) : PluginBase(
     PluginDescription()
-        .mainType(PluginType.GENERAL)
+        .mainType(PluginType.SYNC)
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)

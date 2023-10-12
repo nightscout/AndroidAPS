@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.garmin
+package app.aaps.plugins.sync.garmin
 
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile

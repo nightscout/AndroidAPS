@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.garmin
+package app.aaps.plugins.sync.garmin
 
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventNewBG

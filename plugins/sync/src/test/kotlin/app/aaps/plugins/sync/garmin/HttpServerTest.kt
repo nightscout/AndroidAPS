@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.garmin
+package app.aaps.plugins.sync.garmin
 
 import app.aaps.shared.tests.TestBase
 import org.junit.jupiter.api.Assertions.assertEquals

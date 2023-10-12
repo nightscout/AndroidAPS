@@ -401,8 +401,5 @@
     <string name="default_range">DEFAULT RANGE</string>
     <string name="target">target</string>
     <string name="rate_duration">Rate: %1$.2fU/h (%2$.2f%%) \nDuration %3$d min</string>
-    <string name="garmin">Garmin</string>
-    <string name="garmin_description">Connection to Garmin device (Fenix, Edge, …)</string>
-    <string name="key_garmin_settings">Garmin settings</string>
 
 </resources>

@@ -7,6 +7,8 @@ import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.sync.XDripBroadcast
+import app.aaps.plugins.sync.garmin.LoopHub
+import app.aaps.plugins.sync.garmin.LoopHubImpl
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclient.data.NSSettingsStatusImpl
@@ -82,6 +84,7 @@ abstract class SyncModule {
         @Binds fun bindDataSyncSelectorXdripInterface(dataSyncSelectorXdripImpl: DataSyncSelectorXdripImpl): DataSyncSelectorXdrip
         @Binds fun bindStoreDataForDb(storeDataForDbImpl: StoreDataForDbImpl): StoreDataForDb
         @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XdripPlugin): XDripBroadcast
+        @Binds fun bindLoopHub(loopHub: LoopHubImpl): LoopHub
     }
 
 }

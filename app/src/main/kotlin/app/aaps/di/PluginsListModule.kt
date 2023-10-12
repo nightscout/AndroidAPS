@@ -22,7 +22,7 @@ import app.aaps.plugins.insulin.InsulinOrefRapidActingPlugin
 import app.aaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin
 import app.aaps.plugins.main.general.actions.ActionsPlugin
 import app.aaps.plugins.main.general.food.FoodPlugin
-import app.aaps.plugins.main.general.garmin.GarminPlugin
+import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.persistentNotification.PersistentNotificationPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
