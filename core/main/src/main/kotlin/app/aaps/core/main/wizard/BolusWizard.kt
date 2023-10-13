@@ -243,8 +243,8 @@ class BolusWizard @Inject constructor(
         insulinFromBolusIOB = if (includeBolusIOB) bolusIob.iob else 0.0
         insulinFromBasalIOB = if (includeBasalIOB) basalIob.basaliob else 0.0
 
-        var calculatedTotalIOB = bolusIob.iob + basalIob.iob
-        if (positiveIOBOnly && calculatedTotalIOB < 0.0) 0.0 else -calculatedTotalIOB
+        var calculatedTotalIOB = insulinFromBolusIOB + insulinFromBasalIOB
+        calculatedTotalIOB = if (positiveIOBOnly && calculatedTotalIOB < 0.0) 0.0 else -calculatedTotalIOB
 
         // Insulin from correction
         insulinFromCorrection = if (usePercentage) 0.0 else correction
