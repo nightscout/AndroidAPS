@@ -512,12 +512,14 @@ class CustomWatchface : BaseWatchFace() {
                 view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
                 if (viewJson.has(TEXTVALUE.key))
                     view.text = viewJson.optString(TEXTVALUE.key)
-                view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
-                view.background = (dynData?.getDrawable() ?: textDrawable())?.also {
+                (dynData?.getDrawable() ?: textDrawable())?.let {
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
                         it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
+                    view.background = it
+                } ?: apply {
+                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
                 }
             } ?: apply { view.text = "" }
         }
@@ -539,18 +541,22 @@ class CustomWatchface : BaseWatchFace() {
                     else
                         view.clearColorFilter()
                 }
+                if (view.drawable == null)
+                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
             }
         }
 
         fun customizeGraphView(view: lecho.lib.hellocharts.view.LineChartView) {
             customizeViewCommon(view)
             viewJson?.let { viewJson ->
-                view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
-                view.background = (dynData?.getDrawable() ?: textDrawable())?.also {
+                (dynData?.getDrawable() ?: textDrawable())?.let {
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
                         it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
+                    view.background = it
+                } ?: apply {
+                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
                 }
             }
         }
