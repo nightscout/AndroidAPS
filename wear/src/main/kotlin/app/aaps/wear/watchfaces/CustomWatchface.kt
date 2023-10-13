@@ -431,7 +431,7 @@ class CustomWatchface : BaseWatchFace() {
         );
 
         companion object {
-
+            val TRANSPARENT = "#00000000"
             fun init(cwf: CustomWatchface) = values().forEach {
                 it.cwf = cwf
                 // reset all customized drawable when new watchface is loaded
@@ -519,7 +519,7 @@ class CustomWatchface : BaseWatchFace() {
                         it.clearColorFilter()
                     view.background = it
                 } ?: apply {
-                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
+                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
                 }
             } ?: apply { view.text = "" }
         }
@@ -542,7 +542,7 @@ class CustomWatchface : BaseWatchFace() {
                         view.clearColorFilter()
                 }
                 if (view.drawable == null)
-                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
+                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
             }
         }
 
@@ -556,7 +556,7 @@ class CustomWatchface : BaseWatchFace() {
                         it.clearColorFilter()
                     view.background = it
                 } ?: apply {
-                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
+                    view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
                 }
             }
         }
