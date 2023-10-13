@@ -10,9 +10,9 @@ Please understand that this project:
 Functions completed by the Bluetooth driver include:
 - Binding and unbinding of AndroidAPS with Equil Patch Pump
 - Initialization settings for Equil Patch Pump, including time setting, basal rate setting, and pump reminder mode setting
-- Installation and removal of infusion apparatus, including reset of the driving screw, filling, and air expulsion from the drug reservoir
-- Infusion instructions: large dose infusion (excluding extended large dose), basal rate setting, temporary basal rate setting, infusion pause/resume
-- Pump information synchronization: device firmware information, battery level, drug storage quantity, historical events (including infusion history, alarm errors, etc.)
+- Installation and removal of infusion apparatus, including reset of the driving screw, filling, and air expulsion from the insulin reservoir
+- Insulin Delivery Commands: Bolus (excluding extended bolus), basal rate setting, temporary basal rate setting, pump pause/resume
+- Pump information synchronization: device firmware information, battery level, insulin Reservoir, historical events (including delivery history, alarm errors, etc.)
 
 
 
