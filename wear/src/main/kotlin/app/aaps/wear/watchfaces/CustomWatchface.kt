@@ -514,7 +514,7 @@ class CustomWatchface : BaseWatchFace() {
                     view.text = viewJson.optString(TEXTVALUE.key)
                 (dynData?.getDrawable() ?: textDrawable())?.let {
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
-                        it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.background = it
@@ -530,14 +530,14 @@ class CustomWatchface : BaseWatchFace() {
             viewJson?.let { viewJson ->
                 drawable?.let {
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
-                        it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.setImageDrawable(it)
                 } ?: apply {
                     view.setImageDrawable(defaultDrawable?.let { cwf.resources.getDrawable(it) })
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)
-                        view.setColorFilter(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                        view.setColorFilter(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         view.clearColorFilter()
                 }
@@ -551,7 +551,7 @@ class CustomWatchface : BaseWatchFace() {
             viewJson?.let { viewJson ->
                 (dynData?.getDrawable() ?: textDrawable())?.let {
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
-                        it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.background = it
