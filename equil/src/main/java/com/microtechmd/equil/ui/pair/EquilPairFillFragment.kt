@@ -110,7 +110,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
             override fun run() {
                 if (activity == null) return
 
-                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
                     if (auto) {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
@@ -136,7 +136,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
             object : Callback() {
                 override fun run() {
                     if (activity == null) return
-                    aapsLogger.error(LTag.EQUILBLE, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
+                    aapsLogger.debug(LTag.EQUILBLE, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
                     // result.enacted=true
                     if (result.success) {
                         if (!result.enacted) {

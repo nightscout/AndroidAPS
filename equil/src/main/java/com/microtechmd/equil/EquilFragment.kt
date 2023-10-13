@@ -284,7 +284,7 @@ class EquilFragment : DaggerFragment() {
             commandQueue.customCommand(CmdAlarmSet(data.data.command), object : Callback() {
                 override fun run() {
                     dismissLoading();
-                    aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
+                    aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
                     if (result.success) {
                         equilPumpPlugin.equilManager.alarmMode = data.data;
                         runOnUiThread {
@@ -312,7 +312,7 @@ class EquilFragment : DaggerFragment() {
         commandQueue.customCommand(CmdModelSet(tempMode.command), object : Callback() {
             override fun run() {
                 dismissLoading();
-                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
                     equilPumpPlugin.equilManager.runMode = tempMode
                     runOnUiThread {

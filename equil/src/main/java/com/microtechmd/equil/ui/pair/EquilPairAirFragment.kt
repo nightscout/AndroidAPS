@@ -75,7 +75,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdStepSet(), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
                 if (result.success) {
                     dismissLoading()
                 } else {
@@ -124,7 +124,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdDevicesGet(), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.error(LTag.EQUILBLE, "CmdGetDevices result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "CmdGetDevices result====" + result.success)
                 if (result.success) {
                     equilPumpPlugin.equilManager.closeBle()
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
@@ -159,7 +159,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdBasalSet(basalSchedule, profile), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.error(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
+                aapsLogger.debug(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
                 if (result.success) {
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                     dismissLoading()

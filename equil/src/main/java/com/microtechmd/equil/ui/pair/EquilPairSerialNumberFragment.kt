@@ -192,7 +192,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                     if (it != null) {
                         val historyIndex = Utils.bytesToInt(it[24], it[23])
                         equilPumpPlugin.equilManager.startHistoryIndex = historyIndex;
-                        aapsLogger.error(LTag.EQUILBLE, "historyIndex  $historyIndex")
+                        aapsLogger.debug(LTag.EQUILBLE, "historyIndex  $historyIndex")
                     }
                 }
                 handler.removeCallbacks(stopScanAfterTimeoutRunnable)
@@ -224,11 +224,11 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
     private fun pair(scanResult: BluetoothDevice) {
         equilPumpPlugin.equilManager.activationProgress = ActivationProgress.PRIMING
         equilPumpPlugin.equilManager.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
-        aapsLogger.error(LTag.EQUILBLE, "result====" + scanResult.name.toString() + "===" + scanResult.address.toString())
+        aapsLogger.debug(LTag.EQUILBLE, "result====" + scanResult.name.toString() + "===" + scanResult.address.toString())
         commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(),password), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.error(LTag.EQUILBLE, "result====" + result.success + "===" + result.enacted)
+                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success + "===" + result.enacted)
                 if (result.success) {
                     if (result.enacted) {
 

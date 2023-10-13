@@ -1,6 +1,8 @@
 package com.microtechmd.equil;
 
 
+import static info.nightscout.androidaps.extensions.PumpStateExtensionKt.toStringFull;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +29,7 @@ import com.microtechmd.equil.manager.command.CmdBasalSet;
 import com.microtechmd.equil.manager.command.CmdHistoryGet;
 import com.microtechmd.equil.manager.command.CmdStatusGet;
 import com.microtechmd.equil.manager.command.CmdTimeSet;
+import com.microtechmd.equil.manager.command.PumpEvent;
 import com.microtechmd.equil.service.EquilService;
 
 import org.joda.time.DateTime;
@@ -64,6 +67,7 @@ import info.nightscout.androidaps.plugins.general.overview.notifications.Notific
 import info.nightscout.androidaps.plugins.pump.common.defs.PumpType;
 import info.nightscout.androidaps.queue.commands.CustomCommand;
 import info.nightscout.androidaps.utils.DateUtil;
+import info.nightscout.androidaps.utils.DecimalFormatter;
 import info.nightscout.androidaps.utils.FabricPrivacy;
 import info.nightscout.androidaps.utils.TimeChangeType;
 import info.nightscout.androidaps.utils.rx.AapsSchedulers;
@@ -186,6 +190,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
                 loopHandler.postDelayed(this, STATUS_CHECK_INTERVAL_MILLIS);
             }
         };
+        PumpEvent.init(rh);
 
     }
 
@@ -260,7 +265,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     // TODO is this correct?
     @Override
     public boolean isBusy() {
-        aapsLogger.error(LTag.EQUILBLE, "isBusy  flag: {}");
+        aapsLogger.debug(LTag.EQUILBLE, "isBusy  flag: {}");
         return false;
 
     }
@@ -538,7 +543,31 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @NonNull @Override
     public String shortStatus(boolean veryShort) {
-        return null;
+        if (!equilManager.isActivationCompleted()) {
+            return rh.gs(R.string.equil_init_insulin_error);
+        }
+        String ret = "";
+        if (lastDataTime() != 0) {
+            long agoMsec = System.currentTimeMillis() - lastDataTime();
+            int agoMin = (int) (agoMsec / 60d / 1000d);
+            ret += rh.gs(R.string.omnipod_common_short_status_last_connection, agoMin) + "\n";
+        }
+        if (equilManager.getBolusRecord() != null) {
+            ret += rh.gs(R.string.omnipod_common_short_status_last_bolus,
+                    DecimalFormatter.INSTANCE.to2Decimal(equilManager.getBolusRecord().getAmout()),
+                    android.text.format.DateFormat.format("HH:mm",
+                            equilManager.getBolusRecord().getStartTime())) +
+                    "\n";
+        }
+        PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
+        if (pumpState.getTemporaryBasal() != null && pumpState.getProfile() != null) {
+            ret += rh.gs(R.string.omnipod_common_short_status_temp_basal, toStringFull(pumpState.getTemporaryBasal(), dateUtil) + "\n");
+        }
+        if (pumpState.getExtendedBolus() != null) {
+            ret += rh.gs(R.string.omnipod_common_short_status_extended_bolus, toStringFull(pumpState.getExtendedBolus(), dateUtil) + "\n");
+        }
+        ret += rh.gs(R.string.omnipod_common_short_status_reservoir, (getReservoirLevel()));
+        return ret.trim();
     }
 
     @Override
@@ -610,7 +639,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     }
 
     @NonNull @Override public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        aapsLogger.error(LTag.EQUILBLE, "setTempBasalPercent [OmnipodPumpPlugin] ");
+        aapsLogger.debug(LTag.EQUILBLE, "setTempBasalPercent [OmnipodPumpPlugin] ");
         if (percent == 0) {
             return setTempBasalAbsolute(0.0d, durationInMinutes, profile, enforceNew, tbrType);
         } else {
@@ -702,7 +731,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     public boolean checkProfile() {
         Profile profile = profileFunction.getProfile();
         if (profile == null) {
-            return false;
+            return true;
         }
         return true;
     }

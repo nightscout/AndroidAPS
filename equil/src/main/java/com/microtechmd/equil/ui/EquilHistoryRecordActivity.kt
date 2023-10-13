@@ -147,9 +147,9 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
     private fun filterHistory(group: EquilHistoryEntryGroup) {
         filteredHistoryList.clear()
-        aapsLogger.error(LTag.EQUILBLE, "Items on full list: {}", fullHistoryList.size)
+        aapsLogger.debug(LTag.EQUILBLE, "Items on full list: {}", fullHistoryList.size)
         if (group === EquilHistoryEntryGroup.All) {
-            aapsLogger.error(LTag.EQUILBLE, "alll===")
+            aapsLogger.debug(LTag.EQUILBLE, "alll===")
             filteredHistoryList.addAll(fullHistoryList)
         } else {
             filteredHistoryList.addAll(fullHistoryList.filter { it.type?.let { it1 -> groupForCommandType(it1) } == group })
@@ -159,7 +159,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
             it.historyList = filteredHistoryList
             it.notifyDataSetChanged()
         }
-        aapsLogger.error(LTag.EQUILBLE, "Items on filtered list: {}", filteredHistoryList.size)
+        aapsLogger.debug(LTag.EQUILBLE, "Items on filtered list: {}", filteredHistoryList.size)
     }
 
     private fun groupForCommandType(type: EquilHistoryRecord.EventType): EquilHistoryEntryGroup {
@@ -251,22 +251,21 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
+        calendar.add(Calendar.DAY_OF_MONTH, -5)
         var startTime = calendar.timeInMillis
-        calendar.add(Calendar.DAY_OF_MONTH, 1)
-        calendar.add(Calendar.MILLISECOND, -1)
-        var endTime = calendar.timeInMillis
-        aapsLogger.error(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
+
+        aapsLogger.debug(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====")
         disposable += equilHistoryRecordDao
-            .allSince(endTime)
+            .allSince(startTime,System.currentTimeMillis())
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ historyList ->
-                           aapsLogger.error(LTag.EQUILBLE, "historyList===" + historyList.size)
+                           aapsLogger.debug(LTag.EQUILBLE, "historyList===" + historyList.size)
                            fullHistoryList.clear()
                            fullHistoryList.addAll(historyList)
                            // }
                        }) {
-                aapsLogger.error(LTag.EQUILBLE, "historyListerror===" + it)
+                aapsLogger.debug(LTag.EQUILBLE, "historyListerror===" + it)
             }
     }
 
@@ -275,20 +274,18 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
+        calendar.add(Calendar.DAY_OF_MONTH, -5)
         var startTime = calendar.timeInMillis
-        calendar.add(Calendar.DAY_OF_MONTH, 1)
-        calendar.add(Calendar.MILLISECOND, -1)
-        var endTime = calendar.timeInMillis
-        aapsLogger.error(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
+        var endTime = System.currentTimeMillis()
+        aapsLogger.debug(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
         disposable += equilHistoryRecordDao
             .allFromByType(startTime, endTime, equilPumpPlugin.serialNumber())
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ historyList ->
-                           aapsLogger.error(LTag.EQUILBLE, "loadDataEquil===" + historyList.size)
+                           aapsLogger.debug(LTag.EQUILBLE, "loadDataEquil===" + historyList.size)
                            binding.recyclerviewEquil.swapAdapter(RecyclerViewAdapterEquil(toModels(historyList), rh), false)
                        }) {
-                aapsLogger.error(LTag.EQUILBLE, "historyListerror===" + it)
             }
     }
 
@@ -402,6 +399,9 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                 historyEntry.resolvedStatus == ResolvedResult.SUCCESS       ->
                     R.string.equil_success
 
+                historyEntry.resolvedStatus == ResolvedResult.NONE          ->
+                    R.string.equil_none
+
                 else                                                        ->
                     R.string.equil_command__unknown
             }
@@ -437,7 +437,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         val arrayList = ArrayList<ItemModel>()
         var record: EquilHistoryPump? = null
         var record2: EquilHistoryPump? = null
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
         var list2 = list.sortedWith(compareBy(EquilHistoryPump::eventTimestamp, EquilHistoryPump::eventIndex))
         val iterator = list2.listIterator()
         var pre: EquilHistoryPump? = null
@@ -449,7 +449,6 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
             if (record2 == null || record2.rate != next.rate) {
                 val format = format.format(next.eventTimestamp)
                 val valueOf = Utils.decodeSpeedToUH(next.rate).toString()
-                // aapsLogger.error(LTag.EQUILBLE, "valueOf===" + valueOf + "===" + next.eventIndex + "====" + pre?.type + "===" + pre?.eventIndex)
                 if (pre?.type == 10) {
                     // arrayList.add(ItemModel(format, valueOf, ItemModel.TYPE_BASAL, next.eventTimestamp))
                     arrayList.add(ItemModel(format, valueOf, ItemModel.TYPE_BASAL_TEMP, next.eventTimestamp))
@@ -470,7 +469,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                         * Utils.decodeSpeedToUS(record.largeRate)
                 )
                 val t = (Math.abs(time - time2) / 1000.0);
-                aapsLogger.error(LTag.EQUILBLE, "time===" + t + "===" + format3)
+                aapsLogger.debug(LTag.EQUILBLE, "time===" + t + "===" + format3)
                 arrayList.add(ItemModel(format2, format3, ItemModel.TYPE_BOLUS, time2))
                 record = null
             }
@@ -488,11 +487,11 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         }
 
         // Process remaining bolus speed
-        record?.let {
-            val decodeSpeedToUH = Utils.decodeSpeedToUH(it.largeRate)
-            val format5 = format.format(it.eventTimestamp)
-            arrayList.add(ItemModel(format5, "正在注射 大剂量 $decodeSpeedToUH U/H", 4, it.eventTimestamp))
-        }
+        // record?.let {
+        //     val decodeSpeedToUH = Utils.decodeSpeedToUH(it.largeRate)
+        //     val format5 = format.format(it.eventTimestamp)
+        //     arrayList.add(ItemModel(format5, "正在开始 $decodeSpeedToUH U/H", 4, it.eventTimestamp))
+        // }
 
         val reversedList = arrayList.reversed()
         return reversedList

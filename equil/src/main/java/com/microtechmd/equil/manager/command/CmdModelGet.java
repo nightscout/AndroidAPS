@@ -32,7 +32,7 @@ public class CmdModelGet extends BaseSetting {
     public void decodeConfirmData(byte[] data) {
 
         int mode = data[6] & 0xff;
-        aapsLogger.error(LTag.EQUILBLE, "CmdGetModel====" + mode);
+        aapsLogger.debug(LTag.EQUILBLE, "CmdGetModel====" + mode);
         equilManager.setModel(mode);
         cmdStatus = true;
         synchronized (this) {

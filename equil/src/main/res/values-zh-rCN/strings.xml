@@ -1,6 +1,5 @@
 <resources>
-    <string name="app_name">equil</string>
-    <string name="equil_name" translatable="false">微泰</string>
+    <string name="equil_name" translatable="false">微泰_5.3</string>
     <string name="key_equil_mac_address" translatable="false">pref_equil_mac_address</string>
     <string name="key_equil_name" translatable="false">pref_equil_name</string>
     <string name="key_equil_setting" translatable="false">pref_equil_setting</string>
@@ -207,4 +206,27 @@
     <string name="equil_common_cmd_alarm">Equil警报</string>
     <string name="equil_common_cmd_fill">充盈</string>
 
+
+    <string name="equil_histroy_item1">储药器剩余药量低</string>
+    <string name="equil_histroy_item2">储药器药液已用完</string>
+    <string name="equil_histroy_item3">检测到输注堵塞</string>
+    <string name="equil_histroy_item4">检测到电机反转</string>
+    <string name="equil_histroy_item5">检测到电机故障</string>
+    <string name="equil_histroy_item6">输注暂停开始</string>
+    <string name="equil_histroy_item7">输注已经暂停</string>
+    <string name="equil_histroy_item8">即将自动关机</string>
+    <string name="equil_histroy_item9">泵自动关机</string>
+    <string name="equil_histroy_item10">推杆定位(充盈)</string>
+    <string name="equil_histroy_item11">推杆回退开始</string>
+    <string name="equil_histroy_item12">快速大剂量开始</string>
+    <string name="equil_histroy_item13">临时基础率开始</string>
+    <string name="equil_histroy_item14">临时基础率结束</string>
+    <string name="equil_histroy_item15">电池电量低</string>
+    <string name="equil_histroy_item16">电池已耗尽</string>
+    <string name="equil_histroy_item17">上电复位</string>
+    <string name="equil_histroy_item18">非正常输注停止</string>
+
+
+    <!--    <string name="equil_histroy_item1">推杆定位(充盈)</string>-->
+    <!--    <string name="equil_histroy_item2">推杆回退</string>-->
 </resources>

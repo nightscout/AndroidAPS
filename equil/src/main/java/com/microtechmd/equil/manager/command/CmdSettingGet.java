@@ -59,7 +59,7 @@ public class CmdSettingGet extends BaseSetting {
         infusionUnit = Utils.internalDecodeSpeedToUH(i4);
         basalAlarm = Utils.internalDecodeSpeedToUH(i5);
         largeAlarm = Utils.internalDecodeSpeedToUH(i6);
-        aapsLogger.error(LTag.EQUILBLE,
+        aapsLogger.debug(LTag.EQUILBLE,
                 "CmdSettingGet===" + Utils.bytesToHex(data) + "====" + lowAlarm + "=======" + i1);
         synchronized (this) {
             setCmdStatus(true);

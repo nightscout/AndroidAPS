@@ -34,7 +34,7 @@ public class CmdLargeBasalSet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        aapsLogger.error(LTag.EQUILBLE, "step===" + step + "=====" + stepTime);
+        aapsLogger.debug(LTag.EQUILBLE, "step===" + step + "=====" + stepTime);
         byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x01, 0x03};
         byte[] data3 = Utils.intToBytes(step);

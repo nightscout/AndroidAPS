@@ -22,11 +22,11 @@ public class CmdPair extends BaseCmd {
     public String address;
     private String password;
 
-    public CmdPair(String name, String address,String password) {
+    public CmdPair(String name, String address, String password) {
         super(System.currentTimeMillis());
         port = "0E0E";
         this.address = address;
-        this.password=password;
+        this.password = password;
         sn = name.replace("Equil - ", "").trim();
         sn = convertString(sn);
         Log.e(LTag.EQUILBLE.toString(), "sn===" + sn);
@@ -59,11 +59,11 @@ public class CmdPair extends BaseCmd {
             byte[] pwd = messageDigest.digest();
 
             //B0EB6308060F79D685D6269DC048E32E4C103CD2B8EEA2DE4637EB8A5D6BCD08
-            byte[] equilPassword=AESUtil.getEquilPassWord(password);
+            byte[] equilPassword = AESUtil.getEquilPassWord(password);
             randomPassword = Utils.generateRandomPassword(32);
             byte[] data = Utils.concat(equilPassword, randomPassword);
-            aapsLogger.error(LTag.EQUILBLE, "pwd==" + Utils.bytesToHex(pwd));
-            aapsLogger.error(LTag.EQUILBLE, "data==" + Utils.bytesToHex(data));
+            aapsLogger.debug(LTag.EQUILBLE, "pwd==" + Utils.bytesToHex(pwd));
+            aapsLogger.debug(LTag.EQUILBLE, "data==" + Utils.bytesToHex(data));
             EquilCmdModel equilCmdModel = AESUtil.aesEncrypt(pwd, data);
             return responseCmd(equilCmdModel, "0D0D0000");
         } catch (Exception e) {
@@ -100,11 +100,11 @@ public class CmdPair extends BaseCmd {
                 isEnd = true;
                 response = new EquilResponse(createTime);
                 rspIndex = intValue;
-                aapsLogger.error(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
+                aapsLogger.debug(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
                 return list;
             } catch (Exception e) {
                 response = new EquilResponse(createTime);
-                aapsLogger.error(LTag.EQUILBLE, "decodeConfirm error =====" + e.getMessage());
+                aapsLogger.debug(LTag.EQUILBLE, "decodeConfirm error =====" + e.getMessage());
 
             }
 
@@ -121,11 +121,11 @@ public class CmdPair extends BaseCmd {
             response = new EquilResponse(createTime);
             config = true;
             rspIndex = intValue;
-            aapsLogger.error(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
+            aapsLogger.debug(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
             return list;
         } catch (Exception e) {
             response = new EquilResponse(createTime);
-            aapsLogger.error(LTag.EQUILBLE, "decode error=====" + e.getMessage());
+            aapsLogger.debug(LTag.EQUILBLE, "decode error=====" + e.getMessage());
         }
         return null;
 
@@ -139,8 +139,8 @@ public class CmdPair extends BaseCmd {
         String pwd1 = content.substring(0, 64);
         String pwd2 = content.substring(64, content.length());
 //        List<String> list = AESUtil.test21(reqModel);
-        aapsLogger.error(LTag.EQUILBLE, "decrypted====" + pwd1);
-        aapsLogger.error(LTag.EQUILBLE, "decrypted====" + pwd2);
+        aapsLogger.debug(LTag.EQUILBLE, "decrypted====" + pwd1);
+        aapsLogger.debug(LTag.EQUILBLE, "decrypted====" + pwd2);
         if (ERROR_PWD.equals(pwd1) && ERROR_PWD.equals(pwd2)) {
             synchronized (this) {
                 setCmdStatus(true);

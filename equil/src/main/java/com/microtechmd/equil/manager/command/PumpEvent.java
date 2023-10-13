@@ -1,14 +1,42 @@
 package com.microtechmd.equil.manager.command;
 
+import com.microtechmd.equil.R;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import info.nightscout.androidaps.interfaces.ResourceHelper;
+
 public class PumpEvent {
     private int port;
     private int type;
-    private int level;//0 通知 1.告警 2.报警
+    private int level;//
     private String conent;
+    static List<PumpEvent> lists = new ArrayList<>();
+
+    public static void init(ResourceHelper rh) {
+        lists = new ArrayList<>();
+        lists.add(new PumpEvent(4, 0, 0, "--"));
+        lists.add(new PumpEvent(4, 1, 1, rh.gs(R.string.equil_histroy_item1)));
+        lists.add(new PumpEvent(4, 1, 2, rh.gs(R.string.equil_histroy_item2)));
+        lists.add(new PumpEvent(4, 2, 2, rh.gs(R.string.equil_histroy_item3)));
+        lists.add(new PumpEvent(4, 3, 0, rh.gs(R.string.equil_histroy_item4)));
+        lists.add(new PumpEvent(4, 3, 2, rh.gs(R.string.equil_histroy_item5)));
+        lists.add(new PumpEvent(4, 5, 0, rh.gs(R.string.equil_histroy_item6)));
+        lists.add(new PumpEvent(4, 5, 1, rh.gs(R.string.equil_histroy_item7)));
+        lists.add(new PumpEvent(4, 6, 1, rh.gs(R.string.equil_histroy_item8)));
+        lists.add(new PumpEvent(4, 6, 2, rh.gs(R.string.equil_histroy_item9)));
+        lists.add(new PumpEvent(4, 7, 0, rh.gs(R.string.equil_histroy_item10)));
+        lists.add(new PumpEvent(4, 8, 0, rh.gs(R.string.equil_histroy_item11)));
+        lists.add(new PumpEvent(4, 9, 0, rh.gs(R.string.equil_histroy_item12)));
+        lists.add(new PumpEvent(4, 10, 0, rh.gs(R.string.equil_histroy_item13)));
+        lists.add(new PumpEvent(4, 11, 0, rh.gs(R.string.equil_histroy_item14)));
+        lists.add(new PumpEvent(5, 0, 1, rh.gs(R.string.equil_histroy_item15)));
+        lists.add(new PumpEvent(5, 0, 2, rh.gs(R.string.equil_histroy_item16)));
+        lists.add(new PumpEvent(5, 1, 0, rh.gs(R.string.equil_histroy_item17)));
+        lists.add(new PumpEvent(5, 1, 2, rh.gs(R.string.equil_histroy_item18)));
+    }
 
     public PumpEvent(int port, int type, int level, String conent) {
         this.port = port;
@@ -17,31 +45,6 @@ public class PumpEvent {
         this.conent = conent;
     }
 
-
-    static List<PumpEvent> lists = new ArrayList<>();
-
-    static {
-//        lists.add(new PumpEvent(4, 0, 0, "输注状态更新"));
-        lists.add(new PumpEvent(4, 0, 0, "--"));
-        lists.add(new PumpEvent(4, 1, 1, "储药器剩余药量低"));
-        lists.add(new PumpEvent(4, 1, 2, "储药器药液已用完"));
-        lists.add(new PumpEvent(4, 2, 2, "检测到输注堵塞"));
-        lists.add(new PumpEvent(4, 3, 0, "检测到电机反转"));
-        lists.add(new PumpEvent(4, 3, 2, "检测到电机故障"));
-        lists.add(new PumpEvent(4, 5, 0, "输注暂停开始"));
-        lists.add(new PumpEvent(4, 5, 1, "输注已经暂停"));
-        lists.add(new PumpEvent(4, 6, 1, "即将自动关机"));
-        lists.add(new PumpEvent(4, 6, 2, "已经自动关机"));
-        lists.add(new PumpEvent(4, 7, 0, "推杆定位开始"));
-        lists.add(new PumpEvent(4, 8, 0, "推杆回退开始"));
-        lists.add(new PumpEvent(4, 9, 0, "快速大剂量开始"));
-        lists.add(new PumpEvent(4, 10, 0, "临时基础率开始"));
-        lists.add(new PumpEvent(4, 11, 0, "临时基础率结束"));
-        lists.add(new PumpEvent(5, 0, 1, "电池电量低"));
-        lists.add(new PumpEvent(5, 0, 2, "电池已耗尽"));
-        lists.add(new PumpEvent(5, 1, 0, "上电复位"));
-        lists.add(new PumpEvent(5, 1, 2, "非正常输注停止"));
-    }
 
     public static String getTips(int port, int type, int level) {
         PumpEvent pumpEvent = new PumpEvent(port, type, level, "");

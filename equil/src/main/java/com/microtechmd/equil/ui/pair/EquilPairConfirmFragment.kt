@@ -88,7 +88,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdModelSet(RunMode.RUN.command), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.error(LTag.EQUILBLE, "setModel result====" + result.success + "====")
+                aapsLogger.debug(LTag.EQUILBLE, "setModel result====" + result.success + "====")
                 if (result.success) {
                     dismissLoading();
                     equilPumpPlugin.equilManager.runMode = RunMode.RUN;

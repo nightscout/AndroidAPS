@@ -49,7 +49,7 @@ public class CmdTempBasalSet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        aapsLogger.error(LTag.EQUILBLE, "step===" + step + "=====" + pumpTime);
+        aapsLogger.debug(LTag.EQUILBLE, "step===" + step + "=====" + pumpTime);
         byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x01, 0x04};
         byte[] data3 = Utils.intToBytes(step);

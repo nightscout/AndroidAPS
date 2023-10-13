@@ -287,6 +287,8 @@ public class EquilManager {
             aapsLogger.debug(LTag.EQUILBLE, "sleep===" + detailedBolusInfo.insulin + "===" + percent1);
             float percent = 0;
             if (command.isCmdStatus()) {
+                result.setSuccess(true);
+                result.enacted(true);
                 while (!bolusProfile.getStop() && percent < 100) {
                     progressUpdateEvent.setPercent((int) percent);
                     progressUpdateEvent.setStatus(this.rh.gs(R.string.equil_bolus_delivered,
@@ -297,12 +299,14 @@ public class EquilManager {
                     percent = percent + percent1;
                     aapsLogger.debug(LTag.EQUILBLE, "isCmdStatus===" + percent + "====" + bolusProfile.getStop());
                 }
+                result.setComment(rh.gs(R.string.virtualpump_resultok));
+            }else{
+                result.setSuccess(false);
+                result.enacted(false);
+                result.setComment(rh.gs(R.string.equil_command_connect_error));
             }
-            result.setSuccess(command.isCmdStatus());
-            result.enacted(true);
-            result.setComment(rh.gs(R.string.virtualpump_resultok));
             result.setBolusDelivered(Double.valueOf(percent / 100f * detailedBolusInfo.insulin));
-            if (command.isCmdStatus()) {
+            if (result.getSuccess()) {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
                 long currentTime = System.currentTimeMillis();
                 pumpSync.syncBolusWithPumpId(currentTime,

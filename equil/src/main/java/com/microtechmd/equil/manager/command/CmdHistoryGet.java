@@ -20,7 +20,7 @@ public class CmdHistoryGet extends BaseSetting {
     private int index;
     //    private int port;
     private int type;
-    private int level;//0 通知 1.告警 2.报警
+    private int level;
     private int parm;
     private int currentIndex = 0;
 
@@ -41,14 +41,14 @@ public class CmdHistoryGet extends BaseSetting {
         byte[] data3 = Utils.intToBytes(currentIndex);
         byte[] data = Utils.concat(indexByte, data2, data3);
         pumpReqIndex++;
-        aapsLogger.error(LTag.EQUILBLE, "getReqData2===" + Utils.bytesToHex(data));
+        aapsLogger.debug(LTag.EQUILBLE, "getReqData2===" + Utils.bytesToHex(data));
         return data;
     }
 
     public byte[] getNextData() {
         byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x01, 0x01};
-        aapsLogger.error(LTag.EQUILBLE, "currentIndex===" + currentIndex);
+        aapsLogger.debug(LTag.EQUILBLE, "currentIndex===" + currentIndex);
         byte[] data = Utils.concat(indexByte, data2);
         pumpReqIndex++;
         return data;
@@ -78,7 +78,7 @@ public class CmdHistoryGet extends BaseSetting {
             equilManager.decodeHistory(data);
         }
         currentIndex = index;
-        aapsLogger.error(LTag.EQUILBLE, "history index==" + index + "===" + Utils.bytesToHex(data) +
+        aapsLogger.debug(LTag.EQUILBLE, "history index==" + index + "===" + Utils.bytesToHex(data) +
                 "===" + rate + "====" + largeRate + "===" + Utils.bytesToHex(new byte[]{data[16],
                 data[17]}));
         synchronized (this) {
