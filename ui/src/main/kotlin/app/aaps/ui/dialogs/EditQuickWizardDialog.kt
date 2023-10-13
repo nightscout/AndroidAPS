@@ -79,8 +79,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 entry.storage.put("validTo", toSeconds)
                 entry.storage.put("useBG", binding.useBg.isChecked)
                 entry.storage.put("useCOB", booleanToInt(binding.useCob.isChecked))
-                entry.storage.put("useBolusIOB", booleanToInt(binding.useBolusIob.isChecked))
-                entry.storage.put("useBasalIOB", binding.useBasalIob.selectedItemPosition)
+                entry.storage.put("useIOB", booleanToInt(binding.useIob.isChecked))
+                entry.storage.put("usePositiveIOBOnly", booleanToInt(binding.usePositiveIobOnly.isChecked))
                 entry.storage.put("useTrend", binding.useTrend.selectedItemPosition)
                 entry.storage.put("useSuperBolus", booleanToInt(binding.useSuperBolus.isChecked))
                 entry.storage.put("useTempTarget", booleanToInt(binding.useTempTarget.isChecked))
@@ -226,8 +226,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         binding.useBg.isChecked = intToBoolean(entry.useBG())
         binding.useCob.isChecked = intToBoolean(entry.useCOB())
-        binding.useBolusIob.isChecked = intToBoolean(entry.useBolusIOB())
-        binding.useBasalIob.setSelection(entry.useBasalIOB())
+        binding.useIob.isChecked = intToBoolean(entry.useIOB())
+        binding.usePositiveIobOnly.isChecked = intToBoolean(entry.usePositiveIOBOnly())
         binding.useTrend.setSelection(entry.useTrend())
         binding.useSuperBolus.isChecked = intToBoolean(entry.useSuperBolus())
         binding.useTempTarget.isChecked = intToBoolean(entry.useTempTarget())
@@ -245,23 +245,12 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.useCob.setOnCheckedChangeListener { _, checkedId ->
             processCob()
         }
-        binding.useBasalIobCheckbox.setOnCheckedChangeListener { _, checkedId ->
-            processBasalIOB()
-        }
 
         binding.useTrendCheckbox.setOnCheckedChangeListener { _, checkedId ->
             processTrend()
         }
 
         processCob()
-
-        binding.useBasalIob.setOnItemSelectedListener(object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
-                binding.useBasalIobCheckbox.isChecked = binding.useBasalIob.selectedItemPosition != QuickWizardEntry.NO
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-        })
 
         binding.useTrend.setOnItemSelectedListener(object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
@@ -293,24 +282,11 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
     private fun processCob() {
         if (binding.useCob.isChecked) {
-            binding.useBolusIob.setEnabled(false)
-            binding.useBasalIob.setEnabled(false)
-            binding.useBolusIob.isChecked = true
-            binding.useBasalIobCheckbox.isChecked = true
-            binding.useBasalIobCheckbox.setEnabled(false)
-            binding.useBasalIob.setSelection(QuickWizardEntry.YES)
+            binding.useIob.setEnabled(false)
+            binding.useIob.isChecked = true
         } else {
-            binding.useBolusIob.setEnabled(true)
-            binding.useBasalIob.setEnabled(true)
-            binding.useBasalIobCheckbox.setEnabled(true)
-        }
-    }
-
-    private fun processBasalIOB() {
-        if (binding.useBasalIobCheckbox.isChecked) {
-            if (binding.useBasalIob.selectedItemPosition == QuickWizardEntry.NO) binding.useBasalIob.setSelection(QuickWizardEntry.YES)
-        } else {
-            binding.useBasalIob.setSelection(QuickWizardEntry.NO)
+            binding.useIob.setEnabled(true)
+            binding.useIob.isChecked = false
         }
     }
 

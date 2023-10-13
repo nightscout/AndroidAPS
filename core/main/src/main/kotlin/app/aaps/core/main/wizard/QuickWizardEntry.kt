@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.valueToUnits
-import app.aaps.core.main.iob.round
 import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.MidnightUtils
@@ -116,21 +115,17 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         val cob =
             if (useCOB() == YES) iobCobCalculator.getCobInfo("QuickWizard COB").displayCob ?: 0.0
             else 0.0
-        // Bolus IOB
-        var bolusIOB = false
-        if (useBolusIOB() == YES) {
-            bolusIOB = true
+        // IOB
+        var uIOB = false
+        if (useIOB() == YES) {
+            uIOB = true
         }
-        // Basal IOB
-        val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-        var basalIOB = false
-        if (useBasalIOB() == YES) {
-            basalIOB = true
-        } else if (useBasalIOB() == POSITIVE_ONLY && basalIob.iob > 0) {
-            basalIOB = true
-        } else if (useBasalIOB() == NEGATIVE_ONLY && basalIob.iob < 0) {
-            basalIOB = true
+
+        var uPositiveIOBOnly = false
+        if (usePositiveIOBOnly() == YES) {
+            uPositiveIOBOnly = true
         }
+
         // SuperBolus
         var superBolus = false
         if (useSuperBolus() == YES && sp.getBoolean(app.aaps.core.utils.R.string.key_usesuperbolus, false)) {
@@ -159,14 +154,15 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             percentage,
             true,
             useCOB() == YES,
-            bolusIOB,
-            basalIOB,
+            uIOB, //allways use or don't both bolus
+            uIOB, // & basal IOB
             superBolus,
             useTempTarget() == YES,
             trend,
             false,
             buttonText(),
-            quickWizard = true
+            quickWizard = true,
+            positiveIOBOnly = uPositiveIOBOnly
         ) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
     }
 
@@ -188,9 +184,9 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     fun useCOB(): Int = safeGetInt(storage, "useCOB", NO)
 
-    fun useBolusIOB(): Int = safeGetInt(storage, "useBolusIOB", YES)
+    fun useIOB(): Int = safeGetInt(storage, "useIOB", YES)
 
-    fun useBasalIOB(): Int = safeGetInt(storage, "useBasalIOB", YES)
+    fun usePositiveIOBOnly(): Int = safeGetInt(storage, "usePositiveIOBOnly", NO)
 
     fun useTrend(): Int = safeGetInt(storage, "useTrend", NO)
 
