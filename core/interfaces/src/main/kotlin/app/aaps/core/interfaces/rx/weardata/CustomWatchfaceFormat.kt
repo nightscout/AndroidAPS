@@ -252,6 +252,7 @@ enum class JsonKeys(val key: String) {
     IMAGE("image"),
     INVALIDIMAGE("invalidImage"),
     INVALIDCOLOR("invalidColor"),
+    INVALIDFONTCOLOR("invalidFontColor"),
     TWINVIEW("twinView"),
     TOPOFFSETTWINHIDDEN("topOffsetTwinHidden"),
     LEFTOFFSETTWINHIDDEN("leftOffsetTwinHidden")
