@@ -106,13 +106,13 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun setColorDark() {
         setWatchfaceStyle()
-        if ((ViewMap.SGV.dynData?.stepColor ?: 0) == 0)
+        if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) == 0)
             binding.sgv.setTextColor(bgColor)
         if ((ViewMap.DIRECTION.dynData?.stepColor ?: 0) == 0)
             binding.direction2.colorFilter = changeDrawableColor(bgColor)
-        if (ageLevel != 1 && (ViewMap.TIMESTAMP.dynData?.stepColor ?: 0) == 0)
+        if (ageLevel != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) == 0)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
-        if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepColor ?: 0) == 0)
+        if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) == 0)
             binding.uploaderBattery.setTextColor(lowBatColor)
         if ((ViewMap.LOOP.dynData?.stepDraw ?: 0) == 0)     // Apply automatic background image only if no dynData or no step images
             when (loopLevel) {
@@ -508,11 +508,17 @@ class CustomWatchface : BaseWatchFace() {
                     FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
                     StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
                 )
-                view.setTextColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(FONTCOLOR.key)))
+                view.setTextColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(FONTCOLOR.key)))
                 view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
                 if (viewJson.has(TEXTVALUE.key))
                     view.text = viewJson.optString(TEXTVALUE.key)
-                view.background = dynData?.getDrawable() ?: textDrawable()
+                view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
+                view.background = (dynData?.getDrawable() ?: textDrawable())?.also {
+                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                    else
+                        it.clearColorFilter()
+                }
             } ?: apply { view.text = "" }
         }
 
@@ -522,14 +528,14 @@ class CustomWatchface : BaseWatchFace() {
             viewJson?.let { viewJson ->
                 drawable?.let {
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
-                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.setImageDrawable(it)
                 } ?: apply {
                     view.setImageDrawable(defaultDrawable?.let { cwf.resources.getDrawable(it) })
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)
-                        view.setColorFilter(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                        view.setColorFilter(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         view.clearColorFilter()
                 }
@@ -540,7 +546,12 @@ class CustomWatchface : BaseWatchFace() {
             customizeViewCommon(view)
             viewJson?.let { viewJson ->
                 view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, "#0000000000"), Color.TRANSPARENT))
-                view.background = dynData?.getDrawable() ?: textDrawable()
+                view.background = (dynData?.getDrawable() ?: textDrawable())?.also {
+                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                    else
+                        it.clearColorFilter()
+                }
             }
         }
     }
@@ -695,6 +706,7 @@ class CustomWatchface : BaseWatchFace() {
 
         private val dynDrawable = mutableMapOf<Int, Drawable?>()
         private val dynColor = mutableMapOf<Int, Int>()
+        private val dynFontColor = mutableMapOf<Int, Int>()
         private var dataRange: DataRange? = null
         private var topRange: DataRange? = null
         private var leftRange: DataRange? = null
@@ -703,6 +715,8 @@ class CustomWatchface : BaseWatchFace() {
             get() = dynDrawable.size - 1
         val stepColor: Int
             get() = dynColor.size - 1
+        val stepFontColor: Int
+            get() = dynFontColor.size - 1
 
         val dataValue: Double?
             get() = when (valueMap) {
@@ -727,6 +741,7 @@ class CustomWatchface : BaseWatchFace() {
             ?: (leftRange.invalidData * cwf.zoomFactor).toInt() } } ?: 0
         fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
         fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] }
+        fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] } else null
         fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] } else null
         private fun load() {
             dynDrawable[0] = dataJson.optString(INVALIDIMAGE.key)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
@@ -739,6 +754,12 @@ class CustomWatchface : BaseWatchFace() {
             idx = 1
             while (dataJson.has("${COLOR.key}$idx")) {
                 dynColor[idx] = cwf.getColor(dataJson.optString("${COLOR.key}$idx"))
+                idx++
+            }
+            dynFontColor[0] = cwf.getColor(dataJson.optString(INVALIDFONTCOLOR.key))
+            idx = 1
+            while (dataJson.has("${FONTCOLOR.key}$idx")) {
+                dynFontColor[idx] = cwf.getColor(dataJson.optString("${FONTCOLOR.key}$idx"))
                 idx++
             }
             DataRange(dataJson.optDouble(MINDATA.key, valueMap.min), dataJson.optDouble(MAXDATA.key, valueMap.max)).let { defaultRange ->
