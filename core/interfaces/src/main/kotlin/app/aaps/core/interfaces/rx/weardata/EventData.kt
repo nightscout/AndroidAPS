@@ -50,7 +50,7 @@ sealed class EventData : Event() {
         val product: String
     ) : EventData() {
 
-        override fun equals(other: Any?): Boolean =
+        override fun  equals(other: Any?): Boolean =
             when (other) {
                 !is WearException -> false
                 else              -> timeStamp == other.timeStamp && fingerprint == other.fingerprint
@@ -113,6 +113,22 @@ sealed class EventData : Event() {
 
         override fun toString() =
             "HR ${beatsPerMinute.toInt()} at ${DateTime(timestamp)} for ${duration / 1000.0}sec $device"
+    }
+
+    @Serializable
+    data class ActionStepsRate(
+        val duration: Long,
+        val timestamp: Long,
+        val steps5min: Int,
+        val steps10min: Int,
+        val steps15min: Int,
+        val steps30min: Int,
+        val steps60min: Int,
+        val steps180min: Int,
+        val device: String): EventData() {
+
+        override fun toString() =
+            "STEPS 5min: $steps5min, 10min: $steps10min, 15min: $steps15min, 30min: $steps30min, 60min: $steps60min, 180min: $steps180min at ${DateTime(timestamp)} for ${duration / 1000.0}sec $device"
     }
 
     @Serializable
@@ -313,4 +329,5 @@ sealed class EventData : Event() {
 
     @Serializable
     data class SnoozeAlert(val timeStamp: Long) : EventData()
+
 }

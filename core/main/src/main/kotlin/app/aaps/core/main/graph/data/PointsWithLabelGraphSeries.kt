@@ -51,7 +51,8 @@ class PointsWithLabelGraphSeries<E : DataPointWithLabelInterface> : BaseSeries<E
         COB_FAIL_OVER,
         IOB_PREDICTION,
         BUCKETED_BG,
-        HEARTRATE
+        HEARTRATE,
+        STEPS,
     }
 
     /**
@@ -229,6 +230,11 @@ class PointsWithLabelGraphSeries<E : DataPointWithLabelInterface> : BaseSeries<E
                         canvas.drawText(value.label, endX, endY, mPaint)
                     }
                 } else if (value.shape == Shape.HEARTRATE) {
+                    mPaint.strokeWidth = 0f
+                    val bounds = Rect(endX.toInt(), endY.toInt() - 8, xPlusLength.toInt(), endY.toInt() + 8)
+                    mPaint.style = Paint.Style.FILL_AND_STROKE
+                    canvas.drawRect(bounds, mPaint)
+                } else if (value.shape === Shape.STEPS) {
                     mPaint.strokeWidth = 0f
                     val bounds = Rect(endX.toInt(), endY.toInt() - 8, xPlusLength.toInt(), endY.toInt() + 8)
                     mPaint.style = Paint.Style.FILL_AND_STROKE

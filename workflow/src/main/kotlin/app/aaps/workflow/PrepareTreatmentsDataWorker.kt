@@ -22,6 +22,7 @@ import app.aaps.core.main.graph.data.EffectiveProfileSwitchDataPoint
 import app.aaps.core.main.graph.data.ExtendedBolusDataPoint
 import app.aaps.core.main.graph.data.HeartRateDataPoint
 import app.aaps.core.main.graph.data.PointsWithLabelGraphSeries
+import app.aaps.core.main.graph.data.StepsDataPoint
 import app.aaps.core.main.graph.data.TherapyEventDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
@@ -29,6 +30,7 @@ import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
+import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
@@ -135,6 +137,12 @@ class PrepareTreatmentsDataWorker(
             repository.getHeartRatesFromTimeToTime(fromTime, endTime)
                 .map { hr -> HeartRateDataPoint(hr, rh) }
                 .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.heartRateColor) }
+
+        data.overviewData.stepsCountGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>(
+            repository.getStepsCountFromTimeToTime(fromTime, endTime)
+                .map { steps -> StepsDataPoint(steps, rh) }
+                .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.stepsColor) }
+
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
         return Result.success()

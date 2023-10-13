@@ -265,4 +265,6 @@
     <string name="error">!err!</string>
     <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
     <string name="pref_heartRateSampling">Heart Rate</string>
+    <string name="key_steps_sampling">key_steps_sampling</string>
+    <string name="pref_stepsSampling">Enable Steps Count</string>
 </resources>

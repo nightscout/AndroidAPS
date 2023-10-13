@@ -10,6 +10,7 @@ import app.aaps.database.entities.MultiwaveBolusLink
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.PreferenceChange
 import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
@@ -35,4 +36,5 @@ data class NewEntries(
     val totalDailyDoses: List<TotalDailyDose>,
     val versionChanges: List<VersionChange>,
     val heartRates: List<HeartRate>,
+    val stepsCount: List<StepsCount>,
 )

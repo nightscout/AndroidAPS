@@ -37,12 +37,14 @@ import app.aaps.database.impl.daos.delegated.DelegatedMultiwaveBolusLinkDao
 import app.aaps.database.impl.daos.delegated.DelegatedOfflineEventDao
 import app.aaps.database.impl.daos.delegated.DelegatedPreferenceChangeDao
 import app.aaps.database.impl.daos.delegated.DelegatedProfileSwitchDao
+import app.aaps.database.impl.daos.delegated.DelegatedStepsCountDao
 import app.aaps.database.impl.daos.delegated.DelegatedTemporaryBasalDao
 import app.aaps.database.impl.daos.delegated.DelegatedTemporaryTargetDao
 import app.aaps.database.impl.daos.delegated.DelegatedTherapyEventDao
 import app.aaps.database.impl.daos.delegated.DelegatedTotalDailyDoseDao
 import app.aaps.database.impl.daos.delegated.DelegatedUserEntryDao
 import app.aaps.database.impl.daos.delegated.DelegatedVersionChangeDao
+import app.aaps.database.impl.daos.stepsCountDao
 
 internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val database: AppDatabase) {
 
@@ -67,5 +69,6 @@ internal class DelegatedAppDatabase(val changes: MutableList<DBEntry>, val datab
     val deviceStatusDao: DeviceStatusDao = DelegatedDeviceStatusDao(changes, database.deviceStatusDao)
     val offlineEventDao: OfflineEventDao = DelegatedOfflineEventDao(changes, database.offlineEventDao)
     val heartRateDao: HeartRateDao = DelegatedHeartRateDao(changes, database.heartRateDao)
+    val stepsCountDao: stepsCountDao = DelegatedStepsCountDao(changes, database.stepsCountDao)
     fun clearAllTables() = database.clearAllTables()
 }

@@ -7,6 +7,7 @@ import androidx.room.RoomDatabase.Callback
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import app.aaps.database.entities.TABLE_HEART_RATE
+import app.aaps.database.entities.TABLE_STEPS_COUNT
 import dagger.Module
 import dagger.Provides
 import javax.inject.Qualifier
@@ -113,8 +114,51 @@ open class DatabaseModule {
             dropCustomIndexes(database)
         }
     }
+    private val migration24to25 = object : Migration(24, 25) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            // Création de la table TABLE_STEPS_COUNT
+            database.execSQL(
+                """CREATE TABLE IF NOT EXISTS `$TABLE_STEPS_COUNT` (
+            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+            `duration` INTEGER NOT NULL,
+            `timestamp` INTEGER NOT NULL,
+            `steps` INTEGER NOT NULL,
+            `device` TEXT NOT NULL,
+            `utcOffset` INTEGER NOT NULL,
+            `version` INTEGER NOT NULL,
+            `dateCreated` INTEGER NOT NULL,
+            `isValid` INTEGER NOT NULL,
+            `referenceId` INTEGER,
+            `nightscoutSystemId` TEXT,
+            `nightscoutId` TEXT,
+            `pumpType` TEXT,
+            `pumpSerial` TEXT,
+            `temporaryId` INTEGER,
+            `pumpId` INTEGER, `startId` INTEGER,
+            `endId` INTEGER,
+            `steps5min` INTEGER NOT NULL DEFAULT 0,
+            `steps10min` INTEGER NOT NULL DEFAULT 0,
+            `steps15min` INTEGER NOT NULL DEFAULT 0,
+            `steps30min` INTEGER NOT NULL DEFAULT 0,
+            `steps60min` INTEGER NOT NULL DEFAULT 0,
+            `steps180min` INTEGER NOT NULL DEFAULT 0
+            )""".trimIndent()
+            )
+            // Création des index pour la table TABLE_STEPS_COUNT
+            database.execSQL("""CREATE INDEX IF NOT EXISTS `index_stepsCount_id` ON `$TABLE_STEPS_COUNT` (`id`)""")
+            database.execSQL("""CREATE INDEX IF NOT EXISTS `index_stepsCount_timestamp` ON `$TABLE_STEPS_COUNT` (`timestamp`)""")
+
+            // Suppression des index personnalisés
+            dropCustomIndexes(database)
+        }
+    }
+
+
+
+
+
 
     /** List of all migrations for easy reply in tests. */
     @VisibleForTesting
-    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24)
+    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24, migration24to25)
 }

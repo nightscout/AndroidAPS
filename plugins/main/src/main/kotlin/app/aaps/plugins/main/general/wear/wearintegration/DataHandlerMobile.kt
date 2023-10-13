@@ -56,6 +56,7 @@ import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
+import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TotalDailyDose
@@ -66,6 +67,7 @@ import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
+import app.aaps.database.impl.transactions.InsertOrUpdateStepsCountTransaction
 import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -319,6 +321,13 @@ class DataHandlerMobile @Inject constructor(
             .toObservable(EventData.ActionHeartRate::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ handleHeartRate(it) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.ActionStepsRate::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "Received ActionStepsRate event")
+                           handleStepsCount(it)
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.ActionGetCustomWatchface::class.java)
             .observeOn(aapsSchedulers.io)
@@ -1262,6 +1271,20 @@ class DataHandlerMobile @Inject constructor(
             device = actionHeartRate.device
         )
         repository.runTransaction(InsertOrUpdateHeartRateTransaction(hr)).blockingAwait()
+    }
+    private fun handleStepsCount(actionStepsRate: EventData.ActionStepsRate) {
+        aapsLogger.debug(LTag.WEAR, "Steps count received $actionStepsRate from ${actionStepsRate.sourceNodeId}")
+        val stepsCount = StepsCount(
+            duration = actionStepsRate.duration,
+            timestamp = actionStepsRate.timestamp,
+            steps5min = actionStepsRate.steps5min,
+            steps10min = actionStepsRate.steps10min,
+            steps15min = actionStepsRate.steps15min,
+            steps30min = actionStepsRate.steps30min,
+            steps60min = actionStepsRate.steps60min,
+            steps180min = actionStepsRate.steps180min,
+            device = actionStepsRate.device)
+        repository.runTransaction(InsertOrUpdateStepsCountTransaction(stepsCount)).blockingAwait()
     }
 
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {
