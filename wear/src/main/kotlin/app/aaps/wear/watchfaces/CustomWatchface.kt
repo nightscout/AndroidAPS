@@ -513,12 +513,12 @@ class CustomWatchface : BaseWatchFace() {
                 if (viewJson.has(TEXTVALUE.key))
                     view.text = viewJson.optString(TEXTVALUE.key)
                 (dynData?.getDrawable() ?: textDrawable())?.let {
-                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)           // Note only works on bitmap (png or jpg)  not for svg files
                         it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.background = it
-                } ?: apply {
+                } ?: apply {                                                    // if no drawable loaded either background key or dynData, then apply color to text background
                     view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
                 }
             } ?: apply { view.text = "" }
@@ -529,19 +529,19 @@ class CustomWatchface : BaseWatchFace() {
             view.clearColorFilter()
             viewJson?.let { viewJson ->
                 drawable?.let {
-                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) not for svg files
                         it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.setImageDrawable(it)
                 } ?: apply {
                     view.setImageDrawable(defaultDrawable?.let { cwf.resources.getDrawable(it) })
-                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)
+                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)       // works on xml included into res files
                         view.setColorFilter(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         view.clearColorFilter()
                 }
-                if (view.drawable == null)
+                if (view.drawable == null)                                              // if no drowable (either default, hardcoded or dynData, then apply color to background
                     view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
             }
         }
@@ -550,12 +550,12 @@ class CustomWatchface : BaseWatchFace() {
             customizeViewCommon(view)
             viewJson?.let { viewJson ->
                 (dynData?.getDrawable() ?: textDrawable())?.let {
-                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                    if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) not for svg files
                         it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.background = it
-                } ?: apply {
+                } ?: apply {                                                // if no drowable loaded, then apply color to background
                     view.setBackgroundColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key, TRANSPARENT), Color.TRANSPARENT))
                 }
             }
