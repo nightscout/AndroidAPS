@@ -209,14 +209,16 @@
 
                     <Spinner
                         android:id="@+id/use_trend"
-                        android:layout_width="155dp"
+                        android:layout_width="153dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="2dp"
                         android:entries="@array/yes_no_positiveonly_negativeonly"
                         android:gravity="start" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
+                        android:layout_marginStart="6dp"
                         android:background="@android:color/darker_gray" />
                 </LinearLayout>
             </TableRow>
@@ -246,25 +248,42 @@
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="5dp">
 
-                <CheckBox
-                    android:id="@+id/use_percentage"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
-                    android:text="@string/overview_edit_quickwizard_custom"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:layout_gravity="center">
+
+                    <CheckBox
+                        android:id="@+id/use_percentage"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="start|center_vertical"
+                        android:text="@string/overview_edit_quickwizard_custom"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <EditText
+                        android:id="@+id/custom_percentage_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="32dp"
+                        android:gravity="center"
+                        android:hint="%"
+                        android:inputType="number"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center">
 
-
                     <SeekBar
                         android:id="@+id/custom_percentage_seekbar"
                         android:layout_width="145dp"
                         android:layout_height="match_parent"
                         android:max="40"
+                        android:min="2"
                         android:progress="20" />
 
                     <TextView

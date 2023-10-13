@@ -158,7 +158,7 @@
     <string name="overview_edit_quickwizard_use_bg">BG</string>
     <string name="overview_edit_quickwizard_use_iob">IOB</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Positive only</string>
-    <string name="overview_edit_quickwizard_use_trend">Trend</string>
+    <string name="overview_edit_quickwizard_use_trend">15min trend</string>
     <string name="overview_edit_quickwizard_use_superbolus">Superbolus</string>
     <string name="overview_edit_quickwizard_custom">Custom </string>
     <string name="overview_editquickwizard_usecob">COB</string>
