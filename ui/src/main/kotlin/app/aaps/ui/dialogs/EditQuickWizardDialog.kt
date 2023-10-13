@@ -1,6 +1,5 @@
 package app.aaps.ui.dialogs
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Editable
@@ -8,6 +7,7 @@ import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
@@ -45,6 +45,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     @Inject lateinit var ctx: Context
 
     var position = -1
+    private var seekBarMoving = false
     private var fromSeconds: Int = 0
     private var toSeconds: Int = 0
 
@@ -134,16 +135,19 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             timePicker.show(parentFragmentManager, "event_time_time_picker")
         }
 
-        @SuppressLint("SetTextI18n") fun usePercentage(custom: Boolean) {
+        fun usePercentage(custom: Boolean) {
             if (custom) {
                 binding.defaultPercentageTextview.visibility = View.GONE
                 binding.customPercentageSeekbar.visibility = View.VISIBLE
                 val customPercentage = binding.customPercentageSeekbar.progress * 5
-                binding.usePercentage.text = "$customPercentage%"
+                binding.usePercentage.text = ""
+                binding.customPercentageEdittext.setText("$customPercentage")
+                binding.customPercentageEdittext.visibility = View.VISIBLE
             } else {
                 binding.customPercentageSeekbar.visibility = View.GONE
                 binding.defaultPercentageTextview.visibility = View.VISIBLE
                 binding.usePercentage.text = context?.getString(R.string.overview_edit_quickwizard_custom) + " %"
+                binding.customPercentageEdittext.visibility = View.GONE
             }
         }
 
@@ -171,6 +175,15 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         }
 
+        fun useIOB(checked: Boolean) {
+            if (checked) {
+                binding.usePositiveIobOnly.isEnabled = true
+            } else {
+                binding.usePositiveIobOnly.isChecked = false
+                binding.usePositiveIobOnly.isEnabled = false
+            }
+        }
+
         binding.usePercentage.setOnCheckedChangeListener { _, checkedId ->
             usePercentage(checkedId)
         }
@@ -179,21 +192,29 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             useECarbs(checkedId)
         }
 
+        binding.useIob.setOnCheckedChangeListener { _, checkedId ->
+            useIOB(checkedId)
+        }
+
         binding.customPercentageSeekbar.setOnSeekBarChangeListener(object :
                                                                        SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(
                 seek: SeekBar,
                 progress: Int, fromUser: Boolean
             ) {
-                usePercentage(true)
+                if (seekBarMoving) {
+                    usePercentage(true)
+                }
             }
 
             override fun onStartTrackingTouch(seek: SeekBar) {
                 // write custom code for progress is started
+                seekBarMoving = true
             }
 
             override fun onStopTrackingTouch(seek: SeekBar) {
                 // write custom code for progress is stopped
+                seekBarMoving = false
             }
         })
 
@@ -250,6 +271,46 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             processTrend()
         }
 
+        //set hard limits for custom percentage edittext + update seekbar position
+        binding.customPercentageEdittext.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable) {
+                val customPercentageInt: Int = SafeParse.stringToInt(s.toString())
+
+                if (customPercentageInt > 200) {
+                    binding.customPercentageEdittext.setText("200")
+                }
+                if (!binding.customPercentageEdittext.text.isEmpty()) {
+                    binding.customPercentageSeekbar.progress = SafeParse.stringToInt(binding.customPercentageEdittext.text.toString()) / 5
+                }
+            }
+
+            override fun beforeTextChanged(
+                s: CharSequence, start: Int,
+                count: Int, after: Int
+            ) {
+            }
+
+            override fun onTextChanged(
+                s: CharSequence, start: Int,
+                before: Int, count: Int
+            ) {
+            }
+        })
+
+        binding.customPercentageEdittext.setOnFocusChangeListener(OnFocusChangeListener { v, hasFocus ->
+            if (!hasFocus) {
+                // code to execute when EditText loses focus
+                if (!binding.customPercentageEdittext.text.isEmpty()) {
+                    val customPercentageInt: Int = SafeParse.stringToInt(binding.customPercentageEdittext.text.toString())
+                    if (customPercentageInt < 10) {
+                        binding.customPercentageEdittext.setText("10")
+                    }
+                } else {
+                    binding.customPercentageEdittext.setText("10")
+                }
+            }
+        })
+
         processCob()
 
         binding.useTrend.setOnItemSelectedListener(object : OnItemSelectedListener {
@@ -286,7 +347,6 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             binding.useIob.isChecked = true
         } else {
             binding.useIob.setEnabled(true)
-            binding.useIob.isChecked = false
         }
     }
 
