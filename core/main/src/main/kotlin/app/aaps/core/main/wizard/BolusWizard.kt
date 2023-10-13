@@ -524,12 +524,12 @@ class BolusWizard @Inject constructor(
                 }
             }
             if (quickWizardEntry != null) {
-                scheduleECarbsFromQuickWizzard(ctx, quickWizardEntry)
+                scheduleECarbsFromQuickWizard(ctx, quickWizardEntry)
             }
         })
     }
 
-    private fun scheduleECarbsFromQuickWizzard(ctx: Context, quickWizardEntry: QuickWizardEntry) {
+    private fun scheduleECarbsFromQuickWizard(ctx: Context, quickWizardEntry: QuickWizardEntry) {
         val eCarbsYesNo = quickWizardEntry.storage.get("useEcarbs")
         if (eCarbsYesNo == QuickWizardEntry.YES) {
             val timeOffset = SafeParse.stringToInt(quickWizardEntry.storage.get("time").toString())
