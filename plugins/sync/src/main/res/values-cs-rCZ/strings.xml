@@ -116,4 +116,5 @@
     <string name="xdrip_local_broadcasts_summary">Poslat data o glykémii a ošetření do xDrip+. Musí být vybrán zdroj dat \"xDrip+ Sync Follower\" a přijímání dat musí být povoleno v Nastavení - Nastavení komunikace mezi aplikacemi - Přijímat Glykémie/Ošetření</string>
     <string name="xdrip_local_broadcasts_title">Povolit odesílání do xDrip+.</string>
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
 </resources>
