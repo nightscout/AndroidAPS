@@ -671,6 +671,7 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private enum class ValueMap(val key: String, val min: Double, val max: Double) {
+        NONE("", 0.0, 0.0),
         SGV(ViewKeys.SGV.key, 39.0, 400.0),
         SGVLEVEL(JsonKeyValues.SGVLEVEL.key, -1.0, 1.0),
         DIRECTION(ViewKeys.DIRECTION.key, 1.0, 7.0),
@@ -704,7 +705,7 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun fromKey(key: String) = values().firstOrNull { it.key == key }
+            fun fromKey(key: String) = values().firstOrNull { it.key == key } ?: NONE
         }
     }
 
@@ -726,6 +727,7 @@ class CustomWatchface : BaseWatchFace() {
 
         val dataValue: Double?
             get() = when (valueMap) {
+                ValueMap.NONE             -> null
                 ValueMap.SGV              -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgv else null
                 ValueMap.SGVLEVEL         -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgvLevel.toDouble() else null
                 ValueMap.DIRECTION        -> TrendArrowMap.value()
@@ -750,6 +752,13 @@ class CustomWatchface : BaseWatchFace() {
         fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] } else null
         fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] } else null
         private fun load() {
+            DataRange(dataJson.optDouble(MINDATA.key, valueMap.min), dataJson.optDouble(MAXDATA.key, valueMap.max)).let { defaultRange ->
+                dataRange = defaultRange
+                topRange = parseDataRange(dataJson.optJSONObject(TOPOFFSET.key), defaultRange)
+                leftRange = parseDataRange(dataJson.optJSONObject(LEFTOFFSET.key), defaultRange)
+                rotationRange = parseDataRange(dataJson.optJSONObject(ROTATIONOFFSET.key), defaultRange)
+            }
+
             dynDrawable[0] = dataJson.optString(INVALIDIMAGE.key)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
             var idx = 1
             while (dataJson.has("${IMAGE.key}$idx")) {
@@ -768,12 +777,6 @@ class CustomWatchface : BaseWatchFace() {
                 dynFontColor[idx] = cwf.getColor(dataJson.optString("${FONTCOLOR.key}$idx"))
                 idx++
             }
-            DataRange(dataJson.optDouble(MINDATA.key, valueMap.min), dataJson.optDouble(MAXDATA.key, valueMap.max)).let { defaultRange ->
-                dataRange = defaultRange
-                topRange = parseDataRange(dataJson.optJSONObject(TOPOFFSET.key), defaultRange)
-                leftRange = parseDataRange(dataJson.optJSONObject(LEFTOFFSET.key), defaultRange)
-                rotationRange = parseDataRange(dataJson.optJSONObject(ROTATIONOFFSET.key), defaultRange)
-            }
         }
 
         companion object {
@@ -786,9 +789,9 @@ class CustomWatchface : BaseWatchFace() {
             }
 
             fun getDyn(cwf: CustomWatchface, key: String, width: Int, height: Int, defaultViewKey: String): DynProvider? = dynData["${defaultViewKey}_$key"]
-                ?: dynJson?.optJSONObject(key)?.let { dataJson ->
-                    ValueMap.fromKey(dataJson.optString(VALUEKEY.key, defaultViewKey))?.let { valueMap ->
-                        DynProvider(cwf, dataJson, valueMap, width, height).also { it.load() }
+                ?: dynJson?.optJSONObject(key)?.let { dynJson ->
+                    ValueMap.fromKey(dynJson.optString(VALUEKEY.key, defaultViewKey)).let { valueMap ->
+                        DynProvider(cwf, dynJson, valueMap, width, height).also { it.load() }
                     }
                 }?.also { dynData["${defaultViewKey}_$key"] = it }
 
