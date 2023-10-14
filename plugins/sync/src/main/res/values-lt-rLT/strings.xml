@@ -117,4 +117,5 @@
     <string name="xdrip_local_broadcasts_title">Įjungti duomenų perdavimą į xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="data_broadcaster">Data Broadcaster</string>
+    <!-- GarminPlugin -->
 </resources>
