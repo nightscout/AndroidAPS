@@ -156,7 +156,7 @@
     <!-- Actions -->
     <string name="actions">Handlinger</string>
     <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
-    <string name="actions_shortname">HAN</string>
+    <string name="actions_shortname">HNDL</string>
     <string name="tempbasal_button">Midlertidig basal</string>
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
