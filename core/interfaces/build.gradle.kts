@@ -2,13 +2,13 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("kotlin-allopen")
+    //id("kotlin-allopen")
     id("kotlin-parcelize")
     id("kotlinx-serialization")
     id("android-module-dependencies")
+    id("all-open-dependencies")
 }
 
-apply(from = "${project.rootDir}/core/main/allopen_dependencies.gradle")
 apply(from = "${project.rootDir}/core/main/test_dependencies.gradle")
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 
