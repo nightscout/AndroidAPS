@@ -16,7 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-internal class HeartRateDaoTest {
+class HeartRateDaoTest {
 
     private val context = ApplicationProvider.getApplicationContext<Context>()
     private fun createDatabase() =
@@ -86,9 +86,9 @@ internal class HeartRateDaoTest {
             dao.insertNewEntry(hr1)
             dao.insertNewEntry(hr2)
 
-            assertEquals(listOf(hr1, hr2), dao.getFromTime(timestamp))
-            assertEquals(listOf(hr2), dao.getFromTime(timestamp + 1))
-            assertTrue(dao.getFromTime(timestamp + 2).isEmpty())
+            assertEquals(listOf(hr1, hr2), dao.getFromTime(timestamp).blockingGet())
+            assertEquals(listOf(hr2), dao.getFromTime(timestamp + 1).blockingGet())
+            assertTrue(dao.getFromTime(timestamp + 2).blockingGet().isEmpty())
         }
     }
 
