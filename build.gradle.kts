@@ -88,6 +88,7 @@ allprojects {
         kotlinOptions {
             freeCompilerArgs = listOf(
                 "-opt-in=kotlin.RequiresOptIn",
+                "-opt-in=kotlin.ExperimentalUnsignedTypes",
                 "-Xjvm-default=all"     //Support @JvmDefault
             )
             jvmTarget = "11"

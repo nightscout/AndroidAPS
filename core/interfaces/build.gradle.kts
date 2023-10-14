@@ -7,9 +7,9 @@ plugins {
     id("kotlinx-serialization")
     id("android-module-dependencies")
     id("all-open-dependencies")
+    id("test-dependencies")
 }
 
-apply(from = "${project.rootDir}/core/main/test_dependencies.gradle")
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 
 android {
