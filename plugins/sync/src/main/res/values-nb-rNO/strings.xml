@@ -11,7 +11,7 @@
     <string name="ns_allow_roaming">Tillat tilkobling i roaming</string>
     <string name="ns_create_announcements_from_errors_title">Lag meldinger ved feil</string>
     <string name="ns_create_announcements_from_carbs_req_title">Opprett varslinger hvis det er nødvendig med karbohydrater</string>
-    <string name="ns_create_announcements_from_errors_summary">Opprett varslinger i Nightscout ved feil eller meldinger (også synlig i Careportal under Behandlinger)</string>
+    <string name="ns_create_announcements_from_errors_summary">Opprett varslinger i Nightscout ved feil eller meldinger (også synlig i Helseportal under Behandlinger)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Opprett Nightscout-meldinger ved behov for karbohydrater</string>
     <string name="description_ns_client">Synkroniserer dine data med Nightscout v1 API</string>
     <string name="description_ns_client_v3">Synkroniserer dine data med Nightscout v3 API</string>
@@ -54,11 +54,11 @@
     <string name="ns_receive_temp_target">Motta midlertidige mål</string>
     <string name="ns_receive_temp_target_summary">Aksepter midlertidige mål angitt med NS eller AAPSClient</string>
     <string name="ns_receive_profile_switch">Motta profilbytter</string>
-    <string name="ns_receive_profile_switch_summary">Aksepter profilbytter som er angitt via NS eller NSClient</string>
+    <string name="ns_receive_profile_switch_summary">Aksepter profilbytter som er angitt via NS eller AAPSClient</string>
     <string name="ns_receive_offline_event">Motta APS offline hendelser</string>
     <string name="ns_receive_offline_event_summary">Aksepter APS offline hendelser lagt inn gjennom NS eller AAPSClient</string>
     <string name="ns_receive_tbr_eb">Motta TBR og EB</string>
-    <string name="ns_receive_tbr_eb_summary">Godta TBR og EB beregninger fra tilleggsmodul</string>
+    <string name="ns_receive_tbr_eb_summary">Godta midlertidig basal og forlenget bolus lagt inn fra en annen instans</string>
     <string name="ns_receive_insulin">Motta insulin</string>
     <string name="ns_receive_insulin_summary">Aksepter insulin angitt via NS eller AAPSClient (enhetene er ikke dosert, kun beregnet mot IOB)</string>
     <string name="ns_receive_carbs">Motta karbohydrater</string>

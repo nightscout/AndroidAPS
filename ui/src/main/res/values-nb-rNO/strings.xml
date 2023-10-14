@@ -124,7 +124,7 @@
     <string name="dpv_default_profile">DPV standardprofil</string>
     <string name="invalid_pct">Ugyldig % verdi</string>
     <!-- Other dialogs -->
-    <string name="basal_rate">Basalrate</string>
+    <string name="basal_rate">Basaldose</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOPP er trykket</string>
     <!--QuickWizard-->
