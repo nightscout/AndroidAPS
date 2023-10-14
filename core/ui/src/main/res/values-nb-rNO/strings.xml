@@ -75,7 +75,7 @@
     <string name="dia_long_label">Insulinets virkningstid (DIA)</string>
     <string name="ic_long_label">Insulin-karbohydratfaktor (IK)</string>
     <string name="isf_long_label">Insulin sensitivitetsfaktor (ISF)</string>
-    <string name="basal_long_label">Basalrate</string>
+    <string name="basal_long_label">Basaldose</string>
     <string name="target_long_label">Blodsukkermål</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
