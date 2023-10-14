@@ -116,4 +116,5 @@
     <string name="xdrip_local_broadcasts_summary">Trimite date despre glucoză și tratamente către xDrip+. Trebuie să fie selectată sursa de date \"Sincronizare xDrip+ Urmăritor\" și acceptarea datelor trebuie să fie activată în „Setări - Setări între aplicații - Acceptă Glucoză/Tratamente”</string>
     <string name="xdrip_local_broadcasts_title">Activează transmisiuni spre xDrip+.</string>
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
 </resources>
