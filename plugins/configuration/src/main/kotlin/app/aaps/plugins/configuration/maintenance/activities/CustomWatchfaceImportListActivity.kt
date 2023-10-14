@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileDataToWear
 import app.aaps.core.interfaces.rx.weardata.CUSTOM_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfData
+import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_AUTHOR
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_AUTHOR_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_CREATED_AT
@@ -22,6 +23,7 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_FILENAME
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_NAME
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey.CWF_VERSION
 import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
+import app.aaps.core.interfaces.rx.weardata.CwfResDataMap
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.ResFileMap
 import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
@@ -56,10 +58,10 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
-        binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listCustomWatchfaceFiles().sortedBy { it.metadata[CWF_NAME] })
+        binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listCustomWatchfaceFiles().sortedBy { it.cwfData.metadata[CWF_NAME] })
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CwfData>) : RecyclerView.Adapter<RecyclerViewAdapter.CwfFileViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CwfFile>) : RecyclerView.Adapter<RecyclerViewAdapter.CwfFileViewHolder>() {
 
         inner class CwfFileViewHolder(val customWatchfaceImportListItemBinding: CustomWatchfaceImportListItemBinding) : RecyclerView.ViewHolder(customWatchfaceImportListItemBinding.root) {
 
@@ -67,11 +69,14 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
                 with(customWatchfaceImportListItemBinding) {
                     root.isClickable = true
                     customWatchfaceImportListItemBinding.root.setOnClickListener {
-                        val customWatchfaceFile = filelistName.tag as CwfData
-                        val customWF = EventData.ActionSetCustomWatchface(customWatchfaceFile)
+                        val customWatchfaceFile = filelistName.tag as CwfFile
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, customWatchfaceFile.cwfData.metadata[CWF_NAME] ?:"")
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, customWatchfaceFile.cwfData.metadata[CWF_AUTHOR_VERSION] ?:"")
+                        sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, customWatchfaceFile.cwfData.metadata[CWF_FILENAME] ?:"")
+
                         val i = Intent()
                         setResult(FragmentActivity.RESULT_OK, i)
-                        rxBus.send(EventMobileDataToWear(customWF))
+                        rxBus.send(EventMobileDataToWear(customWatchfaceFile.zipByteArray))
                         finish()
                     }
                 }
@@ -89,8 +94,8 @@ class CustomWatchfaceImportListActivity : TranslatedDaggerAppCompatActivity() {
 
         override fun onBindViewHolder(holder: CwfFileViewHolder, position: Int) {
             val customWatchfaceFile = customWatchfaceFileList[position]
-            val metadata = customWatchfaceFile.metadata
-            val drawable = customWatchfaceFile.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
+            val metadata = customWatchfaceFile.cwfData.metadata
+            val drawable = customWatchfaceFile.cwfData.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
             with(holder.customWatchfaceImportListItemBinding) {
                 val fileName = metadata[CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENTION}" } ?: ""
                 filelistName.text = rh.gs(app.aaps.core.interfaces.R.string.metadata_wear_import_filename, fileName)

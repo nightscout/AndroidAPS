@@ -31,6 +31,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventWearUpdateGui
+import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
@@ -70,6 +71,7 @@ import app.aaps.plugins.main.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -1266,10 +1268,19 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {
         val customWatchface = command.customWatchface
-        aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}: ${customWatchface.customWatchfaceData.json}")
-        rxBus.send(EventWearUpdateGui(customWatchface.customWatchfaceData, command.exportFile))
+        aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}")
+        val cwfData = customWatchface.customWatchfaceData
+        rxBus.send(EventWearUpdateGui(cwfData, command.exportFile))
+        val watchfaceName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
+        val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
+        if (cwfData.metadata[CwfMetadataKey.CWF_NAME] != watchfaceName || cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] != authorVersion) {
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?:"")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?:"")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?:"")
+        }
+
         if (command.exportFile)
-            importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData, command.withDate)
+            importExportPrefs.exportCustomWatchface(cwfData, command.withDate)
     }
 
 }

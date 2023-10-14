@@ -68,6 +68,7 @@ interface UiInteraction {
 
     fun runCareDialog(fragmentManager: FragmentManager, options: EventType, @StringRes event: Int)
 
+    fun dismissNotification(id: Int)
     fun addNotification(id: Int, text: String, level: Int)
     fun addNotificationValidFor(id: Int, text: String, level: Int, validMinutes: Int)
     fun addNotificationWithSound(id: Int, text: String, level: Int, @RawRes soundId: Int?)

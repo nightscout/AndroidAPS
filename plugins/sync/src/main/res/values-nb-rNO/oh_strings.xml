@@ -27,7 +27,7 @@
     <string name="boluses">Boluser</string>
     <string name="extended_boluses">Forlenget bolus</string>
     <string name="carbohydrates">Karbohydrater</string>
-    <string name="careportal_events">Careportal hendelser (unntatt notater)</string>
+    <string name="careportal_events">Helseportal-hendelser (unntatt notater)</string>
     <string name="profile_switches">Profilbytter</string>
     <string name="total_daily_doses">Totale daglige doser</string>
     <string name="temporary_basal_rates">Midlertidige basal doser</string>
