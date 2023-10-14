@@ -167,8 +167,8 @@
     <string name="extendedcarbs_rescue">For å registrere karbohydrater som brukes til å korrigere lavt blodsukker.</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/en/latest/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Fjernovervåking</string>
-    <string name="nsclient_howcanyou">Hvordan kan du overvåke AndroidAPS (for eksempel for ditt barn) på eksternt?</string>
-    <string name="nsclient_nightscout">AAPSClient app, Nightscout app og Nightscout websiden gjør det mulig for deg å følge AAPS eksternt.</string>
+    <string name="nsclient_howcanyou">Hvordan kan du eksternt overvåke AndroidAPS (for eksempel for ditt barn)?</string>
+    <string name="nsclient_nightscout">AAPSClient app, xDrip+ app og Nightscout websiden gjør det mulig for deg å følge AAPS eksternt.</string>
     <string name="nsclient_dexcomfollow">Andre apper (f.eks. Dexcom follow, xDrip som kjører i følger modus) lar deg følge noen parametere (f.eks. blodsukker/sensor verdier) på avstand, men bruker forskjellige beregningsmetoder og kan derfor vise andre IOB eller COB verdier.</string>
     <string name="nsclient_data">For å følge AAPS eksternt må begge enhetene ha Internett-tilgang (f.eks. via Wi-Fi eller mobildata).</string>
     <string name="nsclient_fullcontrol">AAPSClient som brukes som ekstern følger app vil både overvåke og gi full kontroll over AAPS.</string>
