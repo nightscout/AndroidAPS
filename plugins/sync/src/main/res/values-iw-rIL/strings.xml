@@ -117,4 +117,7 @@
     <string name="xdrip_local_broadcasts_title">אפשר שידור ל-xDrip+</string>
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">חיבור למכשיר Garmin</string>
+    <string name="key_garmin_settings">הגדרות Garmin</string>
 </resources>
