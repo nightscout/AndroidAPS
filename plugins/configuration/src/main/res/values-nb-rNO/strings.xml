@@ -121,8 +121,8 @@
     <string name="maintenance_amount">Antall logger du vil sende</string>
     <string name="send_all_logs">Send logger via e-post</string>
     <string name="delete_logs">Slett logger</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout versjon:</string>
-    <string name="engineering_mode_enabled">Engineering Mode aktivert</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout-versjon:</string>
+    <string name="engineering_mode_enabled">Engineering mode aktivert</string>
     <string name="log_files">Loggfiler</string>
     <string name="nav_logsettings">Logginnstillinger</string>
     <string name="miscellaneous">Annet</string>
