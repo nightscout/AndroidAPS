@@ -50,8 +50,8 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
         const val YES = 0
         const val NO = 1
-        private const val POSITIVE_ONLY = 2
-        private const val NEGATIVE_ONLY = 3
+        const val POSITIVE_ONLY = 2
+        const val NEGATIVE_ONLY = 3
         const val DEFAULT = 0
         const val CUSTOM = 1
     }

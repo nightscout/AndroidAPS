@@ -35,22 +35,30 @@
 
         </RelativeLayout>
 
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:hint="@string/overview_edit_quickwizard_button_text">
+
+            <EditText
+                android:id="@+id/button_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="name"
+                android:gravity="center"
+                android:hint="@string/overview_edit_quickwizard_button_text"
+                android:inputType="text" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="3dp">
-
-            <EditText
-                android:id="@+id/button_edit"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-
-                android:autofillHints="name"
-                android:gravity="center"
-                android:hint="@string/overview_edit_quickwizard_button_text"
-                android:inputType="text" />
 
             <TextView
                 android:id="@+id/from"
@@ -82,28 +90,95 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+        <TableLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="10dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <TableRow
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="2dp"
-                android:text="@string/carbs"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="1dp">
 
-            <app.aaps.core.ui.elements.NumberPicker
-                android:id="@+id/carbs_edit"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:gravity="center"
-                app:customContentDescription="@string/carbs" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-        </LinearLayout>
+                    <TextView
+                        android:id="@+id/carbs_input_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:labelFor="@id/carbs_input"
+                        android:minWidth="70dp"
+                        android:padding="10dp"
+                        android:text="@string/carbs"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                </LinearLayout>
+
+                <app.aaps.core.ui.elements.NumberPicker
+                    android:id="@+id/carbs_input"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="2dp"
+                    app:customContentDescription="@string/carbs" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:minWidth="70dp"
+                    android:padding="10dp"
+                    android:text="@string/shortgramm"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp">
+
+                <TextView
+                    android:id="@+id/carbs_correction_label"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:labelFor="@id/carbs_input"
+                    android:minWidth="70dp"
+                    android:padding="10dp"
+                    android:text="@string/treatments_wizard_correction_label"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                <app.aaps.core.ui.elements.NumberPicker
+                    android:id="@+id/correction_input"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
+                    app:customContentDescription="@string/a11_correction_units" />
+
+                <TextView
+                    android:id="@+id/correction_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:minWidth="70dp"
+                    android:padding="10dp"
+                    android:text="%"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </TableRow>
+
+        </TableLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -216,10 +291,12 @@
                         android:gravity="start" />
 
                     <View
+                        android:id="@+id/use_trend_subline"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginStart="6dp"
-                        android:background="@android:color/darker_gray" />
+                        android:background="@android:color/darker_gray"
+                        android:paddingStart="2dp" />
                 </LinearLayout>
             </TableRow>
 
@@ -238,62 +315,6 @@
                     android:gravity="start|center_vertical"
                     android:text="@string/overview_edit_quickwizard_use_superbolus"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:layout_marginHorizontal="10dp"
-                android:layout_marginBottom="5dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center">
-
-                    <CheckBox
-                        android:id="@+id/use_percentage"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="start|center_vertical"
-                        android:text="@string/overview_edit_quickwizard_custom"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                    <EditText
-                        android:id="@+id/custom_percentage_edittext"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="32dp"
-                        android:gravity="center"
-                        android:hint="%"
-                        android:inputType="number"
-                        android:visibility="gone" />
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center">
-
-                    <SeekBar
-                        android:id="@+id/custom_percentage_seekbar"
-                        android:layout_width="145dp"
-                        android:layout_height="match_parent"
-                        android:max="40"
-                        android:min="2"
-                        android:progress="20" />
-
-                    <TextView
-                        android:id="@+id/default_percentage_textview"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/app_default" />
-
-                </RelativeLayout>
 
             </TableRow>
 
@@ -324,7 +345,8 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="1dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -373,7 +395,8 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center_vertical">
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="1dp">
 
                 <TextView
                     android:id="@+id/duration_label"
