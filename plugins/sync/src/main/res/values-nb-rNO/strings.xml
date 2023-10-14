@@ -54,7 +54,7 @@
     <string name="ns_receive_temp_target">Motta midlertidige mål</string>
     <string name="ns_receive_temp_target_summary">Aksepter midlertidige mål angitt med NS eller AAPSClient</string>
     <string name="ns_receive_profile_switch">Motta profilbytter</string>
-    <string name="ns_receive_profile_switch_summary">Aksepter profilbytter som er angitt via NS eller NSClient</string>
+    <string name="ns_receive_profile_switch_summary">Aksepter profilbytter som er angitt via NS eller AAPSClient</string>
     <string name="ns_receive_offline_event">Motta APS offline hendelser</string>
     <string name="ns_receive_offline_event_summary">Aksepter APS offline hendelser lagt inn gjennom NS eller AAPSClient</string>
     <string name="ns_receive_tbr_eb">Motta TBR og EB</string>
