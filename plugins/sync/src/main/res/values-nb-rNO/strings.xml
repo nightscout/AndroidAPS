@@ -58,7 +58,7 @@
     <string name="ns_receive_offline_event">Motta APS offline hendelser</string>
     <string name="ns_receive_offline_event_summary">Aksepter APS offline hendelser lagt inn gjennom NS eller AAPSClient</string>
     <string name="ns_receive_tbr_eb">Motta TBR og EB</string>
-    <string name="ns_receive_tbr_eb_summary">Godta TBR og EB beregninger fra tilleggsmodul</string>
+    <string name="ns_receive_tbr_eb_summary">Godta midlertidig basal og forlenget bolus lagt inn fra en annen instans</string>
     <string name="ns_receive_insulin">Motta insulin</string>
     <string name="ns_receive_insulin_summary">Aksepter insulin angitt via NS eller AAPSClient (enhetene er ikke dosert, kun beregnet mot IOB)</string>
     <string name="ns_receive_carbs">Motta karbohydrater</string>
