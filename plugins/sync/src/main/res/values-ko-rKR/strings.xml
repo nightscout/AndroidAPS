@@ -116,4 +116,5 @@
     <string name="xdrip_local_broadcasts_summary">xDrip+로 글루코스 및 치료 데이터 전송하기. 데이터 소스 \"xDrip+ 동기화 팔로워\"를 선택하야 하며, 설정- 앱 간 설정 - 글루코스/치료제 수락에서 데이터 수락을 활성화해야 합니다</string>
     <string name="xdrip_local_broadcasts_title">xDrip+에 대한 방송 활성화하기</string>
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
 </resources>
