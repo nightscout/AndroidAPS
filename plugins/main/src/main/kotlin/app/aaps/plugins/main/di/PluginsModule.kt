@@ -22,7 +22,7 @@ import dagger.android.ContributesAndroidInjector
         SkinsUiModule::class,
         ActionsModule::class,
         WearModule::class,
-        OverviewModule::class
+        OverviewModule::class,
     ]
 )
 

@@ -43,6 +43,7 @@ import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
+import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.main.general.wear.WearPlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
@@ -128,6 +129,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
     @Inject lateinit var openHumansUploaderPlugin: OpenHumansUploaderPlugin
     @Inject lateinit var diaconnG8Plugin: DiaconnG8Plugin
+    @Inject lateinit var garminPlugin: GarminPlugin
 
     override fun onAttach(context: Context) {
         AndroidSupportInjection.inject(this)
@@ -229,6 +231,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResource(app.aaps.plugins.configuration.R.xml.pref_datachoices, rootKey)
             addPreferencesFromResourceIfEnabled(maintenancePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(openHumansUploaderPlugin, rootKey)
+            addPreferencesFromResourceIfEnabled(garminPlugin, rootKey)
         }
         initSummary(preferenceScreen, pluginId != -1)
         preprocessPreferences()

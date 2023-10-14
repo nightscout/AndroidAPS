@@ -182,4 +182,8 @@
     <string name="data_broadcaster">Data Broadcaster</string>
     <string name="data_broadcaster_description" translatable="false">Broadcast data to other apps like Garmin watch</string>
 
+    <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Connection to Garmin device (Fenix, Edge, …)</string>
+    <string name="key_garmin_settings">Garmin settings</string>
 </resources>
