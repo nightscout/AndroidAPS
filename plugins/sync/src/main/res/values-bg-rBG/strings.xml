@@ -116,4 +116,5 @@
     <string name="xdrip_local_broadcasts_summary">Изпратете данни за глюкоза и лечения до xDrip+. Трябва да бъде избран източник на данни „xDrip+ Sync Follower“ и приемането на данни трябва да е разрешено в Settings - Inter-app settings - Accept Glucose/Treatments</string>
     <string name="xdrip_local_broadcasts_title">Активиране на предаване на данни към xDrip+.</string>
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
 </resources>
