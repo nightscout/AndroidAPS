@@ -23,14 +23,14 @@ class DataSyncWorker(
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
 
     override suspend fun doWorkAndLog(): Result {
-        if (activePlugin.activeNsClient?.hasWritePermission == true || nsClientV3Plugin.wsConnected) {
+        if (activePlugin.activeNsClient?.hasWritePermission == true || nsClientV3Plugin.nsClientV3Service?.wsConnected == true) {
             rxBus.send(EventNSClientNewLog("► UPL", "Start"))
             dataSyncSelectorV3.doUpload()
             rxBus.send(EventNSClientNewLog("► UPL", "End"))
         } else {
             if (activePlugin.activeNsClient?.hasWritePermission == true)
                 rxBus.send(EventNSClientNewLog("► ERROR", "No write permission"))
-            else if (nsClientV3Plugin.wsConnected)
+            else if (nsClientV3Plugin.nsClientV3Service?.wsConnected == true)
                 rxBus.send(EventNSClientNewLog("► ERROR", "Not connected"))
             // refresh token
             nsClientV3Plugin.scheduleIrregularExecution(refreshToken = true)

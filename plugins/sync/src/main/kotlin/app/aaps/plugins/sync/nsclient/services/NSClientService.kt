@@ -68,7 +68,8 @@ import java.net.URISyntaxException
 import java.util.*
 import javax.inject.Inject
 
-@Suppress("SpellCheckingInspection") class NSClientService : DaggerService() {
+@Suppress("SpellCheckingInspection")
+class NSClientService : DaggerService() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
