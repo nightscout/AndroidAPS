@@ -160,7 +160,8 @@
     <string name="overview_edit_quickwizard_use_positive_iob_only">Positive only</string>
     <string name="overview_edit_quickwizard_use_trend">15min trend</string>
     <string name="overview_edit_quickwizard_use_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_custom">Custom </string>
+    <string name="overview_edit_quickwizard_custom">Custom %</string>
+    <string name="overview_edit_quickwizard_percentage_to_high">Percentage to high!</string>
     <string name="overview_editquickwizard_usecob">COB</string>
     <string name="overview_editquickwizard_usetemptarget">TT</string>
     <string name="overview_editquickwizard_usepercentage">Percentage</string>
@@ -172,8 +173,7 @@
     <string name="change_your_input">Change your input!</string>
 
     <string-array name="yes_no_positiveonly_negativeonly">
-        <item>Yes</item>
-        <item>No</item>
+        <item>Both</item>
         <item>Positive only</item>
         <item>Negative only</item>
     </string-array>
