@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.valueToUnits
+import app.aaps.core.main.iob.round
 import app.aaps.core.utils.JsonHelper.safeGetInt
 import app.aaps.core.utils.JsonHelper.safeGetString
 import app.aaps.core.utils.MidnightUtils
@@ -52,6 +53,9 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         const val NO = 1
         const val POSITIVE_ONLY = 2
         const val NEGATIVE_ONLY = 3
+        const val DEVICE_ALL = 0
+        const val DEVICE_PHONE = 1
+        const val DEVICE_WATCH = 2
         const val DEFAULT = 0
         const val CUSTOM = 1
     }
@@ -65,6 +69,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
                 "carbs": 0,
                 "validFrom": 0,
                 "validTo": 86340,
+                "device": "all",
                 "usePercentage": "default",
                 "percentage": 100
             }""".trimMargin()
@@ -101,7 +106,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         return this
     }
 
-    fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo()
+    fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
 
     fun doCalc(profile: Profile, profileName: String, lastBG: InMemoryGlucoseValue): BolusWizard {
         val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
@@ -125,7 +130,6 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         if (usePositiveIOBOnly() == YES) {
             uPositiveIOBOnly = true
         }
-
         // SuperBolus
         var superBolus = false
         if (useSuperBolus() == YES && sp.getBoolean(app.aaps.core.utils.R.string.key_usesuperbolus, false)) {
@@ -167,6 +171,10 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     }
 
     fun guid(): String = safeGetString(storage, "guid", "")
+
+    fun device(): Int = safeGetInt(storage, "device", DEVICE_ALL)
+
+    fun forDevice(device: Int) = device() == device || device() == DEVICE_ALL
 
     fun buttonText(): String = safeGetString(storage, "buttonText", "")
 

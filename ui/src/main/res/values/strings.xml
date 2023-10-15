@@ -149,6 +149,8 @@
     <string name="stop_pressed">STOP PRESSED</string>
 
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">only on watch</string>
+    <string name="a11y_only_on_phone">only on phone</string>
     <string name="quickwizard_settings">QuickWizard settings</string>
     <string name="overview_edit_quickwizard_button_text">Button text</string>
     <string name="overview_edit_quickwizard_carbs">Carbs</string>
@@ -171,6 +173,8 @@
     <string name="overview_edit_quickwizard_useforcalculation">Use for calculation:</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="change_your_input">Change your input!</string>
+    <string name="quickwizard_phone">Phone</string>
+    <string name="quickwizard_watch">Watch</string>
 
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Both</item>
