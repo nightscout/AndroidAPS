@@ -4,7 +4,6 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.plugins.main.general.persistentNotification.DummyService
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
-import app.aaps.plugins.main.general.wear.WearFragment
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataObject
 import dagger.Binds
@@ -21,7 +20,6 @@ import dagger.android.ContributesAndroidInjector
         SkinsModule::class,
         SkinsUiModule::class,
         ActionsModule::class,
-        WearModule::class,
         OverviewModule::class,
     ]
 )
@@ -29,7 +27,6 @@ import dagger.android.ContributesAndroidInjector
 @Suppress("unused")
 abstract class PluginsModule {
 
-    @ContributesAndroidInjector abstract fun contributesWearFragment(): WearFragment
     @ContributesAndroidInjector abstract fun contributesDummyService(): DummyService
     @ContributesAndroidInjector abstract fun autosensDataObjectInjector(): AutosensDataObject
 

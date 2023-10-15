@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.wear.wearintegration
+package app.aaps.plugins.sync.wear.wearintegration
 
 import android.content.ComponentName
 import android.content.Context

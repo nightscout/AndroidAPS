@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.wear.wearintegration
+package app.aaps.plugins.sync.wear.wearintegration
 
 import android.app.NotificationManager
 import android.content.Context
@@ -67,11 +67,10 @@ import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
-import app.aaps.plugins.main.R
+import app.aaps.plugins.sync.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Date

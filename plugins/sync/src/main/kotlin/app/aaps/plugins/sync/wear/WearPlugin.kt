@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.wear
+package app.aaps.plugins.sync.wear
 
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -20,9 +20,9 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.wear.wearintegration.DataHandlerMobile
-import app.aaps.plugins.main.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
+import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -44,7 +44,7 @@ class WearPlugin @Inject constructor(
 
 ) : PluginBase(
     PluginDescription()
-        .mainType(PluginType.GENERAL)
+        .mainType(PluginType.SYNC)
         .fragmentClass(WearFragment::class.java.name)
         .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
         .pluginName(app.aaps.core.ui.R.string.wear)

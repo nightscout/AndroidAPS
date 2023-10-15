@@ -4,9 +4,21 @@ import android.os.StrictMode
 import androidx.annotation.VisibleForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import java.io.*
+import java.io.BufferedOutputStream
+import java.io.ByteArrayOutputStream
+import java.io.Closeable
+import java.io.IOException
+import java.io.InputStream
+import java.io.OutputStream
 import java.lang.Thread.UncaughtExceptionHandler
-import java.net.*
+import java.net.HttpURLConnection
+import java.net.Inet4Address
+import java.net.InetSocketAddress
+import java.net.ServerSocket
+import java.net.Socket
+import java.net.SocketAddress
+import java.net.SocketTimeoutException
+import java.net.URI
 import java.nio.charset.Charset
 import java.nio.charset.StandardCharsets
 import java.time.Duration
@@ -18,10 +30,11 @@ import java.util.regex.Pattern
 import kotlin.concurrent.withLock
 
 /** Basic HTTP server to communicate with Garmin device via localhost. */
-class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val port: Int): Closeable {
+class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val port: Int) : Closeable {
+
     private val serverThread: Thread
     private val workerExecutor: Executor = Executors.newCachedThreadPool()
-    private val endpoints: MutableMap<String, (SocketAddress, URI, String?)->CharSequence> =
+    private val endpoints: MutableMap<String, (SocketAddress, URI, String?) -> CharSequence> =
         ConcurrentHashMap()
     private var serverSocket: ServerSocket? = null
     private val readyLock = ReentrantLock()
@@ -63,18 +76,18 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
     }
 
     /** Register an endpoint (path) to handle requests. */
-    fun registerEndpoint(path: String, endpoint: (SocketAddress, URI, String?)->CharSequence) {
-        aapsLogger.info(LTag.GARMIN,"Register: '$path'")
+    fun registerEndpoint(path: String, endpoint: (SocketAddress, URI, String?) -> CharSequence) {
+        aapsLogger.info(LTag.GARMIN, "Register: '$path'")
         endpoints[path] = endpoint
     }
-
 
     // @Suppress("all")
     private fun respond(
         @Suppress("SameParameterValue") code: Int,
         body: CharSequence,
         @Suppress("SameParameterValue") contentType: String,
-        out: OutputStream) {
+        out: OutputStream
+    ) {
         respond(code, body.toString().toByteArray(Charset.forName("UTF8")), contentType, out)
     }
 
@@ -143,12 +156,14 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
                 // Garmin will only connect to IP4 localhost. Therefore, we need to explicitly listen
                 // on that loopback interface and cannot use InetAddress.getLoopbackAddress(). That
                 // gives ::1 (IP6 localhost).
-                InetSocketAddress(Inet4Address.getByAddress(byteArrayOf(127, 0, 0, 1)), port))
-            readyCond.signalAll() }
-        aapsLogger.info(LTag.GARMIN,"accept connections on " + serverSocket!!.localSocketAddress)
+                InetSocketAddress(Inet4Address.getByAddress(byteArrayOf(127, 0, 0, 1)), port)
+            )
+            readyCond.signalAll()
+        }
+        aapsLogger.info(LTag.GARMIN, "accept connections on " + serverSocket!!.localSocketAddress)
         while (true) {
             val socket = serverSocket!!.accept()
-            aapsLogger.info(LTag.GARMIN,"accept " + socket.remoteSocketAddress)
+            aapsLogger.info(LTag.GARMIN, "accept " + socket.remoteSocketAddress)
             workerExecutor.execute {
                 Thread.currentThread().name = "worker" + Thread.currentThread().id
                 try {
@@ -173,14 +188,16 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
     }
 
     companion object {
+
         private val REQUEST_HEADER = Pattern.compile("(GET|POST) (\\S*) HTTP/1.1")
         private val HEADER_LINE = Pattern.compile("([A-Za-z-]+)\\s*:\\s*(.*)")
 
         private fun readLine(input: InputStream, charset: Charset): String {
             val buffer = ByteArrayOutputStream(input.available())
-            loop@while (true) {
+            loop@ while (true) {
                 when (val c = input.read()) {
                     '\r'.code -> {}
+
                     -1        -> break@loop
                     '\n'.code -> break@loop
                     else      -> buffer.write(c)
@@ -224,10 +241,7 @@ class HttpServer internal constructor(private var aapsLogger: AAPSLogger, val po
             }
             var body: String?
             if (post) {
-                var contentLength = Int.MAX_VALUE
-                if (headers.containsKey("Content-Length")) {
-                    contentLength = headers["Content-Length"]!!.toInt()
-                }
+                val contentLength = headers["Content-Length"]?.toInt() ?: Int.MAX_VALUE
                 val keepAlive = ("Keep-Alive" == headers["Connection"])
                 val contentType = headers["Content-Type"]
                 if (keepAlive && contentLength == Int.MAX_VALUE) {

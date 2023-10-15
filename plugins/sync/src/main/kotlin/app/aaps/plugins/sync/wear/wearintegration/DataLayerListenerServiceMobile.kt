@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.wear.wearintegration
+package app.aaps.plugins.sync.wear.wearintegration
 
 import android.os.Binder
 import android.os.Handler
@@ -20,8 +20,8 @@ import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.database.impl.AppRepository
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.wear.WearPlugin
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.wear.WearPlugin
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.CapabilityClient
 import com.google.android.gms.wearable.CapabilityInfo
