@@ -25,6 +25,7 @@
     <string name="algorithm_debug_data">Podaci za otklanjanje pogrešaka algoritma</string>
     <string name="data_not_uploaded">Podaci NISU preneseni</string>
     <string name="passwords">Lozinke</string>
+    <string name="nightscout_url">Nightscout URL</string>
     <string name="nightscout_api_secret">Tajni API Nightscouta</string>
     <string name="free_text_fields">Slobodna tekstualna polja</string>
     <string name="agree">Razumijem i slažem se.</string>
