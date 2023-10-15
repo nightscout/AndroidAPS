@@ -186,7 +186,17 @@ class DataHandlerWear @Inject constructor(
             .subscribe {
                 aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${it.sourceNodeId}")
                 persistence.store(it)
-                persistence.readCustomWatchface()?.let {
+                persistence.readSimplifiedCwf()?.let {
+                    rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(it, false)))
+                }
+            }
+        disposable += rxBus
+            .toObservable(EventData.ActionUpdateCustomWatchface::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${it.sourceNodeId}")
+                persistence.store(it)
+                persistence.readSimplifiedCwf()?.let {
                     rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(it, false)))
                 }
             }
@@ -205,7 +215,7 @@ class DataHandlerWear @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe { eventData ->
                 aapsLogger.debug(LTag.WEAR, "Custom Watchface requested from ${eventData.sourceNodeId} export ${eventData.exportFile}")
-                persistence.readCustomWatchface(eventData.exportFile)?.let {
+                persistence.readSimplifiedCwf(eventData.exportFile)?.let {
                     rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(it, eventData.exportFile)))
                 }
             }

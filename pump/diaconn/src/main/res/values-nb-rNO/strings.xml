@@ -85,10 +85,10 @@
     <string name="apsIncarnationNo">aps_incarnation_no</string>
     <string name="pumpserialno">pump_serial_no</string>
     <string name="diaconn_g8_loginsulinchange_title">Logg reservoar bytte</string>
-    <string name="diaconn_g8_loginsulinchange_summary">Legg til \"Insulinbytte\" i Careportal når den oppdages i historikken</string>
+    <string name="diaconn_g8_loginsulinchange_summary">Legg til \"Insulinbytte\" i Helseportal når den oppdages i historikken</string>
     <string name="diaconn_g8_logcanulachange_title">Logg bytte av kanyle</string>
-    <string name="diaconn_g8_logcanulachange_summary">Legg til \"Bytte av injeksjonssted\" i Careportal når den oppdages i historikken</string>
-    <string name="diaconn_g8_logbatterychange_summary">Legg til \"Bytte av batteri\" i Careportal når den oppdages i historikken</string>
+    <string name="diaconn_g8_logcanulachange_summary">Legg til \"Bytte av injeksjonssted\" i Helseportal når den oppdages i historikken</string>
+    <string name="diaconn_g8_logbatterychange_summary">Legg til \"Bytte av batteri\" i Helseportal når den oppdages i historikken</string>
     <string name="diaconn_g8_logbatterychange_title">Logg batteri bytte</string>
     <string name="diaconn_g8_logsyncinprogress">Logg synkronisering pågår</string>
     <string name="diaconn_g8_loginsulinshorage">Lavt insulinnivå</string>
@@ -145,7 +145,7 @@
     <string name="diaconn_g8_errorcode_15">Når basal oppsett er fullført, kan basaldoseringer startes.</string>
     <string name="diaconn_g8_errotpreceivedyet">Kommandoen ble ikke utført. Vennligst prøv igjen.</string>
     <string name="diaconn_g8_logtubechange_title">Logg bytte av slangesett</string>
-    <string name="diaconn_g8_logtubechange_summary">Legg til \"Slangesettbytte\" i Careportal når den oppdages i historikken</string>
+    <string name="diaconn_g8_logtubechange_summary">Legg til \"Slangesettbytte\" i Helseportal når den oppdages i historikken</string>
     <string name="diaconn_g8_logtempstart">Temp Basal startet</string>
     <string name="diaconn_g8_errorcode_32">Vel Lav Glukose Stopp (LGS) er injeksjoner begrenset</string>
     <string name="diaconn_g8_errorcode_33">LGS status er PÅ. PÅ kommando er nektet.</string>

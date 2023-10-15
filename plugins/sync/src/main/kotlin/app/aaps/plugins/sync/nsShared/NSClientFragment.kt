@@ -122,6 +122,8 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
             ID_MENU_CLEAR_LOG -> {
                 nsClientPlugin?.listLog?.let {
                     synchronized(it) {
+                        val size = it.size
+                        binding.recyclerview.adapter?.notifyItemRangeRemoved(0, size)
                         it.clear()
                         updateLog()
                     }
@@ -135,7 +137,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
             }
 
             ID_MENU_SEND_NOW  -> {
-                nsClientPlugin?.resend("GUI")
+                handler.post { nsClientPlugin?.resend("GUI") }
                 true
             }
 

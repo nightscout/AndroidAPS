@@ -140,7 +140,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
      * @return the highest y value, or 0 if there is no data
      */
     public double getHighestValueY() {
-        if (mData.isEmpty()) return 0d;
+        if (mData.isEmpty()) return 100d;
         double h = mData.get(0).getY();
         for (int i = 1; i < mData.size(); i++) {
             double c = mData.get(i).getY();

@@ -117,6 +117,7 @@ android {
     flavorDimensions.add("standard")
     productFlavors {
         create("full") {
+            isDefault = true
             applicationId = "info.nightscout.androidaps"
             dimension = "standard"
             resValue("string", "app_name", "AAPS")

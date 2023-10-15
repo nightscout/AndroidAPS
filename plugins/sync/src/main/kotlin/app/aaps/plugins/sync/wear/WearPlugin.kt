@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.wear
+package app.aaps.plugins.sync.wear
 
 import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventDismissBolusProgressIfRunning
 import app.aaps.core.interfaces.rx.events.EventLoopUpdateGui
-import app.aaps.core.interfaces.rx.events.EventMobileDataToWear
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
@@ -21,9 +20,9 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.general.wear.wearintegration.DataHandlerMobile
-import app.aaps.plugins.main.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
+import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -45,7 +44,7 @@ class WearPlugin @Inject constructor(
 
 ) : PluginBase(
     PluginDescription()
-        .mainType(PluginType.GENERAL)
+        .mainType(PluginType.SYNC)
         .fragmentClass(WearFragment::class.java.name)
         .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
         .pluginName(app.aaps.core.ui.R.string.wear)
@@ -112,12 +111,23 @@ class WearPlugin @Inject constructor(
 
     fun checkCustomWatchfacePreferences() {
         savedCustomWatchface?.let { cwf ->
-            val cwf_authorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
-            if (cwf_authorization != cwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()) {
-                // resend new customWatchface to Watch with updated authorization for preferences update
-                val newCwf = cwf.copy()
-                newCwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION] = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false).toString()
-                rxBus.send(EventMobileDataToWear(EventData.ActionSetCustomWatchface(newCwf)))
+            val cwfAuthorization = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+            val cwfName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
+            val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
+            val fileName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_filename, "")
+            var toUpdate = false
+            CwfData("", cwf.metadata, mutableMapOf()).also {
+                if (cwfAuthorization != cwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()) {
+                    it.metadata[CwfMetadataKey.CWF_AUTHORIZATION] = cwfAuthorization.toString()
+                    toUpdate = true
+                }
+                if (cwfName == cwf.metadata[CwfMetadataKey.CWF_NAME] && authorVersion == cwf.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] && fileName != cwf.metadata[CwfMetadataKey.CWF_FILENAME]) {
+                    it.metadata[CwfMetadataKey.CWF_FILENAME] = fileName
+                    toUpdate = true
+                }
+
+                if (toUpdate)
+                    rxBus.send(EventMobileToWear(EventData.ActionUpdateCustomWatchface(it)))
             }
         }
     }

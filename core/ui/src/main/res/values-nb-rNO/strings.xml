@@ -74,8 +74,8 @@
     <string name="target_label">Målverdi</string>
     <string name="dia_long_label">Insulinets virkningstid (DIA)</string>
     <string name="ic_long_label">Insulin-karbohydratfaktor (IK)</string>
-    <string name="isf_long_label">Insulin sensitivitetsfaktor (ISF)</string>
-    <string name="basal_long_label">Basalrate</string>
+    <string name="isf_long_label">Insulinsensitivitetsfaktor (ISF)</string>
+    <string name="basal_long_label">Basaldose</string>
     <string name="target_long_label">Blodsukkermål</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
@@ -193,7 +193,7 @@
     <!--    Temptarget-->
     <string name="mins">%1$d min</string>
     <!--    Translator-->
-    <string name="careportal">Careportal</string>
+    <string name="careportal">Helseportal</string>
     <string name="careportal_bgcheck">BS-kontroll</string>
     <string name="careportal_mbg">Manuelt BS eller kalibrering</string>
     <string name="careportal_announcement">Melding</string>
@@ -294,19 +294,19 @@
     <string name="uel_cancel_bolus">AVBRYT BOLUS</string>
     <string name="uel_cancel_extended_bolus">AVBRYT FORLENGET BOLUS</string>
     <string name="uel_cancel_tt">AVBRYT MIDL. MÅL</string>
-    <string name="uel_careportal">CAREPORTAL</string>
+    <string name="uel_careportal">HELSEPORTAL</string>
     <string name="uel_site_change">BYTTE SLANGESETT</string>
     <string name="uel_reservoir_change">BYTTE RESERVOAR</string>
     <string name="uel_calibration">KALIBRERING</string>
     <string name="uel_prime_bolus">PRIME BOLUS</string>
     <string name="uel_treatment">BEHANDLING</string>
-    <string name="uel_careportal_ns_refresh">CAREPORTAL NS OPPDATERING</string>
+    <string name="uel_careportal_ns_refresh">HELSEPORTAL NS-OPPDATERING</string>
     <string name="uel_profile_switch_ns_refresh">PROFILBYTTE NS OPPDATERING</string>
     <string name="uel_treatments_ns_refresh">BEHANDLINGER NS OPPDATERING</string>
     <string name="uel_tt_ns_refresh">OPPDATER MIDL. MÅL NS</string>
     <string name="uel_automation_removed">AUTOMASJON FJERNET</string>
     <string name="uel_bg_removed">BS FJERNET</string>
-    <string name="uel_careportal_removed">CAREPORTAL FJERNET</string>
+    <string name="uel_careportal_removed">HELSEPORTAL FJERNET</string>
     <string name="uel_bolus_removed">BOLUS FJERNET</string>
     <string name="uel_carbs_removed">KARBO FJERNET</string>
     <string name="uel_temp_basal_removed">MIDL. MÅL FJERNET</string>
@@ -363,7 +363,7 @@
     <string name="temp_target_high_target">Øvre grense for midl. mål</string>
     <string name="temp_target_value">Midl. målverdi</string>
     <string name="profile_dia">Profil DIA verdi</string>
-    <string name="profile_sensitivity_value">Profil insulinfølsomhet</string>
+    <string name="profile_sensitivity_value">Profilens insulinfølsomhet</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
     <string name="current_basal_value">Nåværende basalverdi</string>
     <string name="profile_carbs_ratio_value">Profil karbohydratfaktor (IK)</string>
@@ -389,7 +389,7 @@
     <string name="temp_basal_absolute">MIDL. BASAL %1$.2f E/t %2$d min</string>
     <string name="temp_basal_percent">MIDL. BASAL %1$d E/t %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFIKASJON</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LESESTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Basal er ikke oppdatert.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
@@ -486,7 +486,7 @@
     <string name="resistant_adult">Insulinresistent voksen</string>
     <string name="pregnant">Graviditet</string>
     <string name="patient_age_summary">Velg pasienttype for oppsett av sikkerhetsgrenser</string>
-    <string name="max_bolus_title">Maks tillatt bolus [U]</string>
+    <string name="max_bolus_title">Maks tillatt bolus [E]</string>
     <string name="max_carbs_title">Maks tillatt karbohydrater [g]</string>
     <string name="patient_type">Pasienttype</string>
     <!--    Protection-->
@@ -561,9 +561,9 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <!-- About -->
-    <string name="cta_dont_kill_my_app_info">Hvordan hindre at appen stenges?</string>
+    <string name="cta_dont_kill_my_app_info">Ikke steng appen min?</string>
     <string name="fabric_upload_disabled">Opplast av krasjlogger er deaktivert!</string>
-    <string name="about_link_urls">\n\nDokumentasjon:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
+    <string name="about_link_urls">\n\nDokumentasjon:\nhttps://androidaps.readthedocs.io\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

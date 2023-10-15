@@ -14,6 +14,7 @@ import app.aaps.activities.PreferencesActivity
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.NSAlarm
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.ui.toast.ToastUtils
@@ -167,6 +168,10 @@ class UiInteractionImpl @Inject constructor(
             it.setId(id)
             it.show(fragmentManager, "BolusProgress")
         }
+    }
+
+    override fun dismissNotification(id: Int) {
+        rxBus.send(EventDismissNotification(id))
     }
 
     override fun addNotification(id: Int, text: String, level: Int) {
