@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.forEach
 import androidx.core.view.MenuProvider
@@ -99,6 +100,21 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
                 bindingCarbsTextFull += "/" + entry.duration() + "h ->" + entry.time() + "min"
             }
             holder.binding.carbs.text = bindingCarbsTextFull
+            if (entry.device() == QuickWizardEntry.DEVICE_ALL) {
+                holder.binding.device.visibility = View.GONE
+            } else {
+                holder.binding.device.visibility = View.VISIBLE
+                holder.binding.device.setImageResource(
+                    when (quickWizard[position].device()) {
+                        QuickWizardEntry.DEVICE_WATCH -> app.aaps.core.main.R.drawable.ic_watch
+                        else                          -> app.aaps.core.main.R.drawable.ic_smartphone
+                    }
+                )
+                holder.binding.device.contentDescription = when (quickWizard[position].device()) {
+                    QuickWizardEntry.DEVICE_WATCH -> rh.gs(R.string.a11y_only_on_watch)
+                    else                          -> rh.gs(R.string.a11y_only_on_phone)
+                }
+            }
 
             holder.binding.root.setOnClickListener {
                 if (actionHelper.isNoAction) {

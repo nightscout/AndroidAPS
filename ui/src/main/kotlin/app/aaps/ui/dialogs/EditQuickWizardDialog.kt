@@ -73,6 +73,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
+            binding.devicePhoneCheckbox.visibility = View.VISIBLE
+            binding.deviceWatchCheckbox.visibility = View.VISIBLE
+        } else {
+            binding.devicePhoneCheckbox.visibility = View.GONE
+            binding.deviceWatchCheckbox.visibility = View.GONE
+        }
 
         binding.okcancel.ok.setOnClickListener {
             try {
@@ -88,7 +95,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 entry.storage.put("useSuperBolus", checkBoxToRadioNumbers(binding.useSuperBolus.isChecked))
                 entry.storage.put("useTempTarget", checkBoxToRadioNumbers(binding.useTempTarget.isChecked))
                 entry.storage.put("percentage", binding.correctionInput.value)
-
+                if (binding.devicePhoneCheckbox.isChecked && binding.deviceWatchCheckbox.isChecked){
+                    entry.storage.put("device", QuickWizardEntry.DEVICE_ALL)
+                } else if (binding.devicePhoneCheckbox.isChecked){
+                    entry.storage.put("device", QuickWizardEntry.DEVICE_PHONE)
+                } else if (binding.deviceWatchCheckbox.isChecked){
+                    entry.storage.put("device", QuickWizardEntry.DEVICE_WATCH)
+                }
                 entry.storage.put("useEcarbs", checkBoxToRadioNumbers(binding.useEcarbs.isChecked))
                 entry.storage.put("time", binding.time.value.toInt())
                 entry.storage.put("duration", SafeParse.stringToInt(binding.duration.text))
@@ -199,6 +212,20 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
 
         binding.buttonEdit.setText(entry.buttonText())
+        when(entry.device()){
+            QuickWizardEntry.DEVICE_ALL -> {
+                binding.devicePhoneCheckbox.isChecked = true
+                binding.deviceWatchCheckbox.isChecked = true
+            }
+            QuickWizardEntry.DEVICE_PHONE -> {
+                binding.devicePhoneCheckbox.isChecked = true
+                binding.deviceWatchCheckbox.isChecked = false
+            }
+            QuickWizardEntry.DEVICE_WATCH -> {
+                binding.devicePhoneCheckbox.isChecked = false
+                binding.deviceWatchCheckbox.isChecked = true
+            }
+        }
         binding.carbsInput.value = SafeParse.stringToDouble(entry.carbs().toString())
 
         binding.useBg.isChecked = radioNumbersToCheckBox(entry.useBG())

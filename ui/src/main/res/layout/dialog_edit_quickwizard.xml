@@ -58,7 +58,19 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="3dp">
+            android:padding="7dp">
+
+            <CheckBox
+                android:id="@+id/device_phone_checkbox"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="start|center_vertical"
+                android:background="@drawable/ic_smartphone"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <View
+                android:layout_width="15dp"
+                android:layout_height="30dp" />
 
             <TextView
                 android:id="@+id/from"
@@ -87,6 +99,19 @@
                 android:padding="5dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="08:20pm" />
+
+            <View
+                android:layout_width="15dp"
+                android:layout_height="30dp" />
+
+            <CheckBox
+                android:id="@+id/device_watch_checkbox"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:gravity="start|center_vertical"
+                android:background="@drawable/ic_watch"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
 
         </LinearLayout>
 
