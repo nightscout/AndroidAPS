@@ -42,6 +42,7 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">תם זמן סריקת Combo</string>
     <string name="combov2_pairing_failed_due_to_error">הצימוד נכשל בגלל השגיאה: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">הצימוד בוטל מסיבה לא ידועה</string>
+    <string name="combov2_pairing_invalid_pin_length">"אורך קוד הזיהוי אינו תקין: אורכו צריך להיות %1$d תווים, נרשמו %2$d"</string>
     <string name="combov2_scanning_for_pump">סורק אחר משאבות</string>
     <string name="combov2_establishing_bt_connection">יוצר חיבור בלוטות\' (ניסיון מספר %1$d)</string>
     <string name="combov2_pairing_performing_handshake">מבצע לחיצת יד עם המשאבה</string>
@@ -96,6 +97,7 @@
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">לא ניתן להגדיר בזאלי זמני אם המינון הבזאלי הבסיסי הוא 0</string>
     <string name="combov2_pair_with_pump_summary">צימוד AndroidAPS ואנדרואיד עם משאבת Accu-Chek combo שאינה מצומדת</string>
     <string name="combov2_unpair_pump_summary">ביטול צימוד AndroidAPS ואנדרואיד ממשאבת Accu-Chek combo המצומדת</string>
+    <string name="combov2_unknown_tbr_detected">נמצא מינון בזאלי זמני לא ברור והוא נעצר; %1$d%; זמן נותר: %2$s</string>
     <string name="combov2_connection_error">שגיאת חיבור: %1$s</string>
     <string name="combov2_short_status_last_connection">חיבור אחרון: לפני %1$d דקות</string>
     <string name="combov2_short_status_alert">התראה: %s</string>

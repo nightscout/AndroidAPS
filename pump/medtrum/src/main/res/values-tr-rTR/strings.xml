@@ -6,6 +6,7 @@
     <string name="medtrum_pump_description">Medtrum Nano ve Medtrum 300U için pompa entegrasyonu</string>
     <string name="medtrum_pump_setting">Medtrum pompa ayarları</string>
     <string name="pump_error">Pompa hatası: %1$s !! </string>
+    <string name="pump_warning">Pompa uyarısı: %1$s </string>
     <string name="pump_is_suspended">Pompa durduruldu</string>
     <string name="pump_is_suspended_hour_max">Saatlik maksimum insülinin aşılması nedeniyle pompa askıya alındı</string>
     <string name="pump_is_suspended_day_max">Günlük maksimum insülinin aşılması nedeniyle pompa askıya alındı</string>
@@ -52,6 +53,7 @@
     <string name="alarm_battery_out">Pil bitti</string>
     <string name="alarm_no_calibration">Kalibrasyon yok</string>
     <string name="pump_time_update_failed">Pompa saat dilimi güncellenemedi, mesaj ertelendi ve manuel olarak yenilendi.</string>
+    <string name="bolus_error">Bolus hatası</string>
     <!-- wizard-->
     <string name="retry">Tekrar dene</string>
     <string name="next">İleri</string>
@@ -100,12 +102,16 @@
     <string name="press_retry_or_discard">Etkinleştirmeyi sürdürmek için <b>İleri</b>\'ye veya etkinleştirmeyi iptal etmek için <b>Çıkar</b>\'a basın.</string>
     <string name="reading_activation_status">Lütfen bekleyin, pompadan aktivasyon durumu okunuyor.</string>
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Medtrum yaması başarısız olabileceği ve erişilemeyebileceği için ulaşılamıyor uyarısı zorunlu olarak etkinleştirildi.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Medtrum yaması başarısız olabileceği ve erişilemeyebileceği için 30 dakikaya ayarlanması önerilir.</string>
     <string name="sn_input_title">Seri Numarası</string>
     <string name="sn_input_summary">Pompa tabanınızın seri numarasını girin.</string>
     <string name="sn_input_invalid">Geçersiz seri numarası!</string>
     <string name="pump_unsupported">Pompa test edilmedi: %1$d! Destek için lütfen discord veya github üzerinden bizimle iletişime geçin</string>
     <string name="alarm_setting_title">Alarm Ayarları</string>
     <string name="alarm_setting_summary">Tercih ettiğiniz pompa alarm ayarlarını seçin.</string>
+    <string name="pump_warning_notification_title">Pompa uyarısı hakkında bildirim</string>
+    <string name="pump_warning_notification_summary">Kritik olmayan pompa uyarılarıyla ilgili bildirimi göster: düşük pil, düşük rezervuar (20 birim) ve yakında süresi doluyor. Pompa alarmları sessize ayarlandığında etkin bırakılması önerilir.</string>
     <string name="patch_expiration_title">Patch süre sonu</string>
     <string name="patch_expiration_summary">Etkinleştirildiğinde, patch 3 gün sonra sona erecek ve bunun ardından 8 saatlik bir ek süre tanınacaktır.</string>
     <string name="hourly_max_insulin_title">Saatlik Maksimum insülin</string>

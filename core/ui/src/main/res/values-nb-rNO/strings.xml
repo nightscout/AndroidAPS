@@ -74,7 +74,7 @@
     <string name="target_label">Målverdi</string>
     <string name="dia_long_label">Insulinets virkningstid (DIA)</string>
     <string name="ic_long_label">Insulin-karbohydratfaktor (IK)</string>
-    <string name="isf_long_label">Insulin sensitivitetsfaktor (ISF)</string>
+    <string name="isf_long_label">Insulinsensitivitetsfaktor (ISF)</string>
     <string name="basal_long_label">Basaldose</string>
     <string name="target_long_label">Blodsukkermål</string>
     <string name="shortgram">g</string>
@@ -363,7 +363,7 @@
     <string name="temp_target_high_target">Øvre grense for midl. mål</string>
     <string name="temp_target_value">Midl. målverdi</string>
     <string name="profile_dia">Profil DIA verdi</string>
-    <string name="profile_sensitivity_value">Profil insulinfølsomhet</string>
+    <string name="profile_sensitivity_value">Profilens insulinfølsomhet</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
     <string name="current_basal_value">Nåværende basalverdi</string>
     <string name="profile_carbs_ratio_value">Profil karbohydratfaktor (IK)</string>
@@ -389,7 +389,7 @@
     <string name="temp_basal_absolute">MIDL. BASAL %1$.2f E/t %2$d min</string>
     <string name="temp_basal_percent">MIDL. BASAL %1$d E/t %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFIKASJON</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LESESTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Basal er ikke oppdatert.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
