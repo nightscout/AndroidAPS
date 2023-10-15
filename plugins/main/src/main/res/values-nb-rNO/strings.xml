@@ -291,9 +291,9 @@
     <string name="no_watch_connected">(Ingen klokke tilkoblet)</string>
     <string name="pump_status">Pumpestatus</string>
     <string name="loop_status">Loopstatus</string>
-    <string name="wizard_result">Boluskalkulator:\nInsulin: %1$.2fE\nKarbo: %2$dg</string>
+    <string name="wizard_result">Boluskalkulator:\nBolus: %1$.2fE\nKarbo: %2$dg</string>
     <string name="quick_wizard_not_available">Den valgte hurtigknappen er ikke lenger tilgjengelig, oppdater klokkeflis</string>
-    <string name="quick_wizard_message">Hurtigknapp: %1$s\ninsulin: %2$.2fE\nKarbo: %3$dg</string>
+    <string name="quick_wizard_message">Hurtigknapp: %1$s\nBolus: %2$.2fE\nKarbo: %3$dg</string>
     <string name="wear_action_tempt_preset_error">Ukjent forhåndsinnstilling midl. mål: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt gjeldende midl. mål?</string>
     <string name="wear_action_tempt_unit_error">Forskjellige enheter brukt på klokke og telefon!</string>
