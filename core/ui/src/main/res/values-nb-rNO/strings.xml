@@ -389,7 +389,7 @@
     <string name="temp_basal_absolute">MIDL. BASAL %1$.2f E/t %2$d min</string>
     <string name="temp_basal_percent">MIDL. BASAL %1$d E/t %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFIKASJON</string>
-    <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
+    <string name="read_status" comment="10 characters max for READSTATUS translation">LESESTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Basal er ikke oppdatert.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
