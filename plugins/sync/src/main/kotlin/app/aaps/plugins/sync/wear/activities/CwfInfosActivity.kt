@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.wear.activities
+package app.aaps.plugins.sync.wear.activities
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -24,11 +24,11 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.databinding.CwfInfosActivityBinding
-import app.aaps.plugins.main.databinding.CwfInfosActivityPrefItemBinding
-import app.aaps.plugins.main.databinding.CwfInfosActivityViewItemBinding
-import app.aaps.plugins.main.general.wear.WearPlugin
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.databinding.CwfInfosActivityBinding
+import app.aaps.plugins.sync.databinding.CwfInfosActivityPrefItemBinding
+import app.aaps.plugins.sync.databinding.CwfInfosActivityViewItemBinding
+import app.aaps.plugins.sync.wear.WearPlugin
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -192,7 +192,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
 
         val visibleKeyPairs = mutableListOf<Pair<ViewKeys, Boolean>>()
 
-        for (viewKey in ViewKeys.values()) {
+        for (viewKey in ViewKeys.entries) {
             try {
                 val jsonValue = json.optJSONObject(viewKey.key)
                 if (jsonValue != null) {

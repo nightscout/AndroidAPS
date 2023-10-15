@@ -36,13 +36,13 @@
     <string name="combo_invalid_setup">Ugyldig oppsett av pumpen. Les dokumentasjonen og sjekk at Quick Info menyen heter QUICK INFO ved hjelp av 360 programvaren.</string>
     <string name="combo_actvity_reading_basal_profile">Leser basalprofil</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Pumpe historikken har blitt endret siden bolus kalkuleringen ble utført. Bolus har ikke blitt levert. Vennligst rekalkuler om bolus fortsatt er nødvendig.</string>
-    <string name="combo_error_updating_treatment_record">Bolus har blitt levert, men det oppsto en feil ved loggføring i behandlinger. Dette kan oppstå hvis to små bolus på samme størrelse blir levert i løpet av to minutter. Vennligst sjekk pumpe historikken og behandlinger loggen, og bruk Careportal for å legge til de manglende behandlingene. Pass på at du ikke legger til to identiske behandlinger på samme minutt.</string>
+    <string name="combo_error_updating_treatment_record">Bolus har blitt levert, men det oppsto en feil ved loggføring i behandlinger. Dette kan oppstå hvis to små bolus på samme størrelse blir levert i løpet av to minutter. Vennligst sjekk pumpe historikken og behandlinger loggen, og bruk Helseportal for å legge til de manglende behandlingene. Pass på at du ikke legger til to identiske behandlinger på samme minutt.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Avviser høy temp target siden kalkuleringen ikke tok hensyn til nylige endringer i pumpe historikken</string>
     <string name="combo_activity_checking_pump_state">Oppdaterer pumpestatus</string>
     <string name="combo_warning_pump_basal_rate_changed">Basal dosen i pumpen har blitt endret og vil i løpet av kort tid bli oppdatert</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Basalsats endret i pumpe, men lesing av den feilet</string>
     <string name="combo_activity_checking_for_history_changes">Sjekker for endringer i historikken</string>
-    <string name="combo_error_multiple_boluses_with_identical_timestamp">Flere boluser levert i samme minutt og med samme insulinmengde ble importert. Bare en av doseringene ble lagt til i behandlinger. Vennligst sjekk pumpen og legg manuelt til ekstra bolus doseringer i Careportal. Ikke legg til flere boluser i samme minutt.</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">Flere boluser levert i samme minutt og med samme insulinmengde ble importert. Bare en av doseringene ble lagt til i behandlinger. Vennligst sjekk pumpen og legg manuelt til ekstra bolus doseringer i Helseportal. Ikke legg til flere boluser i samme minutt.</string>
     <string name="combo_check_date">Den siste bolus er eldre enn 24t eller er i fremtiden. Vennligst sjekk at datoen i pumpen er korrekt.</string>
     <string name="combo_suspious_bolus_time">Tid/dato for levert bolus i pumpen er trolig feil, og IOB beregningen blir da feil. Vennligst sjekk pumpens tid/dato.</string>
     <string name="combo_bolus_count">Antall boluser</string>

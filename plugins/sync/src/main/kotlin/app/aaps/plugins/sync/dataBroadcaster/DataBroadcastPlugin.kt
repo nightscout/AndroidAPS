@@ -63,7 +63,9 @@ class DataBroadcastPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
+        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
         .pluginName(R.string.data_broadcaster)
+        .shortName(R.string.data_broadcaster_short)
         .description(R.string.data_broadcaster_description),
     aapsLogger, rh, injector
 ) {

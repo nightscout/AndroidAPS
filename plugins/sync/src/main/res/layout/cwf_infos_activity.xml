@@ -6,7 +6,7 @@
     android:scrollbarStyle="outsideOverlay"
     android:scrollbars="vertical"
     android:paddingTop="2dp"
-    tools:context=".general.wear.activities.CwfInfosActivity">
+    tools:context="app.aaps.plugins.sync.wear.activities.CwfInfosActivity">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -58,7 +58,8 @@
                 android:text="Author: Name"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?attr/importListFileNameColor"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/created_at"
@@ -71,7 +72,8 @@
                 android:text="created at: "
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?attr/importListFileNameColor"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/cwf_version"
@@ -85,7 +87,8 @@
                 android:textAlignment="viewStart"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?attr/importListFileNameColor"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
 
             <TextView
                 android:id="@+id/cwf_comment"
@@ -99,7 +102,8 @@
                 android:textAlignment="viewStart"
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="?attr/importListFileNameColor"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
 
             <LinearLayout
                 android:id="@+id/pref_layout"

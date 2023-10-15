@@ -3,6 +3,9 @@ package app.aaps.wear.interaction.utils
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.events.EventMobileToWear
+import app.aaps.core.interfaces.rx.weardata.CwfData
+import app.aaps.core.interfaces.rx.weardata.CwfMetadataKey
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.EventData.Companion.deserialize
 import app.aaps.core.interfaces.rx.weardata.EventData.SingleBg
@@ -149,6 +152,26 @@ open class Persistence @Inject constructor(
         return null
     }
 
+    fun readSimplifiedCwf(isDefault: Boolean = false): EventData.ActionSetCustomWatchface? {
+        try {
+            var s = sp.getStringOrNull(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, null)
+            if (s != null) {
+                return (deserialize(s) as EventData.ActionSetCustomWatchface).let {
+                    EventData.ActionSetCustomWatchface(it.customWatchfaceData.simplify() ?:it.customWatchfaceData)
+                }
+
+            } else {
+                s = sp.getStringOrNull(CUSTOM_DEFAULT_WATCHFACE, null)
+                if (s != null) {
+                    return deserialize(s) as EventData.ActionSetCustomWatchface
+                }
+            }
+        } catch (exception: Exception) {
+            aapsLogger.error(LTag.WEAR, exception.toString())
+        }
+        return null
+    }
+
     fun store(singleBg: SingleBg) {
         putString(BG_DATA_PERSISTENCE_KEY, singleBg.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored BG data: $singleBg")
@@ -174,6 +197,21 @@ open class Persistence @Inject constructor(
         putString(if (isdefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isdefault}: $customWatchface")
     }
+
+    fun store(customWatchface: EventData.ActionUpdateCustomWatchface) {
+        readCustomWatchface()?.let { savedCwData ->
+            if (customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_NAME] &&
+                customWatchface.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] == savedCwData.customWatchfaceData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]
+            ) {
+                // if same name and author version, then resync metadata to watch to update filename and authorization
+                val newCwfData = CwfData(savedCwData.customWatchfaceData.json, customWatchface.customWatchfaceData.metadata, savedCwData.customWatchfaceData.resDatas)
+                EventData.ActionSetCustomWatchface(newCwfData).also {
+                    putString(CUSTOM_WATCHFACE, it.serialize())
+                    aapsLogger.debug(LTag.WEAR, "Update Custom Watchface ${it.customWatchfaceData} : $customWatchface")
+            }
+        }
+    }
+}
 
     fun setDefaultWatchface() {
         readCustomWatchface(true)?.let { store(it) }

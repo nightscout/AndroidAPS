@@ -156,7 +156,7 @@
     <!-- Actions -->
     <string name="actions">Handlinger</string>
     <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
-    <string name="actions_shortname">ACT</string>
+    <string name="actions_shortname">HAN</string>
     <string name="tempbasal_button">Midlertidig basal</string>
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
@@ -174,18 +174,18 @@
     <string name="patch_pump">Pumpe</string>
     <!-- Overview -->
     <string name="show_statuslights">Vis statusindikatorer på hjem-skjermen</string>
-    <string name="statuslights_cage_warning">Terskel for advarsel om alder på slangesett [h]</string>
-    <string name="statuslights_cage_critical">Terskel for kritisk alder på slangesett [h]</string>
-    <string name="statuslights_iage_warning">Terskel for advarsel, alder på insulin [h]</string>
-    <string name="statuslights_iage_critical">Terskel for kritisk alder på insulin [h]</string>
-    <string name="statuslights_sage_warning">Terskel for advarsel, alder på CGM [h]</string>
-    <string name="statuslights_sage_critical">Terskel for kritisk alder på CGM [h]</string>
+    <string name="statuslights_cage_warning">Terskel for advarsel om alder på slangesett [t]</string>
+    <string name="statuslights_cage_critical">Terskel for kritisk alder på slangesett [t]</string>
+    <string name="statuslights_iage_warning">Terskel for advarsel, alder på insulin [t]</string>
+    <string name="statuslights_iage_critical">Terskel for kritisk alder på insulin [t]</string>
+    <string name="statuslights_sage_warning">Terskel for advarsel, alder på sensor [t]</string>
+    <string name="statuslights_sage_critical">Terskel for kritisk alder på sensor [t]</string>
     <string name="statuslights_sbat_warning">Terskel for advarsel, batterinivå for sensor [%]</string>
     <string name="statuslights_sbat_critical">Terskel for kritisk batterinivå for sensor [%]</string>
-    <string name="statuslights_bage_warning">Terskel for advarsel, batterialder for pumpe [h]</string>
-    <string name="statuslights_bage_critical">Terskel for kritisk batterialder for pumpe [h]</string>
-    <string name="statuslights_res_warning">Terskel for advarsel, insulinreservoar [U]</string>
-    <string name="statuslights_res_critical">Terskel for kritisk insulinreservoar [U]</string>
+    <string name="statuslights_bage_warning">Terskel for advarsel, batterialder for pumpe [t]</string>
+    <string name="statuslights_bage_critical">Terskel for kritisk batterialder for pumpe [t]</string>
+    <string name="statuslights_res_warning">Terskel for advarsel, insulinreservoar [E]</string>
+    <string name="statuslights_res_critical">Terskel for kritisk insulinreservoar [E]</string>
     <string name="statuslights_bat_warning">Terskel for advarsel, batterinivå for pumpe [%]</string>
     <string name="statuslights_bat_critical">Terskel for kritisk batterinivå for pumpe [%]</string>
     <string name="statuslights_copy_ns">Kopier innstillingene fra NS</string>
@@ -242,11 +242,11 @@
     <string name="high_mark">Høy verdi</string>
     <string name="short_tabtitles">Korte navn i menyfaner</string>
     <string name="overview_show_notes_field_in_dialogs_title">Vis merknadsfelt i dialogvindu for boluskalkulator</string>
-    <string name="deliverpartofboluswizard">Bolusveiviser utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB-algoritmen.</string>
+    <string name="deliverpartofboluswizard">Boluskalkulator utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB-algoritmen.</string>
     <string name="deliver_part_of_boluswizard_reset_time">Gi full bolus (100 %) dersom blodsukker er eldre enn</string>
     <string name="enable_bolus_advisor">Aktiver bolusveileder</string>
     <string name="enable_bolus_advisor_summary">Bruk en påminnelse om å spise senere istedet for boluskalkulatorens resultat når blodsukker er høyt (\"pre-bolus\")</string>
-    <string name="enablesuperbolus">Aktiver superbolus i veiviser</string>
+    <string name="enablesuperbolus">Aktiver superbolus i boluskalkulator</string>
     <string name="enablesuperbolus_summary">Aktiver superbolus-funksjonen i boluskalkulatoren. Ikke aktiver denne før du vet hvordan den fungerer. DEN KAN LEDE TIL EN OVERDOSERING AV INSULIN HVIS DEN BRUKES UKRITISK!</string>
     <string name="enablebolusreminder">Aktiver boluspåminnelse</string>
     <string name="enablebolusreminder_summary">Bruk en påminnelse for å sette bolusdosen senere med boluskalkulatoren («post bolus»)</string>

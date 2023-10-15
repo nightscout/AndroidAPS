@@ -19,8 +19,9 @@ dependencies {
     implementation project(':shared:impl')
     implementation project(':database:entities')
     implementation project(':database:impl')
-    implementation project(':core:main')
+    implementation project(':core:graphview')
     implementation project(':core:interfaces')
+    implementation project(':core:main')
     implementation project(':core:nssdk')
     implementation project(':core:ui')
     implementation project(':core:utils')
@@ -44,9 +45,11 @@ dependencies {
     api("io.socket:socket.io-client:2.1.0")
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"
     api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
-    //api "com.squareup.retrofit2:retrofit:$retrofit2_version"
     api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
     api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
 
     api "com.google.code.gson:gson:$gson_version"
+
+    // DataLayerListenerService
+    api "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
 }
