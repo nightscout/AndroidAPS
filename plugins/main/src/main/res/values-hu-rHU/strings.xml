@@ -53,9 +53,6 @@
     <string name="lowres_description">Alacsony felbontás</string>
     <string name="skin">Megjelenés</string>
     <!--    Iob-->
-    <!--    Wear-->
-    <string name="wear_settings">Wear beállítások</string>
-    <string name="wear_general_settings">Általános beállítások</string>
     <!--    PersistentNotification-->
     <string name="old_data">RÉGI ADAT</string>
 </resources>
