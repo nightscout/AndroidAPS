@@ -18,6 +18,7 @@ import app.aaps.plugins.sync.nsclient.workers.NSClientAddAckWorker
 import app.aaps.plugins.sync.nsclient.workers.NSClientAddUpdateWorker
 import app.aaps.plugins.sync.nsclient.workers.NSClientMbgWorker
 import app.aaps.plugins.sync.nsclient.workers.NSClientUpdateRemoveAckWorker
+import app.aaps.plugins.sync.nsclientV3.services.NSClientV3Service
 import app.aaps.plugins.sync.nsclientV3.workers.DataSyncWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadBgWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadDeviceStatusWorker
@@ -53,6 +54,7 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesNSClientFragment(): NSClientFragment
 
     @ContributesAndroidInjector abstract fun contributesNSClientService(): NSClientService
+    @ContributesAndroidInjector abstract fun contributesNSClientV3Service(): NSClientV3Service
     @ContributesAndroidInjector abstract fun contributesNSClientWorker(): NSClientAddUpdateWorker
     @ContributesAndroidInjector abstract fun contributesNSClientAddAckWorker(): NSClientAddAckWorker
     @ContributesAndroidInjector abstract fun contributesNSClientUpdateRemoveAckWorker(): NSClientUpdateRemoveAckWorker
