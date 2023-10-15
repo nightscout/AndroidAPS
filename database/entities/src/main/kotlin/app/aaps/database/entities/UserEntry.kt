@@ -184,6 +184,7 @@ data class UserEntry(
         Stats,               //From Stat Activity
         Aaps,               // MainApp
         BgFragment,
+        Garmin,
         Unknown             //if necessary
         ;
 

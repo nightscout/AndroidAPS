@@ -43,7 +43,7 @@
     <string name="profile_set_ok">Profilen ble angitt</string>
     <string name="suspend_delivery_is_unconfirmed">Pausing av insulintilførsel ble ikke bekreftet! Vennligst oppdater Pod-status fra Omnipod-fanen og gjenoppta insulinlevering om nødvendig.</string>
     <string name="insulin_delivery_suspended">Insulintilførsel er pauset</string>
-    <string name="timezone_on_pod_is_different_from_the_timezone">Tidssone på pod er forskjellig fra tidssonen på telefon. Basalrater er feil. Bytt profil for å korrigere</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Tidssone på pod er forskjellig fra tidssonen på telefon. Basaldoser er feil. Bytt profil for å korrigere</string>
     <string name="failed_to_set_the_new_basal_profile">Kunne ikke sette ny basalprofil. Insulintilførsel er pauset</string>
     <string name="setting_basal_profile_might_have_failed">Endring av basalprofil kan ha feilet. Insulinlevering kan bli stoppet! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
     <string name="bolus_delivery_status_uncertain">Status for levering av bolusdoser er usikker. Oppdater pod-statusen for å verifisere.</string>

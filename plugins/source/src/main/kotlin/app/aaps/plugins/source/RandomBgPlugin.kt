@@ -1,8 +1,10 @@
 package app.aaps.plugins.source
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.PowerManager
 import android.os.SystemClock
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.SourceSensor
@@ -30,6 +32,7 @@ import kotlin.math.sin
 
 @Singleton
 class RandomBgPlugin @Inject constructor(
+    private val context: Context,
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
@@ -50,6 +53,7 @@ class RandomBgPlugin @Inject constructor(
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
+    private var wakeLock: PowerManager.WakeLock? = null
 
     companion object {
 
@@ -68,6 +72,7 @@ class RandomBgPlugin @Inject constructor(
 
     override fun advancedFilteringSupported(): Boolean = true
 
+    @SuppressLint("WakelockTimeout")
     override fun onStart() {
         super.onStart()
         val cal = GregorianCalendar()
@@ -75,11 +80,14 @@ class RandomBgPlugin @Inject constructor(
         cal[Calendar.SECOND] = 0
         cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % 5
         handler.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(5).msecs() + 1000 - System.currentTimeMillis())
+        wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:RandomBgPlugin")
+        wakeLock?.acquire()
     }
 
     override fun onStop() {
         super.onStop()
         handler.removeCallbacks(refreshLoop)
+        if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 
     override fun specialEnableCondition(): Boolean {

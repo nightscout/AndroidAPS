@@ -69,6 +69,7 @@ enum class Sources {
     Stats,               //From Stat Activity
     Aaps,               // MainApp
     BgFragment,
+    Garmin,
     Unknown             //if necessary
     ;
 }

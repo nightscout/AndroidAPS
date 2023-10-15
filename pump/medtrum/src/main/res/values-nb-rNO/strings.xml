@@ -21,7 +21,7 @@
     <string name="reservoir_level"> %.2f E</string>
     <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Basal type</string>
-    <string name="basal_rate_label">Basalrate</string>
+    <string name="basal_rate_label">Basaldose</string>
     <string name="current_basal_rate"> %.2f E/t</string>
     <string name="pump_type_label">Pumpetype</string>
     <string name="fw_version_label">FW versjon</string>
@@ -85,7 +85,7 @@
     <string name="press_next">Trykk <b>Neste</b> for å fortsette.</string>
     <string name="press_next_to_start_activation">Trykk <b>Neste</b> for å starte aktivering.</string>
     <string name="remove_safety_lock">Fjern sikkerhetslåsen. Koble pumpen til kroppen. Trykk nål-knappen.</string>
-    <string name="activating_pump">Aktiverer pumpe og setter basalrate. Vennligst vent.</string>
+    <string name="activating_pump">Aktiverer pumpe og setter basaldose. Vennligst vent.</string>
     <string name="activating_error">Kunne ikke aktivere, trykk <b>Prøv igjen</b> for å prøve igjen.</string>
     <string name="activating_complete">Ny patch aktivert. %.2f enheter gjenstår.</string>
     <string name="press_OK_to_return">Trykk <b>OK</b> for å gå tilbake til hovedskjermen.</string>

@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
-import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
@@ -25,9 +24,7 @@ import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.implementation.utils.DecimalFormatterImpl
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
-import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclientV3.DataSyncSelectorV3
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.nsclientV3.extensions.toNSSvgV3
@@ -56,16 +53,13 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var nsAndroidClient: NSAndroidClient
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var config: Config
-    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var workManager: WorkManager
     @Mock lateinit var workContinuation: WorkContinuation
-    @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Mock lateinit var storeDataForDb: StoreDataForDb
-    @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Mock lateinit var context: ContextWithInjector
 
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
@@ -103,8 +97,8 @@ internal class LoadBgWorkerTest : TestBase() {
         receiverDelegate = ReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
         nsClientV3Plugin = NSClientV3Plugin(
             injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-            sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, persistenceLayer,
-            nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb, decimalFormatter
+            sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
+            nsClientSource, storeDataForDb, decimalFormatter
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

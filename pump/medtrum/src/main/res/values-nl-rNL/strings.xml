@@ -53,6 +53,7 @@
     <string name="alarm_battery_out">Batterij leeg</string>
     <string name="alarm_no_calibration">Geen kalibratie</string>
     <string name="pump_time_update_failed">Update van pomp tijdzone mislukt, snooze bericht en vernieuw handmatig.</string>
+    <string name="bolus_error">Bolus fout</string>
     <!-- wizard-->
     <string name="retry">Opnieuw</string>
     <string name="next">Volgende</string>

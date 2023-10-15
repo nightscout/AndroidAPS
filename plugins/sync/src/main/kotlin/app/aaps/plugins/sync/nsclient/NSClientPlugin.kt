@@ -114,7 +114,7 @@ class NSClientPlugin @Inject constructor(
     }
 
     override fun onStop() {
-        context.applicationContext.unbindService(mConnection)
+        if (nsClientService != null) context.unbindService(mConnection)
         disposable.clear()
         super.onStop()
     }

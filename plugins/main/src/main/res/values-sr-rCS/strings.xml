@@ -73,8 +73,6 @@
     <string name="overview_show_treatments">Tretmani</string>
     <!-- Skins -->
     <!--    Iob-->
-    <!--    Wear-->
-    <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Prikazuje tekuće obaveštenje sa kratkim pregledom onoga što vaša petlja radi</string>
 </resources>

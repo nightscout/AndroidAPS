@@ -3,6 +3,7 @@ android {
     flavorDimensions = ["standard"]
     productFlavors {
         full {
+            getIsDefault().set(true)
             dimension "standard"
         }
         pumpcontrol {

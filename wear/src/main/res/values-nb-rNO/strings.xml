@@ -36,7 +36,7 @@
     <string name="pref_show_avgdelta">Vis Gj.snittDelta</string>
     <string name="pref_show_phone_battery">Vis telefonbatteri</string>
     <string name="pref_show_rig_battery">Vis riggens batteri</string>
-    <string name="pref_show_basal_rate">Vis basalrate</string>
+    <string name="pref_show_basal_rate">Vis basaldose</string>
     <string name="pref_show_loop_status">Vis loop status</string>
     <string name="pref_show_bg">Vis BS</string>
     <string name="pref_show_bgi">Vis BGI</string>
@@ -71,7 +71,7 @@
     <string name="pref_wizard_in_menu">Kalkulator i Meny</string>
     <string name="pref_prime_in_menu">Prime i menyen</string>
     <string name="pref_single_target">Enkel måleverdi</string>
-    <string name="pref_wizard_percentage">Kalkulator prosent</string>
+    <string name="pref_wizard_percentage">Kalkulatorprosent</string>
     <string name="pref_complication_tap_action">Handling ved trykk på komplikasjon</string>
     <string name="pref_unicode_in_complications">Unicode i komplikasjoner</string>
     <string name="pref_version">Versjon:</string>
@@ -109,7 +109,7 @@
     <string name="action_ecarbs">eKarbo</string>
     <string name="action_percentage">Prosent</string>
     <string name="action_start_min">Start [min]</string>
-    <string name="action_duration_h">Varighet [h]</string>
+    <string name="action_duration_h">Varighet [t]</string>
     <string name="action_insulin">Insulin</string>
     <string name="action_preset_1">Forhåndsinnstilling 1</string>
     <string name="action_preset_2">Forhåndsinnstilling 2</string>

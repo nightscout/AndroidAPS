@@ -79,17 +79,22 @@ class NSDeviceStatusHandler @Inject constructor(
         var configurationDetected = false
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
-            updatePumpData(nsDeviceStatus)
-            updateDeviceData(nsDeviceStatus)
-            updateOpenApsData(nsDeviceStatus)
-            updateUploaderData(nsDeviceStatus)
-            nsDeviceStatus.pump?.let { sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
+            if (config.NSCLIENT) {
+                updatePumpData(nsDeviceStatus)
+                updateDeviceData(nsDeviceStatus)
+                updateOpenApsData(nsDeviceStatus)
+                updateUploaderData(nsDeviceStatus)
+            }
             if (config.NSCLIENT && !configurationDetected)
                 nsDeviceStatus.configuration?.let {
                     // copy configuration of Insulin and Sensitivity from main AAPS
                     runningConfiguration.apply(it)
                     configurationDetected = true // pick only newest
+
                 }
+            if (config.APS) {
+                nsDeviceStatus.pump?.let { sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
+            }
         }
     }
 
