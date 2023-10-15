@@ -117,4 +117,7 @@
     <string name="xdrip_local_broadcasts_title">Activeer uitzendingen naar xDrip+.</string>
     <!--    DataBroadcast-->
     <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Verbinding met Garmin apparaat (Fenix, Edge, …)</string>
+    <string name="key_garmin_settings">Garmin instellingen</string>
 </resources>
