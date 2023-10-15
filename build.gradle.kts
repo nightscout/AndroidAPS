@@ -75,7 +75,6 @@ buildscript {
 
 plugins {
     id("org.jlleitschuh.gradle.ktlint") version "11.6.1"
-    id("org.jetbrains.kotlin.android") version Libs.Kotlin.kotlin apply false
 }
 
 allprojects {

@@ -2,10 +2,9 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
+    id("android-module-dependencies")
 }
 
-apply(from = "${project.rootDir}/core/main/android_dependencies.gradle")
-apply(from = "${project.rootDir}/core/main/android_module_dependencies.gradle")
 
 android {
 

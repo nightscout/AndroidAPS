@@ -5,6 +5,7 @@ object Libs {
 
         const val kotlin = "1.9.10"
 
+        const val test = "org.jetbrains.kotlin:kotlin-test:$kotlin"
     }
 
     object KotlinX {
@@ -21,6 +22,14 @@ object Libs {
         const val appCompat = "androidx.appcompat:appcompat:1.6.1"
         const val preference = "androidx.preference:preference-ktx:1.2.1"
         const val workRuntimeKtx = "androidx.work:work-runtime-ktx:2.8.1"
+
+        object Test {
+
+            const val espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
+            const val extKtx = "androidx.test.ext:junit-ktx:1.1.5"
+            const val rules = "androidx.test:rules:1.5.0"
+            const val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
+        }
     }
 
     object Google {
@@ -28,6 +37,8 @@ object Libs {
 
             const val measurementApi = "com.google.android.gms:play-services-measurement-api:21.3.0"
         }
+
+        const val truth = "com.google.truth:truth:1.1.5"
     }
 
     object Dagger {
@@ -59,12 +70,25 @@ object Libs {
         const val logbackAndroid = "com.github.tony19:logback-android:2.0.0"
     }
 
-    const val joda = "net.danlew:android.joda:2.12.5"
-    const val androidSvg = "com.caverock:androidsvg:1.4"
+    object JUnit {
 
-    const val rxjava = "3.1.7"
-    const val rxandroid = "3.0.2"
-    const val rxkotlin = "3.0.1"
+        private const val junitVersion = "5.10.0"
+
+        const val jupiter = "org.junit.jupiter:junit-jupiter:$junitVersion"
+        const val jupiterApi = "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    }
+
+    object Mockito {
+
+        const val jupiter = "org.mockito:mockito-junit-jupiter:5.6.0"
+        const val kotlin = "org.mockito.kotlin:mockito-kotlin:5.1.0"
+    }
+
+    const val androidSvg = "com.caverock:androidsvg:1.4"
+    const val joda = "net.danlew:android.joda:2.12.5"
+    const val json = "org.json:json:20230618"
+    const val jsonAssert = "org.skyscreamer:jsonassert:1.5.0"
+
     const val room = "2.5.2"
     const val lifecycle = "2.6.2"
     const val coroutines = "1.7.3"
@@ -82,11 +106,9 @@ object Libs {
     const val guava = "32.1.3-jre"
     const val work = "2.8.1"
     const val tink = "1.10.0"
-    const val json = "20230618"
     const val swipe = "1.1.0"
 
     const val junit = "4.13.2"
-    const val junit_jupiter = "5.10.0"
     const val mockito = "5.6.0"
     const val dexmaker = "1.2"
     const val retrofit2 = "2.9.0"

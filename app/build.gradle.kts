@@ -15,6 +15,8 @@ plugins {
 
 apply(from = "${project.rootDir}/core/main/android_dependencies.gradle")
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
+apply(from = "${project.rootDir}/core/main/test_dependencies.gradle")
+
 
 repositories {
     mavenCentral()
@@ -75,7 +77,7 @@ fun gitAvailable(): Boolean {
     } catch (ignored: Exception) {
         return false // NoGitSystemAvailable
     }
-    return !stringBuilder.toString().isEmpty()
+    return stringBuilder.toString().isNotEmpty()
 
 }
 
@@ -222,8 +224,6 @@ dependencies {
     // MainApp
     api(Libs.Rx.rxDogTag)
 }
-
-apply(from = "${project.rootDir}/core/main/test_dependencies.gradle")
 
 println("-------------------")
 println("isMaster: ${isMaster()}")
