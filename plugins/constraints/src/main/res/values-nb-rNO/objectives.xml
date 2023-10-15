@@ -24,7 +24,7 @@
     <string name="objectives_autosens_gate">1 uke vellykket looping på dagtid hvor alle måltider (KH) angis</string>
     <string name="objectives_autosens_learned">Hvis dine autosens resultater ikke ligger rundt 100% kan det tyde på at profilen din er feil.</string>
     <string name="objectives_smb_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som SMB (Super Micro Bolus)</string>
-    <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er maxIOB = gjennomsnittlig måltidsbolus + 3*max daglig basal</string>
+    <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er å sette maxIOB til gjennomsnittlig måltidsbolus + 3x max daglig basaldose</string>
     <string name="objectives_smb_learned">Bruk av SMB er en målsetting. Oref1 algoritmen ble designet for å hjelpe deg med dine bolusdoseringer. Det anbefales å ikke gi full bolusdose for måltider, men bare en del av den, og la AAPS styre resten om nødvendig. På denne måten får du større fleksibilitet med hensyn på feilberegnede KH. Visste du at du kan angi en prosentandel for boluskalkulatoren som resulterer i redusert bolusstørrelse?</string>
     <string name="objectives_dyn_isf_objective">Aktivere ekstra funksjoner for bruk på dagtid, slik som Dynamisk Sensitivitet</string>
     <string name="objectives_dyn_isf_gate">Sørg for at SMB fungerer som den skal. Aktiver DynamicISF-tillegget og finn riktig kalibrering for dine behov. Det anbefales å starte med en verdi lavere enn 100% for sikkerhets skyld.</string>

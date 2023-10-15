@@ -108,6 +108,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.ConfigBuilder       -> app.aaps.core.ui.R.drawable.ic_cogs
         Sources.Overview            -> app.aaps.core.ui.R.drawable.ic_home
         Sources.Aaps                -> R.drawable.ic_aaps
+        Sources.GarminDevice        -> app.aaps.core.ui.R.drawable.ic_generic_icon
         Sources.Unknown             -> app.aaps.core.ui.R.drawable.ic_generic_icon
     }
 

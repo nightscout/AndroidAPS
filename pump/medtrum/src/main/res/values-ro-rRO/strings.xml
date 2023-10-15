@@ -53,6 +53,7 @@
     <string name="alarm_battery_out">Baterie descărcată</string>
     <string name="alarm_no_calibration">Fără calibrare</string>
     <string name="pump_time_update_failed">Actualizarea fusului orar al pompei a eșuat, amână mesajul și actualizează manual.</string>
+    <string name="bolus_error">Eroare bolus</string>
     <!-- wizard-->
     <string name="retry">Încearcă din nou</string>
     <string name="next">Înainte</string>
@@ -101,6 +102,8 @@
     <string name="press_retry_or_discard">Apasă <b>Înainte</b> pentru a relua activarea sau <b>Renunțare</b> pentru a reseta statusul activării.</string>
     <string name="reading_activation_status">Te rog, așteaptă. Se citește starea de activare din pompă.</string>
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Alertă de inaccesibilitate activată forțat, deoarece patchul Medtrum poate eșua și să nu fie accesibil.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Recomandat să se seteze la 30 de minute, deoarece patchul Medtrum poate eșua și să nu fie accesibil.</string>
     <string name="sn_input_title">Număr de serie</string>
     <string name="sn_input_summary">Introdu numărul de serie al bazei pompei.</string>
     <string name="sn_input_invalid">Număr de serie invalid!</string>

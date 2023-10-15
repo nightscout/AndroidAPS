@@ -51,7 +51,7 @@
     <string name="pref_show_avgdelta">Vis Gj. snitt Delta</string>
     <string name="pref_show_phone_battery">Vis telefonbatteri</string>
     <string name="pref_show_rig_battery">Vis riggens batteri</string>
-    <string name="pref_show_basal_rate">Vis basalrate</string>
+    <string name="pref_show_basal_rate">Vis basaldose</string>
     <string name="pref_show_loop_status">Vis loop status</string>
     <string name="pref_show_bg">Vis BS</string>
     <string name="pref_show_bgi">Vis BGI</string>
@@ -75,7 +75,7 @@
     <string name="cwf_comment_avg_delta">Gj.snitt BS-endring (15min)</string>
     <string name="cwf_comment_uploader_battery">Telefonbatteri (%)</string>
     <string name="cwf_comment_rig_battery">Rig-batteri (%)</string>
-    <string name="cwf_comment_basalRate">Basalrate</string>
+    <string name="cwf_comment_basalRate">Basaldose</string>
     <string name="cwf_comment_bgi">BGI verdi</string>
     <string name="cwf_comment_time">Tid (TT:MM eller TT:MM:SS)</string>
     <string name="cwf_comment_hour">Time (TT)</string>
