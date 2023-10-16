@@ -1,7 +1,7 @@
 apply(plugin = "jacoco")
 
 project.afterEvaluate {
-    val variants = listOf("debug", "fullDebug")
+    val variants = listOf("fullDebug")
 
     tasks.register<JacocoReport>(name = "jacocoAllDebugReport") {
 
@@ -72,8 +72,10 @@ project.afterEvaluate {
             subprojects.forEach { proj ->
                 variants.forEach { variant ->
                     val path = "${proj.buildDir}/outputs/unit_test_code_coverage/${variant}UnitTest/test${variant.replaceFirstChar(Char::titlecase)}UnitTest.exec"
-                    // printf("Collecting execution data from: %s\n", path)
-                    if ((File(path)).exists()) it.add(path)
+                    if ((File(path)).exists()) {
+                        it.add(path)
+                        println("Collecting execution data from: $path")
+                    }
                 }
             }
         }
