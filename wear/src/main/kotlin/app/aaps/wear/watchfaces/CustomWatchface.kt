@@ -156,15 +156,13 @@ class CustomWatchface : BaseWatchFace() {
                 if (!resDataMap.isEquals(it.customWatchfaceData.resDatas) || jsonString != it.customWatchfaceData.json) {
                     resDataMap = it.customWatchfaceData.resDatas
                     jsonString = it.customWatchfaceData.json
-                    dynPref(json.optJSONObject((DYNPREF.key)))
+                    DynProvider.init(this, json)
                     FontMap.init(this)
                     ViewMap.init(this)
                     TrendArrowMap.init(this)
-                    DynProvider.init(json.optJSONObject(DYNDATA.key))
                 }
                 if (checkPref()) {
-                    dynPref(json.optJSONObject((DYNPREF.key)))
-                    DynProvider.init(json.optJSONObject(DYNDATA.key))
+                    DynProvider.init(this, json)
                 }
                 /*
                 valPref.forEach {s, value ->
@@ -502,7 +500,7 @@ class CustomWatchface : BaseWatchFace() {
                 left = (viewJson.optInt(LEFTMARGIN.key) * cwf.zoomFactor).toInt()
                 top = (viewJson.optInt(TOPMARGIN.key) * cwf.zoomFactor).toInt()
                 val params = FrameLayout.LayoutParams(width, height)
-                dynData = DynProvider.getDyn(cwf, viewJson.optString(DYNDATA.key), width, height, key)
+                dynData = DynProvider.getDyn(cwf, viewJson.optString(DYNDATA.key), viewJson.optString(DYNPREF.key), width, height, key)
                 val topOffset = if (viewJson.optBoolean(TOPOFFSET.key, false)) dynData?.getTopOffset() ?: 0 else 0
                 val topOffsetTwin = ((twinView?.let { if (it.visibility != View.VISIBLE) viewJson.optInt(TOPOFFSETTWINHIDDEN.key,0) else 0 } ?: 0 ) * cwf.zoomFactor).toInt()
                 params.topMargin = top + topOffset + topOffsetTwin
@@ -820,20 +818,35 @@ class CustomWatchface : BaseWatchFace() {
         }
 
         companion object {
-
             val dynData = mutableMapOf<String, DynProvider>()
             var dynJson: JSONObject? = null
-            fun init(dynJson: JSONObject?) {
-                this.dynJson = dynJson
+            fun init(cwf: CustomWatchface, json: JSONObject?) {
+                cwf.dynPref(json?.optJSONObject((DYNPREF.key)))
+                this.dynJson = json?.optJSONObject((DYNDATA.key))
                 dynData.clear()
             }
 
-            fun getDyn(cwf: CustomWatchface, key: String, width: Int, height: Int, defaultViewKey: String): DynProvider? = dynData["${defaultViewKey}_$key"]
-                ?: dynJson?.optJSONObject(key)?.let { dynJson ->
+            fun getDyn(cwf: CustomWatchface, key: String, keyPref: String, width: Int, height: Int, defaultViewKey: String): DynProvider? {
+                if (dynData[defaultViewKey] != null)
+                    return dynData[defaultViewKey]
+
+                cwf.dynPref[keyPref]?.let { dynPref ->
+                    ValueMap.fromKey(dynPref.optString(VALUEKEY.key, defaultViewKey)).let { valueMap ->
+                        DynProvider(cwf, dynPref, valueMap, width, height).also { it.load() }
+                    }
+                }?.also { dynData[defaultViewKey] = it }
+
+                if (dynData[defaultViewKey] != null)
+                    return dynData[defaultViewKey]
+
+                dynJson?.optJSONObject(key)?.let { dynJson ->
                     ValueMap.fromKey(dynJson.optString(VALUEKEY.key, defaultViewKey)).let { valueMap ->
                         DynProvider(cwf, dynJson, valueMap, width, height).also { it.load() }
                     }
-                }?.also { dynData["${defaultViewKey}_$key"] = it }
+                }?.also { dynData[defaultViewKey] = it }
+
+                return dynData[defaultViewKey]
+            }
 
             private fun parseDataRange(json: JSONObject?, defaultData: DataRange) =
                 json?.let {
