@@ -27,7 +27,7 @@
     <string name="combo_reservoir_empty">Tom</string>
     <string name="combo_reservoir_normal">Normal</string>
     <string name="combo_notification_check_time_date">Pumpens tid må oppdateres</string>
-    <string name="combo_pump_tbr_cancelled_warrning">Varsel om kansellering av temp basal er bekreftet</string>
+    <string name="combo_pump_tbr_cancelled_warrning">Varsel om kansellering av midlertidig basal er bekreftet</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Ingen kontakt med pumpen. Ingen bolus er levert</string>
     <string name="combo_error_no_bolus_delivered">Bolus avbrutt. Det virker som ingen bolus er levert. For å være sikker, sjekk pumpen for å unngå levering av dobbel bolus og gjør evt et nytt forsøk. For å unngå feil vil systemet aldri prøve å levere ny bolus.</string>
     <string name="combo_error_partial_bolus_delivered">Bare %1$.2f E av bolusdosen på %2$.2f E ble levert på grunn av en feil. Sjekk pumpen for å kontrollere dette og iverksett nødvendige tiltak.</string>
@@ -46,7 +46,7 @@
     <string name="combo_check_date">Den siste bolus er eldre enn 24t eller er i fremtiden. Vennligst sjekk at datoen i pumpen er korrekt.</string>
     <string name="combo_suspious_bolus_time">Tid/dato for levert bolus i pumpen er trolig feil, og IOB beregningen blir da feil. Vennligst sjekk pumpens tid/dato.</string>
     <string name="combo_bolus_count">Antall boluser</string>
-    <string name="combo_tbr_count">Antall temp basaler TBR</string>
+    <string name="combo_tbr_count">Antall midlertidige basaler TBR</string>
     <string name="bolusstopped">Bolus stoppet</string>
     <string name="bolusstopping">Stopper bolus</string>
     <string name="pump_commerror_label">Komm. feiltelling</string>
