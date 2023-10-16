@@ -54,12 +54,12 @@
     <string name="objectives_exam_learned_dia">Insulinvarighet (DIA) i looping har en annen betydning (tid før alt insulin er absorbert) enn ved klassisk pumpebehandling (tid før det meste av insulinet er absorbert).</string>
     <string name="objectives_exam_learned_isf">Du lærte betydningen av ISF-verdien og hvordan det påvirker mengden insulin som brukes for korreksjon av BS.</string>
     <string name="objectives_exam_learned_ic">Du lærte betydningen av IK-verdien og hvordan det påvirker mengden insulin som brukes for dekke karbohydratene.</string>
-    <string name="objectives_exam_learned_hypott">Hypo temp target bør brukes for å forhindre enn overkorreksjon etter en hypo situasjon, når det vanligvis er bygget opp negativ IOB. Ytterligere tiltak bør vurderes for å forebygge denne situasjonen igjen i fremtiden.</string>
+    <string name="objectives_exam_learned_hypott">Hypo midlertidig mål bør brukes for å forhindre enn overkorreksjon etter en hypo situasjon, når det vanligvis er bygget opp negativ IOB. Ytterligere tiltak bør vurderes for å forebygge denne situasjonen igjen i fremtiden.</string>
     <string name="objectives_exam_learned_profileswitch">Bruk av prosent påvirker ikke målverdier for BS men basal, ISF og IK justeres for å gi mer insulin (over 100%%) eller mindre insulin (under 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Ved å bruke tidsskifte i profilbytte kan du tilpasse døgnprofilen til uregelmessigheter som for eksempel en sen oppvåkning.</string>
     <string name="objectives_exam_learned_profileswitch4">Redigering av profilen er ikke tilstrekkelig til å gjøre en endring. Du må fremdeles fysisk aktivere et profil bytte for å registrere endringene.</string>
     <string name="objectives_exam_learned_exercise">Du bør redusere mengden insulin i kroppen minst 1 time før du starter treningen ved å velge profil under 100 %.</string>
-    <string name="objectives_exam_learned_exercise2">Ved å sette høyere temp target minst 1 time før trening så vil det bidra til å redusere mengden med insulin i kroppen.</string>
+    <string name="objectives_exam_learned_exercise2">Ved å sette høyere midlertidig mål minst 1 time før trening så vil det bidra til å redusere mengden med insulin i kroppen.</string>
     <string name="objectives_exam_learned_noisycgm">Hvis du ikke stoler på CGM-verdier bør du ikke bruke loop uten tilsyn.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS må vite at pumpen ikke er tilkoblet for å beregne IOB riktig.</string>
     <string name="objectives_exam_learned_insulin">Å vite hvilken type insulin som er i pumpen er nødvendig for å beregne IOB korrekt.</string>
