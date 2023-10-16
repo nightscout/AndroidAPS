@@ -34,8 +34,8 @@ class MaintenancePluginTest : TestBase() {
     fun mock() {
         sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")
-        `when`(loggerUtils.logDirectory).thenReturn("src/test/res/logger")
-        `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/res/logger"))
+        `when`(loggerUtils.logDirectory).thenReturn("src/test/assets/logger")
+        `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/assets/logger"))
     }
 
     @Test fun logFilesTest() {
