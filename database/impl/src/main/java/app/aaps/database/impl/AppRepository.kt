@@ -214,11 +214,6 @@ import kotlin.math.roundToInt
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    @Suppress("unused")
-    fun getModifiedTemporaryTargetsDataFromId(lastId: Long): Single<List<TemporaryTarget>> =
-        database.temporaryTargetDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getTemporaryTargetActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryTarget>> =
         database.temporaryTargetDao.getTemporaryTargetActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
@@ -485,11 +480,6 @@ import kotlin.math.roundToInt
                 }
             }
 
-    @Suppress("unused")
-    fun getModifiedBolusesDataFromId(lastId: Long): Single<List<Bolus>> =
-        database.bolusDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getLastBolusRecord(): Bolus? =
         database.bolusDao.getLastBolusRecord()
 
@@ -709,11 +699,6 @@ import kotlin.math.roundToInt
                         .map { it to nextIdElement }
                 }
             }
-
-    @Suppress("unused")
-    fun getModifiedTemporaryBasalDataFromId(lastId: Long): Single<List<TemporaryBasal>> =
-        database.temporaryBasalDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
 
     fun getTemporaryBasalActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryBasal>> =
         database.temporaryBasalDao.getTemporaryBasalActiveAt(timestamp)

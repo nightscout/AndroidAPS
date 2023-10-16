@@ -30,26 +30,26 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): ProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE nightscoutId = :nsId AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
     fun findByNSId(nsId: String): ProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp <= :timestamp AND (timestamp + duration) > :timestamp AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getTemporaryProfileSwitchActiveAt(timestamp: Long): Maybe<ProfileSwitch>
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp <= :timestamp AND  duration = 0 AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp <= :timestamp) AND unlikely(duration = 0) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getPermanentProfileSwitchActiveAt(timestamp: Long): Maybe<ProfileSwitch>
 
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
     fun getAllProfileSwitches(): Single<List<ProfileSwitch>>
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getProfileSwitchDataIncludingInvalidFromTime(timestamp: Long): Single<List<ProfileSwitch>>
 
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getProfileSwitchDataFromTime(timestamp: Long): Single<List<ProfileSwitch>>
 
     // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_PROFILE_SWITCHES WHERE id > :id) ORDER BY id ASC")
+    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(id > :id) AND likely(referenceId IS NULL) OR id IN (SELECT DISTINCT referenceId FROM $TABLE_PROFILE_SWITCHES WHERE id > :id) ORDER BY id ASC")
     fun getModifiedFrom(id: Long): Single<List<ProfileSwitch>>
 
     // for WS we need 1 record only

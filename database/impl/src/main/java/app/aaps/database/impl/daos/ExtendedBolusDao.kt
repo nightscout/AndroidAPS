@@ -26,31 +26,31 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     @Query("SELECT id FROM $TABLE_EXTENDED_BOLUSES ORDER BY id DESC limit 1")
     fun getLastId(): Long?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp = :timestamp AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp = :timestamp) AND likely(referenceId IS NULL)")
     fun findByTimestamp(timestamp: Long): ExtendedBolus?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE nightscoutId = :nsId AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
     fun findByNSId(nsId: String): ExtendedBolus?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE pumpId = :pumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(pumpId = :pumpId) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL)")
     fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): ExtendedBolus?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE endId = :endPumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(endId = :endPumpId) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL)")
     fun findByPumpEndIds(endPumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): ExtendedBolus?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp <= :timestamp AND (timestamp + duration) > :timestamp AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL) AND unlikely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getExtendedBolusActiveAt(timestamp: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Maybe<ExtendedBolus>
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp <= :timestamp AND (timestamp + duration) > :timestamp AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getExtendedBolusActiveAt(timestamp: Long): Maybe<ExtendedBolus>
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getExtendedBolusDataFromTime(timestamp: Long): Single<List<ExtendedBolus>>
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp >= :from AND timestamp <= :to AND isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp BETWEEN :from AND :to) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getExtendedBolusDataFromTimeToTime(from: Long, to: Long): Single<List<ExtendedBolus>>
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getExtendedBolusDataIncludingInvalidFromTime(timestamp: Long): Single<List<ExtendedBolus>>
 
     // This query will be used with v3 to get all changed records

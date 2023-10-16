@@ -23,13 +23,13 @@ internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
     @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE referenceId IS NOT NULL")
     override fun deleteTrackedChanges(): Int
 
-    @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE pumpId = :pumpId AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE unlikely(pumpId = :pumpId) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL)")
     fun findByPumpIds(pumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TotalDailyDose?
 
-    @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE timestamp = :timestamp AND pumpType = :pumpType AND pumpSerial = :pumpSerial AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE unlikely(timestamp = :timestamp) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL)")
     fun findByPumpTimestamp(timestamp: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TotalDailyDose?
 
-    @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE timestamp = :timestamp AND pumpType = :pumpType AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE unlikely(timestamp = :timestamp) AND likely(pumpType = :pumpType) AND likely(referenceId IS NULL)")
     fun findByTimestamp(timestamp: Long, pumpType: InterfaceIDs.PumpType): Maybe<TotalDailyDose>
 
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE isValid = 1 AND referenceId IS NULL AND pumpType <> :exclude ORDER BY timestamp DESC LIMIT :count")
