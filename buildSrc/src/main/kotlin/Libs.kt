@@ -7,6 +7,7 @@ object Libs {
 
         const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
         const val test = "org.jetbrains.kotlin:kotlin-test:$kotlin"
+        const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
     }
 
     object KotlinX {
@@ -39,6 +40,15 @@ object Libs {
             const val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
 
+        object Room {
+            private const val roomVersion = "2.5.2"
+
+            const val room = "androidx.room:room-ktx:$roomVersion"
+            const val compiler = "androidx.room:room-compiler:$roomVersion"
+            const val runtime = "androidx.room:room-runtime:$roomVersion"
+            const val rxJava3 = "androidx.room:room-rxjava3:$roomVersion"
+            const val testing = "androidx.room:room-testing:$roomVersion"
+        }
         object Wear {
 
             const val wear = "androidx.wear:wear:1.3.0"
@@ -63,6 +73,7 @@ object Libs {
         }
 
         const val truth = "com.google.truth:truth:1.1.5"
+        const val gson = "com.google.code.gson:gson:2.10.1"
     }
 
     object Dagger {
@@ -113,13 +124,11 @@ object Libs {
     const val json = "org.json:json:20230618"
     const val jsonAssert = "org.skyscreamer:jsonassert:1.5.0"
 
-    const val room = "2.5.2"
     const val lifecycle = "2.6.2"
     const val coroutines = "1.7.3"
     const val activity = "1.8.0"
     const val fragmentktx = "1.6.1"
     const val ormLite = "4.46"
-    const val gson = "2.10.1"
     const val nav = "2.7.4"
     const val material = "1.10.0"
     const val gridlayout = "1.0.0"
