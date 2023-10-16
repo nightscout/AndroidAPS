@@ -6,6 +6,7 @@
     <string name="medtrum_pump_description">Intégration des pompes Medtrum Nano et Medtrum 300U</string>
     <string name="medtrum_pump_setting">Paramètres de la pompe Medtrum</string>
     <string name="pump_error">Erreur pompe: %1$s!! </string>
+    <string name="pump_warning">Avertissement pompe : %1$s </string>
     <string name="pump_is_suspended">La pompe est suspendue</string>
     <string name="pump_is_suspended_hour_max">La pompe est suspendue, la quantité maximum d\'insuline par heure est dépassée</string>
     <string name="pump_is_suspended_day_max">La pompe est suspendue, la quantité maximum d\'insuline par jour est dépassée</string>
@@ -52,6 +53,7 @@
     <string name="alarm_battery_out">Pile morte</string>
     <string name="alarm_no_calibration">Absence d\'étalonnage</string>
     <string name="pump_time_update_failed">Impossible de mettre à jour le fuseau horaire de la pompe, mettre en veille le message et rafraîchir manuellement.</string>
+    <string name="bolus_error">Erreur de bolus</string>
     <!-- wizard-->
     <string name="retry">Réessayer</string>
     <string name="next">Suivant</string>
@@ -100,12 +102,16 @@
     <string name="press_retry_or_discard">Appuyez sur <b>Suivant</b> pour reprendre l\'activation ou <b>Supprimer</b> pour réinitialiser l\'état d\'activation.</string>
     <string name="reading_activation_status">Veuillez patienter, lecture de l\'état d\'activation de la pompe.</string>
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Alerte injoignable forcée, car le pod Medtrum peut échouer et être inaccessible.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Réglage à 30 minutes conseillé car le pod Medtrum peut échouer et être inaccessible.</string>
     <string name="sn_input_title">Numéro de série</string>
     <string name="sn_input_summary">Entrez le numéro de série de la base de votre pompe.</string>
     <string name="sn_input_invalid">Numéro de série invalide !</string>
     <string name="pump_unsupported">Pompe non testée : %1$d! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
+    <string name="pump_warning_notification_title">Notification sur l\'alerte pompe</string>
+    <string name="pump_warning_notification_summary">Afficher une notification sur les avertissements non critiques de la pompe : pile faible, réservoir faible (20 unités) et expire bientôt. Il est recommandé de laisser activé lorsque les alarmes de la pompe sont réglées sur silencieux.</string>
     <string name="patch_expiration_title">Expiration du Patch</string>
     <string name="patch_expiration_summary">Lorsqu\'il est activé, le Patch expirera après 3 jours, avec un délai de grâce de 8 heures au-delà.</string>
     <string name="hourly_max_insulin_title">Insuline maximale horaire</string>
