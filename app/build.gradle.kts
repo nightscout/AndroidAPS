@@ -11,9 +11,9 @@ plugins {
     id("kotlinx-serialization")
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("android-app-dependencies")
 }
 
-apply(from = "${project.rootDir}/core/main/android_dependencies.gradle")
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 apply(from = "${project.rootDir}/core/main/test_dependencies.gradle")
 
