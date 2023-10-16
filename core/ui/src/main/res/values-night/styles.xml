@@ -240,7 +240,7 @@
         <item name="isCompletedColor">@color/isCompleted</item>
         <item name="isNotCompletedColor">@color/isNotCompleted</item>
         <item name="materialCalendarStyle">@style/DatePicker</item>
-        <item name="materialTimePickerStyle">@style/DatePicker</item>
+        <item name="materialTimePickerStyle">@style/TimePicker</item>
         <!---Nightscout client TitelColor -->
         <item name="nsTitleColor">@color/defaultText</item>
         <!---Icons in Loop area -->
@@ -294,7 +294,18 @@
 
     <!-- Style for Material Time Picker -->
     <style name="TimePicker" parent="ThemeOverlay.MaterialComponents.TimePicker">
+        <item name="backgroundTint">@color/dateTimePickerBackground</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorOnSurface">@color/white</item>
+        <item name="android:textColorPrimary">@color/white</item>
         <item name="buttonStyle">@style/PickerTextButton</item>
+        <item name="keyboardIcon" ns2:ignore="PrivateResource">@drawable/ic_keyboard_black_24dp</item>
+        <item name="clockIcon" ns2:ignore="PrivateResource">@drawable/ic_clock_black_24dp</item>
+        <item name="imageButtonStyle">@style/TimePicker.ImageButton</item>
+    </style>
+
+    <style name="TimePicker.ImageButton" parent="Widget.MaterialComponents.TimePicker.ImageButton">
+        <item name="iconTint">@color/white</item>
     </style>
 
     <!--    Buttons from MaterialDateTimePicker, Dialogs ...    -->
