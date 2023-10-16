@@ -122,7 +122,7 @@
     <string name="key_garmin_settings">הגדרות Garmin</string>
     <!--    Wear-->
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
-    <string name="no_watch_connected">(השעון מנותק)</string>
+    <string name="no_watch_connected">(השעון לא מחובר)</string>
     <string name="pump_status">סטטוס המשאבה</string>
     <string name="loop_status">סטטוס הלולאה</string>
     <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
