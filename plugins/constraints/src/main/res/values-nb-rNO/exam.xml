@@ -7,7 +7,7 @@
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">Hvis du føler at DIA verdien (insulinvarigheten) som du benyttet i pumpen fungerte godt før du tok i bruk AndroidAPS, da er det ikke nødvendig å endre dette når du starter å loope.</string>
     <string name="dia_valuemustbedetermined">Du må selv bestemme hvilken verdi som passer for DIA.</string>
-    <string name="hypott_label">Hypo Temp-Target (TT)</string>
+    <string name="hypott_label">Hypo midlertidig mål (TT)</string>
     <string name="hypott_whenhypott">Hva er hovedgrunnen til å velge et Hypo midlertidig mål?</string>
     <string name="hypott_wrongbasal">For å korrigere følinger som er forårsaket av feil i dine basalinnstillinger.</string>
     <string name="hypott_preventoversmb">For å forhindre at AAPS overkorrigerer for en blodglukoseøkning forårsaket av de hurtigvirkende karbohydratene som brukes til behandling av en hypo.</string>
