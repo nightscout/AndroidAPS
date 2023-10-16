@@ -106,8 +106,8 @@ allprojects {
     apply(plugin = "jacoco")
 }
 
-// Setup all al reports aggregation
-apply(from = "jacoco_project.gradle")
+// Setup all reports aggregation
+apply(from = "jacoco_aggregation.gradle.kts")
 
 tasks.register<Delete>("clean").configure {
     delete(rootProject.buildDir)
