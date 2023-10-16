@@ -6,9 +6,9 @@ plugins {
 android {
     compileSdk = Versions.compileSdk
     defaultConfig {
-        minSdk = 28
-        @Suppress("DEPRECATION")
-        targetSdk = 28
+        multiDexEnabled = true
+        versionCode = Versions.versionCode
+        version = Versions.appVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

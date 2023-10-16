@@ -14,10 +14,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildFeatures {
-        viewBinding = true
-    }
-
     buildTypes {
         named("release") {
             isMinifyEnabled = false
@@ -59,9 +55,10 @@ android {
         }
     }
 
-    // disable for modules here
     buildFeatures {
+        // disable for modules here
         buildConfig = false
+        viewBinding = true
     }
 }
 

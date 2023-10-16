@@ -17,7 +17,6 @@ plugins {
 }
 
 apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
-apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 
@@ -43,6 +42,8 @@ def generateGitBuild = { ->
 }
 
 android {
+    namespace 'app.aaps.wear'
+
     compileSdk 34
 
     defaultConfig {
@@ -81,7 +82,30 @@ android {
             versionName version + "-aapsclient"
         }
     }
-    namespace 'app.aaps.wear'
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['src/main/jniLibs']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    lint {
+        checkReleaseBuilds false
+        disable 'MissingTranslation'
+        disable 'ExtraTranslation'
+    }
 }
 
 allprojects {

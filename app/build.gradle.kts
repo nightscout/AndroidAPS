@@ -106,9 +106,9 @@ android {
     ndkVersion = Versions.ndkVersion
 
     defaultConfig {
-        multiDexEnabled = true
-        versionCode = Versions.versionCode
-        version = Versions.appVersion
+        minSdk = Versions.minSdk
+        targetSdk = Versions.targetSdk
+
         buildConfigField("String", "VERSION", "\"$version\"")
         buildConfigField("String", "BUILDVERSION", "\"${generateGitBuild()}-${generateDate()}\"")
         buildConfigField("String", "REMOTE", "\"${generateGitRemote()}\"")

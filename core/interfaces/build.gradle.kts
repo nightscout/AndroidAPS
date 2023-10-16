@@ -33,7 +33,7 @@ dependencies {
     api(Libs.Logging.slf4jApi)
     api(Libs.Logging.logbackAndroid)
 
-    api(Libs.Google.PlayServices.measurementApi)
+    api(Libs.Google.Android.PlayServices.measurementApi)
 
     api(Libs.KotlinX.serializationJson)
     api(Libs.KotlinX.serializationProtobuf)

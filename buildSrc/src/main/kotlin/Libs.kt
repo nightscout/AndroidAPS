@@ -5,15 +5,22 @@ object Libs {
 
         const val kotlin = "1.9.10"
 
+        const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
         const val test = "org.jetbrains.kotlin:kotlin-test:$kotlin"
     }
 
     object KotlinX {
 
         private const val serialization = "1.6.0"
+        private const val coroutinesVersion = "1.7.3"
 
         const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
         const val serializationProtobuf = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serialization"
+        const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
+        const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+        const val coroutinesGuava = "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutinesVersion"
+        const val coroutinesPlayServices = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion"
+        const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
     }
 
     object AndroidX {
@@ -22,6 +29,7 @@ object Libs {
         const val appCompat = "androidx.appcompat:appcompat:1.6.1"
         const val preference = "androidx.preference:preference-ktx:1.2.1"
         const val workRuntimeKtx = "androidx.work:work-runtime-ktx:2.8.1"
+        const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 
         object Test {
 
@@ -30,12 +38,28 @@ object Libs {
             const val rules = "androidx.test:rules:1.5.0"
             const val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
+
+        object Wear {
+
+            const val wear = "androidx.wear:wear:1.3.0"
+            const val tiles = "androidx.wear.tiles:tiles:1.2.0"
+        }
     }
 
     object Google {
-        object PlayServices {
 
-            const val measurementApi = "com.google.android.gms:play-services-measurement-api:21.3.0"
+        object Android {
+            object PlayServices {
+
+                const val measurementApi = "com.google.android.gms:play-services-measurement-api:21.3.0"
+                const val wearable = "com.google.android.gms:play-services-wearable:18.1.0"
+            }
+
+            object Wearable {
+
+                const val wearable = "com.google.android.wearable:wearable:2.9.0"
+                const val wearableSupport = "com.google.android.support:wearable:2.9.0"
+            }
         }
 
         const val truth = "com.google.truth:truth:1.1.5"

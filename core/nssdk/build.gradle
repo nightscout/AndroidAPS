@@ -5,7 +5,6 @@ plugins {
     id 'kotlinx-serialization'
 }
 
-apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/android_module_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 
