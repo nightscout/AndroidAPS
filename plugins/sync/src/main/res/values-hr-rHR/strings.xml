@@ -58,5 +58,28 @@
     <string name="upload_now">Pošalji sada</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Podijelite IOB na bolus i bazalni IOB na brojčaniku</string>
+    <string name="xdrip_status_show_bgi_title">Prikaži BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Dodajte BGI u redak statusa</string>
+    <string name="disabled_loop">Petlja onemogućena</string>
+    <string name="xdrip_not_installed">xDrip+ nije instaliran</string>
+    <string name="calibration_sent">Kalibracija poslana na xDrip+</string>
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
+    <string name="no_watch_connected">(Sat nije povezan)</string>
+    <string name="loop_status">Loop status</string>
+    <string name="wear_action_tempt_preset_message">Trenutni cilj:\nRazlog: %1$s\nCilj: %2$s\nTrajanje: %3$s</string>
+    <string name="wear_custom_watchface_authorization_summary">Ovlastite učitani prilagođeni brojčanik za promjenu i zaključavanje nekih postavki prikaza sata kako bi odgovarale dizajnu brojača</string>
+    <string name="wear_infos_watchface">Info Watchface</string>
+    <string name="cwf_infos_pref_locked">Popis postavki koje je zaključao Watchface</string>
+    <string name="cwf_infos_pref_required">Popis postavki potrebnih za Watchface</string>
+    <string name="cwf_infos_view_title">Popis polja uključenih u Watchface</string>
+    <string name="units_short">J</string>
+    <string name="hour_short">h</string>
+    <string name="rate_duration">Stopa: %1$.2fU/h (%2$.2f%%) \nTrajanje %3$d min</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="today">Danas</string>
 </resources>

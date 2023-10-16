@@ -2,13 +2,18 @@ package app.aaps.plugins.sync.nsclient.data
 
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.sync.R
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -72,24 +77,31 @@ class NSDeviceStatusHandler @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val runningConfiguration: RunningConfiguration,
-    private val processedDeviceStatusData: ProcessedDeviceStatusData
+    private val processedDeviceStatusData: ProcessedDeviceStatusData,
+    private val uiInteraction: UiInteraction,
+    private val rh: ResourceHelper
 ) {
 
     fun handleNewData(deviceStatuses: Array<NSDeviceStatus>) {
         var configurationDetected = false
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
-            updatePumpData(nsDeviceStatus)
-            updateDeviceData(nsDeviceStatus)
-            updateOpenApsData(nsDeviceStatus)
-            updateUploaderData(nsDeviceStatus)
-            nsDeviceStatus.pump?.let { sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
+            if (config.NSCLIENT) {
+                updatePumpData(nsDeviceStatus)
+                updateDeviceData(nsDeviceStatus)
+                updateOpenApsData(nsDeviceStatus)
+                updateUploaderData(nsDeviceStatus)
+            }
             if (config.NSCLIENT && !configurationDetected)
                 nsDeviceStatus.configuration?.let {
                     // copy configuration of Insulin and Sensitivity from main AAPS
                     runningConfiguration.apply(it)
                     configurationDetected = true // pick only newest
+
                 }
+            if (config.APS) {
+                nsDeviceStatus.pump?.let { sp.putBoolean(app.aaps.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
+            }
         }
     }
 

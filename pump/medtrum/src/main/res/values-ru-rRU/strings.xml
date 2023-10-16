@@ -6,6 +6,7 @@
     <string name="medtrum_pump_description">Интеграция с помпами Medtrum Nano и Medtrum 300U</string>
     <string name="medtrum_pump_setting">Настройки Medtrum</string>
     <string name="pump_error">Ошибка помпы: %1$s !! </string>
+    <string name="pump_warning">Помпа - Предупреждение: %1$s </string>
     <string name="pump_is_suspended">Помпа приостановлена</string>
     <string name="pump_is_suspended_hour_max">Помпа приостановлена из-за превышения максимального количества инсулина в час</string>
     <string name="pump_is_suspended_day_max">Помпа приостановлена в связи с превышением максимального допустимого количества инсулина в сутки</string>
@@ -52,6 +53,7 @@
     <string name="alarm_battery_out">Батарея разряжена</string>
     <string name="alarm_no_calibration">Нет калибровки</string>
     <string name="pump_time_update_failed">Не удалось обновить часовой пояс помпы, закройте сообщение и обновите вручную.</string>
+    <string name="bolus_error">Болюс - ошибка</string>
     <!-- wizard-->
     <string name="retry">Повторить</string>
     <string name="next">Далее</string>
@@ -100,12 +102,16 @@
     <string name="press_retry_or_discard">Нажмите <b>Далее</b>, чтобы возобновить активацию или <b>Discard</b> для сброса статуса активации.</string>
     <string name="reading_activation_status">Пожалуйста, подождите, получение статуса активации с помпы.</string>
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Принудительно включена сигнализация о недоступности помпы, так как патч Medtrum может выйти из строя и быть недоступным.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Рекомендуется установить значение в 30 минут, так как патч Medtrum может выйти из строя и быть недоступным.</string>
     <string name="sn_input_title">Серийный номер</string>
     <string name="sn_input_summary">Введите серийный номер основания вашей помпы.</string>
     <string name="sn_input_invalid">Неверный серийный номер!</string>
     <string name="pump_unsupported">Помпа не тестировалась: %1$d! Свяжитесь с нами в discord или github</string>
     <string name="alarm_setting_title">Настройки оповещений</string>
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
+    <string name="pump_warning_notification_title">Уведомление об оповещениях помпы</string>
+    <string name="pump_warning_notification_summary">Показывать уведомления о некритических оповещениях помпы: низком заряде батареи, низком запасе инсулина (20 единиц) и приближающемся истечении срока работы. Рекомендуется оставить включенным, когда звук оповещений выключен.</string>
     <string name="patch_expiration_title">Окончание срока действия патча</string>
     <string name="patch_expiration_summary">Если включено, то патч закончит свое действие через 3 дня, с дополнительными 8 часами после этого.</string>
     <string name="hourly_max_insulin_title">Максимальное количество инсулина в час</string>

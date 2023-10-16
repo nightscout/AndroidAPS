@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
+import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.wear.interaction.utils.Persistence
 import app.aaps.wear.interaction.utils.WearUtil
@@ -127,9 +128,11 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             }
 
             rxDataPath -> {
-                aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${messageEvent.data}")
-                val command = EventData.deserializeByte(messageEvent.data)
-                rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
+                aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${messageEvent.data.size}")
+                ZipWatchfaceFormat.loadCustomWatchface(messageEvent.data, "", false)?.let {
+                    val command = EventData.ActionSetCustomWatchface(it.cwfData)
+                    rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
+                }
                 // Use this sender
                 transcriptionNodeId = messageEvent.sourceNodeId
                 aapsLogger.debug(LTag.WEAR, "Updated node: $transcriptionNodeId")

@@ -22,11 +22,12 @@ import app.aaps.plugins.insulin.InsulinOrefRapidActingPlugin
 import app.aaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin
 import app.aaps.plugins.main.general.actions.ActionsPlugin
 import app.aaps.plugins.main.general.food.FoodPlugin
+import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.persistentNotification.PersistentNotificationPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.general.themes.ThemeSwitcherPlugin
-import app.aaps.plugins.main.general.wear.WearPlugin
+import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.plugins.main.profile.ProfilePlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
@@ -312,12 +313,6 @@ abstract class PluginsListModule {
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(330)
-    abstract fun bindWearPlugin(plugin: WearPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
     @IntKey(350)
     abstract fun bindNSClientPlugin(plugin: NSClientPlugin): PluginBase
 
@@ -340,16 +335,28 @@ abstract class PluginsListModule {
     abstract fun bindXdripPlugin(plugin: XdripPlugin): PluginBase
 
     @Binds
-    @AllConfigs
+    @NotNSClient
     @IntoMap
     @IntKey(366)
+    abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploaderPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(367)
+    abstract fun bindWearPlugin(plugin: WearPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(368)
     abstract fun bindDataBroadcastPlugin(plugin: DataBroadcastPlugin): PluginBase
 
     @Binds
-    @NotNSClient
+    @AllConfigs
     @IntoMap
-    @IntKey(368)
-    abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploaderPlugin): PluginBase
+    @IntKey(369)
+    abstract fun bindGarminPlugin(plugin: GarminPlugin): PluginBase
 
     @Binds
     @AllConfigs

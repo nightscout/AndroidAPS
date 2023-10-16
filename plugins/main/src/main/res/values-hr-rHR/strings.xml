@@ -120,11 +120,6 @@
     <string name="graph_scale">Skala grafikona</string>
     <!-- Skins -->
     <!--    Iob-->
-    <!--    Wear-->
-    <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
-    <string name="no_watch_connected">(Sat nije povezan)</string>
-    <string name="loop_status">Loop status</string>
-    <string name="wear_action_tempt_preset_message">Trenutni cilj:\nRazlog: %1$s\nCilj: %2$s\nTrajanje: %3$s</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Prikazuje tekuće obavijesti sa kratkim pregledom što loop radi</string>
 </resources>

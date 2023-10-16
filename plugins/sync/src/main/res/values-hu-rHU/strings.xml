@@ -20,4 +20,23 @@
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="pump_status">Pumpa állapot</string>
+    <string name="wear_settings">Wear beállítások</string>
+    <string name="wear_general_settings">Általános beállítások</string>
+    <string name="units_short">E</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">ó</string>
+    <string name="target_only_aps_mode">A célértékek csak APS módra vonatkoznak!</string>
+    <string name="no_history">Nincs előzményadat!</string>
+    <string name="temp_target">Átmeneti célérték</string>
+    <string name="default_range">ALAPÉRTELMEZETT TARTOMÁNY</string>
+    <string name="target">célérték</string>
+    <string name="rate_duration">Ráta: %1$.2fU/ó (%2$.2f%%) \nIdőtartam %3$d perc</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Legutóbbi futás</string>
+    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="today">Ma</string>
+    <string name="weighted">súlyozott</string>
 </resources>

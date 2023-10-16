@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.general.wear
+package app.aaps.plugins.sync.wear
 
 import android.content.Intent
 import android.os.Bundle
@@ -21,9 +21,9 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.plugins.main.R
-import app.aaps.plugins.main.databinding.WearFragmentBinding
-import app.aaps.plugins.main.general.wear.activities.CwfInfosActivity
+import app.aaps.plugins.sync.R
+import app.aaps.plugins.sync.databinding.WearFragmentBinding
+import app.aaps.plugins.sync.wear.activities.CwfInfosActivity
 import dagger.android.support.DaggerFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign

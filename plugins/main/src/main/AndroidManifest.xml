@@ -24,7 +24,7 @@
         </activity>
 
         <activity
-            android:name=".general.wear.activities.CwfInfosActivity"
+            android:name="app.aaps.plugins.sync.wear.activities.CwfInfosActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
 
@@ -35,7 +35,7 @@
             android:exported="false" />
 
         <service
-            android:name=".general.wear.wearintegration.DataLayerListenerServiceMobile"
+            android:name="app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
