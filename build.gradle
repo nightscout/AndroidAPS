@@ -38,7 +38,7 @@ buildscript {
         mockito_version = '5.6.0'
         dexmaker_version = '1.2'
         retrofit2_version = '2.9.0'
-        okhttp3_version = '4.11.0'
+        okhttp3_version = '4.12.0'
         byteBuddy_version = '1.12.8'
 
         androidx_junit_version = '1.1.5'
@@ -72,7 +72,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath "org.jacoco:org.jacoco.core:0.8.10"
+        classpath "org.jacoco:org.jacoco.core:0.8.11"
         classpath "com.vanniktech:gradle-dependency-graph-generator-plugin:0.8.0"
     }
 }

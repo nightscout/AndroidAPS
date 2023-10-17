@@ -1,4 +1,4 @@
-package app.aaps.plugins.configuration.maintenance
+package app.aaps.configuration.maintenance
 
 import android.content.Context
 import app.aaps.core.interfaces.configuration.Config
@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
@@ -33,8 +34,8 @@ class MaintenancePluginTest : TestBase() {
     fun mock() {
         sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")
-        `when`(loggerUtils.logDirectory).thenReturn("src/test/res/logger")
-        `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/res/logger"))
+        `when`(loggerUtils.logDirectory).thenReturn("src/test/assets/logger")
+        `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/assets/logger"))
     }
 
     @Test fun logFilesTest() {
