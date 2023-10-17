@@ -59,7 +59,7 @@
     <string name="exercise_setunchanged">La målverdien for ditt blodsukker være uforandret.</string>
     <string name="exercise_15g">Vent til blodsukkeret ditt synker under Hypo midlertidig mål og spis så 15 gram med hurtigvirkende karbohydrater.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Får jag insulin når loop er stanset/pauset?</string>
+    <string name="suspendloop_doigetinsulin">Får jeg insulin når loop er stanset/pauset?</string>
     <string name="suspendloop_yes">Ja, basal insulin vil fortsatt bli levert.</string>
     <string name="suspendloop_no">Nei, levering av insulin er stanset.</string>
     <string name="basaltest_label">Test av basaldoser, ISF og KH ratio</string>
