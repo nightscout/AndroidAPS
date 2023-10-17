@@ -733,7 +733,7 @@ class CustomWatchface : BaseWatchFace() {
         private var leftRange: DataRange? = null
         private var rotationRange: DataRange? = null
         val stepDraw: Int
-            get() = dynDrawable[0]?.let { dynDrawable.size - 1 } ?: dynDrawable.size
+            get() = dynDrawable.size - 1
         val stepColor: Int
             get() = dynColor[0]?.let { dynColor.size - 1 } ?: dynColor.size
         val stepFontColor: Int
@@ -764,7 +764,7 @@ class CustomWatchface : BaseWatchFace() {
         fun getLeftOffset(): Int = dataRange?.let { dataRange -> leftRange?.let { leftRange -> dataValue?.let { (valueMap.dynValue(it, dataRange, leftRange) * cwf.zoomFactor).toInt() }
             ?: (leftRange.invalidData * cwf.zoomFactor).toInt() } } ?: 0
         fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
-        fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] ?: dynDrawable[1] }
+        fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] }
         fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] ?: dynFontColor[1] } else null
         fun getTextSize() = if (stepTextSize > 0) dataRange?.let { dataRange -> dataValue?.let { dynTextSize[valueMap.stepValue(it, dataRange, stepTextSize)] } ?: dynTextSize[0] ?: dynTextSize[1] } else null
         fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] ?: dynColor[1] } else null
@@ -856,11 +856,12 @@ class CustomWatchface : BaseWatchFace() {
         valPref.clear()
         dynPref.clear()
         dynJson?.keys()?.forEach { key ->
-            dynJson.optJSONObject(key)?.let { buildDynPrefs(dynJson, it, key, mutableSetOf()) }
+            val targetJson = JSONObject()
+            dynJson.optJSONObject(key)?.let { buildDynPrefs(dynJson, targetJson, it, key, mutableSetOf()) }
         }
     }
 
-    private fun buildDynPrefs(dynJson: JSONObject, json: JSONObject, key: String, visitedKeys: MutableSet<String>) {
+    private fun buildDynPrefs(dynJson: JSONObject, targetJson: JSONObject, json: JSONObject, key: String, visitedKeys: MutableSet<String>) {
         val prefKey = json.optString(PREFKEY.key)
         PrefMap.fromKey(prefKey)?.let { prefMap ->
             val value = valPref[prefMap.key]
@@ -869,16 +870,24 @@ class CustomWatchface : BaseWatchFace() {
                 }
             json.optJSONObject(value)?.let { nextJson ->
                 if (nextJson.has(DYNPREF.key)) {
+                    nextJson.keys().forEach { key ->
+                        if ( key != DYNPREF.key)
+                            targetJson.putOpt(key, nextJson.opt(key))
+                    }
                     val nextKey = nextJson.optString(DYNPREF.key)
                     if (nextKey.isNotEmpty() && nextKey !in visitedKeys) {
                         visitedKeys += nextKey
                         dynJson.optJSONObject(nextKey)?.let {
-                            buildDynPrefs(dynJson, it, key, visitedKeys)
+                            buildDynPrefs(dynJson, targetJson, it, key, visitedKeys)
                         }
                     }
                 } else {
-                    aapsLogger.debug("XXXXX dynKey json $key $nextJson")
-                    dynPref[key] = nextJson
+                    nextJson.keys().forEach { key ->
+                        if ( key != DYNPREF.key)
+                            targetJson.putOpt(key, nextJson.opt(key))
+                    }
+                    aapsLogger.debug("XXXXX dynPref key json $key $targetJson")
+                    dynPref[key] = targetJson
                 }
             }
         }
