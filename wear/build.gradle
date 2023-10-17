@@ -5,7 +5,7 @@ buildscript {
     }
 
     dependencies {
-        classpath "org.jacoco:org.jacoco.core:0.8.10"
+        classpath "org.jacoco:org.jacoco.core:0.8.11"
     }
 }
 
