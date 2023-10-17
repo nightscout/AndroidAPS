@@ -535,14 +535,14 @@ class CustomWatchface : BaseWatchFace() {
             viewJson?.let { viewJson ->
                 drawable?.let {
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)        // Note only works on bitmap (png or jpg) not for svg files
-                        it.colorFilter = cwf.changeDrawableColor(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                        it.colorFilter = cwf.changeDrawableColor(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         it.clearColorFilter()
                     view.setImageDrawable(it)
                 } ?: apply {
                     view.setImageDrawable(defaultDrawable?.let { cwf.resources.getDrawable(it) })
                     if (viewJson.has(COLOR.key) || (dynData?.stepColor ?: 0) > 0)       // works on xml included into res files
-                        view.setColorFilter(dynData?.getFontColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
+                        view.setColorFilter(dynData?.getColor() ?: cwf.getColor(viewJson.optString(COLOR.key)))
                     else
                         view.clearColorFilter()
                 }
@@ -732,15 +732,15 @@ class CustomWatchface : BaseWatchFace() {
         private var leftRange: DataRange? = null
         private var rotationRange: DataRange? = null
         val stepDraw: Int
-            get() = dynDrawable.size - 1
+            get() = dynDrawable[0]?.let { dynDrawable.size - 1 } ?: dynDrawable.size
         val stepColor: Int
-            get() = dynColor.size - 1
+            get() = dynColor[0]?.let { dynColor.size - 1 } ?: dynColor.size
         val stepFontColor: Int
-            get() = dynFontColor.size - 1
+            get() = dynFontColor[0]?.let { dynFontColor.size - 1 } ?: dynFontColor.size
 
         val dataValue: Double?
             get() = when (valueMap) {
-                ValueMap.NONE             -> null
+                ValueMap.NONE             -> 0.0
                 ValueMap.SGV              -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgv else null
                 ValueMap.SGVLEVEL         -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgvLevel.toDouble() else null
                 ValueMap.DIRECTION        -> TrendArrowMap.value()
@@ -761,9 +761,9 @@ class CustomWatchface : BaseWatchFace() {
         fun getLeftOffset(): Int = dataRange?.let { dataRange -> leftRange?.let { leftRange -> dataValue?.let { (valueMap.dynValue(it, dataRange, leftRange) * cwf.zoomFactor).toInt() }
             ?: (leftRange.invalidData * cwf.zoomFactor).toInt() } } ?: 0
         fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
-        fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] }
-        fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] } else null
-        fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] } else null
+        fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] ?: dynDrawable[1] }
+        fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] ?: dynFontColor[1] } else null
+        fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] ?: dynColor[1] } else null
         private fun load() {
             DataRange(dataJson.optDouble(MINDATA.key, valueMap.min), dataJson.optDouble(MAXDATA.key, valueMap.max)).let { defaultRange ->
                 dataRange = defaultRange
@@ -771,19 +771,22 @@ class CustomWatchface : BaseWatchFace() {
                 leftRange = parseDataRange(dataJson.optJSONObject(LEFTOFFSET.key), defaultRange)
                 rotationRange = parseDataRange(dataJson.optJSONObject(ROTATIONOFFSET.key), defaultRange)
             }
-            dynDrawable[0] = dataJson.optString(INVALIDIMAGE.key)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
+            if (dataJson.has(INVALIDIMAGE.key))
+                dynDrawable[0] = dataJson.optString(INVALIDIMAGE.key)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
             var idx = 1
             while (dataJson.has("${IMAGE.key}$idx")) {
                 cwf.resDataMap[dataJson.optString("${IMAGE.key}$idx")]?.toDrawable(cwf.resources, width, height).also { dynDrawable[idx] = it }
                 idx++
             }
-            dynColor[0] = cwf.getColor(dataJson.optString(INVALIDCOLOR.key))
+            if (dataJson.has(INVALIDCOLOR.key))
+                dynColor[0] = cwf.getColor(dataJson.optString(INVALIDCOLOR.key))
             idx = 1
             while (dataJson.has("${COLOR.key}$idx")) {
                 dynColor[idx] = cwf.getColor(dataJson.optString("${COLOR.key}$idx"))
                 idx++
             }
-            dynFontColor[0] = cwf.getColor(dataJson.optString(INVALIDFONTCOLOR.key))
+            if (dataJson.has(INVALIDFONTCOLOR.key))
+                dynFontColor[0] = cwf.getColor(dataJson.optString(INVALIDFONTCOLOR.key))
             idx = 1
             while (dataJson.has("${FONTCOLOR.key}$idx")) {
                 dynFontColor[idx] = cwf.getColor(dataJson.optString("${FONTCOLOR.key}$idx"))
@@ -863,6 +866,7 @@ class CustomWatchface : BaseWatchFace() {
                         }
                     }
                 } else {
+                    //aapsLogger.debug("XXXXX dynKey json $key $nextJson")
                     dynPref[key] = nextJson
                 }
             }
