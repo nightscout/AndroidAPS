@@ -507,7 +507,7 @@ class CustomWatchface : BaseWatchFace() {
         fun customizeTextView(view: TextView) {
             customizeViewCommon(view)
             viewJson?.let { viewJson ->
-                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * cwf.zoomFactor).toFloat())
+                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((dynData?.getTextSize() ?: viewJson.optInt(TEXTSIZE.key, 22)) * cwf.zoomFactor).toFloat())
                 view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
                 view.setTypeface(
                     FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
@@ -727,6 +727,7 @@ class CustomWatchface : BaseWatchFace() {
         private val dynDrawable = mutableMapOf<Int, Drawable?>()
         private val dynColor = mutableMapOf<Int, Int>()
         private val dynFontColor = mutableMapOf<Int, Int>()
+        private val dynTextSize = mutableMapOf<Int, Int>()
         private var dataRange: DataRange? = null
         private var topRange: DataRange? = null
         private var leftRange: DataRange? = null
@@ -737,6 +738,8 @@ class CustomWatchface : BaseWatchFace() {
             get() = dynColor[0]?.let { dynColor.size - 1 } ?: dynColor.size
         val stepFontColor: Int
             get() = dynFontColor[0]?.let { dynFontColor.size - 1 } ?: dynFontColor.size
+        val stepTextSize: Int
+            get() = dynTextSize[0]?.let { dynTextSize.size - 1 } ?: dynTextSize.size
 
         val dataValue: Double?
             get() = when (valueMap) {
@@ -763,6 +766,7 @@ class CustomWatchface : BaseWatchFace() {
         fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
         fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] ?: dynDrawable[1] }
         fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] ?: dynFontColor[1] } else null
+        fun getTextSize() = if (stepTextSize > 0) dataRange?.let { dataRange -> dataValue?.let { dynTextSize[valueMap.stepValue(it, dataRange, stepTextSize)] } ?: dynTextSize[0] ?: dynTextSize[1] } else null
         fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] ?: dynColor[1] } else null
         private fun load() {
             DataRange(dataJson.optDouble(MINDATA.key, valueMap.min), dataJson.optDouble(MAXDATA.key, valueMap.max)).let { defaultRange ->
@@ -790,6 +794,13 @@ class CustomWatchface : BaseWatchFace() {
             idx = 1
             while (dataJson.has("${FONTCOLOR.key}$idx")) {
                 dynFontColor[idx] = cwf.getColor(dataJson.optString("${FONTCOLOR.key}$idx"))
+                idx++
+            }
+            if (dataJson.has(INVALIDTEXTSIZE.key))
+                dynTextSize[0] = cwf.getColor(dataJson.optString(INVALIDTEXTSIZE.key))
+            idx = 1
+            while (dataJson.has("${TEXTSIZE.key}$idx")) {
+                dynTextSize[idx] = dataJson.optInt("${TEXTSIZE.key}$idx", 22)
                 idx++
             }
         }
@@ -866,7 +877,7 @@ class CustomWatchface : BaseWatchFace() {
                         }
                     }
                 } else {
-                    //aapsLogger.debug("XXXXX dynKey json $key $nextJson")
+                    aapsLogger.debug("XXXXX dynKey json $key $nextJson")
                     dynPref[key] = nextJson
                 }
             }
