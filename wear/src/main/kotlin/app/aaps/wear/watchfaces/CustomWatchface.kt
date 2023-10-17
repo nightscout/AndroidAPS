@@ -886,7 +886,6 @@ class CustomWatchface : BaseWatchFace() {
                         if ( key != DYNPREF.key)
                             targetJson.putOpt(key, nextJson.opt(key))
                     }
-                    aapsLogger.debug("XXXXX dynPref key json $key $targetJson")
                     dynPref[key] = targetJson
                 }
             }
