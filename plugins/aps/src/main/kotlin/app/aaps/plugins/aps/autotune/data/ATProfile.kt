@@ -1,6 +1,7 @@
 package app.aaps.plugins.aps.autotune.data
 
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.data.Block
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
@@ -22,7 +23,6 @@ import app.aaps.core.main.extensions.blockValueBySeconds
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.entities.data.Block
 import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONException

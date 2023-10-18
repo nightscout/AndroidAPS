@@ -137,20 +137,20 @@ class NSClientAddAckWorker(
 
             is PairProfileSwitch                 -> {
                 val pair = ack.originalObject
-                pair.value.interfaceIDs.nightscoutId = ack.id
+                pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
                 storeDataForDb.nsIdProfileSwitches.add(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ProfileSwitch " + pair.value.ids.nightscoutId))
             }
 
             is PairEffectiveProfileSwitch        -> {
                 val pair = ack.originalObject
-                pair.value.interfaceIDs.nightscoutId = ack.id
+                pair.value.ids.nightscoutId = ack.id
                 pair.confirmed = true
                 storeDataForDb.nsIdEffectiveProfileSwitches.add(pair.value)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked EffectiveProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked EffectiveProfileSwitch " + pair.value.ids.nightscoutId))
             }
 
             is DataSyncSelector.PairDeviceStatus -> {

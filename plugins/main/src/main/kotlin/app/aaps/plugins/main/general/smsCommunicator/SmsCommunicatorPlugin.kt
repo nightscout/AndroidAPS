@@ -664,13 +664,20 @@ class SmsCommunicatorPlugin @Inject constructor(
                     val finalPercentage = percentage
                     messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = true, list[pIndex - 1] as String, finalPercentage) {
                         override fun run() {
-                            if (profileFunction.createProfileSwitch(store, list[pIndex - 1] as String, 0, finalPercentage, 0, dateUtil.now())) {
+                            if (profileFunction.createProfileSwitch(
+                                    profileStore = store,
+                                    profileName = list[pIndex - 1] as String,
+                                    durationInMinutes = 0,
+                                    percentage = finalPercentage,
+                                    timeShiftInHours = 0,
+                                    timestamp = dateUtil.now(),
+                                    action = Action.PROFILE_SWITCH,
+                                    source = Sources.SMS,
+                                    note = rh.gs(R.string.sms_profile_switch_created),
+                                    listValues = listOf(ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created)))
+                                )) {
                                 val replyText = rh.gs(R.string.sms_profile_switch_created)
                                 sendSMS(Sms(receivedSms.phoneNumber, replyText))
-                                uel.log(
-                                    Action.PROFILE_SWITCH, Sources.SMS, rh.gs(R.string.sms_profile_switch_created),
-                                    ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))
-                                )
                             } else {
                                 sendSMS(Sms(receivedSms.phoneNumber, rh.gs(app.aaps.core.ui.R.string.invalid_profile)))
                             }

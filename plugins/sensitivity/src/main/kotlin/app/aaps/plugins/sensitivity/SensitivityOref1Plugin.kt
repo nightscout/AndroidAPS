@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
 import dagger.android.HasAndroidInjector
@@ -40,7 +39,6 @@ class SensitivityOref1Plugin @Inject constructor(
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer
 ) : AbstractSensitivityPlugin(
     PluginDescription()
@@ -72,8 +70,8 @@ class SensitivityOref1Plugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No autosens data available. toTime: " + dateUtil.dateAndTimeString(toTime) + " lastDataTime: " + ads.lastDataTime(dateUtil))
             return AutosensResult()
         }
-        val siteChanges = persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = repository.getProfileSwitchDataFromTime(fromTime, true).blockingGet()
+        val siteChanges = persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true)
+        val profileSwitches = persistenceLayer.getProfileSwitchesFromTime(fromTime, true).blockingGet()
 
         //[0] = 8 hour
         //[1] = 24 hour

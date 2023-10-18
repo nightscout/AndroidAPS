@@ -2,15 +2,15 @@ package app.aaps.core.main.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.Scale
 import app.aaps.interfaces.graph.data.Shape
 
 class EffectiveProfileSwitchDataPoint(
-    val data: EffectiveProfileSwitch,
+    val data: EPS,
     private val rh: ResourceHelper,
     private val scale: Scale
 ) : DataPointWithLabelInterface {

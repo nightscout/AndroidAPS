@@ -1,6 +1,7 @@
 package app.aaps.plugins.insulin
 
 import app.aaps.core.data.db.BS
+import app.aaps.core.data.db.ICfg
 import app.aaps.core.data.iob.Iob
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -15,7 +16,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.database.entities.embedments.InsulinConfiguration
 import dagger.android.HasAndroidInjector
 import kotlin.math.exp
 import kotlin.math.pow
@@ -95,8 +95,8 @@ abstract class InsulinOrefBasePlugin(
         return result
     }
 
-    override val insulinConfiguration: InsulinConfiguration
-        get() = InsulinConfiguration(friendlyName, (dia * 1000.0 * 3600.0).toLong(), T.mins(peak.toLong()).msecs())
+    override val iCfg: ICfg
+        get() = ICfg(friendlyName, (dia * 1000.0 * 3600.0).toLong(), T.mins(peak.toLong()).msecs())
 
     override val comment
         get(): String {

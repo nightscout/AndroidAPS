@@ -6,9 +6,11 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
@@ -30,8 +32,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusTransaction
@@ -43,10 +43,6 @@ import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InvalidateTherapyEventTransaction
-import app.aaps.database.impl.transactions.SyncNsEffectiveProfileSwitchTransaction
-import app.aaps.database.impl.transactions.SyncNsProfileSwitchTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
-import app.aaps.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
 import app.aaps.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -76,12 +72,12 @@ class StoreDataForDbImpl @Inject constructor(
     override val boluses: MutableList<BS> = mutableListOf()
     override val carbs: MutableList<CA> = mutableListOf()
     override val temporaryTargets: MutableList<TT> = mutableListOf()
-    override val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
+    override val effectiveProfileSwitches: MutableList<EPS> = mutableListOf()
     override val bolusCalculatorResults: MutableList<BCR> = mutableListOf()
     override val therapyEvents: MutableList<TE> = mutableListOf()
     override val extendedBoluses: MutableList<EB> = mutableListOf()
     override val temporaryBasals: MutableList<TB> = mutableListOf()
-    override val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
+    override val profileSwitches: MutableList<PS> = mutableListOf()
     override val offlineEvents: MutableList<OE> = mutableListOf()
     override val foods: MutableList<FD> = mutableListOf()
 
@@ -89,12 +85,12 @@ class StoreDataForDbImpl @Inject constructor(
     override val nsIdBoluses: MutableList<BS> = mutableListOf()
     override val nsIdCarbs: MutableList<CA> = mutableListOf()
     override val nsIdTemporaryTargets: MutableList<TT> = mutableListOf()
-    override val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
+    override val nsIdEffectiveProfileSwitches: MutableList<EPS> = mutableListOf()
     override val nsIdBolusCalculatorResults: MutableList<BCR> = mutableListOf()
     override val nsIdTherapyEvents: MutableList<TE> = mutableListOf()
     override val nsIdExtendedBoluses: MutableList<EB> = mutableListOf()
     override val nsIdTemporaryBasals: MutableList<TB> = mutableListOf()
-    override val nsIdProfileSwitches: MutableList<ProfileSwitch> = mutableListOf()
+    override val nsIdProfileSwitches: MutableList<PS> = mutableListOf()
     override val nsIdOfflineEvents: MutableList<OE> = mutableListOf()
     override val nsIdDeviceStatuses: MutableList<DS> = mutableListOf()
     override val nsIdFoods: MutableList<FD> = mutableListOf()
@@ -213,89 +209,27 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         if (effectiveProfileSwitches.isNotEmpty())
-            repository.runTransactionForResult(SyncNsEffectiveProfileSwitchTransaction(effectiveProfileSwitches))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving EffectiveProfileSwitch", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsEffectiveProfileSwitches(effectiveProfileSwitches)
+                .subscribeBy { result ->
                     effectiveProfileSwitches.clear()
-                    result.inserted.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.PROFILE_SWITCH,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
-                        inserted.inc(EffectiveProfileSwitch::class.java.simpleName)
-                    }
-                    result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.PROFILE_SWITCH_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                        invalidated.inc(EffectiveProfileSwitch::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId EffectiveProfileSwitch $it")
-                        nsIdUpdated.inc(EffectiveProfileSwitch::class.java.simpleName)
-                    }
+                    repeat(result.inserted.size) { inserted.inc(EPS::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(EPS::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(EPS::class.java.simpleName) }
+                    sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
                 }
 
-        sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (profileSwitches.isNotEmpty())
-            repository.runTransactionForResult(SyncNsProfileSwitchTransaction(profileSwitches))
-                .doOnError {
-                    aapsLogger.error(LTag.DATABASE, "Error while saving ProfileSwitch", it)
-                }
-                .blockingGet()
-                .also { result ->
+            disposable += persistenceLayer.syncNsProfileSwitches(profileSwitches)
+                .subscribeBy { result ->
                     profileSwitches.clear()
-                    result.inserted.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.PROFILE_SWITCH,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch $it")
-                        inserted.inc(ProfileSwitch::class.java.simpleName)
-                    }
-                    result.invalidated.forEach {
-                        if (config.NSCLIENT.not()) userEntries.add(
-                            UE(
-                                timestamp = dateUtil.now(),
-                                action = Action.PROFILE_SWITCH_REMOVED,
-                                source = Sources.NSClient,
-                                note = "",
-                                values = listOf(ValueWithUnit.Timestamp(it.timestamp))
-                            )
-                        )
-                        aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                        invalidated.inc(ProfileSwitch::class.java.simpleName)
-                    }
-                    result.updatedNsId.forEach {
-                        aapsLogger.debug(LTag.DATABASE, "Updated nsId ProfileSwitch $it")
-                        nsIdUpdated.inc(ProfileSwitch::class.java.simpleName)
-                    }
+                    result.inserted.forEach { inserted.inc(PS::class.java.simpleName) }
+                    result.invalidated.forEach { invalidated.inc(PS::class.java.simpleName) }
+                    result.updatedNsId.forEach { nsIdUpdated.inc(PS::class.java.simpleName) }
+                    sendLog("ProfileSwitch", PS::class.java.simpleName)
                 }
 
-        sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
         SystemClock.sleep(pause)
 
         if (bolusCalculatorResults.isNotEmpty())
@@ -443,30 +377,16 @@ class StoreDataForDbImpl @Inject constructor(
                 repeat(result.updatedNsId.size) { nsIdUpdated.inc(EB::class.java.simpleName) }
             }
 
-        repository.runTransactionForResult(UpdateNsIdProfileSwitchTransaction(nsIdProfileSwitches))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of ProfileSwitch failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateProfileSwitchesNsIds(nsIdProfileSwitches)
+            .subscribeBy { result ->
                 nsIdProfileSwitches.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of ProfileSwitch $it")
-                    nsIdUpdated.inc(ProfileSwitch::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(PS::class.java.simpleName) }
             }
 
-        repository.runTransactionForResult(UpdateNsIdEffectiveProfileSwitchTransaction(nsIdEffectiveProfileSwitches))
-            .doOnError { error ->
-                aapsLogger.error(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch failed", error)
-            }
-            .blockingGet()
-            .also { result ->
+        disposable += persistenceLayer.updateEffectiveProfileSwitchesNsIds(nsIdEffectiveProfileSwitches)
+            .subscribeBy { result ->
                 nsIdEffectiveProfileSwitches.clear()
-                result.updatedNsId.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch $it")
-                    nsIdUpdated.inc(EffectiveProfileSwitch::class.java.simpleName)
-                }
+                repeat(result.updatedNsId.size) { nsIdUpdated.inc(EPS::class.java.simpleName) }
             }
 
         disposable += persistenceLayer.updateDeviceStatusesNsIds(nsIdDeviceStatuses)
@@ -486,8 +406,8 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("Carbs", CA::class.java.simpleName)
         sendLog("TemporaryTarget", TT::class.java.simpleName)
         sendLog("TemporaryBasal", TB::class.java.simpleName)
-        sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
-        sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
+        sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
+        sendLog("ProfileSwitch", PS::class.java.simpleName)
         sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
         sendLog("TherapyEvent", TE::class.java.simpleName)
         sendLog("OfflineEvent", OE::class.java.simpleName)
@@ -554,7 +474,7 @@ class StoreDataForDbImpl @Inject constructor(
                         .also { result ->
                             result.invalidated.forEach {
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                                invalidated.inc(EffectiveProfileSwitch::class.java.simpleName)
+                                invalidated.inc(EPS::class.java.simpleName)
                             }
                         }
                 }
@@ -566,7 +486,7 @@ class StoreDataForDbImpl @Inject constructor(
                         .also { result ->
                             result.invalidated.forEach {
                                 aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                                invalidated.inc(ProfileSwitch::class.java.simpleName)
+                                invalidated.inc(EPS::class.java.simpleName)
                             }
                         }
                 }
@@ -622,8 +542,8 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("Carbs", CA::class.java.simpleName)
         sendLog("TemporaryTarget", TT::class.java.simpleName)
         sendLog("TemporaryBasal", TB::class.java.simpleName)
-        sendLog("EffectiveProfileSwitch", EffectiveProfileSwitch::class.java.simpleName)
-        sendLog("ProfileSwitch", ProfileSwitch::class.java.simpleName)
+        sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
+        sendLog("ProfileSwitch", EPS::class.java.simpleName)
         sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
         sendLog("TherapyEvent", TE::class.java.simpleName)
         sendLog("OfflineEvent", OE::class.java.simpleName)

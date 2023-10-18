@@ -1,7 +1,9 @@
 package app.aaps.shared.tests
 
 import android.content.Context
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.ICfg
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -15,10 +17,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
 import app.aaps.implementation.utils.DecimalFormatterImpl
@@ -67,7 +66,7 @@ open class TestBaseWithProfile : TestBase() {
     private lateinit var validProfileJSON: String
     private lateinit var invalidProfileJSON: String
     lateinit var validProfile: ProfileSealed.Pure
-    lateinit var effectiveProfileSwitch: EffectiveProfileSwitch
+    lateinit var effectiveProfileSwitch: EPS
     lateinit var testPumpPlugin: TestPumpPlugin
 
     var now = 1656358822000L
@@ -91,20 +90,20 @@ open class TestBaseWithProfile : TestBase() {
         Mockito.`when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MGDL.asText)
         hardLimits = HardLimitsMock(sp, rh)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
-        effectiveProfileSwitch = EffectiveProfileSwitch(
+        effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),
             basalBlocks = validProfile.basalBlocks,
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = GlucoseUnit.MMOL.toDb(),
+            glucoseUnit = GlucoseUnit.MMOL,
             originalProfileName = "",
             originalCustomizedName = "",
             originalTimeshift = 0,
             originalPercentage = 100,
             originalDuration = 0,
             originalEnd = 0,
-            insulinConfiguration = InsulinConfiguration("", 0, 0)
+            iCfg = ICfg("", 0, 0)
         )
 
         Mockito.doAnswer { invocation: InvocationOnMock ->

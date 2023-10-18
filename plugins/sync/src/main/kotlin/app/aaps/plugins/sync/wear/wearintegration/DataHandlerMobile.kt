@@ -61,13 +61,8 @@ import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.ValueWrapper
-
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.plugins.sync.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -587,10 +582,10 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleProfileSwitchSendInitialData() {
-        val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
-        if (activeProfileSwitch is ValueWrapper.Existing) { // read CPP values
+        val activeProfileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
+        if (activeProfileSwitch != null) { // read CPP values
             rxBus.send(
-                EventMobileToWear(EventData.ActionProfileSwitchOpenActivity(T.msecs(activeProfileSwitch.value.originalTimeshift).hours().toInt(), activeProfileSwitch.value.originalPercentage))
+                EventMobileToWear(EventData.ActionProfileSwitchOpenActivity(T.msecs(activeProfileSwitch.originalTimeshift).hours().toInt(), activeProfileSwitch.originalPercentage))
             )
         } else {
             sendError(rh.gs(R.string.no_active_profile))
@@ -600,8 +595,8 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun handleProfileSwitchPreCheck(command: EventData.ActionProfileSwitchPreCheck) {
-        val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
-        if (activeProfileSwitch is ValueWrapper.Absent) {
+        val activeProfileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
+        if (activeProfileSwitch == null) {
             sendError(rh.gs(R.string.no_active_profile))
         }
         if (command.percentage < Constants.CPP_MIN_PERCENTAGE || command.percentage > Constants.CPP_MAX_PERCENTAGE) {
@@ -1241,14 +1236,17 @@ class DataHandlerMobile @Inject constructor(
             return
         profileFunction.getProfile() ?: return
         //send profile to pump
-        uel.log(
-            action = Action.PROFILE_SWITCH, source = Sources.Wear,
+        profileFunction.createProfileSwitch(
+            durationInMinutes = 0,
+            percentage = command.percentage,
+            timeShiftInHours = command.timeShift,
+            action = Action.PROFILE_SWITCH,
+            source = Sources.Wear,
             listValues = listOf(
                 ValueWithUnit.Percent(command.percentage),
                 ValueWithUnit.Hour(command.timeShift).takeIf { command.timeShift != 0 }
             )
         )
-        profileFunction.createProfileSwitch(0, command.percentage, command.timeShift)
     }
 
     @Synchronized private fun sendError(errorMessage: String) {
@@ -1275,9 +1273,9 @@ class DataHandlerMobile @Inject constructor(
         val watchfaceName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
         val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
         if (cwfData.metadata[CwfMetadataKey.CWF_NAME] != watchfaceName || cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] != authorVersion) {
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?:"")
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?:"")
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?:"")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?: "")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
         }
 
         if (command.exportFile)

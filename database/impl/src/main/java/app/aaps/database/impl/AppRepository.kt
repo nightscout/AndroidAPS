@@ -218,9 +218,6 @@ import kotlin.math.roundToInt
         database.temporaryTargetDao.getTemporaryTargetActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
 
-    fun deleteAllTempTargetEntries() =
-        database.temporaryTargetDao.deleteAllEntries()
-
     fun getLastTempTargetId(): Long? =
         database.temporaryTargetDao.getLastId()
 
@@ -260,7 +257,7 @@ import kotlin.math.roundToInt
         database.profileSwitchDao.getModifiedFrom(lastId)
             .subscribeOn(Schedulers.io())
 
-    fun getActiveProfileSwitch(timestamp: Long): ProfileSwitch? {
+    fun getProfileSwitchActiveAt(timestamp: Long): ProfileSwitch? {
         val tps = database.profileSwitchDao.getTemporaryProfileSwitchActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
             .blockingGet()
@@ -273,10 +270,9 @@ import kotlin.math.roundToInt
         return ps // if (tps == null)
     }
 
-    fun getPermanentProfileSwitch(timestamp: Long): ProfileSwitch? =
+    fun getPermanentProfileSwitchActiveAt(timestamp: Long): Maybe<ProfileSwitch> =
         database.profileSwitchDao.getPermanentProfileSwitchActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
-            .blockingGet()
 
     fun getAllProfileSwitches(): Single<List<ProfileSwitch>> =
         database.profileSwitchDao.getAllProfileSwitches()
@@ -285,12 +281,12 @@ import kotlin.math.roundToInt
     fun deleteAllProfileSwitches() =
         database.profileSwitchDao.deleteAllEntries()
 
-    fun getProfileSwitchDataFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
+    fun getProfileSwitchesFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
         database.profileSwitchDao.getProfileSwitchDataFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getProfileSwitchDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
+    fun getProfileSwitchesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
         database.profileSwitchDao.getProfileSwitchDataIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
@@ -333,22 +329,21 @@ import kotlin.math.roundToInt
     fun getOldestEffectiveProfileSwitchRecord(): EffectiveProfileSwitch? =
         database.effectiveProfileSwitchDao.getOldestEffectiveProfileSwitchRecord()
 
-    fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Single<ValueWrapper<EffectiveProfileSwitch>> =
+    fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Maybe<EffectiveProfileSwitch> =
         database.effectiveProfileSwitchDao.getEffectiveProfileSwitchActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
-    fun getEffectiveProfileSwitchDataFromTime(timestamp: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
+    fun getEffectiveProfileSwitchesFromTime(timestamp: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
         database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getEffectiveProfileSwitchDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
+    fun getEffectiveProfileSwitchesIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
         database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getEffectiveProfileSwitchDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
+    fun getEffectiveProfileSwitchesFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<EffectiveProfileSwitch>> =
         database.effectiveProfileSwitchDao.getEffectiveProfileSwitchDataFromTimeToTime(start, end)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
@@ -821,7 +816,7 @@ import kotlin.math.roundToInt
                 }
             }
 
-    fun getOfflineEventDataFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<OfflineEvent>> =
+    fun getOfflineEventsFromTimeToTime(start: Long, end: Long, ascending: Boolean): Single<List<OfflineEvent>> =
         database.offlineEventDao.getOfflineEventDataFromTimeToTime(start, end)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
@@ -847,8 +842,9 @@ import kotlin.math.roundToInt
             .subscribeOn(Schedulers.io())
             .blockingGet()
 
-    fun getHeartRatesFromTimeToTime(startMillis: Long, endMillis: Long) =
+    fun getHeartRatesFromTimeToTime(startMillis: Long, endMillis: Long): Single<List<HeartRate>> =
         database.heartRateDao.getFromTimeToTime(startMillis, endMillis)
+            .subscribeOn(Schedulers.io())
 
     suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
         apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),

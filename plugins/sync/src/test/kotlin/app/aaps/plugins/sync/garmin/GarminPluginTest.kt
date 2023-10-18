@@ -1,9 +1,11 @@
 package app.aaps.plugins.sync.garmin
 
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.shared.tests.TestBase
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -24,7 +26,8 @@ import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.locks.Condition
 
-class GarminPluginTest: TestBase() {
+class GarminPluginTest : TestBase() {
+
     private lateinit var gp: GarminPlugin
 
     @Mock private lateinit var rh: ResourceHelper
@@ -56,19 +59,21 @@ class GarminPluginTest: TestBase() {
 
     private fun createUri(params: Map<String, Any>): URI {
         return URI("http://foo?" + params.entries.joinToString(separator = "&") { (k, v) ->
-            "$k=$v"})
+            "$k=$v"
+        })
     }
 
     private fun createHeartRate(@Suppress("SameParameterValue") heartRate: Int) = mapOf<String, Any>(
         "hr" to heartRate,
         "hrStart" to 1001L,
         "hrEnd" to 2001L,
-        "device" to "Test_Device")
+        "device" to "Test_Device"
+    )
 
-    private fun createGlucoseValue(timestamp: Instant, value: Double = 93.0) = GlucoseValue(
+    private fun createGlucoseValue(timestamp: Instant, value: Double = 93.0) = GV(
         timestamp = timestamp.toEpochMilli(), raw = 90.0, value = value,
-        trendArrow = GlucoseValue.TrendArrow.FLAT, noise = null,
-        sourceSensor = GlucoseValue.SourceSensor.RANDOM
+        trendArrow = TrendArrow.FLAT, noise = null,
+        sourceSensor = SourceSensor.RANDOM
     )
 
     @Test
@@ -80,7 +85,8 @@ class GarminPluginTest: TestBase() {
             Instant.ofEpochSecond(hr["hrStart"] as Long),
             Instant.ofEpochSecond(hr["hrEnd"] as Long),
             99,
-            hr["device"] as String)
+            hr["device"] as String
+        )
     }
 
     @Test
@@ -103,11 +109,11 @@ class GarminPluginTest: TestBase() {
     @Test
     fun testGetGlucoseValues_NoNewLast() {
         val from = getGlucoseValuesFrom
-        val lastTimesteamp = clock.instant()
+        val lastTimestamp = clock.instant()
         val prev = createGlucoseValue(clock.instant())
         gp.newValue = mock(Condition::class.java)
         `when`(loopHub.getGlucoseValues(from, true)).thenReturn(listOf(prev))
-        gp.onNewBloodGlucose(EventNewBG(lastTimesteamp.toEpochMilli()))
+        gp.onNewBloodGlucose(EventNewBG(lastTimestamp.toEpochMilli()))
         assertArrayEquals(arrayOf(prev), gp.getGlucoseValues().toTypedArray())
 
         verify(gp.newValue).signalAll()

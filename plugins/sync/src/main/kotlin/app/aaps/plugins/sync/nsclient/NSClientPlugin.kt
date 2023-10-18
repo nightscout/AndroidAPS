@@ -230,8 +230,8 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairTherapyEvent           -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairExtendedBolus          -> dataPair.value.ids.nightscoutId
-            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.ids.nightscoutId
+            is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.ids.nightscoutId
             is DataSyncSelector.PairOfflineEvent           -> dataPair.value.ids.nightscoutId
             else                                           -> error("Unsupported data type")
         }

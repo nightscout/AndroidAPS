@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.waitMillis
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
@@ -32,7 +31,6 @@ class DataSyncSelectorV1 @Inject constructor(
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val appRepository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
     private val rxBus: RxBus
 ) : DataSyncSelector {
@@ -93,16 +91,16 @@ class DataSyncSelectorV1 @Inject constructor(
         if (sp.getBoolean(R.string.key_ns_upload, true) && !isPaused) {
             queueCounter.bolusesRemaining = (persistenceLayer.getLastBolusId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
             queueCounter.carbsRemaining = (persistenceLayer.getLastCarbsId() ?: 0L) - sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
-            queueCounter.bcrRemaining = (appRepository.getLastBolusCalculatorResultId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
+            queueCounter.bcrRemaining = (persistenceLayer.getLastBolusCalculatorResultId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
             queueCounter.ttsRemaining = (persistenceLayer.getLastTemporaryTargetId() ?: 0L) - sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
-            queueCounter.foodsRemaining = (appRepository.getLastFoodId() ?: 0L) - sp.getLong(R.string.key_ns_food_last_synced_id, 0)
+            queueCounter.foodsRemaining = (persistenceLayer.getLastFoodId() ?: 0L) - sp.getLong(R.string.key_ns_food_last_synced_id, 0)
             queueCounter.gvsRemaining = (persistenceLayer.getLastGlucoseValueId() ?: 0L) - sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
             queueCounter.tesRemaining = (persistenceLayer.getLastTherapyEventId() ?: 0L) - sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
-            queueCounter.dssRemaining = (appRepository.getLastDeviceStatusId() ?: 0L) - sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
+            queueCounter.dssRemaining = (persistenceLayer.getLastDeviceStatusId() ?: 0L) - sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
             queueCounter.tbrsRemaining = (persistenceLayer.getLastTemporaryBasalId() ?: 0L) - sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
             queueCounter.ebsRemaining = (persistenceLayer.getLastExtendedBolusId() ?: 0L) - sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
-            queueCounter.pssRemaining = (appRepository.getLastProfileSwitchId() ?: 0L) - sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
-            queueCounter.epssRemaining = (appRepository.getLastEffectiveProfileSwitchId() ?: 0L) - sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
+            queueCounter.pssRemaining = (persistenceLayer.getLastProfileSwitchId() ?: 0L) - sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
+            queueCounter.epssRemaining = (persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L) - sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
             queueCounter.oesRemaining = (persistenceLayer.getLastOfflineEventId() ?: 0L) - sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
             rxBus.send(EventNSClientUpdateGuiQueue())
             val boluses = scope.async { processChangedBoluses() }
@@ -154,7 +152,7 @@ class DataSyncSelectorV1 @Inject constructor(
         sp.remove(R.string.key_ns_offline_event_last_synced_id)
         sp.remove(R.string.key_ns_profile_store_last_synced_timestamp)
 
-        val lastDeviceStatusDbId = appRepository.getLastDeviceStatusId()
+        val lastDeviceStatusDbId = persistenceLayer.getLastDeviceStatusId()
         if (lastDeviceStatusDbId != null) sp.putLong(R.string.key_ns_device_status_last_synced_id, lastDeviceStatusDbId)
         else sp.remove(R.string.key_ns_device_status_last_synced_id)
     }
@@ -265,7 +263,7 @@ class DataSyncSelectorV1 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastBolusCalculatorResultId() ?: 0L
+            val lastDbId = persistenceLayer.getLastBolusCalculatorResultId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
             if (startId > lastDbId) {
                 sp.putLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
@@ -361,7 +359,7 @@ class DataSyncSelectorV1 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastFoodId() ?: 0L
+            val lastDbId = persistenceLayer.getLastFoodId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_food_last_synced_id, 0)
             if (startId > lastDbId) {
                 sp.putLong(R.string.key_ns_food_last_synced_id, 0)
@@ -507,7 +505,7 @@ class DataSyncSelectorV1 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastDeviceStatusId() ?: 0L
+            val lastDbId = persistenceLayer.getLastDeviceStatusId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
             if (startId > lastDbId) {
                 sp.putLong(R.string.key_ns_device_status_last_synced_id, 0)
@@ -640,7 +638,7 @@ class DataSyncSelectorV1 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastProfileSwitchId() ?: 0L
+            val lastDbId = persistenceLayer.getLastProfileSwitchId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
             if (startId > lastDbId) {
                 sp.putLong(R.string.key_ns_profile_switch_last_synced_id, 0)
@@ -648,24 +646,24 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.pssRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementProfileSwitch(startId).blockingGet()?.let { ps ->
+            persistenceLayer.getNextSyncElementProfileSwitch(startId).blockingGet()?.let { ps ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading ProfileSwitch data Start: $startId ${ps.first} forID: ${ps.second.id} ")
                 val dataPair = DataSyncSelector.PairProfileSwitch(ps.first, ps.second.id)
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    ps.first.id == ps.second.id && ps.first.interfaceIDs.nightscoutId != null ->
+                    ps.first.id == ps.second.id && ps.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Loaded from NS: ${ps.second.id} ")
                     // only NsId changed, no need to upload
                     ps.first.onlyNsIdAdded(ps.second)                                         ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Only NS id changed ID: ${ps.second.id} ")
                     // without nsId = create new
-                    ps.first.interfaceIDs.nightscoutId == null                                -> {
+                    ps.first.ids.nightscoutId == null                                -> {
                         activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                     // with nsId = update
-                    ps.first.interfaceIDs.nightscoutId != null                                -> {
+                    ps.first.ids.nightscoutId != null                                -> {
                         activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
@@ -688,7 +686,7 @@ class DataSyncSelectorV1 @Inject constructor(
         var cont = true
         while (cont) {
             if (isPaused) return
-            val lastDbId = appRepository.getLastEffectiveProfileSwitchId() ?: 0L
+            val lastDbId = persistenceLayer.getLastEffectiveProfileSwitchId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
             if (startId > lastDbId) {
                 sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
@@ -696,24 +694,24 @@ class DataSyncSelectorV1 @Inject constructor(
             }
             queueCounter.epssRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
-            appRepository.getNextSyncElementEffectiveProfileSwitch(startId).blockingGet()?.let { ps ->
+            persistenceLayer.getNextSyncElementEffectiveProfileSwitch(startId).blockingGet()?.let { ps ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading EffectiveProfileSwitch data Start: $startId ${ps.first} forID: ${ps.second.id} ")
                 val dataPair = DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second.id)
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
-                    ps.first.id == ps.second.id && ps.first.interfaceIDs.nightscoutId != null ->
+                    ps.first.id == ps.second.id && ps.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Loaded from NS: ${ps.second.id} ")
                     // only NsId changed, no need to upload
                     ps.first.onlyNsIdAdded(ps.second)                                         ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Only NS id changed ID: ${ps.second.id} ")
                     // without nsId = create new
-                    ps.first.interfaceIDs.nightscoutId == null                                -> {
+                    ps.first.ids.nightscoutId == null                                -> {
                         activePlugin.activeNsClient?.nsAdd("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed
                     }
                     // with nsId = update
-                    ps.first.interfaceIDs.nightscoutId != null                                -> {
+                    ps.first.ids.nightscoutId != null                                -> {
                         activePlugin.activeNsClient?.nsUpdate("treatments", dataPair, "$startId/$lastDbId")
                         synchronized(dataPair) { dataPair.waitMillis(60000) }
                         cont = dataPair.confirmed

@@ -20,9 +20,9 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -41,8 +41,6 @@ import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
 import app.aaps.ui.R
 import app.aaps.ui.activities.fragments.TreatmentsProfileSwitchFragment.RecyclerProfileViewAdapter.ProfileSwitchViewHolder
 import app.aaps.ui.databinding.TreatmentsProfileswitchFragmentBinding
@@ -64,7 +62,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var decimalFormatter: DecimalFormatter
 
@@ -94,20 +92,20 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
         requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-    private fun profileSwitchWithInvalid(now: Long) = repository
-        .getProfileSwitchDataIncludingInvalidFromTime(now - millsToThePast, false)
+    private fun profileSwitchWithInvalid(now: Long) = persistenceLayer
+        .getProfileSwitchesIncludingInvalidFromTime(now - millsToThePast, false)
         .map { bolus -> bolus.map { ProfileSealed.PS(it) } }
 
-    private fun effectiveProfileSwitchWithInvalid(now: Long) = repository
-        .getEffectiveProfileSwitchDataIncludingInvalidFromTime(now - millsToThePast, false)
+    private fun effectiveProfileSwitchWithInvalid(now: Long) = persistenceLayer
+        .getEffectiveProfileSwitchesIncludingInvalidFromTime(now - millsToThePast, false)
         .map { carb -> carb.map { ProfileSealed.EPS(it) } }
 
-    private fun profileSwitches(now: Long) = repository
-        .getProfileSwitchDataFromTime(now - millsToThePast, false)
+    private fun profileSwitches(now: Long) = persistenceLayer
+        .getProfileSwitchesFromTime(now - millsToThePast, false)
         .map { bolus -> bolus.map { ProfileSealed.PS(it) } }
 
-    private fun effectiveProfileSwitches(now: Long) = repository
-        .getEffectiveProfileSwitchDataFromTime(now - millsToThePast, false)
+    private fun effectiveProfileSwitches(now: Long) = persistenceLayer
+        .getEffectiveProfileSwitchesFromTime(now - millsToThePast, false)
         .map { carb -> carb.map { ProfileSealed.EPS(it) } }
 
     private fun swapAdapter() {
@@ -168,7 +166,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
         override fun onBindViewHolder(holder: ProfileSwitchViewHolder, position: Int) {
             val profileSwitch = profileSwitchList[position]
             holder.binding.ph.visibility = (profileSwitch is ProfileSealed.EPS).toVisibility()
-            holder.binding.ns.visibility = (profileSwitch.interfaceIDs_backing?.nightscoutId != null).toVisibility()
+            holder.binding.ns.visibility = (profileSwitch.ids?.nightscoutId != null).toVisibility()
             val newDay = position == 0 || !dateUtil.isSameDayGroup(profileSwitch.timestamp, profileSwitchList[position - 1].timestamp)
             holder.binding.date.visibility = newDay.toVisibility()
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(profileSwitch.timestamp, rh) else ""
@@ -304,15 +302,11 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, profileSwitch ->
-                    uel.log(
+                    disposable += persistenceLayer.invalidateProfileSwitch(
+                        profileSwitch.id,
                         Action.PROFILE_SWITCH_REMOVED, Sources.Treatments, profileSwitch.profileName,
-                        ValueWithUnit.Timestamp(profileSwitch.timestamp)
-                    )
-                    disposable += repository.runTransactionForResult(InvalidateProfileSwitchTransaction(profileSwitch.id))
-                        .subscribe(
-                            { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it") } },
-                            { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
-                        )
+                        listOf(ValueWithUnit.Timestamp(profileSwitch.timestamp))
+                    ).subscribe()
                 }
                 actionHelper.finish()
             })

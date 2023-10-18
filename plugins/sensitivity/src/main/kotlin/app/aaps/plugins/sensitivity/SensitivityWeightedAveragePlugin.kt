@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
 import dagger.android.HasAndroidInjector
@@ -36,7 +35,6 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
     sp: SP,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer
 ) : AbstractSensitivityPlugin(
     PluginDescription()
@@ -70,8 +68,8 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
             aapsLogger.debug(LTag.AUTOSENS, "No profile available")
             return AutosensResult()
         }
-        val siteChanges = persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true).blockingGet()
-        val profileSwitches = repository.getProfileSwitchDataFromTime(fromTime, true).blockingGet()
+        val siteChanges = persistenceLayer.getTherapyEventDataFromTime(fromTime, TE.Type.CANNULA_CHANGE, true)
+        val profileSwitches = persistenceLayer.getProfileSwitchesFromTime(fromTime, true).blockingGet()
         var pastSensitivity = ""
         var index = 0
         val data = LongSparseArray<Double>()

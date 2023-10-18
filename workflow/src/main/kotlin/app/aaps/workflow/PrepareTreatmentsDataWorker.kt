@@ -27,7 +27,6 @@ import app.aaps.core.main.graph.data.TherapyEventDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +43,6 @@ class PrepareTreatmentsDataWorker(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var translator: Translator
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var decimalFormatter: DecimalFormatter
@@ -82,7 +80,7 @@ class PrepareTreatmentsDataWorker(
             }
 
         // ProfileSwitch
-        repository.getEffectiveProfileSwitchDataFromTimeToTime(fromTime, endTime, true).blockingGet()
+        persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(fromTime, endTime, true)
             .map { EffectiveProfileSwitchDataPoint(it, rh, data.overviewData.epsScale) }
             .forEach {
                 data.overviewData.maxEpsValue = maxOf(data.overviewData.maxEpsValue, it.data.originalPercentage.toDouble())
@@ -90,7 +88,7 @@ class PrepareTreatmentsDataWorker(
             }
 
         // OfflineEvent
-        repository.getOfflineEventDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
+        persistenceLayer.getOfflineEventsFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true)
             .map {
                 TherapyEventDataPoint(
                     TE(timestamp = it.timestamp, duration = it.duration, type = TE.Type.APS_OFFLINE, glucoseUnit = GlucoseUnit.MMOL),

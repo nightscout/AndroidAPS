@@ -1,25 +1,23 @@
 package app.aaps.plugins.sync.garmin
 
-
+import app.aaps.core.data.db.EPS
+import app.aaps.core.data.db.GV
+import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.HR
+import app.aaps.core.data.db.ICfg
+import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.HeartRate
-import app.aaps.database.entities.embedments.InsulinConfiguration
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.shared.tests.TestBase
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
@@ -37,13 +35,14 @@ import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
 
-class LoopHubTest: TestBase() {
+class LoopHubTest : TestBase() {
+
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var constraints: ConstraintsChecker
     @Mock lateinit var iobCobCalculator: IobCobCalculator
     @Mock lateinit var loop: Loop
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var repo: AppRepository
+    @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var userEntryLogger: UserEntryLogger
 
     private lateinit var loopHub: LoopHubImpl
@@ -51,7 +50,7 @@ class LoopHubTest: TestBase() {
 
     @BeforeEach
     fun setup() {
-        loopHub = LoopHubImpl(iobCobCalculator, loop, profileFunction, repo)
+        loopHub = LoopHubImpl(iobCobCalculator, loop, profileFunction, persistenceLayer)
         loopHub.clock = clock
     }
 
@@ -62,7 +61,7 @@ class LoopHubTest: TestBase() {
         verifyNoMoreInteractions(iobCobCalculator)
         verifyNoMoreInteractions(loop)
         verifyNoMoreInteractions(profileFunction)
-        verifyNoMoreInteractions(repo)
+        verifyNoMoreInteractions(persistenceLayer)
         verifyNoMoreInteractions(userEntryLogger)
     }
 
@@ -112,40 +111,36 @@ class LoopHubTest: TestBase() {
         verify(loop, times(1)).isDisconnected
     }
 
-    private fun effectiveProfileSwitch(duration: Long) = EffectiveProfileSwitch(
+    private fun effectiveProfileSwitch(duration: Long) = EPS(
         timestamp = 100,
         basalBlocks = emptyList(),
         isfBlocks = emptyList(),
         icBlocks = emptyList(),
         targetBlocks = emptyList(),
-        glucoseUnit = EffectiveProfileSwitch.GlucoseUnit.MGDL,
+        glucoseUnit = GlucoseUnit.MGDL,
         originalProfileName = "foo",
         originalCustomizedName = "bar",
         originalTimeshift = 0,
         originalPercentage = 100,
         originalDuration = duration,
         originalEnd = 100 + duration,
-        insulinConfiguration = InsulinConfiguration(
-            "label", 0, 0
-        )
+        iCfg = ICfg("label", 0, 0)
     )
 
     @Test
     fun testIsTemporaryProfileTrue() {
         val eps = effectiveProfileSwitch(10)
-        `when`(repo.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(
-            Single.just(ValueWrapper.Existing(eps)))
+        `when`(persistenceLayer.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(eps)
         assertEquals(true, loopHub.isTemporaryProfile)
-        verify(repo, times(1)).getEffectiveProfileSwitchActiveAt(clock.millis())
+        verify(persistenceLayer, times(1)).getEffectiveProfileSwitchActiveAt(clock.millis())
     }
 
     @Test
     fun testIsTemporaryProfileFalse() {
         val eps = effectiveProfileSwitch(0)
-        `when`(repo.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(
-            Single.just(ValueWrapper.Existing(eps)))
+        `when`(persistenceLayer.getEffectiveProfileSwitchActiveAt(clock.millis())).thenReturn(eps)
         assertEquals(false, loopHub.isTemporaryProfile)
-        verify(repo).getEffectiveProfileSwitchActiveAt(clock.millis())
+        verify(persistenceLayer).getEffectiveProfileSwitchActiveAt(clock.millis())
     }
 
     @Test
@@ -168,34 +163,38 @@ class LoopHubTest: TestBase() {
     @Test
     fun testGetGlucoseValues() {
         val glucoseValues = listOf(
-            GlucoseValue(
+            GV(
                 timestamp = 1_000_000L, raw = 90.0, value = 93.0,
-                trendArrow = GlucoseValue.TrendArrow.FLAT, noise = null,
-                sourceSensor = GlucoseValue.SourceSensor.DEXCOM_G5_XDRIP))
-        `when`(repo.compatGetBgReadingsDataFromTime(1001_000, false))
+                trendArrow = TrendArrow.FLAT, noise = null,
+                sourceSensor = SourceSensor.DEXCOM_G5_XDRIP
+            )
+        )
+        `when`(persistenceLayer.getBgReadingsDataFromTime(1001_000, false))
             .thenReturn(Single.just(glucoseValues))
         assertArrayEquals(
             glucoseValues.toTypedArray(),
-            loopHub.getGlucoseValues(Instant.ofEpochMilli(1001_000), false).toTypedArray())
-        verify(repo).compatGetBgReadingsDataFromTime(1001_000, false)
+            loopHub.getGlucoseValues(Instant.ofEpochMilli(1001_000), false).toTypedArray()
+        )
+        verify(persistenceLayer).getBgReadingsDataFromTime(1001_000, false)
     }
 
     @Test
     fun testStoreHeartRate() {
         val samplingStart = Instant.ofEpochMilli(1_001_000)
         val samplingEnd = Instant.ofEpochMilli(1_101_000)
-        val hr = HeartRate(
+        val hr = HR(
             timestamp = samplingStart.toEpochMilli(),
             duration = samplingEnd.toEpochMilli() - samplingStart.toEpochMilli(),
             dateCreated = clock.millis(),
             beatsPerMinute = 101.0,
-            device = "Test Device")
-        `when`(repo.runTransaction(InsertOrUpdateHeartRateTransaction(hr))).thenReturn(
-            Completable.fromCallable {
-                InsertOrUpdateHeartRateTransaction.TransactionResult(
-                    emptyList(), emptyList())})
+            device = "Test Device"
+        )
+        `when`(persistenceLayer.insertOrUpdateHeartRate(hr)).thenReturn(
+            Single.just(PersistenceLayer.TransactionResult())
+        )
         loopHub.storeHeartRate(
-            samplingStart, samplingEnd, 101, "Test Device")
-        verify(repo).runTransaction(InsertOrUpdateHeartRateTransaction(hr))
+            samplingStart, samplingEnd, 101, "Test Device"
+        )
+        verify(persistenceLayer).insertOrUpdateHeartRate(hr)
     }
 }

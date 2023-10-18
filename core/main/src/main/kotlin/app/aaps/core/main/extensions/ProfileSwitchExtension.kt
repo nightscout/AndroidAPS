@@ -2,17 +2,17 @@ package app.aaps.core.main.extensions
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.ProfileSwitch
 import org.json.JSONObject
 import java.util.TimeZone
 
-fun ProfileSwitch.getCustomizedName(decimalFormatter: DecimalFormatter): String {
+fun PS.getCustomizedName(decimalFormatter: DecimalFormatter): String {
     var name: String = profileName
     if (Constants.LOCAL_PROFILE == name) {
         name = decimalFormatter.to2Decimal(ProfileSealed.PS(this).percentageBasalSum()) + "U "

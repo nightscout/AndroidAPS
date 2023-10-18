@@ -102,14 +102,12 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.rh = rh
                 it.activePlugin = activePlugin
                 it.profileFunction = profileFunction
-                it.uel = uel
                 it.dateUtil = dateUtil
             }
             if (it is ActionProfileSwitchPercent) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.profileFunction = profileFunction
-                it.uel = uel
             }
             if (it is ActionNotification) {
                 it.aapsLogger = aapsLogger

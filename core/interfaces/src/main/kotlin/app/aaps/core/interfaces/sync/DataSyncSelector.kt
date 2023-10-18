@@ -5,16 +5,14 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
-
-import app.aaps.database.entities.EffectiveProfileSwitch
-
-import app.aaps.database.entities.ProfileSwitch
 import org.json.JSONObject
 
 interface DataSyncSelector {
@@ -35,8 +33,8 @@ interface DataSyncSelector {
     data class PairBolusCalculatorResult(override val value: BCR, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairTemporaryBasal(override val value: TB, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairExtendedBolus(override val value: EB, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairProfileSwitch(override val value: ProfileSwitch, override val id: Long, override var confirmed: Boolean = false) : DataPair
-    data class PairEffectiveProfileSwitch(override val value: EffectiveProfileSwitch, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairProfileSwitch(override val value: PS, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairEffectiveProfileSwitch(override val value: EPS, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairOfflineEvent(override val value: OE, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairProfileStore(override val value: JSONObject, override val id: Long, override var confirmed: Boolean = false) : DataPair
     data class PairDeviceStatus(override val value: DS, override val id: Long, override var confirmed: Boolean = false) : DataPair

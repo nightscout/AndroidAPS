@@ -198,18 +198,15 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             if (validity.isValid)
                 OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (profileFunction.createProfileSwitch(
-                            profileStore,
+                            profileStore = profileStore,
                             profileName = profileName,
                             durationInMinutes = duration,
                             percentage = percent,
                             timeShiftInHours = timeShift,
-                            timestamp = eventTime
-                        )
-                    ) {
-                        uel.log(
-                            Action.PROFILE_SWITCH,
-                            Sources.ProfileSwitchDialog,
-                            notes,
+                            timestamp = eventTime,
+                            action = Action.PROFILE_SWITCH,
+                            source = Sources.ProfileSwitchDialog,
+                            note = notes,
                             listValues = listOf(
                                 ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged },
                                 ValueWithUnit.SimpleString(profileName),
@@ -218,6 +215,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Minute(duration).takeIf { duration != 0 }
                             )
                         )
+                    ) {
                         if (percent == 90 && duration == 10) sp.putBoolean(app.aaps.core.utils.R.string.key_objectiveuseprofileswitch, true)
                         if (isTT) {
                             disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(

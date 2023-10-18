@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.garmin
 
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -12,7 +13,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.database.entities.GlucoseValue
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonObject
 import dagger.android.HasAndroidInjector
@@ -23,7 +23,7 @@ import java.net.URI
 import java.time.Clock
 import java.time.Duration
 import java.time.Instant
-import java.util.*
+import java.util.Date
 import java.util.concurrent.locks.Condition
 import java.util.concurrent.locks.ReentrantLock
 import javax.inject.Inject
@@ -128,13 +128,13 @@ class GarminPlugin @Inject constructor(
 
     /** Gets the last 2+ hours of glucose values. */
     @VisibleForTesting
-    fun getGlucoseValues(): List<GlucoseValue> {
+    fun getGlucoseValues(): List<GV> {
         val from = clock.instant().minus(Duration.ofHours(2).plusMinutes(9))
         return loopHub.getGlucoseValues(from, true)
     }
 
     /** Get the last 2+ hours of glucose values and waits in case a new value should arrive soon. */
-    private fun getGlucoseValues(maxWait: Duration): List<GlucoseValue> {
+    private fun getGlucoseValues(maxWait: Duration): List<GV> {
         val glucoseFrequency = Duration.ofMinutes(5)
         val glucoseValues = getGlucoseValues()
         val last = glucoseValues.lastOrNull() ?: return emptyList()
@@ -152,9 +152,9 @@ class GarminPlugin @Inject constructor(
         }
     }
 
-    private fun encodedGlucose(glucoseValues: List<GlucoseValue>): String {
+    private fun encodedGlucose(glucoseValues: List<GV>): String {
         val encodedGlucose = DeltaVarEncodedList(glucoseValues.size * 16, 2)
-        for (glucose: GlucoseValue in glucoseValues) {
+        for (glucose: GV in glucoseValues) {
             val timeSec: Int = (glucose.timestamp / 1000).toInt()
             val glucoseMgDl: Int = glucose.value.roundToInt()
             encodedGlucose.add(timeSec, glucoseMgDl)

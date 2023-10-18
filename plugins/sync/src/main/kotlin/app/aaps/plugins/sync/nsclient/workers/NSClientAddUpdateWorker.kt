@@ -7,7 +7,9 @@ import app.aaps.core.data.db.BCR
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
@@ -23,9 +25,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.receivers.DataWorkerStorage
-
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ProfileSwitch
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.extendedBolusFromJson
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
@@ -108,7 +107,7 @@ class NSClientAddUpdateWorker(
 
                 eventType == TE.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
                     if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
-                        EffectiveProfileSwitch.fromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
+                        EPS.fromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
                             storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
                     }
@@ -150,7 +149,7 @@ class NSClientAddUpdateWorker(
 
                 eventType == TE.Type.PROFILE_SWITCH.text                          ->
                     if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
-                        ProfileSwitch.fromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
+                        PS.fromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
                             storeDataForDb.profileSwitches.add(profileSwitch)
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }

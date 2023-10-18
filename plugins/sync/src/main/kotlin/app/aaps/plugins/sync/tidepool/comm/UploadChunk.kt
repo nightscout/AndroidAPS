@@ -1,5 +1,6 @@
 package app.aaps.plugins.sync.tidepool.comm
 
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -11,8 +12,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.tidepool.elements.BasalElement
 import app.aaps.plugins.sync.tidepool.elements.BaseElement
@@ -37,7 +36,6 @@ class UploadChunk @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
     private val activePlugin: ActivePlugin,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
     private val dateUtil: DateUtil
 ) {
@@ -147,14 +145,14 @@ class UploadChunk @Inject constructor(
         return selection
     }
 
-    private fun newInstanceOrNull(ps: EffectiveProfileSwitch): ProfileElement? = try {
+    private fun newInstanceOrNull(ps: EPS): ProfileElement? = try {
         ProfileElement(ps, activePlugin.activePump.serialNumber(), dateUtil, profileUtil)
     } catch (e: Throwable) {
         null
     }
 
     private fun getProfiles(start: Long, end: Long): List<ProfileElement> {
-        val pss = repository.getEffectiveProfileSwitchDataFromTimeToTime(start, end, true).blockingGet()
+        val pss = persistenceLayer.getEffectiveProfileSwitchesFromTimeToTime(start, end, true)
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
             newInstanceOrNull(ps)?.let {

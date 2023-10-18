@@ -261,22 +261,18 @@ class AutotuneFragment : DaggerFragment() {
                                                       value = ValueWithUnit.SimpleString(tunedP.profileName)
                                                   )
                                                   val now = dateUtil.now()
-                                                  if (profileFunction.createProfileSwitch(
-                                                          it,
-                                                          profileName = tunedP.profileName,
-                                                          durationInMinutes = 0,
-                                                          percentage = 100,
-                                                          timeShiftInHours = 0,
-                                                          timestamp = now
-                                                      )
-                                                  ) {
-                                                      uel.log(
-                                                          Action.PROFILE_SWITCH,
-                                                          Sources.Autotune,
-                                                          "Autotune AutoSwitch",
-                                                          ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName)
-                                                      )
-                                                  }
+                                                  profileFunction.createProfileSwitch(
+                                                      profileStore = it,
+                                                      profileName = tunedP.profileName,
+                                                      durationInMinutes = 0,
+                                                      percentage = 100,
+                                                      timeShiftInHours = 0,
+                                                      timestamp = now,
+                                                      action = Action.PROFILE_SWITCH,
+                                                      source = Sources.Autotune,
+                                                      note = "Autotune AutoSwitch",
+                                                      listValues = listOf(ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName))
+                                                  )
                                                   rxBus.send(EventLocalProfileChanged())
                                                   updateGui()
                                               }

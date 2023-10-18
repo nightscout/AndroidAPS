@@ -9,7 +9,7 @@ import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
@@ -46,13 +46,8 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.getCustomizedName
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.interfaces.end
-import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.R
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
@@ -97,7 +92,6 @@ class CommandQueueImplementation @Inject constructor(
     private val sp: SP,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository,
     private val fabricPrivacy: FabricPrivacy,
     private val androidPermission: AndroidPermission,
     private val uiInteraction: UiInteraction,
@@ -123,30 +117,30 @@ class CommandQueueImplementation @Inject constructor(
                                return@subscribe
                            }
                            aapsLogger.debug(LTag.PROFILE, "onEventProfileSwitchChanged")
-                           val effective = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
+                           val effective = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
                            profileFunction.getRequestedProfile()?.let {
-                               setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
+                               setProfile(ProfileSealed.PS(it), it.ids.nightscoutId != null, object : Callback() {
                                    override fun run() {
                                        if (!result.success) {
                                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), app.aaps.core.ui.R.raw.boluserror)
-                                       } else if (result.enacted || effective is ValueWrapper.Existing && effective.value.originalEnd < dateUtil.now() && effective.value.originalDuration != 0L) {
+                                       } else if (result.enacted || effective != null && effective.originalEnd < dateUtil.now() && effective.originalDuration != 0L) {
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
-                                           EffectiveProfileSwitch(
+                                           EPS(
                                                timestamp = dateUtil.now(),
                                                basalBlocks = nonCustomized.basalBlocks,
                                                isfBlocks = nonCustomized.isfBlocks,
                                                icBlocks = nonCustomized.icBlocks,
                                                targetBlocks = nonCustomized.targetBlocks,
-                                               glucoseUnit = if (it.glucoseUnit == GlucoseUnit.MGDL.toDb()) GlucoseUnit.MGDL.toDb() else GlucoseUnit.MMOL.toDb(),
+                                               glucoseUnit = it.glucoseUnit,
                                                originalProfileName = it.profileName,
                                                originalCustomizedName = it.getCustomizedName(decimalFormatter),
                                                originalTimeshift = it.timeshift,
                                                originalPercentage = it.percentage,
                                                originalDuration = it.duration,
                                                originalEnd = it.end,
-                                               insulinConfiguration = it.insulinConfiguration
+                                               iCfg = it.iCfg
                                            ).also { eps ->
-                                               repository.createEffectiveProfileSwitch(eps)
+                                               persistenceLayer.insertEffectiveProfileSwitch(eps)
                                                aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $eps")
                                            }
                                        }
@@ -241,7 +235,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
@@ -452,7 +446,7 @@ class CommandQueueImplementation @Inject constructor(
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return false
         }
-        if (isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
+        if (isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return false

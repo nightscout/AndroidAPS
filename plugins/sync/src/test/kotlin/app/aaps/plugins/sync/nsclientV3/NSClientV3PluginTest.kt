@@ -5,11 +5,14 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.ICfg
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
@@ -25,15 +28,8 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
-
-import app.aaps.database.entities.EffectiveProfileSwitch
-
-import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.embedments.InsulinConfiguration
-import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
@@ -71,11 +67,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         }
     }
 
-    private var insulinConfiguration: InsulinConfiguration = InsulinConfiguration("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
+    private var insulinConfiguration: ICfg = ICfg("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
 
     @BeforeEach
     fun mock() {
-        Mockito.`when`(insulin.insulinConfiguration).thenReturn(insulinConfiguration)
+        Mockito.`when`(insulin.iCfg).thenReturn(insulinConfiguration)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
     }
 
@@ -284,27 +280,27 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddEffectiveProfileSwitch() = runTest {
-        val profileSwitch = EffectiveProfileSwitch(
+        val profileSwitch = EPS(
             timestamp = 10000,
             isValid = true,
             basalBlocks = validProfile.basalBlocks,
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units.toDb(),
+            glucoseUnit = validProfile.units,
             originalProfileName = "SomeProfile",
             originalCustomizedName = "SomeProfile (150%, 1h)",
             originalTimeshift = 3600000,
             originalPercentage = 150,
             originalDuration = 3600000,
             originalEnd = 0,
-            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also {
+            iCfg = activePlugin.activeInsulin.iCfg.also {
                 it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
             },
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )
@@ -322,25 +318,25 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddProfileSwitch() = runTest {
-        val profileSwitch = ProfileSwitch(
+        val profileSwitch = PS(
             timestamp = 10000,
             isValid = true,
             basalBlocks = validProfile.basalBlocks,
             isfBlocks = validProfile.isfBlocks,
             icBlocks = validProfile.icBlocks,
             targetBlocks = validProfile.targetBlocks,
-            glucoseUnit = validProfile.units.toDb(),
+            glucoseUnit = validProfile.units,
             profileName = "SomeProfile",
             timeshift = 0,
             percentage = 100,
             duration = 0,
-            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also {
+            iCfg = activePlugin.activeInsulin.iCfg.also {
                 it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
             },
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 nightscoutId = "nightscoutId",
                 pumpId = 11000,
-                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpType = PumpType.DANA_I,
                 pumpSerial = "bbbb"
             )
         )

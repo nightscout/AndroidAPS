@@ -53,29 +53,4 @@ data class EffectiveProfileSwitch(
     var originalEnd: Long, // not used (calculated from duration)
     @Embedded
     var insulinConfiguration: InsulinConfiguration
-) : TraceableDBEntry, DBEntryWithTime {
-
-    fun contentEqualsTo(other: EffectiveProfileSwitch): Boolean =
-        isValid == other.isValid &&
-            timestamp == other.timestamp &&
-            utcOffset == other.utcOffset &&
-            basalBlocks == other.basalBlocks &&
-            isfBlocks == other.isfBlocks &&
-            icBlocks == other.icBlocks &&
-            targetBlocks == other.targetBlocks &&
-            glucoseUnit == other.glucoseUnit &&
-            originalProfileName == other.originalProfileName &&
-            originalCustomizedName == other.originalCustomizedName &&
-            originalTimeshift == other.originalTimeshift &&
-            originalPercentage == other.originalPercentage &&
-            originalDuration == other.originalDuration &&
-            originalEnd == other.originalEnd
-
-    fun onlyNsIdAdded(previous: EffectiveProfileSwitch): Boolean =
-        previous.id != id &&
-            contentEqualsTo(previous) &&
-            previous.interfaceIDs.nightscoutId == null &&
-            interfaceIDs.nightscoutId != null
-
-    companion object
-}
+) : TraceableDBEntry, DBEntryWithTime

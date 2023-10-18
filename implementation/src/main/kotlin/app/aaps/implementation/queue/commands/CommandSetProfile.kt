@@ -1,6 +1,7 @@
 package app.aaps.implementation.queue.commands
 
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
@@ -10,8 +11,6 @@ import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -27,10 +26,10 @@ class CommandSetProfile(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var config: Config
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     override fun execute() {
-        if (commandQueue.isThisProfileSet(profile) && repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing) {
+        if (commandQueue.isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set. profile: $profile")
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
             return
@@ -39,8 +38,8 @@ class CommandSetProfile(
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted} profile: $profile")
         callback?.result(r)?.run()
         // Send SMS notification if ProfileSwitch is coming from NS
-        val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
-        if (profileSwitch is ValueWrapper.Existing && r.enacted && hasNsId && !config.NSCLIENT) {
+        val profileSwitch = persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now())
+        if (profileSwitch != null && r.enacted && hasNsId && !config.NSCLIENT) {
             if (smsCommunicator.isEnabled())
                 smsCommunicator.sendNotificationToAllNumbers(rh.gs(app.aaps.core.ui.R.string.profile_set_ok))
         }

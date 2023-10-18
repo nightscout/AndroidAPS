@@ -5,11 +5,13 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.CA
 import app.aaps.core.data.db.DS
 import app.aaps.core.data.db.EB
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.HR
 import app.aaps.core.data.db.OE
+import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
@@ -18,7 +20,6 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.EffectiveProfileSwitch
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
@@ -256,6 +257,13 @@ interface PersistenceLayer {
     fun getNextSyncElementBolusCalculatorResult(id: Long): Maybe<Pair<BCR, BCR>>
 
     /**
+     * Get record with highest id
+     *
+     * @return database record id
+     */
+    fun getLastBolusCalculatorResultId(): Long?
+
+    /**
      * Insert or update if exists record
      *
      * @param bolusCalculatorResult record
@@ -317,7 +325,182 @@ interface PersistenceLayer {
      * @param timestamp time
      * @return running effective profile switch or null if none is running
      */
-    fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Single<ValueWrapper<EffectiveProfileSwitch>>
+    fun getEffectiveProfileSwitchActiveAt(timestamp: Long): EPS?
+
+    /**
+     * Get effective profile switches from time
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of effective profile switches
+     */
+    fun getEffectiveProfileSwitchesFromTime(startTime: Long, ascending: Boolean): Single<List<EPS>>
+
+    /**
+     * Get effective profile switches from time including invalid records
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of effective profile switches
+     */
+    fun getEffectiveProfileSwitchesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<EPS>>
+
+    /**
+     * Get effective profile switches in time interval
+     *
+     * @param startTime from
+     * @param endTime to
+     * @param ascending sort order
+     * @return List effective profile switches
+     */
+    fun getEffectiveProfileSwitchesFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EPS>
+
+    /**
+     * Get next changed record after id
+     *
+     * @param id record id
+     * @return database record
+     */
+    fun getNextSyncElementEffectiveProfileSwitch(id: Long): Maybe<Pair<EPS, EPS>>
+
+    /**
+     * Get record with highest id
+     *
+     * @return database record id
+     */
+    fun getLastEffectiveProfileSwitchId(): Long?
+
+    /**
+     * Insert new record to database
+     *
+     * @param effectiveProfileSwitch record
+     */
+    fun insertEffectiveProfileSwitch(effectiveProfileSwitch: EPS)
+
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
+    fun invalidateEffectiveProfileSwitch(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<EPS>>
+
+    /**
+     * Store records coming from NS to database
+     *
+     * @param effectiveProfileSwitches list of records
+     * @return List of inserted/updated/invalidated records
+     */
+    fun syncNsEffectiveProfileSwitches(effectiveProfileSwitches: List<EPS>): Single<TransactionResult<EPS>>
+
+    /**
+     * Update NS id' in database
+     *
+     * @param effectiveProfileSwitches records containing NS id'
+     * @return List of modified records
+     */
+    fun updateEffectiveProfileSwitchesNsIds(effectiveProfileSwitches: List<EPS>): Single<TransactionResult<EPS>>
+
+    // PS
+    /**
+     * Get running profile switch at time
+     *
+     * @param timestamp time
+     * @return running profile switch or null if none is running
+     */
+    fun getProfileSwitchActiveAt(timestamp: Long): PS?
+
+    /**
+     * Get running profile switch at time with duration == 0 (infinite)
+     *
+     * @param timestamp time
+     * @return running profile switch or null if none is running
+     */
+    fun getPermanentProfileSwitchActiveAt(timestamp: Long): PS?
+
+    /**
+     * Get all profile switches from db
+     *
+     * @return List of profile switches
+     */
+    fun getProfileSwitches(): List<PS>
+
+    /**
+     * Get profile switches from time
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of profile switches
+     */
+    fun getProfileSwitchesFromTime(startTime: Long, ascending: Boolean): Single<List<PS>>
+
+    /**
+     * Get profile switches from time including invalidated records
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of profile switches
+     */
+    fun getProfileSwitchesIncludingInvalidFromTime(startTime: Long, ascending: Boolean): Single<List<PS>>
+
+    /**
+     * Get next changed record after id
+     *
+     * @param id record id
+     * @return database record
+     */
+    fun getNextSyncElementProfileSwitch(id: Long): Maybe<Pair<PS, PS>>
+
+    /**
+     * Get record with highest id
+     *
+     * @return database record id
+     */
+    fun getLastProfileSwitchId(): Long?
+
+    /**
+     * Insert or update new record in database
+     *
+     * @param profileSwitch record
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<PS>>
+
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
+    fun invalidateProfileSwitch(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<PS>>
+
+    /**
+     * Store records coming from NS to database
+     *
+     * @param profileSwitches list of records
+     * @return List of inserted/updated/invalidated records
+     */
+    fun syncNsProfileSwitches(profileSwitches: List<PS>): Single<TransactionResult<PS>>
+
+    /**
+     * Update NS id' in database
+     *
+     * @param profileSwitches records containing NS id'
+     * @return List of modified records
+     */
+    fun updateProfileSwitchesNsIds(profileSwitches: List<PS>): Single<TransactionResult<PS>>
 
     // TB
     /**
@@ -601,7 +784,7 @@ interface PersistenceLayer {
     fun getTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TE>>
     fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>>
     fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>>
-    fun getTherapyEventDataFromTime(timestamp: Long, type: TE.Type, ascending: Boolean): Single<List<TE>>
+    fun getTherapyEventDataFromTime(timestamp: Long, type: TE.Type, ascending: Boolean): List<TE>
 
     /**
      * Get next changed record after id
@@ -671,6 +854,16 @@ interface PersistenceLayer {
     fun getOfflineEventActiveAt(timestamp: Long): OE?
 
     /**
+     * Get offline events in time interval
+     *
+     * @param startTime from
+     * @param endTime to
+     * @param ascending sort order
+     * @return List of offline events
+     */
+    fun getOfflineEventsFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<OE>
+
+    /**
      *  Get highest id in database
      *  @return id
      */
@@ -709,6 +902,13 @@ interface PersistenceLayer {
      * @return database record
      */
     fun getNextSyncElementDeviceStatus(id: Long): Maybe<DS>
+
+    /**
+     * Get record with highest id
+     *
+     * @return database record id
+     */
+    fun getLastDeviceStatusId(): Long?
 
     fun insertDeviceStatus(deviceStatus: DS)
 
@@ -762,6 +962,13 @@ interface PersistenceLayer {
      * @return database record
      */
     fun getNextSyncElementFood(id: Long): Maybe<Pair<FD, FD>>
+
+    /**
+     * Get record with highest id
+     *
+     * @return database record id
+     */
+    fun getLastFoodId(): Long?
 
     /**
      * Invalidate record with id

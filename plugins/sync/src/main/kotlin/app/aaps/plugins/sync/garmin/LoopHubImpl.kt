@@ -1,17 +1,16 @@
 package app.aaps.plugins.sync.garmin
 
 import androidx.annotation.VisibleForTesting
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.HR
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.database.ValueWrapper
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.GlucoseValue
-import app.aaps.database.entities.HeartRate
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import java.time.Clock
 import java.time.Instant
 import javax.inject.Inject
@@ -25,8 +24,10 @@ class LoopHubImpl @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val loop: Loop,
     private val profileFunction: ProfileFunction,
-    private val repo: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
 ) : LoopHub {
+
+    val disposable = CompositeDisposable()
 
     @VisibleForTesting
     var clock: Clock = Clock.systemUTC()
@@ -52,9 +53,7 @@ class LoopHubImpl @Inject constructor(
     /** Returns true if the current profile is set of a limited amount of time. */
     override val isTemporaryProfile: Boolean
         get() {
-            val resp = repo.getEffectiveProfileSwitchActiveAt(clock.millis())
-            val ps: EffectiveProfileSwitch? =
-                (resp.blockingGet() as? ValueWrapper.Existing<EffectiveProfileSwitch>)?.value
+            val ps = persistenceLayer.getEffectiveProfileSwitchActiveAt(clock.millis())
             return ps != null && ps.originalDuration > 0
         }
 
@@ -66,8 +65,8 @@ class LoopHubImpl @Inject constructor(
         }
 
     /** Retrieves the glucose values starting at from. */
-    override fun getGlucoseValues(from: Instant, ascending: Boolean): List<GlucoseValue> {
-        return repo.compatGetBgReadingsDataFromTime(from.toEpochMilli(), ascending)
+    override fun getGlucoseValues(from: Instant, ascending: Boolean): List<GV> {
+        return persistenceLayer.getBgReadingsDataFromTime(from.toEpochMilli(), ascending)
                    .blockingGet()
     }
 
@@ -76,13 +75,13 @@ class LoopHubImpl @Inject constructor(
         samplingStart: Instant, samplingEnd: Instant,
         avgHeartRate: Int,
         device: String?) {
-        val hr = HeartRate(
+        val hr = HR(
             timestamp = samplingStart.toEpochMilli(),
             duration = samplingEnd.toEpochMilli() - samplingStart.toEpochMilli(),
             dateCreated = clock.millis(),
             beatsPerMinute = avgHeartRate.toDouble(),
             device = device ?: "Garmin",
         )
-        repo.runTransaction(InsertOrUpdateHeartRateTransaction(hr)).blockingAwait()
+        disposable += persistenceLayer.insertOrUpdateHeartRate(hr).subscribe()
     }
 }

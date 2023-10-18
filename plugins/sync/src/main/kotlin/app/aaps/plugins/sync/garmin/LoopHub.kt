@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.garmin
 
+import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.database.entities.GlucoseValue
 import java.time.Instant
 
 /** Abstraction from all the functionality we need from the AAPS app. */
@@ -30,7 +30,7 @@ interface LoopHub {
     val temporaryBasal: Double
 
     /** Retrieves the glucose values starting at from. */
-    fun getGlucoseValues(from: Instant, ascending: Boolean): List<GlucoseValue>
+    fun getGlucoseValues(from: Instant, ascending: Boolean): List<GV>
 
     /** Stores hear rate readings that a taken and averaged of the given interval. */
     fun storeHeartRate(

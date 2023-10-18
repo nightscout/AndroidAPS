@@ -1,16 +1,15 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.TE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.utils.JsonHelper
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONObject
 
-fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun EPS.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
@@ -25,13 +24,13 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
         .put("originalEnd", originalEnd)
         .put("notes", originalCustomizedName)
         .also {
-            if (interfaceIDs.pumpId != null) it.put("pumpId", interfaceIDs.pumpId)
-            if (interfaceIDs.pumpType != null) it.put("pumpType", interfaceIDs.pumpType!!.name)
-            if (interfaceIDs.pumpSerial != null) it.put("pumpSerial", interfaceIDs.pumpSerial)
-            if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
+            if (ids.pumpId != null) it.put("pumpId", ids.pumpId)
+            if (ids.pumpType != null) it.put("pumpType", ids.pumpType!!.name)
+            if (ids.pumpSerial != null) it.put("pumpSerial", ids.pumpSerial)
+            if (isAdd && ids.nightscoutId != null) it.put("_id", ids.nightscoutId)
         }
 
-fun EffectiveProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EffectiveProfileSwitch? {
+fun EPS.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EPS? {
     val timestamp =
         JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null)
             ?: JsonHelper.safeGetLongAllowNull(jsonObject, "date", null)
@@ -48,33 +47,33 @@ fun EffectiveProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: 
     val originalCustomizedName = JsonHelper.safeGetStringAllowNull(jsonObject, "originalCustomizedName", null) ?: return null
     val profileJson = JsonHelper.safeGetStringAllowNull(jsonObject, "profileJson", null) ?: return null
     val pumpId = JsonHelper.safeGetLongAllowNull(jsonObject, "pumpId", null)
-    val pumpType = InterfaceIDs.PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
+    val pumpType = PumpType.fromString(JsonHelper.safeGetStringAllowNull(jsonObject, "pumpType", null))
     val pumpSerial = JsonHelper.safeGetStringAllowNull(jsonObject, "pumpSerial", null)
 
     if (timestamp == 0L) return null
     val pureProfile = pureProfileFromJson(JSONObject(profileJson), dateUtil) ?: return null
     val profileSealed = ProfileSealed.Pure(pureProfile)
 
-    return EffectiveProfileSwitch(
+    return EPS(
         timestamp = timestamp,
         basalBlocks = profileSealed.basalBlocks,
         isfBlocks = profileSealed.isfBlocks,
         icBlocks = profileSealed.icBlocks,
         targetBlocks = profileSealed.targetBlocks,
-        glucoseUnit = profileSealed.units.toDb(),
+        glucoseUnit = profileSealed.units,
         originalProfileName = originalProfileName,
         originalCustomizedName = originalCustomizedName,
         originalTimeshift = originalTimeshift,
         originalPercentage = originalPercentage,
         originalDuration = originalDuration,
         originalEnd = originalEnd,
-        insulinConfiguration = profileSealed.insulinConfiguration,
+        iCfg = profileSealed.iCfg,
         isValid = isValid
     ).also {
-        it.interfaceIDs.nightscoutId = id
-        it.interfaceIDs.pumpId = pumpId
-        it.interfaceIDs.pumpType = pumpType
-        it.interfaceIDs.pumpSerial = pumpSerial
+        it.ids.nightscoutId = id
+        it.ids.pumpId = pumpId
+        it.ids.pumpType = pumpType
+        it.ids.pumpSerial = pumpSerial
     }
 }
 

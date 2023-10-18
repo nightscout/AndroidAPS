@@ -1,9 +1,9 @@
 package app.aaps.core.main.extensions
 
+import app.aaps.core.data.db.data.Block
+import app.aaps.core.data.db.data.TargetBlock
+import app.aaps.core.data.db.data.checkSanity
 import app.aaps.core.data.time.T
-import app.aaps.database.entities.data.Block
-import app.aaps.database.entities.data.TargetBlock
-import app.aaps.database.entities.data.checkSanity
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 

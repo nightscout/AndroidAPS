@@ -5,7 +5,6 @@ import androidx.annotation.DrawableRes
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpEnactResult
@@ -25,7 +24,6 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var uel: UserEntryLogger
 
     var inputProfileName: InputProfileName = InputProfileName(rh, activePlugin, "")
 
@@ -57,8 +55,13 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.notexists)).run()
             return
         }
-        uel.log(
-            action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
+        val result = profileFunction.createProfileSwitch(
+            profileStore = profileStore,
+            profileName = inputProfileName.value,
+            durationInMinutes = 0,
+            percentage = 100,
+            timeShiftInHours = 0,
+            timestamp = dateUtil.now(), action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
             source = Sources.Automation,
             note = title,
             listValues = listOf(
@@ -66,7 +69,6 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
                 ValueWithUnit.Percent(100)
             )
         )
-        val result = profileFunction.createProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, dateUtil.now())
         callback.result(PumpEnactResult(injector).success(result).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 

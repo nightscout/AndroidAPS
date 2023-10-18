@@ -1,6 +1,12 @@
 package app.aaps.core.main.profile
 
+import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.db.ICfg
+import app.aaps.core.data.db.IDs
+import app.aaps.core.data.db.PS
+import app.aaps.core.data.db.data.Block
+import app.aaps.core.data.db.data.TargetBlock
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.Notification
@@ -20,12 +26,6 @@ import app.aaps.core.main.extensions.shiftBlock
 import app.aaps.core.main.extensions.shiftTargetBlock
 import app.aaps.core.main.extensions.targetBlockValueBySeconds
 import app.aaps.core.utils.MidnightUtils
-import app.aaps.database.entities.EffectiveProfileSwitch
-import app.aaps.database.entities.ProfileSwitch
-import app.aaps.database.entities.data.Block
-import app.aaps.database.entities.data.TargetBlock
-import app.aaps.database.entities.embedments.InsulinConfiguration
-import app.aaps.database.entities.embedments.InterfaceIDs
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.DecimalFormat
@@ -34,7 +34,7 @@ import java.util.TimeZone
 sealed class ProfileSealed(
     val id: Long,
     val isValid: Boolean,
-    val interfaceIDs_backing: InterfaceIDs?,
+    val ids: IDs?,
     val timestamp: Long,
     var basalBlocks: List<Block>,
     var isfBlocks: List<Block>,
@@ -44,14 +44,14 @@ sealed class ProfileSealed(
     var duration: Long?, // [milliseconds]
     var ts: Int, // timeshift [hours]
     var pct: Int,
-    var insulinConfiguration: InsulinConfiguration,
+    var iCfg: ICfg,
     val utcOffset: Long
 ) : Profile {
 
-    data class PS(val value: ProfileSwitch) : ProfileSealed(
+    data class PS(val value: app.aaps.core.data.db.PS) : ProfileSealed(
         value.id,
         value.isValid,
-        value.interfaceIDs_backing,
+        value.ids,
         value.timestamp,
         value.basalBlocks,
         value.isfBlocks,
@@ -61,14 +61,14 @@ sealed class ProfileSealed(
         value.duration,
         T.msecs(value.timeshift).hours().toInt(),
         value.percentage,
-        value.insulinConfiguration,
+        value.iCfg,
         value.utcOffset
     )
 
-    data class EPS(val value: EffectiveProfileSwitch) : ProfileSealed(
+    data class EPS(val value: app.aaps.core.data.db.EPS) : ProfileSealed(
         value.id,
         value.isValid,
-        value.interfaceIDs_backing,
+        value.ids,
         value.timestamp,
         value.basalBlocks,
         value.isfBlocks,
@@ -78,7 +78,7 @@ sealed class ProfileSealed(
         null, // already converted to non customized
         0, // already converted to non customized
         100, // already converted to non customized
-        value.insulinConfiguration,
+        value.iCfg,
         value.utcOffset
     )
 
@@ -95,7 +95,7 @@ sealed class ProfileSealed(
         null,
         0,
         100,
-        InsulinConfiguration("", (value.dia * 3600 * 1000).toLong(), 0),
+        ICfg("", (value.dia * 3600 * 1000).toLong(), 0),
         value.timeZone.rawOffset.toLong()
     )
 
@@ -208,12 +208,12 @@ sealed class ProfileSealed(
 
     override val units: GlucoseUnit
         get() = when (this) {
-            is PS   -> if (value.glucoseUnit == app.aaps.database.entities.data.GlucoseUnit.MMOL) GlucoseUnit.MMOL else GlucoseUnit.MGDL
-            is EPS  -> if (value.glucoseUnit == app.aaps.database.entities.data.GlucoseUnit.MMOL) GlucoseUnit.MMOL else GlucoseUnit.MGDL
+            is PS   -> value.glucoseUnit
+            is EPS  -> value.glucoseUnit
             is Pure -> value.glucoseUnit
         }
     override val dia: Double
-        get() = insulinConfiguration.insulinEndTime / 1000.0 / 60.0 / 60.0
+        get() = iCfg.insulinEndTime / 1000.0 / 60.0 / 60.0
 
     override val timeshift: Int
         get() = ts
@@ -274,8 +274,8 @@ sealed class ProfileSealed(
             targetBlocks = targetBlocks.shiftTargetBlock(timeshift),
             glucoseUnit = units,
             dia = when (this) {
-                is PS   -> this.value.insulinConfiguration.insulinEndTime / 3600.0 / 1000.0
-                is EPS  -> this.value.insulinConfiguration.insulinEndTime / 3600.0 / 1000.0
+                is PS   -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0
+                is EPS  -> this.value.iCfg.insulinEndTime / 3600.0 / 1000.0
                 is Pure -> this.value.dia
             },
             timeZone = TimeZone.getDefault()

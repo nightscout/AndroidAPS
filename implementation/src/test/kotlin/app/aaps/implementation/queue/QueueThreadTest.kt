@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
 import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.TestPumpPlugin
@@ -27,7 +26,6 @@ class QueueThreadTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
@@ -55,7 +53,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
         )
 
         val pumpDescription = PumpDescription()

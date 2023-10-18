@@ -11,6 +11,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyString
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.skyscreamer.jsonassert.JSONAssert
 
 private const val STRING_JSON = """{"data":{"profileToSwitchTo":"Test"},"type":"ActionProfileSwitch"}"""
@@ -80,7 +81,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
         // do profile switch
         `when`(profileFunction.getProfileName()).thenReturn("Test")
-        `when`(profileFunction.createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())).thenReturn(true)
+        `when`(profileFunction.createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any())).thenReturn(true)
         sut.inputProfileName = InputProfileName(rh, activePlugin, TESTPROFILENAME)
         sut.doAction(object : Callback() {
             override fun run() {
@@ -88,7 +89,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
                 assertThat(result.comment).isEqualTo("OK")
             }
         })
-        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong())
+        Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(anyObject(), anyString(), anyInt(), anyInt(), anyInt(), anyLong(), any(), any(), any(), any())
     }
 
     @Test fun hasDialogTest() {

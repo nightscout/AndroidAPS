@@ -1,9 +1,9 @@
 package app.aaps.core.main.extensions
 
+import app.aaps.core.data.db.data.Block
+import app.aaps.core.data.db.data.TargetBlock
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.data.Block
-import app.aaps.database.entities.data.TargetBlock
 import org.json.JSONArray
 import org.json.JSONObject
 

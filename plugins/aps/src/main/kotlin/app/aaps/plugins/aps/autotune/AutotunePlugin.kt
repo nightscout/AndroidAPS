@@ -237,22 +237,18 @@ class AutotunePlugin @Inject constructor(
                 updateButtonVisibility = View.GONE
                 tunedP.profileStore(circadian)?.let { profileStore ->
                     if (profileFunction.createProfileSwitch(
-                            profileStore,
+                            profileStore = profileStore,
                             profileName = tunedP.profileName,
                             durationInMinutes = 0,
                             percentage = 100,
                             timeShiftInHours = 0,
-                            timestamp = dateUtil.now()
-                        )
-                    ) {
-                        log("Profile Switch succeed ${tunedP.profileName}")
-                        uel.log(
+                            timestamp = dateUtil.now(),
                             action = Action.PROFILE_SWITCH,
                             source = Sources.Automation,
                             note = rh.gs(app.aaps.core.ui.R.string.autotune),
-                            value = ValueWithUnit.SimpleString(tunedP.profileName)
+                            listValues = listOf(ValueWithUnit.SimpleString(tunedP.profileName))
                         )
-                    }
+                    ) log("Profile Switch succeed ${tunedP.profileName}")
                     rxBus.send(EventLocalProfileChanged())
                 }
             }

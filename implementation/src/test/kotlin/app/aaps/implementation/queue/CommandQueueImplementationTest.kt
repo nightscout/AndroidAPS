@@ -26,8 +26,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.queue.commands.CommandBolus
 import app.aaps.implementation.queue.commands.CommandCustomCommand
 import app.aaps.implementation.queue.commands.CommandExtendedBolus
@@ -38,7 +36,6 @@ import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -52,7 +49,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var powerManager: PowerManager
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var persistenceLayer: PersistenceLayer
@@ -70,7 +66,6 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         sp: SP,
         config: Config,
         dateUtil: DateUtil,
-        repository: AppRepository,
         fabricPrivacy: FabricPrivacy,
         androidPermission: AndroidPermission,
         uiInteraction: UiInteraction,
@@ -78,8 +73,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         decimalFormatter: DecimalFormatter
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, config, dateUtil, repository, fabricPrivacy,
-        androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+        activePlugin, context, sp, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
@@ -121,8 +115,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         commandQueue = CommandQueueMocked(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository,
-            fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
         )
         testPumpPlugin = TestPumpPlugin(injector)
 
@@ -130,7 +123,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
         `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        `when`(repository.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(Single.just(ValueWrapper.Existing(effectiveProfileSwitch)))
+        `when`(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch)
         `when`(persistenceLayer.getLastBolus()).thenReturn(
             BS(
                 timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
@@ -159,7 +152,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
         )
         val handler = mock(Handler::class.java)
         `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->

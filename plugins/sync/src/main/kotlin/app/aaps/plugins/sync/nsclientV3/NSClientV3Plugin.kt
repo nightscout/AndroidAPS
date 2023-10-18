@@ -665,12 +665,12 @@ class NSClientV3Plugin @Inject constructor(
                             }
 
                             is DataSyncSelector.PairProfileSwitch          -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdProfileSwitches.add(dataPair.value)
                             }
 
                             is DataSyncSelector.PairEffectiveProfileSwitch -> {
-                                dataPair.value.interfaceIDs.nightscoutId = it
+                                dataPair.value.ids.nightscoutId = it
                                 storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
                             }
 
