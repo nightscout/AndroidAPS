@@ -2,39 +2,47 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("kotlin-parcelize")
     id("android-module-dependencies")
-    id("all-open-dependencies")
     id("test-dependencies")
 }
 
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 
 android {
-    namespace = "app.aaps.core.main"
+    namespace = "app.aaps.plugins.main"
 }
 
 dependencies {
+    implementation(project(":shared:impl"))
     implementation(project(":database:entities"))
+    implementation(project(":database:impl"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:main"))
+    implementation(project(":core:nssdk"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":core:validators"))
 
+    testImplementation(project(":implementation"))
+    testImplementation(project(":plugins:insulin"))
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":shared:impl"))
 
-    api(Libs.Kotlin.stdlibJdk8)
-    api(Libs.Google.Android.material)
-    api(Libs.Google.guava)
-    api(Libs.AndroidX.activity)
     api(Libs.AndroidX.appCompat)
+    api(Libs.Google.Android.material)
 
-    api(Libs.Dagger.android)
-    api(Libs.Dagger.androidSupport)
+    // Actions
+    api(Libs.AndroidX.gridLayout)
 
-    //WorkManager
-    api(Libs.AndroidX.Work.runtimeKtx)  // DataWorkerStorage
+    //SmsCommunicator
+    api(Libs.javaOtp)
+    api(Libs.qrGen)
+
+    // Overview
+    api(Libs.Google.Android.flexbox)
+
+    // Food
+    api(Libs.AndroidX.Work.runtimeKtx)
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

@@ -45,7 +45,7 @@ dependencies {
     api(Libs.Rx.rxAndroid)
 
     // WorkerClasses
-    api(Libs.AndroidX.workRuntimeKtx)
+    api(Libs.AndroidX.Work.runtimeKtx)
 
     // TODO eliminate kapt from low level modules
     kapt(Libs.Dagger.compiler)

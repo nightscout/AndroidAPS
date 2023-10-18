@@ -32,7 +32,7 @@ dependencies {
     api(Libs.Google.tinkAndroid)
 
     //WorkManager
-    api(Libs.AndroidX.workRuntimeKtx) // DataWorkerStorage
+    api(Libs.AndroidX.Work.runtimeKtx) // DataWorkerStorage
 
     api(Libs.Dagger.android)
     api(Libs.Dagger.androidSupport)

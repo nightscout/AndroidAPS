@@ -5,8 +5,10 @@ object Libs {
 
         const val kotlin = "1.9.10"
 
+        const val platformBom = "org.jetbrains.kotlin:kotlin-bom"
         const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
         const val test = "org.jetbrains.kotlin:kotlin-test:$kotlin"
+        const val testJunit5 = "org.jetbrains.kotlin:kotlin-test-junit5"
         const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
     }
 
@@ -17,11 +19,13 @@ object Libs {
 
         const val serializationJson = "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization"
         const val serializationProtobuf = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serialization"
+        const val serializationCore = "org.jetbrains.kotlinx:kotlinx-serialization-core:$serialization"
         const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
         const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
         const val coroutinesRx3 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:$coroutinesVersion"
         const val coroutinesGuava = "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutinesVersion"
         const val coroutinesPlayServices = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion"
+        const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
         const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
     }
 
@@ -31,11 +35,17 @@ object Libs {
         const val appCompat = "androidx.appcompat:appcompat:1.6.1"
         const val activity = "androidx.activity:activity-ktx:1.8.0"
         const val preference = "androidx.preference:preference-ktx:1.2.1"
-        const val workRuntimeKtx = "androidx.work:work-runtime-ktx:2.8.1"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
         const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
         const val gridLayout = "androidx.gridlayout:gridlayout:1.0.0"
+        const val browser = "androidx.browser:browser:1.6.0"
+        const val lifecycleViewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
 
+        object Work {
+            private const val workVersion =  "2.8.1"
+            const val runtimeKtx = "androidx.work:work-runtime-ktx:$workVersion"
+            const val testing = "androidx.work:work-testing:$workVersion"
+        }
         object Test {
 
             const val espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
@@ -81,6 +91,7 @@ object Libs {
             }
 
             const val material = "com.google.android.material:material:1.10.0"
+            const val flexbox = "com.google.android.flexbox:flexbox:3.0.0"
         }
 
         object Firebase {
@@ -134,6 +145,7 @@ object Libs {
 
         const val jupiter = "org.junit.jupiter:junit-jupiter:$junitVersion"
         const val jupiterApi = "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+        const val jupiterEngine = "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
     }
 
     object Mockito {
@@ -172,8 +184,12 @@ object Libs {
     const val jodaTime = "joda-time:joda-time:2.12.5"
     const val json = "org.json:json:20230618"
     const val jsonAssert = "org.skyscreamer:jsonassert:1.5.0"
+    const val rootBeer = "com.scottyab:rootbeer-lib:0.1.0"
+    const val javaOtp = "com.eatthepath:java-otp:0.4.0"
+    const val qrGen = "com.github.kenglxn.QRGen:android:3.0.1"
+    const val socketIo = "io.socket:socket.io-client:2.1.0"
+    const val kotlinTestRunner = "io.kotlintest:kotlintest-runner-junit5:3.4.2"
 
-    const val lifecycle = "2.6.2"
     const val fragmentktx = "1.6.1"
     const val ormLite = "4.46"
     const val nav = "2.7.4"
