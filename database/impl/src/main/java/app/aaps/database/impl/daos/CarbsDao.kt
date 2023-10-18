@@ -38,7 +38,7 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     fun getLastCarbsRecordMaybe(): Maybe<Carbs>
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
-    fun getOldestCarbsRecord(): Carbs?
+    fun getOldestCarbsRecord(): Maybe<Carbs>
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE likely(isValid = 1) AND unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY id DESC")
     fun getCarbsFromTime(timestamp: Long): Single<List<Carbs>>

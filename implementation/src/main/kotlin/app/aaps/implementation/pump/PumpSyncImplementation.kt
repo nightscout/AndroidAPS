@@ -10,6 +10,7 @@ import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -24,12 +25,12 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.asAnnouncement
 import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.pump.toUeSource
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransactionWithPumpId
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalWithTempIdTransaction
@@ -116,7 +117,7 @@ class PumpSyncImplementation @Inject constructor(
     }
 
     override fun expectedPumpState(): PumpSync.PumpState {
-        val bolus = persistenceLayer.getLastBolus()
+        val bolus = persistenceLayer.getNewestBolus()
         val temporaryBasal = persistenceLayer.getTemporaryBasalActiveAt(dateUtil.now())
         val extendedBolus = persistenceLayer.getExtendedBolusActiveAt(dateUtil.now())
 
@@ -256,8 +257,14 @@ class PumpSyncImplementation @Inject constructor(
 
     override fun insertAnnouncement(error: String, pumpId: Long?, pumpType: PumpType, pumpSerial: String) {
         if (!confirmActivePump(dateUtil.now(), pumpType, pumpSerial)) return
-        disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(error, pumpId, pumpType.toDb(), pumpSerial))
-            .subscribe()
+        disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+            therapyEvent = TE.asAnnouncement(error, pumpId, pumpType, pumpSerial),
+            timestamp = dateUtil.now(),
+            action = app.aaps.core.data.ue.Action.TREATMENT,
+            source = Sources.Pump,
+            note = error,
+            listValues = listOf()
+        ).subscribe()
     }
 
     /*

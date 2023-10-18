@@ -296,7 +296,7 @@ class CommandQueueImplementation @Inject constructor(
                 callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
                 return false
             }
-            val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
+            val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
             if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
                 callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()

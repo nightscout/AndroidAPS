@@ -30,8 +30,6 @@ import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.round
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.DeviationDataPoint
 import app.aaps.interfaces.graph.data.FixedLineGraphSeries
@@ -55,7 +53,6 @@ class OverviewDataImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter,
     private val iobCobCalculator: Lazy<IobCobCalculator>
@@ -241,9 +238,7 @@ class OverviewDataImpl @Inject constructor(
     override fun cobInfo(): CobInfo = iobCobCalculator.get().getCobInfo("Overview COB")
 
     override val lastCarbsTime: Long
-        get() = repository.getLastCarbsRecordWrapped().blockingGet().let { lastCarbs ->
-            if (lastCarbs is ValueWrapper.Existing) lastCarbs.value.timestamp else 0L
-        }
+        get() = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
 
     override fun iobText(): String =
         rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)

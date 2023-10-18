@@ -66,14 +66,12 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.events.EventNewNotification
+import app.aaps.core.main.extensions.asAnnouncement
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.convertedToPercent
 import app.aaps.core.main.extensions.plannedRemainingMinutes
 import app.aaps.core.main.iob.json
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
-
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
@@ -106,7 +104,6 @@ class LoopPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
     private val runningConfiguration: RunningConfiguration,
     private val uiInteraction: UiInteraction,
@@ -209,8 +206,8 @@ class LoopPlugin @Inject constructor(
     private fun treatmentTimeThreshold(durationMinutes: Int): Boolean {
         val threshold = System.currentTimeMillis() + durationMinutes * 60 * 1000
         var bool = false
-        val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
-        val lastCarbsTime = repository.getLastCarbsRecord()?.timestamp ?: 0L
+        val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
+        val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
         if (lastBolusTime > threshold || lastCarbsTime > threshold) bool = true
         return bool
     }
@@ -286,7 +283,7 @@ class LoopPlugin @Inject constructor(
             resultAfterConstraints.smb = constraintChecker.applyBolusConstraints(resultAfterConstraints.smbConstraint!!).value()
 
             // safety check for multiple SMBs
-            val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
+            val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
             if (lastBolusTime != 0L && lastBolusTime + T.mins(3).msecs() > System.currentTimeMillis()) {
                 aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
                 resultAfterConstraints.smb = 0.0
@@ -333,7 +330,14 @@ class LoopPlugin @Inject constructor(
                                 rxBus.send(EventNewNotification(carbReqLocal))
                             }
                             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_carbs_req, false)) {
-                                disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resultAfterConstraints.carbsRequiredText)).subscribe()
+                                disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                                    therapyEvent = TE.asAnnouncement(resultAfterConstraints.carbsRequiredText),
+                                    timestamp = dateUtil.now(),
+                                    action = app.aaps.core.data.ue.Action.TREATMENT,
+                                    source = Sources.Loop,
+                                    note = resultAfterConstraints.carbsRequiredText,
+                                    listValues = listOf()
+                                ).subscribe()
                             }
                             if (sp.getBoolean(
                                     app.aaps.core.utils.R.string.key_enable_carbs_required_alert_local,
@@ -642,7 +646,7 @@ class LoopPlugin @Inject constructor(
             return
         }
         val pump = activePlugin.activePump
-        val lastBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
+        val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         if (lastBolusTime != 0L && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
             callback?.result(
@@ -666,7 +670,7 @@ class LoopPlugin @Inject constructor(
 
         // deliver SMB
         val detailedBolusInfo = DetailedBolusInfo()
-        detailedBolusInfo.lastKnownBolusTime = persistenceLayer.getLastBolus()?.timestamp ?: 0L
+        detailedBolusInfo.lastKnownBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
         detailedBolusInfo.insulin = request.smb
         detailedBolusInfo.bolusType = BS.Type.SMB

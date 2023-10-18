@@ -14,7 +14,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
     @Test
     fun shouldRunTest() {
         // Set last bolus time to now
-        `when`(persistenceLayer.getLastBolusOfType(BS.Type.NORMAL)).thenReturn(
+        `when`(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
             BS(
                 timestamp = now,
                 amount = 0.0,
@@ -44,7 +44,7 @@ class TriggerBolusAgoTest : TriggerTestBase() {
         t = TriggerBolusAgo(injector).setValue(390).comparator(Comparator.Compare.IS_EQUAL_OR_LESSER)
         assertThat(t.shouldRun()).isTrue()
         // Set last bolus time to 0
-        `when`(persistenceLayer.getLastBolusOfType(BS.Type.NORMAL)).thenReturn(
+        `when`(persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)).thenReturn(
             BS(
                 timestamp = 0,
                 amount = 0.0,

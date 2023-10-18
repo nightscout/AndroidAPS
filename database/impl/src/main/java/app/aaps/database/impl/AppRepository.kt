@@ -326,8 +326,10 @@ import kotlin.math.roundToInt
         database.effectiveProfileSwitchDao.insert(profileSwitch)
     }
 
-    fun getOldestEffectiveProfileSwitchRecord(): EffectiveProfileSwitch? =
+    fun getOldestEffectiveProfileSwitchRecord(): Maybe<EffectiveProfileSwitch> =
         database.effectiveProfileSwitchDao.getOldestEffectiveProfileSwitchRecord()
+            .subscribeOn(Schedulers.io())
+
 
     fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Maybe<EffectiveProfileSwitch> =
         database.effectiveProfileSwitchDao.getEffectiveProfileSwitchActiveAt(timestamp)
@@ -474,7 +476,7 @@ import kotlin.math.roundToInt
                 }
             }
 
-    fun getLastBolusRecord(): Bolus? =
+    fun getNewestBolus(): Bolus? =
         database.bolusDao.getLastBolusRecord()
 
     fun getLastBolusRecordWrapped(): Single<ValueWrapper<Bolus>> =
@@ -486,7 +488,7 @@ import kotlin.math.roundToInt
         database.bolusDao.getLastBolusRecordOfType(type)
             .subscribeOn(Schedulers.io())
 
-    fun getOldestBolusRecord(): Bolus? =
+    fun getOldestBolus(): Bolus? =
         database.bolusDao.getOldestBolusRecord()
 
     fun getBolusesDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
@@ -560,13 +562,13 @@ import kotlin.math.roundToInt
     fun getLastCarbsRecord(): Carbs? =
         database.carbsDao.getLastCarbsRecord()
 
-    fun getLastCarbsRecordWrapped(): Single<ValueWrapper<Carbs>> =
+    fun getLastCarbs(): Maybe<Carbs> =
         database.carbsDao.getLastCarbsRecordMaybe()
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
-    fun getOldestCarbsRecord(): Carbs? =
+    fun getOldestCarbs(): Maybe<Carbs> =
         database.carbsDao.getOldestCarbsRecord()
+            .subscribeOn(Schedulers.io())
 
     fun getCarbsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Carbs>> =
         database.carbsDao.getCarbsFromTime(timestamp)

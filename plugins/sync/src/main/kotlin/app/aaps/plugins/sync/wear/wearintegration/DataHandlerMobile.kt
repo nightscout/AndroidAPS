@@ -8,6 +8,7 @@ import app.aaps.core.data.db.BS
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.HR
 import app.aaps.core.data.db.TB
+import app.aaps.core.data.db.TDD
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
@@ -61,8 +62,6 @@ import app.aaps.core.main.wizard.BolusWizard
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.main.wizard.QuickWizardEntry
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.entities.TotalDailyDose
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.R
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -90,7 +89,6 @@ class DataHandlerMobile @Inject constructor(
     private val sp: SP,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,
-    private val repository: AppRepository,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
@@ -329,7 +327,7 @@ class DataHandlerMobile @Inject constructor(
         val activePump = activePlugin.activePump
         var message: String
         // check if DB up to date
-        val dummies: MutableList<TotalDailyDose> = LinkedList()
+        val dummies: MutableList<TDD> = LinkedList()
         val historyList = getTDDList(dummies)
         if (isOldData(historyList)) {
             message = "OLD DATA - "
@@ -340,7 +338,7 @@ class DataHandlerMobile @Inject constructor(
                 message += rh.gs(R.string.pump_fetching_data)
                 commandQueue.loadTDDs(object : Callback() {
                     override fun run() {
-                        val dummies1: MutableList<TotalDailyDose> = LinkedList()
+                        val dummies1: MutableList<TDD> = LinkedList()
                         val historyList1 = getTDDList(dummies1)
                         val reloadMessage =
                             if (isOldData(historyList1))
@@ -868,7 +866,7 @@ class DataHandlerMobile @Inject constructor(
             .stream()
             .filter { (_, _, _, _, _, _, _, _, _, type) -> type !== BS.Type.PRIMING }
             .forEach { (_, _, _, isValid, _, _, timestamp, _, amount, type) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, amount, 0.0, type === BS.Type.SMB, isValid)) }
-        repository.getCarbsDataFromTimeExpanded(startTimeWindow, true).blockingGet()
+        persistenceLayer.getCarbsFromTimeExpanded(startTimeWindow, true)
             .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
         val finalLastRun = loop.lastRun
         if (finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
@@ -1055,24 +1053,24 @@ class DataHandlerMobile @Inject constructor(
             return ret
         }
 
-    private fun isOldData(historyList: List<TotalDailyDose>): Boolean {
+    private fun isOldData(historyList: List<TDD>): Boolean {
         val startsYesterday = activePlugin.activePump.pumpDescription.supportsTDDs
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         return historyList.size < 3 || df.format(Date(historyList[0].timestamp)) != df.format(Date(System.currentTimeMillis() - if (startsYesterday) 1000 * 60 * 60 * 24 else 0))
     }
 
-    private fun getTDDList(returnDummies: MutableList<TotalDailyDose>): MutableList<TotalDailyDose> {
-        var historyList = repository.getLastTotalDailyDoses(10, false).blockingGet().toMutableList()
+    private fun getTDDList(returnDummies: MutableList<TDD>): MutableList<TDD> {
+        var historyList = persistenceLayer.getLastTotalDailyDoses(10, false).toMutableList()
         //var historyList = databaseHelper.getTDDs().toMutableList()
         historyList = historyList.subList(0, min(10, historyList.size))
         // fill single gaps - only needed for Dana*R data
-        val dummies: MutableList<TotalDailyDose> = returnDummies
+        val dummies: MutableList<TDD> = returnDummies
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         for (i in 0 until historyList.size - 1) {
             val elem1 = historyList[i]
             val elem2 = historyList[i + 1]
             if (df.format(Date(elem1.timestamp)) != df.format(Date(elem2.timestamp + 25 * 60 * 60 * 1000))) {
-                val dummy = TotalDailyDose(timestamp = elem1.timestamp - T.hours(24).msecs(), bolusAmount = elem1.bolusAmount / 2, basalAmount = elem1.basalAmount / 2)
+                val dummy = TDD(timestamp = elem1.timestamp - T.hours(24).msecs(), bolusAmount = elem1.bolusAmount / 2, basalAmount = elem1.basalAmount / 2)
                 dummies.add(dummy)
                 elem1.basalAmount /= 2.0
                 elem1.bolusAmount /= 2.0
@@ -1083,10 +1081,10 @@ class DataHandlerMobile @Inject constructor(
         return historyList
     }
 
-    private val TotalDailyDose.total
+    private val TDD.total
         get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount
 
-    private fun generateTDDMessage(historyList: MutableList<TotalDailyDose>, dummies: MutableList<TotalDailyDose>): String {
+    private fun generateTDDMessage(historyList: MutableList<TDD>, dummies: MutableList<TDD>): String {
         val profile = profileFunction.getProfile() ?: return rh.gs(R.string.no_profile)
         if (historyList.isEmpty()) {
             return rh.gs(R.string.no_history)

@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.workflow.CalculationWorkflow
-import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import dagger.android.HasAndroidInjector
@@ -33,7 +32,6 @@ class HistoryBrowserData @Inject constructor(
     activePlugin: ActivePlugin,
     defaultValueHelper: DefaultValueHelper,
     profileFunction: ProfileFunction,
-    repository: AppRepository,
     persistenceLayer: PersistenceLayer,
     fabricPrivacy: FabricPrivacy,
     calculationWorkflow: CalculationWorkflow,
@@ -54,7 +52,6 @@ class HistoryBrowserData @Inject constructor(
                 activePlugin,
                 defaultValueHelper,
                 profileFunction,
-                repository,
                 persistenceLayer,
                 decimalFormatter
             ) { iobCobCalculator }
@@ -70,7 +67,6 @@ class HistoryBrowserData @Inject constructor(
                 activePlugin,
                 fabricPrivacy,
                 dateUtil,
-                repository,
                 persistenceLayer,
                 overviewData,
                 calculationWorkflow,

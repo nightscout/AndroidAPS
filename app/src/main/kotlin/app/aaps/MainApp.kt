@@ -33,8 +33,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.ui.locale.LocaleHelper
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.VersionChangeTransaction
 import app.aaps.database.persistence.CompatDBHelper
 import app.aaps.di.DaggerAppComponent
 import app.aaps.implementation.lifecycle.ProcessLifecycleListener
@@ -78,7 +76,6 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
     @Inject lateinit var compatDBHelper: CompatDBHelper
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
     @Suppress("unused") @Inject lateinit var staticInjector: StaticInjector// better avoid, here fake only to initialize
@@ -131,7 +128,7 @@ class MainApp : DaggerApplication() {
                     if (config.isDev() && sp.getStringOrNull(app.aaps.core.utils.R.string.key_email_for_crash_report, null).isNullOrBlank())
                         notificationStore.add(Notification(Notification.IDENTIFICATION_NOT_SET, rh.get().gs(R.string.identification_not_set), Notification.INFO))
                     // log version
-                    disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
+                    disposable += persistenceLayer.insertVersionChangeIfChanged(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash).subscribe()
                     // log app start
                     if (sp.getBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
                         disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(

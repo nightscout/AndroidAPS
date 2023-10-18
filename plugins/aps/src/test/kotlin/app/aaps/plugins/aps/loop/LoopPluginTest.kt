@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
-import app.aaps.database.impl.AppRepository
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
@@ -45,7 +44,6 @@ class LoopPluginTest : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var notificationManager: NotificationManager
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var dateUtil: DateUtil
@@ -61,7 +59,7 @@ class LoopPluginTest : TestBase() {
         loopPlugin = LoopPlugin(
             injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-            repository, persistenceLayer, runningConfiguration, uiInteraction
+            persistenceLayer, runningConfiguration, uiInteraction
         )
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)

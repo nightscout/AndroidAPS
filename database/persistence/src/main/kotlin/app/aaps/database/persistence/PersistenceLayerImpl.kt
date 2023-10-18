@@ -13,6 +13,7 @@ import app.aaps.core.data.db.HR
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.TB
+import app.aaps.core.data.db.TDD
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.UE
@@ -81,9 +82,11 @@ import app.aaps.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdTherapyEventTransaction
 import app.aaps.database.impl.transactions.UserEntryTransaction
+import app.aaps.database.impl.transactions.VersionChangeTransaction
 import app.aaps.database.persistence.converters.fromDb
 import app.aaps.database.persistence.converters.toDb
 import dagger.Reusable
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -120,9 +123,10 @@ class PersistenceLayerImpl @Inject constructor(
     override fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = repository.cleanupDatabase(keepDays, deleteTrackedChanges)
 
     // BS
-    override fun getLastBolus(): BS? = repository.getLastBolusRecord()?.fromDb()
+    override fun getNewestBolus(): BS? = repository.getNewestBolus()?.fromDb()
+    override fun getOldestBolus(): BS? = repository.getOldestBolus()?.fromDb()
 
-    override fun getLastBolusOfType(type: BS.Type): BS? =
+    override fun getNewestBolusOfType(type: BS.Type): BS? =
         repository.getLastBolusRecordOfType(type.toDb()).blockingGet()?.fromDb()
 
     override fun getLastBolusId(): Long? = repository.getLastBolusId()
@@ -265,6 +269,9 @@ class PersistenceLayerImpl @Inject constructor(
                 transactionResult
             }
 
+    override fun getNewestCarbs(): CA? = repository.getLastCarbs().blockingGet()?.fromDb()
+    override fun getOldestCarbs(): CA? = repository.getOldestCarbs().blockingGet()?.fromDb()
+
     // CA
     override fun getLastCarbsId(): Long? = repository.getLastCarbsId()
     override fun getCarbsByNSId(nsId: String): CA? = repository.getCarbsByNSId(nsId)?.fromDb()
@@ -276,6 +283,11 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getCarbsFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<CA>> =
         repository.getCarbsIncludingInvalidFromTime(startTime, ascending)
             .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+
+    override fun getCarbsFromTimeExpanded(startTime: Long, ascending: Boolean): List<CA> =
+        repository.getCarbsDataFromTimeExpanded(startTime, ascending)
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+            .blockingGet()
 
     override fun getCarbsFromTimeToTimeExpanded(startTime: Long, endTime: Long, ascending: Boolean): List<CA> =
         repository.getCarbsDataFromTimeToTimeExpanded(startTime, endTime, ascending)
@@ -537,6 +549,8 @@ class PersistenceLayerImpl @Inject constructor(
                 }
                 transactionResult
             }
+
+    override fun getOldestEffectiveProfileSwitch(): EPS? = repository.getOldestEffectiveProfileSwitchRecord().blockingGet()?.fromDb()
 
     override fun updateExtendedBolusesNsIds(extendedBoluses: List<EB>): Single<PersistenceLayer.TransactionResult<EB>> =
         repository.runTransactionForResult(UpdateNsIdExtendedBolusTransaction(extendedBoluses.asSequence().map { it.toDb() }.toList()))
@@ -1509,5 +1523,14 @@ class PersistenceLayerImpl @Inject constructor(
 
     override fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UE>> =
         repository.getUserEntryFilteredDataFromTime(timestamp).map { list -> list.asSequence().map { it.fromDb() }.toList() }
+
+    // TDD
+    override fun clearCachedTddData(timestamp: Long) = repository.clearCachedTddData(timestamp)
+    override fun getLastTotalDailyDoses(count: Int, ascending: Boolean): List<TDD> =
+        repository.getLastTotalDailyDoses(count, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }.blockingGet()
+
+    // VersionChange
+    override fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable =
+        repository.runTransaction(VersionChangeTransaction(versionName, versionCode, gitRemote, commitHash))
 
 }

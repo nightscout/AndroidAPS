@@ -36,7 +36,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val lastBolus = persistenceLayer.getLastBolusOfType(BS.Type.NORMAL)
+        val lastBolus = persistenceLayer.getNewestBolusOfType(BS.Type.NORMAL)
         val lastBolusTime = lastBolus?.timestamp ?: 0L
         if (lastBolusTime == 0L)
             return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE) {

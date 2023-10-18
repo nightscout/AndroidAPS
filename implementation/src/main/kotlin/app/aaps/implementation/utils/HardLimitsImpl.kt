@@ -2,13 +2,18 @@ package app.aaps.implementation.utils
 
 import android.content.Context
 import app.aaps.annotations.OpenForTesting
+import app.aaps.core.data.db.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import app.aaps.core.main.extensions.asAnnouncement
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -24,7 +29,8 @@ class HardLimitsImpl @Inject constructor(
     private val sp: SP,
     private val rh: ResourceHelper,
     private val context: Context,
-    private val repository: AppRepository,
+    private val persistenceLayer: PersistenceLayer,
+    private val dateUtil: DateUtil
 ) : HardLimits {
 
     private val disposable = CompositeDisposable()
@@ -98,7 +104,14 @@ class HardLimitsImpl @Inject constructor(
             msg += ".\n"
             msg += rh.gs(app.aaps.core.ui.R.string.valuelimitedto, value, newValue)
             aapsLogger.error(msg)
-            disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(msg)).subscribe()
+            disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                therapyEvent = TE.asAnnouncement(msg),
+                timestamp = dateUtil.now(),
+                action = Action.CAREPORTAL,
+                source = Sources.Aaps,
+                note = msg,
+                listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
+            ).subscribe()
             uiInteraction.showToastAndNotification(context, msg, app.aaps.core.ui.R.raw.error)
         }
         return newValue

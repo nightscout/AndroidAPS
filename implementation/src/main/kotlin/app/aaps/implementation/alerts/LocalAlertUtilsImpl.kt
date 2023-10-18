@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -22,8 +21,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.events.EventNewNotification
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import app.aaps.core.main.extensions.asAnnouncement
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -43,10 +41,8 @@ class LocalAlertUtilsImpl @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val smsCommunicator: SmsCommunicator,
     private val config: Config,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
-    private val dateUtil: DateUtil,
-    private val uel: UserEntryLogger
+    private val dateUtil: DateUtil
 ) : LocalAlertUtils {
 
     private val disposable = CompositeDisposable()
@@ -70,9 +66,15 @@ class LocalAlertUtilsImpl @Inject constructor(
                     it.soundId =
                         app.aaps.core.ui.R.raw.alarm
                 }))
-                uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(app.aaps.core.ui.R.string.pump_unreachable), ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                 if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true))
-                    disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(rh.gs(app.aaps.core.ui.R.string.pump_unreachable))).subscribe()
+                    disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                        therapyEvent = TE.asAnnouncement(rh.gs(app.aaps.core.ui.R.string.pump_unreachable)),
+                        timestamp = dateUtil.now(),
+                        action = Action.CAREPORTAL,
+                        source = Sources.Aaps,
+                        note = rh.gs(app.aaps.core.ui.R.string.pump_unreachable),
+                        listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
+                    ).subscribe()
             }
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_smscommunicator_report_pump_unreachable, true))
                 smsCommunicator.sendNotificationToAllNumbers(rh.gs(app.aaps.core.ui.R.string.pump_unreachable))
@@ -131,9 +133,15 @@ class LocalAlertUtilsImpl @Inject constructor(
             n.soundId = app.aaps.core.ui.R.raw.alarm
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
-            uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(app.aaps.core.ui.R.string.missed_bg_readings), ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true)) {
-                disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(n.text)).subscribe()
+                disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
+                    therapyEvent = TE.asAnnouncement(n.text),
+                    timestamp = dateUtil.now(),
+                    action = Action.CAREPORTAL,
+                    source = Sources.Aaps,
+                    note = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings),
+                    listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
+                ).subscribe()
             }
         } else if (dateUtil.isOlderThan(bgReading.timestamp, 5).not()) {
             rxBus.send(EventDismissNotification(Notification.BG_READINGS_MISSED))

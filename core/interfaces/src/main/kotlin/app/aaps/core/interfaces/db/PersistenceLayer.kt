@@ -13,6 +13,7 @@ import app.aaps.core.data.db.HR
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.TB
+import app.aaps.core.data.db.TDD
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.UE
@@ -20,6 +21,7 @@ import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.database.ValueWrapper
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 
@@ -34,7 +36,14 @@ interface PersistenceLayer {
      *
      * @return bolus record
      */
-    fun getLastBolus(): BS?
+    fun getNewestBolus(): BS?
+
+    /**
+     * Get oldest bolus
+     *
+     * @return bolus record
+     */
+    fun getOldestBolus(): BS?
 
     /**
      * Get last bolus of specified type
@@ -42,7 +51,7 @@ interface PersistenceLayer {
      * @param type bolus type
      * @return bolus record
      */
-    fun getLastBolusOfType(type: BS.Type): BS?
+    fun getNewestBolusOfType(type: BS.Type): BS?
 
     /**
      *  Get highest id in database
@@ -147,6 +156,18 @@ interface PersistenceLayer {
 
     // CA
     /**
+     *  Get carbs record with highest timestamp
+     *  @return carbs
+     */
+    fun getNewestCarbs(): CA?
+
+    /**
+     *  Get carbs record with lowest timestamp
+     *  @return carbs
+     */
+    fun getOldestCarbs(): CA?
+
+    /**
      *  Get highest id in database
      *  @return id
      */
@@ -175,6 +196,15 @@ interface PersistenceLayer {
      * @return List of boluses
      */
     fun getCarbsFromTimeIncludingInvalid(startTime: Long, ascending: Boolean): Single<List<CA>>
+
+    /**
+     * Get carbs from time with expanded extended carbs to multiple records
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of carbs
+     */
+    fun getCarbsFromTimeExpanded(startTime: Long, ascending: Boolean): List<CA>
 
     /**
      * Get carbs in time interval with expanded extended carbs to multiple records
@@ -319,6 +349,12 @@ interface PersistenceLayer {
     fun updateGlucoseValuesNsIds(glucoseValues: List<GV>): Single<TransactionResult<GV>>
 
     // EPS
+    /**
+     *  Get effective profile switch record with lowest timestamp
+     *  @return effective profile switch
+     */
+    fun getOldestEffectiveProfileSwitch(): EPS?
+
     /**
      * Get running effective profile switch at time
      *
@@ -1001,6 +1037,35 @@ interface PersistenceLayer {
     fun getUserEntryDataFromTime(timestamp: Long): Single<List<UE>>
     fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UE>>
 
+    // TDD
+
+    /**
+     * Remove data older than timestamp
+     *
+     * @param timestamp from
+     */
+    fun clearCachedTddData(timestamp: Long)
+
+    /**
+     * Get newest 'count' records from database
+     *
+     * @param count amount
+     * @param ascending sorted ascending if true
+     * @return List of tdds
+     */
+    fun getLastTotalDailyDoses(count: Int, ascending: Boolean): List<TDD>
+
+    // VersionChange
+
+    /**
+     * Insert new record to db if version has changed since last run
+     *
+     * @param versionName versionName (ie 3.3.0)
+     * @param versionCode versionCode (ie 1500)
+     * @param gitRemote gitRemote (shortened)
+     * @param commitHash commitHash
+     */
+    fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable
     class TransactionResult<T> {
 
         val inserted = mutableListOf<T>()

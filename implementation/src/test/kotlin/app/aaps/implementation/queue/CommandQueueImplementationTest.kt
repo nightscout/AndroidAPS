@@ -124,7 +124,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(persistenceLayer.getEffectiveProfileSwitchActiveAt(anyLong())).thenReturn(effectiveProfileSwitch)
-        `when`(persistenceLayer.getLastBolus()).thenReturn(
+        `when`(persistenceLayer.getNewestBolus()).thenReturn(
             BS(
                 timestamp = Calendar.getInstance().also { it.set(2000, 0, 1) }.timeInMillis,
                 type = BS.Type.NORMAL,

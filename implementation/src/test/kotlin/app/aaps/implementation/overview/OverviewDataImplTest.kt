@@ -9,7 +9,6 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.DefaultValueHelper
-import app.aaps.database.impl.AppRepository
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -20,7 +19,6 @@ import org.mockito.Mockito
 class OverviewDataImplTest : TestBaseWithProfile() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var autosensDataStore: AutosensDataStore
 
@@ -33,7 +31,7 @@ class OverviewDataImplTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        sut = OverviewDataImpl(aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, repository, persistenceLayer, decimalFormatter) { iobCobCalculator }
+        sut = OverviewDataImpl(aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, persistenceLayer, decimalFormatter) { iobCobCalculator }
         Mockito.`when`(defaultValueHelper.determineLowLine()).thenReturn(80.0)
         Mockito.`when`(defaultValueHelper.determineHighLine()).thenReturn(180.0)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)

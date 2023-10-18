@@ -47,8 +47,6 @@ import app.aaps.core.main.iob.determineBasalJson
 import app.aaps.core.main.iob.plus
 import app.aaps.core.main.iob.round
 import app.aaps.core.main.workflow.CalculationWorkflow
-import app.aaps.database.ValueWrapper
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
 import dagger.android.HasAndroidInjector
@@ -76,7 +74,6 @@ class IobCobCalculatorPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
     val overviewData: OverviewData,
     private val calculationWorkflow: CalculationWorkflow,
@@ -175,11 +172,11 @@ class IobCobCalculatorPlugin @Inject constructor(
         if (oldestTempBasal != null) oldestTime = min(oldestTime, oldestTempBasal.timestamp)
         val oldestExtendedBolus = persistenceLayer.getOldestExtendedBolusRecord()
         if (oldestExtendedBolus != null) oldestTime = min(oldestTime, oldestExtendedBolus.timestamp)
-        val oldestBolus = repository.getOldestBolusRecord()
+        val oldestBolus = persistenceLayer.getOldestBolus()
         if (oldestBolus != null) oldestTime = min(oldestTime, oldestBolus.timestamp)
-        val oldestCarbs = repository.getOldestCarbsRecord()
+        val oldestCarbs = persistenceLayer.getOldestCarbs()
         if (oldestCarbs != null) oldestTime = min(oldestTime, oldestCarbs.timestamp)
-        val oldestPs = repository.getOldestEffectiveProfileSwitchRecord()
+        val oldestPs = persistenceLayer.getOldestEffectiveProfileSwitch()
         if (oldestPs != null) oldestTime = min(oldestTime, oldestPs.timestamp)
         oldestTime -= 15 * 60 * 1000L // allow 15 min before
         return oldestTime
@@ -299,7 +296,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         var futureCarbs = 0.0
         val now = dateUtil.now()
         var timestamp = now
-        val carbs = repository.getCarbsDataFromTimeExpanded(autosensData?.time ?: now, true).blockingGet()
+        val carbs = persistenceLayer.getCarbsFromTimeExpanded(autosensData?.time ?: now, true)
         if (autosensData != null) {
             displayCob = autosensData.cob
             carbs.forEach { carb ->
@@ -318,8 +315,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         val now = System.currentTimeMillis()
         val maxAbsorptionHours: Double = activePlugin.activeSensitivity.maxAbsorptionHours()
         val absorptionTimeAgo = now - (maxAbsorptionHours * T.hours(1).msecs()).toLong()
-        repository.getCarbsDataFromTimeToTimeExpanded(absorptionTimeAgo + 1, now, true)
-            .blockingGet()
+        persistenceLayer.getCarbsFromTimeToTimeExpanded(absorptionTimeAgo + 1, now, true)
             .forEach {
                 if (it.amount > 0) {
                     result.carbs += it.amount
@@ -333,7 +329,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             result.slopeFromMaxDeviation = autosensData.slopeFromMaxDeviation
             result.usedMinCarbsImpact = autosensData.usedMinCarbsImpact
         }
-        val lastBolus = persistenceLayer.getLastBolus()
+        val lastBolus = persistenceLayer.getNewestBolus()
         result.lastBolusTime = lastBolus?.timestamp ?: 0L
         return result
     }
@@ -397,7 +393,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                 {
                     synchronized(this) {
                         aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
-                        repository.clearCachedTddData(MidnightTime.calc(event.oldDataTimestamp))
+                        persistenceLayer.clearCachedTddData(MidnightTime.calc(event.oldDataTimestamp))
                         newHistoryData(
                             event.oldDataTimestamp,
                             event.reloadBgData,
