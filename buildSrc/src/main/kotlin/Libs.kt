@@ -19,6 +19,7 @@ object Libs {
         const val serializationProtobuf = "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$serialization"
         const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion"
         const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutinesVersion"
+        const val coroutinesRx3 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:$coroutinesVersion"
         const val coroutinesGuava = "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutinesVersion"
         const val coroutinesPlayServices = "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutinesVersion"
         const val datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.1"
@@ -28,9 +29,12 @@ object Libs {
 
         const val core = "androidx.core:core-ktx:1.12.0"
         const val appCompat = "androidx.appcompat:appcompat:1.6.1"
+        const val activity = "androidx.activity:activity-ktx:1.8.0"
         const val preference = "androidx.preference:preference-ktx:1.2.1"
         const val workRuntimeKtx = "androidx.work:work-runtime-ktx:2.8.1"
         const val constraintLayout = "androidx.constraintlayout:constraintlayout:2.1.4"
+        const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+        const val gridLayout = "androidx.gridlayout:gridlayout:1.0.0"
 
         object Test {
 
@@ -41,6 +45,7 @@ object Libs {
         }
 
         object Room {
+
             private const val roomVersion = "2.5.2"
 
             const val room = "androidx.room:room-ktx:$roomVersion"
@@ -49,11 +54,14 @@ object Libs {
             const val rxJava3 = "androidx.room:room-rxjava3:$roomVersion"
             const val testing = "androidx.room:room-testing:$roomVersion"
         }
+
         object Wear {
 
             const val wear = "androidx.wear:wear:1.3.0"
             const val tiles = "androidx.wear.tiles:tiles:1.2.0"
         }
+
+        const val biometric = "androidx.biometric:biometric:1.1.0"
     }
 
     object Google {
@@ -63,6 +71,7 @@ object Libs {
 
                 const val measurementApi = "com.google.android.gms:play-services-measurement-api:21.3.0"
                 const val wearable = "com.google.android.gms:play-services-wearable:18.1.0"
+                const val location = "com.google.android.gms:play-services-location:21.0.1"
             }
 
             object Wearable {
@@ -70,10 +79,24 @@ object Libs {
                 const val wearable = "com.google.android.wearable:wearable:2.9.0"
                 const val wearableSupport = "com.google.android.support:wearable:2.9.0"
             }
+
+            const val material = "com.google.android.material:material:1.10.0"
+        }
+
+        object Firebase {
+
+            const val firebaseBom = "com.google.firebase:firebase-bom:32.3.1"
+            const val analytics = "com.google.firebase:firebase-analytics-ktx"
+            const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
+            const val messaging = "com.google.firebase:firebase-messaging-ktx"
+            const val auth = "com.google.firebase:firebase-auth-ktx"
+            const val database = "com.google.firebase:firebase-database-ktx"
         }
 
         const val truth = "com.google.truth:truth:1.1.5"
         const val gson = "com.google.code.gson:gson:2.10.1"
+        const val guava = "com.google.guava:guava:32.1.3-jre"
+        const val tinkAndroid = "com.google.crypto.tink:tink-android:1.10.0"
     }
 
     object Dagger {
@@ -119,33 +142,46 @@ object Libs {
         const val kotlin = "org.mockito.kotlin:mockito-kotlin:5.1.0"
     }
 
+    object Squareup {
+        object Retrofit2 {
+
+            private const val retrofitVersion = "2.9.0"
+
+            const val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
+            const val adapterRxJava3 = "com.squareup.retrofit2:adapter-rxjava3:$retrofitVersion"
+            const val converterGson = "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+        }
+
+        object Okhttp3 {
+
+            private const val okhttpVersion = "4.11.0"
+
+            const val okhttp = "com.squareup.okhttp3:okhttp:$okhttpVersion"
+            const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
+        }
+    }
+
+    object Mozilla {
+
+        const val rhino = "org.mozilla:rhino:1.7.14"
+    }
+
+    const val spongycastleCore = "com.madgag.spongycastle:core:1.58.0.0"
     const val androidSvg = "com.caverock:androidsvg:1.4"
-    const val joda = "net.danlew:android.joda:2.12.5"
+    const val jodaTimeAndroid = "net.danlew:android.joda:2.12.5"
+    const val jodaTime = "joda-time:joda-time:2.12.5"
     const val json = "org.json:json:20230618"
     const val jsonAssert = "org.skyscreamer:jsonassert:1.5.0"
 
     const val lifecycle = "2.6.2"
-    const val coroutines = "1.7.3"
-    const val activity = "1.8.0"
     const val fragmentktx = "1.6.1"
     const val ormLite = "4.46"
     const val nav = "2.7.4"
-    const val material = "1.10.0"
-    const val gridlayout = "1.0.0"
-    const val constraintlayout = "2.1.4"
-    const val preferencektx = "1.2.1"
-    const val commonslang3 = "3.13.0"
     const val commonscodec = "1.16.0"
-    const val guava = "32.1.3-jre"
-    const val work = "2.8.1"
-    const val tink = "1.10.0"
-    const val swipe = "1.1.0"
 
     const val junit = "4.13.2"
     const val mockito = "5.6.0"
     const val dexmaker = "1.2"
-    const val retrofit2 = "2.9.0"
-    const val okhttp3 = "4.11.0"
     const val byteBuddy = "1.12.8"
 
     const val androidx_junit = "1.1.5"
@@ -153,11 +189,6 @@ object Libs {
 
     const val rxandroidble = "1.12.1"
     const val replayshare = "2.2.0"
-
-    const val wearable = "2.9.0"
-    const val play_services_wearable = "18.1.0"
-    const val play_services_location = "21.0.1"
-    const val play_services_measurement = "21.3.0"
 
     const val kotlinx_datetime = "0.4.1"
     const val kotlinx_serialization = "1.6.0"

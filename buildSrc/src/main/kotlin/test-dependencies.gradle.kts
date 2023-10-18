@@ -13,7 +13,7 @@ dependencies {
     testImplementation(Libs.json)
     testImplementation(Libs.Mockito.jupiter)
     testImplementation(Libs.Mockito.kotlin)
-    testImplementation(Libs.joda)
+    testImplementation(Libs.jodaTime)
     testImplementation(Libs.Google.truth)
     testImplementation(Libs.jsonAssert)
 

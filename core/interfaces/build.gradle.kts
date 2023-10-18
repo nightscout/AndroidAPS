@@ -2,11 +2,9 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
-    //id("kotlin-allopen")
     id("kotlin-parcelize")
     id("kotlinx-serialization")
     id("android-module-dependencies")
-    id("all-open-dependencies")
     id("test-dependencies")
 }
 
@@ -25,7 +23,7 @@ dependencies {
 
     api(Libs.AndroidX.appCompat)
     api(Libs.AndroidX.preference)
-    api(Libs.joda)
+    api(Libs.jodaTimeAndroid)
 
     api(Libs.Dagger.androidSupport)
 
@@ -48,4 +46,8 @@ dependencies {
 
     // WorkerClasses
     api(Libs.AndroidX.workRuntimeKtx)
+
+    // TODO eliminate kapt from low level modules
+    kapt(Libs.Dagger.compiler)
+    kapt(Libs.Dagger.androidProcessor)
 }

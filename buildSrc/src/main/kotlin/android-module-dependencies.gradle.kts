@@ -1,7 +1,6 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
-    id("kotlin-kapt")
 }
 
 android {
@@ -60,9 +59,4 @@ android {
         buildConfig = false
         viewBinding = true
     }
-}
-
-dependencies {
-    kapt(Libs.Dagger.androidProcessor)
-    kapt(Libs.Dagger.compiler)
 }

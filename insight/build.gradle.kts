@@ -2,16 +2,14 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("kotlin-allopen")
     id("android-module-dependencies")
     id("test-dependencies")
 }
 
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
-
 android {
-    namespace = "app.aaps.database.impl"
 
+    namespace = "info.nightscout.androidaps.insight"
     defaultConfig {
         kapt {
             arguments {
@@ -20,33 +18,22 @@ android {
             }
         }
     }
-    sourceSets {
-        getByName("androidTest").assets.srcDirs("$projectDir/schemas")
-    }
 }
 
 dependencies {
-    implementation(project(":database:entities"))
 
-    api(Libs.Kotlin.stdlibJdk8)
-    api(Libs.Kotlin.reflect)
-    api(Libs.AndroidX.core)
+    implementation(project(":core:interfaces"))
+    implementation(project(":core:main"))
+    implementation(project(":core:utils"))
+    implementation(project(":core:ui"))
+    implementation(project(":pump:pump-common"))
 
-    api(Libs.Rx.rxJava)
-    api(Libs.Rx.rxAndroid)
-    api(Libs.Rx.rxKotlin)
-
-    api(Libs.Google.gson)
-
+    api(Libs.Google.Android.material)
     api(Libs.AndroidX.Room.room)
     api(Libs.AndroidX.Room.runtime)
     api(Libs.AndroidX.Room.rxJava3)
+
     kapt(Libs.AndroidX.Room.compiler)
-
-    api(Libs.Dagger.android)
-    api(Libs.Dagger.androidSupport)
-
-    androidTestImplementation(Libs.AndroidX.Room.testing)
-
     kapt(Libs.Dagger.compiler)
+    kapt(Libs.Dagger.androidProcessor)
 }

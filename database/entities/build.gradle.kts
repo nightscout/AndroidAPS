@@ -2,9 +2,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("kotlin-kapt")
-    id("kotlin-allopen")
     id("android-module-dependencies")
-    id("all-open-dependencies")
     id("test-dependencies")
 }
 
