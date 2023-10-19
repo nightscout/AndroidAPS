@@ -24,7 +24,7 @@ dependencies {
     api "net.danlew:android.joda:$joda_version"
 
     //Firebase
-    api platform('com.google.firebase:firebase-bom:32.3.1')
+    api platform('com.google.firebase:firebase-bom:32.4.0')
     api "com.google.firebase:firebase-analytics-ktx"
     api "com.google.firebase:firebase-crashlytics-ktx"
     // StatsActivity not in use now
