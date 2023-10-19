@@ -42,6 +42,7 @@ object Libs {
         const val lifecycleViewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
         const val fragment = "androidx.fragment:fragment-ktx:1.6.1"
         const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:2.7.4"
+        const val legacySupport = "androidx.legacy:legacy-support-v13:1.0.0"
 
         object Work {
 

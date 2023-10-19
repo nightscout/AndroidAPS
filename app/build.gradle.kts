@@ -1,7 +1,6 @@
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
-import kotlin.io.println
 
 plugins {
     id("com.android.application")
@@ -13,8 +12,6 @@ plugins {
 }
 
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
-apply(from = "${project.rootDir}/core/main/test_dependencies.gradle")
-
 
 repositories {
     mavenCentral()

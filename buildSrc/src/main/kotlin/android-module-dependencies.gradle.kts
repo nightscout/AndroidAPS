@@ -6,9 +6,9 @@ plugins {
 android {
     compileSdk = Versions.compileSdk
     defaultConfig {
-        minSdk = 28
+        minSdk = Versions.minSdk
         @Suppress("DEPRECATION")
-        targetSdk = 28
+        targetSdk = Versions.targetSdk
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -17,6 +17,10 @@ android {
         named("release") {
             isMinifyEnabled = false
             setProguardFiles(listOf(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"))
+        }
+        named("debug") {
+            enableUnitTestCoverage = true
+            enableAndroidTestCoverage = true
         }
     }
 

@@ -2,7 +2,7 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("android-module-dependencies")
-    id("test-dependencies")
+    id("test-module-dependencies")
 }
 
 apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")

@@ -3,7 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-kapt")
     id("android-module-dependencies")
-    id("test-dependencies")
+    id("test-module-dependencies")
 }
 
 android {

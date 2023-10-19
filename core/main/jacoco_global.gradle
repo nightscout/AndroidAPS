@@ -93,10 +93,3 @@ def setupAndroidReporting() {
     }
 }
 
-android {
-    buildTypes {
-        debug {
-            testCoverageEnabled true
-        }
-    }
-}
