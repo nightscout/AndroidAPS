@@ -196,10 +196,11 @@ object Libs {
     const val kotlinTestRunner = "io.kotlintest:kotlintest-runner-junit5:3.4.2"
     const val rxandroidBle = "com.polidea.rxandroidble3:rxandroidble:1.17.2"
     const val rx3ReplayingShare = "com.jakewharton.rx3:replaying-share:3.0.0"
+    const val commonCodecs = "commons-codec:commons-codec:1.16.0"
+    const val kulid = "com.github.guepardoapps:kulid:2.0.0.0"
+    const val xstream = "com.thoughtworks.xstream:xstream:1.4.20"
 
     const val ormLite = "4.46"
-    const val nav = "2.7.4"
-    const val commonscodec = "1.16.0"
 
     const val junit = "4.13.2"
     const val mockito = "5.6.0"
