@@ -40,12 +40,16 @@ object Libs {
         const val gridLayout = "androidx.gridlayout:gridlayout:1.0.0"
         const val browser = "androidx.browser:browser:1.6.0"
         const val lifecycleViewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
+        const val fragment = "androidx.fragment:fragment-ktx:1.6.1"
+        const val navigationFragment = "androidx.navigation:navigation-fragment-ktx:2.7.4"
 
         object Work {
-            private const val workVersion =  "2.8.1"
+
+            private const val workVersion = "2.8.1"
             const val runtimeKtx = "androidx.work:work-runtime-ktx:$workVersion"
             const val testing = "androidx.work:work-testing:$workVersion"
         }
+
         object Test {
 
             const val espressoCore = "androidx.test.espresso:espresso-core:3.5.1"
@@ -72,6 +76,7 @@ object Libs {
         }
 
         const val biometric = "androidx.biometric:biometric:1.1.0"
+        const val media3 = "androidx.media3:media3-common:1.1.1"
     }
 
     object Google {
@@ -189,8 +194,9 @@ object Libs {
     const val qrGen = "com.github.kenglxn.QRGen:android:3.0.1"
     const val socketIo = "io.socket:socket.io-client:2.1.0"
     const val kotlinTestRunner = "io.kotlintest:kotlintest-runner-junit5:3.4.2"
+    const val rxandroidBle = "com.polidea.rxandroidble3:rxandroidble:1.17.2"
+    const val rx3ReplayingShare = "com.jakewharton.rx3:replaying-share:3.0.0"
 
-    const val fragmentktx = "1.6.1"
     const val ormLite = "4.46"
     const val nav = "2.7.4"
     const val commonscodec = "1.16.0"
@@ -202,9 +208,6 @@ object Libs {
 
     const val androidx_junit = "1.1.5"
     const val androidx_rules = "1.5.0"
-
-    const val rxandroidble = "1.12.1"
-    const val replayshare = "2.2.0"
 
     const val kotlinx_datetime = "0.4.1"
     const val kotlinx_serialization = "1.6.0"
