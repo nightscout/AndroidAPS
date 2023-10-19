@@ -60,6 +60,8 @@ public class CmdPair extends BaseCmd {
 
             //B0EB6308060F79D685D6269DC048E32E4C103CD2B8EEA2DE4637EB8A5D6BCD08
             byte[] equilPassword = AESUtil.getEquilPassWord(password);
+
+
             randomPassword = Utils.generateRandomPassword(32);
             byte[] data = Utils.concat(equilPassword, randomPassword);
             aapsLogger.debug(LTag.EQUILBLE, "pwd==" + Utils.bytesToHex(pwd));
@@ -75,7 +77,7 @@ public class CmdPair extends BaseCmd {
     }
 
     @Override public EquilResponse getNextEquilResponse() {
-        return null;
+        return getEquilResponse();
     }
 
 
@@ -152,10 +154,6 @@ public class CmdPair extends BaseCmd {
 
         sp.putString(EquilConst.Prefs.EQUIL_PASSWORD, pwd2);
         sp.putString(EquilConst.Prefs.EQUIL_DEVICES, pwd1);
-//        ZLog.e2("decrypted====" + pwd2.length());
-//        ZLog.e2("decrypted====" + content);
-//        PersistentStore.setString("pwd",pwd2);
-//        PersistentStore.setString("tzm",pwd1);
         runPwd = pwd2;
         byte[] data1 = Utils.hexStringToBytes(pwd1);
         byte[] data = Utils.concat(data1, keyBytes);

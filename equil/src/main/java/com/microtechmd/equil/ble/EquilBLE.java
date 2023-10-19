@@ -31,6 +31,7 @@ import com.microtechmd.equil.manager.EquilManager;
 import com.microtechmd.equil.manager.EquilResponse;
 import com.microtechmd.equil.manager.Utils;
 import com.microtechmd.equil.manager.command.BaseCmd;
+import com.microtechmd.equil.manager.command.CmdDevicesOldGet;
 import com.microtechmd.equil.manager.command.CmdHistoryGet;
 import com.microtechmd.equil.manager.command.CmdInsulinGet;
 import com.microtechmd.equil.manager.command.CmdLargeBasalSet;
@@ -348,6 +349,8 @@ public class EquilBLE {
         String macAddrss;
         if (baseCmd instanceof CmdPair) {
             macAddrss = ((CmdPair) baseCmd).getAddress();
+        } else if (baseCmd instanceof CmdDevicesOldGet) {
+            macAddrss = ((CmdDevicesOldGet) baseCmd).getAddress();
         } else {
             macAddrss = equilManager.getAddress();
         }

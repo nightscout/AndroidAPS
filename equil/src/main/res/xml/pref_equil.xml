@@ -7,14 +7,15 @@
         android:key="@string/key_absorption_cutoff"
         android:title="@string/equil_settings"
         app:initialExpandedChildrenCount="1">
-        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
-            android:digits="0123456789ABCDEF"
-            android:inputType="numberPassword"
-            android:key="@string/key_equil_pair_password"
-            android:title="@string/equil_password_title"
-            validate:customRegexp="@string/fourhexanumber"
-            validate:testErrorString="@string/error_mustbe4hexadidits"
-            validate:testType="regexp" />
+<!--        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference-->
+<!--            android:digits="0123456789ABCDEF"-->
+<!--            android:inputType="none"-->
+<!--            android:key="@string/key_equil_pair_password"-->
+<!--            android:title="@string/equil_password_title"-->
+<!--            validate:customRegexp="@string/fourhexanumber"-->
+<!--            validate:testErrorString="@string/error_mustbe4hexadidits"-->
+<!--            validate:testType="regexp" />-->
+
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_equil_alarm_battery"

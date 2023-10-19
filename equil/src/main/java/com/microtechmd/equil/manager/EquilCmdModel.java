@@ -37,4 +37,13 @@ public class EquilCmdModel {
     public void setCiphertext(String ciphertext) {
         this.ciphertext = ciphertext;
     }
+
+    @Override public String toString() {
+        return "EquilCmdModel{" +
+                "code='" + code + '\'' +
+                ", iv='" + iv + '\'' +
+                ", tag='" + tag + '\'' +
+                ", ciphertext='" + ciphertext + '\'' +
+                '}';
+    }
 }

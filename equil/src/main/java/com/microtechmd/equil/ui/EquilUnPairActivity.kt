@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import com.microtechmd.equil.EquilConst
@@ -42,6 +43,7 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
 
     private lateinit var binding: EquilUnpairActivityBinding
     @Inject lateinit var profileFunction: ProfileFunction
+    var errorCount = 0;
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -54,6 +56,13 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
         binding.tvHint2.text = String.format(rh.gs(R.string.equil_unpair), name)
         binding.btnNext.setOnClickListener {
             showUnPairConfig();
+        }
+        binding.btnDelete.visibility = View.GONE
+        binding.btnDelete.setOnClickListener {
+            rxBus.send(EventEquilUnPairChanged())
+            equilPumpPlugin.clearData()
+            SystemClock.sleep(50)
+            finish()
         }
     }
 
@@ -88,9 +97,14 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
                     SystemClock.sleep(50)
                     finish()
                 } else {
+                    errorCount += 1;
                     dismissLoading()
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
-
+                    if (errorCount > 5) {
+                        runOnUiThread {
+                            binding.btnDelete.visibility = View.VISIBLE
+                        }
+                    }
                 }
             }
         })

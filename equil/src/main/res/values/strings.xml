@@ -14,7 +14,6 @@
 
 
     <!--  start  -->
-    <string name="equil_alarm_text_startup">非正常输注停止！</string>
     <string name="equil_basal_speed">Basal speed</string>
     <string name="equil_bluetooth_connecting">Bluetooth</string>
     <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U Delivered</string>
@@ -35,10 +34,8 @@
     <string name="equil_dressing_onkey_msg">Automatically moving the plunger to the reservoir bottom. It will stop automatically upon reaching the bottom. Click \'Stop\' to interrupt if needed.</string>
     <string name="equil_finish">Completed</string>
     <string name="equil_next">Next</string>
-    <string name="equil_hint1">After installing the pump onto the base plate, select whether to purge the air from the indwelling needle.</string>
-    <string name="equil_hint2">Purge air</string>
+
     <string name="equil_hint_dressing">This operation will stop insulin infusion and cause the pump plunger to retract to the bottom!</string>
-    <string name="equil_hint_dressing2">Please remove the pump from the base</string>
     <string name="equil_history">History</string>
     <string name="equil_insulin_reservoir">Insulin reservior</string>
 
@@ -68,7 +65,7 @@
     <string name="equil_unit_u_hours">%1$s U/H</string>
     <string name="equil_unit_u_minute">%1$s U/M</string>
     <string name="equil_unit_u_second">%1$s U/S</string>
-    <string name="equil_unbind">Unbind</string>
+
     <!--    <string name="equil_unbind_content">这个操作将会停止胰岛素输注，\n并且让泵的推杆回退至底部！\n切删除绑定状态！</string>-->
     <string name="equil_unbind_content">This operation will stop insulin infusion and retract the pump plunger to the bottom! Also, it will delete the binding status.！</string>
 
@@ -76,17 +73,13 @@
 
     <string name="equil_ble_config_confirmation_title">Pair Equil Patch Pump</string>
 
-    <string name="equil_assemble">Please assemble the pump, the filled reservoir and the charged battery</string>
-    <string name="equil_innsert">Please prime the reservoir until there is a drop of insulin on the needle tip </string>
-    <string name="equil_innsert2">The pump must not be on the pump base.</string>
-    <string name="equil_attach">Please attach the pump to the base</string>
+
     <string name="equil_error">Connection error</string>
 
     <string name="equil_change">Change Pump</string>
     <string name="equil_change_content">Please detach the pump from the base plate.</string>
-    <string name="equil_unpair">Do you want to relinquish control over %1$s?</string>
+
     <string name="equil_unpair_alert">Are you sure you want to relinquish control over %1$s?</string>
-    <string name="equil_devices_number">Enter New Pump ID</string>
     <string name="equil_devices_number_hint">Device number</string>
     <string name="equil_record_basal">Basal rate %1$s U/H</string>
     <string name="equil_record_basal_temp">Temporary basal rate %1$s U/H</string>
@@ -108,9 +101,7 @@
     <string name="equil_firmware_version">Firmware version</string>
     <string name="equil_battery_useup">Out of power</string>
     <string name="equil_occlusion">Pump occlusion</string>
-    <string name="equil_motor_reverse">电机反转</string>
     <string name="equil_motor_fault">Motor error</string>
-    <string name="equil_insert_error">非正常输注停止</string>
     <string name="equil_shutdown_be">Equil will be off automatically</string>
     <string name="equil_shutdown">Equil auto off</string>
 
@@ -205,4 +196,23 @@
     <string name="equil_histroy_item17">上电复位</string>
     <string name="equil_histroy_item18">非正常输注停止</string>
 
+
+    <string name="equil_support_error">版本过低不支持</string>
+    <string name="equil_password_tips">Please set a new password for pairing with the Equil v5.3 pump, this password will also be used for unpairing with the current pump in the future, so please be sure to remember it.
+Password rule: It must be 4 characters long, chosen from ABCDEF0123456789.</string>
+    <string name="delete">Delete</string>
+    <string name="equil_set_pair_password">Set Pair Password</string>
+
+    <string name="equil_hint1">After installing the pump onto the base plate, select whether to purge the air from the indwelling needle.</string>
+
+
+    <string name="equil_unbind">Unpair Device</string>
+    <string name="equil_assemble">Please assemble the pump, the filled reservoir and the charged battery</string>
+    <string name="equil_devices_number">Enter New Pump ID</string>
+    <string name="equil_innsert">Please prime the reservoir until there is a drop of insulin on the needle tip</string>
+    <string name="equil_innsert2">The pump must not be on the pump base.</string>
+    <string name="equil_attach">Please attach the pump to the base</string>
+    <string name="equil_hint2">Prime Cannula</string>
+    <string name="equil_hint_dressing2">Please remove the pump from the base</string>
+    <string name="equil_unpair">Deactivate old pump %1$s?</string>
 </resources>

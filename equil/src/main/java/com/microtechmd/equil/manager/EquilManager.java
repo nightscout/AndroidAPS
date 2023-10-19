@@ -131,13 +131,13 @@ public class EquilManager {
 
     private void initEquilError() {
         listEvent = new ArrayList<>();
-        listEvent.add(new PumpEvent(4, 2, 2, rh.gs(R.string.equil_occlusion)));
-        listEvent.add(new PumpEvent(4, 3, 0, rh.gs(R.string.equil_motor_reverse)));
-        listEvent.add(new PumpEvent(4, 3, 2, rh.gs(R.string.equil_motor_fault)));
+        listEvent.add(new PumpEvent(4, 2, 2, rh.gs(R.string.equil_histroy_item3)));
+        listEvent.add(new PumpEvent(4, 3, 0, rh.gs(R.string.equil_histroy_item4)));
+        listEvent.add(new PumpEvent(4, 3, 2, rh.gs(R.string.equil_histroy_item5)));
         listEvent.add(new PumpEvent(4, 6, 1, rh.gs(R.string.equil_shutdown_be)));
         listEvent.add(new PumpEvent(4, 6, 2, rh.gs(R.string.equil_shutdown)));
         listEvent.add(new PumpEvent(4, 8, 0, rh.gs(R.string.equil_shutdown)));
-        listEvent.add(new PumpEvent(5, 1, 2, rh.gs(R.string.equil_insert_error)));
+        listEvent.add(new PumpEvent(5, 1, 2, rh.gs(R.string.equil_histroy_item18)));
 
     }
 

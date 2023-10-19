@@ -22,30 +22,6 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/devicesPwdLayout"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeColor="@color/white">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/devicesPwd"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:digits="ABCDEF0123456789"
-                android:gravity="center"
-                android:hint="@string/equil_password_title"
-                android:imeOptions="actionDone"
-                android:inputType="textCapCharacters"
-                android:maxLength="4"
-                android:paddingStart="2dp"
-                android:paddingEnd="2dp"
-                android:text=""
-                android:textSize="20sp" />
-
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="250dp"
@@ -68,6 +44,40 @@
                 android:text=""
                 android:textSize="40sp" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/devicesPwdLayout"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="@color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/devicesPwd"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:digits="ABCDEF0123456789"
+                android:gravity="center"
+                android:hint="@string/equil_set_pair_password"
+                android:imeOptions="actionDone"
+                android:inputType="textCapCharacters"
+                android:maxLength="4"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:text=""
+                android:textSize="20sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            style="@style/pairText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:text="@string/equil_password_tips"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <ProgressBar

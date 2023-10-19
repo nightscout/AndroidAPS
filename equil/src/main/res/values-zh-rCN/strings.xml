@@ -63,14 +63,13 @@
     <string name="equil_error_select_device">请选择设备</string>
     <string name="equil_finish">完成</string>
     <string name="equil_next">下一步</string>
-    <string name="equil_hint1">将泵安装到底板上后,需要排除留置针内的空气</string>
-    <string name="equil_hint2">排除留置针内空气</string>
+
     <string name="equil_hint3">⚠ 该功能需要授权才能使用，请联系相关工作人员。</string>
     <string name="equil_hint4">请输入授权码</string>
     <string name="equil_hint_1">需要排出留置针里的空气吗？</string>
     <string name="equil_hint_alter_speed_bolus">·当前大剂量注射速率：%1$sU</string>
     <string name="equil_hint_dressing">这个操作将会停止胰岛素输注，并且让泵的推杆回退至底部！</string>
-    <string name="equil_hint_dressing2">请把泵与底板分离</string>
+
     <string name="equil_history">历史</string>
     <string name="equil_insulin_reservoir">剩余胰岛素量</string>
 
@@ -138,7 +137,7 @@
     <string name="equil_unit_u_second">%1$s U/S</string>
     <string name="equil_unknown">未知</string>
     <string name="equil_unkown">未知</string>
-    <string name="equil_unbind">解除绑定</string>
+
     <string name="equil_unbind_content">这个操作将会停止胰岛素输注，\n并且让泵的推杆回退至底部！\n切删除绑定状态！</string>
 
     <string name="equil_error_no_devices">当前没有绑定的微泰泵</string>
@@ -146,18 +145,17 @@
     <string name="equil_ble_config_confirmation_title">绑定微泰泵</string>
     <string name="equil_ble_config_confirmation">您确定要绑定微泰泵吗？</string>
 
-    <string name="equil_assemble">请将注满的储药器及充满电的电池与泵组装好</string>
-    <string name="equil_innsert">请进行推杆定位直到储药器针头有液体挤出。</string>
-    <string name="equil_innsert2">推杆定位完成前，请不要将泵安装到底板上。</string>
+
+
     <string name="equil_innsert_orientation">推杆定位</string>
-    <string name="equil_attach">请将泵安装到底板上</string>
+
     <string name="equil_error">连接失败</string>
 
     <string name="equil_change">更换胰岛素泵</string>
     <string name="equil_change_content">请把泵与底板分离</string>
-    <string name="equil_unpair">是否取消对%1$s控制权</string>
+
     <string name="equil_unpair_alert">是否确认取消对%1$s控制权</string>
-    <string name="equil_devices_number">输入新泵的序列号</string>
+
     <string name="equil_devices_number_hint">序列号</string>
     <string name="equil_record_basal">基础率 %1$s U/H</string>
     <string name="equil_record_basal_temp">临时基础率 %1$s U/H</string>
@@ -179,9 +177,7 @@
     <string name="equil_firmware_version">固件版本</string>
     <string name="equil_battery_useup">电池已耗尽</string>
     <string name="equil_occlusion">输注堵塞</string>
-    <string name="equil_motor_reverse">电机反转</string>
     <string name="equil_motor_fault">电机故障</string>
-    <string name="equil_insert_error">非正常输注停止</string>
     <string name="equil_shutdown_be">Equil即将自动关机</string>
     <string name="equil_shutdown">Equil自动关机</string>
 
@@ -225,8 +221,19 @@
     <string name="equil_histroy_item16">电池已耗尽</string>
     <string name="equil_histroy_item17">上电复位</string>
     <string name="equil_histroy_item18">非正常输注停止</string>
+    <string name="equil_password_tips">请设置一个新密码用于与 Equil v5.3 泵的配对，该密码未来也被用于与当前泵的解配，请务必牢记。
+密码规则：必须是4位字符，在ABCDEF0123456789中选用</string>
+    <string name="delete">删除</string>
+    <string name="equil_set_pair_password">设置配对密码</string>
+    <string name="equil_hint1">将泵安装到底板上后,需要排除留置针内的空气</string>
 
-
-    <!--    <string name="equil_histroy_item1">推杆定位(充盈)</string>-->
-    <!--    <string name="equil_histroy_item2">推杆回退</string>-->
+    <string name="equil_unbind">解除配对</string>
+    <string name="equil_assemble">请将注满的储药器及充满电的电池与泵组装好</string>
+    <string name="equil_devices_number">输入新泵的序列号</string>
+    <string name="equil_innsert">请进行推杆定位直到储药器针头有液体挤出。</string>
+    <string name="equil_innsert2">推杆定位完成前，请不要将泵安装到底板上。</string>
+    <string name="equil_attach">请将泵安装到底板上</string>
+    <string name="equil_hint2">排除留置针内空气</string>
+    <string name="equil_hint_dressing2">请把泵与底板分离</string>
+    <string name="equil_unpair">取消对泵%1$s的控制权</string>
 </resources>

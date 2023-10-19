@@ -29,6 +29,7 @@ import com.microtechmd.equil.ble.GattAttributes
 import com.microtechmd.equil.driver.definition.ActivationProgress
 import com.microtechmd.equil.driver.definition.BluetoothConnectionState
 import com.microtechmd.equil.manager.Utils
+import com.microtechmd.equil.manager.command.CmdDevicesOldGet
 import com.microtechmd.equil.manager.command.CmdPair
 import com.microtechmd.equil.manager.command.CmdSettingSet
 import info.nightscout.androidaps.extensions.runOnUiThread
@@ -54,7 +55,6 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
             // equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
             dismissLoading()
             stopLeDeviceScan()
-
             runOnUiThread {
                 progressPair.visibility = View.INVISIBLE
                 textTips.visibility = View.VISIBLE
@@ -197,7 +197,8 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                 }
                 handler.removeCallbacks(stopScanAfterTimeoutRunnable)
                 stopLeDeviceScan()
-                pair(scanRecord.device)
+                getVersion(scanRecord.device)
+                // pair(scanRecord.device)
             }
         }
 
@@ -221,11 +222,51 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         equilPumpPlugin.tempActivationProgress = ActivationProgress.NONE;
     }
 
+    fun getVersion(scanResult: BluetoothDevice) {
+        // CmdDevicesOldGet
+        var cmdDevicesOldGet = CmdDevicesOldGet(scanResult.address.toString());
+        commandQueue.customCommand(cmdDevicesOldGet, object : Callback() {
+            override fun run() {
+                if (activity == null) return
+                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success + "===" + result.enacted)
+                if (result.success) {
+                    if (cmdDevicesOldGet.isSupport) {
+                        SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
+                        pair(scanResult)
+                    } else {
+                        equilPumpPlugin.equilManager.closeBle()
+                        dismissLoading();
+                        runOnUiThread {
+                            progressPair.visibility = View.INVISIBLE
+                            buttonPair.isClickable = true
+                            textTips.text = rh.gs(R.string.equil_support_error)
+                            textTips.visibility = View.VISIBLE
+                            buttonPair.text = rh.gs(R.string.equil_retry)
+                            buttonPair.alpha = 1f
+                        }
+                    }
+                } else {
+                    dismissLoading();
+                    runOnUiThread {
+                        progressPair.visibility = View.INVISIBLE
+                        buttonPair.isClickable = true
+                        textTips.visibility = View.VISIBLE
+                        buttonPair.text = rh.gs(R.string.equil_retry)
+                        textTips.text = rh.gs(R.string.equil_pair_error)
+                        buttonPair.alpha = 1f
+                    }
+                    equilPumpPlugin.equilManager.address = ""
+                    equilPumpPlugin.equilManager.serialNumber = ""
+                }
+            }
+        })
+    }
+
     private fun pair(scanResult: BluetoothDevice) {
         equilPumpPlugin.equilManager.activationProgress = ActivationProgress.PRIMING
         equilPumpPlugin.equilManager.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
         aapsLogger.debug(LTag.EQUILBLE, "result====" + scanResult.name.toString() + "===" + scanResult.address.toString())
-        commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(),password), object : Callback() {
+        commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(), password), object : Callback() {
             override fun run() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success + "===" + result.enacted)

@@ -9,6 +9,7 @@ public class EquilConst {
     public static final long EQUIL_CMD_TIME_OUT = 300000;
     public static final long EQUIL_BLE_WRITE_TIME_OUT = 20;
     public static final long EQUIL_BLE_NEXT_CMD= 150;
+    public static final float EQUIL_SUPPORT_LEVEL= 5.3f;
     static final String Prefix = "AAPS.Equil.";
 
     public static class Prefs {
