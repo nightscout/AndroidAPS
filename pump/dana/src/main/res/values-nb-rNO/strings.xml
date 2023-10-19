@@ -39,7 +39,7 @@
     <string name="gettingpumpstatus">Henter pumpestatus</string>
     <string name="gettingextendedbolusstatus">Henter forlenget bolus status</string>
     <string name="gettingbolusstatus">Henter bolus status</string>
-    <string name="gettingtempbasalstatus">Henter temp basal status</string>
+    <string name="gettingtempbasalstatus">Henter status om midlertidig basal</string>
     <string name="gettingpumpsettings">Henter pumpe innstillinger</string>
     <string name="gettingpumptime">Henter pumpens tid</string>
     <string name="largetimedifftitle">Stor tidsforskjell</string>
@@ -48,11 +48,11 @@
     <string name="approachingdailylimit">Maksimal daglig insulindose er snart nådd</string>
     <string name="startingbolus">Starter bolus dosering</string>
     <string name="waitingforestimatedbolusend">Venter på bolus slutt. Gjenværende %1$d sek.</string>
-    <string name="stoppingtempbasal">Stopper temp basal</string>
+    <string name="stoppingtempbasal">Stopper midlertidig basal</string>
     <string name="settingextendedbolus">Setter forlenget bolus</string>
     <string name="stoppingextendedbolus">Stopper forlenget bolus</string>
     <string name="updatingbasalrates">Oppdaterer basaldoser</string>
-    <string name="settingtempbasal">Setter temp basal</string>
+    <string name="settingtempbasal">Setter midlertidig basal</string>
     <string name="waitingfortimesynchronization">Venter på tidsykronisering (%1$d sek)</string>
     <string name="wrongpumppassword">Feil pumpepassord!</string>
     <string name="danar_history_alarm">Alarmer</string>
