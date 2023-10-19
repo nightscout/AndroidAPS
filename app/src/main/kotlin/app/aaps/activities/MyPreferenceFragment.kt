@@ -44,7 +44,7 @@ import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sync.garmin.GarminPlugin
-import app.aaps.plugins.main.general.wear.WearPlugin
+import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
 import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin

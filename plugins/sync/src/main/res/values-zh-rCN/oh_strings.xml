@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">开源人类项目</string>
+    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">开源人类项目允许您上传糖尿病数据并将其捐赠给科学项目。</string>
     <string name="logout">登出</string>
     <string name="setup">设置</string>

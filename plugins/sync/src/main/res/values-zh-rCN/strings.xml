@@ -86,4 +86,49 @@
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="wear_shortname">手表</string>
+    <string name="no_watch_connected">(无手表连接)</string>
+    <string name="pump_status">泵状态</string>
+    <string name="loop_status">闭环状态</string>
+    <string name="wizard_result">计算. 向导:\n胰岛素: %1$.2fU\n碳水: %2$d克</string>
+    <string name="quick_wizard_not_available">选定的快速向导不再可用，请刷新</string>
+    <string name="quick_wizard_message">快速向导: %1$s\n胰岛素: %2$.2fU\n碳水: %3$d克</string>
+    <string name="wear_action_tempt_preset_error">未预设的临时目标： %1$s</string>
+    <string name="wear_action_tempt_cancel_message">取消正在运行的临时目标？</string>
+    <string name="wear_action_tempt_unit_error">手表和手机上使用了不同的单位！</string>
+    <string name="wear_action_tempt_zero_message">无临时目标-取消正在运行的临时目标？</string>
+    <string name="wear_action_tempt_min_bg_error">目标血糖最小值超出范围！</string>
+    <string name="wear_action_tempt_max_bg_error">目标血糖最大值超出范围！</string>
+    <string name="wear_action_tempt_manual_range_message">临时目标:\n最小: %1$s\n最大: %2$s\n持续时间: %3$s</string>
+    <string name="wear_action_tempt_manual_message">临时目标:\n目标: %1$s\n持续时间: %2$s</string>
+    <string name="wear_action_tempt_preset_message">临时目标：\n原因： %1$s\n目标： %2$s\n持续时间： %3$s</string>
+    <string name="no_success">未成功-请检查手机</string>
+    <string name="wear_settings">手表设置</string>
+    <string name="wearcontrol_title">从手表上控制</string>
+    <string name="wearcontrol_summary">设置临时目标并从手表中进行治疗操作。</string>
+    <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
+    <string name="wear_general_settings">常规设置</string>
+    <string name="wear_notifysmb_title">在 SMB 上通知</string>
+    <string name="wear_notifysmb_summary">在手表上像显示常规大剂量一样显示SMB微型大剂量</string>
+    <string name="wear_export_watchface">导出模板</string>
+    <string name="resend_all_data">重新发送所有数据</string>
+    <string name="open_settings_on_wear">在手表上打开设置</string>
+    <string name="pump_fetching_data">正在尝试从胰岛素泵获取数据。</string>
+    <string name="units_short">单位</string>
+    <string name="hour_short">时</string>
+    <string name="no_history">无历史数据！</string>
+    <string name="temp_target">临时目标</string>
+    <string name="until">直到</string>
+    <string name="default_range">缺省范围</string>
+    <string name="target">目标</string>
+    <string name="no_profile">未加载配置文件</string>
+    <string name="aps_only">仅在 APS 模式下应用！</string>
+    <string name="loop_status_closed">闭环</string>
+    <string name="loop_status_open">开环</string>
+    <string name="loop_status_disabled">闭环禁用</string>
+    <string name="last_run">上次运行</string>
+    <string name="today">今天</string>
+    <string name="weighted">权重</string>
 </resources>

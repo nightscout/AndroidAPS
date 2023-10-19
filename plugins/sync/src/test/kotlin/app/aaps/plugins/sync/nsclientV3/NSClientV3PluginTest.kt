@@ -28,10 +28,8 @@ import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
-import app.aaps.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import app.aaps.plugins.sync.nsclient.extensions.fromConstant
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
@@ -55,8 +53,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var mockedProfileFunction: ProfileFunction
-    @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
-    @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var insulin: Insulin
@@ -83,8 +79,8 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, persistenceLayer,
-                nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb, decimalFormatter
+                sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
+                nsClientSource, storeDataForDb, decimalFormatter
             )
         sut.nsAndroidClient = nsAndroidClient
         Mockito.`when`(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)

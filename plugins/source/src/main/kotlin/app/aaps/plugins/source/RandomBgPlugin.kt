@@ -1,7 +1,10 @@
 package app.aaps.plugins.source
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
+import android.os.PowerManager
 import android.os.SystemClock
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -31,6 +34,7 @@ import kotlin.math.sin
 
 @Singleton
 class RandomBgPlugin @Inject constructor(
+    private val context: Context,
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
@@ -51,6 +55,7 @@ class RandomBgPlugin @Inject constructor(
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private lateinit var refreshLoop: Runnable
+    private var wakeLock: PowerManager.WakeLock? = null
 
     companion object {
 
@@ -71,6 +76,7 @@ class RandomBgPlugin @Inject constructor(
 
     override fun advancedFilteringSupported(): Boolean = true
 
+    @SuppressLint("WakelockTimeout")
     override fun onStart() {
         super.onStart()
         val cal = GregorianCalendar()
@@ -79,11 +85,14 @@ class RandomBgPlugin @Inject constructor(
         cal[Calendar.MINUTE] -= cal[Calendar.MINUTE] % 5
         handler.postAtTime(refreshLoop, SystemClock.uptimeMillis() + cal.timeInMillis + T.mins(5).msecs() + 1000 - System.currentTimeMillis())
         disposable.clear()
+        wakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS:RandomBgPlugin")
+        wakeLock?.acquire()
     }
 
     override fun onStop() {
         super.onStop()
         handler.removeCallbacks(refreshLoop)
+        if (wakeLock?.isHeld == true) wakeLock?.release()
     }
 
     override fun specialEnableCondition(): Boolean {
@@ -106,7 +115,7 @@ class RandomBgPlugin @Inject constructor(
             value = bgMgdl,
             raw = 0.0,
             noise = null,
-            trendArrow = GlucoseValue.TrendArrow.values().toList().shuffled().first(),
+            trendArrow = GlucoseValue.TrendArrow.entries.shuffled().first(),
             sourceSensor = GlucoseValue.SourceSensor.RANDOM
         )
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
     <string name="logout">Tancar sessió</string>
     <string name="project_member_id">ID de membre del projecte: %1$s</string>
     <string name="only_upload_if_connected_to_wifi">Enviar només si hi ha connexió WiFi</string>

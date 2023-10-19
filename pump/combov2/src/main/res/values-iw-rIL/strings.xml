@@ -42,6 +42,7 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">תם זמן סריקת Combo</string>
     <string name="combov2_pairing_failed_due_to_error">הצימוד נכשל בגלל השגיאה: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">הצימוד בוטל מסיבה לא ידועה</string>
+    <string name="combov2_pairing_invalid_pin_length">"אורך קוד הזיהוי אינו תקין: אורכו צריך להיות %1$d תווים, נרשמו %2$d"</string>
     <string name="combov2_scanning_for_pump">סורק אחר משאבות</string>
     <string name="combov2_establishing_bt_connection">יוצר חיבור בלוטות\' (ניסיון מספר %1$d)</string>
     <string name="combov2_pairing_performing_handshake">מבצע לחיצת יד עם המשאבה</string>

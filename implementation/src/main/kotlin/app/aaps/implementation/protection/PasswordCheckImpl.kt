@@ -11,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.StringRes
+import app.aaps.core.interfaces.extensions.runOnUiThread
 import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.main.R
@@ -81,7 +82,7 @@ class PasswordCheckImpl @Inject constructor(
 
         val alert = alertDialogBuilder.create().apply {
             window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-            show()
+            runOnUiThread { show() }
         }
 
         userInput.setOnEditorActionListener { _, actionId, _ ->

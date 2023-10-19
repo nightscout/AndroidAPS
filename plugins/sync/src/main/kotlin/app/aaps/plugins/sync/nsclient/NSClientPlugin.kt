@@ -114,7 +114,7 @@ class NSClientPlugin @Inject constructor(
     }
 
     override fun onStop() {
-        context.applicationContext.unbindService(mConnection)
+        if (nsClientService != null) context.unbindService(mConnection)
         disposable.clear()
         super.onStop()
     }
@@ -233,7 +233,7 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairOfflineEvent           -> dataPair.value.interfaceIDs.nightscoutId
-            else                                           -> throw IllegalStateException()
+            else                                           -> error("Unsupported type")
         }
         when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(false, dateUtil)

@@ -262,7 +262,11 @@ enum class JsonKeys(val key: String) {
     INVALIDFONTCOLOR("invalidFontColor"),
     TWINVIEW("twinView"),
     TOPOFFSETTWINHIDDEN("topOffsetTwinHidden"),
-    LEFTOFFSETTWINHIDDEN("leftOffsetTwinHidden")
+    LEFTOFFSETTWINHIDDEN("leftOffsetTwinHidden"),
+    DYNPREF("dynPref"),
+    DYNPREFCOLOR("dynPrefColor"),
+    PREFKEY("prefKey"),
+    DEFAULT("default")
 }
 
 enum class JsonKeyValues(val key: String) {
@@ -285,7 +289,10 @@ enum class JsonKeyValues(val key: String) {
     BOLD_ITALIC("bold_italic"),
     ITALIC("italic"),
     BGCOLOR("bgColor"),
-    SGVLEVEL("sgvLevel")
+    SGVLEVEL("sgvLevel"),
+    PREF_UNITS("key_units"),
+    PREF_DARK("key_dark"),
+    PREF_MATCH_DIVIDER("key_match_divider")
 }
 
 class ZipWatchfaceFormat {
