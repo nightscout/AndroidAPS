@@ -58,6 +58,7 @@
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
     <string name="pref_show_ago">Mostrar \"hace\"</string>
     <string name="pref_show_week_number">Mostrar número de semana</string>
+    <string name="pref_show_date">Mostrar fecha</string>
     <string name="default_custom_watchface_comment">Esfera predeterminada, puedes hacer clic en el botón EXPORTAR ESFERA para generar una plantilla</string>
     <string name="wear_default_watchface">Esfera por defecto</string>
     <string name="cwf_comment_background">Imagen de fondo</string>
