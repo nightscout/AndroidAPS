@@ -101,6 +101,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
         private const val COMMAND_CONNECTING_TIMEOUT_SEC: Long = 30
         private const val ALARM_HOURLY_MAX_CLEAR_CODE = 4
         private const val ALARM_DAILY_MAX_CLEAR_CODE = 5
+
+        private const val CHECK_EXPIRY_WARNING_TIME_MS = 5 * 60 * 1000L
     }
 
     private val disposable = CompositeDisposable()
@@ -135,6 +137,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
                                pumpSync.connectNewPump()
                                medtrumPump.setFakeTBRIfNotSet()
                            }
+                           if (event.isChanged(rh.gs(R.string.key_pump_warning_notification))
+                               || event.isChanged(rh.gs(R.string.key_pump_warning_expiry_hour))
+                           ) {
+                               medtrumPump.loadUserSettingsFromSP()
+                           }
                            if (event.isChanged(rh.gs(R.string.key_alarm_setting))
                                || event.isChanged(rh.gs(R.string.key_patch_expiration))
                                || event.isChanged(rh.gs(R.string.key_hourly_max_insulin))
@@ -167,6 +174,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
         scope.launch {
             medtrumPump.pumpWarningFlow.collect { pumpWarning ->
                 notifyPumpWarning(pumpWarning)
+            }
+        }
+        scope.launch {
+            while (true) {
+                checkExpiryWarning()
+                kotlinx.coroutines.delay(CHECK_EXPIRY_WARNING_TIME_MS)
             }
         }
     }
@@ -700,7 +713,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     private fun notifyPumpWarning(alarmState: AlarmState) {
         // Notification on pump warning
-        if (sp.getBoolean(R.string.key_pump_warning_notification, true) && alarmState != AlarmState.NONE) {
+        if (medtrumPump.desiredPumpWarning && alarmState != AlarmState.NONE) {
             uiInteraction.addNotification(
                 Notification.PUMP_WARNING,
                 rh.gs(R.string.pump_warning, medtrumPump.alarmStateToString(alarmState)),
@@ -712,6 +725,25 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 medtrumPump.pumpType(),
                 medtrumPump.pumpSN.toString(radix = 16)
             )
+        }
+    }
+
+    private fun checkExpiryWarning() {
+        if (medtrumPump.desiredPatchExpiration && medtrumPump.desiredPumpWarning) {
+            val warningAt = medtrumPump.patchStartTime + T.hours(medtrumPump.desiredPumpWarningExpiryThresholdHours).msecs()
+            if (dateUtil.now() >= warningAt && dateUtil.now() <= warningAt + CHECK_EXPIRY_WARNING_TIME_MS) {
+                uiInteraction.addNotification(
+                    Notification.PUMP_WARNING,
+                    rh.gs(R.string.alarm_pump_expires_soon),
+                    Notification.ANNOUNCEMENT,
+                )
+                pumpSync.insertAnnouncement(
+                    rh.gs(R.string.alarm_pump_expires_soon),
+                    null,
+                    medtrumPump.pumpType(),
+                    medtrumPump.pumpSN.toString(radix = 16)
+                )
+            }
         }
     }
 

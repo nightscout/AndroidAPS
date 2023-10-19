@@ -24,8 +24,8 @@
     <string name="startingbolus">Starter bolus dosering</string>
     <string name="waitingforestimatedbolusend">Venter på avsluttet bolus dosering</string>
     <string name="gettingbolusstatus">Leser bolus status</string>
-    <string name="stoppingtempbasal">Stopper temp basal</string>
-    <string name="settingtempbasal">Setter temp basal</string>
+    <string name="stoppingtempbasal">Stopper midlertidig basal</string>
+    <string name="settingtempbasal">Setter midlertidig basal</string>
     <string name="settingextendedbolus">Setter forlenget bolus</string>
     <string name="stoppingextendedbolus">Stopper forlenget bolus</string>
     <string name="updatingbasalrates">Oppdaterer basaldoser</string>
@@ -54,7 +54,7 @@
     <string name="processinghistory">"Behandler hendelse "</string>
     <string name="apslastLogNum">aps_last_log_num</string>
     <string name="apsWrappingCount">aps_wrapping_count</string>
-    <string name="diaconn_g8_history_tempbasal">Temp basal</string>
+    <string name="diaconn_g8_history_tempbasal">Midlertidig basal</string>
     <string name="diaconng8_pump_settings">Diaconn pumpe innstillinger</string>
     <string name="diaconn_g8_pumpalarm">Lyd</string>
     <string name="diaconn_g8_pumpalarm_sound">lyd</string>
@@ -146,12 +146,12 @@
     <string name="diaconn_g8_errotpreceivedyet">Kommandoen ble ikke utført. Vennligst prøv igjen.</string>
     <string name="diaconn_g8_logtubechange_title">Logg bytte av slangesett</string>
     <string name="diaconn_g8_logtubechange_summary">Legg til \"Slangesettbytte\" i Helseportal når den oppdages i historikken</string>
-    <string name="diaconn_g8_logtempstart">Temp Basal startet</string>
+    <string name="diaconn_g8_logtempstart">Midlertidig basal startet</string>
     <string name="diaconn_g8_errorcode_32">Vel Lav Glukose Stopp (LGS) er injeksjoner begrenset</string>
     <string name="diaconn_g8_errorcode_33">LGS status er PÅ. PÅ kommando er nektet.</string>
     <string name="diaconn_g8_errorcode_34">LGS status er AV. AV kommandoen er avslått.</string>
-    <string name="diaconn_g8_errorcode_35">Temp basal avslått siden det allerede kjøres en temp basal</string>
-    <string name="diaconn_g8_errorcode_36">Stopp av temp basal avslått siden det ikke kjøres en temp basal</string>
+    <string name="diaconn_g8_errorcode_35">Midlertidig basal avslått siden det allerede kjøres en midlertidig basal</string>
+    <string name="diaconn_g8_errorcode_36">Stopp av midlertidig basal avslått siden det ikke kjøres en midlertidig basal</string>
     <string name="diaconn_g8_cloudsend_summary">Send pumpe logger til Diaconn Cloud.</string>
     <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
 </resources>

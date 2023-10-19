@@ -496,8 +496,8 @@
     <string name="reservoir_label">Reservoar</string>
     <string name="last_connection_label">Siste tilkobling</string>
     <string name="last_bolus_label">Siste bolus</string>
-    <string name="base_basal_rate_label">Profilens basaldose</string>
-    <string name="tempbasal_label">Midl. basal</string>
+    <string name="base_basal_rate_label">Profilens basal</string>
+    <string name="tempbasal_label">Midlertidig basal</string>
     <string name="extended_bolus_label">Forlenget bolus</string>
     <string name="serial_number">Serienummer</string>
     <string name="disconnected">Frakoblet</string>

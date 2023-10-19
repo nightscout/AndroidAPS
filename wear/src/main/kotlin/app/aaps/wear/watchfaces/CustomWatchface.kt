@@ -62,7 +62,7 @@ class CustomWatchface : BaseWatchFace() {
     private lateinit var binding: ActivityCustomBinding
     private var zoomFactor = 1.0
     private val displaySize = Point()
-    private val TEMPLATE_RESOLUTION = 400
+    private val templeResolution = 400
     private var lowBatColor = Color.RED
     private var resDataMap: CwfResDataMap = mutableMapOf()
     private var json = JSONObject()
@@ -81,7 +81,7 @@ class CustomWatchface : BaseWatchFace() {
         setDefaultColors()
         persistence.store(defaultWatchface(), true)
         (context.getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(displaySize)
-        zoomFactor = (displaySize.x).toDouble() / TEMPLATE_RESOLUTION.toDouble()
+        zoomFactor = (displaySize.x).toDouble() / templeResolution.toDouble()
         return binding
     }
 
@@ -106,15 +106,15 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun setColorDark() {
         setWatchfaceStyle()
-        if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) == 0)
+        if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) <= 0)
             binding.sgv.setTextColor(bgColor)
-        if ((ViewMap.DIRECTION.dynData?.stepColor ?: 0) == 0)
+        if ((ViewMap.DIRECTION.dynData?.stepColor ?: 0) <= 0)
             binding.direction2.colorFilter = changeDrawableColor(bgColor)
-        if (ageLevel != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) == 0)
+        if (ageLevel != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) <= 0)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
-        if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) == 0)
+        if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) <= 0)
             binding.uploaderBattery.setTextColor(lowBatColor)
-        if ((ViewMap.LOOP.dynData?.stepDraw ?: 0) == 0)     // Apply automatic background image only if no dynData or no step images
+        if ((ViewMap.LOOP.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
             when (loopLevel) {
                 -1   -> binding.loop.setBackgroundResource(R.drawable.loop_grey_25)
                 1    -> binding.loop.setBackgroundResource(R.drawable.loop_green_25)
@@ -156,25 +156,30 @@ class CustomWatchface : BaseWatchFace() {
                 if (!resDataMap.isEquals(it.customWatchfaceData.resDatas) || jsonString != it.customWatchfaceData.json) {
                     resDataMap = it.customWatchfaceData.resDatas
                     jsonString = it.customWatchfaceData.json
+                    DynProvider.init(this, json)
                     FontMap.init(this)
                     ViewMap.init(this)
                     TrendArrowMap.init(this)
-                    DynProvider.init(json.optJSONObject(DYNDATA.key))
                 }
+                if (checkPref()) {
+                    DynProvider.init(this, json)
+                }
+
                 enableSecond = json.optBoolean(ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
-                highColor = getColor(json.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
-                midColor = getColor(json.optString(MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
-                lowColor = getColor(json.optString(LOWCOLOR.key), ContextCompat.getColor(this, R.color.low))
-                lowBatColor = getColor(json.optString(LOWBATCOLOR.key), ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
-                carbColor = getColor(json.optString(CARBCOLOR.key), ContextCompat.getColor(this, R.color.carbs))
-                basalBackgroundColor = getColor(json.optString(BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
-                basalCenterColor = getColor(json.optString(BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
-                gridColor = getColor(json.optString(GRIDCOLOR.key), Color.WHITE)
                 pointSize = json.optInt(POINTSIZE.key, 2)
                 dayNameFormat = json.optString(DAYNAMEFORMAT.key, "E").takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
                 monthFormat = json.optString(MONTHFORMAT.key, "MMM").takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
-                binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update daynName and month according to format on cwf loading
+                binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update dayName and month according to format on cwf loading
                 binding.month.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
+                val jsonColor = dynPref[json.optString(DYNPREFCOLOR.key)] ?: json
+                highColor = getColor(jsonColor.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
+                midColor = getColor(jsonColor.optString(MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
+                lowColor = getColor(jsonColor.optString(LOWCOLOR.key), ContextCompat.getColor(this, R.color.low))
+                lowBatColor = getColor(jsonColor.optString(LOWBATCOLOR.key), ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
+                carbColor = getColor(jsonColor.optString(CARBCOLOR.key), ContextCompat.getColor(this, R.color.carbs))
+                basalBackgroundColor = getColor(jsonColor.optString(BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
+                basalCenterColor = getColor(jsonColor.optString(BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
+                gridColor = getColor(jsonColor.optString(GRIDCOLOR.key), Color.WHITE)
 
                 binding.mainLayout.forEach { view ->
                     ViewMap.fromId(view.id)?.let { viewMap ->
@@ -333,7 +338,7 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun manageSpecificViews() {
         //Background should fill all the watchface and must be visible
-        val params = FrameLayout.LayoutParams((TEMPLATE_RESOLUTION * zoomFactor).toInt(), (TEMPLATE_RESOLUTION * zoomFactor).toInt())
+        val params = FrameLayout.LayoutParams((templeResolution * zoomFactor).toInt(), (templeResolution * zoomFactor).toInt())
         params.topMargin = 0
         params.leftMargin = 0
         binding.background.layoutParams = params
@@ -388,10 +393,10 @@ class CustomWatchface : BaseWatchFace() {
         MINUTE(ViewKeys.MINUTE.key, R.id.minute),
         SECOND(ViewKeys.SECOND.key, R.id.second, R.string.key_show_seconds),
         TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod),
-        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name),
-        DAY(ViewKeys.DAY.key, R.id.day),
+        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, R.string.key_show_date),
+        DAY(ViewKeys.DAY.key, R.id.day, R.string.key_show_date),
         WEEKNUMBER(ViewKeys.WEEKNUMBER.key, R.id.week_number, R.string.key_show_week_number),
-        MONTH(ViewKeys.MONTH.key, R.id.month),
+        MONTH(ViewKeys.MONTH.key, R.id.month, R.string.key_show_date),
         LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status),
         DIRECTION(ViewKeys.DIRECTION.key, R.id.direction2, R.string.key_show_direction),
         TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, R.string.key_show_ago),
@@ -431,7 +436,7 @@ class CustomWatchface : BaseWatchFace() {
         );
 
         companion object {
-            val TRANSPARENT = "#00000000"
+            const val TRANSPARENT = "#00000000"
             fun init(cwf: CustomWatchface) = values().forEach {
                 it.cwf = cwf
                 // reset all customized drawable when new watchface is loaded
@@ -486,7 +491,7 @@ class CustomWatchface : BaseWatchFace() {
                 left = (viewJson.optInt(LEFTMARGIN.key) * cwf.zoomFactor).toInt()
                 top = (viewJson.optInt(TOPMARGIN.key) * cwf.zoomFactor).toInt()
                 val params = FrameLayout.LayoutParams(width, height)
-                dynData = DynProvider.getDyn(cwf, viewJson.optString(DYNDATA.key), width, height, key)
+                dynData = DynProvider.getDyn(cwf, viewJson.optString(DYNPREF.key), viewJson.optString(DYNDATA.key), width, height, key)
                 val topOffset = if (viewJson.optBoolean(TOPOFFSET.key, false)) dynData?.getTopOffset() ?: 0 else 0
                 val topOffsetTwin = ((twinView?.let { if (it.visibility != View.VISIBLE) viewJson.optInt(TOPOFFSETTWINHIDDEN.key,0) else 0 } ?: 0 ) * cwf.zoomFactor).toInt()
                 params.topMargin = top + topOffset + topOffsetTwin
@@ -502,7 +507,7 @@ class CustomWatchface : BaseWatchFace() {
         fun customizeTextView(view: TextView) {
             customizeViewCommon(view)
             viewJson?.let { viewJson ->
-                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * cwf.zoomFactor).toFloat())
+                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((dynData?.getTextSize() ?: viewJson.optInt(TEXTSIZE.key, 22)) * cwf.zoomFactor).toFloat())
                 view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
                 view.setTypeface(
                     FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
@@ -651,26 +656,36 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     // This class containt mapping between keys used within json of Custom Watchface and preferences
-    private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
+    private enum class PrefMap(val key: String, @StringRes val prefKey: Int, val typeBool: Boolean) {
 
-        SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
-        SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
-        SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
-        SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
-        SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
-        SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta),
-        SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
-        SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
-        SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
-        SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
-        SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
-        SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
-        SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
-        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status),
-        SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number)
+        SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob, true),
+        SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob, true),
+        SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob, true),
+        SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta, true),
+        SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta, true),
+        SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta, true),
+        SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery, true),
+        SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery, true),
+        SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal, true),
+        SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction, true),
+        SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago, true),
+        SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg, true),
+        SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi, true),
+        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status, true),
+        SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number, true),
+        SHOW_DATE(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DATE.key, R.string.key_show_date, true),
+        PREF_UNITS(JsonKeyValues.PREF_UNITS.key, R.string.key_units_mgdl, true),
+        PREF_DARK(JsonKeyValues.PREF_DARK.key, R.string.key_dark, true),
+        PREF_MATCH_DIVIDER(JsonKeyValues.PREF_MATCH_DIVIDER.key, R.string.key_match_divider, true);
+
+        var value: String = ""
+        companion object {
+            fun fromKey(key: String) = PrefMap.values().firstOrNull { it.key == key }
+        }
     }
 
     private enum class ValueMap(val key: String, val min: Double, val max: Double) {
+        NONE("", 0.0, 0.0),
         SGV(ViewKeys.SGV.key, 39.0, 400.0),
         SGVLEVEL(JsonKeyValues.SGVLEVEL.key, -1.0, 1.0),
         DIRECTION(ViewKeys.DIRECTION.key, 1.0, 7.0),
@@ -704,7 +719,7 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun fromKey(key: String) = values().firstOrNull { it.key == key }
+            fun fromKey(key: String) = values().firstOrNull { it.key == key } ?: NONE
         }
     }
 
@@ -713,6 +728,7 @@ class CustomWatchface : BaseWatchFace() {
         private val dynDrawable = mutableMapOf<Int, Drawable?>()
         private val dynColor = mutableMapOf<Int, Int>()
         private val dynFontColor = mutableMapOf<Int, Int>()
+        private val dynTextSize = mutableMapOf<Int, Int>()
         private var dataRange: DataRange? = null
         private var topRange: DataRange? = null
         private var leftRange: DataRange? = null
@@ -720,12 +736,15 @@ class CustomWatchface : BaseWatchFace() {
         val stepDraw: Int
             get() = dynDrawable.size - 1
         val stepColor: Int
-            get() = dynColor.size - 1
+            get() = dynColor[0]?.let { dynColor.size - 1 } ?: dynColor.size
         val stepFontColor: Int
-            get() = dynFontColor.size - 1
+            get() = dynFontColor[0]?.let { dynFontColor.size - 1 } ?: dynFontColor.size
+        val stepTextSize: Int
+            get() = dynTextSize[0]?.let { dynTextSize.size - 1 } ?: dynTextSize.size
 
         val dataValue: Double?
             get() = when (valueMap) {
+                ValueMap.NONE             -> 0.0
                 ValueMap.SGV              -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgv else null
                 ValueMap.SGVLEVEL         -> if (cwf.singleBg.sgvString != "---") cwf.singleBg.sgvLevel.toDouble() else null
                 ValueMap.DIRECTION        -> TrendArrowMap.value()
@@ -747,50 +766,76 @@ class CustomWatchface : BaseWatchFace() {
             ?: (leftRange.invalidData * cwf.zoomFactor).toInt() } } ?: 0
         fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
         fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] }
-        fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] } else null
-        fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] } else null
+        fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] ?: dynFontColor[1] } else null
+        fun getTextSize() = if (stepTextSize > 0) dataRange?.let { dataRange -> dataValue?.let { dynTextSize[valueMap.stepValue(it, dataRange, stepTextSize)] } ?: dynTextSize[0] ?: dynTextSize[1] } else null
+        fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] ?: dynColor[1] } else null
         private fun load() {
-            dynDrawable[0] = dataJson.optString(INVALIDIMAGE.key)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
-            var idx = 1
-            while (dataJson.has("${IMAGE.key}$idx")) {
-                cwf.resDataMap[dataJson.optString("${IMAGE.key}$idx")]?.toDrawable(cwf.resources, width, height).also { dynDrawable[idx] = it }
-                idx++
-            }
-            dynColor[0] = cwf.getColor(dataJson.optString(INVALIDCOLOR.key))
-            idx = 1
-            while (dataJson.has("${COLOR.key}$idx")) {
-                dynColor[idx] = cwf.getColor(dataJson.optString("${COLOR.key}$idx"))
-                idx++
-            }
-            dynFontColor[0] = cwf.getColor(dataJson.optString(INVALIDFONTCOLOR.key))
-            idx = 1
-            while (dataJson.has("${FONTCOLOR.key}$idx")) {
-                dynFontColor[idx] = cwf.getColor(dataJson.optString("${FONTCOLOR.key}$idx"))
-                idx++
-            }
             DataRange(dataJson.optDouble(MINDATA.key, valueMap.min), dataJson.optDouble(MAXDATA.key, valueMap.max)).let { defaultRange ->
                 dataRange = defaultRange
                 topRange = parseDataRange(dataJson.optJSONObject(TOPOFFSET.key), defaultRange)
                 leftRange = parseDataRange(dataJson.optJSONObject(LEFTOFFSET.key), defaultRange)
                 rotationRange = parseDataRange(dataJson.optJSONObject(ROTATIONOFFSET.key), defaultRange)
             }
+            if (dataJson.has(INVALIDIMAGE.key))
+                dynDrawable[0] = dataJson.optString(INVALIDIMAGE.key)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
+            var idx = 1
+            while (dataJson.has("${IMAGE.key}$idx")) {
+                cwf.resDataMap[dataJson.optString("${IMAGE.key}$idx")]?.toDrawable(cwf.resources, width, height).also { dynDrawable[idx] = it }
+                idx++
+            }
+            if (dataJson.has(INVALIDCOLOR.key))
+                dynColor[0] = cwf.getColor(dataJson.optString(INVALIDCOLOR.key))
+            idx = 1
+            while (dataJson.has("${COLOR.key}$idx")) {
+                dynColor[idx] = cwf.getColor(dataJson.optString("${COLOR.key}$idx"))
+                idx++
+            }
+            if (dataJson.has(INVALIDFONTCOLOR.key))
+                dynFontColor[0] = cwf.getColor(dataJson.optString(INVALIDFONTCOLOR.key))
+            idx = 1
+            while (dataJson.has("${FONTCOLOR.key}$idx")) {
+                dynFontColor[idx] = cwf.getColor(dataJson.optString("${FONTCOLOR.key}$idx"))
+                idx++
+            }
+            if (dataJson.has(INVALIDTEXTSIZE.key))
+                dynTextSize[0] = cwf.getColor(dataJson.optString(INVALIDTEXTSIZE.key))
+            idx = 1
+            while (dataJson.has("${TEXTSIZE.key}$idx")) {
+                dynTextSize[idx] = dataJson.optInt("${TEXTSIZE.key}$idx", 22)
+                idx++
+            }
         }
 
         companion object {
-
             val dynData = mutableMapOf<String, DynProvider>()
             var dynJson: JSONObject? = null
-            fun init(dynJson: JSONObject?) {
-                this.dynJson = dynJson
+            fun init(cwf: CustomWatchface, json: JSONObject?) {
+                cwf.dynPref(json?.optJSONObject((DYNPREF.key)))
+                this.dynJson = json?.optJSONObject((DYNDATA.key))
                 dynData.clear()
             }
 
-            fun getDyn(cwf: CustomWatchface, key: String, width: Int, height: Int, defaultViewKey: String): DynProvider? = dynData["${defaultViewKey}_$key"]
-                ?: dynJson?.optJSONObject(key)?.let { dataJson ->
-                    ValueMap.fromKey(dataJson.optString(VALUEKEY.key, defaultViewKey))?.let { valueMap ->
-                        DynProvider(cwf, dataJson, valueMap, width, height).also { it.load() }
+            fun getDyn(cwf: CustomWatchface, keyPref: String, key: String, width: Int, height: Int, defaultViewKey: String): DynProvider? {
+                if (dynData[defaultViewKey] != null)
+                    return dynData[defaultViewKey]
+
+                cwf.dynPref[keyPref]?.let { dynPref ->
+                    ValueMap.fromKey(dynPref.optString(VALUEKEY.key, defaultViewKey)).let { valueMap ->
+                        DynProvider(cwf, dynPref, valueMap, width, height).also { it.load() }
                     }
-                }?.also { dynData["${defaultViewKey}_$key"] = it }
+                }?.also { dynData[defaultViewKey] = it }
+
+                if (dynData[defaultViewKey] != null)
+                    return dynData[defaultViewKey]
+
+                dynJson?.optJSONObject(key)?.let { dynJson ->
+                    ValueMap.fromKey(dynJson.optString(VALUEKEY.key, defaultViewKey)).let { valueMap ->
+                        DynProvider(cwf, dynJson, valueMap, width, height).also { it.load() }
+                    }
+                }?.also { dynData[defaultViewKey] = it }
+
+                return dynData[defaultViewKey]
+            }
 
             private fun parseDataRange(json: JSONObject?, defaultData: DataRange) =
                 json?.let {
@@ -804,6 +849,53 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private class DataRange (val minData: Double, val maxData: Double, val invalidData: Int = 0)
+
+    // block below build a map of prefKey => json Bloc recursively
+    val dynPref = mutableMapOf<String, JSONObject>()
+    private val valPref = mutableMapOf<String, String>()
+    fun dynPref(dynJson: JSONObject?) {
+        valPref.clear()
+        dynPref.clear()
+        dynJson?.keys()?.forEach { key ->
+            val targetJson = JSONObject()
+            dynJson.optJSONObject(key)?.let { buildDynPrefs(dynJson, targetJson, it, key, mutableSetOf()) }
+        }
+    }
+
+    private fun buildDynPrefs(dynJson: JSONObject, targetJson: JSONObject, json: JSONObject, key: String, visitedKeys: MutableSet<String>) {
+        val prefKey = json.optString(PREFKEY.key)
+        PrefMap.fromKey(prefKey)?.let { prefMap ->
+            val value = valPref[prefMap.key]
+                ?: (if (prefMap.typeBool) sp.getBoolean(prefMap.prefKey, false).toString() else sp.getString(prefMap.prefKey, "")).also {
+                    valPref[prefMap.key] = it
+                }
+            json.optJSONObject(value)?.let { nextJson ->
+                if (nextJson.has(DYNPREF.key)) {
+                    nextJson.keys().forEach { key ->
+                        if ( key != DYNPREF.key)
+                            targetJson.putOpt(key, nextJson.opt(key))
+                    }
+                    val nextKey = nextJson.optString(DYNPREF.key)
+                    if (nextKey.isNotEmpty() && nextKey !in visitedKeys) {
+                        visitedKeys += nextKey
+                        dynJson.optJSONObject(nextKey)?.let {
+                            buildDynPrefs(dynJson, targetJson, it, key, visitedKeys)
+                        }
+                    }
+                } else {
+                    nextJson.keys().forEach { key ->
+                        if ( key != DYNPREF.key)
+                            targetJson.putOpt(key, nextJson.opt(key))
+                    }
+                    dynPref[key] = targetJson
+                }
+            }
+        }
+    }
+
+    private fun checkPref() = valPref.any { (prefMap, s) ->
+        s != PrefMap.fromKey(prefMap)?.let { if (it.typeBool) sp.getBoolean(it.prefKey, false).toString() else sp.getString(it.prefKey, "") }
+    }
 }
 
 

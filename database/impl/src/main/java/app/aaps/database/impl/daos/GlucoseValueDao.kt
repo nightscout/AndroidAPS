@@ -28,23 +28,23 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     @Query("SELECT id FROM $TABLE_GLUCOSE_VALUES ORDER BY id DESC limit 1")
     fun getLastId(): Long?
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE nightscoutId = :nsId AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(nightscoutId = :nsId) AND likely(referenceId IS NULL)")
     fun findByNSId(nsId: String): GlucoseValue?
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE timestamp = :timestamp AND sourceSensor = :sourceSensor AND referenceId IS NULL")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(timestamp = :timestamp) AND likely(sourceSensor = :sourceSensor) AND likely(referenceId IS NULL)")
     fun findByTimestampAndSensor(timestamp: Long, sourceSensor: GlucoseValue.SourceSensor): GlucoseValue?
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE timestamp >= :timestamp AND isValid = 1 AND referenceId IS NULL AND value >= 39 ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) AND likely(value >= 39) ORDER BY timestamp ASC")
     fun compatGetBgReadingsDataFromTime(timestamp: Long): Single<List<GlucoseValue>>
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE timestamp BETWEEN :start AND :end AND isValid = 1 AND referenceId IS NULL AND value >= 39 ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(timestamp BETWEEN :start AND :end) AND likely(isValid = 1) AND likely(referenceId IS NULL) AND likely(value >= 39) ORDER BY timestamp ASC")
     fun compatGetBgReadingsDataFromTime(start: Long, end: Long): Single<List<GlucoseValue>>
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE id > :lastId AND referenceId IS NULL ORDER BY timestamp ASC")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(id > :lastId) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getDataFromId(lastId: Long): Single<List<GlucoseValue>>
 
     // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_GLUCOSE_VALUES WHERE id > :id) ORDER BY id ASC")
+    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(id > :id) AND likely(referenceId IS NULL) OR id IN (SELECT DISTINCT referenceId FROM $TABLE_GLUCOSE_VALUES WHERE id > :id) ORDER BY id ASC")
     fun getModifiedFrom(id: Long): Single<List<GlucoseValue>>
 
     // for WS we need 1 record only

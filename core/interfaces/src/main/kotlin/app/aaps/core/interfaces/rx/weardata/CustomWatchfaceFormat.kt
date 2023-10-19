@@ -170,7 +170,8 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.pref_show_ago, true),
     CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.pref_show_bg, true),
     CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true),
-    CWF_PREF_WATCH_SHOW_WEEK_NUMBER("key_show_week_number", R.string.pref_show_week_number, true);
+    CWF_PREF_WATCH_SHOW_WEEK_NUMBER("key_show_week_number", R.string.pref_show_week_number, true),
+    CWF_PREF_WATCH_SHOW_DATE("key_show_date", R.string.pref_show_date, true);
 
     companion object {
 
@@ -260,9 +261,14 @@ enum class JsonKeys(val key: String) {
     INVALIDIMAGE("invalidImage"),
     INVALIDCOLOR("invalidColor"),
     INVALIDFONTCOLOR("invalidFontColor"),
+    INVALIDTEXTSIZE("invalidTextSize"),
     TWINVIEW("twinView"),
     TOPOFFSETTWINHIDDEN("topOffsetTwinHidden"),
-    LEFTOFFSETTWINHIDDEN("leftOffsetTwinHidden")
+    LEFTOFFSETTWINHIDDEN("leftOffsetTwinHidden"),
+    DYNPREF("dynPref"),
+    DYNPREFCOLOR("dynPrefColor"),
+    PREFKEY("prefKey"),
+    DEFAULT("default")
 }
 
 enum class JsonKeyValues(val key: String) {
@@ -285,7 +291,10 @@ enum class JsonKeyValues(val key: String) {
     BOLD_ITALIC("bold_italic"),
     ITALIC("italic"),
     BGCOLOR("bgColor"),
-    SGVLEVEL("sgvLevel")
+    SGVLEVEL("sgvLevel"),
+    PREF_UNITS("key_units"),
+    PREF_DARK("key_dark"),
+    PREF_MATCH_DIVIDER("key_match_divider")
 }
 
 class ZipWatchfaceFormat {

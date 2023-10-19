@@ -106,9 +106,7 @@
     <string name="alarm_setting_summary">선호하는 펌프 알람 설정을 선택하세요.</string>
     <string name="patch_expiration_title">Patch 만료</string>
     <string name="patch_expiration_summary">활성화되면, patch는 3일 후에 만료되며, 이후 8시간의 유예 기간이 적용됩니다.</string>
-    <string name="hourly_max_insulin_title">시간당 최대 인슐린</string>
     <string name="hourly_max_insulin_summary">시간당 허용되는 인슐린 최대 unit을 정합니다. 이를 초과하면, 펌프는 중지됩니다.</string>
-    <string name="daily_max_insulin_title">일일 최대 인슐린</string>
     <string name="daily_max_insulin_summary">하루에 허용되는 인슐린 최대 unit을 정합니다. 이를 초과하면, 펌프는 중지됩니다.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">펌프 상태 가져오기</string>

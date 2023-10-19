@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="error_only_numeric_digits_allowed">Slegs numeriese syfers word toegelaat.</string>
-    <string name="error_only_numeric_digits_range_allowed">Slegs numeriese syfers binne die reeks %1$s - %2$s word toegelaat.</string>
-    <string name="error_field_must_not_be_empty">Hierdie veld moet nie leeg wees nie</string>
-    <string name="error_phone_not_valid">Telefoonnommer ongeldig</string>
-</resources>

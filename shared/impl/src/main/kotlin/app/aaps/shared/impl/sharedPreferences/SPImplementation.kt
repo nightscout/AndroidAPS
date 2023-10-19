@@ -149,7 +149,11 @@ class SPImplementation @Inject constructor(
         return try {
             sharedPreferences.getLong(context.getString(resourceID), defaultValue)
         } catch (e: Exception) {
-            SafeParse.stringToLong(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
+            try {
+                SafeParse.stringToLong(sharedPreferences.getString(context.getString(resourceID), defaultValue.toString()), defaultValue)
+            } catch (e1: Exception) {
+                return defaultValue
+            }
         }
     }
 
@@ -157,7 +161,11 @@ class SPImplementation @Inject constructor(
         return try {
             sharedPreferences.getLong(key, defaultValue)
         } catch (e: Exception) {
-            SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
+            try {
+                SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()), defaultValue)
+            } catch (e1: Exception) {
+                return defaultValue
+            }
         }
     }
 

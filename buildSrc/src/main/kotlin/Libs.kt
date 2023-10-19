@@ -84,7 +84,7 @@ object Libs {
         object Android {
             object PlayServices {
 
-                const val measurementApi = "com.google.android.gms:play-services-measurement-api:21.3.0"
+                const val measurementApi = "com.google.android.gms:play-services-measurement-api:21.4.0"
                 const val wearable = "com.google.android.gms:play-services-wearable:18.1.0"
                 const val location = "com.google.android.gms:play-services-location:21.0.1"
             }
@@ -101,7 +101,7 @@ object Libs {
 
         object Firebase {
 
-            const val firebaseBom = "com.google.firebase:firebase-bom:32.3.1"
+            const val firebaseBom = "com.google.firebase:firebase-bom:32.4.0"
             const val analytics = "com.google.firebase:firebase-analytics-ktx"
             const val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
             const val messaging = "com.google.firebase:firebase-messaging-ktx"
@@ -171,7 +171,7 @@ object Libs {
 
         object Okhttp3 {
 
-            private const val okhttpVersion = "4.11.0"
+            private const val okhttpVersion = "4.12.0"
 
             const val okhttp = "com.squareup.okhttp3:okhttp:$okhttpVersion"
             const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$okhttpVersion"
