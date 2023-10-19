@@ -313,7 +313,6 @@ class OverviewDataImpl @Inject constructor(
     override var absIobSeries: FixedLineGraphSeries<ScaledDataPoint> = FixedLineGraphSeries()
     override var iobPredictions1Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> =
         PointsWithLabelGraphSeries()
-    //var iobPredictions2Series: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 
     override var maxBGIValue = Double.MIN_VALUE
     override val bgiScale = Scale()

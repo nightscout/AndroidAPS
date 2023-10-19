@@ -11,6 +11,7 @@ import app.aaps.database.entities.ExtendedBolus
 import app.aaps.database.entities.Food
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
+import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.ProfileSwitch
 import app.aaps.database.entities.TemporaryBasal
@@ -853,6 +854,10 @@ import kotlin.math.roundToInt
 
     fun getHeartRatesFromTimeToTime(startMillis: Long, endMillis: Long) =
         database.heartRateDao.getFromTimeToTime(startMillis, endMillis)
+
+    fun getStepsCountFromTime(timeMillis: Long): Single<List<StepsCount>> =
+        database.stepsCountDao.getFromTime(timeMillis)
+            .subscribeOn(Schedulers.io())
 
     fun getStepsCountFromTimeToTime(startMillis: Long, endMillis: Long) =
         database.stepsCountDao.getFromTimeToTime(startMillis, endMillis)
