@@ -141,6 +141,7 @@ import kotlin.math.abs
         preprocessAlarmSettings(preferenceFragment)
         preprocessMaxInsulinSettings(preferenceFragment)
         preprocessConnectionAlertSettings(preferenceFragment)
+        preprocessPumpWarningSettings(preferenceFragment)
     }
 
     private fun preprocessSerialSettings(preferenceFragment: PreferenceFragmentCompat) {
@@ -261,6 +262,14 @@ import kotlin.math.abs
             val currentValue = text
             summary = "${rh.gs(R.string.pump_unreachable_threshold_minutes_summary)}\n${currentValue}"
         }
+    }
+
+    private fun preprocessPumpWarningSettings(preferenceFragment: PreferenceFragmentCompat) {
+        val patchExpirationPref = preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_patch_expiration))
+        val pumpWarningNotificationPref = preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_pump_warning_notification))
+        val pumpWarningExpiryHourPref = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(R.string.key_pump_warning_expiry_hour))
+        
+        pumpWarningExpiryHourPref?.isEnabled = patchExpirationPref?.isChecked == true && pumpWarningNotificationPref?.isChecked == true
     }
 
     override fun isInitialized(): Boolean {
