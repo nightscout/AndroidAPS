@@ -106,9 +106,7 @@
     <string name="alarm_setting_summary">Ställ in dina föredragna larminställningar för pumpen.</string>
     <string name="patch_expiration_title">Poddens utgångsdatum</string>
     <string name="patch_expiration_summary">När den är aktiverad, kommer podden att löpa ut efter 3 dagar, med en tidsfrist på 8 timmar efter det.</string>
-    <string name="hourly_max_insulin_title">Maximalt insulin per timme</string>
     <string name="hourly_max_insulin_summary">Ange maximalt tillåtna insulin-enheter per timme. Om den överskrids kommer pumpen att pausas.</string>
-    <string name="daily_max_insulin_title">Maximal daglig insulin-dos</string>
     <string name="daily_max_insulin_summary">Ange maximalt tillåtna insulin-enheter per dag. Om den överskrids kommer pumpen att pausas.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Hämtar pumpstatus</string>
