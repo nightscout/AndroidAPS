@@ -33,6 +33,13 @@
 
     <CheckBoxPreference
         android:defaultValue="false"
+        android:key="@string/key_show_date"
+        android:title="@string/pref_show_date"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
         android:key="@string/key_vibrate_hourly"
         android:title="@string/pref_vibrate_hourly"
         app:wear_iconOff="@drawable/settings_off"
