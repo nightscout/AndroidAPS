@@ -31,7 +31,7 @@
     <string name="profile_switches">Profilbytter</string>
     <string name="total_daily_doses">Totale daglige doser</string>
     <string name="temporary_basal_rates">Midlertidige basal doser</string>
-    <string name="temporary_targets">Temp Target</string>
+    <string name="temporary_targets">Midlertidige mål</string>
     <string name="settings">Innstillinger</string>
     <string name="application_version">Programversjon</string>
     <string name="device_model">Enhetsmodell</string>

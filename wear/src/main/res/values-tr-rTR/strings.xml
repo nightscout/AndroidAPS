@@ -2,12 +2,10 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS(Büyük)</string>
     <string name="label_watchface_big_chart">AAPS(BüyükGrafik)</string>
     <string name="label_watchface_no_chart">AAPS(GrafikYok)</string>
     <string name="label_watchface_circle">AAPS(Daire)</string>
-    <string name="label_watchface_v2">AAPS (v2)</string>
     <string name="label_watchface_digital_style">AAPS(DijitalStil)</string>
     <string name="label_watchface_custom">AAPS(Özel)</string>
     <string name="label_actions_tile">AAPS(Eylemler)</string>

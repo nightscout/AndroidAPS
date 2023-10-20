@@ -112,11 +112,13 @@
     <string name="alarm_setting_summary">Selecciona los ajustes de la alarma de la bomba que prefieras.</string>
     <string name="pump_warning_notification_title">Notificación sobre advertencia de la bomba</string>
     <string name="pump_warning_notification_summary">Mostrar notificación en advertencias de la bomba no críticas: batería baja, reserva baja (20 unidades) y próxima a caducar. Se recomienda dejarlo habilitado cuando las alarmas de la bomba estén configuradas en silencio.</string>
+    <string name="pump_warning_expiry_hour_title">Aviso de expiración de la bomba [hours]</string>
+    <string name="pump_warning_expiry_hour_summary">Mostrar notificación a la hora especificada tras la activación.</string>
     <string name="patch_expiration_title">Caducidad del parche</string>
     <string name="patch_expiration_summary">Cuando está activado, el parche caducará a los 3 días, con un periodo de gracia de 8 horas adicionales</string>
-    <string name="hourly_max_insulin_title">Insulina máxima por hora</string>
+    <string name="hourly_max_insulin_title">Insulina máxima por hora [Units]</string>
     <string name="hourly_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por hora. Si se supera, la bomba se suspenderá.</string>
-    <string name="daily_max_insulin_title">Insulina máxima diaria</string>
+    <string name="daily_max_insulin_title">Insulina máxima diaria [Units]</string>
     <string name="daily_max_insulin_summary">Especificar las unidades máximas de insulina permitidas por día. Si se superan, la bomba se suspenderá.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Obteniendo el estado de la bomba</string>

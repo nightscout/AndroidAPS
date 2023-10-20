@@ -7,7 +7,7 @@
     <string name="start_activity_tt">Start midlertidig mål for Aktivitet</string>
     <string name="start_eating_soon_tt">Start midlertidig mål for Spise snart</string>
     <string name="start_hypo_tt">Start midlertidig mål for Hypo</string>
-    <string name="time_offset">Tids- forskyvning</string>
+    <string name="time_offset">Tidsforskyvning</string>
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Påminnelse om å gi bolus senere</string>
     <string name="a11y_carb_reminder">angi påminnelse</string>
@@ -45,7 +45,7 @@
     <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør hendelse</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
-    <string name="timeshift_label">Tids- forskyving</string>
+    <string name="timeshift_label">Tidsforskyving</string>
     <string name="percentage_label">Prosent</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Pause loop i 1t</string>

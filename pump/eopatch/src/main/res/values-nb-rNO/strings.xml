@@ -92,9 +92,9 @@
     <string name="patch_cancel_pairing">Avbryt paringen</string>
     <string name="symbol_days">dager</string>
     <string name="all_dose_unit">&#160;E</string>
-    <string name="insulin_suspend_msg1">Når du pauser pumpen vil gjeldende bolus dosering &amp; Temp basal bli kansellert. \n\nDosering : %1$s E/time\nGjenstående tid : %2$s\n&amp; Gjenværende insulin å levere: %3$.2f E</string>
+    <string name="insulin_suspend_msg1">Når du pauser pumpen vil gjeldende bolus dosering &amp; midlertidig basal bli kansellert. \n\nDosering : %1$s E/time\nGjenstående tid : %2$s\n&amp; Gjenværende insulin å levere: %3$.2f E</string>
     <string name="insulin_suspend_msg2">Når du pauser pumpen vil levering av bolus dose bli avbrutt. \n\nGjenværende insulin : %1$.2f E</string>
-    <string name="insulin_suspend_msg3">Når du pauser pumpen vil gjeldende Temp basal dosering bli kansellert. \n\nDosering : %1$s E/time\nGjenstående tid : %2$s</string>
+    <string name="insulin_suspend_msg3">Når du pauser pumpen vil gjeldende midlertidig basaldosering bli kansellert. \n\nDosering : %1$s E/time\nGjenstående tid : %2$s</string>
     <string name="insulin_suspend_msg4">Insulintilførsel er pauset.</string>
     <string name="string_change_patch">Kast/bytt patch</string>
     <string name="string_activate_patch">Aktiver Patch</string>

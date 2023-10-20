@@ -2,12 +2,10 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS (גדול)</string>
     <string name="label_watchface_big_chart">AAPS (תרשים גדול)</string>
     <string name="label_watchface_no_chart">AAPS (ללא תרשים)</string>
     <string name="label_watchface_circle">AAPS (עיגול)</string>
-    <string name="label_watchface_v2">AAPS (v2)</string>
     <string name="label_watchface_digital_style">AAPS (דיגיטלי)</string>
     <string name="label_actions_tile">AAPS (פעולות)</string>
     <string name="label_temp_target_tile">AAPS (מטרה זמנית)</string>

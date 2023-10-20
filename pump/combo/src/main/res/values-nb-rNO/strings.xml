@@ -27,7 +27,7 @@
     <string name="combo_reservoir_empty">Tom</string>
     <string name="combo_reservoir_normal">Normal</string>
     <string name="combo_notification_check_time_date">Pumpens tid må oppdateres</string>
-    <string name="combo_pump_tbr_cancelled_warrning">Varsel om kansellering av temp basal er bekreftet</string>
+    <string name="combo_pump_tbr_cancelled_warrning">Varsel om kansellering av midlertidig basal er bekreftet</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Ingen kontakt med pumpen. Ingen bolus er levert</string>
     <string name="combo_error_no_bolus_delivered">Bolus avbrutt. Det virker som ingen bolus er levert. For å være sikker, sjekk pumpen for å unngå levering av dobbel bolus og gjør evt et nytt forsøk. For å unngå feil vil systemet aldri prøve å levere ny bolus.</string>
     <string name="combo_error_partial_bolus_delivered">Bare %1$.2f E av bolusdosen på %2$.2f E ble levert på grunn av en feil. Sjekk pumpen for å kontrollere dette og iverksett nødvendige tiltak.</string>
@@ -37,7 +37,7 @@
     <string name="combo_actvity_reading_basal_profile">Leser basalprofil</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">Pumpe historikken har blitt endret siden bolus kalkuleringen ble utført. Bolus har ikke blitt levert. Vennligst rekalkuler om bolus fortsatt er nødvendig.</string>
     <string name="combo_error_updating_treatment_record">Bolus har blitt levert, men det oppsto en feil ved loggføring i behandlinger. Dette kan oppstå hvis to små bolus på samme størrelse blir levert i løpet av to minutter. Vennligst sjekk pumpe historikken og behandlinger loggen, og bruk Helseportal for å legge til de manglende behandlingene. Pass på at du ikke legger til to identiske behandlinger på samme minutt.</string>
-    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Avviser høy temp target siden kalkuleringen ikke tok hensyn til nylige endringer i pumpe historikken</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Avviser høyt midlertidig mål siden kalkuleringen ikke tok hensyn til nylige endringer i pumpe historikken</string>
     <string name="combo_activity_checking_pump_state">Oppdaterer pumpestatus</string>
     <string name="combo_warning_pump_basal_rate_changed">Basal dosen i pumpen har blitt endret og vil i løpet av kort tid bli oppdatert</string>
     <string name="combo_error_failure_reading_changed_basal_rate">Basalsats endret i pumpe, men lesing av den feilet</string>
@@ -46,7 +46,7 @@
     <string name="combo_check_date">Den siste bolus er eldre enn 24t eller er i fremtiden. Vennligst sjekk at datoen i pumpen er korrekt.</string>
     <string name="combo_suspious_bolus_time">Tid/dato for levert bolus i pumpen er trolig feil, og IOB beregningen blir da feil. Vennligst sjekk pumpens tid/dato.</string>
     <string name="combo_bolus_count">Antall boluser</string>
-    <string name="combo_tbr_count">Antall temp basaler TBR</string>
+    <string name="combo_tbr_count">Antall midlertidige basaler TBR</string>
     <string name="bolusstopped">Bolus stoppet</string>
     <string name="bolusstopping">Stopper bolus</string>
     <string name="pump_commerror_label">Komm. feiltelling</string>

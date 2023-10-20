@@ -106,15 +106,15 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun setColorDark() {
         setWatchfaceStyle()
-        if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) == 0)
+        if ((ViewMap.SGV.dynData?.stepFontColor ?: 0) <= 0)
             binding.sgv.setTextColor(bgColor)
-        if ((ViewMap.DIRECTION.dynData?.stepColor ?: 0) == 0)
+        if ((ViewMap.DIRECTION.dynData?.stepColor ?: 0) <= 0)
             binding.direction2.colorFilter = changeDrawableColor(bgColor)
-        if (ageLevel != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) == 0)
+        if (ageLevel != 1 && (ViewMap.TIMESTAMP.dynData?.stepFontColor ?: 0) <= 0)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
-        if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) == 0)
+        if (status.batteryLevel != 1 && (ViewMap.UPLOADER_BATTERY.dynData?.stepFontColor ?: 0) <= 0)
             binding.uploaderBattery.setTextColor(lowBatColor)
-        if ((ViewMap.LOOP.dynData?.stepDraw ?: 0) == 0)     // Apply automatic background image only if no dynData or no step images
+        if ((ViewMap.LOOP.dynData?.stepDraw ?: 0) <= 0)     // Apply automatic background image only if no dynData or no step images
             when (loopLevel) {
                 -1   -> binding.loop.setBackgroundResource(R.drawable.loop_grey_25)
                 1    -> binding.loop.setBackgroundResource(R.drawable.loop_green_25)
@@ -393,10 +393,10 @@ class CustomWatchface : BaseWatchFace() {
         MINUTE(ViewKeys.MINUTE.key, R.id.minute),
         SECOND(ViewKeys.SECOND.key, R.id.second, R.string.key_show_seconds),
         TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod),
-        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name),
-        DAY(ViewKeys.DAY.key, R.id.day),
+        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, R.string.key_show_date),
+        DAY(ViewKeys.DAY.key, R.id.day, R.string.key_show_date),
         WEEKNUMBER(ViewKeys.WEEKNUMBER.key, R.id.week_number, R.string.key_show_week_number),
-        MONTH(ViewKeys.MONTH.key, R.id.month),
+        MONTH(ViewKeys.MONTH.key, R.id.month, R.string.key_show_date),
         LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status),
         DIRECTION(ViewKeys.DIRECTION.key, R.id.direction2, R.string.key_show_direction),
         TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, R.string.key_show_ago),
@@ -507,7 +507,7 @@ class CustomWatchface : BaseWatchFace() {
         fun customizeTextView(view: TextView) {
             customizeViewCommon(view)
             viewJson?.let { viewJson ->
-                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * cwf.zoomFactor).toFloat())
+                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((dynData?.getTextSize() ?: viewJson.optInt(TEXTSIZE.key, 22)) * cwf.zoomFactor).toFloat())
                 view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
                 view.setTypeface(
                     FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
@@ -673,6 +673,7 @@ class CustomWatchface : BaseWatchFace() {
         SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi, true),
         SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status, true),
         SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number, true),
+        SHOW_DATE(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DATE.key, R.string.key_show_date, true),
         PREF_UNITS(JsonKeyValues.PREF_UNITS.key, R.string.key_units_mgdl, true),
         PREF_DARK(JsonKeyValues.PREF_DARK.key, R.string.key_dark, true),
         PREF_MATCH_DIVIDER(JsonKeyValues.PREF_MATCH_DIVIDER.key, R.string.key_match_divider, true);
@@ -727,16 +728,19 @@ class CustomWatchface : BaseWatchFace() {
         private val dynDrawable = mutableMapOf<Int, Drawable?>()
         private val dynColor = mutableMapOf<Int, Int>()
         private val dynFontColor = mutableMapOf<Int, Int>()
+        private val dynTextSize = mutableMapOf<Int, Int>()
         private var dataRange: DataRange? = null
         private var topRange: DataRange? = null
         private var leftRange: DataRange? = null
         private var rotationRange: DataRange? = null
         val stepDraw: Int
-            get() = dynDrawable[0]?.let { dynDrawable.size - 1 } ?: dynDrawable.size
+            get() = dynDrawable.size - 1
         val stepColor: Int
             get() = dynColor[0]?.let { dynColor.size - 1 } ?: dynColor.size
         val stepFontColor: Int
             get() = dynFontColor[0]?.let { dynFontColor.size - 1 } ?: dynFontColor.size
+        val stepTextSize: Int
+            get() = dynTextSize[0]?.let { dynTextSize.size - 1 } ?: dynTextSize.size
 
         val dataValue: Double?
             get() = when (valueMap) {
@@ -761,8 +765,9 @@ class CustomWatchface : BaseWatchFace() {
         fun getLeftOffset(): Int = dataRange?.let { dataRange -> leftRange?.let { leftRange -> dataValue?.let { (valueMap.dynValue(it, dataRange, leftRange) * cwf.zoomFactor).toInt() }
             ?: (leftRange.invalidData * cwf.zoomFactor).toInt() } } ?: 0
         fun getRotationOffset(): Int = dataRange?.let { dataRange -> rotationRange?.let { rotRange -> dataValue?.let { valueMap.dynValue(it, dataRange, rotRange) } ?: rotRange.invalidData } } ?: 0
-        fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] ?: dynDrawable[1] }
+        fun getDrawable() = dataRange?.let { dataRange -> dataValue?.let { dynDrawable[valueMap.stepValue(it, dataRange, stepDraw)] } ?: dynDrawable[0] }
         fun getFontColor() = if (stepFontColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynFontColor[valueMap.stepValue(it, dataRange, stepFontColor)] } ?: dynFontColor[0] ?: dynFontColor[1] } else null
+        fun getTextSize() = if (stepTextSize > 0) dataRange?.let { dataRange -> dataValue?.let { dynTextSize[valueMap.stepValue(it, dataRange, stepTextSize)] } ?: dynTextSize[0] ?: dynTextSize[1] } else null
         fun getColor() = if (stepColor > 0) dataRange?.let { dataRange -> dataValue?.let { dynColor[valueMap.stepValue(it, dataRange, stepColor)] } ?: dynColor[0] ?: dynColor[1] } else null
         private fun load() {
             DataRange(dataJson.optDouble(MINDATA.key, valueMap.min), dataJson.optDouble(MAXDATA.key, valueMap.max)).let { defaultRange ->
@@ -790,6 +795,13 @@ class CustomWatchface : BaseWatchFace() {
             idx = 1
             while (dataJson.has("${FONTCOLOR.key}$idx")) {
                 dynFontColor[idx] = cwf.getColor(dataJson.optString("${FONTCOLOR.key}$idx"))
+                idx++
+            }
+            if (dataJson.has(INVALIDTEXTSIZE.key))
+                dynTextSize[0] = cwf.getColor(dataJson.optString(INVALIDTEXTSIZE.key))
+            idx = 1
+            while (dataJson.has("${TEXTSIZE.key}$idx")) {
+                dynTextSize[idx] = dataJson.optInt("${TEXTSIZE.key}$idx", 22)
                 idx++
             }
         }
@@ -845,11 +857,12 @@ class CustomWatchface : BaseWatchFace() {
         valPref.clear()
         dynPref.clear()
         dynJson?.keys()?.forEach { key ->
-            dynJson.optJSONObject(key)?.let { buildDynPrefs(dynJson, it, key, mutableSetOf()) }
+            val targetJson = JSONObject()
+            dynJson.optJSONObject(key)?.let { buildDynPrefs(dynJson, targetJson, it, key, mutableSetOf()) }
         }
     }
 
-    private fun buildDynPrefs(dynJson: JSONObject, json: JSONObject, key: String, visitedKeys: MutableSet<String>) {
+    private fun buildDynPrefs(dynJson: JSONObject, targetJson: JSONObject, json: JSONObject, key: String, visitedKeys: MutableSet<String>) {
         val prefKey = json.optString(PREFKEY.key)
         PrefMap.fromKey(prefKey)?.let { prefMap ->
             val value = valPref[prefMap.key]
@@ -858,16 +871,23 @@ class CustomWatchface : BaseWatchFace() {
                 }
             json.optJSONObject(value)?.let { nextJson ->
                 if (nextJson.has(DYNPREF.key)) {
+                    nextJson.keys().forEach { key ->
+                        if ( key != DYNPREF.key)
+                            targetJson.putOpt(key, nextJson.opt(key))
+                    }
                     val nextKey = nextJson.optString(DYNPREF.key)
                     if (nextKey.isNotEmpty() && nextKey !in visitedKeys) {
                         visitedKeys += nextKey
                         dynJson.optJSONObject(nextKey)?.let {
-                            buildDynPrefs(dynJson, it, key, visitedKeys)
+                            buildDynPrefs(dynJson, targetJson, it, key, visitedKeys)
                         }
                     }
                 } else {
-                    //aapsLogger.debug("XXXXX dynKey json $key $nextJson")
-                    dynPref[key] = nextJson
+                    nextJson.keys().forEach { key ->
+                        if ( key != DYNPREF.key)
+                            targetJson.putOpt(key, nextJson.opt(key))
+                    }
+                    dynPref[key] = targetJson
                 }
             }
         }
