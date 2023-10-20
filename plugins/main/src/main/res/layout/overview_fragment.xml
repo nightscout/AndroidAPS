@@ -34,22 +34,23 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/active_profile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_gravity="end"
-                        android:layout_marginEnd="5dp"
+                        android:layout_marginEnd="4dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
                         android:hint="active profile"
                         android:text="Profile"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         app:icon="@drawable/ic_ribbon_profile"
+                        android:singleLine="false"
                         tools:ignore="HardcodedText" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/temp_target"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
@@ -57,6 +58,7 @@
                         android:text="@string/value_unavailable_short"
                         android:textAppearance="?android:attr/textAppearanceSmall"
                         app:icon="@drawable/ic_crosstarget"
+                        android:singleLine="false"
                         tools:ignore="HardcodedText" />
 
                 </LinearLayout>
@@ -68,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="0dp"
                 app:cardCornerRadius="4dp"
                 app:contentPadding="2dp"
                 app:cardElevation="2dp"
