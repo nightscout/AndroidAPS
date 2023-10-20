@@ -9,6 +9,7 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("android-app-dependencies")
+    id("test-app-dependencies")
     id("jacoco-app-dependencies")
 }
 
@@ -206,8 +207,6 @@ dependencies {
     implementation(project(":workflow"))
 
     testImplementation(project(":shared:tests"))
-
-//    implementation(fileTree (include: listOf("*.jar"), dir = "libs"))
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include

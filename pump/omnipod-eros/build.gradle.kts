@@ -8,8 +8,8 @@ plugins {
 }
 
 android {
-
     namespace = "info.nightscout.androidaps.plugins.pump.omnipod.eros"
+
     defaultConfig {
         kapt {
             arguments {

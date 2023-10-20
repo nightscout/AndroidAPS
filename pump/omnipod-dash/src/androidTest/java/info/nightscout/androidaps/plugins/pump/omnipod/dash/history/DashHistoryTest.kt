@@ -9,8 +9,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.Omnipod
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.DashHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
+import org.junit.After
 import org.junit.Before
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -61,7 +62,7 @@ class DashHistoryTest {
         }
     }
 
-    @org.junit.jupiter.api.AfterEach
+    @After
     fun tearDown() {
         database.close()
     }

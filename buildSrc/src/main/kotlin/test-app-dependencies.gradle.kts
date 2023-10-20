@@ -20,7 +20,8 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.extKtx)
     androidTestImplementation(Libs.AndroidX.Test.rules)
-    //androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
+    androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
+    androidTestImplementation(Libs.Google.truth)
 }
 
 tasks.withType<Test> {
@@ -48,6 +49,14 @@ android {
         unitTests {
             isReturnDefaultValues = true
             isIncludeAndroidResources = true
+        }
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/COPYRIGHT"
+            excludes += "META-INF/LICENSE.md"
+            excludes += "META-INF/LICENSE-notice.md"
         }
     }
 }

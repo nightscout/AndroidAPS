@@ -40,7 +40,6 @@ dependencies {
     api(Libs.AndroidX.Room.room)
     api(Libs.AndroidX.Room.runtime)
     api(Libs.AndroidX.Room.rxJava3)
-    kapt(Libs.AndroidX.Room.compiler)
 
     api(Libs.Dagger.android)
     api(Libs.Dagger.androidSupport)
@@ -48,4 +47,5 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Room.testing)
 
     kapt(Libs.Dagger.compiler)
+    kapt(Libs.AndroidX.Room.compiler)
 }
