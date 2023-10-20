@@ -116,6 +116,7 @@
     <string name="pump_warning_expiry_hour_summary">Melding weergeven op opgegeven uur na activering.</string>
     <string name="patch_expiration_title">Patch vervalt</string>
     <string name="patch_expiration_summary">Wanneer ingeschakeld, zal de patch na 3 dagen verlopen met een extra periode van 8 uur coulance.</string>
+    <string name="hourly_max_insulin_title">Maximale insuline per uur [Eenheden]</string>
     <string name="hourly_max_insulin_summary">Geef de maximale hoeveelheid insuline per uur op. Indien overschreden zal de pomp de insuline toediening onderbreken.</string>
     <string name="daily_max_insulin_title">Maximale insuline per dag [Eenheden]</string>
     <string name="daily_max_insulin_summary">Geef de maximale hoeveelheid insuline per dag op. Indien overschreden zal de pomp de insuline toediening onderbreken.</string>
