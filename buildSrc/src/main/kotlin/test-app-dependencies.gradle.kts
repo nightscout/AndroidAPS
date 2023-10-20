@@ -7,7 +7,7 @@ plugins {
 }
 
 dependencies {
-    testImplementation(Libs.Kotlin.test)
+    testImplementation(kotlin("test"))
     testImplementation(Libs.JUnit.jupiter)
     testImplementation(Libs.JUnit.jupiterApi)
     testImplementation(Libs.json)

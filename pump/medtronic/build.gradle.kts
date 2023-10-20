@@ -4,9 +4,8 @@ plugins {
     id("kotlin-kapt")
     id("android-module-dependencies")
     id("test-module-dependencies")
+    id("jacoco-module-dependencies")
 }
-
-apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 
 android {
     namespace = "info.nightscout.androidaps.plugins.pump.medtronic"

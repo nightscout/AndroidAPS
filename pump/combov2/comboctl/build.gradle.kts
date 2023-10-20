@@ -2,10 +2,8 @@ plugins {
     id("com.android.library")
     id("kotlin-android")
     id("android-module-dependencies")
-    id("test-module-dependencies")
+    id("jacoco-module-dependencies")
 }
-
-apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 
 android {
     namespace = "info.nightscout.comboctl"
@@ -20,14 +18,12 @@ android {
 }
 
 dependencies {
-    implementation(platform(Libs.Kotlin.platformBom))
-    testImplementation(Libs.Kotlin.test)
-    testImplementation(Libs.Kotlin.testJunit5)
-
 
     api(Libs.KotlinX.coroutinesCore)
     api(Libs.KotlinX.datetime)
     api(Libs.AndroidX.core)
+
+    testImplementation(kotlin("test"))
     testImplementation(Libs.kotlinTestRunner)
     testRuntimeOnly(Libs.JUnit.jupiterEngine)
 }

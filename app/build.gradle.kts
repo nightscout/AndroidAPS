@@ -9,9 +9,8 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("android-app-dependencies")
+    id("jacoco-app-dependencies")
 }
-
-apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 
 repositories {
     mavenCentral()

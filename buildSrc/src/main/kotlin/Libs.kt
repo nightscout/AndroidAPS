@@ -5,10 +5,7 @@ object Libs {
 
         const val kotlin = "1.9.10"
 
-        const val platformBom = "org.jetbrains.kotlin:kotlin-bom"
         const val stdlibJdk8 = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin"
-        const val test = "org.jetbrains.kotlin:kotlin-test:$kotlin"
-        const val testJunit5 = "org.jetbrains.kotlin:kotlin-test-junit5"
         const val reflect = "org.jetbrains.kotlin:kotlin-reflect:$kotlin"
     }
 

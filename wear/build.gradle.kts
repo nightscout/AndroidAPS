@@ -8,9 +8,8 @@ plugins {
     id("kotlin-kapt")
     id("android-app-dependencies")
     id("test-app-dependencies")
+    id("jacoco-app-dependencies")
 }
-
-apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 
 repositories {
     google()

@@ -6,9 +6,8 @@ plugins {
     id("android-module-dependencies")
     id("all-open-dependencies")
     id("test-module-dependencies")
+    id("jacoco-module-dependencies")
 }
-
-apply(from = "${project.rootDir}/core/main/jacoco_global.gradle")
 
 android {
     namespace = "app.aaps.core.main"
