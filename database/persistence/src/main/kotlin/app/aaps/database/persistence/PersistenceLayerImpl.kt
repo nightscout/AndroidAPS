@@ -30,6 +30,7 @@ import app.aaps.core.main.extensions.toDb
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.database.impl.transactions.CgmSourceTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
@@ -1322,6 +1323,18 @@ class PersistenceLayerImpl @Inject constructor(
                 transactionResult
             }
 
+    override fun cancelCurrentOfflineEvent(timestamp: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<OE>> =
+        repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(timestamp))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while canceling OfflineEvent", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<OE>()
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent from ${source.name} $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
     override fun syncNsOfflineEvents(offlineEvents: List<OE>): Single<PersistenceLayer.TransactionResult<OE>> =
         repository.runTransactionForResult(SyncNsOfflineEventTransaction(offlineEvents.asSequence().map { it.toDb() }.toList(), config.NSCLIENT))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it) }
@@ -1528,6 +1541,12 @@ class PersistenceLayerImpl @Inject constructor(
     override fun clearCachedTddData(timestamp: Long) = repository.clearCachedTddData(timestamp)
     override fun getLastTotalDailyDoses(count: Int, ascending: Boolean): List<TDD> =
         repository.getLastTotalDailyDoses(count, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }.blockingGet()
+
+    override fun getCalculatedTotalDailyDose(timestamp: Long): TDD? =
+        repository.getCalculatedTotalDailyDose(timestamp).map { it.fromDb() }.blockingGet()
+
+    override fun insertTotalDailyDose(totalDailyDose: TDD) =
+        repository.insertTotalDailyDose(totalDailyDose.toDb())
 
     // VersionChange
     override fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable =

@@ -330,7 +330,6 @@ import kotlin.math.roundToInt
         database.effectiveProfileSwitchDao.getOldestEffectiveProfileSwitchRecord()
             .subscribeOn(Schedulers.io())
 
-
     fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Maybe<EffectiveProfileSwitch> =
         database.effectiveProfileSwitchDao.getEffectiveProfileSwitchActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
@@ -786,10 +785,9 @@ import kotlin.math.roundToInt
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun getCalculatedTotalDailyDose(timestamp: Long): Single<ValueWrapper<TotalDailyDose>> =
+    fun getCalculatedTotalDailyDose(timestamp: Long): Maybe<TotalDailyDose> =
         database.totalDailyDoseDao.findByTimestamp(timestamp, InterfaceIDs.PumpType.CACHE)
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
     fun insertTotalDailyDose(tdd: TotalDailyDose) {
         database.totalDailyDoseDao.insert(tdd)

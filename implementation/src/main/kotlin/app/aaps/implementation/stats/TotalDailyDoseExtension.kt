@@ -5,18 +5,18 @@ import android.content.Context
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
+import app.aaps.core.data.db.TDD
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.entities.TotalDailyDose
 import app.aaps.implementation.R
 
-val TotalDailyDose.total
+val TDD.total
     get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount
 
-val TotalDailyDose.basalPct: Double
+val TDD.basalPct: Double
     get() = if (total > 0) basalAmount / total * 100 else 0.0
 
-fun TotalDailyDose.Companion.toTableRowHeader(context: Context, rh: ResourceHelper, includeCarbs: Boolean): TableRow =
+fun TDD.Companion.toTableRowHeader(context: Context, rh: ResourceHelper, includeCarbs: Boolean): TableRow =
     TableRow(context).also { header ->
         val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
         header.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
@@ -30,7 +30,7 @@ fun TotalDailyDose.Companion.toTableRowHeader(context: Context, rh: ResourceHelp
             header.addView(TextView(context).apply { layoutParams = lp.apply { column = 5; weight = 1f }; text = rh.gs(R.string.carbs_short) })
     }
 
-fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, dateUtil: DateUtil, includeCarbs: Boolean): TableRow =
+fun TDD.toTableRow(context: Context, rh: ResourceHelper, dateUtil: DateUtil, includeCarbs: Boolean): TableRow =
     TableRow(context).also { row ->
         val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
         if ((total.isNaN() || bolusAmount.isNaN() || basalAmount.isNaN() || carbs.isNaN()).not()) {
@@ -61,7 +61,7 @@ fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, dateUtil: Da
     }
 
 @SuppressLint("SetTextI18n")
-fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, days: Int, includeCarbs: Boolean): TableRow =
+fun TDD.toTableRow(context: Context, rh: ResourceHelper, days: Int, includeCarbs: Boolean): TableRow =
     TableRow(context).also { row ->
         val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT).apply { weight = 1f }
         if ((total.isNaN() || bolusAmount.isNaN() || basalAmount.isNaN() || carbs.isNaN()).not()) {

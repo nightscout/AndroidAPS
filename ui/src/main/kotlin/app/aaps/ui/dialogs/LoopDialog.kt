@@ -45,8 +45,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogLoopBinding
 import dagger.android.HasAndroidInjector
@@ -71,7 +69,6 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
@@ -327,28 +324,16 @@ class LoopDialog : DaggerDialogFragment() {
             }
 
             R.id.overview_enable                          -> {
-                uel.log(Action.LOOP_ENABLED, Sources.LoopDialog)
                 (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
                 (loop as PluginBase).setFragmentVisible(PluginType.LOOP, true)
                 configBuilder.storeSettings("EnablingLoop")
                 rxBus.send(EventRefreshOverview("suspend_menu"))
-                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
-                    .subscribe({ result ->
-                                   result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
-                               }, {
-                                   aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                               })
+                disposable += persistenceLayer.cancelCurrentOfflineEvent(dateUtil.now(), Action.LOOP_ENABLED, Sources.LoopDialog).subscribe()
                 return true
             }
 
             R.id.overview_resume, R.id.overview_reconnect -> {
-                uel.log(if (v.id == R.id.overview_resume) Action.RESUME else Action.RECONNECT, Sources.LoopDialog)
-                disposable += repository.runTransactionForResult(CancelCurrentOfflineEventIfAnyTransaction(dateUtil.now()))
-                    .subscribe({ result ->
-                                   result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent $it") }
-                               }, {
-                                   aapsLogger.error(LTag.DATABASE, "Error while saving OfflineEvent", it)
-                               })
+                disposable += persistenceLayer.cancelCurrentOfflineEvent(dateUtil.now(), if (v.id == R.id.overview_resume) Action.RESUME else Action.RECONNECT, Sources.LoopDialog).subscribe()
                 rxBus.send(EventRefreshOverview("suspend_menu"))
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {

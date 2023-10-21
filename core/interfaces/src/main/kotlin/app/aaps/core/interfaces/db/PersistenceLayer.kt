@@ -912,7 +912,26 @@ interface PersistenceLayer {
      * @return database record
      */
     fun getNextSyncElementOfflineEvent(id: Long): Maybe<Pair<OE, OE>>
+
+    /**
+     * Insert offline event and cancel running if there is some at time of new record
+     *
+     * @param offlineEvent new offline event
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     */
     fun insertAndCancelCurrentOfflineEvent(offlineEvent: OE, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?> = listOf()): Single<TransactionResult<OE>>
+
+    /**
+     * Cancel offline event if there is some running at provided timestamp
+     *
+     * @param timestamp time
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     */
+    fun cancelCurrentOfflineEvent(timestamp: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?> = listOf()): Single<TransactionResult<OE>>
 
     /**
      * Store records coming from NS to database
@@ -1054,6 +1073,19 @@ interface PersistenceLayer {
      * @return List of tdds
      */
     fun getLastTotalDailyDoses(count: Int, ascending: Boolean): List<TDD>
+
+    /**
+     * Get cached TDD for specified time
+     *
+     * @param timestamp time
+     * @return tdd or null
+     */
+    fun getCalculatedTotalDailyDose(timestamp: Long): TDD?
+
+    /**
+     * Insert new record to database
+     */
+    fun insertTotalDailyDose(totalDailyDose: TDD)
 
     // VersionChange
 

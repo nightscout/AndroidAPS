@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.tests.TestBaseWithProfile
 import dagger.android.AndroidInjector
@@ -70,7 +69,6 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var smsCommunicator: SmsCommunicator
     @Mock lateinit var loopPlugin: TestLoopPlugin
     @Mock lateinit var uel: UserEntryLogger
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
     var injector: HasAndroidInjector = HasAndroidInjector {
@@ -79,8 +77,7 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.dateUtil = dateUtil
-                it.repository = repository
-                it.uel = uel
+                it.persistenceLayer = persistenceLayer
             }
             if (it is ActionStartTempTarget) {
                 it.aapsLogger = aapsLogger
@@ -88,7 +85,6 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.activePlugin = activePlugin
                 it.persistenceLayer = persistenceLayer
                 it.profileFunction = profileFunction
-                it.uel = uel
                 it.dateUtil = dateUtil
                 it.profileUtil = profileUtil
             }
@@ -127,9 +123,8 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.rh = rh
                 it.configBuilder = configBuilder
                 it.rxBus = rxBus
-                it.repository = repository
+                it.persistenceLayer = persistenceLayer
                 it.dateUtil = dateUtil
-                it.uel = uel
             }
             if (it is ActionLoopEnable) {
                 it.aapsLogger = aapsLogger

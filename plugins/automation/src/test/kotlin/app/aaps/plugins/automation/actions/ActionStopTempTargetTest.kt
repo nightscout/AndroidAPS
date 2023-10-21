@@ -1,9 +1,8 @@
 package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.db.TT
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.queue.Callback
-import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import app.aaps.database.impl.transactions.Transaction
 import app.aaps.plugins.automation.R
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.rxjava3.core.Single
@@ -11,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.skyscreamer.jsonassert.JSONAssert
 
 class ActionStopTempTargetTest : ActionsTestBase() {
@@ -44,19 +44,18 @@ class ActionStopTempTargetTest : ActionsTestBase() {
             // add(TemporaryTarget(id = 0, version = 0, dateCreated = 0, isValid = false, referenceId = null, interfaceIDs_backing = null, timestamp = 0, utcOffset = 0, reason =, highTarget = 0.0, lowTarget = 0.0, duration = 0))
             // insert all updated TTs
         }
-        `when`(
-            repository.runTransactionForResult(anyObject<Transaction<CancelCurrentTemporaryTargetIfAnyTransaction.TransactionResult>>())
-        ).thenReturn(Single.just(CancelCurrentTemporaryTargetIfAnyTransaction.TransactionResult().apply {
-            inserted.addAll(inserted)
-            updated.addAll(updated)
-        }))
+        `when`(persistenceLayer.cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any()))
+            .thenReturn(Single.just(PersistenceLayer.TransactionResult<TT>().apply {
+                inserted.addAll(inserted)
+                updated.addAll(updated)
+            }))
 
         sut.doAction(object : Callback() {
             override fun run() {
                 assertThat(result.success).isTrue()
             }
         })
-        Mockito.verify(repository, Mockito.times(1)).runTransactionForResult((anyObject<Transaction<CancelCurrentTemporaryTargetIfAnyTransaction.TransactionResult>>()))
+        Mockito.verify(persistenceLayer, Mockito.times(1)).cancelCurrentTemporaryTargetIfAny(any(), any(), any(), any(), any())
     }
 
     @Test fun hasDialogTest() {
