@@ -49,9 +49,9 @@
     <string name="smscommunicator_tt_set">Objetivo %1$s para %2$d minutos establecido correctamente</string>
     <string name="smscommunicator_tt_canceled">Objetivo temporal cancelado correctamente</string>
     <string name="smscommunicator_remote_commands_allowed">Permitir comandos remotos vía SMS</string>
-    <string name="smscommunicator_loop_has_been_disabled">El bucle se ha desactivado</string>
-    <string name="smscommunicator_loop_has_been_enabled">El bucle se ha activado</string>
-    <string name="smscommunicator_loop_is_enabled">Bucle activo</string>
+    <string name="smscommunicator_loop_has_been_disabled">El lazo se ha desactivado</string>
+    <string name="smscommunicator_loop_has_been_enabled">El lazo se ha activado</string>
+    <string name="smscommunicator_loop_is_enabled">Lazo activo</string>
     <string name="smscommunicator_pump_connect_with_code">Para conectar la bomba, responder con el código %1$s</string>
     <string name="smscommunicator_pump_connect_fail">Error al conectar a la bomba</string>
     <string name="smscommunicator_pump_disconnect_with_code">Para desconectar la bomba durante %1$dminutos, responde con el código %2$s</string>
@@ -64,10 +64,10 @@
     <string name="smscommunicator_extended_reply_with_code">Para iniciar un bolo extendido de %1$.2fU durante %2$d minutos, responder con el código %3$s</string>
     <string name="smscommunicator_carbs_reply_with_code">Para introducir %1$dg en %2$s, responder con el código %3$s</string>
     <string name="smscommunicator_basal_pct_reply_with_code">Para iniciar una basal de %1$d%% durante %2$d min, responder con el código %3$s</string>
-    <string name="smscommunicator_suspend_reply_with_code">Para suspender el bucle durante %1$d minutos, responde con el código %2$s</string>
-    <string name="smscommunicator_loop_resume_reply_with_code">Para reanudar el bucle, responde con el código %1$s</string>
-    <string name="smscommunicator_loop_enable_reply_with_code">Para activar el bucle, responder con el código %1$s</string>
-    <string name="smscommunicator_loop_disable_reply_with_code">Para desactivar el bucle, responder con el código %1$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Para suspender el lazo durante %1$d minutos, responde con el código %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Para reanudar el lazo, responde con el código %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Para activar el lazo, responder con el código %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Para desactivar el lazo, responder con el código %1$s</string>
     <string name="smscommunicator_tempbasal_set">Basal temporal %1$.2fU/h durante %2$d minutos iniciada correctamente</string>
     <string name="smscommunicator_extended_set">Bolo extendido de %1$.2fU durante %2$d minutos se inició correctamente</string>
     <string name="smscommunicator_carbs_set">Carbohidratos %1$d g ingresados correctamente</string>
@@ -84,17 +84,17 @@
     <string name="smscommunicator_unknown_command">Comando desconocido o respuesta incorrecta</string>
     <string name="smscommunicator_another_bolus_in_queue">Hay otro bolo en cola. Inténtalo de nuevo más tarde.</string>
     <string name="smscommunicator_wrong_duration">Duración incorrecta</string>
-    <string name="smscommunicator_loop_suspended">Bucle suspendido</string>
-    <string name="smscommunicator_loop_resumed">Bucle reanudado</string>
+    <string name="smscommunicator_loop_suspended">Lazo suspendido</string>
+    <string name="smscommunicator_loop_resumed">Lazo reanudado</string>
     <string name="smscommunicator_invalid_phone_number">Número de teléfono incorrecto para SMS</string>
     <string name="smscommunicator_calibration_sent">Calibración enviada. La recepción debe estar habilitada en xDrip+.</string>
     <string name="smscommunicator_calibration_failed">xDrip+ no está recibiendo calibraciones</string>
     <string name="smscommunicator_message_body">El cuerpo del mensaje es inválido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inalcanzable</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">Para cambiar el modo del bucle a LGS (Suspensión por glucosa baja) responde con el código %1$s</string>
-    <string name="smscommunicator_set_closed_loop_reply_with_code">Para cambiar el modo a bucle cerrado, responde con código %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Modo bucle actual: %1$s</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para cambiar el modo lazo a LGS (Suspensión por glucosa baja) responde con el código %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Para cambiar el modo lazo a lazo cerrado, responde con código %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modo lazo actual: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">Glucosa:</string>
     <string name="sms_last_bg">Última Glucosa:</string>
@@ -108,7 +108,7 @@
     <string name="sms_profile_switch_created">Cambio de perfil creado</string>
     <string name="sms_wrong_tbr_duration">La duración de TBR debe ser un múltiplo de %1$d minutos y mayor a 0.</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
-    <string name="disabled_loop">Bucle desactivado</string>
+    <string name="disabled_loop">Lazo desactivado</string>
     <!-- Food-->
     <string name="food_short">Comida</string>
     <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
@@ -199,7 +199,7 @@
     <string name="overview_cgm">MCG</string>
     <string name="overview">Inicio</string>
     <string name="overview_shortname">INICIO</string>
-    <string name="description_overview">Muestra el estado actual de tu bucle y los botones para las acciones más usadas</string>
+    <string name="description_overview">Muestra el estado actual de tu lazo y los botones para las acciones más usadas</string>
     <string name="overview_buttons_selection">Botones</string>
     <string name="show_calibration_button_summary">Envía una calibración a xDrip+ o abre la pantalla de calibración de Dexcom BYODA</string>
     <string name="show_cgm_button_summary">Abre xDrip+ o Dexcom BYODA. Si pulsas el botón atrás, regresa a AAPS</string>
@@ -287,6 +287,6 @@
     <!--    Iob-->
     <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
     <!--    PersistentNotification-->
-    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
+    <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="old_data">DATOS CADUCADOS</string>
 </resources>
