@@ -76,6 +76,12 @@ project.afterEvaluate {
                         it.add(path)
                         println("Collecting execution data from: $path")
                     }
+                    val androidPath = "${proj.buildDir}/outputs/code_coverage/${variant}AndroidTest/connected/"
+                    val androidFiles = fileTree(androidPath)
+                    androidFiles.forEach { file ->
+                        it.add(file.path)
+                        println("Collecting android execution data from: ${file.path}")
+                    }
                 }
             }
         }
