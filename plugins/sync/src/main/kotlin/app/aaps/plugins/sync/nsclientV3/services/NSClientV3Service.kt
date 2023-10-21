@@ -70,10 +70,12 @@ class NSClientV3Service : DaggerService() {
         super.onCreate()
         wakeLock = (getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AndroidAPS:NSClientService")
         wakeLock?.acquire()
+        initializeWebSockets("onCreate")
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        shutdownWebsockets()
         disposable.clear()
         if (wakeLock?.isHeld == true) wakeLock?.release()
     }
