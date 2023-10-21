@@ -4,6 +4,7 @@ plugins {
     id("kotlinx-serialization")
     id("android-module-dependencies")
     id("test-module-dependencies")
+    id("jacoco-module-dependencies")
 }
 
 android {
