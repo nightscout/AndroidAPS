@@ -776,35 +776,50 @@ class CustomWatchface : BaseWatchFace() {
                 leftRange = parseDataRange(dataJson.optJSONObject(LEFTOFFSET.key), defaultRange)
                 rotationRange = parseDataRange(dataJson.optJSONObject(ROTATIONOFFSET.key), defaultRange)
             }
-            if (dataJson.has(INVALIDIMAGE.key))
-                dynDrawable[0] = dataJson.optString(INVALIDIMAGE.key)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
+            getDrawableSteps(dynDrawable, IMAGE.key, INVALIDIMAGE.key)
+            getColorSteps(dynColor, COLOR.key, INVALIDCOLOR.key)
+            getColorSteps(dynFontColor, FONTCOLOR.key, INVALIDFONTCOLOR.key)
+            getIntSteps(dynTextSize, TEXTSIZE.key, INVALIDTEXTSIZE.key)
+
+        }
+
+        private fun getDrawableSteps(dynMap: MutableMap<Int, Drawable?>, key: String, invalidKey: String) {
+            if (dataJson.has(invalidKey))
+                dynMap[0] = dataJson.optString(invalidKey)?.let { cwf.resDataMap[it]?.toDrawable(cwf.resources, width, height) }
             var idx = 1
-            while (dataJson.has("${IMAGE.key}$idx")) {
-                cwf.resDataMap[dataJson.optString("${IMAGE.key}$idx")]?.toDrawable(cwf.resources, width, height).also { dynDrawable[idx] = it }
-                idx++
-            }
-            if (dataJson.has(INVALIDCOLOR.key))
-                dynColor[0] = cwf.getColor(dataJson.optString(INVALIDCOLOR.key))
-            idx = 1
-            while (dataJson.has("${COLOR.key}$idx")) {
-                dynColor[idx] = cwf.getColor(dataJson.optString("${COLOR.key}$idx"))
-                idx++
-            }
-            if (dataJson.has(INVALIDFONTCOLOR.key))
-                dynFontColor[0] = cwf.getColor(dataJson.optString(INVALIDFONTCOLOR.key))
-            idx = 1
-            while (dataJson.has("${FONTCOLOR.key}$idx")) {
-                dynFontColor[idx] = cwf.getColor(dataJson.optString("${FONTCOLOR.key}$idx"))
-                idx++
-            }
-            if (dataJson.has(INVALIDTEXTSIZE.key))
-                dynTextSize[0] = cwf.getColor(dataJson.optString(INVALIDTEXTSIZE.key))
-            idx = 1
-            while (dataJson.has("${TEXTSIZE.key}$idx")) {
-                dynTextSize[idx] = dataJson.optInt("${TEXTSIZE.key}$idx", 22)
+            while (dataJson.has("${key}$idx")) {
+                cwf.resDataMap[dataJson.optString("${key}$idx")]?.toDrawable(cwf.resources, width, height).also { dynMap[idx] = it }
                 idx++
             }
         }
+
+        private fun getColorSteps(dynMap: MutableMap<Int, Int>, key: String, invalidKey: String) {
+            if (dataJson.has(invalidKey))
+                dynMap[0] = cwf.getColor(dataJson.optString(invalidKey))
+            var idx = 1
+            while (dataJson.has("${key}$idx")) {
+                dynMap[idx] = cwf.getColor(dataJson.optString("${key}$idx"))
+                idx++
+            }
+        }
+        private fun getIntSteps(dynMap: MutableMap<Int, Int>, key: String, invalidKey: String) {
+            if (dataJson.has(invalidKey))
+                dynMap[0] = dataJson.optInt(invalidKey)
+            var idx = 1
+            while (dataJson.has("${key}$idx")) {
+                dynMap[idx] = dataJson.optInt("${key}$idx", 22)
+                idx++
+            }
+        }
+
+        private fun parseDataRange(json: JSONObject?, defaultData: DataRange) =
+            json?.let {
+                DataRange(
+                    minData = it.optDouble(MINVALUE.key, defaultData.minData),
+                    maxData = it.optDouble(MAXVALUE.key, defaultData.maxData),
+                    invalidData = it.optInt(INVALIDVALUE.key, defaultData.invalidData)
+                )
+            } ?: defaultData
 
         companion object {
             val dynData = mutableMapOf<String, DynProvider>()
@@ -836,15 +851,6 @@ class CustomWatchface : BaseWatchFace() {
 
                 return dynData[defaultViewKey]
             }
-
-            private fun parseDataRange(json: JSONObject?, defaultData: DataRange) =
-                json?.let {
-                    DataRange(
-                        minData = it.optDouble(MINVALUE.key, defaultData.minData),
-                        maxData = it.optDouble(MAXVALUE.key, defaultData.maxData),
-                        invalidData = it.optInt(INVALIDVALUE.key, defaultData.invalidData)
-                    )
-                } ?: defaultData
         }
     }
 
