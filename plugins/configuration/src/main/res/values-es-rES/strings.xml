@@ -68,8 +68,8 @@
     <string name="configbuilder_sync">Sincronización</string>
     <string name="configbuilder_sync_description">Subida de datos y sincronización de plugins</string>
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
-    <string name="configbuilder_loop">Bucle</string>
-    <string name="configbuilder_loop_description">Usa esto para habilitar la integración de bucle de AAPS.</string>
+    <string name="configbuilder_loop">Lazo</string>
+    <string name="configbuilder_loop_description">Usa esto para habilitar la integración de lazo de AAPS</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
