@@ -18,6 +18,7 @@ import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.ui.di.UiModule
 import app.aaps.workflow.di.WorkflowModule
+import com.microtechmd.equil.di.EquilModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -84,6 +85,7 @@ import javax.inject.Singleton
         PumpCommonModule::class,
         RileyLinkModule::class,
         MedtrumModule::class,
+        EquilModule::class,
         VirtualPumpModule::class
     ]
 )
