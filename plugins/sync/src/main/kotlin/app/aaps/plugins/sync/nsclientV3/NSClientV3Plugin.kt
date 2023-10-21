@@ -188,7 +188,7 @@ class NSClientV3Plugin @Inject constructor(
             )
         )
 
-        setClient("START")
+        setClient()
 
         receiverDelegate.grabReceiversState()
         disposable += rxBus
@@ -203,7 +203,7 @@ class NSClientV3Plugin @Inject constructor(
                            assert(nsClientV3Service != null)
                            if (ev.connected) {
                                when {
-                                   isAllowed && nsClientV3Service?.storageSocket == null  -> setClient("CONNECTIVITY") // socket must be created
+                                   isAllowed && nsClientV3Service?.storageSocket == null  -> setClient() // socket must be created
                                    !isAllowed && nsClientV3Service?.storageSocket != null -> stopService()
                                }
                                if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
@@ -222,7 +222,7 @@ class NSClientV3Plugin @Inject constructor(
                                ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_ns_announcements))
                            ) {
                                stopService()
-                               setClient("SETTING CHANGE")
+                               setClient()
                            }
                            if (ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_local_profile_last_change)))
                                executeUpload("PROFILE_CHANGE", forceNew = true)
@@ -338,7 +338,7 @@ class NSClientV3Plugin @Inject constructor(
         }
     }
 
-    private fun setClient(reason: String) {
+    private fun setClient() {
         if (nsAndroidClient == null)
             nsAndroidClient = NSAndroidClientImpl(
                 baseUrl = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", "").replace(Regex("/$"), ""),
@@ -348,11 +348,11 @@ class NSClientV3Plugin @Inject constructor(
                 logger = { msg -> aapsLogger.debug(LTag.HTTP, msg) }
             )
         SystemClock.sleep(2000)
-        startService(reason)
+        startService()
         rxBus.send(EventSWSyncStatus(status))
     }
 
-    private fun startService(reason: String) {
+    private fun startService() {
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_use_ws, true)) {
             context.bindService(Intent(context, NSClientV3Service::class.java), serviceConnection, Context.BIND_AUTO_CREATE)
         }
