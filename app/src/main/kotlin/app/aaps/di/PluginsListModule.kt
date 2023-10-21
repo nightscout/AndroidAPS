@@ -54,6 +54,7 @@ import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
+import com.microtechmd.equil.EquilPumpPlugin
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntKey
@@ -226,6 +227,11 @@ abstract class PluginsListModule {
     @IntKey(170)
     abstract fun bindVirtualPumpPlugin(plugin: VirtualPumpPlugin): PluginBase
 
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(180)
+    abstract fun bindEquilPumpPlugin(plugin: EquilPumpPlugin): PluginBase
     @Binds
     @APS
     @IntoMap

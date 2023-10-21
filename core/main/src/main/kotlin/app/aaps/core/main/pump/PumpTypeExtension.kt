@@ -63,6 +63,7 @@ fun PumpType.Companion.fromDbPumpType(pt: InterfaceIDs.PumpType): PumpType =
         InterfaceIDs.PumpType.MEDTRUM_300U                -> PumpType.MEDTRUM_300U
         InterfaceIDs.PumpType.MEDTRUM_UNTESTED            -> PumpType.MEDTRUM_UNTESTED
         InterfaceIDs.PumpType.CACHE                       -> PumpType.CACHE
+        InterfaceIDs.PumpType.EQUIL                       -> PumpType.EQUIL
     }
 
 fun PumpType.Source.toDbSource(): UserEntry.Sources =
@@ -125,4 +126,6 @@ fun PumpType.toDbPumpType(): InterfaceIDs.PumpType =
         PumpType.MEDTRUM_300U              -> InterfaceIDs.PumpType.MEDTRUM_300U
         PumpType.MEDTRUM_UNTESTED          -> InterfaceIDs.PumpType.MEDTRUM_UNTESTED
         PumpType.CACHE                     -> InterfaceIDs.PumpType.CACHE
+        PumpType.EQUIL                     -> InterfaceIDs.PumpType.EQUIL
+
     }
