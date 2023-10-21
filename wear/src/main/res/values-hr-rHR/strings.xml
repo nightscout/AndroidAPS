@@ -2,12 +2,10 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS(Veliki)</string>
     <string name="label_watchface_big_chart">AAPS(Veliki Graf)</string>
     <string name="label_watchface_no_chart">AAPS(Bez grafa)</string>
     <string name="label_watchface_circle">AAPS(Kružni)</string>
-    <string name="label_watchface_v2">AAPS(v2)</string>
     <string name="pref_low">Nisko</string>
     <string name="pref_high">Visoko</string>
     <string name="menu_wizard">Kalkulator</string>

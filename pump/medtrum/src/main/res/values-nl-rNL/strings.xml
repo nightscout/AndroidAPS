@@ -112,11 +112,13 @@
     <string name="alarm_setting_summary">Selecteer uw gewenste alarminstellingen voor de pomp.</string>
     <string name="pump_warning_notification_title">Notificatie bij pomp waarschuwing</string>
     <string name="pump_warning_notification_summary">Melding weergeven op niet-kritische pompwaarschuwingen: batterij bijna leeg, reservoir bijna leeg (20 eenheden) en vervalt bijna. Aanbevolen om ingeschakeld te laten wanneer pomp alarmen op stil zijn ingesteld.</string>
+    <string name="pump_warning_expiry_hour_title">Waarschuwing vervallen pomp [uren]</string>
+    <string name="pump_warning_expiry_hour_summary">Melding weergeven op opgegeven uur na activering.</string>
     <string name="patch_expiration_title">Patch vervalt</string>
     <string name="patch_expiration_summary">Wanneer ingeschakeld, zal de patch na 3 dagen verlopen met een extra periode van 8 uur coulance.</string>
-    <string name="hourly_max_insulin_title">Maximale insuline per uur</string>
+    <string name="hourly_max_insulin_title">Maximale insuline per uur [Eenheden]</string>
     <string name="hourly_max_insulin_summary">Geef de maximale hoeveelheid insuline per uur op. Indien overschreden zal de pomp de insuline toediening onderbreken.</string>
-    <string name="daily_max_insulin_title">Maximale insuline per dag</string>
+    <string name="daily_max_insulin_title">Maximale insuline per dag [Eenheden]</string>
     <string name="daily_max_insulin_summary">Geef de maximale hoeveelheid insuline per dag op. Indien overschreden zal de pomp de insuline toediening onderbreken.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pompstatus aan het ophalen</string>

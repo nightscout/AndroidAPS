@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="enable_tbr_over_notification">Aktiver varsel når slutt på temp basal\n(pumpeinnstilling)</string>
-    <string name="disable_tbr_over_notification">Slå av varsel når slutt på temp basal\n(pumpeinnstilling)</string>
+    <string name="enable_tbr_over_notification">Aktiver varsel når slutt på midlertidig basal\n(pumpeinnstilling)</string>
+    <string name="disable_tbr_over_notification">Slå av varsel når slutt på midlertidig basal\n(pumpeinnstilling)</string>
     <string name="not_paired">Ikke sammenkoblet</string>
     <string name="recovering">Gjenoppretter</string>
     <string name="insight_status">Status</string>
@@ -32,7 +32,7 @@
     <string name="disable_vibration">Slå av vibrasjoner på manuell bolus</string>
     <string name="disable_vibration_summary">For bolus og forlenget bolus (bare tilgjengelig med Insight firmware 3.x)</string>
     <string name="disable_vibration_auto">Slå av vibrasjoner ved automatisk bolus</string>
-    <string name="disable_vibration_auto_summary">For SMB og temp basal med TBR emulering (bare tilgjengelig med Insight firmware 3.x)</string>
+    <string name="disable_vibration_auto_summary">For SMB og midlertidig basal med TBR emulering (bare tilgjengelig med Insight firmware 3.x)</string>
     <string name="timeout_during_handshake">En timeout oppstod i paringsprosessen - restart Bluetooth</string>
     <string name="pump_stopped">Pumpen stoppet</string>
     <string name="pump_started">Pumpen startet</string>
@@ -60,7 +60,7 @@
     <string name="log_operating_mode_changes">Logg endring i driftsmodus</string>
     <string name="log_alerts">Logg varslinger</string>
     <string name="enable_tbr_emulation">Aktiver emulering av TBR</string>
-    <string name="enable_tbr_emulation_summary">Bruk forlenget bolus i stedet for temp basaler for å omgå 250%% grensen</string>
+    <string name="enable_tbr_emulation_summary">Bruk forlenget bolus i stedet for midlertidig basaler for å omgå 250%% grensen</string>
     <string name="disconnect_delay">Utsett frakobling [s]</string>
     <string name="max_recovery_duration">Maks pause mellom tilkoblingsforsøk [s]</string>
     <string name="min_recovery_duration">Min pause mellom tilkoblingsforsøk [s]</string>

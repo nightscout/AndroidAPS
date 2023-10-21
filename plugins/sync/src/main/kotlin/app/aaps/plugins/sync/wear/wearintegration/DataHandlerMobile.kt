@@ -175,7 +175,7 @@ class DataHandlerMobile @Inject constructor(
                                EventMobileToWear(
                                    EventData.ConfirmAction(
                                        rh.gs(R.string.loop_status).uppercase(),
-                                       "TARGETS:\n$targetsStatus\n\n$loopStatus\n\nOAPS RESULT:\n$oAPSResultStatus",
+                                       "$targetsStatus\n\n$loopStatus\n\n$oAPSResultStatus",
                                        returnCommand = null
                                    )
                                )
@@ -336,7 +336,7 @@ class DataHandlerMobile @Inject constructor(
         val dummies: MutableList<TotalDailyDose> = LinkedList()
         val historyList = getTDDList(dummies)
         if (isOldData(historyList)) {
-            message = "OLD DATA - "
+            message = rh.gs(app.aaps.core.ui.R.string.tdd_old_data) + ", "
             //if pump is not busy: try to fetch data
             if (activePump.isBusy()) {
                 message += rh.gs(app.aaps.core.ui.R.string.pump_busy)
@@ -434,7 +434,7 @@ class DataHandlerMobile @Inject constructor(
             return
         }
         if (bolusWizard.calculatedTotalInsulin <= 0 && bolusWizard.carbs <= 0) {
-            sendError("No insulin required")
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_insulin_required))
             return
         }
         val message =
@@ -540,7 +540,7 @@ class DataHandlerMobile @Inject constructor(
             message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
         }
         if (carbsAfterConstraints <= 0) {
-            sendError("Carbs = 0! No action taken!")
+            sendError(rh.gs(app.aaps.core.ui.R.string.carb_equal_zero_no_action))
             return
         }
         rxBus.send(
@@ -998,7 +998,7 @@ class DataHandlerMobile @Inject constructor(
     private
     val targetsStatus: String
         get() {
-            var ret = ""
+            var ret = rh.gs(app.aaps.core.ui.R.string.loopstatus_targets) + "\n"
             if (!config.APS) {
                 return rh.gs(R.string.target_only_aps_mode)
             }
@@ -1020,7 +1020,7 @@ class DataHandlerMobile @Inject constructor(
     private
     val oAPSResultStatus: String
         get() {
-            var ret = ""
+            var ret = rh.gs(app.aaps.core.ui.R.string.loopstatus_OAPS_result) + "\n"
             if (!config.APS)
                 return rh.gs(R.string.aps_only)
             val usedAPS = activePlugin.activeAPS

@@ -58,6 +58,7 @@
     <string name="pref_show_direction_arrow">Arată săgeată tendință</string>
     <string name="pref_show_ago">Afişare în urmă</string>
     <string name="pref_show_week_number">Arată numărul săptămânii</string>
+    <string name="pref_show_date">Arată data</string>
     <string name="default_custom_watchface_comment">Fațetă implicită. Poți apăsa pe butonul EXPORT pentru a genera un șablon</string>
     <string name="wear_default_watchface">Fațetă implicită</string>
     <string name="cwf_comment_background">Imagine de fundal</string>

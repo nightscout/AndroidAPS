@@ -114,9 +114,7 @@
     <string name="pump_warning_notification_summary">Afficher une notification sur les avertissements non critiques de la pompe : pile faible, réservoir faible (20 unités) et expire bientôt. Il est recommandé de laisser activé lorsque les alarmes de la pompe sont réglées sur silencieux.</string>
     <string name="patch_expiration_title">Expiration du Patch</string>
     <string name="patch_expiration_summary">Lorsqu\'il est activé, le Patch expirera après 3 jours, avec un délai de grâce de 8 heures au-delà.</string>
-    <string name="hourly_max_insulin_title">Insuline maximale horaire</string>
     <string name="hourly_max_insulin_summary">Spécifiez le nombre maximum d\'unités d\'insuline autorisées par heure. Si ce montant est dépassé, la pompe sera suspendue.</string>
-    <string name="daily_max_insulin_title">Insuline maximale quotidienne</string>
     <string name="daily_max_insulin_summary">Spécifiez le nombre maximum d\'unités d\'insuline autorisées par jour. Si ce montant est dépassé, la pompe sera suspendue.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Mise à jour de l\'état pompe</string>

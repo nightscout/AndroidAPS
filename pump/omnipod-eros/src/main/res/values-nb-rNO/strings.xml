@@ -44,10 +44,10 @@
     <string name="omnipod_eros_error_set_basal_failed_delivery_might_be_suspended">Endring av basalprofil mislyktes. Insulinlevering kan bli stoppet! Vennligst velg Oppdater Pod fra Omnipod fanen og velg gjenoppta levering hvis nødvendig.</string>
     <string name="omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended">Endring av basalprofil kan ha feilet. Insulinlevering kan bli stoppet! Vennligst velg Oppdater Pod fra Omnipod fanen og velg gjenoppta levering hvis nødvendig.</string>
     <string name="omnipod_eros_error_set_basal_failed_delivery_suspended">Endring av basal profil mislyktes. Insulinlevering er stoppet! Velg gjenoppta levering manuelt fra Omnipod-menyen.</string>
-    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Mislyktes trolig med å kansellere temp basal. Vennligst oppdater Pod status manuelt fra Omnipod menyen.</string>
+    <string name="omnipod_eros_error_cancel_temp_basal_failed_uncertain">Mislyktes trolig med å kansellere midlertidig basal. Vennligst oppdater Pod-status manuelt fra Omnipod-menyen.</string>
     <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled">Endring av midlertidig basal var mislykket. En tidligere midlertidig basal kan ha blitt kansellert. Oppdater statusen på Pod manuelt fra Omnipod fanen.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting av temp basal kan ha feilet. Hvis en temp basal allerede var aktiv så er den nå avbrutt. Vennligst oppdater Pod status manuelt fra Omnipod menyen.</string>
-    <string name="omnipod_eros_error_set_temp_basal_failed_validation">TBR varighet må være større enn null og et multiplum av %1$s minutter.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed">Setting av midlertidig basal kan ha feilet. Hvis en midlertidig basal allerede var aktiv så er den nå avbrutt. Vennligst oppdater Pod-status manuelt fra Omnipod-menyen.</string>
+    <string name="omnipod_eros_error_set_temp_basal_failed_validation">Midlertidig basalvarighet må være større enn null og et multiplum av %1$s minutter.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_might_be_suspended">Innstilling av tid kan ha mislyktes. Insulinlevering kan være pauset! Oppdater statusen manuelt fra fanen Omnipod og gjenoppta levering hvis nødvendig.</string>
     <string name="omnipod_eros_error_set_time_failed_delivery_suspended">Endring av tid mislyktes. Insulinlevering er pauset! Velg gjenoppta levering manuelt fra Omnipod-fanen.</string>
     <string name="omnipod_eros_error_failed_to_read_pulse_log">Feilet i å lese Pulsloggen</string>

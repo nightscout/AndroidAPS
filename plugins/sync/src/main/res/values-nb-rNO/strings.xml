@@ -18,8 +18,8 @@
     <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
     <string name="unsupported_ns_version">Versjonen av Nightscout støttes ikke</string>
-    <string name="openaps_short">OAPS</string>
-    <string name="uploader_short">OPPL</string>
+    <string name="openaps_short">OpenAPS</string>
+    <string name="uploader_short">Opplaster</string>
     <string name="ns_malfunction">NSClient feil. Vurder omstart av NS og NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT har ingen skriverettighet. Feil API-nøkkel?</string>

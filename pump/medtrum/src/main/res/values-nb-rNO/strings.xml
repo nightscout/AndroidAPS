@@ -112,11 +112,13 @@
     <string name="alarm_setting_summary">Velg dine foretrukne alarminnstillinger.</string>
     <string name="pump_warning_notification_title">Varsel om pumpeadvarsel</string>
     <string name="pump_warning_notification_summary">Vis varsel om ikke-kritisk pumpeadvarsel: lavt batteri, lavt reservoar (20 enheter) og utløper snart. Anbefales og la være aktivert når pumpealarmer er satt til stillemodus.</string>
+    <string name="pump_warning_expiry_hour_title">Utløpsvarsel om pumpe</string>
+    <string name="pump_warning_expiry_hour_summary">Vis varsel på angitt time etter aktivering.</string>
     <string name="patch_expiration_title">Patch utløpsdato</string>
     <string name="patch_expiration_summary">Når aktivert vil plasteret utløpe etter 3 dager, med en nådeperiode på 8 timer etter det.</string>
-    <string name="hourly_max_insulin_title">Maksimal insulin per time</string>
+    <string name="hourly_max_insulin_title">Maks insulin per time [Enheter]</string>
     <string name="hourly_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per time. Hvis overskredet vil pumpen suspendere.</string>
-    <string name="daily_max_insulin_title">Maksimal insulin per dag</string>
+    <string name="daily_max_insulin_title">Maks insulin per dag [Enheter]</string>
     <string name="daily_max_insulin_summary">Angi maksimalt antall enheter insulin tillatt per dag. Hvis overskredet vil pumpen suspendere.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Henter pumpestatus</string>

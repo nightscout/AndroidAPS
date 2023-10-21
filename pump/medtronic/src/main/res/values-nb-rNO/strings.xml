@@ -71,8 +71,8 @@
     <string name="medtronic_cmd_desc_get_model">Henter pumpe modell</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Henter basal profil</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Angi basal profil</string>
-    <string name="medtronic_cmd_desc_get_tbr">Henter Temp Basal</string>
-    <string name="medtronic_cmd_desc_set_tbr">Angi Temp Basal</string>
+    <string name="medtronic_cmd_desc_get_tbr">Henter midlertidig basal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Angi midlertidig basal</string>
     <string name="medtronic_cmd_desc_cancel_tbr">Avbryt midlertidig basal</string>
     <string name="medtronic_cmd_desc_set_bolus">Angi Bolus</string>
     <string name="medtronic_cmd_desc_get_remaining_insulin">Oppdater status insulinvolum</string>
@@ -88,7 +88,7 @@
     <string name="common_off">Av</string>
     <string name="pump_time_updated">Pumpens tid ble oppdatert</string>
     <string name="set_neutral_temps_title">Sett nøytrale temp basaler</string>
-    <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en temp basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
+    <string name="set_neutral_temps_summary">Hvis aktivert så vil den stoppe en midlertidig basal rett før hver hele time for å stoppe noen pumpers varsler/vibreringer på hver hele time.</string>
     <string name="mdt_tbr_remaining">%1$.1f E/t (%2$d min gjenstår)</string>
     <string name="invalid_history_data">Ugyldige data for pumpehistorikken er oppdaget. Rapporter hendelsen til APPS og legg ved logg.</string>
     <string name="riley_statistics">RL statistikk</string>

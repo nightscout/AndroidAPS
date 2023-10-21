@@ -7,8 +7,8 @@
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">Hvis du føler at DIA verdien (insulinvarigheten) som du benyttet i pumpen fungerte godt før du tok i bruk AndroidAPS, da er det ikke nødvendig å endre dette når du starter å loope.</string>
     <string name="dia_valuemustbedetermined">Du må selv bestemme hvilken verdi som passer for DIA.</string>
-    <string name="hypott_label">Hypo Temp-Target (TT)</string>
-    <string name="hypott_whenhypott">Hva er hovedgrunnen til å velge en hypo temp-target?</string>
+    <string name="hypott_label">Hypo midlertidig mål (TT)</string>
+    <string name="hypott_whenhypott">Hva er hovedgrunnen til å velge et Hypo midlertidig mål?</string>
     <string name="hypott_wrongbasal">For å korrigere følinger som er forårsaket av feil i dine basalinnstillinger.</string>
     <string name="hypott_preventoversmb">For å forhindre at AAPS overkorrigerer for en blodglukoseøkning forårsaket av de hurtigvirkende karbohydratene som brukes til behandling av en hypo.</string>
     <string name="hypott_exercise">For å korrigere for en føling som er et resultat av trening.</string>
@@ -55,11 +55,11 @@
     <string name="exercise_label">Trening og midlertidige målverdier (temp targets)</string>
     <string name="exercise_whattodo">Hvordan kan du bruke midlertidige målverdier til å hjelpe systemet å håndtere aerobic trening?</string>
     <string name="exercise_settt">Sett et midlertidig mål for blodsukkeret som starter en passende tid før treningen begynner.</string>
-    <string name="exercise_setfinished">Angi en temp mål for Trening etter at du har avsluttet treningen.</string>
+    <string name="exercise_setfinished">Angi et midlertidig mål for Aktivitet etter at du har avsluttet treningen.</string>
     <string name="exercise_setunchanged">La målverdien for ditt blodsukker være uforandret.</string>
-    <string name="exercise_15g">Vent til blodsukkeret ditt synker under Hypo temp target og spis så 15 gram med hurtigvirkende karbohydrater.</string>
+    <string name="exercise_15g">Vent til blodsukkeret ditt synker under Hypo midlertidig mål og spis så 15 gram med hurtigvirkende karbohydrater.</string>
     <string name="exercise_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_doigetinsulin">Får jag insulin når loop er stanset/pauset?</string>
+    <string name="suspendloop_doigetinsulin">Får jeg insulin når loop er stanset/pauset?</string>
     <string name="suspendloop_yes">Ja, basal insulin vil fortsatt bli levert.</string>
     <string name="suspendloop_no">Nei, levering av insulin er stanset.</string>
     <string name="basaltest_label">Test av basaldoser, ISF og KH ratio</string>
@@ -150,7 +150,7 @@
     <string name="cob3_no_effect">Ved å sette profilen til 150% påvirkes ikke beregningen av absorbering av karbohydrater</string>
     <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">IOB verdi påvirkes av midlertidige temp basaler.</string>
-    <string name="iob_hightemp">Høy temp basal vil ikke bli gitt når ditt blodsukker er under målverdi.</string>
+    <string name="iob_hightemp">Høy midlertidig basal vil ikke bli gitt når ditt blodsukker er under målverdi.</string>
     <string name="iob_negiob">Negativ IOB i en lengre periode selv om du ikke trener tyder på at profilen din gir for mye insulin og kanskje bør reduseres i innstillingene.</string>
     <string name="iob_posiob">Positiv IOB for en lengre periode tyder på enten økt insulinresistens eller uannonserte måltider.</string>
     <string name="breadgrams_label">Karbohydrater og bolus</string>
@@ -207,7 +207,7 @@
     <string name="profileswitchtime_iwant">Hvis du står opp 2 timer tidligere enn vanlig, hvordan forteller du AndroidAPS om endringen i døgnrytmen din?</string>
     <string name="profileswitchtime_2">Gjør et profilbytte med en tidsforskyvning på 2</string>
     <string name="profileswitchtime__2">Gjør et profilbytte med en tidsforskyvning på -2</string>
-    <string name="profileswitchtime_tt">Angi et \"spise snart\" temp target.</string>
+    <string name="profileswitchtime_tt">Angi et \"Spise snart\" midlertidig mål.</string>
     <string name="profileswitchtime_100">Gjør et profilbytte til mer enn 100%.</string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/en/latest/Usage/Profiles.html#timeshift</string>
     <string name="profileswitch4_label">Endring av profil</string>
