@@ -28,11 +28,9 @@
                     android:id="@+id/loop_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
                     android:orientation="horizontal" >
 
-                    <com.google.android.material.button.MaterialButton
+                    <TextView
                         android:id="@+id/active_profile"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -40,23 +38,29 @@
                         android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
                         android:hint="active profile"
                         android:text="Profile"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        app:icon="@drawable/ic_ribbon_profile"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        app:drawableStartCompat="@drawable/ic_ribbon_profile"
                         tools:ignore="HardcodedText" />
 
-                    <com.google.android.material.button.MaterialButton
+                    <TextView
                         android:id="@+id/temp_target"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:gravity="center_vertical|center_horizontal"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
                         android:hint="temp target"
                         android:text="@string/value_unavailable_short"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        app:icon="@drawable/ic_crosstarget"
+                        android:foreground="?attr/selectableItemBackgroundBorderless"
+                        app:drawableStartCompat="@drawable/ic_crosstarget"
                         tools:ignore="HardcodedText" />
 
                 </LinearLayout>
@@ -68,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
-                android:layout_marginTop="1dp"
+                android:layout_marginTop="4dp"
                 app:cardCornerRadius="4dp"
                 app:contentPadding="2dp"
                 app:cardElevation="2dp"
