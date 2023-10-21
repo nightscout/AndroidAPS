@@ -156,7 +156,7 @@
     <!-- Actions -->
     <string name="actions">Handlinger</string>
     <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
-    <string name="actions_shortname">HNDL</string>
+    <string name="actions_shortname">HAND</string>
     <string name="tempbasal_button">Midlertidig basal</string>
     <string name="extended_bolus_button">Forlenget bolus</string>
     <string name="extended_bolus_cancel_button">Avbryt forlenget bolus</string>
@@ -210,7 +210,7 @@
     <string name="constraints_violation">Brudd på begrensninger</string>
     <string name="change_your_input">Endre dine inndata!</string>
     <string name="openaps">OpenAPS</string>
-    <string name="uploader">Opplaster</string>
+    <string name="uploader">Opplaster-batteri</string>
     <string name="data_status">BS data status</string>
     <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
     <string name="keep_screen_on_title">Hold skjermen påslått</string>

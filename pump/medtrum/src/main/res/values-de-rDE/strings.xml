@@ -105,9 +105,7 @@
     <string name="alarm_setting_summary">Wählen Sie Ihre bevorzugten Pumpen-Alarmeinstellungen.</string>
     <string name="patch_expiration_title">Patch Ablaufdatum</string>
     <string name="patch_expiration_summary">Wenn aktiviert, läuft der Patch nach 3 Tagen ab, mit einer Nachfrist von 8 Stunden danach.</string>
-    <string name="hourly_max_insulin_title">Stündliches Maximum Insulin</string>
     <string name="hourly_max_insulin_summary">Lege die maximale Anzahl an Insulineinheiten pro Stunde fest. Bei Überschreitung wird die Pumpe ausgesetzt.</string>
-    <string name="daily_max_insulin_title">Tägliches Maximum Insulin</string>
     <string name="daily_max_insulin_summary">Legen Sie die maximale Anzahl an Insulineinheiten pro Tag fest. Bei Überschreitung wird die Pumpe ausgesetzt.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Pumpenstatus wird abgerufen</string>

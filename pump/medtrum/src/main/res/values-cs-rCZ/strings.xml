@@ -112,11 +112,13 @@
     <string name="alarm_setting_summary">Vyberte preferované nastavení alarmů.</string>
     <string name="pump_warning_notification_title">Oznámení o varování pumpy</string>
     <string name="pump_warning_notification_summary">Zobrazit upozornění na nekritická varování pumpy: vybitá baterie, téměř prázdný zásobník (20 jednotek) a brzy dojde inzulin. Doporučeno ponechat zapnuté, když jsou výstrahy pumpy nastaveny na ticho.</string>
+    <string name="pump_warning_expiry_hour_title">Varování před vypršením platnosti pumpy [hodiny]</string>
+    <string name="pump_warning_expiry_hour_summary">Zobrazit upozornění v určené hodině po aktivaci.</string>
     <string name="patch_expiration_title">Vypršení platnosti Patche</string>
     <string name="patch_expiration_summary">Pokud je povoleno, Patch vyprší po 3 dnech s maximální dobou odkladu 8 hodin.</string>
-    <string name="hourly_max_insulin_title">Hodinové maximum inzulínu</string>
+    <string name="hourly_max_insulin_title">Hodinové maximum inzulínu [U]</string>
     <string name="hourly_max_insulin_summary">Zadejte maximální povolený počet jednotek inzulínu za hodinu. Pokud je překročeno, pumpa bude pozastavena.</string>
-    <string name="daily_max_insulin_title">Denní maximální inzulín</string>
+    <string name="daily_max_insulin_title">Denní maximum inzulínu [U]</string>
     <string name="daily_max_insulin_summary">Zadejte maximální povolené množství inzulínu za den. Pokud je překročeno, pumpa bude pozastavena.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Nahrávám stav pumpy</string>

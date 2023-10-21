@@ -20,8 +20,6 @@ import app.aaps.wear.tile.QuickWizardTileService
 import app.aaps.wear.tile.TempTargetTileService
 import app.aaps.wear.tile.TileBase
 import app.aaps.wear.watchfaces.AapsLargeWatchface
-import app.aaps.wear.watchfaces.AapsV2Watchface
-import app.aaps.wear.watchfaces.AapsWatchface
 import app.aaps.wear.watchfaces.BigChartWatchface
 import app.aaps.wear.watchfaces.CircleWatchface
 import app.aaps.wear.watchfaces.CustomWatchface
@@ -52,8 +50,6 @@ abstract class WearServicesModule {
     @ContributesAndroidInjector abstract fun contributesWallpaperComplication(): WallpaperComplication
 
     @ContributesAndroidInjector abstract fun contributesBaseWatchFace(): BaseWatchFace
-    @ContributesAndroidInjector abstract fun contributesAapsWatchface(): AapsWatchface
-    @ContributesAndroidInjector abstract fun contributesAapsV2Watchface(): AapsV2Watchface
     @ContributesAndroidInjector abstract fun contributesAapsLargeWatchface(): AapsLargeWatchface
     @ContributesAndroidInjector abstract fun contributesDigitalStyleWatchface(): DigitalStyleWatchface
     @ContributesAndroidInjector abstract fun contributesBIGChart(): BigChartWatchface

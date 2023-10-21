@@ -53,6 +53,7 @@
     <string name="alarm_battery_out">Rozładowana bateria</string>
     <string name="alarm_no_calibration">Brak kalibracji</string>
     <string name="pump_time_update_failed">Nie udało się zaktualizować strefy czasowej pompy, wycisz to powiadomienie i zaktualizuj ręcznie.</string>
+    <string name="bolus_error">Błąd bolusa</string>
     <!-- wizard-->
     <string name="retry">Spróbuj ponownie</string>
     <string name="next">Dalej</string>
@@ -101,6 +102,8 @@
     <string name="press_retry_or_discard">Naciśnij <b>Dalej</b> aby wznowić aktywację lub <b>Odrzuć</b> aby zresetować stan aktywacji.</string>
     <string name="reading_activation_status">Proszę czekać, odczytywanie stanu aktywacji z pompy.</string>
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Wymuszono włączenie alarmu nieosiągalności, ponieważ Patch Medtrum może przestać działać i być nieosiągalny.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Zaleca się ustawić na 30 minut, ponieważ Patch Medtrum może przestać działać i być nieosiągalny.</string>
     <string name="sn_input_title">Numer seryjny</string>
     <string name="sn_input_summary">Wprowadź numer seryjny bazy pompy.</string>
     <string name="sn_input_invalid">Nieprawidłowy numer seryjny!</string>
@@ -109,11 +112,13 @@
     <string name="alarm_setting_summary">Wybierz preferowaną konfigurację alarmu pompy.</string>
     <string name="pump_warning_notification_title">Powiadomienie o ostrzeżeniu pompy</string>
     <string name="pump_warning_notification_summary">Pokaż powiadomienia o niekrytycznych ostrzeżeniach pompy takich jak: niski poziom baterii, niski poziom zbiornika (20 jednostek) i wkrótce wygasa. Zalecane zostawianie włączonych powiadomień, gdy alarmy pompy są wyciszone.</string>
+    <string name="pump_warning_expiry_hour_title">Ostrzeżenie o upływie terminu ważności pompy [godziny]</string>
+    <string name="pump_warning_expiry_hour_summary">Pokaż powiadomienie w określonej godzinie po aktywacji.</string>
     <string name="patch_expiration_title">Wygaśnięcie Patcha</string>
     <string name="patch_expiration_summary">Po uruchomieniu Patch wygaśnie po 3 dniach, z dodatkowym 8 godzinowym okresem karencji.</string>
-    <string name="hourly_max_insulin_title">Maksymalna Insulina w godzinę</string>
+    <string name="hourly_max_insulin_title">Maksymalna Insulina w godzinę [jednostki]</string>
     <string name="hourly_max_insulin_summary">Określ maksymalną dozwoloną ilość jednostek insuliny podanych na godzinę. Po przekroczeniu tego limitu pompa zawiesi podaż insuliny.</string>
-    <string name="daily_max_insulin_title">Maksymalna Insulina dziennie</string>
+    <string name="daily_max_insulin_title">Maksymalna Insulina dziennie [jednostki]</string>
     <string name="daily_max_insulin_summary">Określ maksymalną dozwoloną ilość jednostek insuliny podanych na dzień. Po przekroczeniu tego limitu pompa zawiesi podaż insuliny.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Uzyskiwanie statusu pompy</string>

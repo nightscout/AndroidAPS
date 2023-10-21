@@ -5,6 +5,7 @@
     <string name="key_alarm_setting" translatable="false">alarm_setting</string>
     <string name="key_patch_expiration" translatable="false">patch_expiration</string>
     <string name="key_pump_warning_notification" translatable="false">pump_warning_notification</string>
+    <string name="key_pump_warning_expiry_hour" translatable="false">pump_expiry_warning_hour</string>
     <string name="key_hourly_max_insulin" translatable="false">hourly_max_insulin</string>
     <string name="key_daily_max_insulin" translatable="false">daily_max_insulin</string>
 
@@ -145,11 +146,13 @@
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
     <string name="pump_warning_notification_title">Notification on pump warning</string>
     <string name="pump_warning_notification_summary">Show notification on non critical pump warnings: low battery, low reservoir (20 units) and expires soon. Recommended to leave enabled when pump alarms are set to silent.</string>
+    <string name="pump_warning_expiry_hour_title">Pump expiry warning [hours]</string>
+    <string name="pump_warning_expiry_hour_summary">Show notification on specified hour after activation.</string>
     <string name="patch_expiration_title">Patch Expiration</string>
     <string name="patch_expiration_summary">When enabled, the patch will expire after 3 days, with a grace period of 8 hours after that.</string>
-    <string name="hourly_max_insulin_title">Hourly Maximum Insulin</string>
+    <string name="hourly_max_insulin_title">Hourly Maximum Insulin [Units]</string>
     <string name="hourly_max_insulin_summary">Specify the maximum units of insulin allowed per hour. If exceeded, the pump will suspend.</string>
-    <string name="daily_max_insulin_title">Daily Maximum Insulin</string>
+    <string name="daily_max_insulin_title">Daily Maximum Insulin [Units]</string>
     <string name="daily_max_insulin_summary">Specify the maximum units of insulin allowed per day. If exceeded, the pump will suspend.</string>
 
     <!-- treatment state-->

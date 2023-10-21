@@ -2,12 +2,10 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS (stor)</string>
     <string name="label_watchface_big_chart">AAPS (stor graf)</string>
     <string name="label_watchface_no_chart">AAPS (ingen graf)</string>
     <string name="label_watchface_circle">AAPS (sirkel)</string>
-    <string name="label_watchface_v2">AAPS(v2)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
     <string name="label_watchface_custom">AAPS(Tilpasset)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
@@ -42,7 +40,7 @@
     <string name="pref_show_bgi">Vis BGI</string>
     <string name="pref_show_direction_arrow">Vis retningspil</string>
     <string name="pref_show_ago">Vis siden</string>
-    <string name="pref_show_temp_basal">Vis TBR</string>
+    <string name="pref_show_temp_basal">Vis midl. basal</string>
     <string name="pref_show_bolus">Vis Bolus &amp; SMB</string>
     <string name="pref_show_grid">Vis rutenett</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørkt</string>
