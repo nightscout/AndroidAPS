@@ -36,6 +36,7 @@ dependencies {
     api(Libs.Squareup.Retrofit2.retrofit)
     api(Libs.AndroidX.browser)
     api(Libs.AndroidX.Work.runtimeKtx)
+    api(Libs.AndroidX.gridLayout)
     api(Libs.Google.Android.material)
 
     // NSClient, Tidepool
