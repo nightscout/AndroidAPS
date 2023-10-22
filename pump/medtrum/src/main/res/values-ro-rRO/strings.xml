@@ -114,7 +114,9 @@
     <string name="pump_warning_notification_summary">Arată notificare cu privire la avertismentele non-critice ale pompei: baterie scăzută, rezervor redus (20 de unități) și expiră în curând. Se recomandă să lăsaţi activat când alarmele pompei sunt setate la silențios.</string>
     <string name="patch_expiration_title">Patch Expirare</string>
     <string name="patch_expiration_summary">Când este activat, patchul va expira după 3 zile, cu o perioadă de graţie de 8 ore după expirare.</string>
+    <string name="hourly_max_insulin_title">Insulină maximă pe oră</string>
     <string name="hourly_max_insulin_summary">Specifică numărul maxim de unități de insulină permise pe oră. Dacă sunt depăşite, pompa se va suspenda.</string>
+    <string name="daily_max_insulin_title">Insulină maximă zilnică</string>
     <string name="daily_max_insulin_summary">Specifică numărul maxim de unități de insulină permise pe zi. Dacă sunt depăşite, pompa se va suspenda.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Se primește starea pompei</string>
