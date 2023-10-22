@@ -2,10 +2,10 @@
 <resources>
     <string name="units">Unidades</string>
     <string name="setupwizard_units_prompt">Seleccione as unidades em que deseja exibir os valores</string>
-    <string name="next_button">Seguinte</string>
-    <string name="previous_button">Anterior</string>
+    <string name="next_button">Avançar</string>
+    <string name="previous_button">Voltar</string>
     <string name="nav_setupwizard">Assistente de Configuração</string>
-    <string name="setupwizard_finish">TERMINAR</string>
+    <string name="setupwizard_finish">Finalizar Configuração</string>
     <string name="welcome">Bem-vindo(a)</string>
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="end_user_license_agreement">Condições de Utilização</string>
@@ -35,7 +35,7 @@
     <string name="diawarning">Lembre-se: novos perfis de insulina requerem diâmetro de pelo menos 5h. DIA 5–6h no novo perfil é igual ao diâmetro 3h nos antigos perfis de insulina.</string>
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
-    <string name="exitwizard">Saltar assistente de configuração</string>
+    <string name="exitwizard">Sair do assistente de configuração</string>
     <string name="setupwizard_loop_description">Pressione o botão abaixo para permitir ao AndroidAPS sugerir/fazer alterações na basal.</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
