@@ -1,11 +1,11 @@
 package app.aaps.core.data.db
 
 data class FD(
-    var id: Long = 0,
-    var version: Int = 0,
-    var dateCreated: Long = -1,
-    var isValid: Boolean = true,
-    var referenceId: Long? = null,
+    override var id: Long = 0,
+    override var version: Int = 0,
+    override var dateCreated: Long = -1,
+    override var isValid: Boolean = true,
+    override var referenceId: Long? = null,
     override var ids: IDs = IDs(),
     var name: String,
     var category: String? = null,

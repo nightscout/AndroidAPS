@@ -10,6 +10,7 @@ import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.HR
+import app.aaps.core.data.db.NE
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.TB
@@ -1709,4 +1710,6 @@ class PersistenceLayerImpl @Inject constructor(
     override fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable =
         repository.runTransaction(VersionChangeTransaction(versionName, versionCode, gitRemote, commitHash))
 
+    override fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): NE =
+        repository.collectNewEntriesSince(since, until, limit, offset).fromDb()
 }

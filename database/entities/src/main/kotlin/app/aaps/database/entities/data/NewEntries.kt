@@ -1,5 +1,8 @@
 package app.aaps.database.entities.data
 
+import app.aaps.database.entities.APSResult
+import app.aaps.database.entities.APSResultLink
+import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.Carbs
 import app.aaps.database.entities.EffectiveProfileSwitch
@@ -17,10 +20,10 @@ import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.VersionChange
 
 data class NewEntries(
-    val apsResults: List<app.aaps.database.entities.APSResult>,
-    val apsResultLinks: List<app.aaps.database.entities.APSResultLink>,
+    val apsResults: List<APSResult>,
+    val apsResultLinks: List<APSResultLink>,
     val bolusCalculatorResults: List<BolusCalculatorResult>,
-    val boluses: List<app.aaps.database.entities.Bolus>,
+    val boluses: List<Bolus>,
     val carbs: List<Carbs>,
     val effectiveProfileSwitches: List<EffectiveProfileSwitch>,
     val extendedBoluses: List<ExtendedBolus>,

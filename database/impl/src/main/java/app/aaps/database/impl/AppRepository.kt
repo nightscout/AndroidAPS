@@ -847,7 +847,7 @@ class AppRepository @Inject internal constructor(
         database.heartRateDao.getFromTimeToTime(startMillis, endMillis)
             .subscribeOn(Schedulers.io())
 
-    suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
+    fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
         apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),
         apsResultLinks = database.apsResultLinkDao.getNewEntriesSince(since, until, limit, offset),
         bolusCalculatorResults = database.bolusCalculatorResultDao.getNewEntriesSince(since, until, limit, offset),

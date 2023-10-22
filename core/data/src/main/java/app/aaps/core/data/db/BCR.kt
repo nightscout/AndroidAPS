@@ -3,11 +3,11 @@ package app.aaps.core.data.db
 import java.util.TimeZone
 
 data class BCR(
-    var id: Long = 0,
-    var version: Int = 0,
-    var dateCreated: Long = -1,
-    var isValid: Boolean = true,
-    var referenceId: Long? = null,
+    override var id: Long = 0,
+    override var version: Int = 0,
+    override var dateCreated: Long = -1,
+    override var isValid: Boolean = true,
+    override var referenceId: Long? = null,
     override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),

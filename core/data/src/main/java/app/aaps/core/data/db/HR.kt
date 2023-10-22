@@ -18,8 +18,8 @@ data class HR(
     var dateCreated: Long = -1,
     var isValid: Boolean = true,
     var referenceId: Long? = null,
-    override var ids: IDs = IDs()
-) : HasIDs {
+    var ids: IDs = IDs()
+) {
 
     fun contentEqualsTo(other: HR): Boolean {
         return this === other || (

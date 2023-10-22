@@ -10,6 +10,7 @@ import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.HR
+import app.aaps.core.data.db.NE
 import app.aaps.core.data.db.OE
 import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.TB
@@ -1273,6 +1274,17 @@ interface PersistenceLayer {
      * @param commitHash commitHash
      */
     fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable
+
+    /**
+     * Get list of db changed records in db since time
+     *
+     * @param since from
+     * @param until to
+     * @param limit max amount
+     * @param offset
+     * @return List of arrays of records
+     */
+    fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): NE
     class TransactionResult<T> {
 
         val inserted = mutableListOf<T>()
