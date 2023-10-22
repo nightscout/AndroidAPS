@@ -3,7 +3,6 @@ package app.aaps.plugins.automation.triggers
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
-import app.aaps.database.impl.AppRepository
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.services.LastLocationDataContainer
@@ -20,7 +19,6 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var automationPlugin: AutomationPlugin
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
     @BeforeEach
@@ -37,7 +35,6 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.profileFunction = profileFunction
                 it.sp = sp
                 it.locationDataContainer = locationDataContainer
-                it.repository = repository
                 it.persistenceLayer = persistenceLayer
                 it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator

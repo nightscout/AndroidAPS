@@ -42,7 +42,6 @@ import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
-import app.aaps.database.impl.AppRepository
 import app.aaps.ui.R
 import app.aaps.ui.databinding.DialogInsulinBinding
 import app.aaps.ui.extensions.toSignedString
@@ -67,7 +66,6 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var ctx: Context
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config
     @Inject lateinit var automation: Automation
     @Inject lateinit var uel: UserEntryLogger

@@ -26,7 +26,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -41,11 +40,6 @@ import app.aaps.core.main.extensions.iobCalc
 import app.aaps.core.main.utils.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.CutCarbsTransaction
-import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
-import app.aaps.database.impl.transactions.InvalidateBolusTransaction
-import app.aaps.database.impl.transactions.InvalidateCarbsTransaction
 import app.aaps.ui.R
 import app.aaps.ui.databinding.TreatmentsBolusCarbsFragmentBinding
 import app.aaps.ui.databinding.TreatmentsBolusCarbsItemBinding
@@ -69,7 +63,6 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var config: Config
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var activePlugin: ActivePlugin
 
@@ -359,40 +352,27 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
     private fun deleteFutureTreatments() {
         activity?.let { activity ->
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.overview_treatment_label), rh.gs(app.aaps.core.ui.R.string.delete_future_treatments) + "?", Runnable {
-                uel.log(Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments)
                 disposable += persistenceLayer
                     .getBolusesFromTime(dateUtil.now(), false)
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list ->
                         list.forEach { bolus ->
-                            disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
-                                .subscribe(
-                                    { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it) }
-                                )
+                            disposable += persistenceLayer.invalidateBolus(bolus.id, Action.DELETE_FUTURE_TREATMENTS, Sources.Treatments, null, listOf()).subscribe()
                         }
                     }
-                disposable += repository
-                    .getCarbsDataFromTimeNotExpanded(dateUtil.now(), false)
-                    .observeOn(aapsSchedulers.main)
+                disposable += persistenceLayer
+                    .getCarbsFromTimeNotExpanded(dateUtil.now(), false)
                     .subscribe { list ->
                         list.forEach { carb ->
                             if (carb.duration == 0L)
-                                disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
-                                    .subscribe(
-                                        { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
-                                    )
-                            else {
-                                disposable += repository.runTransactionForResult(CutCarbsTransaction(carb.id, dateUtil.now()))
-                                    .subscribe(
-                                        { result ->
-                                            result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") }
-                                            result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated (cut end) carbs $it") }
-                                        },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
-                                    )
-                            }
+                                disposable += persistenceLayer.invalidateCarbs(
+                                    carb.id,
+                                    action = Action.CARBS_REMOVED,
+                                    source = Sources.Treatments,
+                                    listValues = listOf(ValueWithUnit.Timestamp(carb.timestamp))
+                                ).subscribe()
+                            else
+                                disposable += persistenceLayer.cutCarbs(carb.id, dateUtil.now()).subscribe()
                         }
                     }
                 disposable += persistenceLayer
@@ -400,11 +380,12 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                     .observeOn(aapsSchedulers.main)
                     .subscribe { list ->
                         list.forEach { bolusCalc ->
-                            disposable += repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(bolusCalc.id))
-                                .subscribe(
-                                    { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolusCalculatorResult $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolusCalculatorResult", it) }
-                                )
+                            disposable += persistenceLayer.invalidateBolusCalculatorResult(
+                                bolusCalc.id,
+                                action = Action.BOLUS_CALCULATOR_RESULT_REMOVED,
+                                source = Sources.Treatments,
+                                listValues = listOf(ValueWithUnit.Timestamp(bolusCalc.timestamp))
+                            ).subscribe()
                         }
                     }
             })
@@ -431,43 +412,33 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, ml ->
                     ml.bolus?.let { bolus ->
-                        uel.log(
-                            action = Action.BOLUS_REMOVED, source = Sources.Treatments,
+                        disposable += persistenceLayer.invalidateBolus(
+                            bolus.id, action = Action.BOLUS_REMOVED,
+                            source = Sources.Treatments,
                             listValues = listOf(
                                 ValueWithUnit.Timestamp(bolus.timestamp),
                                 ValueWithUnit.Insulin(bolus.amount)
                             )
-                        )
-                        disposable += repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
-                            .subscribe(
-                                { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolus $it") } },
-                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolus", it) }
-                            )
+                        ).subscribe()
                     }
                     ml.carbs?.let { carb ->
-                        uel.log(
-                            action = Action.CARBS_REMOVED, source = Sources.Treatments,
+                        disposable += persistenceLayer.invalidateCarbs(
+                            carb.id,
+                            action = Action.CARBS_REMOVED,
+                            source = Sources.Treatments,
                             listValues = listOf(
                                 ValueWithUnit.Timestamp(carb.timestamp),
                                 ValueWithUnit.Gram(carb.amount.toInt())
                             )
-                        )
-                        disposable += repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
-                            .subscribe(
-                                { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated carbs $it") } },
-                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating carbs", it) }
-                            )
+                        ).subscribe()
                     }
                     ml.bolusCalculatorResult?.let { bolusCalculatorResult ->
-                        uel.log(
-                            action = Action.BOLUS_CALCULATOR_RESULT_REMOVED, source = Sources.Treatments,
-                            value = ValueWithUnit.Timestamp(bolusCalculatorResult.timestamp)
-                        )
-                        disposable += repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(bolusCalculatorResult.id))
-                            .subscribe(
-                                { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated bolusCalculatorResult $it") } },
-                                { aapsLogger.error(LTag.DATABASE, "Error while invalidating bolusCalculatorResult", it) }
-                            )
+                        disposable += persistenceLayer.invalidateBolusCalculatorResult(
+                            bolusCalculatorResult.id,
+                            action = Action.BOLUS_CALCULATOR_RESULT_REMOVED,
+                            source = Sources.Treatments,
+                            listValues = listOf(ValueWithUnit.Timestamp(bolusCalculatorResult.timestamp))
+                        ).subscribe()
                     }
                 }
                 actionHelper.finish()

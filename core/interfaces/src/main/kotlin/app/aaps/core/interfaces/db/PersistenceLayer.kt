@@ -121,6 +121,18 @@ interface PersistenceLayer {
     fun insertBolusWithTempId(bolus: BS): Single<TransactionResult<BS>>
 
     /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
+    fun invalidateBolus(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<BS>>
+
+    /**
      * Sync record coming from pump to database
      *
      * @param bolus record to sync
@@ -207,6 +219,15 @@ interface PersistenceLayer {
     fun getCarbsFromTimeExpanded(startTime: Long, ascending: Boolean): List<CA>
 
     /**
+     * Get carbs records from time
+     *
+     * @param startTime from
+     * @param ascending sort order
+     * @return List of carbs
+     */
+    fun getCarbsFromTimeNotExpanded(startTime: Long, ascending: Boolean): Single<List<CA>>
+
+    /**
      * Get carbs in time interval with expanded extended carbs to multiple records
      *
      * @param startTime from
@@ -242,6 +263,30 @@ interface PersistenceLayer {
      * @return List of inserted records
      */
     fun insertPumpCarbsIfNewByTimestamp(carbs: CA): Single<TransactionResult<CA>>
+
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
+    fun invalidateCarbs(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<CA>>
+
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
+    fun cutCarbs(id: Long, timestamp: Long): Single<TransactionResult<CA>>
 
     /**
      * Store records coming from NS to database
@@ -317,6 +362,18 @@ interface PersistenceLayer {
      */
     fun updateBolusCalculatorResultsNsIds(bolusCalculatorResults: List<BCR>): Single<TransactionResult<BCR>>
 
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
+    fun invalidateBolusCalculatorResult(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<BCR>>
+
     // GV
     fun getLastGlucoseValue(): GV?
 
@@ -337,6 +394,16 @@ interface PersistenceLayer {
     fun getBgReadingsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<GV>>
     fun getBgReadingByNSId(nsId: String): GV?
 
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
     fun invalidateGlucoseValue(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<TransactionResult<GV>>
     fun insertCgmSourceData(caller: Sources, glucoseValues: List<GV>, calibrations: List<Calibration>, sensorInsertionTime: Long?): Single<TransactionResult<GV>>
 

@@ -33,6 +33,7 @@ import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import app.aaps.database.impl.transactions.CgmSourceTransaction
+import app.aaps.database.impl.transactions.CutCarbsTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import app.aaps.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InsertBolusWithTempIdTransaction
@@ -44,6 +45,9 @@ import app.aaps.database.impl.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateProfileSwitch
 import app.aaps.database.impl.transactions.InsertTemporaryBasalWithTempIdTransaction
+import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
+import app.aaps.database.impl.transactions.InvalidateBolusTransaction
+import app.aaps.database.impl.transactions.InvalidateCarbsTransaction
 import app.aaps.database.impl.transactions.InvalidateEffectiveProfileSwitchTransaction
 import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
 import app.aaps.database.impl.transactions.InvalidateFoodTransaction
@@ -192,6 +196,19 @@ class PersistenceLayerImpl @Inject constructor(
                 transactionResult
             }
 
+    override fun invalidateBolus(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<BS>> =
+        repository.runTransactionForResult(InvalidateBolusTransaction(id))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Bolus", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<BS>()
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated Bolus from ${source.name} $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                    log(action = action, source = source, note = note, listValues = listValues)
+                }
+                transactionResult
+            }
+
     override fun syncPumpBolus(bolus: BS, type: BS.Type?): Single<PersistenceLayer.TransactionResult<BS>> =
         repository.runTransactionForResult(SyncPumpBolusTransaction(bolus.toDb(), type?.toDb()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving Bolus", it) }
@@ -290,6 +307,10 @@ class PersistenceLayerImpl @Inject constructor(
             .map { list -> list.asSequence().map { it.fromDb() }.toList() }
             .blockingGet()
 
+    override fun getCarbsFromTimeNotExpanded(startTime: Long, ascending: Boolean): Single<List<CA>> =
+        repository.getCarbsDataFromTimeNotExpanded(startTime, ascending)
+            .map { list -> list.asSequence().map { it.fromDb() }.toList() }
+
     override fun getCarbsFromTimeToTimeExpanded(startTime: Long, endTime: Long, ascending: Boolean): List<CA> =
         repository.getCarbsDataFromTimeToTimeExpanded(startTime, endTime, ascending)
             .map { list -> list.asSequence().map { it.fromDb() }.toList() }
@@ -337,6 +358,35 @@ class PersistenceLayerImpl @Inject constructor(
                 result.inserted.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Inserted Carbs $it")
                     transactionResult.inserted.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun invalidateCarbs(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<CA>> =
+        repository.runTransactionForResult(InvalidateCarbsTransaction(id))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Carbs", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<CA>()
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated Carbs from ${source.name} $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                    log(action = action, source = source, note = note, listValues = listValues)
+                }
+                transactionResult
+            }
+
+    override fun cutCarbs(id: Long, timestamp: Long): Single<PersistenceLayer.TransactionResult<CA>> =
+        repository.runTransactionForResult(CutCarbsTransaction(id, timestamp))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while cutting Carbs", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<CA>()
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated Carbs from $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated Carbs from $it")
+                    transactionResult.updated.add(it.fromDb())
                 }
                 transactionResult
             }
@@ -455,6 +505,19 @@ class PersistenceLayerImpl @Inject constructor(
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId BolusCalculatorResult $it")
                     transactionResult.updatedNsId.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun invalidateBolusCalculatorResult(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<BCR>> =
+        repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(id))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BolusCalculatorResult", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<BCR>()
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult from ${source.name} $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                    log(action = action, source = source, note = note, listValues = listValues)
                 }
                 transactionResult
             }
