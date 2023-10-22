@@ -51,6 +51,7 @@
     <string name="extended_bolus">Forlenget bolus</string>
     <string name="paused">Pauset</string>
     <string name="tdd_total">TDD Total</string>
+    <string name="tdd_old_data">Gammel data</string>
     <string name="goingtodeliver">Leverer %1$.2f enheter</string>
     <string name="waitingforpump">Venter på pumpen</string>
     <string name="androidaps_start">AAPS startet</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Last opp pumpestatus til NS eller Tidepool</string>
     <string name="suspendloop_label">Deaktivert/pauset loop</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>
+    <string name="loopstatus_targets">MÅLVERDIER:</string>
+    <string name="loopstatus_OAPS_result">OAPS resultat:</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
     <string name="wrongpin">Feil PIN-kode</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
+    <string name="carb_equal_zero_no_action">Karbo = 0. Ingen handling utført!</string>
+    <string name="wizard_no_insulin_required">Insulin er ikke nødvendig!</string>
     <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
     <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
     <string name="wizard_no_cob">Ukjent COB! BS-verdier mangler eller nylig oppstart av appen?</string>
