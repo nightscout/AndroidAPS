@@ -30,7 +30,6 @@ import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.localmodel.treatment.CreateUpdateResponse
-import app.aaps.database.impl.AppRepository
 import app.aaps.plugins.sync.nsShared.StoreDataForDbImpl
 import app.aaps.plugins.sync.nsclient.ReceiverDelegate
 import app.aaps.shared.tests.TestBaseWithProfile
@@ -55,7 +54,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var mockedProfileFunction: ProfileFunction
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var insulin: Insulin
 
@@ -77,7 +75,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, repository, persistenceLayer, sp, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, sp, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,

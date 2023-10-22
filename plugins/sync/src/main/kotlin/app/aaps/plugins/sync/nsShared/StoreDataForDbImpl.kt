@@ -32,17 +32,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
-import app.aaps.database.impl.transactions.InvalidateBolusTransaction
-import app.aaps.database.impl.transactions.InvalidateCarbsTransaction
-import app.aaps.database.impl.transactions.InvalidateEffectiveProfileSwitchTransaction
-import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
-import app.aaps.database.impl.transactions.InvalidateOfflineEventTransaction
-import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
-import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
-import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
-import app.aaps.database.impl.transactions.InvalidateTherapyEventTransaction
 import app.aaps.plugins.sync.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -57,7 +46,6 @@ import javax.inject.Singleton
 class StoreDataForDbImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
     private val sp: SP,
     private val uel: UserEntryLogger,
@@ -224,9 +212,9 @@ class StoreDataForDbImpl @Inject constructor(
             disposable += persistenceLayer.syncNsProfileSwitches(profileSwitches)
                 .subscribeBy { result ->
                     profileSwitches.clear()
-                    result.inserted.forEach { inserted.inc(PS::class.java.simpleName) }
-                    result.invalidated.forEach { invalidated.inc(PS::class.java.simpleName) }
-                    result.updatedNsId.forEach { nsIdUpdated.inc(PS::class.java.simpleName) }
+                    repeat(result.inserted.size) { inserted.inc(PS::class.java.simpleName) }
+                    repeat(result.invalidated.size) { invalidated.inc(PS::class.java.simpleName) }
+                    repeat(result.updatedNsId.size) { nsIdUpdated.inc(PS::class.java.simpleName) }
                     sendLog("ProfileSwitch", PS::class.java.simpleName)
                 }
 
@@ -420,134 +408,134 @@ class StoreDataForDbImpl @Inject constructor(
         deleteTreatment.forEach { id ->
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
                 persistenceLayer.getBolusByNSId(id)?.let { bolus ->
-                    repository.runTransactionForResult(InvalidateBolusTransaction(bolus.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Bolus", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated Bolus $it")
-                                invalidated.inc(BS::class.java.simpleName)
-                            }
-                        }
+                    disposable += persistenceLayer.invalidateBolus(
+                        bolus.id,
+                        Action.BOLUS_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(bolus.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(BS::class.java.simpleName) }
+                        sendLog("Bolus", BS::class.java.simpleName)
+                    }
                 }
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
-                repository.getCarbsByNSId(id)?.let { carb ->
-                    repository.runTransactionForResult(InvalidateCarbsTransaction(carb.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating Carbs", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated Carbs $it")
-                                invalidated.inc(CA::class.java.simpleName)
-                            }
-                        }
+                persistenceLayer.getCarbsByNSId(id)?.let { carb ->
+                    disposable += persistenceLayer.invalidateCarbs(
+                        carb.id,
+                        Action.CARBS_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(carb.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(CA::class.java.simpleName) }
+                        sendLog("Carbs", CA::class.java.simpleName)
+                    }
                 }
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT)
-                repository.findTemporaryTargetByNSId(id)?.let { gv ->
-                    repository.runTransactionForResult(InvalidateTemporaryTargetTransaction(gv.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryTarget", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryTarget $it")
-                                invalidated.inc(TT::class.java.simpleName)
-                            }
-                        }
+                persistenceLayer.getTemporaryTargetByNSId(id)?.let { tt ->
+                    disposable += persistenceLayer.invalidateTemporaryTarget(
+                        tt.id,
+                        Action.TT_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(tt.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(TT::class.java.simpleName) }
+                        sendLog("TemporaryTarget", TT::class.java.simpleName)
+                    }
                 }
             if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
-                repository.findTemporaryBasalByNSId(id)?.let { gv ->
-                    repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(gv.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                                invalidated.inc(TB::class.java.simpleName)
-                            }
-                        }
-                }
-            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT)
-                repository.findEffectiveProfileSwitchByNSId(id)?.let { gv ->
-                    repository.runTransactionForResult(InvalidateEffectiveProfileSwitchTransaction(gv.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating EffectiveProfileSwitch", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated EffectiveProfileSwitch $it")
-                                invalidated.inc(EPS::class.java.simpleName)
-                            }
-                        }
-                }
-            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT)
-                repository.findProfileSwitchByNSId(id)?.let { gv ->
-                    repository.runTransactionForResult(InvalidateProfileSwitchTransaction(gv.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch $it")
-                                invalidated.inc(EPS::class.java.simpleName)
-                            }
-                        }
-                }
-            repository.findBolusCalculatorResultByNSId(id)?.let { gv ->
-                repository.runTransactionForResult(InvalidateBolusCalculatorResultTransaction(gv.id))
-                    .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating BolusCalculatorResult", it) }
-                    .blockingGet()
-                    .also { result ->
-                        result.invalidated.forEach {
-                            aapsLogger.debug(LTag.DATABASE, "Invalidated BolusCalculatorResult $it")
-                            invalidated.inc(BCR::class.java.simpleName)
-                        }
+                persistenceLayer.getTemporaryBasalByNSId(id)?.let { tb ->
+                    disposable += persistenceLayer.invalidateTemporaryBasal(
+                        tb.id,
+                        Action.TEMP_BASAL_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(tb.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(TB::class.java.simpleName) }
+                        sendLog("TemporaryBasal", TB::class.java.simpleName)
                     }
+                }
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT)
+                persistenceLayer.getEffectiveProfileSwitchByNSId(id)?.let { eps ->
+                    disposable += persistenceLayer.invalidateEffectiveProfileSwitch(
+                        eps.id,
+                        Action.PROFILE_SWITCH_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(eps.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(EPS::class.java.simpleName) }
+                        sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
+                    }
+                }
+            if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT)
+                persistenceLayer.getProfileSwitchByNSId(id)?.let { ps ->
+                    disposable += persistenceLayer.invalidateProfileSwitch(
+                        ps.id,
+                        Action.PROFILE_SWITCH_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(ps.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(PS::class.java.simpleName) }
+                        sendLog("ProfileSwitch", PS::class.java.simpleName)
+                    }
+                }
+            persistenceLayer.getBolusCalculatorResultByNSId(id)?.let { bcr ->
+                disposable += persistenceLayer.invalidateBolusCalculatorResult(
+                    bcr.id,
+                    Action.BOLUS_CALCULATOR_RESULT_REMOVED,
+                    Sources.NSClient,
+                    null,
+                    listValues = listOf(ValueWithUnit.Timestamp(bcr.timestamp))
+                ).subscribeBy { result ->
+                    repeat(result.invalidated.size) { invalidated.inc(BCR::class.java.simpleName) }
+                    sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
+                }
             }
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
-                repository.findTherapyEventByNSId(id)?.let { gv ->
-                    repository.runTransactionForResult(InvalidateTherapyEventTransaction(gv.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TherapyEvent", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated TherapyEvent $it")
-                                invalidated.inc(TE::class.java.simpleName)
-                            }
-                        }
+                persistenceLayer.getTherapyEventByNSId(id)?.let { te ->
+                    disposable += persistenceLayer.invalidateTherapyEvent(
+                        te.id,
+                        Action.TREATMENT_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(te.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(TE::class.java.simpleName) }
+                        sendLog("TherapyEvent", TE::class.java.simpleName)
+                    }
                 }
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
-                repository.findOfflineEventByNSId(id)?.let { gv ->
-                    repository.runTransactionForResult(InvalidateOfflineEventTransaction(gv.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating OfflineEvent", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent $it")
-                                invalidated.inc(OE::class.java.simpleName)
-                            }
-                        }
+                persistenceLayer.getOfflineEventByNSId(id)?.let { oe ->
+                    disposable += persistenceLayer.invalidateOfflineEvent(
+                        oe.id,
+                        Action.TREATMENT_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(oe.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(OE::class.java.simpleName) }
+                        sendLog("OfflineEvent", OE::class.java.simpleName)
+                    }
                 }
             if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT)
-                repository.findExtendedBolusByNSId(id)?.let { gv ->
-                    repository.runTransactionForResult(InvalidateExtendedBolusTransaction(gv.id))
-                        .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating EB", it) }
-                        .blockingGet()
-                        .also { result ->
-                            result.invalidated.forEach {
-                                aapsLogger.debug(LTag.DATABASE, "Invalidated EB $it")
-                                invalidated.inc(EB::class.java.simpleName)
-                            }
-                        }
+                persistenceLayer.getExtendedBolusByNSId(id)?.let { eb ->
+                    disposable += persistenceLayer.invalidateExtendedBolus(
+                        eb.id,
+                        Action.EXTENDED_BOLUS_REMOVED,
+                        Sources.NSClient,
+                        null,
+                        listValues = listOf(ValueWithUnit.Timestamp(eb.timestamp))
+                    ).subscribeBy { result ->
+                        repeat(result.invalidated.size) { invalidated.inc(EB::class.java.simpleName) }
+                        sendLog("EB", EB::class.java.simpleName)
+                    }
                 }
         }
-        sendLog("Bolus", BS::class.java.simpleName)
-        sendLog("Carbs", CA::class.java.simpleName)
-        sendLog("TemporaryTarget", TT::class.java.simpleName)
-        sendLog("TemporaryBasal", TB::class.java.simpleName)
-        sendLog("EffectiveProfileSwitch", EPS::class.java.simpleName)
-        sendLog("ProfileSwitch", EPS::class.java.simpleName)
-        sendLog("BolusCalculatorResult", BCR::class.java.simpleName)
-        sendLog("TherapyEvent", TE::class.java.simpleName)
-        sendLog("OfflineEvent", OE::class.java.simpleName)
-        sendLog("EB", EB::class.java.simpleName)
     }
 
     override fun updateDeletedGlucoseValuesInDb() {

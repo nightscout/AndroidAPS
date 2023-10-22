@@ -38,6 +38,7 @@ import app.aaps.core.data.pump.defs.PumpDescription;
 import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.data.pump.defs.TimeChangeType;
 import app.aaps.core.data.time.T;
+import app.aaps.core.data.ue.Sources;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
@@ -421,7 +422,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
             }
         } else if (!podStateManager.isTempBasalRunning() && tempBasal != null) {
             aapsLogger.warn(LTag.PUMP, "Removing AAPS TBR that actually hadn't succeeded");
-            pumpSync.invalidateTemporaryBasal(tempBasal.getId());
+            pumpSync.invalidateTemporaryBasal(tempBasal.getId(), Sources.OmnipodEros, tempBasal.getTimestamp());
         }
 
         rxBus.send(new EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS));

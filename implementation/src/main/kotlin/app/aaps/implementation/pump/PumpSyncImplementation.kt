@@ -31,7 +31,6 @@ import app.aaps.core.main.pump.toUeSource
 import app.aaps.database.entities.TotalDailyDose
 import app.aaps.database.entities.embedments.InterfaceIDs
 import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransactionWithPumpId
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalWithTempIdTransaction
 import app.aaps.database.impl.transactions.SyncPumpCancelExtendedBolusIfAnyTransaction
@@ -370,17 +369,15 @@ class PumpSyncImplementation @Inject constructor(
             .blockingGet()
     }
 
-    override fun invalidateTemporaryBasal(id: Long): Boolean {
-        repository.runTransactionForResult(InvalidateTemporaryBasalTransaction(id))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
+    override fun invalidateTemporaryBasal(id: Long, sources: Sources, timestamp: Long): Boolean =
+        persistenceLayer.invalidateTemporaryBasal(
+            id = id,
+            action = Action.TEMP_BASAL_REMOVED,
+            source = sources,
+            note = null,
+            listValues = listOf(ValueWithUnit.Timestamp(timestamp))
+        ).map { result -> result.invalidated.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                }
-                return result.invalidated.size > 0
-            }
-    }
 
     override fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         repository.runTransactionForResult(

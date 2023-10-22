@@ -52,6 +52,7 @@ import app.aaps.database.impl.transactions.InvalidateEffectiveProfileSwitchTrans
 import app.aaps.database.impl.transactions.InvalidateExtendedBolusTransaction
 import app.aaps.database.impl.transactions.InvalidateFoodTransaction
 import app.aaps.database.impl.transactions.InvalidateGlucoseValueTransaction
+import app.aaps.database.impl.transactions.InvalidateOfflineEventTransaction
 import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
@@ -448,6 +449,8 @@ class PersistenceLayerImpl @Inject constructor(
                 transactionResult
             }
 
+    override fun getBolusCalculatorResultByNSId(nsId: String): BCR? = repository.findBolusCalculatorResultByNSId(nsId)?.fromDb()
+
     // BCR
     override fun getBolusCalculatorResultsFromTime(startTime: Long, ascending: Boolean): Single<List<BCR>> =
         repository.getBolusCalculatorResultsDataFromTime(startTime, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
@@ -648,6 +651,8 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getEffectiveProfileSwitchActiveAt(timestamp: Long): EPS? =
         repository.getEffectiveProfileSwitchActiveAt(timestamp).blockingGet()?.fromDb()
 
+    override fun getEffectiveProfileSwitchByNSId(nsId: String): EPS? = repository.findEffectiveProfileSwitchByNSId(nsId)?.fromDb()
+
     override fun getEffectiveProfileSwitchesFromTime(startTime: Long, ascending: Boolean): Single<List<EPS>> =
         repository.getEffectiveProfileSwitchesFromTime(startTime, ascending)
             .map { list -> list.asSequence().map { it.fromDb() }.toList() }
@@ -731,6 +736,8 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun getProfileSwitchActiveAt(timestamp: Long): PS? = repository.getProfileSwitchActiveAt(timestamp)?.fromDb()
+    override fun getProfileSwitchByNSId(nsId: String): PS? = repository.findProfileSwitchByNSId(nsId)?.fromDb()
+
     override fun getPermanentProfileSwitchActiveAt(timestamp: Long): PS? =
         repository.getPermanentProfileSwitchActiveAt(timestamp).blockingGet()?.fromDb()
 
@@ -840,6 +847,7 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getOldestTemporaryBasalRecord().blockingGet()?.fromDb()
 
     override fun getLastTemporaryBasalId(): Long? = repository.getLastTemporaryBasalId()
+    override fun getTemporaryBasalByNSId(nsId: String): TB? = repository.findTemporaryBasalByNSId(nsId)?.fromDb()
 
     override fun getTemporaryBasalsActiveBetweenTimeAndTime(startTime: Long, endTime: Long): List<TB> =
         repository.getTemporaryBasalsActiveBetweenTimeAndTime(startTime, endTime).blockingGet().asSequence().map { it.fromDb() }.toList()
@@ -995,6 +1003,7 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getOldestExtendedBolusRecord().blockingGet()?.fromDb()
 
     override fun getLastExtendedBolusId(): Long = getLastExtendedBolusId()
+    override fun getExtendedBolusByNSId(nsId: String): EB? = repository.findExtendedBolusByNSId(nsId)?.fromDb()
 
     override fun getExtendedBolusesStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EB> =
         repository.getExtendedBolusesStartingFromTimeToTime(startTime, endTime, ascending)
@@ -1095,6 +1104,7 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getTemporaryTargetActiveAt(timestamp).blockingGet()?.fromDb()
 
     override fun getLastTemporaryTargetId(): Long? = repository.getLastTempTargetId()
+    override fun getTemporaryTargetByNSId(nsId: String): TT? = repository.findTemporaryTargetByNSId(nsId)?.fromDb()
 
     override fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>> =
         repository.getTemporaryTargetDataFromTime(timestamp, ascending).map { list -> list.asSequence().map { it.fromDb() }.toList() }
@@ -1228,6 +1238,7 @@ class PersistenceLayerImpl @Inject constructor(
             }
 
     override fun getLastTherapyEventId(): Long? = repository.getLastTherapyEventId()
+    override fun getTherapyEventByNSId(nsId: String): TE? = repository.findTherapyEventByNSId(nsId)?.fromDb()
 
     // TE
     override fun getLastTherapyRecordUpToNow(type: TE.Type): Single<ValueWrapper<TE>> =
@@ -1357,6 +1368,8 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getOfflineEventActiveAt(timestamp: Long): OE? =
         repository.getOfflineEventActiveAt(timestamp).blockingGet()?.fromDb()
 
+    override fun getOfflineEventByNSId(nsId: String): OE? = repository.findOfflineEventByNSId(nsId)?.fromDb()
+
     override fun getOfflineEventsFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<OE> =
         repository.getOfflineEventsFromTimeToTime(startTime, endTime, ascending)
             .map { list -> list.asSequence().map { it.fromDb() }.toList() }
@@ -1382,6 +1395,19 @@ class PersistenceLayerImpl @Inject constructor(
                 result.updated.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent from ${source.name} $it")
                     transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun invalidateOfflineEvent(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<OE>> =
+        repository.runTransactionForResult(InvalidateOfflineEventTransaction(id))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating OfflineEvent", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<OE>()
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated OfflineEvent from ${source.name} $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                    log(action = action, source = source, note = note, listValues = listValues)
                 }
                 transactionResult
             }

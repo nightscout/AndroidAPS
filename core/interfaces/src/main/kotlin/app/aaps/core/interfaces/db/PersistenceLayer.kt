@@ -306,6 +306,12 @@ interface PersistenceLayer {
 
     // BCR
     /**
+     *  Get bolus calculator result by NS id
+     *  @return bolus calculator result
+     */
+    fun getBolusCalculatorResultByNSId(nsId: String): BCR?
+
+    /**
      * Get BCRs starting from time
      *
      * @param startTime from
@@ -431,6 +437,12 @@ interface PersistenceLayer {
     fun getEffectiveProfileSwitchActiveAt(timestamp: Long): EPS?
 
     /**
+     *  Get bolus by NS id
+     *  @return effective profile switch
+     */
+    fun getEffectiveProfileSwitchByNSId(nsId: String): EPS?
+
+    /**
      * Get effective profile switches from time
      *
      * @param startTime from
@@ -516,6 +528,12 @@ interface PersistenceLayer {
      * @return running profile switch or null if none is running
      */
     fun getProfileSwitchActiveAt(timestamp: Long): PS?
+
+    /**
+     *  Get profile switch by NS id
+     *  @return profile switch
+     */
+    fun getProfileSwitchByNSId(nsId: String): PS?
 
     /**
      * Get running profile switch at time with duration == 0 (infinite)
@@ -626,6 +644,12 @@ interface PersistenceLayer {
      *  @return id
      */
     fun getLastTemporaryBasalId(): Long?
+
+    /**
+     *  Get temporary basal by NS id
+     *  @return temporary basal
+     */
+    fun getTemporaryBasalByNSId(nsId: String): TB?
 
     /**
      * Get running temporary basal in time interval
@@ -749,6 +773,12 @@ interface PersistenceLayer {
     fun getLastExtendedBolusId(): Long?
 
     /**
+     *  Get extended bolus by NS id
+     *  @return extended bolus
+     */
+    fun getExtendedBolusByNSId(nsId: String): EB?
+
+    /**
      * Get running extended bolus starting in time interval
      *
      * @param startTime from
@@ -835,6 +865,12 @@ interface PersistenceLayer {
      */
     fun getLastTemporaryTargetId(): Long?
 
+    /**
+     *  Get temporary target by NS id
+     *  @return temporary target
+     */
+    fun getTemporaryTargetByNSId(nsId: String): TT?
+
     fun getTemporaryTargetDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
     fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TT>>
 
@@ -882,6 +918,12 @@ interface PersistenceLayer {
      *  @return id
      */
     fun getLastTherapyEventId(): Long?
+
+    /**
+     *  Get therapy event by NS id
+     *  @return therapy event
+     */
+    fun getTherapyEventByNSId(nsId: String): TE?
 
     fun getLastTherapyRecordUpToNow(type: TE.Type): Single<ValueWrapper<TE>>
     fun getTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TE>>
@@ -957,6 +999,12 @@ interface PersistenceLayer {
     fun getOfflineEventActiveAt(timestamp: Long): OE?
 
     /**
+     *  Get offline event by NS id
+     *  @return offline event
+     */
+    fun getOfflineEventByNSId(nsId: String): OE?
+
+    /**
      * Get offline events in time interval
      *
      * @param startTime from
@@ -989,6 +1037,18 @@ interface PersistenceLayer {
      * @param listValues Values for UserEntry logging
      */
     fun insertAndCancelCurrentOfflineEvent(offlineEvent: OE, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?> = listOf()): Single<TransactionResult<OE>>
+
+    /**
+     * Invalidate record with id
+     *
+     * @param id record id
+     * @param action Action for UserEntry logging
+     * @param source Source for UserEntry logging
+     * @param note Note for UserEntry logging
+     * @param listValues Values for UserEntry logging
+     * @return List of changed records
+     */
+    fun invalidateOfflineEvent(id: Long, action: Action, source: Sources, note: String? = null, listValues: List<ValueWithUnit?>): Single<TransactionResult<OE>>
 
     /**
      * Cancel offline event if there is some running at provided timestamp

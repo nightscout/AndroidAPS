@@ -5,6 +5,7 @@ import app.aaps.core.data.db.TB
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
+import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -434,10 +435,12 @@ interface PumpSync {
      * If db record doesn't exist data is ignored and false returned
      *
      *
-     * @param id            id of temporary basal
+     * @param id temporary basal id
+     * @param sources caller
+     * @param timestamp caller
      * @return true if running record is found and invalidated
      **/
-    fun invalidateTemporaryBasal(id: Long): Boolean
+    fun invalidateTemporaryBasal(id: Long, sources: Sources, timestamp: Long): Boolean
 
     /**
      * Invalidate of temporary basals that failed to start

@@ -15,7 +15,6 @@ import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.graph.data.GlucoseValueDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.database.impl.AppRepository
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
 import dagger.android.HasAndroidInjector
@@ -33,7 +32,6 @@ class PreparePredictionsWorker(
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var overviewData: OverviewData
-    @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var config: Config
     @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
