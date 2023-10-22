@@ -104,10 +104,10 @@ class HeartRateDaoTest {
             dao.insertNewEntry(hr2)
             dao.insertNewEntry(hr3)
 
-            assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2))
-            assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1))
-            assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1))
-            assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).isEmpty())
+            assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2).blockingGet())
+            assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1).blockingGet())
+            assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1).blockingGet())
+            assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).blockingGet().isEmpty())
         }
     }
 
