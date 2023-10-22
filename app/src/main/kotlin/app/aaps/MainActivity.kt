@@ -205,7 +205,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     }
 
                     R.id.nav_about              -> {
-                        var message = "Build: ${BuildConfig.BUILDVERSION}\n"
+                        var message = "Build: ${config.BUILD_VERSION}\n"
                         message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                         message += "${rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(app.aaps.plugins.main.R.string.not_available_full)}"
                         if (config.isEngineeringMode()) message += "\n${rh.gs(app.aaps.plugins.configuration.R.string.engineering_mode_enabled)}"
@@ -215,7 +215,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         val messageSpanned = SpannableString(message)
                         Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
                         MaterialAlertDialogBuilder(this@MainActivity, app.aaps.core.ui.R.style.DialogTheme)
-                            .setTitle(rh.gs(R.string.app_name) + " " + BuildConfig.VERSION)
+                            .setTitle(rh.gs(R.string.app_name) + " " + config.VERSION)
                             .setIcon(iconsProvider.getIcon())
                             .setMessage(messageSpanned)
                             .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok), null)
@@ -448,16 +448,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         if (!fabricPrivacy.fabricEnabled()) return
         val closedLoopEnabled = if (constraintChecker.isClosedLoopAllowed().value()) "CLOSED_LOOP_ENABLED" else "CLOSED_LOOP_DISABLED"
         // Size is limited to 36 chars
-        val remote = BuildConfig.REMOTE.lowercase(Locale.getDefault())
+        val remote = config.REMOTE.lowercase(Locale.getDefault())
             .replace("https://", "")
             .replace("http://", "")
             .replace(".git", "")
             .replace(".com/", ":")
             .replace(".org/", ":")
             .replace(".net/", ":")
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Mode", BuildConfig.APPLICATION_ID + "-" + closedLoopEnabled)
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
         fabricPrivacy.firebaseAnalytics.setUserProperty("Language", sp.getString(app.aaps.core.ui.R.string.key_language, Locale.getDefault().language))
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Version", BuildConfig.VERSION)
+        fabricPrivacy.firebaseAnalytics.setUserProperty("Version", config.VERSION_NAME)
         fabricPrivacy.firebaseAnalytics.setUserProperty("HEAD", BuildConfig.HEAD)
         fabricPrivacy.firebaseAnalytics.setUserProperty("Remote", remote)
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
@@ -471,9 +471,9 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         activePlugin.activeInsulin.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
         // Add to crash log too
         FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
-        FirebaseCrashlytics.getInstance().setCustomKey("Version", BuildConfig.VERSION)
-        FirebaseCrashlytics.getInstance().setCustomKey("BuildType", BuildConfig.BUILD_TYPE)
-        FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", BuildConfig.FLAVOR)
+        FirebaseCrashlytics.getInstance().setCustomKey("Version", config.VERSION_NAME)
+        FirebaseCrashlytics.getInstance().setCustomKey("BuildType", config.BUILD_TYPE)
+        FirebaseCrashlytics.getInstance().setCustomKey("BuildFlavor", config.FLAVOR)
         FirebaseCrashlytics.getInstance().setCustomKey("Remote", remote)
         FirebaseCrashlytics.getInstance().setCustomKey("Committed", BuildConfig.COMMITTED)
         FirebaseCrashlytics.getInstance().setCustomKey("Hash", hashes[0])

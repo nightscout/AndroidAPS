@@ -47,6 +47,7 @@
     <string name="patch_manually_turning_off_alarm_desc_2">En este caso, puede detenerlo completamente pulsando el botón de Alarma manual que libera el puerto del parche como se muestra a continuación:</string>
     <string name="patch_manually_turning_off_alarm_step_1">1. Retire el parche de su cuerpo y despegue la cinta adhesiva.</string>
     <string name="patch_manually_turning_off_alarm_step_2">2. Use un clip, para presionar fuertemente el agujero al lado de a la entrada de insulina.</string>
+    <string name="patch_wake_up">Llenado de insulina</string>
     <string name="patch_wake_up_step">1/6</string>
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_wake_up_desc_1">Llene un nuevo parche con insulina a temperatura ambiente. Compruebe el ángulo de la jeringa</string>
