@@ -20,7 +20,6 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:validators"))
 
-    testImplementation(project(":database:impl"))
     testImplementation(project(":implementation"))
     testImplementation(project(":insight"))
     testImplementation(project(":plugins:aps"))

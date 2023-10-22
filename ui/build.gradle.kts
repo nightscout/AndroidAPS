@@ -15,7 +15,6 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:libraries"))
     implementation(project(":core:graphview"))
-    implementation(project(":database:impl"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:main"))
     implementation(project(":core:ui"))

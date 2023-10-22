@@ -10,7 +10,7 @@ data class EPS(
     var dateCreated: Long = -1,
     var isValid: Boolean = true,
     var referenceId: Long? = null,
-    var ids: IDs = IDs(),
+    override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var basalBlocks: List<Block>,
@@ -26,7 +26,7 @@ data class EPS(
     var originalDuration: Long, // [milliseconds]
     var originalEnd: Long, // not used (calculated from duration)
     var iCfg: ICfg
-)  {
+) : HasIDs {
 
     fun contentEqualsTo(other: EPS): Boolean =
         isValid == other.isValid &&

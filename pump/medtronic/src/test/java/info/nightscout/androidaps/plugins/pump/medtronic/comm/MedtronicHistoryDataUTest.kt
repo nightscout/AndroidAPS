@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.util.Log
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.database.impl.serialisation.SealedClassHelper
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
@@ -135,7 +134,7 @@ import org.mockito.Mock
 
         println("PumpHistoryEntries: getFilteredItems: " + tbrs.size)
 
-        println("PumpHistoryEntries: getRewindItems: $rewindRecords.size : " + SealedClassHelper.gson.toJson(rewindRecords))
+        //println("PumpHistoryEntries: getRewindItems: $rewindRecords.size : " + SealedClassHelper.gson.toJson(rewindRecords))
 
         val processList: MutableList<TempBasalProcessDTO> = medtronicHistoryData.createTBRProcessList(tbrs)
 

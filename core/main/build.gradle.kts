@@ -14,7 +14,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":database:entities"))
     implementation(project(":core:data"))
     implementation(project(":core:graph"))
     implementation(project(":core:graphview"))

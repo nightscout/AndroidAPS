@@ -2,28 +2,6 @@ package app.aaps.core.main.pump
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Sources
-import app.aaps.database.entities.UserEntry
-
-fun PumpType.Companion.fromDbSource(s: UserEntry.Sources): PumpType.Source =
-    when (s) {
-        UserEntry.Sources.Dana        -> PumpType.Source.Dana
-        UserEntry.Sources.DanaR       -> PumpType.Source.DanaR
-        UserEntry.Sources.DanaRC      -> PumpType.Source.DanaRC
-        UserEntry.Sources.DanaRv2     -> PumpType.Source.DanaRv2
-        UserEntry.Sources.DanaRS      -> PumpType.Source.DanaRS
-        UserEntry.Sources.DanaI       -> PumpType.Source.DanaI
-        UserEntry.Sources.DiaconnG8   -> PumpType.Source.DiaconnG8
-        UserEntry.Sources.Insight     -> PumpType.Source.Insight
-        UserEntry.Sources.Combo       -> PumpType.Source.Combo
-        UserEntry.Sources.Medtronic   -> PumpType.Source.Medtronic
-        UserEntry.Sources.Omnipod     -> PumpType.Source.Omnipod
-        UserEntry.Sources.OmnipodEros -> PumpType.Source.OmnipodEros
-        UserEntry.Sources.OmnipodDash -> PumpType.Source.OmnipodDash
-        UserEntry.Sources.EOPatch2    -> PumpType.Source.EOPatch2
-        UserEntry.Sources.MDI         -> PumpType.Source.MDI
-        UserEntry.Sources.VirtualPump -> PumpType.Source.VirtualPump
-        else                          -> PumpType.Source.Unknown
-    }
 
 fun PumpType.Source.toUeSource(): Sources =
     when (this) {

@@ -8,7 +8,7 @@ data class BS(
     var dateCreated: Long = -1,
     var isValid: Boolean = true,
     var referenceId: Long? = null,
-    var ids: IDs = IDs(),
+    override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var amount: Double,
@@ -16,7 +16,7 @@ data class BS(
     var notes: String? = null,
     var isBasalInsulin: Boolean = false,
     var icfg: ICfg? = null
-) {
+) : HasIDs {
 
     fun contentEqualsTo(other: BS): Boolean =
         isValid == other.isValid &&

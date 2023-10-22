@@ -23,7 +23,6 @@ dependencies {
     implementation(project(":pump:rileylink"))
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":database:impl"))
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

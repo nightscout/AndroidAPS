@@ -6,7 +6,7 @@ data class FD(
     var dateCreated: Long = -1,
     var isValid: Boolean = true,
     var referenceId: Long? = null,
-    var ids: IDs = IDs(),
+    override var ids: IDs = IDs(),
     var name: String,
     var category: String? = null,
     var subCategory: String? = null,
@@ -22,7 +22,7 @@ data class FD(
     var unit: String = "g",
     var gi: Int? = null // not used yet
 
-) {
+) : HasIDs {
 
     fun contentEqualsTo(other: FD): Boolean {
         if (isValid != other.isValid) return false

@@ -1,11 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.TE
-import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.main.extensions.fromDb
-import app.aaps.core.main.extensions.toDb
 import app.aaps.database.entities.TherapyEvent
 
 fun TherapyEvent.Type.fromDb(): TE.Type = when (this) {

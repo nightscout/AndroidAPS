@@ -19,7 +19,6 @@ android {
 
 dependencies {
     implementation(project(":core:data"))
-    implementation(project(":database:entities"))
 
     api(Libs.AndroidX.appCompat)
     api(Libs.AndroidX.preference)

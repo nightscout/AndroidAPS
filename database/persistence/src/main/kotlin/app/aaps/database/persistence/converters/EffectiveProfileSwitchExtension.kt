@@ -3,8 +3,6 @@ package app.aaps.database.persistence.converters
 import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.data.Block
 import app.aaps.core.data.db.data.TargetBlock
-import app.aaps.core.main.extensions.fromDb
-import app.aaps.core.main.extensions.toDb
 import app.aaps.database.entities.EffectiveProfileSwitch
 
 fun EffectiveProfileSwitch.fromDb(): EPS =

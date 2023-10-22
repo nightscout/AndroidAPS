@@ -21,8 +21,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":database:entities"))
-    implementation(project(":database:impl"))
     implementation(project(":core:data"))
     implementation(project(":core:libraries"))
     implementation(project(":core:interfaces"))

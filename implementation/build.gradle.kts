@@ -20,8 +20,6 @@ dependencies {
     implementation(project(":core:interfaces"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
-    implementation(project(":database:entities"))
-    implementation(project(":database:impl"))
 
     testImplementation(project(":shared:tests"))
     testImplementation(project(":plugins:aps"))

@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.database.ValueWrapper
 import app.aaps.plugins.main.R
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -129,10 +128,10 @@ class StatusLightHandler @Inject constructor(
     private fun handleAge(view: TextView?, type: TE.Type, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
         val warn = sp.getDouble(warnSettings, defaultWarnThreshold)
         val urgent = sp.getDouble(urgentSettings, defaultUrgentThreshold)
-        val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(type).blockingGet()
-        if (therapyEvent is ValueWrapper.Existing) {
-            warnColors.setColorByAge(view, therapyEvent.value, warn, urgent)
-            view?.text = therapyEvent.value.age(rh.shortTextMode(), rh, dateUtil)
+        val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(type)
+        if (therapyEvent != null) {
+            warnColors.setColorByAge(view, therapyEvent, warn, urgent)
+            view?.text = therapyEvent.age(rh.shortTextMode(), rh, dateUtil)
         } else {
             view?.text = if (rh.shortTextMode()) "-" else rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
         }
@@ -163,10 +162,10 @@ class StatusLightHandler @Inject constructor(
 
     private fun handleUsage(view: TextView?, units: String) {
         handler.post {
-            val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE).blockingGet()
+            val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(TE.Type.CANNULA_CHANGE)
             val usage =
-                if (therapyEvent is ValueWrapper.Existing) {
-                    tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+                if (therapyEvent != null) {
+                    tddCalculator.calculate(therapyEvent.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
                 } else 0.0
             runOnUiThread {
                 view?.text = decimalFormatter.to0Decimal(usage, units)

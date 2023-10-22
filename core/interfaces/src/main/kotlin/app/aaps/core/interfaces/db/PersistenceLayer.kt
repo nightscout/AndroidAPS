@@ -17,10 +17,10 @@ import app.aaps.core.data.db.TDD
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.UE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
-import app.aaps.database.ValueWrapper
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -734,6 +734,35 @@ interface PersistenceLayer {
     fun syncPumpTemporaryBasal(temporaryBasal: TB, type: TB.Type?): Single<TransactionResult<TB>>
 
     /**
+     * Sync end of temporary basal coming from pump to database
+     *
+     * @param timestamp end temporary basal to this timme
+     * @param endPumpId id from pump
+     * @param pumpType PumpType
+     * @param pumpSerial pump serial number
+     * @return List of updated records
+     */
+    fun syncPumpCancelTemporaryBasalIfAny(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Single<TransactionResult<TB>>
+
+    /**
+     * Invalidate temporary basal coming from pump in database
+     *
+     * @param temporaryId temporary id of record
+     * @return List of invalidated records
+     */
+    fun syncPumpInvalidateTemporaryBasalWithTempId(temporaryId: Long): Single<TransactionResult<TB>>
+
+    /**
+     * Invalidate temporary basal coming from pump in database
+     *
+     * @param pumpId id from pump
+     * @param pumpType PumpType
+     * @param pumpSerial pump serial number
+     * @return List of invalidated records
+     */
+    fun syncPumpInvalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Single<TransactionResult<TB>>
+
+    /**
      * Sync record coming from pump to database using pump temp id
      *
      * @param temporaryBasal record to sync
@@ -850,6 +879,17 @@ interface PersistenceLayer {
      */
     fun syncPumpExtendedBolus(extendedBolus: EB): Single<TransactionResult<EB>>
 
+    /**
+     * Sync end of extended bolus coming from pump to database
+     *
+     * @param timestamp time
+     * @param endPumpId pump id of end
+     * @param pumpType PumpType
+     * @param pumpSerial pump serial number
+     * @return List of updated records
+     */
+    fun syncPumpStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Single<TransactionResult<EB>>
+
     // TT
     /**
      * Get running temporary target at time
@@ -925,7 +965,7 @@ interface PersistenceLayer {
      */
     fun getTherapyEventByNSId(nsId: String): TE?
 
-    fun getLastTherapyRecordUpToNow(type: TE.Type): Single<ValueWrapper<TE>>
+    fun getLastTherapyRecordUpToNow(type: TE.Type): TE?
     fun getTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TE>>
     fun getTherapyEventDataIncludingInvalidFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>>
     fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TE>>
@@ -1213,6 +1253,14 @@ interface PersistenceLayer {
      * Insert new record to database
      */
     fun insertTotalDailyDose(totalDailyDose: TDD)
+
+    /**
+     * Insert or update if exists record
+     *
+     * @param totalDailyDose record
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateTotalDailyDose(totalDailyDose: TDD): Single<TransactionResult<TDD>>
 
     // VersionChange
 

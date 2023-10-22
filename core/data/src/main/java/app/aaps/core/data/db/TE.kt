@@ -8,7 +8,7 @@ data class TE(
     var dateCreated: Long = -1,
     var isValid: Boolean = true,
     var referenceId: Long? = null,
-    var ids: IDs = IDs(),
+    override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var duration: Long = 0,
@@ -18,7 +18,7 @@ data class TE(
     var glucose: Double? = null,
     var glucoseType: MeterType? = null,
     var glucoseUnit: GlucoseUnit,
-) {
+) : HasIDs {
 
     fun contentEqualsTo(other: TE): Boolean =
         isValid == other.isValid &&

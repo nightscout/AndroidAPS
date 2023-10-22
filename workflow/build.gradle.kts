@@ -20,8 +20,6 @@ dependencies {
     implementation(project(":core:main"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
-    implementation(project(":database:entities"))
-    implementation(project(":database:impl"))
     implementation(project(":plugins:main"))
 
     kapt(Libs.Dagger.compiler)

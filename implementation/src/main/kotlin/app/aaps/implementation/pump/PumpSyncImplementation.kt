@@ -6,6 +6,7 @@ import app.aaps.core.data.db.EB
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.TB
+import app.aaps.core.data.db.TDD
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
@@ -26,16 +27,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.asAnnouncement
-import app.aaps.core.main.extensions.toDb
 import app.aaps.core.main.pump.toUeSource
-import app.aaps.database.entities.TotalDailyDose
-import app.aaps.database.entities.embedments.InterfaceIDs
-import app.aaps.database.impl.AppRepository
-import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransactionWithPumpId
-import app.aaps.database.impl.transactions.InvalidateTemporaryBasalWithTempIdTransaction
-import app.aaps.database.impl.transactions.SyncPumpCancelExtendedBolusIfAnyTransaction
-import app.aaps.database.impl.transactions.SyncPumpCancelTemporaryBasalIfAnyTransaction
-import app.aaps.database.impl.transactions.SyncPumpTotalDailyDoseTransaction
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -47,7 +39,6 @@ class PumpSyncImplementation @Inject constructor(
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
-    private val repository: AppRepository,
     private val persistenceLayer: PersistenceLayer,
     private val activePlugin: ActivePlugin
 ) : PumpSync {
@@ -300,15 +291,9 @@ class PumpSyncImplementation @Inject constructor(
 
     override fun syncStopTemporaryBasalWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        repository.runTransactionForResult(SyncPumpCancelTemporaryBasalIfAnyTransaction(timestamp, endPumpId, pumpType.toDb(), pumpSerial))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
+        return persistenceLayer.syncPumpCancelTemporaryBasalIfAny(timestamp, endPumpId, pumpType, pumpSerial)
+            .map { result -> result.updated.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
-                }
-                return result.updated.size > 0
-            }
     }
 
     override fun addTemporaryBasalWithTempId(
@@ -379,34 +364,15 @@ class PumpSyncImplementation @Inject constructor(
         ).map { result -> result.invalidated.size > 0 }
             .blockingGet()
 
-    override fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
-        repository.runTransactionForResult(
-            InvalidateTemporaryBasalTransactionWithPumpId(
-                pumpId, pumpType.toDb(),
-                pumpSerial
-            )
-        )
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
+    override fun invalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean =
+        persistenceLayer.syncPumpInvalidateTemporaryBasalWithPumpId(pumpId, pumpType, pumpSerial)
+            .map { result -> result.invalidated.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                }
-                return result.invalidated.size > 0
-            }
-    }
 
-    override fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean {
-        repository.runTransactionForResult(InvalidateTemporaryBasalWithTempIdTransaction(temporaryId))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating TemporaryBasal", it) }
+    override fun invalidateTemporaryBasalWithTempId(temporaryId: Long): Boolean =
+        persistenceLayer.syncPumpInvalidateTemporaryBasalWithTempId(temporaryId)
+            .map { result -> result.invalidated.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.invalidated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
-                }
-                return result.invalidated.size > 0
-            }
-    }
 
     override fun syncExtendedBolusWithPumpId(timestamp: Long, amount: Double, duration: Long, isEmulatingTB: Boolean, pumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
@@ -428,38 +394,27 @@ class PumpSyncImplementation @Inject constructor(
 
     override fun syncStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Boolean {
         if (!confirmActivePump(timestamp, pumpType, pumpSerial)) return false
-        repository.runTransactionForResult(SyncPumpCancelExtendedBolusIfAnyTransaction(timestamp, endPumpId, pumpType.toDb(), pumpSerial))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving ExtendedBolus", it) }
+        return persistenceLayer.syncPumpStopExtendedBolusWithPumpId(timestamp, endPumpId, pumpType, pumpSerial)
+            .map { result -> result.updated.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
-                }
-                return result.updated.size > 0
-            }
     }
 
     override fun createOrUpdateTotalDailyDose(timestamp: Long, bolusAmount: Double, basalAmount: Double, totalAmount: Double, pumpId: Long?, pumpType: PumpType, pumpSerial: String): Boolean {
         // there are probably old data in pump -> do not show notification, just ignore
         if (!confirmActivePump(timestamp, pumpType, pumpSerial, showNotification = false)) return false
-        val tdd = TotalDailyDose(
+        val tdd = TDD(
             timestamp = timestamp,
             bolusAmount = bolusAmount,
             basalAmount = basalAmount,
             totalAmount = totalAmount,
-            interfaceIDs_backing = InterfaceIDs(
+            ids = IDs(
                 pumpId = pumpId,
-                pumpType = pumpType.toDb(),
+                pumpType = pumpType,
                 pumpSerial = pumpSerial
             )
         )
-        repository.runTransactionForResult(SyncPumpTotalDailyDoseTransaction(tdd))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TotalDailyDose", it) }
+        return persistenceLayer.insertOrUpdateTotalDailyDose(tdd)
+            .map { result -> result.inserted.size > 0 || result.updated.size > 0 }
             .blockingGet()
-            .also { result ->
-                result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted TotalDailyDose $it") }
-                result.updated.forEach { aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose $it") }
-                return result.inserted.size > 0
-            }
     }
 }

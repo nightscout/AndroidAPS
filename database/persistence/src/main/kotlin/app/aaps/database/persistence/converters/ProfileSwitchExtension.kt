@@ -3,8 +3,6 @@ package app.aaps.database.persistence.converters
 import app.aaps.core.data.db.PS
 import app.aaps.core.data.db.data.Block
 import app.aaps.core.data.db.data.TargetBlock
-import app.aaps.core.main.extensions.fromDb
-import app.aaps.core.main.extensions.toDb
 import app.aaps.database.entities.ProfileSwitch
 
 fun ProfileSwitch.fromDb(): PS =
@@ -27,7 +25,7 @@ fun ProfileSwitch.fromDb(): PS =
         percentage = this.percentage,
         duration = this.duration,
         iCfg = this.insulinConfiguration.fromDb()
-)
+    )
 
 fun PS.toDb(): ProfileSwitch =
     ProfileSwitch(

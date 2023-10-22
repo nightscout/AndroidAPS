@@ -406,8 +406,8 @@ class AppRepository @Inject internal constructor(
     fun deleteAllTherapyEventsEntries() =
         database.therapyEventDao.deleteAllEntries()
 
-    fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): Single<ValueWrapper<TherapyEvent>> =
-        database.therapyEventDao.getLastTherapyRecord(type, System.currentTimeMillis()).toWrappedSingle()
+    fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): Maybe<TherapyEvent> =
+        database.therapyEventDao.getLastTherapyRecord(type, System.currentTimeMillis())
             .subscribeOn(Schedulers.io())
 
     fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TherapyEvent>> =

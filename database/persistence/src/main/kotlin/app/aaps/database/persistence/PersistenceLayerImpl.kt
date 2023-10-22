@@ -17,6 +17,7 @@ import app.aaps.core.data.db.TDD
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.db.UE
+import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
@@ -25,8 +26,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.fromDb
-import app.aaps.core.main.extensions.toDb
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.TherapyEvent
 import app.aaps.database.impl.AppRepository
@@ -55,6 +54,8 @@ import app.aaps.database.impl.transactions.InvalidateGlucoseValueTransaction
 import app.aaps.database.impl.transactions.InvalidateOfflineEventTransaction
 import app.aaps.database.impl.transactions.InvalidateProfileSwitchTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransaction
+import app.aaps.database.impl.transactions.InvalidateTemporaryBasalTransactionWithPumpId
+import app.aaps.database.impl.transactions.InvalidateTemporaryBasalWithTempIdTransaction
 import app.aaps.database.impl.transactions.InvalidateTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.InvalidateTherapyEventTransaction
 import app.aaps.database.impl.transactions.InvalidateTherapyEventsWithNoteTransaction
@@ -71,8 +72,11 @@ import app.aaps.database.impl.transactions.SyncNsTemporaryBasalTransaction
 import app.aaps.database.impl.transactions.SyncNsTemporaryTargetTransaction
 import app.aaps.database.impl.transactions.SyncNsTherapyEventTransaction
 import app.aaps.database.impl.transactions.SyncPumpBolusTransaction
+import app.aaps.database.impl.transactions.SyncPumpCancelExtendedBolusIfAnyTransaction
+import app.aaps.database.impl.transactions.SyncPumpCancelTemporaryBasalIfAnyTransaction
 import app.aaps.database.impl.transactions.SyncPumpExtendedBolusTransaction
 import app.aaps.database.impl.transactions.SyncPumpTemporaryBasalTransaction
+import app.aaps.database.impl.transactions.SyncPumpTotalDailyDoseTransaction
 import app.aaps.database.impl.transactions.SyncTemporaryBasalWithTempIdTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.UpdateNsIdBolusTransaction
@@ -647,6 +651,18 @@ class PersistenceLayerImpl @Inject constructor(
                 transactionResult
             }
 
+    override fun syncPumpStopExtendedBolusWithPumpId(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Single<PersistenceLayer.TransactionResult<EB>> =
+        repository.runTransactionForResult(SyncPumpCancelExtendedBolusIfAnyTransaction(timestamp, endPumpId, pumpType.toDb(), pumpSerial))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing ExtendedBolus", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<EB>()
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated ExtendedBolus $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
     // EPS
     override fun getEffectiveProfileSwitchActiveAt(timestamp: Long): EPS? =
         repository.getEffectiveProfileSwitchActiveAt(timestamp).blockingGet()?.fromDb()
@@ -971,6 +987,42 @@ class PersistenceLayerImpl @Inject constructor(
                 transactionResult
             }
 
+    override fun syncPumpCancelTemporaryBasalIfAny(timestamp: Long, endPumpId: Long, pumpType: PumpType, pumpSerial: String): Single<PersistenceLayer.TransactionResult<TB>> =
+        repository.runTransactionForResult(SyncPumpCancelTemporaryBasalIfAnyTransaction(timestamp, endPumpId, pumpType.toDb(), pumpSerial))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<TB>()
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryBasal ${it.first} New: ${it.second}")
+                    transactionResult.updated.add(it.second.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun syncPumpInvalidateTemporaryBasalWithTempId(temporaryId: Long): Single<PersistenceLayer.TransactionResult<TB>> =
+        repository.runTransactionForResult(InvalidateTemporaryBasalWithTempIdTransaction(temporaryId))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<TB>()
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    override fun syncPumpInvalidateTemporaryBasalWithPumpId(pumpId: Long, pumpType: PumpType, pumpSerial: String): Single<PersistenceLayer.TransactionResult<TB>> =
+        repository.runTransactionForResult(InvalidateTemporaryBasalTransactionWithPumpId(pumpId, pumpType.toDb(), pumpSerial))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while syncing TemporaryBasal", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<TB>()
+                result.invalidated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Invalidated TemporaryBasal $it")
+                    transactionResult.invalidated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
     override fun syncPumpTemporaryBasalWithTempId(temporaryBasal: TB, type: TB.Type?): Single<PersistenceLayer.TransactionResult<TB>> =
         repository.runTransactionForResult(SyncTemporaryBasalWithTempIdTransaction(temporaryBasal.toDb(), type?.toDb()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TemporaryBasal", it) }
@@ -1241,8 +1293,8 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getTherapyEventByNSId(nsId: String): TE? = repository.findTherapyEventByNSId(nsId)?.fromDb()
 
     // TE
-    override fun getLastTherapyRecordUpToNow(type: TE.Type): Single<ValueWrapper<TE>> =
-        repository.getLastTherapyRecordUpToNow(type.toDb()).fromDb(TherapyEvent::fromDb)
+    override fun getLastTherapyRecordUpToNow(type: TE.Type): TE? =
+        repository.getLastTherapyRecordUpToNow(type.toDb()).blockingGet()?.fromDb()
 
     override fun getTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TE>> =
         repository.compatGetTherapyEventDataFromToTime(from, to).map { list -> list.asSequence().map { it.fromDb() }.toList() }
@@ -1636,6 +1688,22 @@ class PersistenceLayerImpl @Inject constructor(
 
     override fun insertTotalDailyDose(totalDailyDose: TDD) =
         repository.insertTotalDailyDose(totalDailyDose.toDb())
+
+    override fun insertOrUpdateTotalDailyDose(totalDailyDose: TDD): Single<PersistenceLayer.TransactionResult<TDD>> =
+        repository.runTransactionForResult(SyncPumpTotalDailyDoseTransaction(totalDailyDose.toDb()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving TotalDailyDose $it") }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<TDD>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted TotalDailyDose $it")
+                    transactionResult.inserted.add(it.fromDb())
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
 
     // VersionChange
     override fun insertVersionChangeIfChanged(versionName: String, versionCode: Int, gitRemote: String?, commitHash: String?): Completable =

@@ -8,13 +8,13 @@ data class CA(
     var dateCreated: Long = -1,
     var isValid: Boolean = true,
     var referenceId: Long? = null,
-    var ids: IDs = IDs(),
+    override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var duration: Long, // in milliseconds
     var amount: Double,
     var notes: String? = null
-) {
+) : HasIDs {
 
     fun contentEqualsTo(other: CA): Boolean =
         isValid == other.isValid &&

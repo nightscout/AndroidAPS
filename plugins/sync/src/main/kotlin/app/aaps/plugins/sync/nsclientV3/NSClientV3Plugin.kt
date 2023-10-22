@@ -17,6 +17,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
+import app.aaps.core.data.db.HasIDs
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
@@ -53,7 +54,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.nssdk.NSAndroidClientImpl
 import app.aaps.core.nssdk.interfaces.NSAndroidClient
 import app.aaps.core.nssdk.remotemodel.LastModified
-import app.aaps.database.entities.interfaces.TraceableDBEntry
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.NSClientFragment
 import app.aaps.plugins.sync.nsShared.events.EventConnectivityOptionChanged
@@ -596,7 +596,7 @@ class NSClientV3Plugin @Inject constructor(
             else                                           -> null
         }?.let { data ->
             try {
-                val id = if (dataPair.value is TraceableDBEntry) (dataPair.value as TraceableDBEntry).interfaceIDs.nightscoutId else ""
+                val id = if (dataPair.value is HasIDs) (dataPair.value as HasIDs).ids.nightscoutId else ""
                 rxBus.send(
                     EventNSClientNewLog(
                         when (operation) {

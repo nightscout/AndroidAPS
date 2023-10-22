@@ -10,7 +10,7 @@ data class PS(
     var dateCreated: Long = -1,
     var isValid: Boolean = true,
     var referenceId: Long? = null,
-    var ids: IDs = IDs(),
+    override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var basalBlocks: List<Block>,
@@ -23,7 +23,7 @@ data class PS(
     var percentage: Int, // 1 ~ XXX [%]
     var duration: Long, // [milliseconds]
     var iCfg: ICfg
-) {
+) : HasIDs {
 
     fun copy(): PS =
         PS(
