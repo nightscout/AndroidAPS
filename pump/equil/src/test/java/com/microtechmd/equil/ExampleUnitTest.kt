@@ -1,4 +1,4 @@
-package com.microtechmd.equil
+package app.aaps.pump.equil
 
 import org.junit.Test
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.microtechmd.equil">
+    package="app.aaps.pump.equil">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -15,16 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.Launcher">
         <service
-            android:name=".service.EquilService"
+            android:name="app.aaps.pump.equil.service.EquilService"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="com.microtechmd.equil.ui.EquilBLEConfigActivity"
+            android:name="app.aaps.pump.equil.ui.EquilBLEConfigActivity"
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="com.microtechmd.equil.ui.EquilBLEConfigActivity" />
+                <action android:name="app.aaps.pump.equil.ui.EquilBLEConfigActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -53,7 +53,7 @@
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="com.microtechmd.equil.ui.EquilPairAssembleActivity" />
+                <action android:name="app.aaps.pump.equil.ui.EquilPairAssembleActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -82,7 +82,7 @@
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="com.microtechmd.equil.ui.pair.EquilPairActivity" />
+                <action android:name="app.aaps.pump.equil.ui.pair.EquilPairActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

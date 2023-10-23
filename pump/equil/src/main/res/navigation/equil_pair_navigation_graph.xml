@@ -4,7 +4,7 @@
     app:startDestination="@id/startEquilActivationFragment">
     <fragment
         android:id="@+id/startEquilActivationFragment"
-        android:name="com.microtechmd.equil.ui.pair.EquilPairAssembleFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairAssembleFragment"
         android:label="StartEquilActivationFragment">
         <action
             android:id="@+id/action_startEquilActivationFragment_to_startEquilSerialNumberFragment"
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/startEquilSerialNumberFragment"
-        android:name="com.microtechmd.equil.ui.pair.EquilPairSerialNumberFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairSerialNumberFragment"
         android:label="StartEquilSerialNumberFragment">
 
         <action
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/startEquilChangeInsulinFragment"
-        android:name="com.microtechmd.equil.ui.pair.EquilChangeInsulinFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilChangeInsulinFragment"
         android:label="StartEquilSerialNumberFragment">
 
         <action
@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/startEquilPairFillFragment"
-        android:name="com.microtechmd.equil.ui.pair.EquilPairFillFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairFillFragment"
         android:label="StartEquilPairFillFragment">
         <action
             android:id="@+id/action_startEquilActivationFragment_to_startEquilPairAttachFragment"
@@ -42,7 +42,7 @@
 
     <fragment
         android:id="@+id/startEquilPairAttachFragment"
-        android:name="com.microtechmd.equil.ui.pair.EquilPairAttachFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairAttachFragment"
         android:label="StartEquilPairAttachFragment">
         <action
             android:id="@+id/action_startEquilActivationFragment_to_startEquilPairAirFragment"
@@ -50,7 +50,7 @@
     </fragment>
     <fragment
         android:id="@+id/startEquilPairAirFragment"
-        android:name="com.microtechmd.equil.ui.pair.EquilPairAirFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairAirFragment"
         android:label="StartEquilPairAirFragment">
         <action
             android:id="@+id/action_startEquilActivationFragment_to_startEquilPairConfirmFragment"
@@ -58,6 +58,6 @@
     </fragment>
     <fragment
         android:id="@+id/startEquilPairConfirmFragment"
-        android:name="com.microtechmd.equil.ui.pair.EquilPairConfirmFragment"
+        android:name="app.aaps.pump.equil.ui.pair.EquilPairConfirmFragment"
         android:label="StartEquilPairConfirmFragment"></fragment>
 </navigation>
