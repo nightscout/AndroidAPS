@@ -51,6 +51,7 @@
     <string name="extended_bolus">Bolus étendu</string>
     <string name="paused">En pause</string>
     <string name="tdd_total">DTQ Total</string>
+    <string name="tdd_old_data">Données anciennes</string>
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
     <string name="androidaps_start">AAPS démarré</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Télécharger l\'état de la pompe sur NS ou Tidepool</string>
     <string name="suspendloop_label">Boucle désactivée/suspendue</string>
     <string name="iob_label">Insuline Active (IA)</string>
+    <string name="loopstatus_targets">CIBLES:</string>
+    <string name="loopstatus_OAPS_result">RÉSULTATS OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
     <string name="wrongpin">Code PIN incorrect</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
     <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
+    <string name="carb_equal_zero_no_action">Glucides = 0. Aucune action !</string>
+    <string name="wizard_no_insulin_required">Aucune insuline requise !</string>
     <string name="wizard_no_actual_bg">Pas de glycémie récente pour calculer !</string>
     <string name="wizard_no_active_profile">Aucun profil activé !</string>
     <string name="wizard_no_cob">GA inconnu! glycémie manquante ou démarrage récent de l\'application ?</string>
