@@ -51,6 +51,7 @@
     <string name="extended_bolus">Vertraagde bolus</string>
     <string name="paused">Gepauzeerd</string>
     <string name="tdd_total">TDD Totaal</string>
+    <string name="tdd_old_data">Oude gegevens</string>
     <string name="goingtodeliver">%1$.2f E toedienen</string>
     <string name="waitingforpump">Wacht op pomp</string>
     <string name="androidaps_start">AAPS gestart</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Upload pomp status naar NS of Tidepool</string>
     <string name="suspendloop_label">Uitgeschakelde/onderbroken loop</string>
     <string name="iob_label">Insuline aan boord (IOB)</string>
+    <string name="loopstatus_targets">DOELWAARDE:</string>
+    <string name="loopstatus_OAPS_result">OAPS RESULTAAT:</string>
     <!--    Protection-->
     <string name="wrongpassword">Verkeerd wachtwoord</string>
     <string name="wrongpin">Onjuiste PIN-code</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>
     <string name="no_action_selected">Geen actie geselecteerd, er zal niets uitgevoerd worden</string>
+    <string name="carb_equal_zero_no_action">Koolhydraten = 0. Geen actie!</string>
+    <string name="wizard_no_insulin_required">Geen insuline nodig!</string>
     <string name="wizard_no_actual_bg">Geen recente BG om de berekening op te baseren!</string>
     <string name="wizard_no_active_profile">Geen actief profiel ingesteld!</string>
     <string name="wizard_no_cob">Onbekende COB! BG uitlezing ontbreekt of de recente app herstart?</string>
