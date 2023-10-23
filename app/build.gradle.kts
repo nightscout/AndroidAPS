@@ -151,7 +151,9 @@ android {
     useLibrary("org.apache.http.legacy")
 
     //Deleting it causes a binding error
-    dataBinding { enable }
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 allprojects {
