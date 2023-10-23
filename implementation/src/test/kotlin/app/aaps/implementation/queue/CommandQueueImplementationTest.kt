@@ -82,24 +82,30 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is Command) {
+            if (it is CommandTempBasalPercent) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
-            }
-            if (it is CommandTempBasalPercent) {
                 it.activePlugin = activePlugin
             }
             if (it is CommandBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
                 it.rxBus = rxBus
             }
             if (it is CommandCustomCommand) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is CommandExtendedBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is CommandLoadHistory) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
                 it.activePlugin = activePlugin
             }
             if (it is PumpEnactResult) {

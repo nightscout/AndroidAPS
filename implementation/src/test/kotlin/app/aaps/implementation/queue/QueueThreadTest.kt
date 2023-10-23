@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.pump.PumpSync
-import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandTempBasalAbsolute
@@ -32,11 +31,8 @@ class QueueThreadTest : TestBaseWithProfile() {
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is Command) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
-            }
             if (it is CommandTempBasalAbsolute) {
+                it.aapsLogger = aapsLogger
                 it.activePlugin = activePlugin
                 it.rh = rh
             }

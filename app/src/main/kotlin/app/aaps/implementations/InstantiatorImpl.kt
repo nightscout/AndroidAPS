@@ -4,6 +4,7 @@ import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.profile.ProfileStore
+import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.plugins.aps.APSResultObject
@@ -25,4 +26,5 @@ class InstantiatorImpl @Inject constructor(
     override fun provideAPSResultObject(): APSResult = APSResultObject(injector)
 
     override fun provideAutosensDataObject(): AutosensData = AutosensDataObject(injector)
+    override fun providePumpEnactResult(): PumpEnactResult = PumpEnactResult(injector)
 }
