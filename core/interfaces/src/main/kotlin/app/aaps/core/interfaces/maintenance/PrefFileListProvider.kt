@@ -1,6 +1,5 @@
 package app.aaps.core.interfaces.maintenance
 
-import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import java.io.File
 

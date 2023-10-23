@@ -29,9 +29,6 @@ dependencies {
     api(Libs.KotlinX.serializationJson)
     api(Libs.KotlinX.serializationProtobuf)
 
-    //TODO eliminate
-    api(Libs.androidSvg)
-
     api(Libs.Apache.commonsLang3)
 
     //RxBus

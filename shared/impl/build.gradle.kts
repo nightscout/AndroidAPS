@@ -22,6 +22,8 @@ dependencies {
     api(Libs.Logging.slf4jApi)
     api(Libs.Logging.logbackAndroid)
 
+    api(Libs.androidSvg)
+
     api(Libs.Rx.rxAndroid)
     api(Libs.jodaTimeAndroid)
 
