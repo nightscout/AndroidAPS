@@ -7,7 +7,7 @@
     <string name="label_watchface_no_chart">AAPS (SansGraph)</string>
     <string name="label_watchface_circle">AAPS (Cercle)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
-    <string name="label_watchface_custom">AAPS(perso)</string>
+    <string name="label_watchface_custom">AAPS (perso)</string>
     <string name="label_actions_tile">AAPS (Actions)</string>
     <string name="label_temp_target_tile">AAPS(Cible Temp)</string>
     <string name="label_quick_wizard_tile">AAPS(Assistant rapide)</string>
