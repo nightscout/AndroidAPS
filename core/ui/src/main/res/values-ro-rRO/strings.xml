@@ -51,6 +51,7 @@
     <string name="extended_bolus">Bolus extins</string>
     <string name="paused">Suspendat</string>
     <string name="tdd_total">Total TDD</string>
+    <string name="tdd_old_data">Date vechi</string>
     <string name="goingtodeliver">Se vor livra %1$.2fU</string>
     <string name="waitingforpump">Se așteaptă pompa</string>
     <string name="androidaps_start">AAPS pornit</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Trimitere status către NS sau Tidepool</string>
     <string name="suspendloop_label">Buclă dezactivată/suspendată</string>
     <string name="iob_label">Insulină activă (IOB)</string>
+    <string name="loopstatus_targets">ȚINTE:</string>
+    <string name="loopstatus_OAPS_result">REZULTATUL OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Parola greșită</string>
     <string name="wrongpin">PIN greșit</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Bolusul va fi doar consemnat (nu va fi livrat de pompă)</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
     <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
+    <string name="carb_equal_zero_no_action">Carbohidrați = 0. Nicio acțiune efectuată!</string>
+    <string name="wizard_no_insulin_required">Nu este necesară insulină!</string>
     <string name="wizard_no_actual_bg">Nicio glicemie recentă pe care să se bazeze calculul!</string>
     <string name="wizard_no_active_profile">Niciun profil activ stabilit!</string>
     <string name="wizard_no_cob">COB necunoscut! Lipsesc datele de glicemie sau aplicația a fost repornită de curând?</string>
