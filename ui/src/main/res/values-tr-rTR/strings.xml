@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Bolus kısıtlaması uygulandı</string>
+    <string name="carbs_constraint_applied">Karbonhidrat kısıtlaması uygulandı</string>
+    <string name="temp_target_short">GH</string>
+    <string name="dialog_canceled">İletişim kutusu iptal edildi</string>
+    <string name="start_activity_tt">Egzersiz Başlat GH</string>
+    <string name="start_eating_soon_tt">Yakında Öğün GH</string>
+    <string name="start_hypo_tt">Hipo GH başlat</string>
+    <string name="time_offset">Saat farkı</string>
+    <string name="unit_minute_short">dk.</string>
+    <string name="remind_to_bolus_later">Bolusu daha sonra hatırlat</string>
+    <string name="a11y_carb_reminder">hatırlatıcıyı kur</string>
+    <!--    Widget-->
+    <string name="configure">Şeffaflığı yapılandır</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Aktivite monitörü</string>
+    <string name="do_you_want_reset_stats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
+    <string name="do_you_want_reset_tdd_stats">GTD istatistiklerini sıfırlamak istiyor musunuz?</string>
+    <string name="statistics">İstatistikler</string>
+    <string name="calculation_in_progress">Hesaplanıyor</string>
+    <string name="invalid_age">Geçersiz yaş girişi</string>
+    <string name="invalid_weight">Geçersiz ağırlık girişi</string>
+    <string name="id">Kimlik:</string>
+    <string name="submit">Sunum</string>
+    <string name="age">Yaş</string>
+    <string name="weight_label">Ağırlık</string>
+    <string name="most_common_profile">En yaygın profil:</string>
+    <string name="survey_comment">Not: Yalnızca bu ekranda görünen veriler anonim olarak yüklenecektir. Bu AAPS kurulumunda kimlik atanır. Ana profiliniz değişirse verileri tekrar gönderebilir, ancak sonuçların zaman içinde görünür olması için en az bir hafta çalışmasına izin verebilirsiniz. Yardımın takdire değer.</string>
+    <string name="glucose_type">Glikoz türü</string>
+    <string name="bg_other">Diğer</string>
+    <string name="bg_meter">GlkMetre</string>
+    <string name="bg_sensor">Sensör</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s IDF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg Kİ: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Toplam</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Lütfen miktarın infüzyon setinizin özelliklerine uygun olduğundan emin olun!</string>
+    <string name="record_pump_site_change">İnfüzyon seti değişimini kaydet</string>
+    <string name="record_insulin_cartridge_change">Rezervuar değişimini kaydet</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Bolusu sadece kayıt altına al</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">%1$d%% %2$dsa yeniden kullan</string>
+    <string name="timeshift_label">Zaman kaydırma</string>
+    <string name="percentage_label">Yüzde</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Döngüyü 1saat duraklat</string>
+    <string name="suspendloopfor2h">Döngüyü 2saat duraklat</string>
+    <string name="suspendloopfor3h">Döngüyü 3saat duraklat</string>
+    <string name="suspendloopfor10h">Döngüyü 10saat duraklat</string>
+    <string name="disconnectpump">Pompayı ayırın</string>
+    <string name="disconnectpumpfor15m">15 dakika boyunca pompayı ayırın</string>
+    <string name="disconnectpumpfor30m">30 dakika boyunca pompayı ayırın</string>
+    <string name="disconnectpumpfor1h">1 saat boyunca pompayı ayırın</string>
+    <string name="disconnectpumpfor2h">2 saat boyunca pompayı ayırın</string>
+    <string name="disconnectpumpfor3h">3 saat boyunca pompayı ayırın</string>
+    <string name="resume">Devam et</string>
+    <string name="reconnect">Pompayı tekrar bağla</string>
+    <string name="duration15m">15 dk</string>
+    <string name="duration30m">30 dk</string>
+    <string name="duration1h">1 saat</string>
+    <string name="duration2h">2 saat</string>
+    <string name="duration3h">3 saat</string>
+    <string name="duration10h">10 saat</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">% ile doğru sonuç</string>
+    <string name="a11_correction_units">ünite ile doğru sonuç</string>
+    <string name="two_hours">2sa</string>
+    <string name="result_insulin_carbs">Sonuç: %1$s %2$s</string>
+    <string name="missing_carbs">%1$d g eksik</string>
+    <string name="a11y_current_bg">geçerli kan şekeri</string>
+    <string name="carb_time_label">Karb. zamanı</string>
+    <string name="a11y_set_carb_timer">karbonhidrat zamanlayıcı alarmı kur</string>
+    <string name="show_calculation">Hesaplamayı göster</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Kayıt mevcut değil</string>
+    <string name="calculation_short">Hesap</string>
+    <string name="treatments_iob_label_string">AİNS:</string>
+    <string name="treatments_insulin_label_string">İnsülin:</string>
+    <string name="treatments_carbs_label_string">Karbonhidrat:</string>
+    <string name="treatments_iobtotal_label_string">Toplam AİNS:</string>
+    <string name="treatments_iob_activity_total_label_string">Toplam AİNS etkinliği:</string>
+    <string name="tempbasals_realduration_label_string">Süre:</string>
+    <string name="tempbasals_netratio_label_string">Oran:</string>
+    <string name="tempbasals_netinsulin_label_string">İns:</string>
+    <string name="tempbasals_iob_label_string">AİNS:</string>
+    <string name="treatments_wizard_correction_label">Düzeltme</string>
+    <string name="meal_bolus">Ögün</string>
+    <string name="prime">Doldur</string>
+    <string name="profile_changes">Profil değişiklikleri</string>
+    <string name="tempt_targets">Geçici Hedefler</string>
+    <string name="carbs_and_bolus">Karbonhidrat ve bolus</string>
+    <string name="show_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları göster</string>
+    <string name="hide_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları gizle</string>
+    <string name="refresh_from_nightscout">Nightscout\'tan Yenile</string>
+    <string name="refresheventsfromnightscout">NS\'tan yenile</string>
+    <string name="show_invalidated">Geçersiz olanları göster</string>
+    <string name="hide_invalidated">Geçersiz olanları gizle</string>
+    <string name="careportal_remove_started_events">AAPS tarafından başlatılmış girdileri kaldırın</string>
+    <string name="hide_loop">Döngüyü gizle</string>
+    <string name="show_loop">Döngüyü göster</string>
+    <string name="user_entry">Kullanıcı girişi</string>
+    <string name="clone_label">Klon</string>
+    <string name="show_loop_records">Döngü kayıtlarını göster</string>
+    <string name="show_hide_records">Döngü kayıtlarını gizle</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="profile_type">Profil tipi</string>
+    <string name="basal_pct_from_tdd_label">% bazalın</string>
+    <string name="selected_profile">Seçildi:</string>
+    <string name="compare_profile">Profilleri karşılaştırın</string>
+    <string name="nav_profile_helper">Profil yardımcısı</string>
+    <string name="motol_default_profile">Varsayılan profil</string>
+    <string name="current_profile">Mevcut profil</string>
+    <string name="available_profile">Kullanılabilir profil</string>
+    <string name="format_with_tdd">Yaş: %1$d GTD: %2$.0f Ü</string>
+    <string name="format_with_tdd_and_pct">Yaş: %1$d GTD: %2$.0f Ü %3$d%%</string>
+    <string name="format_with_weight">Yaş: %1$d Ağırlık: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Varsayılan profil</string>
+    <string name="invalid_pct">Geçersiz % giriş</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Bazal oranı</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">DURDUR\'A BASILDI</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">sadece saatte</string>
+    <string name="a11y_only_on_phone">sadece telefonda</string>
+    <string name="quickwizard_settings">Hızlı asistan ayarları</string>
+    <string name="overview_edit_quickwizard_button_text">Buton Metni:</string>
+    <string name="overview_edit_quickwizard_carbs">Karb:</string>
+    <string name="overview_edit_quickwizard_valid">Geçerli:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Ekle</string>
+    <string name="overview_quickwizard_item_edit_button">Düzenle</string>
+    <string name="overview_edit_quickwizard_show_on_device">Girişi cihazda göster:</string>
+    <string name="overview_edit_quickwizard_use_bg">KŞ Hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus AİNS hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Bazal AİNS hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_trend">Trend hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Süperbolus hesaplaması</string>
+    <string name="overview_edit_quickwizard_percentage">Yüzde</string>
+    <string name="device_all">Tümü</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Saat</string>
+    <string name="positive_only">Sadece pozitif</string>
+    <string name="negative_only">Sadece negatif</string>
+    <string name="overview_editquickwizard_usecob">AKRB hesaplaması</string>
+    <string name="overview_editquickwizard_usetemptarget">Geçici hedef hesaplaması</string>
+    <string name="overview_editquickwizard_usepercentage">Yüzde Hesaplaması</string>
+    <string name="app_default">Uygulama varsayılanı</string>
+    <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
+</resources>

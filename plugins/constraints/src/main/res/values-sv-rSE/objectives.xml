@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">Starta</string>
+    <string name="objectives_button_verify">Kontrollera</string>
+    <string name="nth_objective">%1$d. Målet</string>
+    <string name="objectivenotstarted">Mål %1$d inte uppnått</string>
+    <string name="objectivenotfinished">Mål %1$d inte uppnått</string>
+    <string name="objectives_0_objective">Ställer in utseende och övervakning för att sedan kunna analysera basaler och kvoter</string>
+    <string name="objectives_0_gate">Kontrollera att BG syns i Nightscout och att insulindata från pumpen laddas upp</string>
+    <string name="objectives_0_learned">Du har utfört grundläggande installation av AAPS-ekosystemet. Nightscout är inte nödvändigt för AAPS att köra, men det är mycket användbart för rapportering och övervakning av andra patienter. Det är inte nödvändigt att vara ansluten till NS hela tiden om du använder NS enbart för dig själv. Du kan ställa in att uppladdning enbart ska ske t. ex. endast på wifi för att spara batteri.</string>
+    <string name="objectives_openloop_objective">Starta med open loop</string>
+    <string name="objectives_openloop_gate">Kör i Open Loop-läge i några dagar och sätt ett antal temp-basaler manuellt. Konfigurera och använd temporära och förinställda temporära mål (t.ex. Träning eller Hypo)</string>
+    <string name="objectives_openloop_learned">Öppen loop kan användas för rekommendationer om du inte har en kompatibel pump eller om du inte är redo att stänga loopen.</string>
+    <string name="objectives_maxbasal_objective">Förstå din open loop och hur den föreslår temp basaler</string>
+    <string name="objectives_maxbasal_gate">Utifrån vad du nu lärt dig, besluta vilken max basal du vill ha. Ställ in det både i inställningarna i appen och i din pump</string>
+    <string name="objectives_maxbasal_learned">Var noggrann med säkerhetsfunktioner och justera säkerhetsparametrar vid behov.</string>
+    <string name="objectives_maxiobzero_objective">Börja använda closed loop med aktiverad funktion att stänga av vid lågt BG</string>
+    <string name="objectives_maxiobzero_gate">Aktivera closed loop med max IOB=0 i några dagar till dess systemet inte stänger av pga lågt BG för många gånger</string>
+    <string name="objectives_maxiobzero_learned">Att sätta MaxIOB till noll förebygger att du får lågt blodsocker och kommer inte att lägga till mer insulin över basal hastighet (utom situationer där du har negativ IOB)</string>
+    <string name="objectives_maxiob_objective">Finjustering av closed loop, med gradvis ökande max IOB och minskande målvärde för BG</string>
+    <string name="objectives_maxiob_gate">Kör några dagar och åtminstone en natt utan larm för lågt BG innan du sänker målvärdet för BG</string>
+    <string name="objectives_maxiob_learned">Uppdatera MaxIOB när ett barn växer. Låt inte systemet ge dig mer insulin än du kan täcka med mat = ett mycket högt värde är en dålig idé.</string>
+    <string name="objectives_autosens_objective">Justera basaler och kvoter om det behövs. Aktivera sedan autosens</string>
+    <string name="objectives_autosens_gate">1 veckas lyckad looping dagtid, där alla måltider lagts in</string>
+    <string name="objectives_autosens_learned">Om ditt autosens-resultat inte pendlar runt 100% är din profil förmodligen fel.</string>
+    <string name="objectives_smb_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB</string>
+    <string name="objectives_smb_gate">Du måste läsa wikin och öka max IOB för att få SMB att fungera bra. En bra start är att sätta max IOB till din genomsnittliga måltidsbolus plus 3 gånger den högsta basalen du har under ett dygn</string>
+    <string name="objectives_smb_learned">Att använda SMB är ditt mål. Oref1-algoritmen utformades även för att hjälpa dig med dina bolusar. Du bör inte ge full bolus till din mat utan bara en del av det och låt AAPS ge dig resten om det behövs. På så sätt har du mer utrymme för felberäknade kolhydrater. Visste du att du kan ställa in en procentandel av boluskalkylatorns resultat för att minska storleken på bolus?</string>
+    <string name="objectives_dyn_isf_objective">Aktiverar extra funktioner som kan användas dagtid, såsom insticksprogrammet för dynamisk känslighet</string>
+    <string name="objectives_dyn_isf_gate">Se till att SMB fungerar korrekt. Aktivera insticksprogrammet DynamicISF och identifiera lämplig kalibrering för just din kropp. Det är lämpligt att börja med ett värde lägre än 100% av säkerhetsskäl.</string>
+    <string name="objectives_dyn_isf_learned">Insticksprogrammet för dynamisk känslighet bygger på teorin att det totala insulinintaget och nuvarande blodsockernivåer påverkar insulinkänsligheten. Insticksprogrammet DynamicISF kan löpande justera insulinkänslighetsfaktorn (ISF) som används av algoritmen.</string>
+    <string name="objectives_auto_objective">Aktivera automatisering</string>
+    <string name="objectives_auto_gate">Läs dokumentationen kring hur automatisering fungerar. Konfigurera dina första enkla regler. I stället för att ange en åtgärd, låt AAPS enbart visa en avisering. När du är säker på att automatisering utlöses vid rätt tidpunkt kan du ersätta aviseringen med verklig åtgärd. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Automation kan vara en bra tjänare men en dålig herre. Överanvänd den inte. Försök inte att ersätta underliggande algoritm. Testa regeln först med enbart meddelande innan du sätter igång den på riktigt. Automatiseringarna påverkas av ordningsföljden.</string>
+    <string name="objectives_bgavailableinns">BG tillgängligt i NS eller Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Pumpstatus tillgängligt i NS eller Tidepool</string>
+    <string name="objectives_manualenacts">Manuella justeringar</string>
+    <string name="accomplished">Utfört: %1$s</string>
+    <string name="objectives_usage_objective">Lär dig hur du styr AAPS</string>
+    <string name="objectives_usage_gate">Utför olika åtgärder i AAPS</string>
+    <string name="objectives_usage_learned">Du har lärt dig hur man hanterar grunderna i AAPS. Huvudkontrollerna finns på översiktsskärmen och nås via klick eller långklick, fler kontroller finns på åtgärdsskärmen. Du bör veta hur man kan placera ett insticksprograms vy i toppmenyn, eller låta den visas i övre vänstra listan över aktiverade insticksprogram.</string>
+    <string name="objectives_useprofileswitch">Ställ in profilen 90% för 10 minuter (Tryck och håll in profilens namn i Översikten)</string>
+    <string name="objectives_usedisconnectpump">Simulera dusch. Koppla från pump i 1 timme (Tryck och håll in på Open Loop i Översikten)</string>
+    <string name="objectives_usereconnectpump">... och återanslut på samma sätt</string>
+    <string name="objectives_usetemptarget">Skapa ett anpassat tillfälligt mål med 10 min varaktighet (Tryck och håll in på nuvarande BG-mål i Översikten)</string>
+    <string name="objectives_useactions">I Konfigurationsverktyget, aktivera insticksprogrammet Åtgärder, gör det synligt och visa dess innehåll från övre menyn</string>
+    <string name="objectives_useloop">Visa innehållet i insticksprogrammet \"Loop\"</string>
+    <string name="objectives_usescale">Testa skala om BG-grafen genom att trycka och hålla in fingret på den</string>
+    <string name="objectives_exam_objective">Bevisa dina kunskaper</string>
+    <string name="objectives_exam_gate">Studera frågorna.  Ni får fyra möjliga svar på varje fråga. Det kan finnas mer än ett korrekt svar. Kontrollera alla de som är korrekta och välj Kontrollera.</string>
+    <string name="objectives_exam_learned_prerequisites">Du behöver inte vara en utvecklare men du behöver NS för att skicka mål och kompatibel pump samt en dator för att bygga AAPS för första gången och för varje uppdatering.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS kan köras offline.</string>
+    <string name="objectives_exam_learned_basaltest">Profilen bör granskas och uppdateras. Bättre profil = bättre resultat.</string>
+    <string name="objectives_exam_learned_dia">DIA i looping har olika betydelse: \"den tid det tar tills allt insulin har absorberas av kroppen\" än i klassisk pumpterapi: \"den tid det tar tills merparten av insulinet absorberas\".</string>
+    <string name="objectives_exam_learned_isf">Du har lärt dig betydelsen av ISF-värde och hur det påverkar mängden insulin som levereras för BG-korrigering.</string>
+    <string name="objectives_exam_learned_ic">Du har lärt dig betydelsen av KH-kvoten och hur det påverkar mängden insulin som levereras för att täcka upp för intagna kolhydrater.</string>
+    <string name="objectives_exam_learned_hypott">Tillfälligt mål för lågt blodsocker används endast för att förhindra att AAPS överkorrigera vid lågt blodsocker, när det är vanligt att AAPS bygger upp ett negativt IOB. Ytterligare åtgärder bör utvärderas för att förhindra att denna situation uppstår igen.</string>
+    <string name="objectives_exam_learned_profileswitch">Användning av procent påverkar inte målvärdet för blodsocker. Men basal, ISF och IC justeras för att ge mer insulin (över 100%%) eller mindre insulin (under 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Genom att använda tidsförskjutning när du byter profil kan du anpassa dygnsprofilen till ovanligheter som t. ex. att du vaknat sent.</string>
+    <string name="objectives_exam_learned_profileswitch4">Redigering av profilen räcker inte för att en ändring ska bli aktiv. Du måste fortfarande genomföra ett profilbyte för att aktivera ändringar.</string>
+    <string name="objectives_exam_learned_exercise">Du bör minska mängden insulin i kroppen minst en timme före träning genom att välja en profilprocent under 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Att sätta ett högre tillfälligt BG-målvärde minst 1 timme före träning hjälper också med att minska mängden insulin i kroppen.</string>
+    <string name="objectives_exam_learned_noisycgm">När du inte kan lita på de värden AAPS får från CGM bör du inte använda loopen utan uppsikt.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS måste veta att pumpen inte är ansluten för att kunna räkna IOB korrekt.</string>
+    <string name="objectives_exam_learned_insulin">Att ange vilket insulin som är i pumpen är nödvändigt eftersom det påverkar IOB-beräkningen.</string>
+    <string name="objectives_exam_learned_sensitivity">Känslighetsdetektion är en del av algoritmen som gör det möjligt att anpassa insulindoseringen till olika situationer.</string>
+    <string name="objectives_exam_learned_objectives">Dina framsteg i målen lagras tillsammans med andra inställningar och bör säkerhetskopieras.</string>
+    <string name="objectives_exam_learned_objectives2">Spara alltid exporterade inställningar och den genererade APK-filen även utanför telefon. Telefonen kan förloras, skadas etc. Ett bra ställe kan vara en molnlagringstjänst som kan nås från telefonen. I detta fall kan du återställa AAPS på en annan enhet på några minuter. Bra praxis är att lagra huvudlösenordet på en säker plats också. Utan det är din backup värdelös. Detsamma gäller för signeringsnycklar (.jks-fil) och lösenord som används för att bygga AAPS. Resten är inte viktigt - det kan när som helst laddas ner från internet igen.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Om du gjorde en felaktig inmatning till AAPS eller om den inte matchar verkligheten, lös det så fort som möjligt. Det kan leda till överdosering. AAPS bör alltid hållas informerad på bästa möjliga sätt om verkligt intag av kolhydrater, insulinleverans etc.</string>
+    <string name="objectives_exam_learned_iob">Om du analyserar huruvida AAPS fungerar bra för dig kommer IOB-grafen att ge dig mycket användbar information.</string>
+    <string name="objectives_exam_learned_cob">COB-beräkningen beror på sambandet mellan ISF och IC. Att öka ISF eller att minska IC kommer att leda till längre absorptionstider. Men att växla profil med procentuella förändringar påverkar båda värdena samtidigt och absorptionstiden påverkas därmed inte.</string>
+    <string name="objectives_exam_learned_breadgrams">Endast gram är tillåtna för inmatning av kolhydrater.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carbs är en ersättning för konceptet med förlängd bolus i pumpvärlden.</string>
+    <string name="objectives_exam_learned_nsclient">Fjärrövervakning och fjärrstyrning är möjligt men alla funktioner behöver inte vara tillgängliga på distans.</string>
+    <string name="answerdisabledto">Svarsfunktionen inaktiverad till: %1$s</string>
+    <string name="wronganswer">Fel svar</string>
+    <string name="unfinshed_button">Nästa icke slutförda</string>
+    <string name="requestcode">Begärd kod: %1$s</string>
+    <string name="objectives_hint">(markera ett eller flera alternativ)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">Inte ansluten till internet</string>
+    <string name="failedretrievetime">Fel vid hämtning av tid</string>
+    <string name="requirementnotmet">Målets krav är inte uppfyllda</string>
+    <string name="what_i_ve_learned">Vad jag har lärt mig:</string>
+</resources>

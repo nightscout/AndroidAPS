@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">인증이 필요합니다.</string>
+    <string name="biometric_description">신원 확인을 위하여 홈 버튼에 지문을 대주십시오.</string>
+    <string name="settings_protection">설정 보안</string>
+    <string name="application_protection">애플리케이션 보안</string>
+    <string name="bolus_protection">Bolus 보안</string>
+    <string name="settings_password">설정 비밀번호</string>
+    <string name="settings_pin">설정 PIN</string>
+    <string name="application_password">애플리케이션 비밀번호</string>
+    <string name="application_pin">투여 PIN</string>
+    <string name="bolus_password">Bolus 비밀번호</string>
+    <string name="bolus_pin">Bolus PIN</string>
+    <string name="protection_timeout_title">암호 및 PIN 보존 [s]</string>
+    <string name="protection_timeout_summary">암호 또는 PIN을 입력하기 전까지의 시간</string>
+    <string name="biometric">생체 인식</string>
+    <string name="custom_password">사용자 지정 비밀번호</string>
+    <string name="custom_pin">사용자 지정 PIN</string>
+    <string name="noprotection">보안 없음</string>
+    <string name="unsecure_fallback_biometric">안전하지 않은 대비책</string>
+    <string name="unsecure_fallback_descriotion_biometric">생체 인식 보호를 효율적으로 사용하려면, 대비책을 위한 마스터 암호가 설정되어 있어야 합니다. \n\n 마스터 암호를 설정하십시오!</string>
+    <string name="password_set">비밀번호가 설정되었습니다!</string>
+    <string name="pin_set">PIN 설정!</string>
+    <string name="password_not_set">비밀번호가 설정되지 않았습니다.</string>
+    <string name="pin_not_set">PIN이 설정되지 않음</string>
+    <string name="password_not_changed">비밀번호가 변경되지 않았습니다.</string>
+    <string name="pin_not_changed">PIN이 변경되지 않음</string>
+    <string name="pin_cleared">PIN이 제거됨!</string>
+    <string name="password_hint">여기에 비밀번호를 입력하세요</string>
+    <string name="pin_hint">이곳에 PIN을 입력하세요</string>
+</resources>

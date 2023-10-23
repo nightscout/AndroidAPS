@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev(超速效赖脯胰岛素)</string>
+    <string name="description_insulin_rapid">胰岛素预设为 Humalog(优泌乐) 和 NovoRapid(门冬)/NovoLog(诺和锐)</string>
+    <string name="description_insulin_ultra_rapid">Fiasp 胰岛素预设</string>
+    <string name="description_insulin_lyumjev">预设为Lyumjev速效赖脯胰岛素</string>
+    <string name="description_insulin_free_peak">允许您定义胰岛素作用的峰值, 并且只应由高级用户使用</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
+    <string name="insulin_peak_time">峰值时间 [min]</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">速效 Oref</string>
+    <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
+</resources>

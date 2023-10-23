@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MedtrumPump -->
+    <string name="key_sn_input" translatable="false">sn_input</string>
+    <string name="key_alarm_setting" translatable="false">alarm_setting</string>
+    <string name="key_patch_expiration" translatable="false">patch_expiration</string>
+    <string name="key_pump_warning_notification" translatable="false">pump_warning_notification</string>
+    <string name="key_pump_warning_expiry_hour" translatable="false">pump_expiry_warning_hour</string>
+    <string name="key_hourly_max_insulin" translatable="false">hourly_max_insulin</string>
+    <string name="key_daily_max_insulin" translatable="false">daily_max_insulin</string>
+
+    <string name="key_medtrum_pump_settings" translatable="false">medtrum_pump_setting</string>
+    <string name="key_pump_state" translatable="false">pump_state</string>
+    <string name="key_active_alarms" translatable="false">active_alarms</string>
+    <string name="key_last_connection" translatable="false">last_connection</string>
+    <string name="key_bolus_start_time" translatable="false">bolus_start_time</string>
+    <string name="key_bolus_amount_to_be_delivered" translatable = "false">bolus_amount_to_be_delivered</string>
+    <string name="key_last_bolus_time" translatable="false">last_bolus_time</string>
+    <string name="key_last_bolus_amount" translatable="false">last_bolus_amount</string>
+    <string name="key_session_token" translatable="false">medtrum_session_token</string>
+    <string name="key_patch_id" translatable="false">patch_id</string>
+    <string name="key_device_type" translatable="false">device_type</string>
+    <string name="key_sw_version" translatable="false">sw_version</string>
+    <string name="key_patch_start_time" translatable="false">patch_start_time</string>
+    <string name="key_actual_basal_profile" translatable="false">actual_basal_profile</string>
+    <string name="key_current_sequence_number" translatable="false">current_sequence_number</string>
+    <string name="key_synced_sequence_number" translatable="false">synced_sequence_number</string>
+    <string name="key_pump_time_zone_offset" translatable="false">pump_time_zone_offset</string>
+
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Pump integration for Medtrum Nano and Medtrum 300U</string>
+    <string name="medtrum_pump_setting">Medtrum pump settings</string>
+    <string name="pump_error">Pump error: %1$s !! </string>
+    <string name="pump_warning">Pump warning: %1$s </string>
+    <string name="pump_is_suspended">Pump is suspended</string>
+    <string name="pump_is_suspended_hour_max">Pump is suspended due to hourly max insulin exceeded</string>
+    <string name="pump_is_suspended_day_max">Pump is suspended due to daily max insulin exceeded</string>
+    <string name="patch_not_active">Patch not activated</string>
+    <string name="pump_setting_failed">Setting user settings to pump failed!</string>
+
+    <!-- overview fragment -->
+    <string name="ble_status_label">BLE Status</string>
+    <string name="last_connection_label">Last connected</string>
+    <string name="active_bolus_label">Active bolus</string>
+    <string name="pump_state_label">Pump state</string>
+    <string name="active_alarms_label">Active alarms</string>
+    <string name="reservoir_level"> %.2f U</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Basal type</string>
+    <string name="basal_rate_label">Basal rate</string>
+    <string name="current_basal_rate"> %.2f U/h</string>
+    <string name="pump_type_label">Pump type</string>
+    <string name="fw_version_label">FW version</string>
+    <string name="patch_no_label">Patch no</string>
+    <string name="patch_expiry_label">Patch expires</string>
+    <string name="refresh_label">Refresh</string>
+    <string name="reset_alarms_label">Reset alarms</string>
+    <string name="change_patch_label">Change Patch</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
+    <string name="expiry_not_enabled">Not enabled</string>
+
+    <!-- Alarm strings -->
+    <string name="alarm_none">None</string>
+    <string name="alarm_pump_low_battery">Pump low battery</string>
+    <string name="alarm_pump_low_reservoir">Pump low reservoir</string>
+    <string name="alarm_pump_expires_soon">Pump expires soon</string>
+    <string name="alarm_low_bg_suspended">Low BG suspended</string>
+    <string name="alarm_low_bg_suspended2">Low BG suspended 2</string>
+    <string name="alarm_auto_suspended">Auto suspended</string>
+    <string name="alarm_hourly_max_suspended">hourly max suspended</string>
+    <string name="alarm_daily_max_suspended">daily max suspended</string>
+    <string name="alarm_suspended">Suspended</string>
+    <string name="alarm_paused">Paused</string>
+    <string name="alarm_occlusion">Occlusion</string>
+    <string name="alarm_expired">Expired</string>
+    <string name="alarm_reservoir_empty">Reservoir empty</string>
+    <string name="alarm_patch_fault">Patch fault</string>
+    <string name="alarm_patch_fault2">Patch fault 2</string>
+    <string name="alarm_base_fault">Base fault</string>
+    <string name="alarm_battery_out">Battery out</string>
+    <string name="alarm_no_calibration">No calibration</string>
+    <string name="pump_time_update_failed">Failed to update pump timezone, snooze message and refresh manually.</string>
+    <string name="bolus_error">Bolus error</string>
+
+    <!-- wizard-->
+    <string name="retry">Retry</string>
+    <string name="next">Next</string>
+    <string name="discard">Discard</string>
+
+    <string name="step_prepare_patch">Activate Patch</string>
+    <string name="step_prepare_patch_connect">Connect and Fill</string>
+    <string name="step_prime">Prime</string>
+    <string name="step_priming">Priming</string>
+    <string name="step_priming_complete">Priming Complete</string>
+    <string name="step_attach">Attach Patch</string>
+    <string name="step_activate">Activating...</string>
+    <string name="step_activate_complete">Activation Complete</string>
+    <string name="step_deactivate">Deactivate Patch</string>
+    <string name="step_deactivating">Deactivating...</string>
+    <string name="step_deactivate_complete">Patch deactivated</string>
+    <string name="step_retry_activation">Activation in progress</string>
+    <string name="unexpected_state">Unexpected state: %1$s</string>
+    <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
+    <string name="no_sn_in_settings">No serial number known. Please enter pumpbase serial number in settings and try again.</string>
+
+    <string name="base_serial">Pump Base Serial: %1$X</string>
+    <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>
+    <string name="patch_not_active_note">Pump base should not be connected to the patch until the next step!</string>
+    <string name="connect_pump_base">Connect pump base to a new patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
+    <string name="note_min_70_units">Note: A minimum of 70 units is required for activation.</string>
+    <string name="do_not_attach_to_body">Do not attach the patch to the body yet.</string>
+    <string name="half_press_needle">Half-press needle button. Then tap <b>Next</b> to start prime.</string>
+    <string name="wait_for_priming">Please wait for the priming to complete.</string>
+    <string name="priming_error">Failed to prime, press <b>Retry</b> to try again.</string>
+    <string name="press_next">Press <b>Next</b> to continue.</string>
+    <string name="press_next_to_start_activation">Press <b>Next</b> to start activation.</string>
+    <string name="remove_safety_lock">Remove the safety lock. Attach the pump to the body. Press the needle button.</string>
+    <string name="activating_pump">Activating pump and setting initial basal rate. Please Wait.</string>
+    <string name="activating_error">Failed to activate, press <b>Retry</b> to try again.</string>
+    <string name="activating_complete">New patch activated. %.2f Units remaining.</string>
+    <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>
+
+    <string name="deactivate_sure">Are you sure that you want to deactivate the current patch?</string>
+    <string name="cancel_sure">Are you sure that you want to cancel the activation?</string>
+    <string name="medtrum_deactivate_pump_confirm">Are you sure? This action cannot be reversed!!</string>
+    <string name="press_next_or_cancel">Press <b>Next</b> to deactivate or <b>Cancel</b> to return to main screen.</string>
+    <string name="deactivating_pump">Deactivating patch. Please Wait.</string>
+    <string name="deactivating_error">Failed to deactivate, press <b>Discard</b> to forget patch.</string>
+    <string name="retract_needle">Retract needle. Remove patch from body.</string>
+    <string name="remove_base_discard_patch">Remove pump base and dispose of used patch appropriately.</string>
+    <string name="press_next_or_OK">Press <b>OK</b> to return to main screen. Press <b>Next</b> to start activation of new patch.</string>
+
+    <string name="activation_in_progress">Oops! Something went wrong, it seems there is already an activation in progress.</string>
+    <string name="press_retry_or_discard">Press <b>Next</b> to resume the activation or <b>Discard</b> to reset the activation status.</string>
+    <string name="reading_activation_status">Please wait, reading activation status from pump.</string>
+
+    <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Unreachable alert forced enabled, because Medtrum patch can fail and be unreachable.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Advised to set to 30 minutes, because Medtrum patch can fail and be unreachable.</string>
+    <string name="sn_input_title">Serial Number</string>
+    <string name="sn_input_summary">Enter the serial number of your pump base.</string>
+    <string name="sn_input_invalid">Invalid serial number!</string>
+    <string name="pump_unsupported">Pump untested: %1$d! Please contact us at discord or github for support</string>
+    <string name="alarm_setting_title">Alarm Settings</string>
+    <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
+    <string name="pump_warning_notification_title">Notification on pump warning</string>
+    <string name="pump_warning_notification_summary">Show notification on non critical pump warnings: low battery, low reservoir (20 units) and expires soon. Recommended to leave enabled when pump alarms are set to silent.</string>
+    <string name="pump_warning_expiry_hour_title">Pump expiry warning [hours]</string>
+    <string name="pump_warning_expiry_hour_summary">Show notification on specified hour after activation.</string>
+    <string name="patch_expiration_title">Patch Expiration</string>
+    <string name="patch_expiration_summary">When enabled, the patch will expire after 3 days, with a grace period of 8 hours after that.</string>
+    <string name="hourly_max_insulin_title">Hourly Maximum Insulin [Units]</string>
+    <string name="hourly_max_insulin_summary">Specify the maximum units of insulin allowed per hour. If exceeded, the pump will suspend.</string>
+    <string name="daily_max_insulin_title">Daily Maximum Insulin [Units]</string>
+    <string name="daily_max_insulin_summary">Specify the maximum units of insulin allowed per day. If exceeded, the pump will suspend.</string>
+
+    <!-- treatment state-->
+    <string name="getting_pump_status">Getting pump status</string>
+    <string name="getting_bolus_status">Getting bolus status</string>
+    <string name="getting_temp_basal_status">Getting temporary basal status</string>
+    <string name="setting_pump_settings">Setting user options</string>
+
+</resources>

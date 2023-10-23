@@ -11,13 +11,11 @@
     <string name="stop_pump">停止泵</string>
     <string name="started">已启动</string>
     <string name="stopped">已停止</string>
-    <string name="paused">已暂停</string>
     <string name="operating_mode">操作模式</string>
     <string name="description_pump_insight_local">集成Accu-Chek Insight泵</string>
     <string name="not_inserted">未插入</string>
     <string name="tdd_bolus">大剂量日总量</string>
     <string name="tdd_basal">基础日总量</string>
-    <string name="tdd_total">胰岛素输注日总量</string>
     <string name="tbr_formatter">%1$d%% 为 %2$d / %3$d 分钟</string>
     <string name="multiwave_bolus">多波</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U 为 %3$d 分钟</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">握手时超时-重启蓝牙</string>
     <string name="pump_stopped">泵停止了</string>
     <string name="pump_started">泵启动了</string>
-    <string name="pump_paused">泵暂停了</string>
     <string name="short_status_last_connected">最后一次连接: %1$d 分钟前</string>
     <string name="short_status_tbr">临时基础率: %1$d%% for %2$d / %3$d 分钟</string>
     <string name="short_status_extended">扩展: %1$.2f / %2$.2f U 为 %3$d 分钟</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">TDD(日输注总量): %1$.2f</string>
     <string name="short_status_reservoir">储药器： %1$.2f U</string>
     <string name="short_status_battery">电池: %1$d%%</string>
-    <string name="confirm">确认</string>
-    <string name="mute_alert">静音</string>
     <string name="release_software_version">发行软件版本</string>
     <string name="ui_processor_software_version">UI 处理器软件版本</string>
     <string name="pc_processor_software_version">PC 处理器软件版本</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">最小恢复持续时间 [s]</string>
     <string name="pump_alert">泵警报</string>
     <string name="pairing_information">配对信息</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight刷新按钮</string>
 </resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="ageValues" translatable="false">
+        <item>@string/key_child</item>
+        <item>@string/key_teenage</item>
+        <item>@string/key_adult</item>
+        <item>@string/key_resistantadult</item>
+        <item>@string/key_pregnant</item>
+    </string-array>
+
+</resources>

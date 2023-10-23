@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">Gly</string>
+    <string name="executing_right_now">Commande exécutée à l\'instant</string>
+    <string name="basal_value_below_minimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
+    <string name="permission">Autorisation</string>
+    <string name="need_whitelisting">%1$s a besoin d\'être sur la liste blanche de l\'optimisation de la batterie pour des performances correctes</string>
+    <string name="need_location_permission">L\'application a besoin de l\'autorisation de localisation pour l\'analyse BT et l\'identification WiFi</string>
+    <string name="need_storage_permission">L\'application a besoin d\'une autorisation de stockage pour pouvoir stocker les fichiers journaux et les paramètres d\'exportation</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Très bas</string>
+    <string name="low" comment="3.1-3.9">Bas</string>
+    <string name="high" comment="10.0-13.9">Haut</string>
+    <string name="veryHigh" comment="above 13.9">Très haut</string>
+    <string name="below" comment="below &quot;in range&quot;">En-dessous</string>
+    <string name="in_range">Dans la cible</string>
+    <string name="above" comment="above &quot;in range&quot;">Au-dessus</string>
+    <string name="hba1c">HbA1c : </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="detailed_14_days">Détail de 14 jours</string>
+    <string name="day_tir">TIR Jour</string>
+    <string name="night_tir">TIR Nuit</string>
+    <string name="carbs_short" comment="max 6 characters">Gluc.</string>
+</resources>

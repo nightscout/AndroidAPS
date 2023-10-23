@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">24 saat veya daha kısa süre içinde yaz saati değişikliği</string>
+    <string name="dst_loop_disabled_warning">Yaz Saati Uygulaması 3 saatten daha kısa bir süre önce değişti - Kapalı döngü devre dışı</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Dahili depolama biriminden en az %1$d MB yer kaldı! Döngü devre dışı!</string>
+    <!-- Version Checker -->
+    <string name="old_version">eski sürüm</string>
+    <string name="very_old_version">çok eski sürüm</string>
+    <string name="application_expired">Uygulamanın süresi doldu</string>
+    <string name="new_version_warning">Yeni sürüm en az %1$d gündür kontrol edilmedi! %2$d gün sonra LGS\'ye geri dönüş, %3$d gün sonra döngü devre dışı bırakılacak. İnternet bağlantısını yeniden sağlayın!</string>
+    <string name="running_invalid_version">Geçersiz bir sürüm çalıştırdığınızı tespit ettik. Döngü devre dışı!</string>
+    <string name="versionavailable">Sürüm %1$s mevcut</string>
+    <string name="version_expire">%1$s sürümünün süresi %2$s tarihinde sona eriyor</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Kullanılan veriler yeniden hesaplandı</string>
+    <string name="bg_too_close">KŞ çok yakın:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">tekrar hesaplandı</string>
+    <string name="a11y_bg_quality_doubles">çift giriş</string>
+    <string name="a11y_bg_quality_flat">Düz veri. Yanlış kabul edildi</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">%2$s\'den dolayı yayma bolus %1$.1f Ü ile sınırlandırılıyor</string>
+    <string name="limitingcarbs">%2$s\'den dolayı karbonhidratlar %1$d g ile sınırlandırılıyor</string>
+    <string name="pumpisnottempbasalcapable">Pompa geçici bazal özellikli değil</string>
+    <string name="closedmodedisabledinpreferences">Kapalı Döngü tercihlerde devre dışı bırakıldı</string>
+    <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
+    <string name="closed_loop_disabled_with_eb">Yayma bolus çalıştığı için kapalı döngü devre dışı bırakıldı</string>
+    <string name="smbalwaysdisabled">Aktif KŞ kaynağı gelişmiş filtrelemeyi desteklemediği için SMB (Super Micro Bolus) her zaman ve karbonhidratlardan sonra devre dışı bırakıldı</string>
+    <string name="smbnotallowedinopenloopmode">Açık Döngü modunda SMB\'ye (Super Micro Bolus) izin verilmiyor</string>
+    <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
+    <string name="hardlimit">sert sınır</string>
+    <string name="treatmentssafety_title">Tedavi güvenliği</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Tamamlandı, tebrikler!</string>
+    <string name="not_completed_yet">Henüz tamamlanmadı</string>
+    <string name="time_elapsed">Geçen süre</string>
+    <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
+    <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
+    <string name="synchaswritepermission">Senkronizasyon servisi yazma iznine sahip</string>
+    <string name="loopenabled">Döngü etkin</string>
+    <string name="apsselected">APS Seçildi</string>
+    <string name="closedmodeenabled">Kapalı mod etkin</string>
+    <string name="objectives_shortname">GRV</string>
+    <string name="description_objectives">Eğitim programı</string>
+    <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
+    <string name="objectives_next_button">Sonraki</string>
+    <string name="objectives_previous_button">Önceki</string>
+    <string name="objectives_button_unfinish">Bitmiş durumu sıfırla</string>
+    <string name="objectives_button_unstart">Başlatma durumunu sıfırla</string>
+</resources>

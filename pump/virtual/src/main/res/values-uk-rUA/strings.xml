@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <!--    PumpType-->
+    <string name="def_extended_note">В віртуальній помпі тільки дискретні значення підтримуються для налаштування базала/болюса.</string>
+</resources>

@@ -11,13 +11,11 @@
     <string name="stop_pump">Opriți pompa</string>
     <string name="started">Pornit</string>
     <string name="stopped">Oprit</string>
-    <string name="paused">Suspendat</string>
     <string name="operating_mode">Modul de funcționare</string>
     <string name="description_pump_insight_local">Integrare pentru pompele Accu-Chek Insight</string>
     <string name="not_inserted">Nu este introdus</string>
     <string name="tdd_bolus">Bolus TDD</string>
     <string name="tdd_basal">Bazală TDD</string>
-    <string name="tdd_total">Total TDD</string>
     <string name="tbr_formatter">%1$d%% pentru %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus multiwave</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U pentru %3$d min</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">Durată timp expirat pe timpul negocierii - resetare bluetooth</string>
     <string name="pump_stopped">Pompă oprită</string>
     <string name="pump_started">Pompă pornită</string>
-    <string name="pump_paused">Pompă în pauză</string>
     <string name="short_status_last_connected">Ultima conexiune: acum %1$d min</string>
     <string name="short_status_tbr">TBR: %1$d%% pentru %2$d / %3$d min</string>
     <string name="short_status_extended">Extins: %1$.2f / %2$.2f U pentru %3$d min</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Rezervor: %1$.2fU</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Confirmă</string>
-    <string name="mute_alert">Liniște</string>
     <string name="release_software_version">Versiunea de software</string>
     <string name="ui_processor_software_version">Versiunea softwareului procesor UI</string>
     <string name="pc_processor_software_version">Versiunea software procesor PC</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Timpul minim de restabilire [s]</string>
     <string name="pump_alert">Alertă a pompei</string>
     <string name="pairing_information">Informații despre asociere</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Buton Reîmprospătare Insight</string>
 </resources>

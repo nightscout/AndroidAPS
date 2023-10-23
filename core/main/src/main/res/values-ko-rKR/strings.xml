@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="format_carbs">%1$d g</string>
+    <string name="count_selected">%1$d 선택됨</string>
+    <string name="remove_items">항목 제거하기</string>
+    <string name="sort_items">항목 분류하기</string>
+    <string name="remove_selected_items">선택된 항목 제거하기</string>
+    <string name="sort_label">분류</string>
+</resources>

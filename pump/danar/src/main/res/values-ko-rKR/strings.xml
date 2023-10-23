@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsupported_action_in_pump">펌프에서 지원되지 않는 작업입니다. AndroidAPS  UI만 사용하세요!</string>
+</resources>

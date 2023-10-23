@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Pretraži</string>
+    <string name="riley_link_ble_config_scan_stop">Zaustavi</string>
+    <string name="riley_link_ble_config_scan_selected">Odabrano</string>
+    <string name="riley_link_ble_config_scan_scanning">Pretraživanje</string>
+    <string name="riley_link_ble_config_scan_finished">Skeniranje završeno</string>
+    <string name="riley_link_ble_config_scan_error">Pogreška skeniranja: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Nikada</string>
+    <string name="riley_link_ble_config_remove_riley_link">Ukloniti</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Postavke</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_pump_serial_number">Serijski broj pumpe:</string>
+    <string name="rileylink_pump_frequency">Frekventno područje pumpe:</string>
+    <!-- RL State -->
+    <string name="rileylink_state_connected">Povezano</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_bt_disabled">Bluetooth onemogućen</string>
+    <string name="rileylink_error_no_bt_adapter">Nema Bluetooth adaptera</string>
+    <string name="rileylink_error_pump_unreachable">Pumpa nedostupna</string>
+    <!-- RileyLink - Common -->
+    <!-- RileyLink - Preferences -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dan</item>
+        <item quantity="few">%1$d dana</item>
+        <item quantity="other">%1$d dana</item>
+    </plurals>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Typ pompy wirtualnej</string>
+    <string name="virtual_pump_definition">Definicja Pompy</string>
+    <string name="virtual_pump_pump_def">Bolus: dawka =%1$s\nBolus Przedłużony: [krok =%2$s, czas trwania =%3$smin -%4$sh] \nBaza: dawka =%5$s\nTBR: %6$s (przez %7$s), czas trwania =%8$smin -%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUMP</string>
+    <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
+    <string name="virtual_pump_label">POMPA WIRTUALNA</string>
+    <string name="virtualpump_settings">Ustawienia pompy wirtualnej</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">*Tylko wartości dyskretne, a nie zakresy są wspierane jako dawki bazowe/bolusy w pompie wirtualnej.</string>
+</resources>

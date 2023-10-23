@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">Glykémia</string>
+    <string name="executing_right_now">Príkaz sa práve vykonáva</string>
+    <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimom. Profil nenastavený!</string>
+    <string name="permission">Povolenie</string>
+    <string name="need_whitelisting">%1$s potrebuje vypnúť optimalizáciu batérie pre optimálny výkon</string>
+    <string name="need_location_permission">Aplikácia vyžaduje oprávnenie polohy, pre vyhľadávanie BT a identifikáciu WiFi</string>
+    <string name="need_storage_permission">Aby bolo možné nahrávať logy a exportovať nastavenia, je nutné pre aplikáciu povoliť oprávnenie prístupu k úložisku</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Veľmi nízka</string>
+    <string name="low" comment="3.1-3.9">Nízka</string>
+    <string name="high" comment="10.0-13.9">Vysoká</string>
+    <string name="veryHigh" comment="above 13.9">Veľmi vysoká</string>
+    <string name="below" comment="below &quot;in range&quot;">Nižšie</string>
+    <string name="in_range">V rozsahu</string>
+    <string name="above" comment="above &quot;in range&quot;">Vyššie</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="detailed_14_days">Podrobne 14 dní</string>
+    <string name="day_tir">Denný TIR</string>
+    <string name="night_tir">Nočný TIR</string>
+    <string name="carbs_short" comment="max 6 characters">Sach</string>
+</resources>

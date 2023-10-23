@@ -105,10 +105,11 @@ public abstract class SatlMessage {
         if (packetLength != packetLengthXOR) throw new InvalidPacketLengthsException();
         if (version != VERSION) throw new IncompatibleSatlVersionException();
         if (clazz == null) throw new InvalidSatlCommandException();
-        SatlMessage message = null;
+        SatlMessage message;
         try {
-            message = clazz.newInstance();
+            message = clazz.getDeclaredConstructor().newInstance();
         } catch (Exception ignored) {
+            throw new IllegalArgumentException();
         }
         message.parse(ByteBuf.from(payload));
         message.setNonce(parsedNonce);
@@ -135,10 +136,11 @@ public abstract class SatlMessage {
         if (packetLength != packetLengthXOR) throw new InvalidPacketLengthsException();
         if (version != VERSION) throw new IncompatibleSatlVersionException();
         if (clazz == null) throw new InvalidSatlCommandException();
-        SatlMessage message = null;
+        SatlMessage message;
         try {
-            message = clazz.newInstance();
+            message = clazz.getDeclaredConstructor().newInstance();
         } catch (Exception ignored) {
+            throw new IllegalArgumentException();
         }
         message.parse(ByteBuf.from(payload));
         message.setNonce(Nonce.fromProductionalBytes(nonce));

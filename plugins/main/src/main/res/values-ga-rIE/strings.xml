@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_loop_has_been_disabled">Is lúb díchumasaithe</string>
+    <string name="smscommunicator_loop_has_been_enabled">Is lúb cumasaithe</string>
+    <string name="smscommunicator_loop_is_enabled">Is lúb cumasaithe</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Cealú TBR teip</string>
+    <string name="smscommunicator_loop_suspended">Lúb ar fionraí</string>
+    <string name="smscommunicator_loop_resumed">Lúb atógáil</string>
+    <string name="sms_actual_bg">BG:</string>
+    <string name="sms_last_bg">GF deiridh:</string>
+    <string name="sms_delta">Deilte:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bólas:</string>
+    <string name="sms_basal">Bunaidh:</string>
+    <string name="sms_min_ago">%1$dnóim ó shin</string>
+    <string name="sms_loop_suspended_for">Ar fionraí (%1$d nóim)</string>
+    <string name="disabled_loop">Lúb díchumasaithe</string>
+    <!-- Food-->
+    <string name="food_short">Bia</string>
+    <string name="food">Bia</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_fat">Saill</string>
+    <string name="category">Catagóir</string>
+    <string name="calculator_label">Áireamhán</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile">Próifíl</string>
+    <string name="units_colon">Aonaid:</string>
+    <string name="errors">Earráidí</string>
+    <string name="profile_name">Ainm Próifíle:</string>
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BUN</string>
+    <!-- Actions -->
+    <string name="actions">Gníomhartha</string>
+    <string name="actions_shortname">GNÍ</string>
+    <string name="sensor_label">Braiteoir</string>
+    <string name="age_label">aois:</string>
+    <string name="insulin_label">Inslin</string>
+    <string name="pb_label">Caidéil ceallraí</string>
+    <!-- Overview -->
+    <string name="a11y_insulin_label">inslin</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="overview_shortname">BAILE</string>
+    <string name="overview_buttons_selection">Cnaipi</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="treatments">Cóireálacha</string>
+    <string name="cgm">CGM</string>
+    <string name="activity_duration">Gníomhaíocht fad</string>
+    <string name="activity_target">Gníomhaíocht sprioc</string>
+    <string name="button1">Cnaipe 1</string>
+    <string name="button2">Cnaipe 2</string>
+    <string name="button3">Cnaipe 3</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_treatments">Cóireálacha</string>
+    <string name="overview_show_activity">Gníomhaíocht</string>
+    <string name="overview_show_basals">Bunaidhi</string>
+    <string name="basal_shortname">BUN</string>
+    <string name="activity_shortname">GNÍ</string>
+    <!-- Skins -->
+    <!--    Iob-->
+    <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
+    <string name="wear_general_settings">Socruithe Ginearálta</string>
+    <!--    PersistentNotification-->
+</resources>

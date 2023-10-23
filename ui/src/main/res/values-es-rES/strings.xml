@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Restricción aplicada en bolo</string>
+    <string name="carbs_constraint_applied">Restricción aplicada en carbohidratos</string>
+    <string name="temp_target_short">OT</string>
+    <string name="dialog_canceled">Diálogo cancelado</string>
+    <string name="start_activity_tt">Iniciar OT Actividad</string>
+    <string name="start_eating_soon_tt">Iniciar OT Comiendo Pronto</string>
+    <string name="start_hypo_tt">Iniciar OT Hipo</string>
+    <string name="time_offset">Retardo</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Recordar ejecutar el bolo más tarde</string>
+    <string name="a11y_carb_reminder">establecer recordatorio</string>
+    <!--    Widget-->
+    <string name="configure">Configurar la opacidad</string>
+    <string name="widget_description">Widget de AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Monitor de actividad</string>
+    <string name="do_you_want_reset_stats">¿Desea restablecer las estadísticas de actividad?</string>
+    <string name="do_you_want_reset_tdd_stats">¿Desea restablecer las estadísticas de TDD?</string>
+    <string name="statistics">Estadísticas</string>
+    <string name="calculation_in_progress">Cálculo en curso</string>
+    <string name="invalid_age">Entrada de edad no válida</string>
+    <string name="invalid_weight">Entrada de peso no válida</string>
+    <string name="id">ID:</string>
+    <string name="submit">Enviar</string>
+    <string name="age">Edad</string>
+    <string name="weight_label">Peso</string>
+    <string name="most_common_profile">Perfil más común:</string>
+    <string name="survey_comment">Nota: Sólo los datos visibles en esta pantalla se subirán de forma anónima. El ID es asignado a la instalación de AAPS. Puedes volver a enviar datos si cambias tu perfil principal, pero deja que se ejecute al menos durante una semana, para que el resultado del tiempo en rango sea visible. Agradecemos tu ayuda.</string>
+    <string name="glucose_type">Tipo de glucosa</string>
+    <string name="bg_other">Otro</string>
+    <string name="bg_meter">Medidor de glucosa</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Por favor, asegúrate de que la cantidad coincide con la especificada en el set de infusión!</string>
+    <string name="record_pump_site_change">Anotar el cambio de sitio de la bomba</string>
+    <string name="record_insulin_cartridge_change">Anotar cambio del cartucho de insulina</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">No administrar bolo, sólo anotarlo</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Reutilizar %1$d%% %2$dh</string>
+    <string name="timeshift_label">Cambio de hora</string>
+    <string name="percentage_label">Porcentaje</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
+    <string name="suspendloopfor2h">Suspender lazo durante 2 horas</string>
+    <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
+    <string name="suspendloopfor10h">Suspender bucle durante 10 horas</string>
+    <string name="disconnectpump">Desconectar bomba</string>
+    <string name="disconnectpumpfor15m">Desconectar la bomba durante 15 minutos</string>
+    <string name="disconnectpumpfor30m">Desconectar la bomba durante 30 minutos</string>
+    <string name="disconnectpumpfor1h">Desconectar la bomba durante 1 hora</string>
+    <string name="disconnectpumpfor2h">Desconectar la bomba durante 2 horas</string>
+    <string name="disconnectpumpfor3h">Desconectar la bomba durante 3 horas</string>
+    <string name="resume">Resumir</string>
+    <string name="reconnect">Vuelva a conectar la bomba</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 hora</string>
+    <string name="duration2h">2 horas</string>
+    <string name="duration3h">3 horas</string>
+    <string name="duration10h">10 horas</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">corregir resultado con %</string>
+    <string name="a11_correction_units">corregir resultado con unidades</string>
+    <string name="two_hours">2h</string>
+    <string name="result_insulin_carbs">Resultado: %1$s %2$s</string>
+    <string name="missing_carbs">Faltan %1$d g</string>
+    <string name="a11y_current_bg">glucosa en sangre actual</string>
+    <string name="carb_time_label">Tiempo de absorción</string>
+    <string name="a11y_set_carb_timer">establecer alarma de carbohidratos</string>
+    <string name="show_calculation">Mostrar cálculo</string>
+    <!-- Treatments -->
+    <string name="no_records_available">No hay registros disponibles</string>
+    <string name="calculation_short">Cálculo</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">Carbohidratos:</string>
+    <string name="treatments_iobtotal_label_string">IOB total:</string>
+    <string name="treatments_iob_activity_total_label_string">Actividad IOB:</string>
+    <string name="tempbasals_realduration_label_string">Duración:</string>
+    <string name="tempbasals_netratio_label_string">Relación:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Corrección</string>
+    <string name="meal_bolus">Comida</string>
+    <string name="prime">Cebar</string>
+    <string name="profile_changes">Cambios en el perfil</string>
+    <string name="tempt_targets">Objetivos temporales</string>
+    <string name="carbs_and_bolus">Carbohidratos y bolos</string>
+    <string name="show_invalidated_records">Mostrar registros eliminados o invalidados</string>
+    <string name="hide_invalidated_records">Ocultar registros eliminados o invalidados</string>
+    <string name="refresh_from_nightscout">Actualizar de Nightscout</string>
+    <string name="refresheventsfromnightscout">Actualizar desde Nightscout</string>
+    <string name="show_invalidated">Mostrar invalidados</string>
+    <string name="hide_invalidated">Ocultar invalidados</string>
+    <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
+    <string name="hide_loop">Ocultar lazo</string>
+    <string name="show_loop">Mostrar lazo</string>
+    <string name="user_entry">Registro por parte del usuario</string>
+    <string name="clone_label">Duplicar</string>
+    <string name="show_loop_records">Mostrar registros del lazo</string>
+    <string name="show_hide_records">Ocultar registros del lazo</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Perfil 1</string>
+    <string name="profile2">Perfil 2</string>
+    <string name="profile_type">Tipo de perfil</string>
+    <string name="basal_pct_from_tdd_label">% de basal</string>
+    <string name="selected_profile">Seleccionado:</string>
+    <string name="compare_profile">Comparar perfiles</string>
+    <string name="nav_profile_helper">Asistente de perfil</string>
+    <string name="motol_default_profile">Perfil predeterminado</string>
+    <string name="current_profile">Perfil actual</string>
+    <string name="available_profile">Perfil disponible</string>
+    <string name="format_with_tdd">Edad: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Edad: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Edad: %1$d Peso: %2$.0f kg</string>
+    <string name="dpv_default_profile">Perfil DPV por defecto</string>
+    <string name="invalid_pct">Entrada % inválida</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Tasa basal</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">DETENER PRESIONADO</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">sólo en reloj</string>
+    <string name="a11y_only_on_phone">sólo en teléfono</string>
+    <string name="quickwizard_settings">Configuración del asistente de configuración</string>
+    <string name="overview_edit_quickwizard_button_text">Texto del botón:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbohidratos:</string>
+    <string name="overview_edit_quickwizard_valid">Válido:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Añadir</string>
+    <string name="overview_quickwizard_item_edit_button">Editar</string>
+    <string name="overview_edit_quickwizard_show_on_device">Mostrar entrada en dispositivo:</string>
+    <string name="overview_edit_quickwizard_use_bg">Cálculo de glucosa</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Cálculo del bolo IOB</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Cálculo de basal IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Cálculo de tendencia</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Cálculo de superbolo</string>
+    <string name="overview_edit_quickwizard_percentage">Porcentaje</string>
+    <string name="device_all">Todo</string>
+    <string name="device_phone">Teléfono</string>
+    <string name="device_watch">Reloj</string>
+    <string name="positive_only">Sólo positivo</string>
+    <string name="negative_only">Sólo negativo</string>
+    <string name="overview_editquickwizard_usecob">Cálculo COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Cálculo de objetivo temporal</string>
+    <string name="overview_editquickwizard_usepercentage">Cálculo de porcentaje</string>
+    <string name="app_default">Aplicación por defecto</string>
+    <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
+</resources>

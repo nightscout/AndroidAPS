@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Тип виртуальной помпы</string>
+    <string name="virtual_pump_definition">Определение помпы</string>
+    <string name="virtual_pump_pump_def">Болюс: Шаг =%1$s\n Пролонгированный Болюс: [Шаг =%2$s, Продолжительность =%3$sмин -%4$sh] \nБазал: Шаг =%5$s\n ВБС: %6$s (на %7$s), Продолжительность =%8$sмин -%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">ВиртПомпа</string>
+    <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
+    <string name="virtual_pump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
+    <string name="virtualpump_settings">настройки вирт помпы</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
+</resources>

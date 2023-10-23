@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">Glucemia</string>
+    <string name="executing_right_now">El comando se está ejecutando en este momento</string>
+    <string name="basal_value_below_minimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
+    <string name="permission">Permiso</string>
+    <string name="need_whitelisting">%1$s necesita añadir la optimización de la batería a la lista blanca, para obtener un rendimiento adecuado</string>
+    <string name="need_location_permission">La aplicación necesita permiso de ubicación para poder buscar dispositivos Bluetooth y redes WiFi</string>
+    <string name="need_storage_permission">La aplicación necesita permiso de almacenamiento para poder almacenar los archivos de registro y exportar las configuraciones</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Muy bajo</string>
+    <string name="low" comment="3.1-3.9">Bajo</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
+    <string name="veryHigh" comment="above 13.9">Muy alto</string>
+    <string name="below" comment="below &quot;in range&quot;">Por debajo de</string>
+    <string name="in_range">En rango</string>
+    <string name="above" comment="above &quot;in range&quot;">Por encima de</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">Desviación estándar: %1$s</string>
+    <string name="detailed_14_days">Datos detallados de 14 días</string>
+    <string name="day_tir">TIR Diurno</string>
+    <string name="night_tir">TIR Nocturno</string>
+    <string name="carbs_short" comment="max 6 characters">Carbohidratos</string>
+</resources>

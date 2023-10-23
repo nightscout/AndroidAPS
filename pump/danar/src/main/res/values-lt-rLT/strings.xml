@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsupported_action_in_pump">Nepalaikomas veiksmas pompoje. Naudokite tik AndroidAPS vartotojo sąsają!</string>
+</resources>

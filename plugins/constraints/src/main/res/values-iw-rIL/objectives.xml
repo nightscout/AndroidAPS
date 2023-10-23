@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">התחל</string>
+    <string name="objectives_button_verify">סיום</string>
+    <string name="nth_objective">%1$d. משימה</string>
+    <string name="objectivenotstarted">מטרה %1$d לא החלה</string>
+    <string name="objectivenotfinished">משימה %1$d לא בוצעה במלואה</string>
+    <string name="objectives_0_objective">מגדיר ויזואליזציה, ניטור, נתוח של מינון בזאלי ויחסים</string>
+    <string name="objectives_0_gate">ודא כי רמת סוכר זמינה ב- Nightscout, ושנתוני האינסולין מהמשאבה נשלחים</string>
+    <string name="objectives_0_learned">ביצעתם הגדרה בסיסית של מערכת AAPS. נייטסקאוט אינו הכרחי להפעלת AAPS, אך הוא שימושי מאוד לדיווח או לניטור של חולים אחרים. אין חובה להיות מחובר לנייטסקאוט כל הזמן אם אתם משתמשים בו רק עבור עצמכם. אתם יכולים למשל להגדיר העלאה רק ב-wifi הביתי כדי לחסוך בסוללה.</string>
+    <string name="objectives_openloop_objective">התחלה עם לולאה פתוחה</string>
+    <string name="objectives_openloop_gate">השתמשו במצב לולאה פתוחה במשך מס\' ימים וקבעו באופן ידני מספר רב של מינונים בזאליים זמניים. הגדירו והשתמשו במטרות זמניות ובמטרות ברירת מחדל (לדוגמא פעילות גופנית, או מתן פחמימות בהיפו)</string>
+    <string name="objectives_openloop_learned">לולאה פתוחה יכולה להמליץ על הטיפול אם אין ברשתכם משאבה תואמת או אם אתם עוד לא מוכנים ללולאה סגורה.</string>
+    <string name="objectives_maxbasal_objective">הבנה של הלולאה הפתוחה שלך, לרבות הבזאלים הזמניים וההמלצות</string>
+    <string name="objectives_maxbasal_gate">בהתבסס על ניסיון זה, קבעו את הערך הבזאלי המקסימלי והגדירו אותו במשאבה</string>
+    <string name="objectives_maxbasal_learned">קחו בחשבון את אמצעי הבטיחות והתאימו את ערכי משתני הבטיחות במקרה הצורך.</string>
+    <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה עם השהיה עקב רמת גלוקוז נמוכה</string>
+    <string name="objectives_maxiobzero_gate">השתמשו בלולאה סגורה עם ערך IOB מקסימלי = 0 למשך מספר ימים, עם כמה שפחות ארועי השהיה עקב גלוקוז נמוך (LGS)</string>
+    <string name="objectives_maxiobzero_learned">איפוס ה-MaxIOB פועל למניעת היפוגליקמיה ולא יוסיף אינסולין מעל המינון בזאלי הקבוע בפרופיל (למעט במצב עם אינסולין פעיל שלילי)</string>
+    <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
+    <string name="objectives_maxiob_gate">לפני הורדת ערך רמת הסוכר, הפעילו במשך מס\' ימים, עם לפחות לילה אחד ללא התרעת רמת סוכר נמוכה</string>
+    <string name="objectives_maxiob_learned">עדכנו את MaxIOB ככל שהילד\ה המטופל\ת גדל\ה. אל תאפשרו למערכת להזריק יותר אינסולין ממה שאפשר לכסות ע\"י מזון = ערך גבוה מאוד הוא רעיון רע.</string>
+    <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
+    <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך שעות היום, עם רישום ערכי פחמימות בקביעות</string>
+    <string name="objectives_autosens_learned">אם תוצאת הזיהוי האוטומטי שלכם לא מתנודדת סביב 100%, כנראה שהפרופיל טעון שיפור.</string>
+    <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
+    <string name="objectives_smb_gate">חובה לקרוא את הויקי ולהעלות את ערך האינסולין הפעיל המרבי (maxIOB) כדי להפעיל את ה- SMB כראוי. התחלה טובה תהיה maxIOB=בולוס ארוחה טיפוסי + 3 פעמים ערך הבזאלי המקסימלי ביממה</string>
+    <string name="objectives_smb_learned">שימוש ב-SMB הוא המטרה שלכם. אלגוריתם Oref1 תוכנן לעזור גם עם הבולוסים שלכם. אתם לא צריכים להזריק בולוס מלא למזון שלכם אלא רק על חלק ממנו ולתת ל-AAPS לטפל בשאר במידת הצורך. כך קל יותר להכיל טעויות בספירת פחמימות. הידעתם שאפשר להגדיר אחוז מתוצאת מחשבון הבולוס כדי להקטין את גודל הבולוס?</string>
+    <string name="objectives_dyn_isf_objective">הפעלת פונקציות נוספות לשימוש במשך היום כמו לדוגמה, רגישות דינאמית</string>
+    <string name="objectives_dyn_isf_gate">וודאו ש-SMB פועל היטב. הפעילו את הרגישות הדינאמית ומצאו את הכיול המתאים לגופכם. מטעמי בטיחות מומלץ להתחיל עם ערך הקטן מ-100%.</string>
+    <string name="objectives_dyn_isf_learned">הרגישות הדינאמית מתבססת על הרעיון שהזרקת האינסולין ורמת הסוכר משפיעות על הרגישות בפועל. הרגישות הדינאמית יכולה להתאים בשבילכם את יחס התיקון (ISF) בו האלגוריתם משתמש.</string>
+    <string name="objectives_auto_objective">הפעלת אוטומציה</string>
+    <string name="objectives_auto_gate">קראו את המסמכים על אופן הפעולה של אוטומציות. הגדירו את התנאים הפשוטים הראשונים שלכם. במקום פעולה תנו ל-AAPS להציג הודעה בלבד. כאשר אתם בטוחים שהאוטומציה מופעלת בזמן הנכון, החליפו את ההודעה בפעולה אמיתית. (https://wiki.aaps.app/he/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">אוטומציה יכולה להיות משרת טוב אבל אדון רע. אל תשתמשו בהן יתר על המידה. אל תנסו להחליף את האלגוריתם הבסיסי. בדקו את התנאי של האוטומציה עם הודעה לפני השימוש.</string>
+    <string name="objectives_bgavailableinns">נתוני הסוכר זמינים בנייטסקאוט או ב-Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">סטטוס המשאבה זמין בנייטסקאוט או ב-Tidepool</string>
+    <string name="objectives_manualenacts">קביעות ידניות</string>
+    <string name="accomplished">הושלמו: %1$s</string>
+    <string name="objectives_usage_objective">למדו כיצד לשלוט ב-AndoridAPS</string>
+    <string name="objectives_usage_gate">בצעו פעולות שונות ב-AndroidAPS</string>
+    <string name="objectives_usage_learned">למדתם איך להתמודד עם היסודות של AAPS. השליטה העיקרית היא מתוך מסך סקירה כללית והיא נגישה בלחיצה או בלחיצה ארוכה, פקודות נוספות נמצאות במסך הפעולות. עליכם לדעת איך לשים לשונית של תוסף בתפריט העליון שאותו ניתן לגלול או שיופיע ברשימה הימינית העליונה של תוספים מופעלים.</string>
+    <string name="objectives_useprofileswitch">הגדירו פרופיל 90% למשך 10 דקות (לחיצה ארוכה על שם הפרופיל במסך הסקירה הכללית)</string>
+    <string name="objectives_usedisconnectpump">דמו מקלחת. הגדירו ניתוק משאבה במשך שעה אחת (לחיצה ארוכה על לולאה פתוחה)</string>
+    <string name="objectives_usereconnectpump">... והתחברו מחדש באותה הדרך</string>
+    <string name="objectives_usetemptarget">צרו ערך מטרה זמני מותאם אישית במשך 10 דקות (לחיצה ארוכה על ערך המטרה הנוכחי)</string>
+    <string name="objectives_useactions">ב-בונה התצורה יש להפעיל את תוסף הפעולות, להפוך אותו לגלוי ולהציג את תוכנו בתפריט העליון</string>
+    <string name="objectives_useloop">הצג תוכן של תוסף לולאה</string>
+    <string name="objectives_usescale">השתמשו בפונקציית קנה המידה ע\"י לחיצה ארוכה על תרשים הסוכר</string>
+    <string name="objectives_exam_objective">הוכיחו את הידע שלכם\\ן</string>
+    <string name="objectives_exam_gate">למדו לקראת מענה על השאלות.  קיימות ארבע תשובות אפשריות לכל שאלה. ייתכן שיש יותר מתשובה נכונה אחת. בחרו את כל התשובות הנכונות ובחרו אישור.</string>
+    <string name="objectives_exam_learned_prerequisites">לא צריכים להיות מפתחי תוכנה אבל אתם צריכים מחשב כדי לבנות AAPS בפעם הראשונה ולביצוע כל עדכון, דרושה משאבה תואמת וצריכים נייטסקאוט כדי לעבור משימות.</string>
+    <string name="objectives_exam_learned_prerequisites2">ניתן להפעיל ולהשתמש ב-AASP ללא אינטרנט.</string>
+    <string name="objectives_exam_learned_basaltest">יש לבדוק ולעדכן את הפרופיל. פרופיל טוב יותר = תוצאות טובות יותר.</string>
+    <string name="objectives_exam_learned_dia">למשך פעילות האינסולין בשומוש בלופ יש משמעות שונה (זמן בו שכל האינסולין נספג) מאשר בטיפול במשאבות קלאסי (זמן עד שרוב האינסולין נספג).</string>
+    <string name="objectives_exam_learned_isf">למדתם את משמעות הערך ISF וכיצד הוא משפיע על כמות האינסולין המשמשת לתיקון הסוכר בדם.</string>
+    <string name="objectives_exam_learned_ic">למדתם את משמעות הערך IC וכיצד הוא משפיע על כמות האינסולין הדרושה לכיסוי פחמימות.</string>
+    <string name="objectives_exam_learned_hypott">ערך מטרה זמני היפו משמש רק כדי למנוע תיקון ביתר לאחר היפו, כאשר בדרך כלל יש אינסולין פעיל שלילי שהצטבר. יש לשקול לבצע פעולות נוספות כדי למנוע מצב כזה בעתיד.</string>
+    <string name="objectives_exam_learned_profileswitch">השימוש באחוז אינו משפיע על ערכי המטרה של הסוכר, אבל כן משפיע על המינונים הבזאליים, על ה-ISF ועל ה-IC כך שיוזרק יותר אינסולין (מעל 100%%) או פחות אינסולין (מתחת ל-100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">על ידי שימוש בהיסט זמן בהחלפת הפרופיל, אתם יכולים להתאים את הפרופיל הצירקדי לאי סדרים כמו השכמה מאוחרת.</string>
+    <string name="objectives_exam_learned_profileswitch4">עריכת הפרופיל עצמו אינה מספיקה כדי לבצע שינוי. אתם עדיין צריכים לבצע החלפת פרופיל כדי להפעיל שינויים.</string>
+    <string name="objectives_exam_learned_exercise">עליכם להפחית את כמות האינסולין בגוף לפחות שעה אחת לפני תחילת האימון על ידי בחירת פרופיל מתחת ל-100%.</string>
+    <string name="objectives_exam_learned_exercise2">הגדרת ערך מטרה זמני גבוה יותר לפחות שעה אחת לפני האימון גם היא מסייעת בהפחתת כמות האינסולין בגוף.</string>
+    <string name="objectives_exam_learned_noisycgm">כאשר אינכם יכולים לסמוך על ערכי הסנסור, אל תשתמשו בלולאה ללא השגחה.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">חובה על AAPS לדעת שהמשאבה אינה מחוברת כדי לספור כראוי את האינסולין הפעיל.</string>
+    <string name="objectives_exam_learned_insulin">יש צורך ליידע איזה סוג אינסולין נמצא במשאבה מכיוון שהוא משפיע על חישוב האינסולין הפעיל.</string>
+    <string name="objectives_exam_learned_sensitivity">זיהוי רגישות הוא חלק מהאלגוריתם המאפשר להתאים את מינון האינסולין למצבים שונים.</string>
+    <string name="objectives_exam_learned_objectives">ההתקדמות שלכם במשימות מאוחסנת יחד עם הגדרות אחרות ויש לבצע לה גיבויים.</string>
+    <string name="objectives_exam_learned_objectives2">שמרו תמיד את ההגדרות המיוצאות ואת קובץ ה-APK מחוץ לטלפון. טלפון יכול ללכת לאיבוד, להינזק וכו\'. מקום טוב יכול להיות כל ענן שנגיש מהטלפון. במקרה זה תוכלו לשחזר את AAPS במכשיר אחר תוך מספר דקות. מומלץ לאחסן גם את הסיסמה הראשית במקום בטוח. בלעדיה הגיבוי חסר תועלת. אותו הדבר תקף עבור מפתחות חתימה (קובץ jks) וסיסמאות המשמשות לבניית AAPS. השאר לא קריטי - אפשר להוריד אותו שוב מהאינטרנט בכל עת.</string>
+    <string name="objectives_exam_learned_wrongcarbs">אם הזנתם נתונים שגויים ל-AAPS או שהוא לא תואם את המציאות, יש לפתור זאת בהקדם האפשרי. זה עלול להוביל למינון יתר. יש ליידע את AAPS תמיד בצורה הטובה ביותר לגבי פחמימות, אינסולין וכו\'.</string>
+    <string name="objectives_exam_learned_iob">אם תנתח האם AAPS עובד טוב, צפייה בגרף האינסולין הפעיל יכולה לתת הרבה מידע שימושי.</string>
+    <string name="objectives_exam_learned_cob">חישוב פחמימות פעילות תלוי ביחס שבין יחס הפחמימות (IC) ויחס התיקון (ISF). העלאת ISF או הורדת IC יביאו להארכת משך ספיגת הפחמימות. החלפת הפרופיל באחוזים משנה את שני היחסים בו זמנית ולכן משך הספיגה אינו מושפע.</string>
+    <string name="objectives_exam_learned_breadgrams">הזנת פחמימות היא בגרמים בלבד.</string>
+    <string name="objectives_exam_learned_ecarbs">פחמימות ממושכות הן תחליף לבולוס מושהה בעולם המשאבות.</string>
+    <string name="objectives_exam_learned_nsclient">ניטור ושליטה מרחוק אפשריים אך לא כל התכונות חייבות להיות זמינות מרחוק.</string>
+    <string name="answerdisabledto">לא ניתן לענות עד: %1$s</string>
+    <string name="wronganswer">תשובה שגויה!</string>
+    <string name="unfinshed_button">הבא שלא נענה</string>
+    <string name="requestcode">בקשת קוד: %1$s</string>
+    <string name="objectives_hint">(סמנו את כל התשובות הנכונות)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/he/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/he/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/he/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/he/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">אין חיבור לאינטרנט</string>
+    <string name="failedretrievetime">אחזור השעה נכשל</string>
+    <string name="requirementnotmet">דרישות המשימה לא נענו</string>
+    <string name="what_i_ve_learned">מה שלמדתי:</string>
+</resources>

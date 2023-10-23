@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="menu_wizard">Kalkulator</string>
+    <string name="menu_treatment">Tretman</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Uglj. hidrati</string>
+    <string name="action_duration">Trajanje</string>
+    <string name="action_carbs">Uglj. hidrati</string>
+    <string name="action_insulin">Insulin</string>
+    <string name="action_bolus">Bolus</string>
+    <string name="status_pump">Pumpa</string>
+    <string name="status_loop">Loop</string>
+    <string name="activity_IOB">IOB</string>
+</resources>

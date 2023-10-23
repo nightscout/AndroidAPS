@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Bolus constraint applied</string>
+    <string name="carbs_constraint_applied">Carbs constraint applied</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog canceled</string>
+    <string name="start_activity_tt">Start Activity TT</string>
+    <string name="start_eating_soon_tt">Start Eating soon TT</string>
+    <string name="start_hypo_tt">Start Hypo TT</string>
+    <string name="time_offset">Time offset</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Remind to bolus later</string>
+
+    <string name="a11y_carb_reminder">set reminder</string>
+
+    <!--    Widget-->
+    <string name="configure">Configure opacity</string>
+    <string name="widget_description">AAPS widget</string>
+
+    <!--     Activities-->
+    <string name="activity_monitor">Activity monitor</string>
+    <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
+    <string name="do_you_want_reset_tdd_stats">Do you want to reset TDD stats?</string>
+    <string name="statistics">Statistics</string>
+    <string name="calculation_in_progress">Calculation in progress</string>
+    <string name="invalid_age">Invalid age entry</string>
+    <string name="invalid_weight">Invalid weight entry</string>
+    <string name="id">ID:</string>
+    <string name="submit">Submit</string>
+    <string name="age">Age</string>
+    <string name="weight_label">Weight</string>
+    <string name="most_common_profile">Most common profile:</string>
+    <string name="survey_comment">Note: Only data visible on this screen will be anonymously uploaded. ID is assigned to this installation of AAPS. You can submit data again if your main profile get changed but let it running at least for a week to make result visible in time in range. Your help is appreciated.</string>
+
+
+    <string name="glucose_type">Glucose type</string>
+    <string name="bg_other">Other</string>
+    <string name="bg_meter">Meter</string>
+    <string name="bg_sensor">Sensor</string>
+
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Total</string>
+
+    <!-- FillDialog -->
+    <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
+    <string name="record_pump_site_change">Record pump site change</string>
+    <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
+
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Do not bolus, record only</string>
+
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Reuse %1$d%% %2$dh</string>
+    <string name="timeshift_label">Time shift</string>
+    <string name="percentage_label">Percentage</string>
+
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Suspend loop for 1h</string>
+    <string name="suspendloopfor2h">Suspend loop for 2h</string>
+    <string name="suspendloopfor3h">Suspend loop for 3h</string>
+    <string name="suspendloopfor10h">Suspend loop for 10 h</string>
+    <string name="disconnectpump">Disconnect pump</string>
+    <string name="disconnectpumpfor15m">Disconnect pump for 15 min</string>
+    <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
+    <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
+    <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
+    <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
+    <string name="resume">Resume</string>
+    <string name="reconnect">Reconnect Pump</string>
+    <string name="duration15m">15 mins</string>
+    <string name="duration30m">30 mins</string>
+    <string name="duration1h">1 hour</string>
+    <string name="duration2h">2 hours</string>
+    <string name="duration3h">3 hours</string>
+    <string name="duration10h">10 hours</string>
+
+    <!-- WizardDialog -->
+    <string name="key_wizard_calculation_visible" translatable="false">wizard_calculation_visible</string>
+    <string name="key_wizard_correction_percent" translatable="false">wizard_correction_percent</string>
+    <string name="key_wizard_include_cob" translatable="false">wizard_include_cob</string>
+    <string name="key_wizard_include_trend_bg" translatable="false">wizard_include_trend_bg</string>
+
+    <string name="a11_correction_percentage">correct outcome with %</string>
+    <string name="a11_correction_units">correct outcome with units</string>
+    <string name="two_hours">2h</string>
+    <string name="result_insulin_carbs">Result: %1$s %2$s</string>
+    <string name="missing_carbs">Missing %1$d g</string>
+    <string name="a11y_current_bg">current blood glucose</string>
+    <string name="carb_time_label">Carb time</string>
+    <string name="a11y_set_carb_timer">set carb timer alarm</string>
+    <string name="show_calculation">Show calcuation</string>
+
+    <!-- Treatments -->
+    <string name="no_records_available">No records available</string>
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulin:</string>
+    <string name="treatments_carbs_label_string">Carbs:</string>
+    <string name="treatments_iobtotal_label_string">Total IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Total IOB activity:</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="meal_bolus">Meal</string>
+    <string name="prime">Prime</string>
+    <string name="profile_changes">Profile changes</string>
+    <string name="tempt_targets">Temp Targets</string>
+    <string name="carbs_and_bolus">Carbs and bolus</string>
+    <string name="show_invalidated_records">Show invalidated / removed records</string>
+    <string name="hide_invalidated_records">Hide invalidated / removed records</string>
+    <string name="refresh_from_nightscout">Refresh from Nightscout</string>
+    <string name="refresheventsfromnightscout">Refresh from NS</string>
+    <string name="show_invalidated">Show invalidated</string>
+    <string name="hide_invalidated">Hide invalidated</string>
+    <string name="careportal_remove_started_events">Remove AAPS started entries</string>
+    <string name="hide_loop">Hide loop</string>
+    <string name="show_loop">Show loop</string>
+    <string name="user_entry">User entry</string>
+    <string name="clone_label">Clone</string>
+    <string name="show_loop_records">Show loop records</string>
+    <string name="show_hide_records">Hide loop records</string>
+
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profile 1</string>
+    <string name="profile2">Profile 2</string>
+    <string name="profile_type">Profile type</string>
+    <string name="basal_pct_from_tdd_label">% of basal</string>
+    <string name="selected_profile">Selected:</string>
+    <string name="compare_profile">Compare profiles</string>
+    <string name="nav_profile_helper">Profile helper</string>
+    <string name="motol_default_profile">Default profile</string>
+    <string name="current_profile">Current profile</string>
+    <string name="available_profile">Available profile</string>
+    <string name="format_with_tdd">Age: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Age: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Age: %1$d Weight: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Default profile</string>
+    <string name="invalid_pct">Invalid % entry</string>
+
+    <!-- Other dialogs -->
+    <string name="basal_rate">Basal rate</string>
+
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STOP PRESSED</string>
+
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">only on watch</string>
+    <string name="a11y_only_on_phone">only on phone</string>
+    <string name="quickwizard_settings">QuickWizard settings</string>
+    <string name="overview_edit_quickwizard_button_text">Button text:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbs:</string>
+    <string name="overview_edit_quickwizard_valid">Valid:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Add</string>
+    <string name="overview_quickwizard_item_edit_button">Edit</string>
+    <string name="overview_edit_quickwizard_show_on_device">Show entry on device:</string>
+    <string name="overview_edit_quickwizard_use_bg">BG calculation</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB calculation</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB calculation</string>
+    <string name="overview_edit_quickwizard_use_trend">Trend calculation</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolus calculation</string>
+    <string name="overview_edit_quickwizard_percentage">Percentage</string>
+    <string name="device_all">All</string>
+    <string name="device_phone">Phone</string>
+    <string name="device_watch">Watch</string>
+    <string name="positive_only">Positive only</string>
+    <string name="negative_only">Negative only</string>
+    <string name="overview_editquickwizard_usecob">COB calculation</string>
+    <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
+    <string name="app_default">Application default</string>
+    <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
+
+</resources>

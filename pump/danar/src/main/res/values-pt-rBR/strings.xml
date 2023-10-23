@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="unsupported_action_in_pump">Ação não suportada na bomba. Use apenas a interface do usuário do AndroidAPS!</string>
+</resources>

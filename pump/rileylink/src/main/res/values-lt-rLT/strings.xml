@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Skanuoti</string>
+    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_scan_selected">Parinkta</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink skanavimas</string>
+    <string name="riley_link_ble_config_scan_scanning">Skanuojama</string>
+    <string name="riley_link_ble_config_scan_finished">Skanavimas baigtas</string>
+    <string name="riley_link_ble_config_scan_error">Skanavimo klaida: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Niekada</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Šiuo metu pasirinktas RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Pašalinti</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Ar tikrai norite pašalinti savo RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Pašalinti RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Nepasirinktas RileyLink</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Nustatymai</string>
+    <string name="rileylink_settings_tab2">Istorija</string>
+    <string name="rileylink_status">RileyLink statusas</string>
+    <string name="medtronic_pump_status">Pompos statusas</string>
+    <string name="title_activity_rileylink_settings">RileyLink parametrai</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Adresas:</string>
+    <string name="rileylink_name">Vardas:</string>
+    <string name="rileylink_battery_level">Baterijos lygis:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Ryšio statusas:</string>
+    <string name="rileylink_connection_error">Prisijungimo klaida:</string>
+    <string name="rileylink_device">Įrenginys</string>
+    <string name="rileylink_device_type">Įrenginio tipas:</string>
+    <string name="rileylink_configured_device_model">Nustatytas įrenginio modelis:</string>
+    <string name="rileylink_connected_device_model">Prijungtas įrenginio modelis:</string>
+    <string name="rileylink_last_used_frequency">Paskutinis naudotas dažnis:</string>
+    <string name="rileylink_last_device_contact">Paskutinis įrenginio kontaktas:</string>
+    <string name="rileylink_firmware_version">Programinės įrangos versija:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">Pompos serijos Nr:</string>
+    <string name="rileylink_pump_frequency">Pompos dažnis:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Inicijuojamas Bluetooth…</string>
+    <string name="rileylink_state_bt_error">Bluetooth klaida</string>
+    <string name="rileylink_state_bt_ready">Bluetooth paruošta</string>
+    <string name="rileylink_state_not_started">Nepradėta</string>
+    <string name="rileylink_state_rl_init">RileyLink inicijavimas…</string>
+    <string name="rileylink_state_rl_error">RileyLink klaida</string>
+    <string name="rileylink_state_pc_tune_up">RileyLink ir Pompos suderinimas</string>
+    <string name="rileylink_state_pc_error">Sujungimo su pompa problema</string>
+    <string name="rileylink_state_connected">Prisijungta</string>
+    <string name="rileylink_state_rl_ready">RileyLink paruoštas</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Įrenginys nėra RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink nepasiekiama</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth išjungtas</string>
+    <string name="rileylink_error_no_bt_adapter">Nėra Bluetooth adapterio</string>
+    <string name="rileylink_error_tuneup_failed">TuneUp klaida</string>
+    <string name="rileylink_error_pump_unreachable">Pompa nepasiekiama</string>
+    <string name="rileylink_error_pod_unreachable">Pod nepasiekiamas</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Pompa Medtronic</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Taip</string>
+    <string name="riley_link_common_no">Ne</string>
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Rodyti baterijos įkrovimo lygį, gautą iš OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">NEVEIKIA su originaliu RileyLink. Gali neveikti su kitomis RileyLink alternatyvomis.</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d d.</item>
+        <item quantity="few">%1$d d.</item>
+        <item quantity="many">%1$d d.</item>
+        <item quantity="other">%1$d d.</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d val.</item>
+        <item quantity="few">%1$d val.</item>
+        <item quantity="many">%1$d val.</item>
+        <item quantity="other">%1$d val.</item>
+    </plurals>
+    <string name="orange_use_scanning_level">Atlikti skanavimą</string>
+    <string name="orange_use_scanning_level_summary">Prieš suporuodami su OrangeLink, naudokite skanavimą, tai turėtų pagerinti ryšio kokybę (jei reikia, galite jį naudoti ir kituose RileyLink klonuose)</string>
+    <string name="rileylink_configuration">RileyLink konfigūravimas</string>
+</resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Virtuell pumpe</string>
+    <string name="virtual_pump_definition">Pumpedefinisjon</string>
+    <string name="virtual_pump_pump_def">Bolus: Step=%1$s\nForlenget bolus: [Step=%2$s, Varighet=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (av %7$s), Varighet=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUMP</string>
+    <string name="description_pump_virtual">Integrasjon mot pumper som ikke støttes av AndroidAPS (åpen loop)</string>
+    <string name="virtual_pump_label">VIRTUELL PUMPE</string>
+    <string name="virtualpump_settings">Innstillinger for virtuell pumpe</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Bare konkrete verdier støttes som granularitet for basal/bolus i virtuell pumpe, ingen verdiområder.</string>
+</resources>

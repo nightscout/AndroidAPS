@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/omnipod_pod_management"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.ErosPodManagementActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/waiting_for_rl_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="@string/omnipod_eros_pod_management_waiting_for_riley_link_connection"
+                android:textAlignment="center"
+                android:textSize="8pt" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/omnipod_common_pod_management_heading_actions" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/Actions_Row_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/Actions_Row_1_horizontal_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button_activate_pod"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_pod_activate_pod"
+                android:text="@string/omnipod_common_pod_management_button_activate_pod"
+                android:textAllCaps="false"
+                android:visibility="visible"
+                app:layout_constrainedHeight="@+id/Actions_Row_1_horizontal_guideline"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/Actions_Col_1_Row_1_vertical_guideline"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/Actions_Col_1_Row_1_vertical_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button_deactivate_pod"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_pod_deactivate_pod"
+                android:text="@string/omnipod_common_pod_management_button_deactivate_pod"
+                android:textAllCaps="false"
+                android:visibility="visible"
+                app:layout_constrainedHeight="@+id/Actions_Row_1_horizontal_guideline"
+                app:layout_constraintLeft_toRightOf="@+id/Actions_Col_1_Row_1_vertical_guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:id="@+id/Actions_Row_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/Actions_Row_2_horizontal_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button_play_test_beep"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_pod_management_play_test_beep"
+                android:text="@string/omnipod_common_pod_management_button_play_test_beep"
+                android:textAllCaps="false"
+                android:visibility="visible"
+                app:layout_constrainedHeight="@+id/Actions_Row_2_horizontal_guideline"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/Actions_Col_1_Row_2_vertical_guideline"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/Actions_Col_1_Row_2_vertical_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button_discard_pod"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_pod_management_discard_pod"
+                android:text="@string/omnipod_common_pod_management_button_discard_pod"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_constrainedHeight="@+id/Actions_Row_2_horizontal_guideline"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/Actions_Col_1_Row_2_vertical_guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="15dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/omnipod_common_pod_management_heading_tools" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+
+            android:id="@+id/Tools_Row_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/Tools_Row_1_horizontal_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button_reset_rileylink_config"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_pod_activity_reset_rileylink_config"
+                android:text="@string/omnipod_eros_pod_management_button_reset_riley_link_config"
+                android:textAllCaps="false"
+                android:visibility="visible"
+                app:layout_constrainedHeight="@+id/Tools_Row_1_horizontal_guideline"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/Tools_Col_1_vertical_guideline"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/Tools_Col_1_vertical_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button_pod_history"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_pod_management_pod_history"
+                android:text="@string/omnipod_common_pod_management_button_pod_history"
+                android:textAllCaps="false"
+                android:visibility="visible"
+                app:layout_constrainedHeight="@+id/Tools_Row_1_horizontal_guideline"
+                app:layout_constraintLeft_toRightOf="@+id/Tools_Col_1_vertical_guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/Tools_Row_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/Tools_Row_2_horizontal_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button_rileylink_stats"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_pod_management_rl_stats"
+                android:text="@string/omnipod_eros_pod_management_button_riley_link_stats"
+                android:textAllCaps="false"
+                android:visibility="visible"
+                app:layout_constrainedHeight="@+id/Tools_Row_2_horizontal_guideline"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/Tools_Col_1_Row_2_vertical_guideline"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/Tools_Col_1_Row_2_vertical_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button_pulse_log"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/ic_pod_management_pulse_log"
+                android:text="@string/omnipod_eros_pod_management_button_read_pulse_log"
+                android:textAllCaps="false"
+                android:visibility="gone"
+                app:layout_constrainedHeight="@+id/Tools_Row_2_horizontal_guideline"
+                app:layout_constraintLeft_toRightOf="@+id/Tools_Col_1_Row_2_vertical_guideline"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="openaps_short">OAPS</string>
+    <!-- NSClient -->
+    <string name="ns_client_url">URL:</string>
+    <string name="restart">Atosaigh</string>
+    <string name="deliver_now">Seachadadh anois</string>
+    <string name="status">Stádas:</string>
+    <string name="ns_alarm_options">Aláraim roghanna</string>
+    <!-- Tidepool -->
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
+</resources>

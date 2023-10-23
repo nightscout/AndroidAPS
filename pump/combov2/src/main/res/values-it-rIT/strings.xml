@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Check Combo</string>
+    <string name="combov2_plugin_description">Integrazione nativa del microinfusore Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Impossibile connettersi al micro</string>
+    <string name="combov2_not_paired">Non associato a un micro</string>
+    <string name="combov2_pump_terminated_connection">Il micro ha terminato la connessione</string>
+    <string name="combov2_warning">Avviso Combo</string>
+    <string name="combov2_error">Errore Combo</string>
+    <string name="combov2_warning_4">Chiama il supporto per l\'aggiornamento</string>
+    <string name="combov2_warning_10">Errore bluetooth; ripetere l\'associazione</string>
+    <string name="combov2_error_1">Serbatoio vuoto</string>
+    <string name="combov2_error_2">Batteria scarica</string>
+    <string name="combov2_error_4">Occlusione</string>
+    <string name="combov2_error_5">Fine operatività del micro di backup</string>
+    <string name="combov2_error_6">Errore meccanico</string>
+    <string name="combov2_error_7">Errore di elettronica</string>
+    <string name="combov2_error_8">Interruzione di corrente</string>
+    <string name="combov2_error_9">Fine operatività del micro in prestito</string>
+    <string name="combov2_error_10">Errore serbatoio</string>
+    <string name="combov2_error_11">Set di infusione non caricato</string>
+    <string name="combov2_extended_bolus_not_supported">Il bolo esteso non è supportato</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Associa con micro</string>
+    <string name="combov2_unpair_pump_title">Disassocia micro</string>
+    <string name="combov2_driver_state_label">Stato driver</string>
+    <string name="combov2_current_activity_label">Attività corrente</string>
+    <string name="bluetooth_address">Indirizzo bluetooth</string>
+    <string name="combov2_start_pairing">Avvia associazione</string>
+    <string name="combov2_pairing_in_progress">Associazione Combo in corso</string>
+    <string name="combov2_pairing_start_steps">Passi per eseguire l\'associazione con il tuo Combo:\n\n
+1. Sul tuo microinfusore, vai alle Impostazioni Bluetooth\n
+2. Controlla se un dispositivo è già mostrato come associato; in tal caso, vai alla schermata del microinfusore \"Elimina dispositivo\" per eliminare/disassociare quel dispositivo\n
+3. Vai alla schermata del microinfusore \"Aggiungi dispositivo\" e avvia l\'associazione sul microinfusore\n
+4. Clicca sul tasto \"Avvia associazione\" qui sotto per avviare l\'associazione in AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Dopo un po \', il nome del telefono viene mostrato sullo schermo del micro; premi il tasto di CONFERMA per confermare.\n\n
+Quando l\'associazione è stata completata con successo, conferma la fine dell\'associazione sul microinfusore e torna alla schermata principale del microinfusore premendo il tasto di CONFERMA due volte.\n\n
+Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
+1. Premi Indietro o il tasto \"Annulla associazione\"\n
+2. Annulla l\'associazione sul Combo (premere i tasti SOPRA e MENU allo stesso tempo per annullare l\'associazione)\n
+3. Prova ad associare di nuovo</string>
+    <string name="combov2_enter_pin">Inserisci PIN</string>
+    <string name="combov2_cancel_pairing">Annulla associazione</string>
+    <string name="combov2_pin_hint">PIN a 10 cifre</string>
+    <string name="combov2_pairing_finished_successfully">Associato al Combo con successo</string>
+    <string name="combov2_pairing_cancelled">Associazione con Combo annullata dall\'utente</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Scansione Combo: timeout raggiunto</string>
+    <string name="combov2_pairing_failed_due_to_error">Associazione fallita a causa di un errore: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Associazione interrotta per motivi sconosciuti</string>
+    <string name="combov2_pairing_invalid_pin_length">"PIN di associazione - lunghezza non valida: necessarie %1$d cifre, ricevute %2$d"</string>
+    <string name="combov2_scanning_for_pump">Scansione micro</string>
+    <string name="combov2_establishing_bt_connection">Connessione Bluetooth (tentativo n. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Esecuzione dell\'associazione con il micro</string>
+    <string name="combov2_pairing_pump_requests_pin">Il micro richiede un PIN a 10 cifre</string>
+    <string name="combov2_pairing_finishing">Fine associazione</string>
+    <string name="combov2_no_connection_for_n_mins">Nessuna connessione per %1$d minuti</string>
+    <string name="combov2_less_than_one_minute_ago">Meno di un minuto fa</string>
+    <string name="combov2_setting_current_pump_time">Impostazione ora corrente del micro</string>
+    <string name="combov2_setting_current_pump_date">Impostazione data corrente del micro</string>
+    <string name="combov2_not_initialized">Non inizializzato</string>
+    <string name="combov2_checking_pump">Controllo micro</string>
+    <string name="combov2_ready">Pronto</string>
+    <string name="combov2_suspended">Sospeso</string>
+    <string name="combov2_pump_is_suspended">Il micro è sospeso</string>
+    <string name="combov2_executing_command">Esecuzione comando</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Ricezione profilo basale</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Impostazione profilo basale</string>
+    <string name="combov2_setting_tbr_cmddesc">Impostazione TBR %1$d%% per %2$d minuti</string>
+    <string name="combov2_cancelling_tbr">Cancellazione TBR in esecuzione</string>
+    <string name="combov2_delivering_bolus_cmddesc">Erogazione bolo di %1$.1f U</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Recupero storico TDD</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Aggiornamento data e ora del micro</string>
+    <string name="combov2_updating_pump_status_cmddesc">Aggiornamento stato micro</string>
+    <string name="combov2_pairing_pin_failure">Il PIN non ha funzionato. Controlla se c\'è stato un errore ti battitura. Se continua ad accadere, annulla e riprova l\'associazione.</string>
+    <string name="combov2_discovery_duration">Durata ricerca (in secondi)</string>
+    <string name="combov2_verbose_logging">Abilita log verboso del Combo</string>
+    <string name="combov2_getting_basal_profile">Ricezione profilo basale; %1$d record letto(i)</string>
+    <string name="combov2_setting_basal_profile">Impostazione profilo basale; %1$d record scritto(i)</string>
+    <string name="combov2_delivering_bolus">Erogazione bolo (%1$.1f di %2$.1f U erogate)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Impossibile erogare il trattamento - il micro è sospeso</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Insulina insufficiente nel serbatoio</string>
+    <string name="combov2_bolus_cancelled">Bolo cancellato</string>
+    <string name="combov2_bolus_delivery_failed">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza, controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
+    <string name="combov2_bolus_not_delivered">Bolo non erogato</string>
+    <string name="combov2_cannot_access_pump_data">Impossibile accedere ai dati del micro; il micro deve essere associato di nuovo</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Rilevate erogazioni bolo non contabilizzate. Cancellazione del bolo per motivi di sicurezza.</string>
+    <string name="combov2_incorrect_active_basal_profile">Profilo basale attivo errato; il profilo 1 deve essere quello attivo, non il profilo %1$d</string>
+    <string name="combov2_unrecognized_alert">Avviso del Combo non riconosciuto</string>
+    <string name="combov2_combo_alert">Avviso del Combo</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d min rimanenti)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (meno di 1 minuto rimanente)</string>
+    <string name="combov2_load_tdds_cancelled">Caricamento TDD annullato</string>
+    <string name="combov2_retrieving_tdds_failed">Recupero TDD fallito</string>
+    <string name="combov2_battery_low_warning">Batteria micro quasi scarica</string>
+    <string name="combov2_reservoir_low_warning">Il livello del serbatoio del micro è basso</string>
+    <string name="combov2_setting_tbr_succeeded">Impostazione TBR riuscita</string>
+    <string name="combov2_setting_tbr_failed">Impostazione TBR fallita</string>
+    <string name="combov2_set_emulated_100_tbr">Imposta TBR 100% (emulato)</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Lasciando finire il TBR 100% (emulato) in esecuzione</string>
+    <string name="combov2_ignoring_redundant_100_tbr">TBR 100%: ignorando la richiesta ridondante</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Limite inatteso riscontrato durante la regolazione di TBR: la percentuale target era %1$d%%, raggiunto un limite a %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Impossibile impostare un TBR assoluto se la velocità basale di base è zero</string>
+    <string name="combov2_pair_with_pump_summary">Associa AndroidAPS e Android con un micro Accu-Chek Combo attualmente non associato</string>
+    <string name="combov2_unpair_pump_summary">Disassocia AndroidAPS e Android dal micro Accu-Chek Combo attualmente associato</string>
+    <string name="combov2_unknown_tbr_detected">Un TBR sconosciuto è stato rilevato e fermato; percentuale: %1$d%%; durata rimanente: %2$s</string>
+    <string name="combov2_connection_error">Errore connessione: %1$s</string>
+    <string name="combov2_short_status_last_connection">Ultima conn.: %1$d min fa</string>
+    <string name="combov2_short_status_alert">Avviso: %s</string>
+    <string name="combov2_short_status_last_bolus">UltimoBolo: %1$sU @ %2$s</string>
+    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_reservoir">Serb: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">vuoto</string>
+    <string name="combov2_short_status_battery_state_low">basso</string>
+    <string name="combov2_short_status_battery_state_full">pieno</string>
+    <string name="combov2_short_status_battery_state">Batt: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Rileva e inserisci automaticamente il cambio serbatoio di insulina</string>
+    <string name="combov2_automatic_battery_entry">Rileva e inserisci automaticamente il cambio batteria</string>
+    <string name="combov2_note_reservoir_change">Cambio serbatoio insulina inserito automaticamente dal driver combov2</string>
+    <string name="combov2_note_battery_change">Cambio batteria inserito automaticamente dal driver combov2</string>
+    <string name="combov2_timezone_changed">Fuso orario cambiato</string>
+    <string name="combov2_datetime_changed">Data e/o ora cambiata</string>
+    <string name="combov2_dst_started">Ora legale (DST) iniziata</string>
+    <string name="combov2_dst_ended">Ora legale (DST) terminata</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Impossibile connettersi al micro perché il micro ha segnalato un errore. L\'utente deve gestire l\'errore e quindi attendere 5 minuti o premere il tasto Aggiorna nella scheda del driver.</string>
+    <string name="combov2_refresh_pump_status_after_error">Aggiornamento dello stato del micro dopo che il micro ha segnalato un errore</string>
+    <string name="combov2_go_back">Torna indietro</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Impossibile eseguire l\'associazione perché il driver non è inizializzato. Questo accade tipicamente perché i permessi Bluetooth necessari non sono stati concessi. Torna indietro, concedi i permessi Bluetooth, quindi riprova ad associare.</string>
+    <string name="combov2_bluetooth_disabled">Impossibile avviare il driver - il bluetooth è disabilitato</string>
+    <string name="combov2_bluetooth_not_supported">Impossibile eseguire il driver - questo dispositivo non supporta il bluetooth</string>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <application>
+
+        <service
+            android:name=".nsclient.services.NSClientService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".nsclientV3.services.NSClientV3Service"
+            android:enabled="true"
+            android:exported="false" />
+        <activity
+            android:name=".openhumans.ui.OHLoginActivity"
+            android:launchMode="singleTop"
+            android:theme="@style/OpenHumans"
+            android:label="Setup Open Humans"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="setup-openhumans"
+                    android:scheme="androidaps" />
+            </intent-filter>
+        </activity>
+
+    </application>
+
+</manifest>

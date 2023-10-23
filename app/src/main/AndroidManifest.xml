@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH"
+        tools:remove="android:maxSdkVersion" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
@@ -10,11 +13,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.RECEIVE_MMS" />
-    <uses-permission android:name="android.permission.SEND_SMS" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.SEND_MMS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
@@ -35,11 +33,10 @@
     <!-- To receive data from Aidex -->
     <uses-permission android:name="com.microtechmd.cgms.aidex.permissions.RECEIVE_BG_ESTIMATE" />
 
-
     <application
-        android:name=".MainApp"
+        android:name="app.aaps.MainApp"
         android:allowBackup="true"
-        android:backupAgent=".utils.SPBackupAgent"
+        android:backupAgent="app.aaps.utils.SPBackupAgent"
         android:fullBackupOnly="false"
         android:icon="${appIcon}"
         android:label="@string/app_name"
@@ -52,27 +49,6 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".widget.WidgetConfigureActivity"
-            android:theme="@android:style/Theme.Material.Dialog.NoActionBar"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
-            </intent-filter>
-        </activity>
-
-        <receiver
-            android:name=".widget.Widget"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/widget_info" />
-        </receiver>
-
         <meta-data
             android:name="com.google.android.backup.api_key"
             android:value="AEdPqrEAAAAI3JiApyMrbP2QFzZ2fYfCPsgjkRp53Dm2S1-zPQ" />
@@ -82,9 +58,9 @@
             android:resource="@xml/automotive_app_desc" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="app.aaps.MainActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -93,46 +69,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.PreferencesActivity"
-            android:exported="false" />
-        <activity
-            android:name=".plugins.general.overview.activities.QuickWizardListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".plugins.general.maintenance.activities.PrefImportListActivity"
+            android:name="app.aaps.activities.PreferencesActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".activities.HistoryBrowseActivity"
+            android:name="app.aaps.activities.HistoryBrowseActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.TreatmentsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.SurveyActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.ProfileHelperActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".activities.StatsActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-
         <!-- Receive new BG readings from other local apps -->
         <receiver
-            android:name=".receivers.DataReceiver"
+            android:name="app.aaps.receivers.DataReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -144,6 +90,7 @@
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
                 <!-- Receiver from Dexcom -->
                 <action android:name="com.dexcom.cgm.EXTERNAL_BROADCAST" />
+                <action android:name="com.dexcom.g7.EXTERNAL_BROADCAST" />
                 <!-- Receiver from Poctech -->
                 <action android:name="com.china.poctech.data" />
                 <!-- Receiver from Tomato -->
@@ -155,7 +102,7 @@
 
         <!-- Receive new SMS messages -->
         <receiver
-            android:name=".receivers.SmsReceiver"
+            android:name="app.aaps.receivers.SmsReceiver"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BROADCAST_SMS">
@@ -165,11 +112,11 @@
         </receiver>
 
         <!-- Receive ignore 5m, 15m, 30m requests for carb notifications -->
-        <receiver android:name=".plugins.aps.loop.CarbSuggestionReceiver" />
+        <receiver android:name="app.aaps.plugins.aps.loop.CarbSuggestionReceiver" />
 
         <!-- Auto start -->
         <receiver
-            android:name=".receivers.AutoStartReceiver"
+            android:name="app.aaps.receivers.AutoStartReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
@@ -186,70 +133,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths" />
         </provider>
-
-        <service
-            android:name=".plugins.general.wear.wearintegration.DataLayerListenerServiceMobile"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
-                <data
-                    android:host="*"
-                    android:scheme="wear" />
-            </intent-filter>
-            <intent-filter>
-                <!-- listeners receive events that match the action and data filters -->
-                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-
-                <data
-                    android:host="*"
-                    android:pathPrefix="@string/path_rx_bridge"
-                    android:scheme="wear" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".plugins.general.nsclient.services.NSClientService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".services.AlarmSoundService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".plugins.general.overview.notifications.DismissNotificationService"
-            android:exported="false" />
-
-        <service android:name=".plugins.general.persistentNotification.DummyService" />
-
-        <activity
-            android:name=".setupwizard.SetupWizardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="false"
-            android:label="@string/title_activity_setup_wizard"
-            android:theme="@style/AppTheme" />
-
-        <activity
-            android:name=".activities.SingleFragmentActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".plugins.general.maintenance.activities.LogSettingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.RequestDexcomPermissionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <uses-library
             android:name="org.apache.http.legacy"

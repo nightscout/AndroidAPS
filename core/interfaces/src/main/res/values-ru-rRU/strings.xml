@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Драйвер помпы изменен.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d мин. назад</string>
+    <string name="minago_long">%1$d минут назад</string>
+    <string name="hoursago">%1$.1fч. назад</string>
+    <string name="days_ago">%1$s дн назад</string>
+    <string name="days_ago_round">%1$s дн назад</string>
+    <string name="in_days">через %1$.0f дн</string>
+    <string name="in_days_round">через %1$.0f дн</string>
+    <string name="shorthour">ч</string>
+    <string name="days">дн</string>
+    <string name="hours">час</string>
+    <string name="unit_second">сек</string>
+    <string name="unit_minute">мин</string>
+    <string name="unit_hour">час</string>
+    <string name="unit_day">дн</string>
+    <string name="unit_week">нед</string>
+    <string name="unit_seconds">сек</string>
+    <string name="unit_minutes">мин</string>
+    <string name="unit_hours">час</string>
+    <string name="unit_days">дн</string>
+    <string name="unit_weeks">нед</string>
+    <string name="shortminute">м</string>
+    <string name="shortday">д</string>
+    <string name="later_today">Позднее сегодня</string>
+    <string name="tomorrow">Завтра</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <!-- Rx -->
+    <string name="connecting_for">Связь установлена за %1$d сек</string>
+    <string name="handshaking">Подтверждение связи</string>
+    <string name="connected">соединение установлено</string>
+    <string name="disconnecting">разъединение</string>
+    <string name="waiting_for_disconnection">Ожидание разъединения</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Создано: %1$s</string>
+    <string name="metadata_label_watchface_author">Автор: %1$s</string>
+    <string name="metadata_label_watchface_name">Название: %1$s</string>
+    <string name="metadata_wear_import_filename">Имя файла: %1$s</string>
+    <string name="metadata_label_plugin_version">Версия плагина: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Имя: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Информация: %1$s</string>
+    <string name="pref_show_iob">Отображать IOB</string>
+    <string name="pref_show_detailed_iob">Отображать IOB подробно</string>
+    <string name="pref_show_cob">Отображать COB</string>
+    <string name="pref_show_delta">Отображать дельту</string>
+    <string name="pref_show_detailed_delta">Отображать дельту подробно</string>
+    <string name="pref_show_avgdelta">Отображать усредненную дельту</string>
+    <string name="pref_show_phone_battery">Отображать заряд телефона</string>
+    <string name="pref_show_rig_battery">Отображать заряд батареи системы</string>
+    <string name="pref_show_basal_rate">Отображать базал</string>
+    <string name="pref_show_loop_status">Отображать состояние цикла</string>
+    <string name="pref_show_bg">Отображать ГК</string>
+    <string name="pref_show_bgi">Отображать BGI (ГКИ)</string>
+    <string name="pref_show_direction_arrow">Отображать стрелку тренда</string>
+    <string name="pref_show_ago">Отображать историю</string>
+    <string name="pref_show_week_number">Показывать номер недели</string>
+    <string name="default_custom_watchface_comment">Циферблат по умолчанию, вы можете нажать на EXPORT WATCHFACE чтобы создать шаблон</string>
+    <string name="wear_default_watchface">Циферблат по умолчанию</string>
+    <string name="cwf_comment_background">Фоновое изображение</string>
+    <string name="cwf_comment_chart">Графики (ГК, базал, линии прогнозов...)</string>
+    <string name="cwf_comment_cover_chart">Изображение перед графиком и за текстовыми полями</string>
+    <string name="cwf_comment_freetext1">Свободный текст 1</string>
+    <string name="cwf_comment_freetext2">Свободный текст 2</string>
+    <string name="cwf_comment_freetext3">Свободный текст 3</string>
+    <string name="cwf_comment_freetext4">Свободный текст 4</string>
+    <string name="cwf_comment_iob1">Метка IOB, или общего IOB для подробного отображения</string>
+    <string name="cwf_comment_iob2">Общий IOB, или (IOB_болюса|IOB_базы) для подробного отображения</string>
+    <string name="cwf_comment_cob1">Метка COB</string>
+    <string name="cwf_comment_cob2">Значение COB</string>
+    <string name="cwf_comment_delta">Краткая дельта ГК</string>
+    <string name="cwf_comment_avg_delta">Средняя дельта ГК (15 мин)</string>
+    <string name="cwf_comment_uploader_battery">Заряд телефона (%)</string>
+    <string name="cwf_comment_rig_battery">Заряд системы ИПЖ (%)</string>
+    <string name="cwf_comment_basalRate">Базальная скорость</string>
+    <string name="cwf_comment_bgi">Значение ГКИ</string>
+    <string name="cwf_comment_time">Время (ЧЧ:ММ или ЧЧ:ММ:СС)</string>
+    <string name="cwf_comment_hour">Часы (ЧЧ)</string>
+    <string name="cwf_comment_minute">Минуты (ММ)</string>
+    <string name="cwf_comment_second">Секунды (СС)</string>
+    <string name="cwf_comment_timePeriod">AM или PM</string>
+    <string name="cwf_comment_day_name">Название дня недели</string>
+    <string name="cwf_comment_day">Число (ДД)</string>
+    <string name="cwf_comment_week_number">Номер недели (нн)</string>
+    <string name="cwf_comment_month">Название месяца (краткое)</string>
+    <string name="cwf_comment_loop">Статус цикла и история</string>
+    <string name="cwf_comment_direction">Стрелка тренда</string>
+    <string name="cwf_comment_timestamp">Минут с последнего чтения ГК</string>
+    <string name="cwf_comment_sgv">Значение ГК</string>
+    <string name="cwf_comment_cover_plate">Изображение перед текстом (циферблаты…)</string>
+    <string name="cwf_comment_hour_hand">Изображение для часовой стрелки (Аналоговые часы)</string>
+    <string name="cwf_comment_minute_hand">Изображение для минутной стрелки (Аналоговые часы)</string>
+    <string name="cwf_comment_second_hand">Изображение для секундной стрелки (Аналоговые часы)</string>
+</resources>

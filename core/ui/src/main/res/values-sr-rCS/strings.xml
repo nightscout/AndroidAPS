@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <string name="constraint_applied">Primenjeno ograničenje!</string>
+    <string name="tempbasals_iobtotal_label_string">Ukupno IOB:</string>
+    <string name="tt_label">TT</string>
+    <string name="save">Sačuvaj</string>
+    <string name="virtual_pump">Virtuelna Pumpa</string>
+    <string name="constraints">Ograničenja</string>
+    <string name="result">Rezultat</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="pump">Pumpa</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="goingtodeliver">Isporučujem %1$.2f U</string>
+    <string name="carbs">Uglj. hidrati</string>
+    <string name="basal_label">Basal</string>
+    <string name="exit">Izađi</string>
+    <string name="iob">IOB</string>
+    <string name="bg_label">GUK</string>
+    <string name="treatmentdeliveryerror">Bolus je prijavio grešku. Ručno proverite stvarnu isporučenu količinu</string>
+    <string name="duration_label">Trajanje</string>
+    <string name="profile">Profil</string>
+    <string name="overview_treatment_label">Tretman</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basalni IOB</string>
+    <string name="invalid">NEVAŽEĆE</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="lowglucosesuspend">Niska Glukoza Obustavi</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <string name="duration">Trajanje</string>
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <string name="glucosetype_sensor">Senzor</string>
+    <string name="wear">Sat</string>
+    <string name="loop">Loop</string>
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <string name="basalrate">Basal</string>
+    <string name="bolus">Bolus</string>
+    <string name="ratio">Odnos</string>
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="basal">Basal</string>
+    <string name="basalpct">Basal %</string>
+    <!-- Autotune -->
+    <string name="autotune_result">Rezultat: %1$s</string>
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <string name="quickwizard">Brzi Čarobnjak</string>
+    <!--    Preferences-->
+    <!--    Protection-->
+    <!--    Pumps -->
+    <!--    Constraints-->
+    <!-- Locale -->
+    <!--    Dialogs-->
+    <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za dešifriranje uvezenih postavki.</string>
+    <!-- NumberPicker -->
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <!-- SmsCommunicator -->
+    <!-- About -->
+    <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
+</resources>

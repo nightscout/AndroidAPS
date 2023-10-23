@@ -1,0 +1,71 @@
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_refresh_status"
+        style="@style/ButtonSmallFontStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_omnipod_overview_refresh_pod_status"
+        android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
+        android:text="@string/refresh" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_pod_management"
+        style="@style/ButtonSmallFontStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_omnipod_overview_pod_management"
+        android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
+        android:text="@string/omnipod_common_overview_button_pod_management" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_silence_alerts"
+        style="@style/ButtonSmallFontStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_omnipod_overview_silence_alerts"
+        android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
+        android:text="@string/omnipod_common_overview_button_silence_alerts" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_set_time"
+        style="@style/ButtonSmallFontStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_omnipod_overview_set_time"
+        android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
+        android:text="@string/omnipod_common_overview_button_set_time"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_resume_delivery"
+        style="@style/ButtonSmallFontStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_pod_resume_delivery"
+        android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
+        android:text="@string/omnipod_common_overview_button_resume_delivery"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_suspend_delivery"
+        style="@style/ButtonSmallFontStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:drawableTop="@drawable/ic_omnipod_overview_suspend_delivery"
+        android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
+        android:text="@string/omnipod_common_overview_button_suspend_delivery"
+        android:visibility="gone" />
+
+</merge>

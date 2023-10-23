@@ -1,0 +1,125 @@
+package app.aaps.implementation.protection
+
+import androidx.fragment.app.FragmentActivity
+import app.aaps.core.interfaces.protection.PasswordCheck
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import dagger.Reusable
+import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+
+@Reusable
+class ProtectionCheckImpl @Inject constructor(
+    private val sp: SP,
+    private val passwordCheck: PasswordCheck,
+    private val dateUtil: DateUtil
+) : ProtectionCheck {
+
+    private var lastAuthorization = mutableListOf(0L, 0L, 0L)
+
+    private val passwordsResourceIDs = listOf(
+        app.aaps.core.utils.R.string.key_settings_password,
+        app.aaps.core.utils.R.string.key_application_password,
+        app.aaps.core.utils.R.string.key_bolus_password
+    )
+
+    private val pinsResourceIDs = listOf(
+        app.aaps.core.utils.R.string.key_settings_pin,
+        app.aaps.core.utils.R.string.key_application_pin,
+        app.aaps.core.utils.R.string.key_bolus_pin
+    )
+
+    private val protectionTypeResourceIDs = listOf(
+        app.aaps.core.utils.R.string.key_settings_protection,
+        app.aaps.core.utils.R.string.key_application_protection,
+        app.aaps.core.utils.R.string.key_bolus_protection
+    )
+
+    private val titlePassResourceIDs = listOf(
+        app.aaps.core.ui.R.string.settings_password,
+        app.aaps.core.ui.R.string.application_password,
+        app.aaps.core.ui.R.string.bolus_password
+    )
+
+    private val titlePinResourceIDs = listOf(
+        app.aaps.core.ui.R.string.settings_pin,
+        app.aaps.core.ui.R.string.application_pin,
+        app.aaps.core.ui.R.string.bolus_pin
+    )
+
+    override fun isLocked(protection: ProtectionCheck.Protection): Boolean {
+        if (activeSession(protection)) {
+            return false
+        }
+        return when (ProtectionCheck.ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
+            ProtectionCheck.ProtectionType.NONE            -> false
+            ProtectionCheck.ProtectionType.BIOMETRIC       -> true
+            ProtectionCheck.ProtectionType.MASTER_PASSWORD -> sp.getString(app.aaps.core.utils.R.string.key_master_password, "") != ""
+            ProtectionCheck.ProtectionType.CUSTOM_PASSWORD -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
+            ProtectionCheck.ProtectionType.CUSTOM_PIN      -> sp.getString(pinsResourceIDs[protection.ordinal], "") != ""
+        }
+    }
+
+    override fun resetAuthorization() {
+        lastAuthorization = mutableListOf(0L, 0L, 0L)
+    }
+
+    private fun activeSession(protection: ProtectionCheck.Protection): Boolean {
+        var timeout = TimeUnit.SECONDS.toMillis(sp.getInt(app.aaps.core.utils.R.string.key_protection_timeout, 0).toLong())
+        // Default timeout to pass the resume check at start of an activity
+        timeout = if (timeout < 1000) 1000 else timeout
+        val last = lastAuthorization[protection.ordinal]
+        val diff = dateUtil.now() - last
+        return diff < timeout
+    }
+
+    private fun onOk(protection: ProtectionCheck.Protection) {
+        lastAuthorization[protection.ordinal] = dateUtil.now()
+    }
+
+    override fun queryProtection(activity: FragmentActivity, protection: ProtectionCheck.Protection, ok: Runnable?, cancel: Runnable?, fail: Runnable?) {
+        if (activeSession(protection)) {
+            onOk(protection)
+            ok?.run()
+            return
+        }
+
+        when (ProtectionCheck.ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
+            ProtectionCheck.ProtectionType.NONE            ->
+                ok?.run()
+
+            ProtectionCheck.ProtectionType.BIOMETRIC       ->
+                BiometricCheck.biometricPrompt(activity, titlePassResourceIDs[protection.ordinal], { onOk(protection); ok?.run() }, cancel, fail, passwordCheck)
+
+            ProtectionCheck.ProtectionType.MASTER_PASSWORD ->
+                passwordCheck.queryPassword(
+                    activity,
+                    app.aaps.core.ui.R.string.master_password,
+                    app.aaps.core.utils.R.string.key_master_password,
+                    { onOk(protection); ok?.run() },
+                    { cancel?.run() },
+                    { fail?.run() })
+
+            ProtectionCheck.ProtectionType.CUSTOM_PASSWORD ->
+                passwordCheck.queryPassword(
+                    activity,
+                    titlePassResourceIDs[protection.ordinal],
+                    passwordsResourceIDs[protection.ordinal],
+                    { onOk(protection); ok?.run() },
+                    { cancel?.run() },
+                    { fail?.run() })
+
+            ProtectionCheck.ProtectionType.CUSTOM_PIN      ->
+                passwordCheck.queryPassword(
+                    activity,
+                    titlePinResourceIDs[protection.ordinal],
+                    pinsResourceIDs[protection.ordinal],
+                    { onOk(protection); ok?.run() },
+                    { cancel?.run() },
+                    { fail?.run() },
+                    true
+                )
+        }
+    }
+}

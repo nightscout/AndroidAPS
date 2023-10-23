@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">NSClient BS</string>
+    <string name="ns_client_bg_short">NS BS</string>
+    <string name="description_source_ns_client">Last ned BS-verdier fra Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
+    <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Motta BS-verdier fra \'Build Your Own Dexcom App\'.</string>
+    <string name="eversense">Eversense App (patched)</string>
+    <string name="description_source_eversense">Motta BS-verdier fra den modifiserte Eversense-appen.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Motta BS-verdier fra Glimp.</string>
+    <string name="mm640g">MM640G</string>
+    <string name="description_source_mm640g">Motta BS-verdier fra 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Motta BS-verdier fra Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Motta BS verdier fra Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Motta BS-verdier fra Intelligo-app</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Motta BS-verdier fra Tomato app (MiaoMiao enhet)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Motta BS-verdier fra GlucoRx Aidex CGM.</string>
+    <string name="random_bg">Vilkårlig BS</string>
+    <string name="description_source_random_bg">Generer vilkårlige BS-data (kun demo formål)</string>
+    <string name="random_bg_short">BS</string>
+    <string name="do_xdrip_upload_title">Send BS-data til xDrip+</string>
+    <string name="do_xdrip_upload_summary">I xDrip+, velg 640G/Eversens som datakilde</string>
+    <string name="bgsource_upload">Innstillinger for opplasting av BS</string>
+    <string name="dexcom_log_ns_sensor_change_title">Logg sensorbytte til NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Sensorbytte\" automatisk i NS ved start av sensoren</string>
+    <string name="direction">retning</string>
+</resources>

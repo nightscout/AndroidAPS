@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_bg"
+        android:summary="Show BG."
+        android:title="@string/pref_show_bg"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_iob"
+        android:summary="Show insulin on board."
+        android:title="@string/pref_show_iob"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_detailed_iob"
+        android:summary="Break down IOB into bolus and basal IOB on the watchface"
+        android:title="@string/pref_show_detailed_iob"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_cob"
+        android:summary="Show carb on board."
+        android:title="@string/pref_show_cob"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_bgi"
+        android:summary="Show BGI"
+        android:title="@string/pref_show_bgi"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_delta"
+        android:summary="Show delta."
+        android:title="@string/pref_show_delta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_avg_delta"
+        android:summary="Show the avgDelta."
+        android:title="@string/pref_show_avgdelta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_detailed_delta"
+        android:summary="Show delta with one more decimal place"
+        android:title="@string/pref_show_detailed_delta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_direction"
+        android:summary="Show direction arrow"
+        android:title="@string/pref_show_direction_arrow"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_ago"
+        android:summary="Minutes since last reading."
+        android:title="@string/pref_show_ago"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_uploader_battery"
+        android:title="@string/pref_show_phone_battery"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_rig_battery"
+        android:title="@string/pref_show_rig_battery"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_temp_basal"
+        android:title="@string/pref_show_basal_rate"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_external_status"
+        android:title="@string/pref_show_loop_status"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <app.aaps.wear.interaction.utils.WatchfaceSettingsPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="more_settings"
+        android:summary="Input Design"
+        android:title="@string/pref_moreWatchfaceSettings" />
+</PreferenceScreen>

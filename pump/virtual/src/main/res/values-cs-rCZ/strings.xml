@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Typ virtuální pumpy</string>
+    <string name="virtual_pump_definition">Definice pumpy</string>
+    <string name="virtual_pump_pump_def">Bolus: Krok =%1$s\nProdl. bolus: [Krok=%2$s, Délka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Délka=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUM</string>
+    <string name="description_pump_virtual">Ovladač pumpy pro uživatele bez podporované pumpy (Otevřená smyčka)</string>
+    <string name="virtual_pump_label">VIRTUÁLNÍ PUMPA</string>
+    <string name="virtualpump_settings">Nastavení virtuální pumpy</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Pouze diskrétní hodnoty a ne rozsahy jsou podporovány pro bazál/bolus ve virtuální pumpě.</string>
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Sommar/vintertid inträffar inom 24 timmar</string>
+    <string name="dst_loop_disabled_warning">Sommar/vintertid ändrades för mindre än 3 timmar sedan. Closed Loop avstängt</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Frigör minst %1$d MB lagring. Loopen inaktiverad!</string>
+    <!-- Version Checker -->
+    <string name="old_version">gammal version</string>
+    <string name="very_old_version">väldigt gammal version</string>
+    <string name="application_expired">Applikationen inte giltig längre</string>
+    <string name="new_version_warning">AAPS har inte kunnat söka efter nya versioner de senaste %1$d dagarna! AAPS kommer att aktivera LGS-läge efter %2$d dagar, och loopen kommer att inaktiveras efter %3$d dagar. Återställ Internet-anslutningen!</string>
+    <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
+    <string name="versionavailable">Version %1$s tillgänglig</string>
+    <string name="version_expire">Version %1$s upphör att gälla %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Omräknad data används</string>
+    <string name="bg_too_close">BG för nära:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">omräknad</string>
+    <string name="a11y_bg_quality_doubles">dubbla poster</string>
+    <string name="a11y_bg_quality_flat">Platt datakurva. Anses vara fel</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Begränsar förlängd bolus till %1$.1f U p.g.a. %2$s</string>
+    <string name="limitingcarbs">Begränsar kolhydrater till %1$d g pga %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pumpen kan inte hantera temp basaler</string>
+    <string name="closedmodedisabledinpreferences">Closed Loop inaktiverat i Inställningar</string>
+    <string name="closed_loop_disabled_on_dev_branch">Du kör nu dev-versionen. Closed Loop inaktiverat.</string>
+    <string name="closed_loop_disabled_with_eb">Closed Loop-läget inaktiverat pga att en förlängd bolus är aktiv</string>
+    <string name="smbalwaysdisabled">SMB Alltid På och SMB Efter Kolhydrater är inaktiverat pga att den aktiva BG-källan inte stöder avancerad filtrering</string>
+    <string name="smbnotallowedinopenloopmode">SMB inte tillåtet i Open Loop</string>
+    <string name="maxvalueinpreferences">maxvärde i Inställningar</string>
+    <string name="hardlimit">hård begränsning</string>
+    <string name="treatmentssafety_title">Säkerhetsbegränsningar</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Slutfört, bra jobbat!</string>
+    <string name="not_completed_yet">Inte slutfört ännu</string>
+    <string name="time_elapsed">Förfluten tid</string>
+    <string name="maxiobset">Max IOB är korrekt angivet</string>
+    <string name="hasbgdata">BG tillgängligt från vald källa</string>
+    <string name="synchaswritepermission">Synkroniseringstjänsten har skrivrättigheter</string>
+    <string name="loopenabled">Loop aktiverad</string>
+    <string name="apsselected">APS vald</string>
+    <string name="closedmodeenabled">Closed loop aktiverad</string>
+    <string name="objectives_shortname">Mål</string>
+    <string name="description_objectives">Inlärningsprogram</string>
+    <string name="doyouwantresetstart">Vill du starta om målet? Du kan förlora de steg du gjort hittills.</string>
+    <string name="objectives_next_button">Nästa</string>
+    <string name="objectives_previous_button">Föregående</string>
+    <string name="objectives_button_unfinish">Nollställ slutfört läge</string>
+    <string name="objectives_button_unstart">Nollställ startat läge</string>
+</resources>

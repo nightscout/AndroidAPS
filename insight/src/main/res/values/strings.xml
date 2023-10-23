@@ -11,13 +11,11 @@
     <string name="stop_pump">Stop pump</string>
     <string name="started">Started</string>
     <string name="stopped">Stopped</string>
-    <string name="paused">Paused</string>
     <string name="operating_mode">Operating mode</string>
     <string name="description_pump_insight_local">Pump integration for Accu-Chek Insight pumps</string>
     <string name="not_inserted">Not inserted</string>
     <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Basal</string>
-    <string name="tdd_total">TDD Total</string>
     <string name="tbr_formatter">%1$d%% for %2$d / %3$d min</string>
     <string name="multiwave_bolus">Multiwave bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
@@ -53,7 +51,6 @@
     <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
     <string name="pump_stopped">Pump stopped</string>
     <string name="pump_started">Pump started</string>
-    <string name="pump_paused">Pump paused</string>
     <string name="short_status_last_connected">Last conn: %1$d min ago</string>
     <string name="short_status_tbr">TBR: %1$d%% for %2$d / %3$d min</string>
     <string name="short_status_extended">Extended: %1$.2f / %2$.2f U for %3$d min</string>
@@ -61,8 +58,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="confirm">Confirm</string>
-    <string name="mute_alert">Mute</string>
     <string name="release_software_version">Release software version</string>
     <string name="ui_processor_software_version">UI processor software version</string>
     <string name="pc_processor_software_version">PC processor software version</string>
@@ -86,4 +81,6 @@
     <string name="min_recovery_duration">Min. recovery duration [s]</string>
     <string name="pump_alert">Pump alert</string>
     <string name="pairing_information">Pairing information</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
+
 </resources>

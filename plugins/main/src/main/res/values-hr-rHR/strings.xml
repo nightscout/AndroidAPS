@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="description_sms_communicator">Daljinsko upravljanje AndroidAPS-om pomoću SMS naredbi.</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Skenirajte kod za postavljanje AAPS OTP kodova</string>
+    <string name="smscommunicator_otp_reset_warning">Poništavanjem autentifikatora činite sve već osigurane autentifikatore nevažećima. Morat ćete ih ponovno postaviti!</string>
+    <string name="smscommunicator_temptarget_with_code">Za postavljanje privremenog cilja %1$s odgovorite s kodom %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">Da biste otkazali Temp Target, odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">Da biste onemogućili uslugu SMS Remote Service, odgovorite s kodom %1$s.\n\nImajte na umu da ćete je moći ponovno aktivirati samo s AAPS glavnog pametnog telefona.</string>
+    <string name="smscommunicator_stopped_sms">Usluga SMS Remote Service zaustavljena. Za ponovno aktiviranje upotrijebite AAPS na glavnom pametnom telefonu.</string>
+    <string name="smscommunicator_calibration_reply_with_code">Za slanje kalibracije %1$.2f odgovorite s kodom %2$s</string>
+    <string name="smscommunicator_bolus_failed">Bolus nije uspio</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Najmanji broj minuta koji mora proći između jednog daljinskog bolusa i sljedećeg</string>
+    <string name="smscommunicator_remote_bolus_min_distance">Koliko minuta mora proći najmanje između dva bolusa</string>
+    <string name="smscommunicator_remote_bolus_min_distance_caveat">Radi vaše sigurnosti, za uređivanje ove postavke morate dodati najmanje 2 telefonska broja.</string>
+    <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U uspješno isporučen</string>
+    <string name="smscommunicator_meal_bolus_delivered">Bolus za obrok %1$.2f U uspješno isporučen</string>
+    <string name="smscommunicator_meal_bolus_delivered_tt">Ciljajte %1$s na %2$d minute</string>
+    <string name="smscommunicator_remote_commands_allowed">Dopusti daljinske naredbe putem SMS-a</string>
+    <string name="smscommunicator_loop_has_been_disabled">Petlja je onemogućena</string>
+    <string name="smscommunicator_loop_has_been_enabled">Petlja je omogućena</string>
+    <string name="smscommunicator_loop_is_enabled">Petlja je omogućena</string>
+    <string name="smscommunicator_pump_connect_with_code">Za povezivanje pumpe odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_pump_connect_fail">Povezivanje s pumpom nije uspjelo</string>
+    <string name="smscommunicator_pump_disconnect_with_code">Za odspajanje pumpe na %1$d minute odgovorite s kodom %2$s</string>
+    <string name="smscommunicator_pump_disconnected">Pumpa nije povezana</string>
+    <string name="smscommunicator_remote_command_not_allowed">Daljinska naredba nije dopuštena</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">Daljinski bolus nije dostupan. Pokušajte ponovno kasnije.</string>
+    <string name="smscommunicator_basal_reply_with_code">Za početak bazalnog %1$.2f U/h za %2$d min odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_profile_reply_with_code">Za promjenu profila na %1$s %2$d%% odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_extended_reply_with_code">Za početak produženog bolusa %1$.2f U za %2$d min odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_carbs_reply_with_code">Za unos %1$dg na %2$s odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">Za početak bazalnog %1$d%% za %2$d min odgovorite s kodom %3$s</string>
+    <string name="smscommunicator_suspend_reply_with_code">Da biste obustavili petlju na %1$d minute, odgovorite s kodom %2$s</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Za nastavak petlje odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Da biste omogućili petlju odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Za onemogućavanje petlje odgovorite s kodom %1$s</string>
+    <string name="smscommunicator_tempbasal_set">Temp bazal %1$.2fU/h za %2$d min uspješno je započeo</string>
+    <string name="smscommunicator_extended_set">Produženi bolus %1$.2fU za %2$d min uspješno je započeo</string>
+    <string name="smscommunicator_carbs_set">Ugljikohidrati %1$d g uspješno uneseni</string>
+    <string name="smscommunicator_carbs_failed">Unos %1$dg ugljikohidrata nije uspio</string>
+    <string name="smscommunicator_tempbasal_set_percent">Temp bazal %1$d%% za %2$d min uspješno je započeo</string>
+    <string name="smscommunicator_tempbasal_failed">Temp bazalni početak nije uspio</string>
+    <string name="smscommunicator_extended_failed">Početak produženog bolusa nije uspio</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Za zaustavljanje privremenog bazalnog odgovora s kodom %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Za zaustavljanje produljenog bolusa odgovorite kodom %1$s</string>
+    <string name="smscommunicator_tempbasal_canceled">Temp bazal je otkazan</string>
+    <string name="smscommunicator_extended_canceled">Produženi bolus otkazan</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Otkazivanje privremenog bazala nije uspjelo</string>
+    <string name="smscommunicator_extended_cancel_failed">Otkazivanje produženog bolusa nije uspjelo</string>
+    <string name="smscommunicator_unknown_command">Nepoznata naredba ili pogrešan odgovor</string>
+    <string name="smscommunicator_wrong_duration">Pogrešno trajanje</string>
+    <string name="smscommunicator_loop_suspended">Petlja suspendirana</string>
+    <string name="sms_actual_bg">GUK:</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">Aktivni inzulin:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Bazal:</string>
+    <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
+    <string name="disabled_loop">Petlja onemogućena</string>
+    <!-- Food-->
+    <string name="food_short">Hrana</string>
+    <string name="description_food">Prikaži postavke prehrane definirane u Nightscout</string>
+    <string name="filter">Filter</string>
+    <string name="food">Hrana</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_energy">Eng</string>
+    <string name="short_protein">Proteini</string>
+    <string name="short_fat">Masnoće</string>
+    <string name="category">Kategorija</string>
+    <string name="subcategory">Podkategorija</string>
+    <string name="calculator_label">Kalkulator</string>
+    <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Odaberite tamno, svijetlo ili slijedite temu sustava</string>
+    <string name="app_color_scheme">Shema boja aplikacije</string>
+    <string name="dark_theme">Tamna tema</string>
+    <string name="light_theme">Svijetla tema</string>
+    <string name="follow_system_theme">Koristite temu uređaja</string>
+    <!-- Profile -->
+    <string name="localprofile">Profil</string>
+    <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definirajte profil koji je dostupan izvan mreže.</string>
+    <string name="a11y_add_new_to_list">dodaj novi na popis</string>
+    <string name="do_you_want_switch_profile">Želite li promijeniti profil i odbaciti promjene napravljene na trenutnom profilu?</string>
+    <string name="save_or_reset_changes_first">Prvo spremite ili poništite trenutne promjene</string>
+    <string name="delete_current_profile">Izbrisati trenutni profil?</string>
+    <string name="units_colon">Jedinice:</string>
+    <string name="missing_profile_name">Nedostaje naziv profila</string>
+    <string name="error_in_ic_values">Pogreška u IC vrijednostima</string>
+    <string name="error_in_basal_values">Pogreška u bazalnim vrijednostima</string>
+    <string name="error_in_target_values">Pogreška u ciljanim vrijednostima</string>
+    <string name="error_in_isf_values">Pogreška u ISF vrijednostima</string>
+    <string name="invalid_profile_not_accepted">Nevažeći profil %1$s nije prihvaćen od NS-a</string>
+    <string name="view">Pogled</string>
+    <string name="errors">Greške</string>
+    <string name="select_profile">Odaberite profil za uređivanje</string>
+    <string name="profile_name">Ime profila:</string>
+    <string name="a11y_add_new_profile">dodaj novi profil</string>
+    <string name="a11y_clone_profile">klonirajte trenutni profil</string>
+    <string name="a11y_delete_current_profile">brisanje trenutnog profila</string>
+    <string name="dia_short">DIA</string>
+    <string name="target_short">CILJ</string>
+    <string name="basal_short">BAZAL</string>
+    <!-- Actions -->
+    <string name="description_actions">Nekoliko izbora za brzi pristup uobičajenim funkcijama</string>
+    <string name="sensor_label">Senzor</string>
+    <string name="insulin_label">Inzulin</string>
+    <!-- Overview -->
+    <string name="a11y_insulin_label">inzulin</string>
+    <string name="overview">Pregled</string>
+    <string name="description_overview">Prikaži trenutno stanje tvog loop-a i izbore za najuobičajenije postupke</string>
+    <string name="treatments">Tretmani</string>
+    <string name="enable_bolus_advisor">Omogući savjetnika za bolus</string>
+    <string name="enable_bolus_advisor_summary">Omogući savjetnika za bolus i koristite podsjetnik da počnete jesti kasnije umjesto rezultata čarobnjaka tijekom visoke glikemije (\"pre-bolus\")</string>
+    <string name="enablebolusreminder_summary">Koristite podsjetnik za bolus kasnije pomoću čarobnjaka (\"post-bolus\")</string>
+    <string name="run_question">Pokrenuti %s?</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_treatments">Tretmani</string>
+    <string name="basal_shortname">BAZAL</string>
+    <string name="graph_scale">Skala grafikona</string>
+    <!-- Skins -->
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="description_persistent_notification">Prikazuje tekuće obavijesti sa kratkim pregledom što loop radi</string>
+</resources>

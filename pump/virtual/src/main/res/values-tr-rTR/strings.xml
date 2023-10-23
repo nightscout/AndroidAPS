@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Sanal Pompa Tipi</string>
+    <string name="virtual_pump_definition">Pompa tanımı</string>
+    <string name="virtual_pump_pump_def">Bolus: Adım=%1$s\nYayma Bolus: [Adım=%2$s, Süre=%3$sdk-%4$ssa]\nBazal: Adım=%5$s\nGBO: %6$s (ile %7$s), Süre=%8$sdk-%9$ssa\n%10$s</string>
+    <string name="virtual_pump_shortname">VPOMP</string>
+    <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
+    <string name="virtual_pump_label">SANAL POMPA</string>
+    <string name="virtualpump_settings">Sanal pompa ayarları</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Sanal pompada bazal/bolus ayrıntı düzeyi için yalnızca ayrık değerler desteklenir. Aralıklar değil.</string>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">BG</string>
+    <string name="executing_right_now">Il comando sarà eseguito ora</string>
+    <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
+    <string name="permission">Autorizzazione</string>
+    <string name="need_whitelisting">%1$s necessita della whitelist per l\'ottimizzazione della batteria per avere prestazioni adeguate</string>
+    <string name="need_location_permission">L\'applicazione richiede l\'accesso alla posizione per la scansione bluetooth e l\'identificazione WiFi</string>
+    <string name="need_storage_permission">L\'applicazione richiede l\'accesso alla memoria per memorizzare i file di log ed esportare le impostazioni</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Molto basso</string>
+    <string name="low" comment="3.1-3.9">Basso</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
+    <string name="veryHigh" comment="above 13.9">Molto alto</string>
+    <string name="below" comment="below &quot;in range&quot;">Sotto</string>
+    <string name="in_range">In range</string>
+    <string name="above" comment="above &quot;in range&quot;">Sopra</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="detailed_14_days">Dettaglio 14 giorni</string>
+    <string name="day_tir">TIR giorno</string>
+    <string name="night_tir">TIR notturno</string>
+    <string name="carbs_short" comment="max 6 characters">CHO</string>
+</resources>

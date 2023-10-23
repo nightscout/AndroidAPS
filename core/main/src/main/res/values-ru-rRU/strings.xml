@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="format_carbs">%1$d гр</string>
+    <string name="count_selected">Выбрано: %1$d</string>
+    <string name="remove_items">Удалить элементы</string>
+    <string name="sort_items">Сортировать элементы</string>
+    <string name="remove_selected_items">Удалить выбранные элементы</string>
+    <string name="sort_label">Сортировать</string>
+</resources>

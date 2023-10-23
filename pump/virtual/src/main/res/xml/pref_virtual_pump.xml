@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/key_virtualpump_settings"
+        android:title="@string/virtualpump_settings"
+        app:initialExpandedChildrenCount="0">
+
+        <ListPreference
+            android:defaultValue="1"
+            android:entries="@array/virtualPumpTypes"
+            android:entryValues="@array/virtualPumpTypes"
+            android:key="@string/key_virtualpump_type"
+            android:title="@string/virtual_pump_type" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_virtual_pump_upload_status"
+            android:title="@string/virtualpump_uploadstatus_title" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

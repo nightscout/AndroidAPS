@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Η ολοκλήρωση της αντλίας για τη Medtronic, απαιτεί τη συσκευή RileyLink και το συγκεκριμένο μοντέλο αντλίας</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Σειριακός Αριθμός Αντλίας</string>
+    <string name="medtronic_pump_type">Τύπος Αντλίας</string>
+    <string name="medtronic_pump_frequency">Συχνότητα Αντλίας</string>
+    <string name="medtronic_pump_bolus_delay">Η καθυστέρηση πριν το bolus ξεκίνησε (s)</string>
+    <string name="medtronic_pump_max_bolus">Μέγιστο Bolus στην αντλία (U)</string>
+    <string name="medtronic_pump_max_basal">Μέγιστος Βασικός στην αντλία (U/h)</string>
+    <string name="medtronic_pump_encoding">Αποκωδικοποίηση Medtronic</string>
+    <string name="medtronic_pump_frequency_us_ca">US &amp; Canada (916MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Παγκοσμίως (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Κωδικοποίηση λογισμικού 4b6b</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Κωδικοποίηση hardware 4b6b</string>
+    <string name="medtronic_custom_action_wake_and_tune">Wake and Tune Up</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Καθαρισμός Bolus Block</string>
+    <string name="medtronic_custom_action_reset_rileylink">Επαναφορά Ρυθμίσεων RileyLink</string>
+    <string name="medtronic_pump_battery_select">Τύπος Μπαταρίας (Power View)</string>
+    <string name="medtronic_pump_battery_no">Μη επιλεγμένη (Simple View)</string>
+    <string name="medtronic_pump_battery_alkaline">Αλκαλική (Extended view)</string>
+    <string name="medtronic_pump_battery_lithium">Λιθίου (Extended view)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Εκτενής προβολή)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Εκτενής προβολή)</string>
+    <string name="medtronic_bolus_debugging">Εντοπισμός Σφαλμάτων Bolus/Θεραπειών</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Μπαταρία RileyLink</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Σφάλματα</string>
+    <string name="medtronic_error_serial_not_set">Δεν ορίστηκε # Serial.</string>
+    <string name="medtronic_error_serial_invalid">Serial # μη έγκυρο.</string>
+    <string name="medtronic_error_pump_type_not_set">Δεν ορίστηκε Τύπος Αντλίας.</string>
+    <string name="medtronic_error_pump_type_invalid">Τύπος Αντλίας δεν υποστηρίζεται.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Δεν ορίστηκε Συχνότητα Αντλίας.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Συχνότητα Αντλίας δεν υποστηρίζεται.</string>
+    <string name="medtronic_error_rileylink_address_invalid">Διεύθυνση RileyLink μη έγκυρη.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Ο τύπος αντλίας που ανιχνεύτηκε δεν είναι ο ίδιος με αυτόν που ορίστηκε.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Η ρύθμιση των βασικών προφίλ/μοτίβων δεν είναι ενεργοποιημένη στην αντλία. Ενεργοποιήστε την στην αντλία.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Το βασικό προφίλ που ορίστηκε στην αντλία είναι λάθoς (πρέπει να είναι STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Λάθος τύπος TBR ορίστηκε στην αντλία (πρέπει να είναι Absolute).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Λάθος μέγιστο bolus ορίστηκε στην αντλία (πρέπει να είναι %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Λάθος μέγιστο Βασικού ορίστηκε στην αντλία (πρέπει να είναι %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Λειτουργία δεν είναι δυνατή. \n\n Χρειάζεται να ρυθμίσετε την αντλία Medtronic πρώτα, προτού να μπορέσετε να χρησιμοποιήσετε αυτή την λειτουργία.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Απαιτήθηκε αλλαγή ώρας πάνω από 24h.</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Ιστορικό Αντλίας Medtronic</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Ακυρώσατε τον Bolus, αφού είχε ήδη σταλεί στην αντλία. Επειδή η αντλία Medtronic δεν υποστηρίζει ακύρωση, θα χρειαστεί να ακυρωθεί χειροκίνητα. Βάλτε την αντλία σε αναστολή λειτουργίας και μετά κάντε Συνέχιση (αν θέλετε να ακυρώσετε ακόμα). Η εφαρμογή θα πάρει τις αλλαγές, στην επόμενη ενημέρωση (σε λιγότερο από 5 λεπτά).</string>
+    <string name="medtronic_cmd_cant_read_tbr">Αδυναμία ανάγνωσης τρέχοντος TBR.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Αδυναμία ακύρωσης τρέχοντος TBR. Αναστολή λειτουργίας.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Η δημιουργία προφίλ απέτυχε, επειδή ακολουθώντας πρότυπα, έχετε υπερβολικά μεγάλο βασικό ρυθμό: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">Το Bolus δεν μπορεί να χορηγηθεί.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Το Bolus δεν μπορεί να παραδοθεί διότι η διαθέσιμη ποσότητα ινσουλίνης (%1$.2f) είναι μικρότερη από αυτήν που ζητείται (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR δεν μπορεί να μπει.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Αδυναμία ακύρωσης τρέχοντος TBR.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Το Βασικό Προφίλ δεν μπορεί να τοποθετηθεί.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Το Βασικό Προφίλ είναι ίδιο, οπότε δεν θα μπει ξανά.</string>
+    <string name="medtronic_cmd_desc_get_history">Βλέπε Ιστορικό - Σελίδα %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Βλέπε Ιστορικό - Σελίδα %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Πάρτε Ώρα Αντλίας</string>
+    <string name="medtronic_cmd_desc_set_time">Ορισμός Ώρας Αντλίας</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Λήψη Κατάστασης Μπαταρίας</string>
+    <string name="medtronic_cmd_desc_get_settings">Λάβετε ρυθμίσεις</string>
+    <string name="medtronic_cmd_desc_get_model">Λάβετε Μοντέλο Αντλίας</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Λάβετε Βασικό Προφίλ</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Βάλτε Βασικό Προφίλ</string>
+    <string name="medtronic_cmd_desc_get_tbr">Λάβετε Προσωρινό Ρυθμό</string>
+    <string name="medtronic_cmd_desc_set_tbr">Βάλτε Προσωρινό Ρυθμό</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Ακύρωση Προσωρινού Βασικού</string>
+    <string name="medtronic_cmd_desc_set_bolus">Βάλτε Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Λήψη Ινσουλίνης Που Απομένει</string>
+    <string name="medtronic_pump_status_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
+    <string name="medtronic_warning">Προειδοποίηση</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Τώρα</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">πριν</string>
+    <string name="medtronic_notification_check_time_date">Η ώρα της αντλίας χρειάζεται ανανέωση</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="common_on">Ενεργό</string>
+    <string name="common_off">Ανενεργό</string>
+    <string name="pump_time_updated">Η ώρα στην αντλία άλλαξε</string>
+    <string name="set_neutral_temps_title">Ορισμός ουδέτερου προσωρινού ρυθμού</string>
+    <string name="set_neutral_temps_summary">Αν ενεργοποιηθεί, θα ακυρωθεί ο προσωρινός βασικός πριν από το τέλος κάθε ώρας. Αυτή η μέθοδος μπορεί να βοηθήσει στη διακοπή κάποιου ωριαίου μπιπ/δόνησης ορισμένων αντλιών.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d λεπτά απομένουν)</string>
+    <string name="invalid_history_data">Ανιχνεύθηκαν μη έγκυρα δεδομένα ιστορικού αντλίας. Ανοίξτε νέο θέμα και αποστείλετε τα αρχεία καταγραφής.</string>
+    <string name="riley_statistics">Στατιστικά RL</string>
+    <string name="medtronic_history_type">Τύπος:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Πατήθηκε η ανανέωση</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Προγραμματισμένη Ανανέωση Κατάστασης</string>
+</resources>

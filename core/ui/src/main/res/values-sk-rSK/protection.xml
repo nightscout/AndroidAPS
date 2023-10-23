@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">Vyžaduje sa autentifikácia</string>
+    <string name="biometric_description">Priložte prst na čítačku odtlačkov prstov pre overenie vašej totožnosti</string>
+    <string name="settings_protection">Ochrana nastavení</string>
+    <string name="application_protection">Ochrana aplikácie</string>
+    <string name="bolus_protection">Ochrana bolusu</string>
+    <string name="settings_password">Heslo pre nastavenia</string>
+    <string name="settings_pin">Nastavenie PIN</string>
+    <string name="application_password">Heslo aplikácie</string>
+    <string name="application_pin">PIN pre aplikáciu</string>
+    <string name="bolus_password">Heslo pre bolus</string>
+    <string name="bolus_pin">PIN pre bolus</string>
+    <string name="protection_timeout_title">Zachovanie hesla a PIN [s]</string>
+    <string name="protection_timeout_summary">Čas pred zadaním hesla alebo PIN</string>
+    <string name="biometric">Biometria</string>
+    <string name="custom_password">Vlastné heslo</string>
+    <string name="custom_pin">Vlastný PIN</string>
+    <string name="noprotection">Bez ochrany</string>
+    <string name="unsecure_fallback_biometric">Nezabezpečené záložné riešenie</string>
+    <string name="unsecure_fallback_descriotion_biometric">Aby bolo biometrické zabezpečenie účinné, je potrebné pre záložné riešenie nastaviť hlavné heslo.\n\nProsím nastavte hlavné heslo!</string>
+    <string name="password_set">Heslo nastavené!</string>
+    <string name="pin_set">PIN nastavený!</string>
+    <string name="password_not_set">Heslo nie je nastavené</string>
+    <string name="pin_not_set">PIN nie je nastavený</string>
+    <string name="password_not_changed">Heslo nezmenené</string>
+    <string name="pin_not_changed">PIN nebol zmenený</string>
+    <string name="pin_cleared">PIN bol vymazaný!</string>
+    <string name="password_hint">Zadajte heslo</string>
+    <string name="pin_hint">Zadajte PIN</string>
+</resources>

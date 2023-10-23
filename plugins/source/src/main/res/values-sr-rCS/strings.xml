@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Preuzimajte podatke GUK sa Nightscout-a</string>
+    <string name="description_source_xdrip">Preuzimajte vrijednosti GUK od xDrip+.</string>
+    <string name="description_source_eversense">Preuzimajte vrednosti GUK iz zakrpljene aplikacije Eversense.</string>
+    <string name="description_source_glimp">Preuzimajte vrednosti GUK od Glimp-a.</string>
+    <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
+</resources>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">Començar</string>
+    <string name="objectives_button_verify">Verificar</string>
+    <string name="nth_objective">%1$d. Objectiu</string>
+    <string name="objectivenotstarted">Objectiu %1$d no iniciat</string>
+    <string name="objectivenotfinished">Objectiu %1$d no acabat</string>
+    <string name="objectives_0_objective">Configuració de visualització i monitorització, així com anàlisi de basals i ràtios</string>
+    <string name="objectives_0_gate">Comprovar que la glucèmia està disponible a Nightscout i les dades d\'insulina de la bomba s\'estan enviant</string>
+    <string name="objectives_openloop_objective">Iniciant llaç obert</string>
+    <string name="objectives_openloop_gate">Funcionar en mode llaç obert uns quants dies i acceptar manualment múltiples basals temporals. Configurar i utilitzar objectius temporals i objectius temporals per defecte (p.ex. esport o carbs per tractament d\'hipo)</string>
+    <string name="objectives_maxbasal_objective">Entendre el vostre llaç obert, recomanacions de basals temporals incloses</string>
+    <string name="objectives_maxbasal_gate">D\'acord amb aquesta experiència, decidiu quina hauria de ser la basal màxima i configureu-la a la bomba i la configuració</string>
+    <string name="objectives_maxiobzero_objective">Començant a tancar el llaç amb LGS (Suspensió per glucèmia baixa)</string>
+    <string name="objectives_maxiobzero_gate">Funcionar en mode llaç tancat amb IOB max = 0 uns quants dies, sense gaires esdeveniments LGS (Suspensió per glucèmia baixa)</string>
+    <string name="objectives_maxiob_objective">Ajustant el llaç tancat, augmentant la IOB màxima per sobre de 0 i baixant gradualment els objectius de glucèmia</string>
+    <string name="objectives_maxiob_gate">Funcionar uns quants dies, i al menys una nit sense cap alarma per baixa glucèmia, abans de baixar el valor de glucèmia</string>
+    <string name="objectives_autosens_objective">Ajustar basals i ràtios si cal, i després activar auto-sens</string>
+    <string name="objectives_autosens_gate">1 setmana d\'èxit en mode llaç tancat durant el dia, amb introducció regular de carbohidrats</string>
+    <string name="objectives_smb_objective">Activant funcions addicionals d\'ús diurn, com l\'SMB (super micro bolus)</string>
+    <string name="objectives_auto_objective">Activant l\'automatització</string>
+    <string name="objectives_manualenacts">Activació manual</string>
+    <string name="accomplished">Completat: %1$s</string>
+    <string name="objectives_useprofileswitch">Establiu un perfil del 90% durant 10 minuts (pulsació llarga sobre el nom del perfil a \"Inici\")</string>
+    <string name="objectives_usedisconnectpump">Simuleu una dutxa. Desconnecteu la bomba durant 1h (pulsació llarga sobre la icona \"llaç obert\")</string>
+    <string name="objectives_usereconnectpump">... i torneu a connectar de la mateixa manera</string>
+    <string name="objectives_usetemptarget">Creeu un objectiu temporal personalitzat d\'una durada de 10 minuts (pulsació llarga sobre l\'objectiu actual)</string>
+    <string name="objectives_useactions">Al Configurador, activeu el plugin Accions, feu-lo visible i mostreu el seu contingut des del menú superior</string>
+    <string name="objectives_useloop">Mostreu el contingut del plugin Loop (llaç)</string>
+    <string name="objectives_usescale">Utilitzeu la funció d\'escala fent pulsació llarga sobre la gràfica de glucèmia</string>
+    <string name="objectives_exam_objective">Demostreu els vostres coneixements</string>
+    <string name="objectives_exam_gate">Estudieu les preguntes. Se us donen quatre possibles respostes a cada pregunta. Pot haver-hi més d\'una resposta correcta. Marqueu totes les correctes i seleccioneu VERIFICAR.</string>
+    <string name="answerdisabledto">Resposta deshabilitada fins: %1$s</string>
+    <string name="wronganswer">Resposta incorrecta!</string>
+    <string name="unfinshed_button">Següent no finalitzada</string>
+    <string name="requestcode">Sol·licitar codi: %1$s</string>
+    <string name="objectives_hint">(marqueu totes les respostes correctes)</string>
+    <string name="notconnected">No hi ha connexió a internet</string>
+    <string name="failedretrievetime">Errada en recuperar l\'hora</string>
+    <string name="requirementnotmet">No es compleixen els requeriments de l\'objectiu</string>
+</resources>

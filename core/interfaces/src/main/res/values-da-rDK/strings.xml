@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpe driver ændret.</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d min. siden</string>
+    <string name="minago_long">%1$d minutter siden</string>
+    <string name="hoursago">%1$.1f t siden</string>
+    <string name="days_ago">%1$.1f dage siden</string>
+    <string name="days_ago_round">%1$.0f dage siden</string>
+    <string name="in_days">om %1$.0f dage</string>
+    <string name="in_days_round">om %1$.0f dage</string>
+    <string name="shorthour">t</string>
+    <string name="days">dage</string>
+    <string name="hours">timer</string>
+    <string name="unit_second">sekund</string>
+    <string name="unit_minute">minut</string>
+    <string name="unit_hour">time</string>
+    <string name="unit_day">dag</string>
+    <string name="unit_week">uge</string>
+    <string name="unit_seconds">sekunder</string>
+    <string name="unit_minutes">minutter</string>
+    <string name="unit_hours">timer</string>
+    <string name="unit_days">dage</string>
+    <string name="unit_weeks">uger</string>
+    <string name="shortminute">min</string>
+    <string name="shortday">d</string>
+    <string name="later_today">Senere i dag</string>
+    <string name="tomorrow">I morgen</string>
+    <string name="today">I dag</string>
+    <string name="yesterday">I går</string>
+    <!-- Rx -->
+    <string name="connecting_for">Opretter forbindelse i %1$d s</string>
+    <string name="handshaking">Forbindelse verificeres</string>
+    <string name="connected">Tilsuttet</string>
+    <string name="disconnecting">Afbryder</string>
+    <string name="waiting_for_disconnection">Venter på afbrydelse</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Oprettet den: %1$s</string>
+    <string name="metadata_label_watchface_author">Forfatter: %1$s</string>
+    <string name="metadata_label_watchface_name">Navn: %1$s</string>
+    <string name="metadata_wear_import_filename">Filnavn: %1$s</string>
+    <string name="metadata_label_plugin_version">Plugin version: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Navn: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Oplysning: %1$s</string>
+    <string name="pref_show_iob">Vis IOB</string>
+    <string name="pref_show_detailed_iob">Vis detaljeret IOB</string>
+    <string name="pref_show_cob">Vis COB</string>
+    <string name="pref_show_delta">Vis Delta</string>
+    <string name="pref_show_detailed_delta">Vis detaljeret Delta</string>
+    <string name="pref_show_avgdelta">Show GnsDelta</string>
+    <string name="pref_show_phone_battery">Vis Telefonbatteri</string>
+    <string name="pref_show_rig_battery">Vis Rig-batteri</string>
+    <string name="pref_show_basal_rate">Vis Basalrate</string>
+    <string name="pref_show_loop_status">Vis Loop-status</string>
+    <string name="pref_show_bg">Vis BS</string>
+    <string name="pref_show_bgi">Vis BSI</string>
+    <string name="pref_show_direction_arrow">Vis Retningspil</string>
+    <string name="pref_show_ago">Vis alder</string>
+    <string name="pref_show_week_number">Vis ugenummer</string>
+    <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTÉR URSKIVE-knappen for at generere en skabelon</string>
+    <string name="wear_default_watchface">Standard Urskive</string>
+    <string name="cwf_comment_background">Baggrundsbillede</string>
+    <string name="cwf_comment_chart">Grafer (BS, basal, prognoselinjer...)</string>
+    <string name="cwf_comment_cover_chart">Billede foran graf og bag tekstfelter</string>
+    <string name="cwf_comment_freetext1">Fritekst 1</string>
+    <string name="cwf_comment_freetext2">Fri tekst 2</string>
+    <string name="cwf_comment_freetext3">Fri tekst 3</string>
+    <string name="cwf_comment_freetext4">Fri tekst 4</string>
+    <string name="cwf_comment_iob1">IOB-etiket eller IOB-sum, hvis givet</string>
+    <string name="cwf_comment_iob2">IOB-sum eller (Bolus_IOB|Basal_IOB) hvis givet</string>
+    <string name="cwf_comment_cob1">COB-etiket</string>
+    <string name="cwf_comment_cob2">COB-værdi</string>
+    <string name="cwf_comment_delta">Kort BG-delta</string>
+    <string name="cwf_comment_avg_delta">Gennemsnitlig BG-delta (15min)</string>
+    <string name="cwf_comment_uploader_battery">Telefonbatteri (%)</string>
+    <string name="cwf_comment_rig_battery">Globalt loop batteri (%)</string>
+    <string name="cwf_comment_basalRate">Basalrate</string>
+    <string name="cwf_comment_bgi">BGI-værdi</string>
+    <string name="cwf_comment_time">Tid (TT:MM eller TT:MM:SS)</string>
+    <string name="cwf_comment_hour">Time (TT)</string>
+    <string name="cwf_comment_minute">Minut (MM)</string>
+    <string name="cwf_comment_second">Sekund (SS)</string>
+    <string name="cwf_comment_timePeriod">AM eller PM</string>
+    <string name="cwf_comment_day_name">Navn på ugedag</string>
+    <string name="cwf_comment_day">Dag (DD)</string>
+    <string name="cwf_comment_week_number">Ugenummer (uu)</string>
+    <string name="cwf_comment_month">Måned navn (kort)</string>
+    <string name="cwf_comment_loop">Loop status og tid</string>
+    <string name="cwf_comment_direction">Retningspil</string>
+    <string name="cwf_comment_timestamp">Minutter siden sidst modtaget BS</string>
+    <string name="cwf_comment_sgv">BS-værdi</string>
+    <string name="cwf_comment_cover_plate">Dækbillede foran tekst (opkald...)</string>
+    <string name="cwf_comment_hour_hand">Billede af timeviser (Analogur)</string>
+    <string name="cwf_comment_minute_hand">Billede af minutviser (Analogur)</string>
+    <string name="cwf_comment_second_hand">Billede af sekundviser (Analogur)</string>
+</resources>

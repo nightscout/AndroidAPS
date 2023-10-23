@@ -16,13 +16,13 @@ import androidx.core.content.ContextCompat;
 
 import javax.inject.Inject;
 
+import app.aaps.core.utils.HtmlHelper;
 import dagger.android.support.DaggerAppCompatActivity;
 import info.nightscout.androidaps.insight.R;
 import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus;
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils;
-import info.nightscout.androidaps.utils.HtmlHelper;
 
 public class InsightAlertActivity extends DaggerAppCompatActivity {
 

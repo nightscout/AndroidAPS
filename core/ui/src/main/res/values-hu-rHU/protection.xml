@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="protection_timeout_title">Jelszó és PIN megőrzése [mp]</string>
+    <string name="protection_timeout_summary">Jelszó vagy a PIN-kód megadása előtti idő</string>
+    <string name="unsecure_fallback_biometric">Nem biztonságos visszalépés</string>
+    <string name="unsecure_fallback_descriotion_biometric">A hatályba lépéshez a biometrikus védelemhez tartalék jelszót kell beállítani.\n\nKérjük, állítson be egy fő jelszót!</string>
+</resources>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Constrângere de bolus aplicată</string>
+    <string name="carbs_constraint_applied">Constrângere de carbohidrați aplicată</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialog anulat</string>
+    <string name="start_activity_tt">Start TT activitate</string>
+    <string name="start_eating_soon_tt">Start TT mănânc-în-curând</string>
+    <string name="start_hypo_tt">Start TT hipo</string>
+    <string name="time_offset">Decalaj</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Amintește-mi sa fac bolus mai târziu</string>
+    <string name="a11y_carb_reminder">setați memento</string>
+    <!--    Widget-->
+    <string name="configure">Configurați opacitatea</string>
+    <string name="widget_description">Widget AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Monitorizare activitate</string>
+    <string name="do_you_want_reset_stats">Doriți să resetați statisticile de activitate?</string>
+    <string name="do_you_want_reset_tdd_stats">Doriți să resetați statisticile DZT?</string>
+    <string name="statistics">Statistici</string>
+    <string name="calculation_in_progress">Calcul în desfășurare</string>
+    <string name="invalid_age">Valoare vârstă invalidă</string>
+    <string name="invalid_weight">Valoare greutate invalidă</string>
+    <string name="id">ID:</string>
+    <string name="submit">Trimiteți</string>
+    <string name="age">Vârstă</string>
+    <string name="weight_label">Greutate</string>
+    <string name="most_common_profile">Cel mai frecvent profil:</string>
+    <string name="survey_comment">Notă: Doar datele vizibile pe acest ecran vor fi încărcate în mod anonim. ID-ul este alocat acestei instalări a AndroidAPS. Puteți trimite date din nou dacă profilul dumneavoastră principal se modifică, dar lăsați-l să ruleze cel puțin o săptămână pentru ca rezultatul să fie vizibil în interval de timp. Ajutorul dumneavoastră este apreciat.</string>
+    <string name="glucose_type">Tip glicemie</string>
+    <string name="bg_other">Altul</string>
+    <string name="bg_meter">Glucometru</string>
+    <string name="bg_sensor">Senzor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Asigurați-vă că aveți cantitatea specificată de instrucțiunile setului de infuzie!</string>
+    <string name="record_pump_site_change">Înregistrare schimbare a locului pompei</string>
+    <string name="record_insulin_cartridge_change">Înregistrare schimbare rezervor insulină</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Nu bolusa, doar înregistrează</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Reutilizare %1$d%% %2$dh</string>
+    <string name="timeshift_label">Decalare</string>
+    <string name="percentage_label">Procentaj</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Suspendă bucla pentru 1h</string>
+    <string name="suspendloopfor2h">Suspendă bucla pentru 2h</string>
+    <string name="suspendloopfor3h">Suspendă bucla pentru 3h</string>
+    <string name="suspendloopfor10h">Suspendă bucla pentru 10 h</string>
+    <string name="disconnectpump">Deconectează pompa</string>
+    <string name="disconnectpumpfor15m">Deconectează pompa pentru 15 min</string>
+    <string name="disconnectpumpfor30m">Deconectează pompa pentru 30 min</string>
+    <string name="disconnectpumpfor1h">Deconectează pompa pentru 1h</string>
+    <string name="disconnectpumpfor2h">Deconectează pompa pentru 2h</string>
+    <string name="disconnectpumpfor3h">Deconectează pompa pentru 3h</string>
+    <string name="resume">Restabilește</string>
+    <string name="reconnect">Reconectaţi pompa</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 oră</string>
+    <string name="duration2h">2 ore</string>
+    <string name="duration3h">3 ore</string>
+    <string name="duration10h">10 ore</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">corectează rezultatul cu %</string>
+    <string name="a11_correction_units">corectează rezultatul cu unități</string>
+    <string name="two_hours">2h</string>
+    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
+    <string name="missing_carbs">Lipsă %1$d g</string>
+    <string name="a11y_current_bg">valoarea actuală a glicemiei</string>
+    <string name="carb_time_label">Ora carbohidrați</string>
+    <string name="a11y_set_carb_timer">stabilește alarma pentru timpul carbohidraților</string>
+    <string name="show_calculation">Arată calculul</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Nicio înregistrare disponibila</string>
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulină:</string>
+    <string name="treatments_carbs_label_string">Carbohidrați:</string>
+    <string name="treatments_iobtotal_label_string">IOB total:</string>
+    <string name="treatments_iob_activity_total_label_string">Activitate total IOB:</string>
+    <string name="tempbasals_realduration_label_string">Durată:</string>
+    <string name="tempbasals_netratio_label_string">Raport:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Corecție</string>
+    <string name="meal_bolus">Masă</string>
+    <string name="prime">Amorsare</string>
+    <string name="profile_changes">Modificări ale profilului</string>
+    <string name="tempt_targets">Ținte temporare</string>
+    <string name="carbs_and_bolus">Carbohidrați și bolusuri</string>
+    <string name="show_invalidated_records">Arată înregistrările invalidate / şterse</string>
+    <string name="hide_invalidated_records">Ascunde înregistrările invalidate / eliminate</string>
+    <string name="refresh_from_nightscout">Reîmprospătare din Nightscout</string>
+    <string name="refresheventsfromnightscout">Actualizează din NS</string>
+    <string name="show_invalidated">Arată invalidat</string>
+    <string name="hide_invalidated">Ascunde invalidat</string>
+    <string name="careportal_remove_started_events">Eliminare intrări pornire AAPS</string>
+    <string name="hide_loop">Ascunde bucla</string>
+    <string name="show_loop">Arată bucla</string>
+    <string name="user_entry">Înregistrare utilizator</string>
+    <string name="clone_label">Clonează</string>
+    <string name="show_loop_records">Afișare înregistrări buclă</string>
+    <string name="show_hide_records">Ascundere înregistrări buclă</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profilul 1</string>
+    <string name="profile2">Profilul 2</string>
+    <string name="profile_type">Tip profil</string>
+    <string name="basal_pct_from_tdd_label">% din bazală</string>
+    <string name="selected_profile">Selectat:</string>
+    <string name="compare_profile">Compară profilurile</string>
+    <string name="nav_profile_helper">Ajutor Profil</string>
+    <string name="motol_default_profile">Profil implicit</string>
+    <string name="current_profile">Profil curent</string>
+    <string name="available_profile">Profil disponibil</string>
+    <string name="format_with_tdd">Vârstă: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Vârstă: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Vârstă: %1$d Greutate: %2$.0f kg</string>
+    <string name="dpv_default_profile">Profil implicit DPV</string>
+    <string name="invalid_pct">Intrare % invalidă</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Rată bazală</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STOP APĂSAT</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">numai pe ceas</string>
+    <string name="a11y_only_on_phone">numai pe telefon</string>
+    <string name="quickwizard_settings">Setări AsistentRapid</string>
+    <string name="overview_edit_quickwizard_button_text">Text buton:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbohidrați:</string>
+    <string name="overview_edit_quickwizard_valid">Valabil:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Adaugă</string>
+    <string name="overview_quickwizard_item_edit_button">Editează</string>
+    <string name="overview_edit_quickwizard_show_on_device">Arată înregistrarea pe dispozitiv:</string>
+    <string name="overview_edit_quickwizard_use_bg">Calcul glicemie</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Calcul IOB bolus</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Calcul IOB bazală</string>
+    <string name="overview_edit_quickwizard_use_trend">Calcul pantă</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Calcul superbolus</string>
+    <string name="overview_edit_quickwizard_percentage">Procentaj</string>
+    <string name="device_all">Toate</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Ceas</string>
+    <string name="positive_only">Doar pozitiv</string>
+    <string name="negative_only">Doar negativ</string>
+    <string name="overview_editquickwizard_usecob">Calcul COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Calcul țintă temporară</string>
+    <string name="overview_editquickwizard_usepercentage">Calculul procentajului</string>
+    <string name="app_default">Implicit pentru aplicație</string>
+    <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
+</resources>

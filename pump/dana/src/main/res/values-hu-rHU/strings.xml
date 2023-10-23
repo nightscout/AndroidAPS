@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="danars_pairing">Párosítás</string>
+    <string name="danar_history_errors">Hibák</string>
+    <string name="danar_history_glucose">Glükóz</string>
+    <string name="danar_pump_alarm">Riasztás</string>
+    <string name="option_on">Be</string>
+    <string name="option_off">Ki</string>
+</resources>

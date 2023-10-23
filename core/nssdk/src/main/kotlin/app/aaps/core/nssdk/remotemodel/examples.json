@@ -1,0 +1,490 @@
+// Entry
+{
+  "device": "xDrip-Follower",
+  "date": 1549414398005,
+  "dateString": "2019-02-06T01:53:18.005+0100",
+  "sgv": 98,
+  "delta": -1.132,
+  "direction": "Flat",
+  "type": "sgv",
+  "filtered": 90336,
+  "unfiltered": 89712,
+  "rssi": 100,
+  "noise": 1,
+  "sysTime": "2019-02-06T01:53:18.005+0100",
+  "identifier": "5c5a3007e0196f4d3d9aeafc",
+  "srvModified": 1549414398005,
+  "srvCreated": 1549414398005
+},
+
+// G6 AAPS
+{
+    "_id": "60bace9f51e8150004f0973a",
+    "device": "AndroidAPS-DexcomG6",
+    "date": 1622855221000,
+    "dateString": "2021-06-05T01:07:01.000Z",
+    "isValid": true,
+    "sgv": 76,
+    "direction": "Flat",                            // DoubleDown, SingleDown, FortyFiveDown, Flat, FortyFiveUp, SingleUp, DoubleUp
+    "type": "sgv",
+    "created_at": "2021-06-05T01:08:47.234Z"
+},
+// G6 DEXCOM APP Share
+{
+  "_id": "60cd4e7d5bcdeb30e43a248d",
+  "sgv": 90,
+  "date": 1624067551000,
+  "dateString": "2021-06-19T01:52:31.000Z",
+  "trend": 4,                                     // 7         , 6         , 5            , 4   , 3          , 2       , 1
+  "direction": "Flat",                            // DoubleDown, SingleDown, FortyFiveDown, Flat, FortyFiveUp, SingleUp, DoubleUp
+  "device": "share2",
+  "type": "sgv",
+  "utcOffset": 0,
+  "sysTime": "2021-06-19T01:52:31.000Z"
+},
+// FSL1 xDrip
+{
+    "device": "AndroidAPS",
+    "date": 1588557121000,
+    "dateString": "2020-05-04T01:52:01Z",
+    "sgv": 76,
+    "direction": "Flat",                        // DoubleDown, SingleDown, FortyFiveDown, Flat, FortyFiveUp, SingleUp, DoubleUp
+    "type": "sgv",
+    "systime": "2020-05-04T01:52:01Z",
+    "utcOffset": 120
+},
+// LimiTTer xDrip
+{
+  "_id": "5ed06c9a0ea4dcb70fac6cc7",
+  "device": "xDrip-LimiTTer",
+  "date": 1590717591357,
+  "dateString": "2020-05-29T01:59:51.357Z",
+  "sgv": 114,
+  "delta": -2.942,
+  "direction": "Flat",
+  "type": "sgv",
+  "filtered": 127411.75515,
+  "unfiltered": 127411.75515,
+  "rssi": 100,
+  "noise": 1,
+  "sysTime": "2020-05-29T01:59:51.357Z",
+  "utcOffset": 120
+},
+
+// API v3 requests for treatments
+{
+  "eventType": "BG Check",
+  "created_at": 1616966443000,
+  "units": "mg/dl",
+  "glucose": 57,
+  "NSCLIENT_ID": "1616966443000",
+  "identifier": "6060f32e9b9c5900045c858b",
+  "srvModified": 1616966443000,
+  "srvCreated": 1616966443000
+},
+{
+  "eventType": "BG Check",
+  "created_at": 1617365936000,
+  "enteredBy": "AndroidAPS",
+  "units": "mg/dl",
+  "notes": "Coucou",
+  "glucose": 94,
+  "glucoseType": "Finger",
+  "identifier": "606727c058f71500041e1ed3",
+  "srvModified": 1617365936000,
+  "srvCreated": 1617365936000
+},
+{
+  "eventType": "Meal Bolus",
+  "carbs": 45,
+  "created_at": "2021-07-13T18:19:43.325Z",
+  "isValid": true,
+  "date": 1626200383325,
+  "identifier": "60ede2a4c574da0004a3869c",
+  "srvModified": 1626200383325,
+  "srvCreated": 1626200383325
+},
+{
+  "eventType": "Meal Bolus",
+  "insulin": 8.1,
+  "created_at": "2021-07-13T11:25:12.664Z",
+  "date": 1626175512664,
+  "type": "NORMAL",
+  "isValid": true,
+  "isSMB": false,
+  "pumpId": 4102,
+  "pumpType": "ACCU_CHEK_INSIGHT_BLUETOOTH",
+  "pumpSerial": "33013206",
+  "identifier": "60ed782dc574da0004a38595",
+  "srvModified": 1626175512664,
+  "srvCreated": 1626175512664
+},
+{
+  "eventType": "Correction Bolus",
+  "insulin": 0.25,
+  "created_at": "2021-07-13T20:44:14.441Z",
+  "date": 1626209054441,
+  "type": "SMB",
+  "isValid": true,
+  "isSMB": true,
+  "pumpId": 4148,
+  "pumpType": "ACCU_CHEK_INSIGHT_BLUETOOTH",
+  "pumpSerial": "33013206",
+  "identifier": "60edfb34c574da0004a386d4",
+  "srvModified": 1626209054441,
+  "srvCreated": 1626209054441
+},{
+  "eventType": "Carb Correction",
+  "carbs": 5,
+  "created_at": "2021-06-17T09:00:34.000Z",
+  "isValid": true,
+  "date": 1623920434000,
+  "identifier": "60cb2f351a94d4000483b692",
+  "srvModified": 1623920434000,
+  "srvCreated": 1623920434000
+},
+{
+"created_at": "2021-05-28T19:46:43.851Z",
+"enteredBy": "openaps://AndroidAPS",
+"eventType": "Combo Bolus",
+"duration": 5,
+"splitNow": 0,
+"splitExt": 100,
+"enteredinsulin": 0.7890262726962469,
+"relative": 8.893749414356174,
+"isValid": true,
+"isEmulatingTempBasal": false,
+"pumpId": 4,
+"pumpType": "ACCU_CHEK_INSIGHT_BLUETOOTH",
+"pumpSerial": "33010032",
+"identifier": "60b148b419cf4300040b0195",
+"srvModified": 1622231203851,
+"srvCreated": 1622231203851
+},
+{
+  "eventType": "Announcement",
+  "created_at": 1617350431592,
+  "enteredBy": "AndroidAPS",
+  "units": "mg/dl",
+  "notes": "5g de glucides requis dans 40 min.",
+  "isAnnouncement": true,
+  "identifier": "6066cf2508a6ed0004b4ed44",
+  "srvModified": 1617350431592,
+  "srvCreated": 1617350431592
+},
+{
+  "eventType": "Note",
+  "created_at": 1617023462485,
+  "units": "mg/dl",
+  "notes": "AndroidAPS started - Logicom Le Hola FR",
+  "identifier": "6061d20b17619800047216b2",
+  "srvModified": 1617023462485,
+  "srvCreated": 1617023462485
+},
+{
+  "eventType": "Exercise",
+  "created_at": 1617373066000,
+  "enteredBy": "AndroidAPS",
+  "units": "mg/dl",
+  "duration": 20,
+  "notes": "ten tab",
+  "identifier": "606727a658f71500041e1ed2",
+  "srvModified": 1617373066000,
+  "srvCreated": 1617373066000
+},
+{
+  "eventType": "Exercise",
+  "isValid": true,
+  "created_at": "2021-07-09T18:15:22.000Z",
+  "enteredBy": "AndroidAPS",
+  "units": "mg/dl",
+  "duration": 105,
+  "notes": "🏓",
+  "identifier": "60e8b223b98ea2000472cbb3",
+  "srvModified": 1625854522000,
+  "srvCreated": 1625854522000
+},
+{
+  "eventType": "Site Change",
+  "created_at": 1616312250000,
+  "units": "mg/dl",
+  "notes": "",
+  "NSCLIENT_ID": "1616312250000",
+  "identifier": "6056f7c1bc2dc60004e75499",
+  "srvModified": 1616312250000,
+  "srvCreated": 1616312250000
+},
+{
+  "eventType": "Sensor Change",
+  "created_at": 1617373059000,
+  "enteredBy": "AndroidAPS",
+  "units": "mg/dl",
+  "identifier": "6067278d58f71500041e1ed1",
+  "srvModified": 1617373059000,
+  "srvCreated": 1617373059000
+},
+{
+  "enteredBy": "AndroidAPS-DexcomG6",
+  "created_at": 1617799461000,
+  "eventType": "Sensor Change",
+  "NSCLIENT_ID": "1617961262771",
+  "identifier": "60702190403172000451e5dc",
+  "srvModified": 1617799461000,
+  "srvCreated": 1617799461000
+},
+{
+  "eventType": "Pump Battery Change",
+  "created_at": 1616517575000,
+  "enteredBy": "AndroidAPS",
+  "units": "mg/dl",
+  "notes": "à peu près...",
+  "NSCLIENT_ID": "1616517575000",
+  "identifier": "605cbce3f9ed3b0004694ee8",
+  "srvModified": 1616517575000,
+  "srvCreated": 1616517575000
+},
+{
+  "created_at": 1617576811000,
+  "eventType": "Pump Battery Change",
+  "NSCLIENT_ID": "1617577097394",
+  "glucoseType": "Manual",
+  "isValid": true,
+  "units": "mg/dl",
+  "identifier": "606a448d7c31f00004bb47ac",
+  "srvModified": 1617576811000,
+  "srvCreated": 1617576811000
+},
+{
+  "eventType": "Insulin Change",
+  "created_at": 1616342559000,
+  "units": "mg/dl",
+  "notes": "Ajout manuel pour UE",
+  "NSCLIENT_ID": "1616342559000",
+  "identifier": "60576e6b5a34f900043e25f6",
+  "srvModified": 1616342559000,
+  "srvCreated": 1616342559000
+},
+{
+  "created_at": "2021-07-13T20:44:12.891Z",
+  "enteredBy": "openaps://AndroidAPS",
+  "eventType": "Temp Basal",
+  "isValid": true,
+  "duration": 60,
+  "rate": 0,
+  "type": "NORMAL",
+  "absolute": 0,
+  "pumpId": 284835,
+  "pumpType": "ACCU_CHEK_INSIGHT_BLUETOOTH",
+  "pumpSerial": "33013206",
+  "identifier": "60edfb34c574da0004a386d3",
+  "srvModified": 1626209052891,
+  "srvCreated": 1626209052891
+},
+{
+  "created_at": "2021-07-13T20:40:29.896Z",
+  "enteredBy": "openaps://AndroidAPS",
+  "eventType": "Temp Basal",
+  "isValid": true,
+  "duration": 3,
+  "rate": 2.4391549295774646,
+  "type": "FAKE_EXTENDED",
+  "absolute": 2.4391549295774646,
+  "pumpId": 4147,
+  "pumpType": "ACCU_CHEK_INSIGHT_BLUETOOTH",
+  "pumpSerial": "33013206",
+  "extendedEmulated": {
+    "created_at": "2021-07-13T20:40:29.896Z",
+    "enteredBy": "openaps://AndroidAPS",
+    "eventType": "Combo Bolus",
+    "duration": 3,
+    "splitNow": 0,
+    "splitExt": 100,
+    "enteredinsulin": 0.11,
+    "relative": 1.8591549295774648,
+    "isValid": true,
+    "isEmulatingTempBasal": true,
+    "pumpId": 4147,
+    "pumpType": "ACCU_CHEK_INSIGHT_BLUETOOTH",
+    "pumpSerial": "33013206"
+  },
+  "identifier": "60edfa51c574da0004a386d0",
+  "srvModified": 1626208829896,
+  "srvCreated": 1626208829896
+},
+{
+  "eventType": "OpenAPS Offline",
+  "created_at": 1616391934628,
+  "enteredBy": "openaps://AndroidAPS",
+  "units": "mg/dl",
+  "duration": 15,
+  "NSCLIENT_ID": "1616391934628",
+  "identifier": "60582f005a34f900043e2845",
+  "srvModified": 1616391934628,
+  "srvCreated": 1616391934628
+},
+{
+  "created_at": "2021-06-26T13:36:47.000Z",
+  "enteredBy": "openaps://AndroidAPS",
+  "isValid": true,
+  "eventType": "Profile Switch",
+  "duration": 0,
+  "profile": "Tuned 13/01 90%Lyum",
+  "profileJson": "{\"units\":\"mg\\/dl\",\"dia\":5,\"timezone\":\"Africa\\/Cairo\",\"sens\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":45},{\"time\":\"07:00\",\"timeAsSeconds\":25200,\"value\":45},{\"time\":\"08:00\",\"timeAsSeconds\":28800,\"value\":46},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":49},{\"time\":\"10:00\",\"timeAsSeconds\":36000,\"value\":52},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":55},{\"time\":\"13:00\",\"timeAsSeconds\":46800,\"value\":54},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":51},{\"time\":\"15:00\",\"timeAsSeconds\":54000,\"value\":49},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":49}],\"carbratio\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":4.3},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":5.5},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":5}],\"basal\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0.7},{\"time\":\"01:00\",\"timeAsSeconds\":3600,\"value\":0.78},{\"time\":\"02:00\",\"timeAsSeconds\":7200,\"value\":0.85},{\"time\":\"03:00\",\"timeAsSeconds\":10800,\"value\":0.75},{\"time\":\"04:00\",\"timeAsSeconds\":14400,\"value\":0.61},{\"time\":\"05:00\",\"timeAsSeconds\":18000,\"value\":0.69},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":0.64},{\"time\":\"07:00\",\"timeAsSeconds\":25200,\"value\":0.68},{\"time\":\"08:00\",\"timeAsSeconds\":28800,\"value\":0.65},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":0.64},{\"time\":\"10:00\",\"timeAsSeconds\":36000,\"value\":0.65},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":0.67},{\"time\":\"12:00\",\"timeAsSeconds\":43200,\"value\":0.74},{\"time\":\"13:00\",\"timeAsSeconds\":46800,\"value\":0.76},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":0.76},{\"time\":\"15:00\",\"timeAsSeconds\":54000,\"value\":0.77},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":0.68},{\"time\":\"17:00\",\"timeAsSeconds\":61200,\"value\":0.72},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":0.65},{\"time\":\"19:00\",\"timeAsSeconds\":68400,\"value\":0.7},{\"time\":\"20:00\",\"timeAsSeconds\":72000,\"value\":0.62},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":0.62},{\"time\":\"22:00\",\"timeAsSeconds\":79200,\"value\":0.58},{\"time\":\"23:00\",\"timeAsSeconds\":82800,\"value\":0.55}],\"target_low\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":100},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":90},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":100},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":90},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":100},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":90},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":100}],\"target_high\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":100},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":90},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":100},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":90},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":100},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":90},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":100}]}",
+  "timeshift": 0,
+  "percentage": 100,
+  "identifier": "60d72d80aec46a0004f95163",
+  "srvModified": 1624714607000,
+  "srvCreated": 1624714607000
+},
+{
+  "created_at": "2021-06-13T07:20:33.000Z",
+  "enteredBy": "openaps://AndroidAPS",
+  "isValid": true,
+  "eventType": "Profile Switch",
+  "duration": 150,
+  "profile": "Tuned 13/01 90%Lyum(75%)",
+  "profileJson": "{\"units\":\"mg\\/dl\",\"dia\":5,\"timezone\":\"Africa\\/Cairo\",\"sens\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":60},{\"time\":\"07:00\",\"timeAsSeconds\":25200,\"value\":60},{\"time\":\"08:00\",\"timeAsSeconds\":28800,\"value\":61.33333333333333},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":65.33333333333333},{\"time\":\"10:00\",\"timeAsSeconds\":36000,\"value\":69.33333333333333},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":73.33333333333333},{\"time\":\"13:00\",\"timeAsSeconds\":46800,\"value\":72},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":68},{\"time\":\"15:00\",\"timeAsSeconds\":54000,\"value\":65.33333333333333},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":65.33333333333333}],\"carbratio\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":5.7333333333333325},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":7.333333333333333},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":6.666666666666666}],\"basal\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0.5249999999999999},{\"time\":\"01:00\",\"timeAsSeconds\":3600,\"value\":0.585},{\"time\":\"02:00\",\"timeAsSeconds\":7200,\"value\":0.6375},{\"time\":\"03:00\",\"timeAsSeconds\":10800,\"value\":0.5625},{\"time\":\"04:00\",\"timeAsSeconds\":14400,\"value\":0.4575},{\"time\":\"05:00\",\"timeAsSeconds\":18000,\"value\":0.5175},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":0.48},{\"time\":\"07:00\",\"timeAsSeconds\":25200,\"value\":0.51},{\"time\":\"08:00\",\"timeAsSeconds\":28800,\"value\":0.48750000000000004},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":0.48},{\"time\":\"10:00\",\"timeAsSeconds\":36000,\"value\":0.48750000000000004},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":0.5025000000000001},{\"time\":\"12:00\",\"timeAsSeconds\":43200,\"value\":0.5549999999999999},{\"time\":\"13:00\",\"timeAsSeconds\":46800,\"value\":0.5700000000000001},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":0.5700000000000001},{\"time\":\"15:00\",\"timeAsSeconds\":54000,\"value\":0.5775},{\"time\":\"16:00\",\"timeAsSeconds\":57600,\"value\":0.51},{\"time\":\"17:00\",\"timeAsSeconds\":61200,\"value\":0.54},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":0.48750000000000004},{\"time\":\"19:00\",\"timeAsSeconds\":68400,\"value\":0.5249999999999999},{\"time\":\"20:00\",\"timeAsSeconds\":72000,\"value\":0.46499999999999997},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":0.46499999999999997},{\"time\":\"22:00\",\"timeAsSeconds\":79200,\"value\":0.43499999999999994},{\"time\":\"23:00\",\"timeAsSeconds\":82800,\"value\":0.41250000000000003}],\"target_low\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":100},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":90},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":100},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":90},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":100},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":90},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":100}],\"target_high\":[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":100},{\"time\":\"06:00\",\"timeAsSeconds\":21600,\"value\":90},{\"time\":\"09:00\",\"timeAsSeconds\":32400,\"value\":100},{\"time\":\"11:00\",\"timeAsSeconds\":39600,\"value\":90},{\"time\":\"14:00\",\"timeAsSeconds\":50400,\"value\":100},{\"time\":\"18:00\",\"timeAsSeconds\":64800,\"value\":90},{\"time\":\"21:00\",\"timeAsSeconds\":75600,\"value\":100}]}",
+  "timeshift": 0,
+  "percentage": 100,
+  "identifier": "60c5b1f41b3715000420af27",
+  "srvModified": 1623568833000,
+  "srvCreated": 1623568833000
+},
+{
+  "eventType": "Temporary Target",
+  "duration": 60,
+  "isValid": true,
+  "created_at": "2021-07-10T05:04:11.566Z",
+  "enteredBy": "AndroidAPS",
+  "reason": "Automation",
+  "targetBottom": 110,
+  "targetTop": 110,
+  "units": "mg/dl",
+  "identifier": "60e92a644fc2eb00045ece1b",
+  "srvModified": 1625893451566,
+  "srvCreated": 1625893451566
+},
+{
+  "eventType": "Temporary Target",
+  "duration": 120,
+  "isValid": true,
+  "created_at": "2021-07-09T20:30:21.627Z",
+  "enteredBy": "AndroidAPS",
+  "reason": "Hypo",
+  "targetBottom": 140,
+  "targetTop": 140,
+  "units": "mg/dl",
+  "identifier": "60e8b1f2b98ea2000472cbb1",
+  "srvModified": 1625862621627,
+  "srvCreated": 1625862621627
+},
+{
+  "eventType": "Bolus Wizard",
+  "created_at": "2021-07-13T18:59:43.325Z",
+  "isValid": true,
+  "bolusCalculatorResult": "{\"basalIOB\":-0.247,\"bolusIOB\":-1.837,\"carbs\":45.0,\"carbsInsulin\":9.0,\"cob\":0.0,\"cobInsulin\":0.0,\"dateCreated\":1626202788810,\"glucoseDifference\":44.0,\"glucoseInsulin\":0.8979591836734694,\"glucoseTrend\":5.5,\"glucoseValue\":134.0,\"ic\":5.0,\"id\":331,\"interfaceIDs_backing\":{\"nightscoutId\":\"60ede2a4c574da0004a3869d\"},\"isValid\":true,\"isf\":49.0,\"note\":\"\",\"otherCorrection\":0.0,\"percentageCorrection\":90,\"profileName\":\"Tuned 13/01 90%Lyum\",\"superbolusInsulin\":0.0,\"targetBGHigh\":90.0,\"targetBGLow\":90.0,\"timestamp\":1626202783325,\"totalInsulin\":7.34,\"trendInsulin\":0.336734693877551,\"utcOffset\":7200000,\"version\":1,\"wasBasalIOBUsed\":true,\"wasBolusIOBUsed\":true,\"wasCOBUsed\":true,\"wasGlucoseUsed\":true,\"wasSuperbolusUsed\":false,\"wasTempTargetUsed\":false,\"wasTrendUsed\":true,\"wereCarbsUsed\":false}",
+  "date": 1626202783325,
+  "glucose": 134,
+  "units": "mg/dl",
+  "notes": "",
+  "identifier": "60ede2a4c574da0004a3869d",
+  "srvModified": 1626202783325,
+  "srvCreated": 1626202783325
+},
+
+DEVICE STATUS with configuration
+---------------------------------
+{
+    "_id": "635abf2069a34517e83768cd",
+    "created_at": "2022-10-27T17:25:49.730Z",
+    "device": "openaps://samsung SM-G970F",
+    "pump": {
+        "battery": {
+            "percent": 100
+        },
+        "status": {
+            "status": "normal",
+            "timestamp": "2022-10-27T17:16:11.504Z"
+        },
+        "extended": {
+            "Version": "3.1.0.3-dev-c-nscv3-8da78d7351-2022.10.25-19:56",
+            "LastBolus": "10/27/22 18:40",
+            "LastBolusAmount": 0.35,
+            "TempBasalAbsoluteRate": 0,
+            "TempBasalStart": "10/27/22 18:50",
+            "TempBasalRemaining": 24,
+            "BaseBasalRate": 1,
+            "ActiveProfile": "LocalProfile1"
+        },
+        "reservoir": 191,
+        "clock": "2022-10-27T17:25:49.759Z"
+    },
+    "openaps": {
+        "suggested": {
+            "temp": "absolute",
+            "bg": 72,
+            "tick": -6,
+            "eventualBG": 4,
+            "snoozeBG": 4,
+            "predBGs": {
+                "IOB": [72, 61, 51, 42, 39, 39, 39, 39, 39, 39, 39, 39, 39]
+            },
+            "COB": 0,
+            "IOB": 0.052,
+            "reason": "COB: 0, Dev: -66, BGI: -0.88, ISF: 2.0, Target: 6.0; BG 4.0<4.4, but 25m left and 0 ~ req 0U/hr: no action required",
+            "timestamp": "2022-10-27T17:25:49.726Z"
+        },
+        "iob": {
+            "iob": 0.052,
+            "basaliob": 0.052,
+            "activity": 0.0049,
+            "time": "2022-10-27T17:25:49.726Z"
+        }
+    },
+    "uploaderBattery": 100,
+    "configuration": {
+        "insulin": 5,
+        "insulinConfiguration": {},
+        "sensitivity": 2,
+        "sensitivityConfiguration": {
+            "openapsama_min_5m_carbimpact": 10,
+            "absorption_cutoff": 4,
+            "autosens_max": 1.2,
+            "autosens_min": 0.7
+        },
+        "overviewConfiguration": {
+            "units": "mmol",
+            "eatingsoon_duration": 0,
+            "eatingsoon_target": 0,
+            "activity_duration": 0,
+            "activity_target": 0,
+            "hypo_duration": 0,
+            "hypo_target": 0,
+            "low_mark": 4,
+            "high_mark": 0,
+            "statuslights_cage_warning": 48,
+            "statuslights_cage_critical": 72,
+            "statuslights_iage_warning": 72,
+            "statuslights_iage_critical": 144,
+            "statuslights_sage_warning": 216,
+            "statuslights_sage_critical": 240,
+            "statuslights_sbat_warning": 25,
+            "statuslights_sbat_critical": 5,
+            "statuslights_bage_warning": 216,
+            "statuslights_bage_critical": 240,
+            "statuslights_res_warning": 80,
+            "statuslights_res_critical": 10,
+            "statuslights_bat_warning": 25,
+            "statuslights_bat_critical": 5,
+            "boluswizard_percentage": 60
+        },
+        "safetyConfiguration": {
+            "age": "teenage",
+            "treatmentssafety_maxbolus": 4,
+            "treatmentssafety_maxcarbs": 60
+        },
+        "pump": "DanaR",
+        "version": "3.1.0.3-dev-c-nscv3"
+        },
+    "mills": 1666891549730
+}

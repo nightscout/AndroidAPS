@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_setting">Configurações da Bomba Medtrum</string>
+    <string name="pump_error">Erro da Bomba: %1$s !! </string>
+    <string name="pump_is_suspended">Bomba suspensa</string>
+    <string name="pump_is_suspended_hour_max">Bomba está suspensa devido a insulina máxima horária excedida</string>
+    <string name="pump_is_suspended_day_max">A bomba é suspensa devido à insulina máxima diária excedida</string>
+    <string name="patch_not_active">Patch não ativado</string>
+    <string name="pump_setting_failed">Falha ao definir as configurações do usuário para a bomba!</string>
+    <!-- overview fragment -->
+    <string name="ble_status_label">BLE Status</string>
+    <string name="last_connection_label">Última conexão</string>
+    <string name="pump_state_label">Estado da Bomba</string>
+    <string name="active_alarms_label">Alarmes ativos</string>
+    <string name="reservoir_level"> %.2f U</string>
+    <!-- Alarm strings -->
+    <!-- wizard-->
+    <!-- settings-->
+    <!-- treatment state-->
+</resources>

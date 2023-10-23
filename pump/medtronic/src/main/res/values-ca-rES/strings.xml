@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Integració de bomba per models Medtronic, calen dispositiu RileyLink i model de bomba específic</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Número de sèrie bomba</string>
+    <string name="medtronic_pump_type">Tipus bomba</string>
+    <string name="medtronic_pump_frequency">Freqüència bomba</string>
+    <string name="medtronic_pump_bolus_delay">Retard fins que bolus comenci (s)</string>
+    <string name="medtronic_pump_max_bolus">Màx. bolus a la bomba (U)</string>
+    <string name="medtronic_pump_max_basal">Màx. basal a la bomba (U/h)</string>
+    <string name="medtronic_pump_encoding">Codificació Medtronic</string>
+    <string name="medtronic_pump_frequency_us_ca">EEUU &amp; Canadà (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Global (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Codificació 4b6b software</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Codificació 4b6b hardware</string>
+    <string name="medtronic_custom_action_wake_and_tune">Engegar i ajustar</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Esborrar bloc de bolus</string>
+    <string name="medtronic_custom_action_reset_rileylink">Restablir configuració RileyLink</string>
+    <string name="medtronic_pump_battery_select">Tipo de batería (Vista d\'energia)</string>
+    <string name="medtronic_pump_battery_no">No seleccionat (Vista simple)</string>
+    <string name="medtronic_pump_battery_alkaline">Alcalina (Vista ampliada)</string>
+    <string name="medtronic_pump_battery_lithium">Liti (Vista ampliada)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Vista ampliada)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Vista ampliada)</string>
+    <string name="medtronic_bolus_debugging">Depuració de bolus/tractaments</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">Bateria RileyLink</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Errors</string>
+    <string name="medtronic_error_serial_not_set">Nr. de sèrie # no configurat.</string>
+    <string name="medtronic_error_serial_invalid">Nr. de sèrie # no vàlid.</string>
+    <string name="medtronic_error_pump_type_not_set">Tipus de bomba no configurat.</string>
+    <string name="medtronic_error_pump_type_invalid">Tipus de bomba no compatible.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Freqüència bomba no configurada.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Freqüència bomba no compatible.</string>
+    <string name="medtronic_error_rileylink_address_invalid">Adreça RileyLink no vàlida.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Tipus de bomba detectat diferent al configurat.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Perfils de basal configurats no activats a la bomba. Activeu-los a la bomba.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Perfil de basal configurat a la bomba no correcte (ha de ser STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Tipus de basal temporal errònia configurada a la bomba (ha de ser Absolut).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Bolus màx. erroni configurat a la bomba (ha de ser %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Basal màx. errònia configurada a la bomba (ha de ser %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Operació no possible.\n\n Heu de configurar la bomba Medtronic abans de fer servir aquesta operació.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">S\'ha sol·licitat un canvi d\'hora de més de 24h.</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Historial bomba Medtronic</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Heu cancel·lat un bolus un cop ja havia estat enviat a la bomba. Donat que la bomba de Medtronic no permet la comanda \"cancel·lar\", haureu de fer-ho manualment: poseu la bomba en mode \"Suspendre\" i després feu \"Reprendre\" (si encara voleu cancel·lar). L\'aplicació agafarà els canvis la següent vegada que s\'actualitzi (menys de 5 minuts).</string>
+    <string name="medtronic_cmd_cant_read_tbr">No s\'ha pogut llegir la basal temporal actual.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">No s\'ha pogut cancel·lar la basal temporal actual. Aturant l\'operació.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Ha fallat l\'activació de perfil, ja que els següents patrons tenen una basal massa gran: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">No s\'ha pogut lliurar el bolus.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">No s\'ha pogut lliurar el bolus, perquè la quantitat d\'insulina que queda (%1$.2f) és menor que el bolus sol·licitat (%2$.2f).</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">No s\'ha pogut activar la basal temporal.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">No s\'ha pogut cancel·lar la basal temporal actual.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">No s\'ha pogut activar el perfil de basal.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">El perfil basal és el mateix, per tant no serà modificat.</string>
+    <string name="medtronic_cmd_desc_get_history">Recuperar historial - Pàgina %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Recuperar historial - Pàgina %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Obtenir hora bomba</string>
+    <string name="medtronic_cmd_desc_set_time">Configurar hora bomba</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Obtenir estat bateria</string>
+    <string name="medtronic_cmd_desc_get_settings">Obtenir configuració</string>
+    <string name="medtronic_cmd_desc_get_model">Obtenir model bomba</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Obtenir perfil basal</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Obtenir perfil basal</string>
+    <string name="medtronic_cmd_desc_get_tbr">Obtenir basal temporal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Establir basal temporal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Cancel·lar basal temporal</string>
+    <string name="medtronic_cmd_desc_set_bolus">Establir bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Obtenir insulina restant</string>
+    <string name="medtronic_pump_status_pump_unreachable">Bomba no accessible</string>
+    <string name="medtronic_warning">Avís</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Ara</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">fa</string>
+    <string name="medtronic_notification_check_time_date">Cal actualitzar l\'hora de la bomba</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="common_on">On</string>
+    <string name="common_off">Off</string>
+    <string name="pump_time_updated">Actualitzada hora de la bomba</string>
+    <string name="set_neutral_temps_title">Establir basals temporals neutres</string>
+    <string name="set_neutral_temps_summary">Si està activat, cancel·larà la basal temporal abans del final de cada hora. Aquest mètode pot ajudar a evitar que algunes bombes pitin/vibrin cada hora.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (queden %2$d min)</string>
+    <string name="medtronic_history_type">Tipus:</string>
+</resources>

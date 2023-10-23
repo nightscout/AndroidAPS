@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_m22_title">Baterija prazna</string>
+    <string name="alert_m24_title">Začepljenje</string>
+    <string name="alert_e6_title">Mehanička greška</string>
+</resources>

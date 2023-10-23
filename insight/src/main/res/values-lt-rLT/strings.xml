@@ -4,28 +4,26 @@
     <string name="disable_tbr_over_notification">Išjungti pranešimus apie LBD pabaigą\n(pompos nustatymai)</string>
     <string name="not_paired">Nesusieta</string>
     <string name="recovering">Atstatoma</string>
-    <string name="insight_status">Būsena</string>
+    <string name="insight_status">Statusas</string>
     <string name="recovery_duration">Atkūrimo trukmė</string>
     <string name="last_connected">Paskutinis prisijungimas</string>
     <string name="start_pump">Paleisti pompą</string>
     <string name="stop_pump">Sustabdyti pompą</string>
     <string name="started">Pradžia</string>
     <string name="stopped">Sustabdyta</string>
-    <string name="paused">Pristabdyta</string>
     <string name="operating_mode">Darbinis režimas</string>
     <string name="description_pump_insight_local">Accu-Chek Insight pompos integracija</string>
     <string name="not_inserted">Neįvestas</string>
     <string name="tdd_bolus">BPD bolusai</string>
     <string name="tdd_basal">BPD bazė</string>
-    <string name="tdd_total">BPD viso</string>
     <string name="tbr_formatter">%1$d%% - %2$d / %3$d min</string>
     <string name="multiwave_bolus">Daugiabangis bolusas</string>
     <string name="eb_formatter">%1$.2f / %2$.2f vv per %3$d min</string>
     <string name="insight_last_bolus">Paskutinis bolusas</string>
     <string name="searching_for_devices">Ieškoma įrenginių…</string>
-    <string name="pairing_completed">Sujungimas sėkmingas</string>
+    <string name="pairing_completed">Sėkmingai susieta</string>
     <string name="code_compare">Ar kodas, kurį matote įrenginyje, sutampa su pompos kodu?</string>
-    <string name="insight_pairing">Insight sujungimas</string>
+    <string name="insight_pairing">Insight susiejimas</string>
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Kateteris pakeistas</string>
@@ -38,16 +36,13 @@
     <string name="timeout_during_handshake">Ryšio užmezgimui skirtas laikas baigėsi - iš naujo nustatykite bluetooth</string>
     <string name="pump_stopped">Pompa sustabdyta</string>
     <string name="pump_started">Pompa paleista</string>
-    <string name="pump_paused">Pompa pristabdyta</string>
-    <string name="short_status_last_connected">Paskutinis prisijungimas: prieš %1$d min</string>
+    <string name="short_status_last_connected">Pask. prijung: prieš %1$d min</string>
     <string name="short_status_tbr">LBD: %1$d%% - %2$d / %3$d min</string>
     <string name="short_status_extended">Ištęstas: %1$.2f / %2$.2f V %3$d min</string>
     <string name="short_status_multiwave">Daugiabangis: %1$.2f / %2$.2f vv %3$d min</string>
     <string name="short_status_tdd">BPD: %1$.2f</string>
     <string name="short_status_reservoir">Rez.: %1$.2f vv</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Patvirtinti</string>
-    <string name="mute_alert">Nutildyti</string>
     <string name="release_software_version">Išleistos programinės įrangos versija</string>
     <string name="ui_processor_software_version">UI procesoriaus programinės įrangos versija</string>
     <string name="pc_processor_software_version">PC procesoriaus programinės įrangos versija</string>
@@ -57,7 +52,7 @@
     <string name="bluetooth_address">Bluetooth adresas</string>
     <string name="system_id_appendix">Sistemos ID priedėlis</string>
     <string name="manufacturing_date">Pagaminimo data</string>
-    <string name="delete_pairing">Panaikinti sąsają</string>
+    <string name="delete_pairing">Panaikinti susiejimą</string>
     <string name="log_site_changes">Įrašyti adatos pakeitimą</string>
     <string name="log_reservoir_changes">Įrašyti rezervuaro keitimus</string>
     <string name="log_tube_changes">Įrašyti infuzijos vamzdelio pakeitimą</string>
@@ -70,5 +65,6 @@
     <string name="max_recovery_duration">Didž. atkūrimo trukmė [s]</string>
     <string name="min_recovery_duration">Min. atkūrimo trukmė [s]</string>
     <string name="pump_alert">Pompos aliarmas</string>
-    <string name="pairing_information">Sąsajos informacija</string>
+    <string name="pairing_information">Susiejimo informacija</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Naujinti Insight mygtukas </string>
 </resources>

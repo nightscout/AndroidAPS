@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensibilitate Oref1</string>
+    <string name="sensitivity_aaps">Sensibilitate AAPS</string>
+    <string name="sensitivity_weighted_average">Sensibilitate estimată prin mediere</string>
+    <string name="description_sensitivity_aaps">Sensibilitatea este calculată la fel ca în algoritmul Oref0, dar se poate specifica un interval de timp în trecut. Absorbția minimă de carbohidrați este calculată din parametrul echivalent, stabilit în preferințe.</string>
+    <string name="description_sensitivity_oref1">Sensibilitatea este calculată folosind datele din ultimele 8 sau 24 ore (se alege cea mai mare din ele), iar carbohidrații (când nu sunt absorbiți) sunt ignorați după timpul specificat în preferințe. Plugin-ul calculează și UAM.</string>
+    <string name="description_sensitivity_weighted_average">Sensibilitatea este calculată ca o medie ponderată a deviațiilor. Deviațiile noi au o importanță mai mare. Absorbția minimă de carbohidrați este calculată în funcție de parametrul absorbție maximă de carbohidrați, stabilit în preferințe. Acest algoritm este cel mai rapid atunci când sensibilitatea la insulină este fluctuantă.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM dezactivat deoarece este bazat pe plugin-ul Oref1 pentru sensibilitate</string>
+    <string name="absorption_settings_title">Setări absorbție</string>
+    <string name="absorption_max_time_title">Timp maxim absorbție masă [o]</string>
+    <string name="absorption_max_time_summary">Timp în ore la care se presupune că toți carbohidrații sunt absorbiți</string>
+    <string name="openapsama_autosens_period">Interval pentru autosens [o]</string>
+    <string name="openapsama_autosens_period_summary">Numărul de ore din trecut pentru detectarea sensibilității (se exclude timpul de absorbție al carbo)</string>
+    <string name="openapsama_autosens_max_summary">Valoare implicită: 1.2\nAceasta este valoarea limită de multiplicare pentru autosens (și pentru autotune, în curând) pentru a seta o limită maximă de 20%% din cât de mare poate fi raportul autosens, care, la rândul ei, determină cât de mult poate autosens să modifice bazalele, cât de jos poate modifica ISF și cât de jos poate pune ținta glicemiei.</string>
+    <string name="openapsama_autosens_min_summary">Valoare implicită: 0.7\nCealaltă parte a limitelor autosens, care limitează cât de jos poate ajusta bazalele și cât de mult poate mări ISF și țintele de glicemie.</string>
+    <string name="openapsama_autosens_max">Rată maximă autosens</string>
+    <string name="openapsama_autosens_min">Rată minimă autosens</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valoarea implicită: 3.0 (AMA) sau 8.0 (SMB). Aceasta este o setare pentru impactul implicit al carbohidraţilor pe 5 minute. Valoarea implicită este 3mg/dl la 5min. Aceasta influenţează rapiditatea cu care se scade COB şi modul în care se ia în calcul absorbţia carbohidraţilor în calcularea valorilor estimate ale glicemiei, atunci când glicemia este în scădere mai mare decât se aştepta sau nu creşte atât de repede pe cât se aştepta.</string>
+    <string name="absorption_cutoff_title">Timpul maxim de absorbție a mesei [h]</string>
+    <string name="absorption_cutoff_summary">Timpul în care orice mâncare se consideră absorbită. Carbohidrații rămași vor fi ignorați.</string>
+</resources>

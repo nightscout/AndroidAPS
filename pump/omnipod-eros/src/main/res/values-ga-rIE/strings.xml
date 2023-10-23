@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <!-- Omnipod Eros - Keys -->
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <string name="omnipod_eros_preferences_category_riley_link">RileyLink</string>
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_item_date">Dáta</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f A</string>
+    <!-- Omnipod Eros - Short Status -->
+    <!-- Omnipod Eros - Error -->
+    <!-- Omnipod Eros - Pod Management -->
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <!-- Omnipod Eros - Other -->
+</resources>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Cambio all\'ora legale/solare in 24h o meno</string>
+    <string name="dst_loop_disabled_warning">Cambio all\'ora legale/solare avvenuto meno di 3 ore fa - Loop chiuso disabilitato</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Libera almeno %1$d MB dalla memoria interna! Loop disabilitato!</string>
+    <!-- Version Checker -->
+    <string name="old_version">versione datata</string>
+    <string name="very_old_version">versione molto datata</string>
+    <string name="application_expired">Applicazione scaduta</string>
+    <string name="new_version_warning">Non è stata controllata la presenza di nuova versione per almeno %1$d giorni! Ritorno alla modalità LGS dopo %2$d giorni, il loop sarà disabilitato dopo %3$d giorni. Ristabilire la connessione internet!</string>
+    <string name="running_invalid_version">Abbiamo rilevato che stai eseguendo una versione non valida. Loop disabilitato!</string>
+    <string name="versionavailable">Versione %1$s disponibile</string>
+    <string name="version_expire">Versione: %1$s | Scadenza: %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Dati ricalcolati usati</string>
+    <string name="bg_too_close">BG troppo vicino:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">ricalcolato</string>
+    <string name="a11y_bg_quality_doubles">doppi caricamenti</string>
+    <string name="a11y_bg_quality_flat">Dati piatti. Considerati errati</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Limitazione bolo esteso a %1$.1f U a causa di: %2$s</string>
+    <string name="limitingcarbs">Limitazione carboidrati a %1$d g a causa di: %2$s</string>
+    <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
+    <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
+    <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>
+    <string name="closed_loop_disabled_with_eb">Loop chiuso disabilitato a causa dell\'esecuzione di un bolo esteso</string>
+    <string name="smbalwaysdisabled">Le funzioni \"SMB sempre\" e \"SMB dopo i CHO\" sono disabilitate perché l\'attuale sorgente delle glicemie non supporta il filtraggio avanzato</string>
+    <string name="smbnotallowedinopenloopmode">SMB non consentito in modalità loop aperto</string>
+    <string name="maxvalueinpreferences">valore max nelle preferenze</string>
+    <string name="hardlimit">limite fisso</string>
+    <string name="treatmentssafety_title">Sicurezza trattamenti</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Completato, ben fatto!</string>
+    <string name="not_completed_yet">Non ancora completato</string>
+    <string name="time_elapsed">Tempo trascorso</string>
+    <string name="maxiobset">Max IOB impostata correttamente</string>
+    <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
+    <string name="synchaswritepermission">Il servizio di sincronizzazione ha i permessi di scrittura</string>
+    <string name="loopenabled">Loop abilitato</string>
+    <string name="apsselected">APS selezionato</string>
+    <string name="closedmodeenabled">Modalità chiusa abilitata</string>
+    <string name="objectives_shortname">OBT</string>
+    <string name="description_objectives">Programma di apprendimento</string>
+    <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
+    <string name="objectives_next_button">Avanti</string>
+    <string name="objectives_previous_button">Indietro</string>
+    <string name="objectives_button_unfinish">Reset stato completato</string>
+    <string name="objectives_button_unstart">Reset stato avviato</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <!-- NSClient -->
+    <string name="ns_alarm_options">Параметри сповіщень</string>
+    <string name="ns_alarms">Створювати сповіщення з тривог NS</string>
+    <string name="ns_announcements">Створювати сповіщення з оголошень NS</string>
+    <string name="ns_alarm_stale_data_value_label">Поріг застарівання даних [хв]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Терміновий поріг застарівання даних [хв]</string>
+    <!-- Tidepool -->
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="units_short">Од</string>
+    <string name="hour_short">год</string>
+    <string name="today">Сьогодні</string>
+</resources>

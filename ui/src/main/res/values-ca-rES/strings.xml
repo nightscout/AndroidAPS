@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Restricció de bolus aplicada</string>
+    <string name="carbs_constraint_applied">Restricció de carbs. aplicada</string>
+    <string name="temp_target_short">OT</string>
+    <string name="start_activity_tt">Iniciar OT: Esport</string>
+    <string name="start_eating_soon_tt">Iniciar OT: Menjar aviat</string>
+    <string name="start_hypo_tt">Iniciar OT: Hipo</string>
+    <string name="time_offset">Decalatge horari</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Recordar aplicar bolus més tard</string>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="activity_monitor">Monitor d\'activitat</string>
+    <string name="do_you_want_reset_stats">Voleu restablir les estadístiques d\'activitat?</string>
+    <string name="statistics">Estadístiques</string>
+    <string name="calculation_in_progress">Càlculs en procés</string>
+    <string name="invalid_age">Dada \"edat\" no vàlida</string>
+    <string name="invalid_weight">Dada \"pes\" no vàlida</string>
+    <string name="id">ID:</string>
+    <string name="submit">Enviar</string>
+    <string name="age">Edat</string>
+    <string name="weight_label">Ponderació</string>
+    <string name="most_common_profile">Perfil més habitual:</string>
+    <string name="glucose_type">Tipus de glucèmia</string>
+    <string name="bg_other">Altres</string>
+    <string name="bg_meter">Glucòmetre</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Assegureu-vos que la quantitat coincideix amb la indicada pel vostre set d\'infusió!</string>
+    <string name="record_pump_site_change">Anotar canvi de cànula</string>
+    <string name="record_insulin_cartridge_change">Anotar canvi reservori d\'insulina</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">No lliurar bolus, només anotar</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Reutilitzar %1$d%% %2$dh</string>
+    <string name="timeshift_label">Decalatge horari</string>
+    <string name="percentage_label">Percentatge</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Aturar el llaç 1h</string>
+    <string name="suspendloopfor2h">Aturar el llaç 2h</string>
+    <string name="suspendloopfor3h">Aturar el llaç 3h</string>
+    <string name="suspendloopfor10h">Aturar el llaç 10h</string>
+    <string name="disconnectpump">Desconnectar bomba</string>
+    <string name="disconnectpumpfor15m">Desconnectar bomba 15 min</string>
+    <string name="disconnectpumpfor30m">Desconnectar bomba 30 min</string>
+    <string name="disconnectpumpfor1h">Desconnectar bomba 1 h</string>
+    <string name="disconnectpumpfor2h">Desconnectar bomba 2 h</string>
+    <string name="disconnectpumpfor3h">Desconnectar bomba 3 h</string>
+    <string name="resume">Reprendre</string>
+    <string name="reconnect">Reconnectar bomba</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 hora</string>
+    <string name="duration2h">2 hores</string>
+    <string name="duration3h">3 hores</string>
+    <string name="duration10h">10 hores</string>
+    <!-- WizardDialog -->
+    <string name="two_hours">2h</string>
+    <string name="result_insulin_carbs">Resultat: %1$s %2$s</string>
+    <string name="missing_carbs">Falten %1$d g</string>
+    <string name="carb_time_label">Temps d\'absorció</string>
+    <string name="show_calculation">Mostrar càlcul</string>
+    <!-- Treatments -->
+    <string name="calculation_short">Calc</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">Carbs:</string>
+    <string name="treatments_iobtotal_label_string">IOB total:</string>
+    <string name="treatments_iob_activity_total_label_string">Activitat total IOB:</string>
+    <string name="tempbasals_realduration_label_string">Durada:</string>
+    <string name="tempbasals_netratio_label_string">Ràtio:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="meal_bolus">Àpat</string>
+    <string name="prime">Encebar</string>
+    <string name="refresheventsfromnightscout">Actualitzar des de NS</string>
+    <string name="user_entry">Entrada d\'usuari</string>
+    <string name="clone_label">Duplicar</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile_type">Tipus de perfil</string>
+    <string name="basal_pct_from_tdd_label">% de basal</string>
+    <string name="selected_profile">Seleccionat:</string>
+    <string name="compare_profile">Comparar perfils</string>
+    <string name="nav_profile_helper">Assistent de perfil</string>
+    <string name="motol_default_profile">Perfil per defecte</string>
+    <string name="current_profile">Perfil actual</string>
+    <string name="available_profile">Perfil disponible</string>
+    <string name="format_with_tdd">Edat: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Edat: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Edat: %1$d Weight: %2$.0f kg</string>
+    <string name="dpv_default_profile">Perfil DPV per defecte</string>
+    <string name="invalid_pct">Dada % no vàlida</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Ràtio de basal</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STOP polsat</string>
+    <!--QuickWizard-->
+</resources>

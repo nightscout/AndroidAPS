@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Ovládač pumpy zmenený.</string>
+    <!--    DateUtil-->
+    <string name="minago">pred %1$d min</string>
+    <string name="minago_long">pred %1$d minútami</string>
+    <string name="hoursago">pred %1$.1f h</string>
+    <string name="days_ago">Pred %1$.1f dňami</string>
+    <string name="days_ago_round">Pred %1$.0f dňami</string>
+    <string name="in_days">za %1$.0f dní</string>
+    <string name="in_days_round">za %1$.0f dní</string>
+    <string name="shorthour">h</string>
+    <string name="days">dní</string>
+    <string name="hours">hodín</string>
+    <string name="unit_second">sekunda</string>
+    <string name="unit_minute">minúta</string>
+    <string name="unit_hour">hodina</string>
+    <string name="unit_day">deň</string>
+    <string name="unit_week">týždeň</string>
+    <string name="unit_seconds">sekúnd</string>
+    <string name="unit_minutes">minút</string>
+    <string name="unit_hours">hodín</string>
+    <string name="unit_days">dní</string>
+    <string name="unit_weeks">týždňov</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="later_today">Neskôr počas dňa</string>
+    <string name="tomorrow">Zajtra</string>
+    <string name="today">Dnes</string>
+    <string name="yesterday">včera</string>
+    <!-- Rx -->
+    <string name="connecting_for">Pripájanie %1$d sek</string>
+    <string name="handshaking">Overovanie</string>
+    <string name="connected">Pripojené</string>
+    <string name="disconnecting">Odpájanie</string>
+    <string name="waiting_for_disconnection">Čakám na odpojenie</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Vytvorené: %1$s</string>
+    <string name="metadata_label_watchface_author">Autor: %1$s</string>
+    <string name="metadata_label_watchface_name">Meno: %1$s</string>
+    <string name="metadata_wear_import_filename">Názov súboru: %1$s</string>
+    <string name="metadata_label_plugin_version">Verzia pluginu: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Meno: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Informácie: %1$s</string>
+    <string name="pref_show_iob">Zobraziť IOB</string>
+    <string name="pref_show_detailed_iob">Zobraziť detailný IOB</string>
+    <string name="pref_show_cob">Zobraziť COB</string>
+    <string name="pref_show_delta">Zobraziť odchýlku</string>
+    <string name="pref_show_detailed_delta">Zobraziť detailnú odchylku</string>
+    <string name="pref_show_avgdelta">Zobraziť priemernú odchýlku</string>
+    <string name="pref_show_phone_battery">Zobraziť stav batérie telefónu</string>
+    <string name="pref_show_rig_battery">Zobrazovať stav batérie ďalších zariadení</string>
+    <string name="pref_show_basal_rate">Zobraziť bazál</string>
+    <string name="pref_show_loop_status">Zobraziť stav uzavretého okruhu</string>
+    <string name="pref_show_bg">Zobraziť glykémiu</string>
+    <string name="pref_show_bgi">Zobraziť BGI</string>
+    <string name="pref_show_direction_arrow">Zobraziť trendovú šípku</string>
+    <string name="pref_show_ago">Zobraziť aktualizované pred</string>
+    <string name="pref_show_week_number">Zobraziť číslo týždňa</string>
+    <string name="default_custom_watchface_comment">Predvolený ciferník. Môžete kliknúť na tlačítko EXPORTOVAŤ CIFERNÍK pre vygenerovanie šablóny</string>
+    <string name="wear_default_watchface">Predvolený ciferník</string>
+    <string name="cwf_comment_background">Obrázok pozadia</string>
+    <string name="cwf_comment_chart">Grafy (glykémie, bazály, krivky predpovedí...)</string>
+    <string name="cwf_comment_cover_chart">Obrázok pred grafom a za textovými poliami</string>
+    <string name="cwf_comment_freetext1">Voľný text 1</string>
+    <string name="cwf_comment_freetext2">Voľný text 2</string>
+    <string name="cwf_comment_freetext3">Voľný text 3</string>
+    <string name="cwf_comment_freetext4">Voľný text 4</string>
+    <string name="cwf_comment_iob1">Štítok IOB alebo suma IOB pri zapnutých detailoch</string>
+    <string name="cwf_comment_iob2">Suma IOB alebo (Bolus_IOB|Basal_IOB) pri zapnutých detailoch</string>
+    <string name="cwf_comment_cob1">Štítok COB</string>
+    <string name="cwf_comment_cob2">Hodnota COB</string>
+    <string name="cwf_comment_delta">Krátkodobý priemer</string>
+    <string name="cwf_comment_avg_delta">Priemerný rozdiel glykémií (15min)</string>
+    <string name="cwf_comment_uploader_battery">Batéria telefónu (%)</string>
+    <string name="cwf_comment_rig_battery">Batéria uzavretého okruhu (%)</string>
+    <string name="cwf_comment_basalRate">Bazálna dávka</string>
+    <string name="cwf_comment_bgi">Hodnota BGI</string>
+    <string name="cwf_comment_time">Čas (HH:MM alebo HH:MM:SS)</string>
+    <string name="cwf_comment_hour">Hodiny (HH)</string>
+    <string name="cwf_comment_minute">Minúty (MM)</string>
+    <string name="cwf_comment_second">Sekundy (SS)</string>
+    <string name="cwf_comment_timePeriod">AM alebo PM</string>
+    <string name="cwf_comment_day_name">Meno dňa v týždni</string>
+    <string name="cwf_comment_day">Deň (DD)</string>
+    <string name="cwf_comment_week_number">Číslo týždňa (ww)</string>
+    <string name="cwf_comment_month">Názov mesiaca (krátky)</string>
+    <string name="cwf_comment_loop">Stav uzavretého okruhu a čas</string>
+    <string name="cwf_comment_direction">Trendová šípka</string>
+    <string name="cwf_comment_timestamp">Pred minútami pre poslednú prijatú glykémiu</string>
+    <string name="cwf_comment_sgv">Hodnota glykémie</string>
+    <string name="cwf_comment_cover_plate">Úvodný obrázok pred textom (číselníky...)</string>
+    <string name="cwf_comment_hour_hand">Obrázok hodinovej ručičky (Analógové hodinky)</string>
+    <string name="cwf_comment_minute_hand">Obrázok minútovej ručičky (Analógové hodinky)</string>
+    <string name="cwf_comment_second_hand">Obrázok sekundovej ručičky (Analógové hodinky)</string>
+</resources>

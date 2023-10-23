@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bg_label">KG</string>
+    <string name="executing_right_now">Komanda vykdoma</string>
+    <string name="basal_value_below_minimum">Valandinės bazės vertė mažesnė už minimalią. Profilis nenustatytas!</string>
+    <string name="permission">Leidimas</string>
+    <string name="need_whitelisting">%1$s įtraukite į baterijos neoptimizavimo sąrašą tinkamam veikimui užtikrinti</string>
+    <string name="need_location_permission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
+    <string name="need_storage_permission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
+    <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Labai žemas</string>
+    <string name="low" comment="3.1-3.9">Žemas</string>
+    <string name="high" comment="10.0-13.9">Aukštas</string>
+    <string name="veryHigh" comment="above 13.9">Labai aukštas</string>
+    <string name="below" comment="below &quot;in range&quot;">Žemiau</string>
+    <string name="in_range">Ribose</string>
+    <string name="above" comment="above &quot;in range&quot;">Virš</string>
+    <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="detailed_14_days">14 d. detaliai</string>
+    <string name="day_tir">Dienos LNR</string>
+    <string name="night_tir">Nakties LNR</string>
+    <string name="carbs_short" comment="max 6 characters">AV</string>
+</resources>

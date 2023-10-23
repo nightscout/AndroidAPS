@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Integració de bombes d\'insulina per les quals encara no existeix driver/controlador (Llaç obert)</string>
+    <string name="virtualpump_settings">Configuració bomba virtual</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Només son acceptats valors discrets, no rangs, com a granularitat pels bolus/basals a la bomba virtual.</string>
+</resources>

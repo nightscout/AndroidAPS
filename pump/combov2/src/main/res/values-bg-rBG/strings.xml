@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Вградена интеграция за помпи Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Неуспешно свързване с помпата</string>
+    <string name="combov2_not_paired">Не е свързан с помпата</string>
+    <string name="combov2_pump_terminated_connection">Прекратена връзка с помпата</string>
+    <string name="combov2_warning">Combo предупреждение</string>
+    <string name="combov2_error">Combo грешка</string>
+    <string name="combov2_warning_4">Обадете се на \"гореща\" линия за актуализация</string>
+    <string name="combov2_warning_10">Bluetooth грешка; повторете сдвояването</string>
+    <string name="combov2_error_1">Резервоар празен</string>
+    <string name="combov2_error_2">Изтощена батерия</string>
+    <string name="combov2_error_4">Запушване</string>
+    <string name="combov2_error_5">Край на архивирането на помпата</string>
+    <string name="combov2_error_6">Маханична грешка</string>
+    <string name="combov2_error_7">Грешка в електрониката</string>
+    <string name="combov2_error_8">Захранването е прекъснато</string>
+    <string name="combov2_error_9">Край на работата на помпата на \"заем\"</string>
+    <string name="combov2_error_10">Грешка на резервоара</string>
+    <string name="combov2_error_11">Инфузионният сет не е напълнен</string>
+    <string name="combov2_extended_bolus_not_supported">Удълженият болус не се поддържа</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Сдвояване с помпата</string>
+    <string name="combov2_unpair_pump_title">Раздвояване с помпата</string>
+    <string name="combov2_driver_state_label">Състояние на драйвера</string>
+    <string name="combov2_current_activity_label">Текуща дейност</string>
+    <string name="bluetooth_address">Bluetooth адрес</string>
+    <string name="combov2_start_pairing">Започване на сдвояване</string>
+    <string name="combov2_pairing_in_progress">Combo в процес на сдвояване</string>
+    <string name="combov2_pairing_start_steps">Стъпки за сдвояване с вашата Combo:\n\n
+1. В менюто на помпата отидете до Bluetooth настройки\n
+2. Проверете дали устройство е вече сдвоено; ако е така, отидете на „Изтриване на устройство“, за да изтриете/отмените сдвояването на устройството\n
+3. Отидете на „Добавяне на устройство“ и започнете сдвояване на помпата\n
+4. Кликнете върху „Стартиране на сдвояването“ по-долу, за да започнете сдвояване в AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">След известно време, името на телефона се показва на екрана на помпата; натиснете ПРОВЕРКА за потвърждение.\n\n
+Когато сдвояването завърши успешно, го потвърдете във вашата помпа и се върнете към главния екран, като натиснете два пъти бутона ПРОВЕРКА.\n\n
+Ако не се установи връзка след повече от ~5 минути:\n\n
+1. Натиснете Назад или бутона \"Отказ от сдвояването\"\n
+2. Отменете сдвояването на Combo (натиснете едновременно бутони НАГОРЕ и МЕНЮ, за да отмените сдвояването)\n
+3. Опитайте да сдвоите отново</string>
+    <string name="combov2_enter_pin">Въведи PIN</string>
+    <string name="combov2_cancel_pairing">Отмени сдвояване</string>
+    <string name="combov2_pin_hint">10-цифрен PIN</string>
+    <string name="combov2_pairing_finished_successfully">Успешно сдвоен с Combo</string>
+    <string name="combov2_pairing_cancelled">Сдвояването с Combo е отменено от потребителя</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Combo Времето за сканиране е изтекло</string>
+    <string name="combov2_pairing_failed_due_to_error">Сдвояването неуспешно, поради грешка: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Сдвояването е прекъснато по неизвестни причини</string>
+    <string name="combov2_pairing_invalid_pin_length">"Невалидна дължина на ПИН за сдвояване: нужни %1$d цифри, въведени %2$d"</string>
+    <string name="combov2_scanning_for_pump">Сканиране за помпа</string>
+    <string name="combov2_establishing_bt_connection">Установява се Bluetooth връзка (опит № %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Извършване на синхронизация с помпа</string>
+    <string name="combov2_pairing_pump_requests_pin">Помпата иска 10-цифрен PIN</string>
+    <string name="combov2_pairing_finishing">Завършва сдвояването</string>
+    <string name="combov2_no_connection_for_n_mins">Няма връзка за %1$d минути</string>
+    <string name="combov2_less_than_one_minute_ago">Преди по-малко от 1 минута</string>
+    <string name="combov2_setting_current_pump_time">Задаване на текущо време на помпата</string>
+    <string name="combov2_setting_current_pump_date">Задаване на текуща дата на помпата</string>
+    <string name="combov2_not_initialized">Под не е инициализиран</string>
+    <string name="combov2_checking_pump">Проверка на помпата</string>
+    <string name="combov2_ready">Готова</string>
+    <string name="combov2_suspended">Прекратено</string>
+    <string name="combov2_pump_is_suspended">Помпата е спряна</string>
+    <string name="combov2_executing_command">Изпълнение на команда</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Получаване на базален профил</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Настройва базалният профил</string>
+    <string name="combov2_setting_tbr_cmddesc">Задава се %1$d%% Временен базал за %2$d минути</string>
+    <string name="combov2_cancelling_tbr">Отмяната продължителността на Временния базал</string>
+    <string name="combov2_delivering_bolus_cmddesc">Доставяне на %1$.1f Е болус</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Извличане на TDD(Обща дневна доза) история</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Актуализиране времето на помпата</string>
+    <string name="combov2_updating_pump_status_cmddesc">Актуализиране състоянието на помпата</string>
+    <string name="combov2_pairing_pin_failure">ПИН кодът не работи. Проверете за грешка. Ако това продължава, отменете и опитайте отново сдвояването.</string>
+    <string name="combov2_discovery_duration">Продължителност на откриването (в секунди)</string>
+    <string name="combov2_verbose_logging">Активиране на подробно Combo регистриране</string>
+    <string name="combov2_getting_basal_profile">Получаване на базален профил; %1$d прочетен(и) фактор(а)</string>
+    <string name="combov2_setting_basal_profile">Задаване на базален профил; %1$d записан(и) фактор(а)</string>
+    <string name="combov2_delivering_bolus">Доставяне на болус (%1$.1f от %2$.1f Е доставен)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Не може да се извърши доставяне - помпата е спряна</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Недостатъчно инсулин в резервоара</string>
+    <string name="combov2_bolus_cancelled">Болус анулиран</string>
+    <string name="combov2_bolus_delivery_failed">Болусът беше неуспешен.  За да сте сигурни, моля, проверете помпата, за да избегнете повторение на вече доставен болус. За да се избегнат бъгове болусите не се повтарят автоматично.</string>
+    <string name="combov2_bolus_not_delivered">Болусът не е доставен</string>
+    <string name="combov2_cannot_access_pump_data">Няма достъп до данните на помпата; помпата трябва да се сдвои отново</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Открити са неотчетени доставки на болус. Отмяна на болуса от съображения за безопасност.</string>
+    <string name="combov2_incorrect_active_basal_profile">Некоректен активен базален профил; профил 1 трябва да е активен, а не профил %1$d</string>
+    <string name="combov2_unrecognized_alert">Неразпознат Combo сигнал</string>
+    <string name="combov2_combo_alert">Combo предупреждение</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d мин. остават)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (остава по-малко от 1 минута)</string>
+    <string name="combov2_load_tdds_cancelled">Зареждането на TDD(Обща дневна доза) е отменено</string>
+    <string name="combov2_retrieving_tdds_failed">Извличането на TDD(Обща дневна доза) не бе успешно</string>
+    <string name="combov2_battery_low_warning">Батерията на помпата е слаба</string>
+    <string name="combov2_reservoir_low_warning">Нивото на резервоара на помпата е ниско</string>
+    <string name="combov2_setting_tbr_succeeded">Задаването на Временен базал е успешно</string>
+    <string name="combov2_setting_tbr_failed">Задаването на Временен базал е неуспешно</string>
+    <string name="combov2_set_emulated_100_tbr">Задайте емулиран 100% Временен базал</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Оставяне на текущия емулиран 100% Временен базал Завършено</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Игнориране на излишна заявка за 100% Временен базал</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Възникна неочакван лимит при коригиране на Временния базал: целевият процент беше %1$d%%, достигна лимит от %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Не може да се зададе абсолютен Временен базал, ако той е нула</string>
+    <string name="combov2_pair_with_pump_summary">Сдвоете AndroidAPS и Android с несвързана в момента помпа Accu-Chek Combo</string>
+    <string name="combov2_unpair_pump_summary">Раздвоете AndroidAPS и Android със свързаната в момента помпа Accu-Chek Combo</string>
+    <string name="combov2_unknown_tbr_detected">Неизвестен Временен базал беше открит и спрян; процент: %1$d%%; оставаща продължителност: %2$s</string>
+    <string name="combov2_connection_error">Грешка при свързване: %1$s</string>
+    <string name="combov2_short_status_last_connection">Последно свързване: преди %1$d минути</string>
+    <string name="combov2_short_status_alert">Предупреждение: %s</string>
+    <string name="combov2_short_status_last_bolus">ПоследенБолус: %1$sЕ @ %2$s</string>
+    <string name="combov2_short_status_temp_basal">Врем базал: %s</string>
+    <string name="combov2_short_status_reservoir">Рез.: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">празен</string>
+    <string name="combov2_short_status_battery_state_low">ниска</string>
+    <string name="combov2_short_status_battery_state_full">пълна</string>
+    <string name="combov2_short_status_battery_state">Бат: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Автоматично откриване и въвеждане на промяна на резервоар</string>
+    <string name="combov2_automatic_battery_entry">Автоматично откриване и въвеждане на промяна на батерията</string>
+    <string name="combov2_note_reservoir_change">Смяната на резервоар се помества автоматично от драйвера combov2</string>
+    <string name="combov2_note_battery_change">Смяната на батерията се помества автоматично от драйвера combov2</string>
+    <string name="combov2_timezone_changed">Часовата зона е променена</string>
+    <string name="combov2_datetime_changed">Датата и/или часът са променени</string>
+    <string name="combov2_dst_started">Лятното часово време (ЛЧВ) започна</string>
+    <string name="combov2_dst_ended">Лятното часово време (ЛЧВ) приключи</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Не може да се свърже с помпата поради грешка. Потребителят трябва я отстрани и след това или да изчака 5 минути, или да натисне бутона Обновяване в раздела на драйвера.</string>
+    <string name="combov2_refresh_pump_status_after_error">Обновяване състоянието на помпата, след съобщение за грешка</string>
+    <string name="combov2_go_back">Връщане</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Не може да се извърши сдвояване, защото драйверът не е инициализиран. Това обикновено се случва, защото не са предоставени необходимите разрешения за Bluetooth. Върнете се, дайте разрешения на Bluetooth, след което опитайте отново да сдвоите.</string>
+    <string name="combov2_bluetooth_disabled">Неуспешно стартиране на драйвър - Bluetooth изключен</string>
+    <string name="combov2_bluetooth_not_supported">Драъвър не може да бъде стартиран - това устройство не поддържа Bluetooth</string>
+</resources>

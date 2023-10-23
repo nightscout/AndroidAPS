@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="wrong_format">Hibás formátum</string>
+    <string name="sms_actual_bg">VC:</string>
+    <string name="sms_bolus">Bólus:</string>
+    <string name="sms_basal">Bázis:</string>
+    <!-- Food-->
+    <string name="food_short">Étel</string>
+    <string name="filter">Szűrő</string>
+    <string name="food">Étel</string>
+    <!-- Theme switcher dark and light mode-->
+    <!-- Profile -->
+    <string name="localprofile">Profil</string>
+    <string name="missing_profile_name">Profilnév hiányzik</string>
+    <string name="error_in_basal_values">Hiba bázisértékekben</string>
+    <string name="error_in_target_values">Hiba célértékekben</string>
+    <string name="errors">Hibák</string>
+    <string name="dia_short">DIA</string>
+    <string name="basal_short">BÁZ</string>
+    <!-- Actions -->
+    <string name="actions">Műveletek</string>
+    <string name="tools">Eszközök</string>
+    <string name="sensor_label">Szenzor</string>
+    <string name="age_label">kor:</string>
+    <string name="insulin_label">Inzulin</string>
+    <string name="cannula">Kanül</string>
+    <!-- Overview -->
+    <string name="a11y_graph">grafikon</string>
+    <string name="a11y_insulin_label">inzulin</string>
+    <string name="overview_cgm">CGM</string>
+    <string name="overview">Kezdőlap</string>
+    <string name="overview_shortname">KEZD</string>
+    <string name="overview_buttons_selection">Gombok</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="uploader">Feltöltő</string>
+    <string name="keep_screen_on_title">Képernyő bekapcsolva tartása</string>
+    <string name="cgm">CGM</string>
+    <string name="button1">Gomb 1</string>
+    <string name="button2">Gomb 2</string>
+    <string name="button3">Gomb 3</string>
+    <string name="enable_bolus_advisor">Bólusvarázsló bekapcsolása</string>
+    <!--    OverviewMenu-->
+    <string name="overview_show_predictions">Előrejelzések</string>
+    <string name="overview_show_sensitivity">Érzékenység</string>
+    <string name="overview_show_basals">Bázis</string>
+    <string name="overview_show_abs_insulin">Inzulin összesen</string>
+    <string name="basal_shortname">BÁZ</string>
+    <string name="graph_menu_divider_header">Grafikon</string>
+    <!-- Skins -->
+    <string name="classic_description">Eredeti megjelenés</string>
+    <string name="lowres_description">Alacsony felbontás</string>
+    <string name="skin">Megjelenés</string>
+    <!--    Iob-->
+    <!--    PersistentNotification-->
+    <string name="old_data">RÉGI ADAT</string>
+</resources>
