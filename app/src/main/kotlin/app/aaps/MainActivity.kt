@@ -455,20 +455,20 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .replace(".com/", ":")
             .replace(".org/", ":")
             .replace(".net/", ":")
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Language", sp.getString(app.aaps.core.ui.R.string.key_language, Locale.getDefault().language))
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Version", config.VERSION_NAME)
-        fabricPrivacy.firebaseAnalytics.setUserProperty("HEAD", BuildConfig.HEAD)
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Remote", remote)
+        fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
+        fabricPrivacy.setUserProperty("Language", sp.getString(app.aaps.core.ui.R.string.key_language, Locale.getDefault().language))
+        fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
+        fabricPrivacy.setUserProperty("HEAD", BuildConfig.HEAD)
+        fabricPrivacy.setUserProperty("Remote", remote)
         val hashes: List<String> = signatureVerifierPlugin.shortHashes()
-        if (hashes.isNotEmpty()) fabricPrivacy.firebaseAnalytics.setUserProperty("Hash", hashes[0])
-        activePlugin.activePump.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Pump", it::class.java.simpleName) }
+        if (hashes.isNotEmpty()) fabricPrivacy.setUserProperty("Hash", hashes[0])
+        activePlugin.activePump.let { fabricPrivacy.setUserProperty("Pump", it::class.java.simpleName) }
         if (!config.NSCLIENT && !config.PUMPCONTROL)
-            activePlugin.activeAPS.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Aps", it::class.java.simpleName) }
-        activePlugin.activeBgSource.let { fabricPrivacy.firebaseAnalytics.setUserProperty("BgSource", it::class.java.simpleName) }
-        fabricPrivacy.firebaseAnalytics.setUserProperty("Profile", activePlugin.activeProfileSource.javaClass.simpleName)
-        activePlugin.activeSensitivity.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Sensitivity", it::class.java.simpleName) }
-        activePlugin.activeInsulin.let { fabricPrivacy.firebaseAnalytics.setUserProperty("Insulin", it::class.java.simpleName) }
+            activePlugin.activeAPS.let { fabricPrivacy.setUserProperty("Aps", it::class.java.simpleName) }
+        activePlugin.activeBgSource.let { fabricPrivacy.setUserProperty("BgSource", it::class.java.simpleName) }
+        fabricPrivacy.setUserProperty("Profile", activePlugin.activeProfileSource.javaClass.simpleName)
+        activePlugin.activeSensitivity.let { fabricPrivacy.setUserProperty("Sensitivity", it::class.java.simpleName) }
+        activePlugin.activeInsulin.let { fabricPrivacy.setUserProperty("Insulin", it::class.java.simpleName) }
         // Add to crash log too
         FirebaseCrashlytics.getInstance().setCustomKey("HEAD", BuildConfig.HEAD)
         FirebaseCrashlytics.getInstance().setCustomKey("Version", config.VERSION_NAME)

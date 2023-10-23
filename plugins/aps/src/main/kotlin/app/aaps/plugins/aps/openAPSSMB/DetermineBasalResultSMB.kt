@@ -58,7 +58,7 @@ class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) 
         }
     }
 
-    override fun newAndClone(injector: HasAndroidInjector): DetermineBasalResultSMB {
+    override fun newAndClone(): DetermineBasalResultSMB {
         val newResult = DetermineBasalResultSMB(injector)
         doClone(newResult)
         newResult.eventualBG = eventualBG

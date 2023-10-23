@@ -277,7 +277,7 @@ class NSClientV3Service : DaggerService() {
         rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_announcements, config.NSCLIENT))
-            uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
+            uiInteraction.addNotificationWithAction(NSAlarmObject(data))
     }
     private val onAlarm = Emitter.Listener { args ->
 
@@ -300,7 +300,7 @@ class NSClientV3Service : DaggerService() {
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
+                uiInteraction.addNotificationWithAction(NSAlarmObject(data))
         }
     }
 
@@ -311,7 +311,7 @@ class NSClientV3Service : DaggerService() {
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
+                uiInteraction.addNotificationWithAction(NSAlarmObject(data))
         }
     }
 

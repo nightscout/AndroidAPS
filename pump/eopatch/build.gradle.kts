@@ -26,6 +26,7 @@ dependencies {
     api(Libs.Google.guava)
 
     //RxAndroidBle
+    api(Libs.Rx.rxAndroid)
     api(Libs.rxandroidBle)
     api(Libs.rx3ReplayingShare)
 

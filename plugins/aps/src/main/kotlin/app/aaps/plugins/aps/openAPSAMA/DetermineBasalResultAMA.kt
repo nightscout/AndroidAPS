@@ -42,7 +42,7 @@ class DetermineBasalResultAMA private constructor(injector: HasAndroidInjector) 
         }
     }
 
-    override fun newAndClone(injector: HasAndroidInjector): DetermineBasalResultAMA {
+    override fun newAndClone(): DetermineBasalResultAMA {
         val newResult = DetermineBasalResultAMA(injector)
         doClone(newResult)
         newResult.eventualBG = eventualBG

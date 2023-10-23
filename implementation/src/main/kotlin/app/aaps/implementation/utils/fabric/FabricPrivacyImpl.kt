@@ -30,11 +30,15 @@ class FabricPrivacyImpl @Inject constructor(
     private val sp: SP
 ) : FabricPrivacy {
 
-    override val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+    private final val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
     init {
         firebaseAnalytics.setAnalyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())
+    }
+
+    override fun setUserProperty(key: String, value: String) {
+        firebaseAnalytics.setUserProperty(key, value)
     }
 
     // Analytics logCustom

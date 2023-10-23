@@ -31,7 +31,6 @@ dependencies {
     api(Libs.Kotlin.reflect)
     api(Libs.AndroidX.core)
 
-    api(Libs.Rx.rxJava)
     api(Libs.Rx.rxAndroid)
     api(Libs.Rx.rxKotlin)
 

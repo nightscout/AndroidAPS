@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.R
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -116,7 +115,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override val openApsTimestamp: Long
         get() = if (openAPSData.clockSuggested != 0L) openAPSData.clockSuggested else -1
 
-    override fun getAPSResult(injector: HasAndroidInjector): APSResult =
+    override fun getAPSResult(): APSResult =
         instantiator.provideAPSResultObject().also {
             it.json = openAPSData.suggested
             it.date = openAPSData.clockSuggested

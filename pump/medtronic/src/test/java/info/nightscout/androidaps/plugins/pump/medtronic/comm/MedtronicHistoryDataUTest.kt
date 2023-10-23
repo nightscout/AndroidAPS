@@ -114,7 +114,7 @@ import org.mockito.Mock
         val pumpHistoryEntries: MutableList<PumpHistoryEntry> = decoder.processPageAndCreateRecords(historyPage)
         println("PumpHistoryEntries: " + pumpHistoryEntries.size)
 
-        val rewindRecords: MutableList<PumpHistoryEntry> = medtronicHistoryData.getFilteredItems(pumpHistoryEntries, PumpHistoryEntryType.Rewind)
+        //val rewindRecords: MutableList<PumpHistoryEntry> = medtronicHistoryData.getFilteredItems(pumpHistoryEntries, PumpHistoryEntryType.Rewind)
 
         preProcessListTBR(pumpHistoryEntries)
 

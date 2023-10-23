@@ -1106,7 +1106,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val isfMgdl = profile?.getIsfMgdl()
         val variableSens =
             if (config.APS && request is VariableSensitivityResult) request.variableSens ?: 0.0
-            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult(injector).json, "variable_sens")
+            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "variable_sens")
             else 0.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {

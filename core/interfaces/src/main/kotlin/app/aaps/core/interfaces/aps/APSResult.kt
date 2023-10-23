@@ -4,7 +4,6 @@ import android.text.Spanned
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.constraints.Constraint
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
 interface APSResult {
@@ -39,6 +38,6 @@ interface APSResult {
     var smbConstraint: Constraint<Double>?
 
     fun toSpanned(): Spanned
-    fun newAndClone(injector: HasAndroidInjector): APSResult
+    fun newAndClone(): APSResult
     fun json(): JSONObject?
 }

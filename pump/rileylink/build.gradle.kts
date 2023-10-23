@@ -19,6 +19,8 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
 
+    api(Libs.jodaTimeAndroid)
+
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)
 }

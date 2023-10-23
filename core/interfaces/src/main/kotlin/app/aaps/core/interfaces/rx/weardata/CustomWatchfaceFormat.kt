@@ -69,7 +69,7 @@ enum class ResFormat(val extension: String) {
     companion object {
 
         fun fromFileName(fileName: String): ResFormat =
-            values().firstOrNull { it.extension == fileName.substringAfterLast(".").lowercase() } ?: UNKNOWN
+            entries.firstOrNull { it.extension == fileName.substringAfterLast(".").lowercase() } ?: UNKNOWN
 
     }
 }
@@ -135,15 +135,19 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
 
 typealias CwfResDataMap = MutableMap<String, ResData>
 typealias CwfMetadataMap = MutableMap<CwfMetadataKey, String>
+
 fun CwfResDataMap.isEquals(dataMap: CwfResDataMap) = (this.size == dataMap.size) && this.all { (key, resData) -> dataMap[key]?.value.contentEquals(resData.value) == true }
+
 @Serializable
 data class CwfData(val json: String, var metadata: CwfMetadataMap, val resDatas: CwfResDataMap) {
+
     fun simplify(): CwfData? = resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.let {
-            val simplifiedDatas: CwfResDataMap = mutableMapOf()
-            simplifiedDatas[ResFileMap.CUSTOM_WATCHFACE.fileName] = it
+        val simplifiedDatas: CwfResDataMap = mutableMapOf()
+        simplifiedDatas[ResFileMap.CUSTOM_WATCHFACE.fileName] = it
         CwfData(json, metadata, simplifiedDatas)
     }
 }
+
 data class CwfFile(val cwfData: CwfData, val zipByteArray: ByteArray)
 
 enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref: Boolean) {

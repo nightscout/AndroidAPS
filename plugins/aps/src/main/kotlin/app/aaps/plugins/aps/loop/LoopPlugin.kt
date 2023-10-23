@@ -274,7 +274,7 @@ class LoopPlugin @Inject constructor(
             apsResult.percent = (apsResult.rate / profile.getBasal() * 100).toInt()
 
             // check rate for constraints
-            val resultAfterConstraints = apsResult.newAndClone(injector)
+            val resultAfterConstraints = apsResult.newAndClone()
             resultAfterConstraints.rateConstraint = ConstraintObject(resultAfterConstraints.rate, aapsLogger)
             resultAfterConstraints.rate = constraintChecker.applyBasalConstraints(resultAfterConstraints.rateConstraint!!, profile).value()
             resultAfterConstraints.percentConstraint = ConstraintObject(resultAfterConstraints.percent, aapsLogger)

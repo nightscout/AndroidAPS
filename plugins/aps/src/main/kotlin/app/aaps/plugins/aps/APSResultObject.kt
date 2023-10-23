@@ -129,7 +129,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
         } else HtmlHelper.fromHtml(rh.gs(R.string.nochangerequested))
     }
 
-    override fun newAndClone(injector: HasAndroidInjector): APSResult {
+    override fun newAndClone(): APSResult {
         val newResult = APSResultObject(injector)
         doClone(newResult)
         return newResult

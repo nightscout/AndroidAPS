@@ -30,5 +30,8 @@ dependencies {
     // APS
     api(Libs.Mozilla.rhino)
 
+    //Logger
+    api(Libs.Logging.slf4jApi)
+
     kapt(Libs.Dagger.androidProcessor)
 }

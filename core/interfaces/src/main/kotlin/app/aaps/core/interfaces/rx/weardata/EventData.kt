@@ -5,7 +5,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf
-import org.joda.time.DateTime
+import java.util.Date
 import java.util.Objects
 
 @Serializable
@@ -112,7 +112,7 @@ sealed class EventData : Event() {
     ) : EventData() {
 
         override fun toString() =
-            "HR ${beatsPerMinute.toInt()} at ${DateTime(timestamp)} for ${duration / 1000.0}sec $device"
+            "HR ${beatsPerMinute.toInt()} at ${Date(timestamp)} for ${duration / 1000.0}sec $device"
     }
 
     @Serializable
@@ -293,8 +293,10 @@ sealed class EventData : Event() {
 
     @Serializable
     data class ActionSetCustomWatchface(val customWatchfaceData: CwfData) : EventData()
+
     @Serializable
     data class ActionUpdateCustomWatchface(val customWatchfaceData: CwfData) : EventData()
+
     @Serializable
     data class ActionrequestCustomWatchface(val exportFile: Boolean) : EventData()
 

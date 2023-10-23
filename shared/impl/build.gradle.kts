@@ -18,6 +18,13 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
 
+    //Logger
+    api(Libs.Logging.slf4jApi)
+    api(Libs.Logging.logbackAndroid)
+
+    api(Libs.Rx.rxAndroid)
+    api(Libs.jodaTimeAndroid)
+
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)
 }
