@@ -24,9 +24,7 @@ public class Crc {
 
 
     public static byte[] getCRC(byte[] bytes) {
-        // CRC寄存器全为1
         int CRC = 0x0000ffff;
-        // 多项式校验值
         int POLYNOMIAL = 0x0000a001;
         int i, j;
         for (i = 0; i < bytes.length; i++) {
@@ -40,7 +38,6 @@ public class Crc {
                 }
             }
         }
-        // 结果转换为16进制
         String result = Integer.toHexString(CRC).toUpperCase();
         if (result.length() != 4) {
             StringBuffer sb = new StringBuffer("0000");
@@ -48,25 +45,5 @@ public class Crc {
         }
         return Utils.hexStringToBytes(result);
     }
-
-
-    public static class ReqModel {
-        public String code;
-        public String iv;
-        public String tag;
-        public String content;
-
-        @Override public String toString() {
-            return "ReqModel{" +
-                    "code='" + code + '\'' +
-                    ", iv='" + iv + '\'' +
-                    ", tag='" + tag + '\'' +
-                    ", content='" + content + '\'' +
-                    '}';
-        }
-    }
-
-
-    static int index = 0;
 
 }

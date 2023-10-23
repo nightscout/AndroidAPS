@@ -1,12 +1,11 @@
 package app.aaps.pump.equil.manager.command;
 
-import app.aaps.pump.equil.R;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.pump.equil.R;
 
 
 public class PumpEvent {

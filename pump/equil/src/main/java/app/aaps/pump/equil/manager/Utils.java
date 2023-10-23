@@ -14,7 +14,6 @@ public class Utils {
     }
 
     public static int bytesToInt(byte highByte, byte lowByte) {
-        // 将byte转换为int，同时进行位运算合并
         int highValue = (highByte & 0xFF) << 8;
         int lowValue = lowByte & 0xFF;
         int value = highValue | lowValue;
@@ -44,7 +43,6 @@ public class Utils {
         BigDecimal a = new BigDecimal(String.valueOf(i));
         BigDecimal b = new BigDecimal("0.00625");
         BigDecimal c = a.divide(b);
-//        c.setScale(2);
         return c.intValue();
     }
 
@@ -114,20 +112,12 @@ public class Utils {
         return src;
     }
 
-//    public static int bytesToInt(byte highByte, byte lowByte) {
-//        // 将byte转换为int，同时进行位运算合并
-//        int highValue = (highByte & 0xFF) << 8;
-//        int lowValue = lowByte & 0xFF;
-//        return highValue | lowValue;
-//    }
-
     public static byte[] intToTwoBytes(int value) {
         byte[] bytes = new byte[2];
-        bytes[1] = (byte) ((value >> 8) & 0xFF); // 取高8位并转为byte
-        bytes[0] = (byte) (value & 0xFF); // 取低8位并转为byte
+        bytes[1] = (byte) ((value >> 8) & 0xFF);
+        bytes[0] = (byte) (value & 0xFF);
         return bytes;
 
-//        int i1 = ((data[15] & 0x0f) << 8) | data[14] & 0xff;
     }
 
     public static byte[] convertByteArray(List<Byte> byteList) {

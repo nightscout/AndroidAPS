@@ -40,7 +40,7 @@ public class AESUtil {
     }
 
     public static byte[] getEquilPassWord(String password) {
-        String plaintextDefault = "Equil"; // 6位的输入字符串
+        String plaintextDefault = "Equil"; //
         byte[] defaultKey = generateAESKeyFromPassword(plaintextDefault);
         byte[] aesKey = Utils.concat(defaultKey, generateAESKeyFromPassword(password));
         Log.e(LTag.EQUILBLE.toString(), Utils.bytesToHex(aesKey) + "===" + aesKey.length);
@@ -59,14 +59,12 @@ public class AESUtil {
         return null;
     }
 
-    //加密
     public static EquilCmdModel aesEncrypt(byte[] pwd, byte[] data) throws Exception {
         byte[] iv = generateRandomIV(12);
         SecretKey key = new SecretKeySpec(pwd, "AES");
         Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
         GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(128, iv);
         cipher.init(Cipher.ENCRYPT_MODE, key, gcmParameterSpec);
-        // 加密数据
         byte[] ciphertext = cipher.doFinal(data);
         byte[] authenticationTag = Arrays.copyOfRange(ciphertext, ciphertext.length - 16, ciphertext.length);
         byte[] encryptedData = Arrays.copyOfRange(ciphertext, 0, ciphertext.length - 16);
