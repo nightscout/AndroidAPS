@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -54,7 +55,7 @@ class QueueThread internal constructor(
                 val secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000
                 val pump = activePlugin.activePump
                 //  Manifest.permission.BLUETOOTH_CONNECT
-                if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                if (config.PUMPDRIVERS && pump !is VirtualPump && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
                     if (androidPermission.permissionNotGranted(context, "android.permission.BLUETOOTH_CONNECT")) {
                         aapsLogger.debug(LTag.PUMPQUEUE, "no permission")
                         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
