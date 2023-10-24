@@ -50,6 +50,18 @@ android {
         buildConfigField("String", "BUILDVERSION", "\"${generateGitBuild()}-${generateDate()}\"")
     }
 
+    android {
+        buildTypes {
+            debug {
+                enableUnitTestCoverage = true
+                // Disable androidTest coverage, since it performs offline coverage
+                // instrumentation and that causes online (JavaAgent) instrumentation
+                // to fail in this project.
+                enableAndroidTestCoverage = false
+            }
+        }
+    }
+
     flavorDimensions.add("standard")
     productFlavors {
         create("full") {
