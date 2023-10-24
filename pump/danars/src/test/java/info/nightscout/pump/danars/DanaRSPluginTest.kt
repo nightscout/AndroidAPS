@@ -79,7 +79,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
                 dateUtil,
                 uiInteraction,
                 danaHistoryDatabase,
-                decimalFormatter
+                decimalFormatter,
+                instantiator
             )
     }
 }

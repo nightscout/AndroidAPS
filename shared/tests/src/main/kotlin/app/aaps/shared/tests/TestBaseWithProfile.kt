@@ -5,7 +5,9 @@ import app.aaps.core.data.db.EPS
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.ICfg
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileStore
@@ -18,6 +20,9 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.ui.R
+import app.aaps.implementation.aps.APSResultObject
+import app.aaps.implementation.instantiator.InstantiatorImpl
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
 import app.aaps.implementation.utils.DecimalFormatterImpl
@@ -44,14 +49,32 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var config: Config
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
+    @Mock lateinit var constraintsChecker: ConstraintsChecker
 
     lateinit var dateUtil: DateUtil
     lateinit var profileUtil: ProfileUtil
     lateinit var decimalFormatter: DecimalFormatter
     lateinit var hardLimits: HardLimits
+    lateinit var instantiator: Instantiator
 
-    val profileInjector = HasAndroidInjector {
+    private val injectors = mutableListOf<(Any) -> Unit>()
+    fun addInjector(fn: (Any) -> Unit) {
+        injectors.add(fn)
+    }
+
+    val injector = HasAndroidInjector {
         AndroidInjector {
+            if (it is APSResultObject) {
+                it.aapsLogger = aapsLogger
+                it.constraintChecker = constraintsChecker
+                it.sp = sp
+                it.activePlugin = activePlugin
+                it.iobCobCalculator = iobCobCalculator
+                it.profileFunction = profileFunction
+                it.rh = rh
+                it.decimalFormatter = decimalFormatter
+            }
+            injectors.forEach { fn -> fn(it) }
         }
     }
 
@@ -76,7 +99,7 @@ open class TestBaseWithProfile : TestBase() {
         dateUtil = Mockito.spy(DateUtilImpl(context))
         decimalFormatter = DecimalFormatterImpl(rh)
         profileUtil = ProfileUtilImpl(sp, decimalFormatter)
-        testPumpPlugin = TestPumpPlugin(profileInjector)
+        testPumpPlugin = TestPumpPlugin(rh)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         Mockito.`when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MGDL.asText)
@@ -97,6 +120,9 @@ open class TestBaseWithProfile : TestBase() {
             originalEnd = 0,
             iCfg = ICfg("", 0, 0)
         )
+
+        Mockito.`when`(rh.gs(R.string.ok)).thenReturn("OK")
+        Mockito.`when`(rh.gs(R.string.error)).thenReturn("Error")
 
         Mockito.doAnswer { invocation: InvocationOnMock ->
             val string = invocation.getArgument<Int>(0)
@@ -189,7 +215,7 @@ open class TestBaseWithProfile : TestBase() {
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
         }.`when`(rh).gs(anyInt(), anyString(), anyInt(), anyString())
-
+        instantiator = InstantiatorImpl(injector, dateUtil, rh, aapsLogger, sp, activePlugin, config, rxBus, hardLimits)
     }
 
     fun getValidProfileStore(): ProfileStore {

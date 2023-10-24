@@ -1,4 +1,4 @@
-package app.aaps.implementations
+package app.aaps.implementation.instantiator
 
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.interfaces.aps.APSResult
@@ -13,10 +13,10 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.implementation.aps.APSResultObject
+import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.pump.PumpEnactResultObject
-import app.aaps.plugins.aps.APSResultObject
-import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataObject
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject

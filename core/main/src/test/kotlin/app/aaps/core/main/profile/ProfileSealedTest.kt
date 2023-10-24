@@ -1,19 +1,18 @@
 package app.aaps.core.main.profile
 
 import android.content.Context
-import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.main.extensions.pureProfileFromJson
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.HardLimitsMock
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -55,7 +54,7 @@ class ProfileSealedTest : TestBase() {
 
     @BeforeEach
     fun prepare() {
-        testPumpPlugin = TestPumpPlugin { AndroidInjector { } }
+        testPumpPlugin = TestPumpPlugin(rh)
         dateUtil = DateUtilImpl(context)
         hardLimits = HardLimitsMock(sp, rh)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)

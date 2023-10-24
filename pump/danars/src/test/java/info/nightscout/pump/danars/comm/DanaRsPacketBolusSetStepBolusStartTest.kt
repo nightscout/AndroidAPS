@@ -1,11 +1,11 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.main.constraints.ConstraintObject
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
@@ -73,7 +73,8 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
                 dateUtil,
                 uiInteraction,
                 danaHistoryDatabase,
-                decimalFormatter
+                decimalFormatter,
+                instantiator
             )
         Mockito.`when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(ConstraintObject(0.0, aapsLogger))
     }

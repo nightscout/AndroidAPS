@@ -20,7 +20,7 @@ class ActionLoopResumeTest : ActionsTestBase() {
     fun setup() {
 
         `when`(rh.gs(app.aaps.core.ui.R.string.resumeloop)).thenReturn("Resume loop")
-        `when`(context.getString(R.string.notsuspended)).thenReturn("Not suspended")
+        `when`(rh.gs(R.string.notsuspended)).thenReturn("Not suspended")
 
         sut = ActionLoopResume(injector)
     }

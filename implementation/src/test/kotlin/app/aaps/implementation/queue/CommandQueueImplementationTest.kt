@@ -9,10 +9,10 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
@@ -27,14 +27,20 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.implementation.queue.commands.CommandBolus
+import app.aaps.implementation.queue.commands.CommandCancelExtendedBolus
+import app.aaps.implementation.queue.commands.CommandCancelTempBasal
+import app.aaps.implementation.queue.commands.CommandClearAlarms
 import app.aaps.implementation.queue.commands.CommandCustomCommand
+import app.aaps.implementation.queue.commands.CommandDeactivate
 import app.aaps.implementation.queue.commands.CommandExtendedBolus
+import app.aaps.implementation.queue.commands.CommandLoadEvents
 import app.aaps.implementation.queue.commands.CommandLoadHistory
+import app.aaps.implementation.queue.commands.CommandReadStatus
+import app.aaps.implementation.queue.commands.CommandSMBBolus
 import app.aaps.implementation.queue.commands.CommandTempBasalPercent
+import app.aaps.implementation.queue.commands.CommandUpdateTime
 import app.aaps.shared.tests.TestBaseWithProfile
-import app.aaps.shared.tests.TestPumpPlugin
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -70,19 +76,31 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         androidPermission: AndroidPermission,
         uiInteraction: UiInteraction,
         persistenceLayer: PersistenceLayer,
-        decimalFormatter: DecimalFormatter
+        decimalFormatter: DecimalFormatter,
+        instantiator: Instantiator
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
-        activePlugin, context, sp, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+        activePlugin, context, sp, config, dateUtil, fabricPrivacy, androidPermission,
+        uiInteraction, persistenceLayer, decimalFormatter, instantiator
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
 
     }
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
+    init {
+        addInjector {
+            if (it is CommandCancelExtendedBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
             if (it is CommandTempBasalPercent) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandCancelTempBasal) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
                 it.activePlugin = activePlugin
@@ -92,6 +110,11 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 it.rh = rh
                 it.activePlugin = activePlugin
                 it.rxBus = rxBus
+            }
+            if (it is CommandSMBBolus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
             }
             if (it is CommandCustomCommand) {
                 it.aapsLogger = aapsLogger
@@ -108,8 +131,30 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
                 it.rh = rh
                 it.activePlugin = activePlugin
             }
-            if (it is PumpEnactResult) {
-                it.context = context
+            if (it is CommandLoadEvents) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandReadStatus) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandClearAlarms) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandDeactivate) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
+            }
+            if (it is CommandUpdateTime) {
+                it.aapsLogger = aapsLogger
+                it.rh = rh
+                it.activePlugin = activePlugin
             }
         }
     }
@@ -119,12 +164,9 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         commandQueue = CommandQueueMocked(
-            injector, aapsLogger, rxBus, aapsSchedulers, rh,
-            constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction, activePlugin, context,
+            sp, config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
-        testPumpPlugin = TestPumpPlugin(injector)
-
         testPumpPlugin.pumpDescription.basalMinimumRate = 0.1
 
         `when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
@@ -158,7 +200,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
         val handler = mock(Handler::class.java)
         `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->

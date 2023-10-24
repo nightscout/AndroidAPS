@@ -19,8 +19,6 @@ import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -42,10 +40,6 @@ class SafetyPluginTest : TestBaseWithProfile() {
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
-        }
-    }
     private val pumpDescription = PumpDescription()
 
     @BeforeEach

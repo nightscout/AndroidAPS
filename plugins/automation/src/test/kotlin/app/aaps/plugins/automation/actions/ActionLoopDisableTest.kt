@@ -18,9 +18,9 @@ class ActionLoopDisableTest : ActionsTestBase() {
     fun setup() {
 
         testPumpPlugin.pumpDescription.isTempBasalCapable = true
-        `when`(context.getString(app.aaps.core.ui.R.string.disableloop)).thenReturn("Disable loop")
         `when`(rh.gs(app.aaps.core.ui.R.string.disableloop)).thenReturn("Disable loop")
-        `when`(context.getString(R.string.alreadydisabled)).thenReturn("Already disabled")
+        `when`(rh.gs(app.aaps.core.ui.R.string.disableloop)).thenReturn("Disable loop")
+        `when`(rh.gs(R.string.alreadydisabled)).thenReturn("Already disabled")
 
         sut = ActionLoopDisable(injector)
     }

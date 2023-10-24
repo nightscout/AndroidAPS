@@ -5,16 +5,11 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.implementation.pump.PumpEnactResultObject
-import app.aaps.implementation.utils.DecimalFormatterImpl
-import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.TestBaseWithProfile
 import app.aaps.shared.tests.rx.TestAapsSchedulers
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
@@ -29,10 +24,8 @@ import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
 
-class OmnipodErosPumpPluginTest : TestBase() {
+class OmnipodErosPumpPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var injector: HasAndroidInjector
-    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var aapsOmnipodErosManager: AapsOmnipodErosManager
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var commandQueue: CommandQueue
@@ -40,12 +33,9 @@ class OmnipodErosPumpPluginTest : TestBase() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var erosHistoryDatabase: ErosHistoryDatabase
 
-    private lateinit var decimalFormatter: DecimalFormatter
-
     @BeforeEach fun prepare() {
         `when`(rh.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
             .thenReturn("")
-        decimalFormatter = DecimalFormatterImpl(rh)
     }
 
     @Test fun testSetTempBasalPercent() {
@@ -56,13 +46,11 @@ class OmnipodErosPumpPluginTest : TestBase() {
             injector, aapsLogger, TestAapsSchedulers(), rxBus, null,
             rh, null, null, aapsOmnipodErosManager, commandQueue,
             null, null, null, null,
-            rileyLinkUtil, null, null, pumpSync, uiInteraction, erosHistoryDatabase, decimalFormatter
+            rileyLinkUtil, null, null, pumpSync, uiInteraction, erosHistoryDatabase, decimalFormatter, instantiator
         )
         val pumpState = PumpSync.PumpState(null, null, null, null, "")
         `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)
         `when`(rileyLinkUtil.rileyLinkHistory).thenReturn(ArrayList())
-        `when`(injector.androidInjector()).thenReturn(
-            AndroidInjector { })
         val profile = Mockito.mock(
             Profile::class.java
         )

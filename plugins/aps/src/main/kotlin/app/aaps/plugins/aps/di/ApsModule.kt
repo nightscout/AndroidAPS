@@ -2,7 +2,7 @@ package app.aaps.plugins.aps.di
 
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.autotune.Autotune
-import app.aaps.plugins.aps.APSResultObject
+import app.aaps.implementation.aps.APSResultObject
 import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.autotune.AutotunePlugin
 import app.aaps.plugins.aps.loop.LoopPlugin

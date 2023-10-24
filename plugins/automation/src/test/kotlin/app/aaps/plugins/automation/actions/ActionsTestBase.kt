@@ -15,14 +15,12 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileSource
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.tests.TestBaseWithProfile
-import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
@@ -71,17 +69,18 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
-    var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is ActionStopTempTarget) {
+    init {
+        addInjector {
+            if (it is Action) {
                 it.aapsLogger = aapsLogger
                 it.rh = rh
+                it.instantiator = instantiator
+            }
+            if (it is ActionStopTempTarget) {
                 it.dateUtil = dateUtil
                 it.persistenceLayer = persistenceLayer
             }
             if (it is ActionStartTempTarget) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
                 it.activePlugin = activePlugin
                 it.persistenceLayer = persistenceLayer
                 it.profileFunction = profileFunction
@@ -89,81 +88,53 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.profileUtil = profileUtil
             }
             if (it is ActionSendSMS) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
                 it.smsCommunicator = smsCommunicator
             }
             if (it is ActionProfileSwitch) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
                 it.activePlugin = activePlugin
                 it.profileFunction = profileFunction
                 it.dateUtil = dateUtil
             }
             if (it is ActionProfileSwitchPercent) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
                 it.profileFunction = profileFunction
             }
             if (it is ActionNotification) {
-                it.aapsLogger = aapsLogger
-                it.rh = rh
                 it.rxBus = rxBus
             }
             if (it is ActionLoopSuspend) {
-                it.aapsLogger = aapsLogger
                 it.loop = loopPlugin
-                it.rh = rh
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionLoopResume) {
-                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
-                it.rh = rh
                 it.configBuilder = configBuilder
                 it.rxBus = rxBus
                 it.persistenceLayer = persistenceLayer
                 it.dateUtil = dateUtil
             }
             if (it is ActionLoopEnable) {
-                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
-                it.rh = rh
                 it.configBuilder = configBuilder
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionLoopDisable) {
-                it.aapsLogger = aapsLogger
                 it.loopPlugin = loopPlugin
-                it.rh = rh
                 it.configBuilder = configBuilder
                 it.commandQueue = commandQueue
                 it.rxBus = rxBus
                 it.uel = uel
             }
             if (it is ActionCarePortalEvent) {
-                it.rh = rh
                 it.persistenceLayer = persistenceLayer
                 it.sp = sp
                 it.dateUtil = dateUtil
                 it.profileFunction = profileFunction
             }
-            if (it is ActionStopProcessing) {
-                it.rh = rh
-            }
-            if (it is PumpEnactResult) {
-                it.context = context
-            }
             if (it is Trigger) {
                 it.rh = rh
                 it.profileFunction = profileFunction
-                it.aapsLogger = aapsLogger
-            }
-            if (it is Action) {
-                it.rh = rh
-                it.aapsLogger = aapsLogger
             }
         }
     }

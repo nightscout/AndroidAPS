@@ -7,8 +7,6 @@ import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.automation.services.LastLocationDataContainer
 import app.aaps.shared.tests.TestBaseWithProfile
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -26,8 +24,8 @@ open class TriggerTestBase : TestBaseWithProfile() {
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
     }
 
-    var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
+    init {
+        addInjector {
             if (it is Trigger) {
                 it.aapsLogger = aapsLogger
                 it.rxBus = rxBus

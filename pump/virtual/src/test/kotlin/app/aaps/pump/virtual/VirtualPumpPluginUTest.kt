@@ -1,17 +1,11 @@
 package app.aaps.pump.virtual
 
 import app.aaps.core.data.pump.defs.PumpType
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.shared.tests.TestBase
+import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import org.junit.jupiter.api.BeforeEach
@@ -19,16 +13,10 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
-class VirtualPumpPluginUTest : TestBase() {
+class VirtualPumpPluginUTest : TestBaseWithProfile() {
 
-    @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var sp: SP
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var commandQueue: CommandQueue
-    @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var pumpSync: PumpSync
-    @Mock lateinit var config: Config
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
@@ -39,7 +27,7 @@ class VirtualPumpPluginUTest : TestBase() {
         virtualPumpPlugin = VirtualPumpPlugin(
             { AndroidInjector { } },
             aapsLogger, rxBus, fabricPrivacy, rh, aapsSchedulers, sp, profileFunction,
-            commandQueue, pumpSync, config, dateUtil, processedDeviceStatusData, persistenceLayer
+            commandQueue, pumpSync, config, dateUtil, processedDeviceStatusData, persistenceLayer, instantiator
         )
     }
 

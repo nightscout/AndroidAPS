@@ -77,7 +77,8 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 dateUtil,
                 uiInteraction,
                 danaHistoryDatabase,
-                decimalFormatter
+                decimalFormatter,
+                instantiator
             )
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
     }

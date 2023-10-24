@@ -19,6 +19,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":core:validators"))
+    implementation(project(":implementation"))
 
     testImplementation(project(":pump:virtual"))
     testImplementation(project(":shared:tests"))

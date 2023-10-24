@@ -17,9 +17,9 @@ class ActionLoopSuspendTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
 
-        `when`(context.getString(app.aaps.core.ui.R.string.suspendloop)).thenReturn("Suspend loop")
+        `when`(rh.gs(app.aaps.core.ui.R.string.suspendloop)).thenReturn("Suspend loop")
         `when`(rh.gs(R.string.suspendloopforXmin)).thenReturn("Suspend loop for %d min")
-        `when`(context.getString(R.string.alreadysuspended)).thenReturn("Already suspended")
+        `when`(rh.gs(R.string.alreadysuspended)).thenReturn("Already suspended")
 
         sut = ActionLoopSuspend(injector)
     }

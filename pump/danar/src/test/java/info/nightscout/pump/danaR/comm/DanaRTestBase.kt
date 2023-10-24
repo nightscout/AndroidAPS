@@ -2,14 +2,11 @@ package info.nightscout.pump.danaR.comm
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
@@ -34,7 +31,6 @@ open class DanaRTestBase : TestBaseWithProfile() {
     @Mock lateinit var constraintChecker: ConstraintsChecker
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
-    @Mock lateinit var instantiator: Instantiator
     @Mock lateinit var uiInteraction: UiInteraction
 
     @BeforeEach
@@ -47,8 +43,8 @@ open class DanaRTestBase : TestBaseWithProfile() {
         `when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
     }
 
-    val injector = HasAndroidInjector {
-        AndroidInjector {
+    init {
+        addInjector {
             if (it is MessageBase) {
                 it.aapsLogger = aapsLogger
                 it.dateUtil = dateUtil

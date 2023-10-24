@@ -34,6 +34,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
+import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.implementation.logging.LoggerUtilsImpl
 import app.aaps.implementation.logging.UserEntryLoggerImpl
@@ -82,6 +83,7 @@ abstract class ImplementationModule {
 
     @ContributesAndroidInjector abstract fun profileStoreInjector(): ProfileStoreObject
     @ContributesAndroidInjector abstract fun contributesNetworkChangeReceiver(): NetworkChangeReceiver
+    @ContributesAndroidInjector abstract fun autosensDataObjectInjector(): AutosensDataObject
 
     @Module
     interface Bindings {

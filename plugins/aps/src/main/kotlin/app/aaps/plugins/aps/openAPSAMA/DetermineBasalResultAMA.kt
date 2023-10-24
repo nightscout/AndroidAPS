@@ -2,7 +2,7 @@ package app.aaps.plugins.aps.openAPSAMA
 
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.plugins.aps.APSResultObject
+import app.aaps.implementation.aps.APSResultObject
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject

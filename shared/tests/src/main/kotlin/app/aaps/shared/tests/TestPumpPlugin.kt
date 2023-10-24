@@ -12,15 +12,11 @@ import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.implementation.pump.PumpEnactResultObject
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
-import org.mockito.Mock
 
 @Suppress("MemberVisibilityCanBePrivate")
 @OpenForTesting
-class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
-
-    @Mock lateinit var rh: ResourceHelper
+class TestPumpPlugin(val rh: ResourceHelper) : Pump {
 
     var connected = false
     var isProfileSet = true

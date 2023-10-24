@@ -8,11 +8,9 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -29,8 +27,6 @@ import app.aaps.plugins.source.GlimpPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
@@ -63,7 +59,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
     @Mock lateinit var ruffyScripter: RuffyScripter
     @Mock lateinit var uiInteraction: UiInteraction
-    @Mock lateinit var instantiator: Instantiator
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
     @Mock lateinit var insightDatabase: InsightDatabase
     @Mock lateinit var bgQualityCheck: BgQualityCheck
@@ -82,14 +77,11 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     private lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
 
-    private val injector = HasAndroidInjector {
-        AndroidInjector {
+    init {
+        addInjector {
             if (it is Objective) {
                 it.sp = sp
                 it.dateUtil = dateUtil
-            }
-            if (it is PumpEnactResult) {
-                it.context = context
             }
         }
     }
@@ -121,7 +113,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(context.getString(info.nightscout.pump.combo.R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
+        `when`(rh.gs(info.nightscout.pump.combo.R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
@@ -138,76 +130,35 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
-        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction)
+        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction, instantiator)
         danaRPlugin = DanaRPlugin(
             injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
-            uiInteraction, danaHistoryDatabase, decimalFormatter
+            uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
         danaRSPlugin =
             DanaRSPlugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction,
                 sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
-                fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter
+                fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
-        insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, config, dateUtil, insightDbHelper, pumpSync, insightDatabase)
+        insightPlugin = LocalInsightPlugin(
+            injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction,
+            context, config, dateUtil, insightDbHelper, pumpSync, insightDatabase, instantiator
+        )
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
-                injector,
-                aapsLogger,
-                rxBus,
-                constraintChecker,
-                rh,
-                profileFunction,
-                context,
-                activePlugin,
-                iobCobCalculator,
-                hardLimits,
-                profiler,
-                sp,
-                dateUtil,
-                persistenceLayer,
-                glucoseStatusProvider,
-                bgQualityCheck,
-                tddCalculator
+                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
+                hardLimits, profiler, sp, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator
             )
         openAPSSMBDynamicISFPlugin =
             OpenAPSSMBDynamicISFPlugin(
-                injector,
-                aapsLogger,
-                rxBus,
-                constraintChecker,
-                rh,
-                profileFunction,
-                context,
-                activePlugin,
-                iobCobCalculator,
-                hardLimits,
-                profiler,
-                sp,
-                dateUtil,
-                persistenceLayer,
-                glucoseStatusProvider,
-                bgQualityCheck,
-                tddCalculator
+                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
+                hardLimits, profiler, sp, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
-                injector,
-                aapsLogger,
-                rxBus,
-                constraintChecker,
-                rh,
-                profileFunction,
-                context,
-                activePlugin,
-                iobCobCalculator,
-                hardLimits,
-                profiler,
-                fabricPrivacy,
-                dateUtil,
-                persistenceLayer,
-                glucoseStatusProvider,
-                sp
+                injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
+                hardLimits, profiler, fabricPrivacy, dateUtil, persistenceLayer, glucoseStatusProvider, sp
             )
         safetyPlugin =
             SafetyPlugin(

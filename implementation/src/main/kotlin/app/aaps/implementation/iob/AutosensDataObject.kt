@@ -1,4 +1,4 @@
-package app.aaps.plugins.main.iob.iobCobCalculator.data
+package app.aaps.implementation.iob
 
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
