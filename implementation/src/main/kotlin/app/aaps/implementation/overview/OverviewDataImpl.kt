@@ -13,7 +13,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -47,7 +46,6 @@ class OverviewDataImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val sp: SP,
     private val activePlugin: ActivePlugin,
-    private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
     private val persistenceLayer: PersistenceLayer,
     private val decimalFormatter: DecimalFormatter,

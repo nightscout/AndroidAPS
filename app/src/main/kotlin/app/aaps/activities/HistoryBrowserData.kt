@@ -50,7 +50,6 @@ class HistoryBrowserData @Inject constructor(
                 dateUtil,
                 sp,
                 activePlugin,
-                defaultValueHelper,
                 profileFunction,
                 persistenceLayer,
                 decimalFormatter
