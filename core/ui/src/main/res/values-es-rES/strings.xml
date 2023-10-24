@@ -51,6 +51,7 @@
     <string name="extended_bolus">Bolo extendido</string>
     <string name="paused">Pausado</string>
     <string name="tdd_total">Total TDD</string>
+    <string name="tdd_old_data">Datos antiguos</string>
     <string name="goingtodeliver">Entregando %1$.2f U</string>
     <string name="waitingforpump">Esperando bomba</string>
     <string name="androidaps_start">AAPS iniciado</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Subir estado de la bomba a NS o Tidepool</string>
     <string name="suspendloop_label">Desactiva/suspende el lazo</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
+    <string name="loopstatus_targets">OBJETIVOS:</string>
+    <string name="loopstatus_OAPS_result">RESULTADO OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
     <string name="wrongpin">Pin erróneo</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">El bolo sólo se anotará (no será entregado por la bomba)</string>
     <string name="advisoralarm">Ejecutar alarma cuando sea hora de comer</string>
     <string name="no_action_selected">No se ha seleccionado ninguna opción, por lo que no se realizará ningún cambio</string>
+    <string name="carb_equal_zero_no_action">Carbs = 0. ¡No se toma ningua acción!</string>
+    <string name="wizard_no_insulin_required">¡No se requiere insulina!</string>
     <string name="wizard_no_actual_bg">¡No hay valor de glucosa reciente en el que basar el cálculo!</string>
     <string name="wizard_no_active_profile">¡No hay perfil activo!</string>
     <string name="wizard_no_cob">COB desconocido! ¿Valor de glucosa ausente o reincio reciente de la aplicación?</string>

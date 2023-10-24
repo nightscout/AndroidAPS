@@ -293,7 +293,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
             OKDialog.showConfirmation(activity, rh.gs(app.aaps.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, event ->
                     uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, event.title)
-                    automationPlugin.removeAt(event.position)
+                    automationPlugin.remove(event)
                     rxBus.send(EventAutomationDataChanged())
                 }
                 actionHelper.finish()

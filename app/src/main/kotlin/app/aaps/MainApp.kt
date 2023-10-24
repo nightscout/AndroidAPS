@@ -100,7 +100,7 @@ class MainApp : DaggerApplication() {
             setRxErrorHandler()
             LocaleHelper.update(this@MainApp)
 
-            var gitRemote: String? = BuildConfig.REMOTE
+            var gitRemote: String? = config.REMOTE
             var commitHash: String? = BuildConfig.HEAD
             if (gitRemote?.contains("NoGitSystemAvailable") == true) {
                 gitRemote = null
@@ -109,9 +109,9 @@ class MainApp : DaggerApplication() {
             disposable += compatDBHelper.dbChangeDisposable()
             registerActivityLifecycleCallbacks(activityMonitor)
             runOnUiThread { themeSwitcherPlugin.setThemeMode() }
-            aapsLogger.debug("Version: " + BuildConfig.VERSION_NAME)
-            aapsLogger.debug("BuildVersion: " + BuildConfig.BUILDVERSION)
-            aapsLogger.debug("Remote: " + BuildConfig.REMOTE)
+            aapsLogger.debug("Version: " + config.VERSION_NAME)
+            aapsLogger.debug("BuildVersion: " + config.BUILD_VERSION)
+            aapsLogger.debug("Remote: " + config.REMOTE)
             registerLocalBroadcastReceiver()
 
             // trigger here to see the new version on app start after an update
@@ -128,7 +128,7 @@ class MainApp : DaggerApplication() {
                     if (config.isDev() && sp.getStringOrNull(app.aaps.core.utils.R.string.key_email_for_crash_report, null).isNullOrBlank())
                         notificationStore.add(Notification(Notification.IDENTIFICATION_NOT_SET, rh.get().gs(R.string.identification_not_set), Notification.INFO))
                     // log version
-                    disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
+                    disposable += repository.runTransaction(VersionChangeTransaction(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
                     // log app start
                     if (sp.getBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
                         disposable += repository

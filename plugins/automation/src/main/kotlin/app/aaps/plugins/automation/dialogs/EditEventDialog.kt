@@ -57,7 +57,7 @@ class EditEventDialog : BaseDialog() {
         // load data from bundle
         (savedInstanceState ?: arguments)?.let { bundle ->
             position = bundle.getInt("position", -1)
-            bundle.getString("event")?.let { event = AutomationEventObject(injector).fromJSON(it, position) }
+            bundle.getString("event")?.let { event = AutomationEventObject(injector).fromJSON(it) }
         }
 
         onCreateViewGeneral()

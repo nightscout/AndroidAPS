@@ -3,6 +3,7 @@
 /local.properties
 .DS_Store
 */jacoco.exec
+*/output-metadata.json
 /build
 /captures
 *.apk
@@ -19,6 +20,9 @@ app/.classpath
 app/.settings/org.eclipse.buildship.core.prefs
 wear/.classpath
 wear/.settings/org.eclipse.buildship.core.prefs
-app/nsclient/*
-app/nsclient2/*
+app/aapsclient/*
+app/aapsclient2/*
 app/pumpcontrol/*
+wear/aapsclient/*
+wear/aapsclient2/*
+wear/pumpcontrol/*

@@ -54,7 +54,7 @@ class AutomationEventTest : TestBase() {
         JSONAssert.assertEquals(eventJsonExpected, event.toJSON(), true)
 
         // clone
-        val clone = AutomationEventObject(injector).fromJSON(eventJsonExpected, 1)
+        val clone = AutomationEventObject(injector).fromJSON(eventJsonExpected)
 
         // check title
         assertThat(clone.title).isEqualTo(event.title)
