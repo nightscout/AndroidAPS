@@ -15,6 +15,7 @@ import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -77,6 +78,7 @@ class XdripPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val loop: Loop,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val rxBus: RxBus,
     private val uiInteraction: UiInteraction,
     private val dateUtil: DateUtil,
@@ -239,7 +241,7 @@ class XdripPlugin @Inject constructor(
         } else lastLoopStatus = true
 
         //Temp basal
-        iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
+        processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
             status.append(it.toStringShort(decimalFormatter)).append(" ")
         }
         //IOB
@@ -300,7 +302,7 @@ class XdripPlugin @Inject constructor(
                 "entries"    -> sendEntries(dataPairs = dataPairs, progress = progress)
                 "food"       -> sendFood(dataPairs = dataPairs, progress = progress)
                 "treatments" -> sendTreatments(dataPairs = dataPairs, progress = progress)
-                else           -> error("Invalid collection")
+                else         -> error("Invalid collection")
             }
         }
     }

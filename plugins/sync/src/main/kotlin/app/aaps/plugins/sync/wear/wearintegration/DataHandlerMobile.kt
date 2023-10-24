@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -89,6 +90,7 @@ class DataHandlerMobile @Inject constructor(
     private val sp: SP,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
@@ -782,7 +784,7 @@ class DataHandlerMobile @Inject constructor(
         var runningTime = startTimeWindow
         var beginBasalValue = profile.getBasal(beginBasalSegmentTime)
         var endBasalValue = beginBasalValue
-        var tb1 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime)
+        var tb1 = processedTbrEbData.getTempBasalIncludingConvertedExtended(runningTime)
         var tb2: TB?
         var tbBefore = beginBasalValue
         var tbAmount = beginBasalValue
@@ -808,7 +810,7 @@ class DataHandlerMobile @Inject constructor(
             }
 
             //temps
-            tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(runningTime)
+            tb2 = processedTbrEbData.getTempBasalIncludingConvertedExtended(runningTime)
             if (tb1 == null && tb2 == null) {
                 //no temp stays no temp
             } else if (tb1 != null && tb2 == null) {
@@ -838,7 +840,7 @@ class DataHandlerMobile @Inject constructor(
             basals.add(EventData.TreatmentData.Basal(beginBasalSegmentTime, runningTime, beginBasalValue))
         }
         if (tb1 != null) {
-            tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(now) //use "now" to express current situation
+            tb2 = processedTbrEbData.getTempBasalIncludingConvertedExtended(now) //use "now" to express current situation
             if (tb2 == null) {
                 //express the cancelled temp by painting it down one minute early
                 temps.add(EventData.TreatmentData.TempBasal(tbStart, tbBefore, now - 60 * 1000, endBasalValue, tbAmount))
@@ -854,7 +856,7 @@ class DataHandlerMobile @Inject constructor(
                 }
             }
         } else {
-            tb2 = iobCobCalculator.getTempBasalIncludingConvertedExtended(now) //use "now" to express current situation
+            tb2 = processedTbrEbData.getTempBasalIncludingConvertedExtended(now) //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
                 val profileTB = profileFunction.getProfile(runningTime)
@@ -904,7 +906,7 @@ class DataHandlerMobile @Inject constructor(
             iobDetail = "(${decimalFormatter.to2Decimal(bolusIob.iob)}|${decimalFormatter.to2Decimal(basalIob.basaliob)})"
             cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString(decimalFormatter)
             currentBasal =
-                iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(decimalFormatter) ?: rh.gs(
+                processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort(decimalFormatter) ?: rh.gs(
                     app.aaps.core.ui.R.string.pump_base_basal_rate, profile
                         .getBasal()
                 )

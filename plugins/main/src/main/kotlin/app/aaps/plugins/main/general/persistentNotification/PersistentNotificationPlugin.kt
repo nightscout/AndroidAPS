@@ -9,6 +9,7 @@ import androidx.core.app.RemoteInput
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -49,6 +50,7 @@ class PersistentNotificationPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugins: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val rxBus: RxBus,
     private val context: Context,
     private val notificationHolder: NotificationHolder,
@@ -140,7 +142,7 @@ class PersistentNotificationPlugin @Inject constructor(
                 line1aa = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings)
                 line1 = line1aa
             }
-            val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+            val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
                 line1 += "  " + activeTemp.toStringShort(decimalFormatter)
                 line1aa += "  " + activeTemp.toStringShort(decimalFormatter) + "."

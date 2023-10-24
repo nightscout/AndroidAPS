@@ -1,8 +1,8 @@
 package app.aaps.core.main.workflow
 
-import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.main.graph.OverviewData
 
 interface CalculationWorkflow {
     companion object {
@@ -26,13 +26,21 @@ interface CalculationWorkflow {
 
         fun finalPercent(progress: Int): Int {
             var total = 0
-            for (i in values()) if (i.pass < pass) total += i.percentOfTotal
+            for (i in entries) if (i.pass < pass) total += i.percentOfTotal
             total += (percentOfTotal.toDouble() * progress / 100.0).toInt()
             return total
         }
     }
 
     fun stopCalculation(job: String, from: String)
+
+    /**
+     * Start calculation of data needed for displaying graphs
+     *
+     * @param job [MAIN_CALCULATION] or [HISTORY_CALCULATION]
+     * @param iobCobCalculator different instance for [HistoryBrowseActivity]
+     * @param overviewData different instance for [HistoryBrowseActivity]
+     */
     fun runCalculation(
         job: String,
         iobCobCalculator: IobCobCalculator,
@@ -42,4 +50,15 @@ interface CalculationWorkflow {
         bgDataReload: Boolean,
         cause: Event?
     )
+
+    /**
+     * Update treatments in graph ofter new therapy event
+     */
+    fun runOnEventTherapyEventChange(overviewData: OverviewData)
+
+    /**
+     * Update graph ofter scale change
+     * There may be me necessary display larger time interval thus run new calculation
+     */
+    fun runOnScaleChanged(iobCobCalculator: IobCobCalculator, overviewData: OverviewData)
 }

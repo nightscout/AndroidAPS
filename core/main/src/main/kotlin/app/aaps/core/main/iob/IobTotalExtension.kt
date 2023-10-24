@@ -3,6 +3,7 @@ package app.aaps.core.main.iob
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
@@ -101,3 +102,12 @@ fun IobTotal.Companion.combine(bolusIOB: IobTotal, basalIob: IobTotal): IobTotal
     result.iobWithZeroTemp = basalIob.iobWithZeroTemp
     return result
 }
+
+fun Array<IobTotal>.convertToJSONArray(dateUtil: DateUtil): JSONArray {
+    val array = JSONArray()
+    for (i in this.indices) {
+        array.put(this[i].determineBasalJson(dateUtil))
+    }
+    return array
+}
+

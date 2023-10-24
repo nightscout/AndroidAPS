@@ -26,6 +26,7 @@ import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -86,6 +87,7 @@ import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.directionToIcon
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.displayText
+import app.aaps.core.main.iob.round
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.wizard.QuickWizard
 import app.aaps.core.ui.UIRunnable
@@ -915,10 +917,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         )
     }
 
+    private fun bolusIob(): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
+    private fun basalIob(): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+    private fun iobText(): String =
+        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)
+
+    private fun iobDialogText(): String =
+        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob) + "\n" +
+            rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob) + "\n" +
+            rh.gs(app.aaps.core.ui.R.string.basal) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, basalIob().basaliob)
+
     private fun updateIobCob() {
-        val iobText = overviewData.iobText()
-        val iobDialogText = overviewData.iobDialogText()
-        val displayText = overviewData.cobInfo().displayText(rh, decimalFormatter)
+        val iobText = iobText()
+        val iobDialogText = iobDialogText()
+        val displayText = iobCobCalculator.getCobInfo("Overview COB").displayText(rh, decimalFormatter)
         val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
         runOnUiThread {
             _binding ?: return@runOnUiThread

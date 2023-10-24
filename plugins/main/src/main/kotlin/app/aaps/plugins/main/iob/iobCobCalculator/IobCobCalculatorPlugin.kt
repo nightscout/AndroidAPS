@@ -16,6 +16,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -27,11 +28,14 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.EventAppInitialized
 import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
 import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
+import app.aaps.core.interfaces.rx.events.EventOfflineChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
+import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -39,11 +43,9 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.iobCalc
-import app.aaps.core.main.extensions.toTemporaryBasal
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.combine
 import app.aaps.core.main.iob.copy
-import app.aaps.core.main.iob.determineBasalJson
 import app.aaps.core.main.iob.plus
 import app.aaps.core.main.iob.round
 import app.aaps.core.main.workflow.CalculationWorkflow
@@ -52,7 +54,6 @@ import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
 import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import org.json.JSONArray
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -75,9 +76,10 @@ class IobCobCalculatorPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
-    val overviewData: OverviewData,
+    private val overviewData: OverviewData,
     private val calculationWorkflow: CalculationWorkflow,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val processedTbrEbData: ProcessedTbrEbData
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -130,12 +132,47 @@ class IobCobCalculatorPlugin @Inject constructor(
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
                            }
+                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_units))) {
+                               overviewData.reset()
+                               rxBus.send(EventNewHistoryData(0, false))
+                           }
+                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_rangetodisplay))) {
+                               overviewData.initRange()
+                               calculationWorkflow.runOnScaleChanged(this, overviewData)
+                               rxBus.send(EventNewHistoryData(0, false))
+                           }
                        }, fabricPrivacy::logException)
         // EventNewHistoryData
         disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event -> scheduleHistoryDataChange(event) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventTherapyEventChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ calculationWorkflow.runOnEventTherapyEventChange(overviewData) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventOfflineChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ calculationWorkflow.runOnEventTherapyEventChange(overviewData) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventAppInitialized::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe(
+                {
+                    calculationWorkflow.runCalculation(
+                        CalculationWorkflow.MAIN_CALCULATION,
+                        this,
+                        overviewData,
+                        "onEventAppInitialized",
+                        System.currentTimeMillis(),
+                        bgDataReload = true,
+                        cause = it
+                    )
+                },
+                fabricPrivacy::logException
+            )
+
     }
 
     override fun onStop() {
@@ -260,7 +297,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         if (retVal == null) {
             //log.debug(">>> getBasalData Cache miss " + new Date(time).toLocaleString());
             retVal = BasalData()
-            val tb = getTempBasalIncludingConvertedExtended(time)
+            val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(time)
             retVal.basal = profile.getBasal(time)
             if (tb != null) {
                 retVal.isTempBasalRunning = true
@@ -456,14 +493,6 @@ class IobCobCalculatorPlugin @Inject constructor(
         //log.debug("Releasing onNewHistoryData");
     }
 
-    override fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray {
-        val array = JSONArray()
-        for (i in iobArray.indices) {
-            array.put(iobArray[i].determineBasalJson(dateUtil))
-        }
-        return array
-    }
-
     /**
      *  Time range to the past for IOB calculation
      *  @return milliseconds
@@ -532,28 +561,6 @@ class IobCobCalculatorPlugin @Inject constructor(
             }
         }
         return total
-    }
-
-    private fun getConvertedExtended(timestamp: Long): TB? {
-        if (activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            val eb = persistenceLayer.getExtendedBolusActiveAt(timestamp)
-            val profile = profileFunction.getProfile(timestamp) ?: return null
-            return eb?.toTemporaryBasal(profile)
-        }
-        return null
-    }
-
-    override fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB? =
-        persistenceLayer.getTemporaryBasalActiveAt(timestamp) ?: getConvertedExtended(timestamp)
-
-    override fun getTempBasalIncludingConvertedExtendedForRange(startTime: Long, endTime: Long, calculationStep: Long): Map<Long, TB?> {
-        val tempBasals = HashMap<Long, TB?>()
-        val tbs = persistenceLayer.getTemporaryBasalsActiveBetweenTimeAndTime(startTime, endTime)
-        for (t in startTime until endTime step calculationStep) {
-            val tb = tbs.firstOrNull { basal -> basal.timestamp <= t && (basal.timestamp + basal.duration) > t }
-            tempBasals[t] = tb ?: getConvertedExtended(t)
-        }
-        return tempBasals
     }
 
     override fun calculateAbsoluteIobFromBaseBasals(toTime: Long): IobTotal {

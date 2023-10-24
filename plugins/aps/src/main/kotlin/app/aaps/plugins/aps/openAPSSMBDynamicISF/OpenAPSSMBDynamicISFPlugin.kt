@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -39,6 +40,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     context: Context,
     activePlugin: ActivePlugin,
     iobCobCalculator: IobCobCalculator,
+    processedTbrEbData: ProcessedTbrEbData,
     hardLimits: HardLimits,
     profiler: Profiler,
     sp: SP,
@@ -57,6 +59,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     context,
     activePlugin,
     iobCobCalculator,
+    processedTbrEbData,
     hardLimits,
     profiler,
     sp,

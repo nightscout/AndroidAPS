@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -100,6 +101,7 @@ class LoopPlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val virtualPump: VirtualPump,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
@@ -563,7 +565,7 @@ class LoopPlugin @Inject constructor(
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
         val now = System.currentTimeMillis()
-        val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
+        val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         if (request.rate == 0.0 && request.duration == 0 || abs(request.rate - pump.baseBasalRate) < pump.pumpDescription.basalStep) {
             if (activeTemp != null) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: cancelTempBasal()")

@@ -1,6 +1,7 @@
 package app.aaps.activities
 
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -11,7 +12,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
@@ -33,41 +33,38 @@ class HistoryBrowserData @Inject constructor(
     persistenceLayer: PersistenceLayer,
     fabricPrivacy: FabricPrivacy,
     calculationWorkflow: CalculationWorkflow,
-    decimalFormatter: DecimalFormatter
+    decimalFormatter: DecimalFormatter,
+    processedTbrEbData: ProcessedTbrEbData
 ) {
 
-    lateinit var iobCobCalculator: IobCobCalculatorPlugin
-    var overviewData: OverviewData
-
-    init {
-        // We don't want to use injected singletons but own instance working on top of different data
-        overviewData =
-            OverviewDataImpl(
-                aapsLogger,
-                rh,
-                dateUtil,
-                sp,
-                activePlugin,
-                profileFunction,
-                persistenceLayer,
-                decimalFormatter
-            ) { iobCobCalculator }
-        iobCobCalculator =
-            IobCobCalculatorPlugin(
-                injector,
-                aapsLogger,
-                aapsSchedulers,
-                rxBus,
-                sp,
-                rh,
-                profileFunction,
-                activePlugin,
-                fabricPrivacy,
-                dateUtil,
-                persistenceLayer,
-                overviewData,
-                calculationWorkflow,
-                decimalFormatter
-            )
-    }
+    // We don't want to use injected singletons but own instance working on top of different data
+    val overviewData =
+        OverviewDataImpl(
+            rh,
+            dateUtil,
+            sp,
+            activePlugin,
+            profileFunction,
+            persistenceLayer,
+            decimalFormatter,
+            processedTbrEbData
+        )
+    val iobCobCalculator =
+        IobCobCalculatorPlugin(
+            injector,
+            aapsLogger,
+            aapsSchedulers,
+            rxBus,
+            sp,
+            rh,
+            profileFunction,
+            activePlugin,
+            fabricPrivacy,
+            dateUtil,
+            persistenceLayer,
+            overviewData,
+            calculationWorkflow,
+            decimalFormatter,
+            processedTbrEbData
+        )
 }

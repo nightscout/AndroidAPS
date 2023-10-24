@@ -6,6 +6,7 @@ import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.ICfg
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -44,6 +45,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var iobCobCalculator: IobCobCalculator
+    @Mock lateinit var processedTbrEbData: ProcessedTbrEbData
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
@@ -69,7 +71,7 @@ open class TestBaseWithProfile : TestBase() {
                 it.constraintChecker = constraintsChecker
                 it.sp = sp
                 it.activePlugin = activePlugin
-                it.iobCobCalculator = iobCobCalculator
+                it.processedTbrEbData = processedTbrEbData
                 it.profileFunction = profileFunction
                 it.rh = rh
                 it.decimalFormatter = decimalFormatter

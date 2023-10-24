@@ -8,6 +8,7 @@ import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -51,6 +52,7 @@ class DataBroadcastPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val profileFunction: ProfileFunction,
     private val defaultValueHelper: DefaultValueHelper,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
@@ -174,7 +176,7 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putLong("basalTimeStamp", now)
         bundle.putDouble("baseBasal", profile.getBasal())
         bundle.putString("profile", profileFunction.getProfileName())
-        iobCobCalculator.getTempBasalIncludingConvertedExtended(now)?.let {
+        processedTbrEbData.getTempBasalIncludingConvertedExtended(now)?.let {
             bundle.putLong("tempBasalStart", it.timestamp)
             bundle.putLong("tempBasalDurationInMinutes", it.durationInMinutes)
             if (it.isAbsolute) bundle.putDouble("tempBasalAbsolute", it.rate) // U/h for absolute TBR

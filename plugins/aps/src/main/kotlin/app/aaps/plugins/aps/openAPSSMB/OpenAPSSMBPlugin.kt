@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -54,6 +55,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     val context: Context,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
     private val sp: SP,
@@ -283,7 +285,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
             } else {
                 // TODO still needed with oref1?
                 // Fix bug determine basal
-                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultSMB.isTempBasalRequested =
+                if (determineBasalResultSMB.rate == 0.0 && determineBasalResultSMB.duration == 0 && processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultSMB
+                    .isTempBasalRequested =
                     false
                 determineBasalResultSMB.iob = iobArray[0]
                 determineBasalResultSMB.json?.put("timestamp", dateUtil.toISOString(now))

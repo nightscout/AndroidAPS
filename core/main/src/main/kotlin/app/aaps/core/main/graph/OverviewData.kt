@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import app.aaps.core.data.db.GV
-import app.aaps.core.data.iob.CobInfo
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.DeviationDataPoint
 import app.aaps.interfaces.graph.data.FixedLineGraphSeries
@@ -50,14 +49,6 @@ interface OverviewData {
     */
     fun extendedBolusText(): String
     fun extendedBolusDialogText(): String
-
-    /*
-     * IOB, COB
-     */
-    fun cobInfo(): CobInfo
-
-    fun iobText(): String
-    fun iobDialogText(): String
 
     /*
      * Graphs

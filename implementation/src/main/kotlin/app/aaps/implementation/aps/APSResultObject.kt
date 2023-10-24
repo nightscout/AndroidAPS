@@ -9,7 +9,7 @@ import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
@@ -37,7 +37,7 @@ open class APSResultObject @Inject constructor(protected val injector: HasAndroi
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var sp: SP
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var decimalFormatter: DecimalFormatter
@@ -272,7 +272,7 @@ open class APSResultObject @Inject constructor(protected val injector: HasAndroi
                 return false
             }
             val now = System.currentTimeMillis()
-            val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
+            val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
             val pump = activePlugin.activePump
             val profile = profileFunction.getProfile()
             if (profile == null) {

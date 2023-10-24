@@ -14,7 +14,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.fromGv
 import app.aaps.core.main.extensions.valueToUnits
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LastBgDataImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,

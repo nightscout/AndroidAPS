@@ -12,6 +12,7 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -63,6 +64,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var config: Config
     @Inject lateinit var protectionCheck: ProtectionCheck
@@ -142,7 +144,7 @@ class ActionsFragment : DaggerFragment() {
             }
         }
         binding.cancelTempBasal.setOnClickListener {
-            if (iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) != null) {
+            if (processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now()) != null) {
                 uel.log(Action.CANCEL_TEMP_BASAL, Sources.Actions)
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
@@ -255,7 +257,7 @@ class ActionsFragment : DaggerFragment() {
             binding.setTempBasal.visibility = View.GONE
             binding.cancelTempBasal.visibility = View.GONE
         } else {
-            val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
+            val activeTemp = processedTbrEbData.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
                 binding.setTempBasal.visibility = View.GONE
                 binding.cancelTempBasal.visibility = View.VISIBLE

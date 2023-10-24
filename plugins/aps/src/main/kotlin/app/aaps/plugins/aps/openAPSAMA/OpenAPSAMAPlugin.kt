@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -53,6 +54,7 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val context: Context,
     private val activePlugin: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
+    private val processedTbrEbData: ProcessedTbrEbData,
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
     private val fabricPrivacy: FabricPrivacy,
@@ -220,7 +222,8 @@ class OpenAPSAMAPlugin @Inject constructor(
             lastAPSResult = null
             lastAPSRun = 0
         } else {
-            if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultAMA.isTempBasalRequested =
+            if (determineBasalResultAMA.rate == 0.0 && determineBasalResultAMA.duration == 0 && processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now()) == null) determineBasalResultAMA
+                .isTempBasalRequested =
                 false
             determineBasalResultAMA.iob = iobArray[0]
             val now = System.currentTimeMillis()

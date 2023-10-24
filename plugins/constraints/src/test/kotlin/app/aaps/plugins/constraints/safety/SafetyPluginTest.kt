@@ -70,11 +70,11 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(config.APS).thenReturn(true)
         safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, constraintChecker, activePlugin, hardLimits, config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter)
         openAPSAMAPlugin = OpenAPSAMAPlugin(
-            injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy,
+            injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, processedTbrEbData, hardLimits, profiler, fabricPrivacy,
             dateUtil, persistenceLayer, glucoseStatusProvider, sp
         )
         openAPSSMBPlugin = OpenAPSSMBPlugin(
-            injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp,
+            injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, processedTbrEbData, hardLimits, profiler, sp,
             dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator
         )
     }

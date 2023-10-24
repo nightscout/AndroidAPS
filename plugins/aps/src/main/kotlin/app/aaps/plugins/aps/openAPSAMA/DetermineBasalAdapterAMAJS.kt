@@ -8,15 +8,17 @@ import app.aaps.core.data.iob.MealData
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
-import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.main.extensions.plannedRemainingMinutes
+import app.aaps.core.main.iob.convertToJSONArray
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.utils.ScriptReader
@@ -44,7 +46,8 @@ class DetermineBasalAdapterAMAJS internal constructor(private val scriptReader: 
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
+    @Inject lateinit var dateUtil: DateUtil
 
     private var profile = JSONObject()
     private var glucoseStatus = JSONObject()
@@ -194,7 +197,7 @@ class DetermineBasalAdapterAMAJS internal constructor(private val scriptReader: 
             this.profile.put("out_units", "mmol/L")
         }
         val now = System.currentTimeMillis()
-        val tb = iobCobCalculator.getTempBasalIncludingConvertedExtended(now)
+        val tb = processedTbrEbData.getTempBasalIncludingConvertedExtended(now)
         currentTemp = JSONObject()
         currentTemp.put("temp", "absolute")
         currentTemp.put("duration", tb?.plannedRemainingMinutes ?: 0)
@@ -202,7 +205,7 @@ class DetermineBasalAdapterAMAJS internal constructor(private val scriptReader: 
         // as we have non default temps longer than 30 minutes
         if (tb != null) currentTemp.put("minutesrunning", tb.getPassedDurationToTimeInMinutes(now))
 
-        iobData = iobCobCalculator.convertToJSONArray(iobArray)
+        iobData = iobArray.convertToJSONArray(dateUtil)
         this.glucoseStatus = JSONObject()
         this.glucoseStatus.put("glucose", glucoseStatus.glucose)
         if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {

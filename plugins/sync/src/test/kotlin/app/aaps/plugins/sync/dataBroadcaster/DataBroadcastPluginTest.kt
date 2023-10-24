@@ -38,7 +38,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         sut = DataBroadcastPlugin(
-            injector, aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, profileFunction, defaultValueHelper, processedDeviceStatusData,
+            injector, aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, defaultValueHelper, processedDeviceStatusData,
             loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
@@ -49,7 +49,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         Mockito.`when`(iobCobCalculator.getCobInfo("broadcast")).thenReturn(CobInfo(1000, 100.0, 10.0))
         Mockito.`when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
-        Mockito.`when`(iobCobCalculator.getTempBasalIncludingConvertedExtended(anyLong()))
+        Mockito.`when`(processedTbrEbData.getTempBasalIncludingConvertedExtended(anyLong()))
             .thenReturn(TB(timestamp = 1000, duration = 60000, isAbsolute = true, rate = 1.0, type = TB.Type.NORMAL))
         Mockito.`when`(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
         Mockito.`when`(loop.lastRun).thenReturn(Loop.LastRun().also {

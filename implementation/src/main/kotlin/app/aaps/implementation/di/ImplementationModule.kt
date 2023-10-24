@@ -1,6 +1,7 @@
 package app.aaps.implementation.di
 
 import app.aaps.core.interfaces.alerts.LocalAlertUtils
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.logging.UserEntryLogger
@@ -35,6 +36,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
+import app.aaps.implementation.db.ProcessedTbrEbDataImpl
 import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.implementation.logging.LoggerUtilsImpl
@@ -94,6 +96,7 @@ abstract class ImplementationModule {
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
         @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData
+        @Binds fun bindProcessedTbrEbData(pProcessedTbrEbData: ProcessedTbrEbDataImpl): ProcessedTbrEbData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
         @Binds fun bindDetailedBolusInfoStorage(detailedBolusInfoStorageImpl: DetailedBolusInfoStorageImpl): DetailedBolusInfoStorage
         @Binds fun bindTemporaryBasalStorage(temporaryBasalStorageImpl: TemporaryBasalStorageImpl): TemporaryBasalStorage

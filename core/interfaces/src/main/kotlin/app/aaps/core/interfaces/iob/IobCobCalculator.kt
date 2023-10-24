@@ -3,13 +3,11 @@ package app.aaps.core.interfaces.iob
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.BasalData
-import app.aaps.core.data.db.TB
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.iob.MealData
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.profile.Profile
-import org.json.JSONArray
 
 interface IobCobCalculator {
 
@@ -27,7 +25,6 @@ interface IobCobCalculator {
     fun calculateIobArrayInDia(profile: Profile): Array<IobTotal>
     fun calculateIobArrayForSMB(lastAutosensResult: AutosensResult, exerciseMode: Boolean, halfBasalExerciseTarget: Int, isTempTarget: Boolean): Array<IobTotal>
     fun iobArrayToString(array: Array<IobTotal>): String
-    fun convertToJSONArray(iobArray: Array<IobTotal>): JSONArray
 
     fun clearCache()
 
@@ -48,26 +45,6 @@ interface IobCobCalculator {
      * @return calculated iob
      */
     fun calculateIobFromBolus(): IobTotal
-
-    /**
-     * Get running temporary basal at time
-     *
-     *  @return     running temporary basal or null if no tbr is running
-     *              If pump is faking extended boluses as temporary basals
-     *              return extended converted to temporary basal with type == FAKE_EXTENDED
-     */
-    fun getTempBasalIncludingConvertedExtended(timestamp: Long): TB?
-
-    /**
-     * Get running temporary basals for given time range, sliced by calculationStep.
-     * For each step between given range it calculates equivalent of getTempBasalIncludingConvertedExtended
-     *
-     *  @param startTime start of calculated period, timestamp
-     *  @param endTime end of calculated period, timestamp
-     *  @param calculationStep calculation step, in millisecond
-     *  @return map where for each step, its timestamp is a key and calculated optional temporary basal is a value
-     */
-    fun getTempBasalIncludingConvertedExtendedForRange(startTime: Long, endTime: Long, calculationStep: Long): Map<Long, TB?>
 
     /**
      *  Calculate IOB of base basal insulin (usually not accounted towards IOB)

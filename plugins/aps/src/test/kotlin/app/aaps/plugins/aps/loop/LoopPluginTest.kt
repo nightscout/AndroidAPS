@@ -38,7 +38,7 @@ class LoopPluginTest : TestBaseWithProfile() {
 
         loopPlugin = LoopPlugin(
             injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
-            constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel,
+            constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             persistenceLayer, runningConfiguration, uiInteraction, instantiator
         )
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)

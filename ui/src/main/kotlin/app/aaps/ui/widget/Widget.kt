@@ -13,11 +13,13 @@ import android.os.HandlerThread
 import android.view.View
 import android.widget.RemoteViews
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.extensions.toVisibilityKeepSpace
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
@@ -37,6 +39,7 @@ import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.directionToIcon
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.displayText
+import app.aaps.core.main.iob.round
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.ui.R
 import dagger.android.HasAndroidInjector
@@ -61,6 +64,7 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
+    @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var loop: Loop
     @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
@@ -176,7 +180,7 @@ class Widget : AppWidgetProvider() {
 
     private fun updateTemporaryBasal(views: RemoteViews) {
         views.setTextViewText(R.id.base_basal, overviewData.temporaryBasalText())
-        views.setTextColor(R.id.base_basal, iobCobCalculator.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gc(app.aaps.core.ui.R.color.widget_basal) }
+        views.setTextColor(R.id.base_basal, processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let { rh.gc(app.aaps.core.ui.R.color.widget_basal) }
             ?: rh.gc(app.aaps.core.ui.R.color.white))
         views.setImageViewResource(R.id.base_basal_icon, overviewData.temporaryBasalIcon())
     }
@@ -187,10 +191,15 @@ class Widget : AppWidgetProvider() {
         views.setViewVisibility(R.id.extended_layout, (persistenceLayer.getExtendedBolusActiveAt(dateUtil.now()) != null && !pump.isFakingTempsByExtendedBoluses).toVisibility())
     }
 
+    private fun bolusIob(): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
+    private fun basalIob(): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
+    private fun iobText(): String =
+        rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)
+
     private fun updateIobCob(views: RemoteViews) {
-        views.setTextViewText(R.id.iob, overviewData.iobText())
+        views.setTextViewText(R.id.iob, iobText())
         // cob
-        var cobText = overviewData.cobInfo().displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+        var cobText = iobCobCalculator.getCobInfo("Overview COB").displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
 
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
         val lastRun = loop.lastRun
