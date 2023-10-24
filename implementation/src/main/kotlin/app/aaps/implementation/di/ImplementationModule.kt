@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.logging.LoggerUtils
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationHolder
+import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -38,6 +39,7 @@ import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.implementation.logging.LoggerUtilsImpl
 import app.aaps.implementation.logging.UserEntryLoggerImpl
+import app.aaps.implementation.overview.LastBgDataImpl
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.profile.DefaultValueHelperImpl
@@ -91,6 +93,7 @@ abstract class ImplementationModule {
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
+        @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger
         @Binds fun bindDetailedBolusInfoStorage(detailedBolusInfoStorageImpl: DetailedBolusInfoStorageImpl): DetailedBolusInfoStorage
         @Binds fun bindTemporaryBasalStorage(temporaryBasalStorageImpl: TemporaryBasalStorageImpl): TemporaryBasalStorage

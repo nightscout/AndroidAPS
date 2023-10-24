@@ -2,13 +2,11 @@ package app.aaps.core.main.graph
 
 import android.content.Context
 import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.CobInfo
-import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
 import app.aaps.interfaces.graph.data.DeviationDataPoint
 import app.aaps.interfaces.graph.data.FixedLineGraphSeries
@@ -40,25 +38,6 @@ interface OverviewData {
 
     var calcProgressPct: Int
 
-    /*
-     * BG
-     */
-
-    /**
-     * Get newest glucose value from bucketed data.
-     * If there are less than 3 glucose values, bucketed data is not created.
-     * In this case take newest [app.aaps.core.data.db.GV] from db and convert it to [InMemoryGlucoseValue]
-     *
-     * Intended for display on screen only
-     *
-     * @return newest glucose value
-     */
-    fun lastBg(): InMemoryGlucoseValue?
-    fun isLow(): Boolean
-    fun isHigh(): Boolean
-    @ColorInt fun lastBgColor(context: Context?): Int
-    fun lastBgDescription(): String
-    fun isActualBg(): Boolean
     /*
      * TEMPORARY BASAL
      */

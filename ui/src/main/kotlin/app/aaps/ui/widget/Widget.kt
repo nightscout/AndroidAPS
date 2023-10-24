@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -51,6 +52,7 @@ class Widget : AppWidgetProvider() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var overviewData: OverviewData
+    @Inject lateinit var lastBgData: LastBgData
     @Inject lateinit var trendCalculator: TrendCalculator
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var rh: ResourceHelper
@@ -133,12 +135,12 @@ class Widget : AppWidgetProvider() {
     private fun updateBg(views: RemoteViews) {
         views.setTextViewText(
             R.id.bg,
-            overviewData.lastBg()?.let { profileUtil.fromMgdlToStringInUnits(it.value) } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short))
+            lastBgData.lastBg()?.let { profileUtil.fromMgdlToStringInUnits(it.value) } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short))
         views.setTextColor(
             R.id.bg, when {
-                overviewData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
-                overviewData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
-                else                  -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
+                lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
+                else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
         )
         trendCalculator.getTrendArrow()?.let {
@@ -147,9 +149,9 @@ class Widget : AppWidgetProvider() {
         views.setViewVisibility(R.id.arrow, (trendCalculator.getTrendArrow() != null).toVisibilityKeepSpace())
         views.setInt(
             R.id.arrow, "setColorFilter", when {
-                overviewData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
-                overviewData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
-                else                  -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
+                lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
+                lastBgData.isHigh() -> rh.gc(app.aaps.core.ui.R.color.widget_high)
+                else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
         )
 
@@ -165,10 +167,10 @@ class Widget : AppWidgetProvider() {
         }
 
         // strike through if BG is old
-        if (!overviewData.isActualBg()) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+        if (!lastBgData.isActualBg()) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
         else views.setInt(R.id.bg, "setPaintFlags", Paint.ANTI_ALIAS_FLAG)
 
-        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, overviewData.lastBg()?.timestamp))
+        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, lastBgData.lastBg()?.timestamp))
         //views.setTextViewText(R.id.time_ago_short, "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")")
     }
 

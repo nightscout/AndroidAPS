@@ -45,6 +45,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -143,6 +144,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var overviewData: OverviewData
+    @Inject lateinit var lastBgData: LastBgData
     @Inject lateinit var automation: Automation
     @Inject lateinit var bgQualityCheck: BgQualityCheck
     @Inject lateinit var uiInteraction: UiInteraction
@@ -779,13 +781,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     fun updateBg() {
-        val lastBg = overviewData.lastBg()
-        val lastBgColor = overviewData.lastBgColor(context)
-        val isActualBg = overviewData.isActualBg()
+        val lastBg = lastBgData.lastBg()
+        val lastBgColor = lastBgData.lastBgColor(context)
+        val isActualBg = lastBgData.isActualBg()
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
         val trendDescription = trendCalculator.getTrendDescription()
         val trendArrow = trendCalculator.getTrendArrow()
-        val lastBgDescription = overviewData.lastBgDescription()
+        val lastBgDescription = lastBgData.lastBgDescription()
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.value)

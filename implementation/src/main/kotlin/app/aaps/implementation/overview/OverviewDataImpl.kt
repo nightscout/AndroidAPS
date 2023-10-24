@@ -2,13 +2,11 @@ package app.aaps.implementation.overview
 
 import android.content.Context
 import androidx.annotation.AttrRes
-import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.CobInfo
-import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
@@ -23,11 +21,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.main.R
 import app.aaps.core.main.extensions.convertedToPercent
-import app.aaps.core.main.extensions.fromGv
 import app.aaps.core.main.extensions.isInProgress
 import app.aaps.core.main.extensions.toStringFull
 import app.aaps.core.main.extensions.toStringShort
-import app.aaps.core.main.extensions.valueToUnits
 import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.round
 import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
@@ -137,46 +133,8 @@ class OverviewDataImpl @Inject constructor(
     override var calcProgressPct: Int = 100
 
     /*
-     * BG
-     */
-
-    override fun lastBg(): InMemoryGlucoseValue? =
-        iobCobCalculator.get().ads.bucketedData?.firstOrNull()
-            ?: persistenceLayer.getLastGlucoseValue()?.let { InMemoryGlucoseValue.fromGv(it) }
-
-    override fun isLow(): Boolean =
-        lastBg()?.let { lastBg ->
-            lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()
-        } ?: false
-
-    override fun isHigh(): Boolean =
-        lastBg()?.let { lastBg ->
-            lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine()
-        } ?: false
-
-    @ColorInt
-    override fun lastBgColor(context: Context?): Int =
-        when {
-            isLow()  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
-            isHigh() -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)
-            else     -> rh.gac(context, app.aaps.core.ui.R.attr.bgInRange)
-        }
-
-    override fun lastBgDescription(): String =
-        when {
-            isLow()  -> rh.gs(app.aaps.core.ui.R.string.a11y_low)
-            isHigh() -> rh.gs(app.aaps.core.ui.R.string.a11y_high)
-            else     -> rh.gs(app.aaps.core.ui.R.string.a11y_inrange)
-        }
-
-    override fun isActualBg(): Boolean =
-        lastBg()?.let { lastBg ->
-            lastBg.timestamp > dateUtil.now() - T.mins(9).msecs()
-        } ?: false
-
-    /*
-     * TEMPORARY BASAL
-     */
+    * TEMPORARY BASAL
+    */
 
     override fun temporaryBasalText(): String =
         profileFunction.getProfile()?.let { profile ->

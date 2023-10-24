@@ -16,13 +16,13 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 
-class OverviewDataImplTest : TestBaseWithProfile() {
+class LastBgDataImplTest : TestBaseWithProfile() {
 
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var autosensDataStore: AutosensDataStore
 
-    private lateinit var sut: OverviewDataImpl
+    private lateinit var sut: LastBgDataImpl
     private val time = 1000000L
 
     private val glucoseValue =
@@ -31,7 +31,7 @@ class OverviewDataImplTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        sut = OverviewDataImpl(aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, persistenceLayer, decimalFormatter) { iobCobCalculator }
+        sut = LastBgDataImpl(rh, dateUtil, persistenceLayer, profileFunction, defaultValueHelper, iobCobCalculator)
         Mockito.`when`(defaultValueHelper.determineLowLine()).thenReturn(80.0)
         Mockito.`when`(defaultValueHelper.determineHighLine()).thenReturn(180.0)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
