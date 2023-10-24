@@ -3,7 +3,6 @@ package app.aaps.activities
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -30,7 +29,6 @@ class HistoryBrowserData @Inject constructor(
     dateUtil: DateUtil,
     sp: SP,
     activePlugin: ActivePlugin,
-    defaultValueHelper: DefaultValueHelper,
     profileFunction: ProfileFunction,
     persistenceLayer: PersistenceLayer,
     fabricPrivacy: FabricPrivacy,

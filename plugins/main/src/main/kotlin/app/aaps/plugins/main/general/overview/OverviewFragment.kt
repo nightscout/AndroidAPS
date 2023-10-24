@@ -919,7 +919,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val iobText = overviewData.iobText()
         val iobDialogText = overviewData.iobDialogText()
         val displayText = overviewData.cobInfo().displayText(rh, decimalFormatter)
-        val lastCarbsTime = overviewData.lastCarbsTime
+        val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.iob.text = iobText
@@ -949,7 +949,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @SuppressLint("SetTextI18n")
     fun updateTemporaryTarget() {
         val units = profileFunction.getUnits()
-        val tempTarget = overviewData.temporaryTarget
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         runOnUiThread {
             _binding ?: return@runOnUiThread
             if (tempTarget != null) {
@@ -1089,7 +1089,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateSensitivity() {
         _binding ?: return
-        val lastAutosensData = overviewData.lastAutosensData()
+        val lastAutosensData = iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
         if (config.NSCLIENT && sp.getBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, false) ||
             !config.NSCLIENT && constraintChecker.isAutosensModeEnabled().value()
         ) {

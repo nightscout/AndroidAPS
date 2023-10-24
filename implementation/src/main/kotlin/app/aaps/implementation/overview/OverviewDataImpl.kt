@@ -193,9 +193,6 @@ class OverviewDataImpl @Inject constructor(
     private fun basalIob(): IobTotal = iobCobCalculator.get().calculateIobFromTempBasalsIncludingConvertedExtended().round()
     override fun cobInfo(): CobInfo = iobCobCalculator.get().getCobInfo("Overview COB")
 
-    override val lastCarbsTime: Long
-        get() = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
-
     override fun iobText(): String =
         rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob)
 
@@ -203,20 +200,6 @@ class OverviewDataImpl @Inject constructor(
         rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob + basalIob().basaliob) + "\n" +
             rh.gs(app.aaps.core.ui.R.string.bolus) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, bolusIob().iob) + "\n" +
             rh.gs(app.aaps.core.ui.R.string.basal) + ": " + rh.gs(app.aaps.core.ui.R.string.format_insulin_units, basalIob().basaliob)
-
-    /*
-     * TEMP TARGET
-     */
-
-    override val temporaryTarget: TT?
-        get() =
-            persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
-
-    /*
-     * SENSITIVITY
-     */
-
-    override fun lastAutosensData(): AutosensData? = iobCobCalculator.get().ads.getLastAutosensData("Overview", aapsLogger, dateUtil)
 
     /*
      * Graphs

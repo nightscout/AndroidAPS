@@ -197,7 +197,8 @@ class Widget : AppWidgetProvider() {
         if (config.APS && constraintsProcessed != null && lastRun != null) {
             if (constraintsProcessed.carbsReq > 0) {
                 //only display carbsreq when carbs have not been entered recently
-                if (overviewData.lastCarbsTime < lastRun.lastAPSRun) {
+                val lastCarbsTime = persistenceLayer.getNewestCarbs()?.timestamp ?: 0L
+                if (lastCarbsTime < lastRun.lastAPSRun) {
                     cobText += " | " + constraintsProcessed.carbsReq + " " + rh.gs(app.aaps.core.ui.R.string.required)
                 }
             }
@@ -207,7 +208,7 @@ class Widget : AppWidgetProvider() {
 
     private fun updateTemporaryTarget(views: RemoteViews) {
         val units = profileFunction.getUnits()
-        val tempTarget = overviewData.temporaryTarget
+        val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
         if (tempTarget != null) {
             // this is crashing, use background as text for now
             //views.setTextColor(R.id.temp_target, rh.gc(R.color.ribbonTextWarning))
@@ -266,7 +267,7 @@ class Widget : AppWidgetProvider() {
             views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_swap_vert_black_48dp_green)
         else
             views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_x_swap_vert)
-        views.setTextViewText(R.id.sensitivity, overviewData.lastAutosensData()?.let { autosensData ->
+        views.setTextViewText(R.id.sensitivity, iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)?.let { autosensData ->
             String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
         } ?: "")
 
