@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -96,7 +97,8 @@ class CommandQueueImplementation @Inject constructor(
     private val androidPermission: AndroidPermission,
     private val uiInteraction: UiInteraction,
     private val persistenceLayer: PersistenceLayer,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val instantiator: Instantiator
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
@@ -151,7 +153,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     private fun executingNowError(): PumpEnactResult =
-        PumpEnactResult(injector).success(false).enacted(false).comment(R.string.executing_right_now)
+        instantiator.providePumpEnactResult().success(false).enacted(false).comment(R.string.executing_right_now)
 
     override fun isRunning(type: CommandType): Boolean = performing?.commandType == type
 
@@ -235,7 +237,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
+            config, dateUtil, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter, instantiator
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()
@@ -276,8 +278,8 @@ class CommandQueueImplementation @Inject constructor(
                     action = Action.CARBS,
                     source = Sources.TreatmentDialog
                 ).subscribe(
-                    { callback?.result(PumpEnactResult(injector).enacted(false).success(true))?.run() },
-                    { callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run() }
+                    { callback?.result(instantiator.providePumpEnactResult().enacted(false).success(true))?.run() },
+                    { callback?.result(instantiator.providePumpEnactResult().enacted(false).success(false))?.run() }
                 )
             }
             // Do not process carbs anymore
@@ -293,13 +295,13 @@ class CommandQueueImplementation @Inject constructor(
         if (type == CommandType.SMB_BOLUS) {
             if (bolusInQueue()) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting SMB since a bolus is queue/running")
-                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                callback?.result(instantiator.providePumpEnactResult().enacted(false).success(false))?.run()
                 return false
             }
             val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
             if (detailedBolusInfo.lastKnownBolusTime < lastBolusTime) {
                 aapsLogger.debug(LTag.PUMPQUEUE, "Rejecting bolus, another bolus was issued since request time")
-                callback?.result(PumpEnactResult(injector).enacted(false).success(false))?.run()
+                callback?.result(instantiator.providePumpEnactResult().enacted(false).success(false))?.run()
                 return false
             }
             removeAll(CommandType.SMB_BOLUS)
@@ -443,12 +445,12 @@ class CommandQueueImplementation @Inject constructor(
     fun setProfile(profile: ProfileSealed, hasNsId: Boolean, callback: Callback?): Boolean {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
-            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
+            callback?.result(instantiator.providePumpEnactResult().success(true).enacted(false))?.run()
             return false
         }
         if (isThisProfileSet(profile) && persistenceLayer.getEffectiveProfileSwitchActiveAt(dateUtil.now()) != null) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Correct profile already set")
-            callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
+            callback?.result(instantiator.providePumpEnactResult().success(true).enacted(false))?.run()
             return false
         }
         // Compare with pump limits
@@ -457,7 +459,7 @@ class CommandQueueImplementation @Inject constructor(
             if (basalValue.value < activePlugin.activePump.pumpDescription.basalMinimumRate) {
                 val notification = Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, rh.gs(R.string.basal_value_below_minimum), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
-                callback?.result(PumpEnactResult(injector).success(false).enacted(false).comment(R.string.basal_value_below_minimum))?.run()
+                callback?.result(instantiator.providePumpEnactResult().success(false).enacted(false).comment(R.string.basal_value_below_minimum))?.run()
                 return false
             }
         }

@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.friendlyDescription
@@ -64,8 +63,8 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                 ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
             )
         ).subscribe(
-            { callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run() },
-            { callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.error)).run() }
+            { callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run() },
+            { callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.error)).run() }
         )
     }
 

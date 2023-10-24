@@ -2,13 +2,13 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.defs.determineCorrectBasalSize
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.implementation.pump.PumpEnactResultObject
 import app.aaps.implementation.utils.DecimalFormatterImpl
 import app.aaps.shared.tests.TestBase
 import app.aaps.shared.tests.rx.TestAapsSchedulers
@@ -76,7 +76,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
             )
         ).thenAnswer { invocation: InvocationOnMock ->
             val pair = invocation.getArgument<TempBasalPair>(0)
-            val result = PumpEnactResult(injector)
+            val result = PumpEnactResultObject(rh)
             result.absolute(pair.insulinRate)
             result.duration(pair.durationMinutes)
             result

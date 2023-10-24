@@ -6,7 +6,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
@@ -41,9 +40,9 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
                 listValues = listOf(ValueWithUnit.Minute(minutes.getMinutes()))
             )
             rxBus.send(EventRefreshOverview("ActionLoopSuspend"))
-            callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.alreadysuspended)).run()
         }
     }
 

@@ -4,7 +4,6 @@ import android.content.Context
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
@@ -41,7 +40,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
     override fun doAction(callback: Callback) {
         timerUtil.scheduleReminder(10, text.value.takeIf { it.isNotBlank() }
             ?: rh.gs(config.appName))
-        callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+        callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun toJSON(): String {

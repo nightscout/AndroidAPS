@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -40,7 +39,7 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
                 }
             })
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadydisabled)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.alreadydisabled)).run()
         }
     }
 

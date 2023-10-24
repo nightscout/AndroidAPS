@@ -19,6 +19,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.BolusProgressData
@@ -68,7 +69,8 @@ open class VirtualPumpPlugin @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val instantiator: Instantiator
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -139,7 +141,7 @@ open class VirtualPumpPlugin @Inject constructor(
     override var fakeDataDetected = false
 
     override fun loadTDDs(): PumpEnactResult { //no result, could read DB in the future?
-        return PumpEnactResult(injector)
+        return instantiator.providePumpEnactResult()
     }
 
     override fun isInitialized(): Boolean = true
@@ -164,7 +166,7 @@ open class VirtualPumpPlugin @Inject constructor(
         lastDataTime = System.currentTimeMillis()
         rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)))
         // Do nothing here. we are using database profile
-        return PumpEnactResult(injector).success(true).enacted(true)
+        return instantiator.providePumpEnactResult().success(true).enacted(true)
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean = pumpSync.expectedPumpState().profile?.isEqual(profile) ?: false
@@ -183,7 +185,7 @@ open class VirtualPumpPlugin @Inject constructor(
         get() = batteryPercent
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
             .success(true)
             .bolusDelivered(detailedBolusInfo.insulin)
             .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
@@ -198,7 +200,7 @@ open class VirtualPumpPlugin @Inject constructor(
             rxBus.send(bolusingEvent)
             delivering += 0.1
             if (BolusProgressData.stopPressed)
-                return PumpEnactResult(injector)
+                return instantiator.providePumpEnactResult()
                     .success(false)
                     .enacted(false)
                     .comment(rh.gs(app.aaps.core.ui.R.string.stop))
@@ -233,7 +235,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun stopBolusDelivering() {}
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         result.success = true
         result.enacted = true
         result.isTempCancel = false
@@ -257,7 +259,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         result.success = true
         result.enacted = true
         result.percent = percent
@@ -306,7 +308,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         result.success = true
         result.isTempCancel = true
         result.comment = rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok)
@@ -326,7 +328,7 @@ open class VirtualPumpPlugin @Inject constructor(
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (pumpSync.expectedPumpState().extendedBolus != null) {
             pumpSync.syncStopExtendedBolusWithPumpId(
                 timestamp = dateUtil.now(),

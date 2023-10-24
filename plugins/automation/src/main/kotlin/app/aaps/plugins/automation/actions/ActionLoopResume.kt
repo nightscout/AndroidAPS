@@ -5,7 +5,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
@@ -34,9 +33,9 @@ class ActionLoopResume(injector: HasAndroidInjector) : Action(injector) {
         if (loopPlugin.isSuspended) {
             disposable += persistenceLayer.cancelCurrentOfflineEvent(dateUtil.now(), app.aaps.core.data.ue.Action.RESUME, Sources.Automation, title).subscribe()
             rxBus.send(EventRefreshOverview("ActionLoopResume"))
-            callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.notsuspended)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.notsuspended)).run()
         }
     }
 

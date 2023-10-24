@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.actions
 
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.automation.R
@@ -24,7 +23,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun doAction(callback: Callback) {
         disposable += persistenceLayer.cancelCurrentTemporaryTargetIfAny(dateUtil.now(), app.aaps.core.data.ue.Action.CANCEL_TT, Sources.Automation, title, listOf()).subscribe()
-        callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+        callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun isValid(): Boolean = true

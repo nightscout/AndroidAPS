@@ -38,9 +38,7 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import kotlin.math.min
 
-class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader, injector: HasAndroidInjector) : DetermineBasalAdapter {
-
-    private val injector: HasAndroidInjector
+class DetermineBasalAdapterAMAJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -48,7 +46,6 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
 
-    private val mScriptReader: ScriptReader
     private var profile = JSONObject()
     private var glucoseStatus = JSONObject()
     private var iobData: JSONArray? = null
@@ -234,7 +231,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
     }
 
     @Throws(IOException::class) private fun readFile(filename: String): String {
-        val bytes = mScriptReader.readFile(filename)
+        val bytes = scriptReader.readFile(filename)
         var string = String(bytes, StandardCharsets.UTF_8)
         if (string.startsWith("#!/usr/bin/env node")) {
             string = string.substring(20)
@@ -244,7 +241,5 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
 
     init {
         injector.androidInjector().inject(this)
-        mScriptReader = scriptReader
-        this.injector = injector
     }
 }

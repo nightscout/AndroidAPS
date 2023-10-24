@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.constraints.PluginConstraints;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.objects.Instantiator;
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.profile.ProfileFunction;
@@ -152,6 +153,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     private final InsightDbHelper insightDbHelper;
     private final PumpSync pumpSync;
     private final InsightDatabase insightDatabase;
+    private final Instantiator instantiator;
     private final PumpDescription pumpDescription;
     private final Object $bolusLock = new Object[0];
     public double lastBolusAmount = 0;
@@ -209,7 +211,8 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
             DateUtil dateUtil,
             InsightDbHelper insightDbHelper,
             PumpSync pumpSync,
-            InsightDatabase insightDatabase
+            InsightDatabase insightDatabase,
+            Instantiator instantiator
     ) {
         super(new PluginDescription()
                         .pluginIcon(app.aaps.core.ui.R.drawable.ic_insight_128)
@@ -233,6 +236,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         this.insightDbHelper = insightDbHelper;
         this.pumpSync = pumpSync;
         this.insightDatabase = insightDatabase;
+        this.instantiator = instantiator;
 
         pumpDescription = new PumpDescription();
         PumpDescriptionExtensionKt.fillFor(pumpDescription, PumpType.ACCU_CHEK_INSIGHT);
@@ -476,7 +480,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(Profile profile) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         rxBus.send(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         List<BasalProfileBlock> profileBlocks = new ArrayList<>();
         for (int i = 0; i < profile.getBasalValues().length; i++) {
@@ -576,7 +580,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
         if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
             throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         double insulin = Math.round(detailedBolusInfo.insulin / 0.01) * 0.01;
         if (insulin > 0) {
             try {
@@ -693,7 +697,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         if (activeBasalRate == null) return result;
         if (activeBasalRate.getActiveBasalRate() == 0) return result;
         double percent = 100D / activeBasalRate.getActiveBasalRate() * absoluteRate;
@@ -743,7 +747,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         percent = (int) Math.round(((double) percent) / 10d) * 10;
         if (percent == 100) return cancelTempBasal(true);
         else if (percent > 250) percent = 250;
@@ -799,7 +803,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     public PumpEnactResult setExtendedBolusOnly(Double insulin, Integer durationInMinutes, boolean disableVibration) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             DeliverBolusMessage bolusMessage = new DeliverBolusMessage();
             bolusMessage.setBolusType(BolusType.EXTENDED);
@@ -831,7 +835,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean enforceNew) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         PumpEnactResult cancelEBResult = null;
         if (isFakingTempsByExtendedBoluses()) cancelEBResult = cancelExtendedBolusOnly();
         PumpEnactResult cancelTBRResult = cancelTempBasalOnly();
@@ -852,7 +856,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     private PumpEnactResult cancelTempBasalOnly() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             alertService.ignore(AlertType.WARNING_36);
             connectionService.requestMessage(new CancelTBRMessage()).await();
@@ -895,7 +899,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     private PumpEnactResult cancelExtendedBolusOnly() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             for (ActiveBolus activeBolus : activeBoluses) {
                 if (activeBolus.getBolusType() == BolusType.EXTENDED || activeBolus.getBolusType() == BolusType.MULTIWAVE) {
@@ -1014,7 +1018,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     public PumpEnactResult stopPump() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
             operatingModeMessage.setOperatingMode(OperatingMode.STOPPED);
@@ -1036,7 +1040,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     public PumpEnactResult startPump() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             SetOperatingModeMessage operatingModeMessage = new SetOperatingModeMessage();
             operatingModeMessage.setOperatingMode(OperatingMode.STARTED);
@@ -1058,7 +1062,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
     }
 
     public PumpEnactResult setTBROverNotification(boolean enabled) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         boolean valueBefore = tbrOverNotificationBlock.isEnabled();
         tbrOverNotificationBlock.setEnabled(enabled);
         try {
@@ -1121,7 +1125,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
 
     @NonNull @Override
     public PumpEnactResult loadTDDs() {
-        return new PumpEnactResult(getInjector()).success(true);
+        return instantiator.providePumpEnactResult().success(true);
     }
 
     private void readHistory() {

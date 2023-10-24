@@ -52,14 +52,6 @@ open class TestBaseWithProfile : TestBase() {
 
     val profileInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is ProfileStoreObject) {
-                it.aapsLogger = aapsLogger
-                it.activePlugin = activePlugin
-                it.config = config
-                it.rh = rh
-                it.rxBus = rxBus
-                it.hardLimits = hardLimits
-            }
         }
     }
 
@@ -206,7 +198,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(profileInjector, json, dateUtil)
+        return ProfileStoreObject(json, aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil)
     }
 
     fun getInvalidProfileStore1(): ProfileStore {
@@ -215,7 +207,7 @@ open class TestBaseWithProfile : TestBase() {
         store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
         json.put("store", store)
-        return ProfileStoreObject(profileInjector, json, dateUtil)
+        return ProfileStoreObject(json, aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil)
     }
 
     fun getInvalidProfileStore2(): ProfileStore {
@@ -225,6 +217,6 @@ open class TestBaseWithProfile : TestBase() {
         store.put("invalid", JSONObject(invalidProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
-        return ProfileStoreObject(profileInjector, json, dateUtil)
+        return ProfileStoreObject(json, aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil)
     }
 }

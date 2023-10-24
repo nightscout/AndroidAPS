@@ -40,4 +40,24 @@ interface APSResult {
     fun toSpanned(): Spanned
     fun newAndClone(): APSResult
     fun json(): JSONObject?
+
+    fun doClone(newResult: APSResult) {
+        newResult.date = date
+        newResult.reason = reason
+        newResult.rate = rate
+        newResult.duration = duration
+        newResult.isTempBasalRequested = isTempBasalRequested
+        newResult.iob = iob
+        newResult.json = JSONObject(json.toString())
+        newResult.hasPredictions = hasPredictions
+        newResult.smb = smb
+        newResult.deliverAt = deliverAt
+        newResult.rateConstraint = rateConstraint
+        newResult.smbConstraint = smbConstraint
+        newResult.percent = percent
+        newResult.usePercent = usePercent
+        newResult.carbsReq = carbsReq
+        newResult.carbsReqWithin = carbsReqWithin
+        newResult.targetBG = targetBG
+    }
 }

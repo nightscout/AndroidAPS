@@ -776,7 +776,7 @@ class PersistenceLayerImpl @Inject constructor(
         repository.getNextSyncElementProfileSwitch(id)
             .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
 
-    override fun getLastProfileSwitchId(): Long? = getLastProfileSwitchId()
+    override fun getLastProfileSwitchId(): Long? = repository.getLastProfileSwitchId()
     override fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<PS>> =
         repository.runTransactionForResult(InsertOrUpdateProfileSwitch(profileSwitch.toDb()))
             .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
@@ -1055,7 +1055,7 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getOldestExtendedBolusRecord(): EB? =
         repository.getOldestExtendedBolusRecord().blockingGet()?.fromDb()
 
-    override fun getLastExtendedBolusId(): Long = getLastExtendedBolusId()
+    override fun getLastExtendedBolusId(): Long? = repository.getLastExtendedBolusId()
     override fun getExtendedBolusByNSId(nsId: String): EB? = repository.findExtendedBolusByNSId(nsId)?.fromDb()
 
     override fun getExtendedBolusesStartingFromTimeToTime(startTime: Long, endTime: Long, ascending: Boolean): List<EB> =
@@ -1428,7 +1428,7 @@ class PersistenceLayerImpl @Inject constructor(
             .map { list -> list.asSequence().map { it.fromDb() }.toList() }
             .blockingGet()
 
-    override fun getLastOfflineEventId(): Long = getLastOfflineEventId()
+    override fun getLastOfflineEventId(): Long? = repository.getLastOfflineEventId()
 
     override fun getNextSyncElementOfflineEvent(id: Long): Maybe<Pair<OE, OE>> =
         repository.getNextSyncElementOfflineEvent(id)

@@ -7,7 +7,6 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper
@@ -36,23 +35,23 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.validators.R.string.error_field_must_not_be_empty)).run()
+            callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.validators.R.string.error_field_must_not_be_empty)).run()
             return
         }
         if (profileFunction.getProfile() == null) {
             aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.noprofile)).run()
+            callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.noprofile)).run()
             return
         }
         if (inputProfileName.value == activeProfileName) {
             aapsLogger.debug(LTag.AUTOMATION, "Profile is already switched")
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadyset)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(R.string.alreadyset)).run()
             return
         }
         val profileStore = activePlugin.activeProfileSource.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
-            callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.notexists)).run()
+            callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.notexists)).run()
             return
         }
         val result = profileFunction.createProfileSwitch(
@@ -69,7 +68,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
                 ValueWithUnit.Percent(100)
             )
         )
-        callback.result(PumpEnactResult(injector).success(result).comment(app.aaps.core.ui.R.string.ok)).run()
+        callback.result(instantiator.providePumpEnactResult().success(result).comment(app.aaps.core.ui.R.string.ok)).run()
     }
 
     override fun generateDialog(root: LinearLayout) {

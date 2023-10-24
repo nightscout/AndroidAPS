@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.constraints.PluginConstraints;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.objects.Instantiator;
 import app.aaps.core.interfaces.plugin.ActivePlugin;
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin;
 import app.aaps.core.interfaces.profile.Profile;
@@ -67,6 +68,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected UiInteraction uiInteraction;
     protected DanaHistoryDatabase danaHistoryDatabase;
     protected DecimalFormatter decimalFormatter;
+    protected Instantiator instantiator;
 
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
@@ -83,7 +85,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             PumpSync pumpSync,
             UiInteraction uiInteraction,
             DanaHistoryDatabase danaHistoryDatabase,
-            DecimalFormatter decimalFormatter
+            DecimalFormatter decimalFormatter,
+            Instantiator instantiator
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -106,6 +109,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         this.uiInteraction = uiInteraction;
         this.danaHistoryDatabase = danaHistoryDatabase;
         this.decimalFormatter = decimalFormatter;
+        this.instantiator = instantiator;
     }
 
     @Override protected void onStart() {
@@ -148,7 +152,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     // Pump interface
     @NonNull @Override
     public PumpEnactResult setNewBasalProfile(@NonNull Profile profile) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
 
         if (sExecutionService == null) {
             getAapsLogger().error("setNewBasalProfile sExecutionService is null");
@@ -225,7 +229,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getAapsLogger()), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input);
@@ -278,7 +282,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < getPumpDescription().getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
@@ -329,7 +333,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
 
     @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
             if (!danaPump.isExtendedInProgress()) {

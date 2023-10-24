@@ -15,6 +15,7 @@ import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.objects.Instantiator;
 import app.aaps.core.interfaces.plugin.ActivePlugin;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.profile.ProfileFunction;
@@ -90,6 +91,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject SP sp;
     @Inject DateUtil dateUtil;
     @Inject UiInteraction uiInteraction;
+    @Inject Instantiator instantiator;
 
     public DanaRv2ExecutionService() {
     }
@@ -418,14 +420,14 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public PumpEnactResult loadEvents() {
         if (!danaRv2Plugin.isInitialized()) {
-            PumpEnactResult result = new PumpEnactResult(injector).success(false);
+            PumpEnactResult result = instantiator.providePumpEnactResult().success(false);
             result.comment("pump not initialized");
             return result;
         }
 
 
         if (!isConnected())
-            return new PumpEnactResult(injector).success(false);
+            return instantiator.providePumpEnactResult().success(false);
         SystemClock.sleep(300);
         MsgHistoryEventsV2 msg = new MsgHistoryEventsV2(injector, danaPump.readHistoryFrom);
         aapsLogger.debug(LTag.PUMP, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.readHistoryFrom));
@@ -439,7 +441,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         else
             danaPump.readHistoryFrom = 0;
         danaPump.setLastConnection(System.currentTimeMillis());
-        return new PumpEnactResult(injector).success(true);
+        return instantiator.providePumpEnactResult().success(true);
     }
 
     public boolean updateBasalsInPump(final Profile profile) {
@@ -458,12 +460,12 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public PumpEnactResult setUserOptions() {
         if (!isConnected())
-            return new PumpEnactResult(injector).success(false);
+            return instantiator.providePumpEnactResult().success(false);
         SystemClock.sleep(300);
         MsgSetUserOptions msg = new MsgSetUserOptions(injector);
         mSerialIOThread.sendMessage(msg);
         SystemClock.sleep(200);
-        return new PumpEnactResult(injector).success(!msg.getFailed());
+        return instantiator.providePumpEnactResult().success(!msg.getFailed());
     }
 
     public class LocalBinder extends Binder {

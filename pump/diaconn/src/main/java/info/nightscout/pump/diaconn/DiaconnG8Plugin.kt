@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -84,7 +85,8 @@ class DiaconnG8Plugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val uiInteraction: UiInteraction,
     private val diaconnHistoryDatabase: DiaconnHistoryDatabase,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val instantiator: Instantiator
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -181,11 +183,11 @@ class DiaconnG8Plugin @Inject constructor(
 
     // Diaconn Pump Interface
     override fun loadHistory(): PumpEnactResult {
-        return diaconnG8Service?.loadHistory() ?: PumpEnactResult(injector).success(false)
+        return diaconnG8Service?.loadHistory() ?: instantiator.providePumpEnactResult().success(false)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        return diaconnG8Service?.setUserSettings() ?: PumpEnactResult(injector).success(false)
+        return diaconnG8Service?.setUserSettings() ?: instantiator.providePumpEnactResult().success(false)
     }
 
     // Constraints interface
@@ -224,7 +226,7 @@ class DiaconnG8Plugin @Inject constructor(
         diaconnG8Service?.isConnected ?: false || diaconnG8Service?.isConnecting ?: false
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (!isInitialized()) {
             uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
             result.comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
@@ -285,7 +287,7 @@ class DiaconnG8Plugin @Inject constructor(
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
                 ?: false
-            val result = PumpEnactResult(injector)
+            val result = instantiator.providePumpEnactResult()
             result.success = connectionOK
             result.bolusDelivered = t.insulin
 
@@ -296,7 +298,7 @@ class DiaconnG8Plugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result
         } else {
-            val result = PumpEnactResult(injector)
+            val result = instantiator.providePumpEnactResult()
             result.success = false
             result.bolusDelivered = 0.0
             result.comment = rh.gs(app.aaps.core.ui.R.string.invalid_input)
@@ -312,7 +314,7 @@ class DiaconnG8Plugin @Inject constructor(
     // This is called from APS
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         val doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
@@ -403,7 +405,7 @@ class DiaconnG8Plugin @Inject constructor(
         var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
 
         if (diaconnG8Pump.isExtendedInProgress && abs(diaconnG8Pump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
@@ -441,7 +443,7 @@ class DiaconnG8Plugin @Inject constructor(
 
     @Synchronized
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (diaconnG8Pump.isTempBasalInProgress) {
             diaconnG8Service?.tempBasalStop()
             result.success = !diaconnG8Pump.isTempBasalInProgress
@@ -459,7 +461,7 @@ class DiaconnG8Plugin @Inject constructor(
     }
 
     @Synchronized override fun cancelExtendedBolus(): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (diaconnG8Pump.isExtendedInProgress) {
             diaconnG8Service?.extendedBolusStop()
             result.success = !diaconnG8Pump.isExtendedInProgress

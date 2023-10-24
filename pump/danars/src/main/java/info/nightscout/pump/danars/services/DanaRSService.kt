@@ -12,6 +12,7 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -110,6 +111,7 @@ class DanaRSService : DaggerService() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var instantiator: Instantiator
 
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
@@ -258,7 +260,7 @@ class DanaRSService : DaggerService() {
 
     fun loadEvents(): PumpEnactResult {
         if (!danaRSPlugin.isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
+            val result = instantiator.providePumpEnactResult().success(false)
             result.comment = "pump not initialized"
             return result
         }
@@ -274,13 +276,13 @@ class DanaRSService : DaggerService() {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpstatus)))
         sendMessage(DanaRSPacketGeneralInitialScreenInformation(injector))
         danaPump.lastConnection = System.currentTimeMillis()
-        return PumpEnactResult(injector).success(msg.success())
+        return instantiator.providePumpEnactResult().success(msg.success())
     }
 
     fun setUserSettings(): PumpEnactResult {
         val message = DanaRSPacketOptionSetUserOption(injector)
         sendMessage(message)
-        return PumpEnactResult(injector).success(message.success())
+        return instantiator.providePumpEnactResult().success(message.success())
     }
 
     fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
@@ -493,7 +495,7 @@ class DanaRSService : DaggerService() {
     }
 
     fun loadHistory(type: Byte): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (!isConnected) return result
         var msg: DanaRSPacketHistory? = null
         when (type) {

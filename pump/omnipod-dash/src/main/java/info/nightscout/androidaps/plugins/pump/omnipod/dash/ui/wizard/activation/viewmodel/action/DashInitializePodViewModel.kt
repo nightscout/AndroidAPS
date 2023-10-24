@@ -3,11 +3,11 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.activatio
 import androidx.annotation.StringRes
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.sharedPreferences.SP
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InitializePodViewModel
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 class DashInitializePodViewModel @Inject constructor(
     private val omnipodManager: OmnipodDashManager,
-    injector: HasAndroidInjector,
+    instantiator: Instantiator,
     logger: AAPSLogger,
     private val sp: SP,
     private val podStateManager: OmnipodDashPodStateManager,
@@ -33,7 +33,7 @@ class DashInitializePodViewModel @Inject constructor(
     private val history: DashHistory,
     aapsSchedulers: AapsSchedulers
 
-) : InitializePodViewModel(injector, logger, aapsSchedulers) {
+) : InitializePodViewModel(instantiator, logger, aapsSchedulers) {
 
     override fun isPodInAlarm(): Boolean = false // TODO
 
@@ -65,14 +65,14 @@ class DashInitializePodViewModel @Inject constructor(
                     onError = { throwable ->
                         logger.error(LTag.PUMP, "Error in Pod activation part 1", throwable)
                         source.onSuccess(
-                            PumpEnactResult(injector)
+                            instantiator.providePumpEnactResult()
                                 .success(false)
                                 .comment(I8n.textFromException(throwable, rh))
                         )
                     },
                     onComplete = {
                         logger.debug("Pod activation part 1 completed")
-                        source.onSuccess(PumpEnactResult(injector).success(true))
+                        source.onSuccess(instantiator.providePumpEnactResult().success(true))
                     }
                 )
         }

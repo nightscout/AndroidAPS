@@ -17,6 +17,7 @@ import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.constraints.ConstraintsChecker;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.objects.Instantiator;
 import app.aaps.core.interfaces.plugin.ActivePlugin;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
@@ -81,9 +82,11 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             PumpSync pumpSync,
             UiInteraction uiInteraction,
             DanaHistoryDatabase danaHistoryDatabase,
-            DecimalFormatter decimalFormatter
+            DecimalFormatter decimalFormatter,
+            Instantiator instantiator
     ) {
-        super(injector, danaPump, rh, constraintsChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter);
+        super(injector, danaPump, rh, constraintsChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter
+                , instantiator);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.rh = rh;
@@ -168,7 +171,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
-            PumpEnactResult result = new PumpEnactResult(getInjector());
+            PumpEnactResult result = instantiator.providePumpEnactResult();
             result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.getInsulin());
             if (!result.getSuccess())
@@ -195,7 +198,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                         serialNumber());
             return result;
         } else {
-            PumpEnactResult result = new PumpEnactResult(getInjector());
+            PumpEnactResult result = instantiator.providePumpEnactResult();
             result.success(false).bolusDelivered(0d).comment(app.aaps.core.ui.R.string.invalid_input);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
@@ -207,7 +210,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         // Recheck pump status if older than 30 min
         //This should not be needed while using queue because connection should be done before calling this
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
 
         absoluteRate = constraintChecker.applyBasalConstraints(new ConstraintObject<>(absoluteRate, getAapsLogger()), profile).value();
 
@@ -329,7 +332,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         if (danaPump.isExtendedInProgress() && useExtendedBoluses) {
             return cancelExtendedBolus();
         }
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         result.success(true).enacted(false).comment(app.aaps.core.ui.R.string.ok).isTempCancel(true);
         return result;
     }
@@ -340,7 +343,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     }
 
     private PumpEnactResult cancelRealTempBasal() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         if (danaPump.isTempBasalInProgress()) {
             sExecutionService.tempBasalStop();
             if (!danaPump.isTempBasalInProgress()) {
@@ -362,7 +365,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult loadEvents() {
-        return new PumpEnactResult(getInjector()); // no history, not needed
+        return instantiator.providePumpEnactResult(); // no history, not needed
     }
 
     @NonNull @Override

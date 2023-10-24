@@ -38,12 +38,12 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.queue.Callback
@@ -107,6 +107,7 @@ class LoopPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val runningConfiguration: RunningConfiguration,
     private val uiInteraction: UiInteraction,
+    private val instantiator: Instantiator
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.LOOP)
@@ -400,7 +401,7 @@ class LoopPlugin @Inject constructor(
                     if (resultAfterConstraints.isChangeRequested
                         && !commandQueue.bolusInQueue()
                     ) {
-                        val waiting = PumpEnactResult(injector)
+                        val waiting = instantiator.providePumpEnactResult()
                         waiting.queued = true
                         if (resultAfterConstraints.isTempBasalRequested) lastRun.tbrSetByPump = waiting
                         if (resultAfterConstraints.isBolusRequested) lastRun.smbSetByPump =
@@ -546,18 +547,18 @@ class LoopPlugin @Inject constructor(
      */
     private fun applyTBRRequest(request: APSResult, profile: Profile, callback: Callback?) {
         if (!request.isTempBasalRequested) {
-            callback?.result(PumpEnactResult(injector).enacted(false).success(true).comment(app.aaps.core.ui.R.string.nochangerequested))?.run()
+            callback?.result(instantiator.providePumpEnactResult().enacted(false).success(true).comment(app.aaps.core.ui.R.string.nochangerequested))?.run()
             return
         }
         val pump = activePlugin.activePump
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(R.string.pump_not_initialized))
-            callback?.result(PumpEnactResult(injector).comment(R.string.pump_not_initialized).enacted(false).success(false))?.run()
+            callback?.result(instantiator.providePumpEnactResult().comment(R.string.pump_not_initialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applyAPSRequest: " + rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
-            callback?.result(PumpEnactResult(injector).comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
+            callback?.result(instantiator.providePumpEnactResult().comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applyAPSRequest: $request")
@@ -571,7 +572,7 @@ class LoopPlugin @Inject constructor(
             } else {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                 callback?.result(
-                    PumpEnactResult(injector).absolute(request.rate).duration(0)
+                    instantiator.providePumpEnactResult().absolute(request.rate).duration(0)
                         .enacted(false).success(true).comment(R.string.basal_set_correctly)
                 )?.run()
             }
@@ -584,7 +585,7 @@ class LoopPlugin @Inject constructor(
                 } else {
                     aapsLogger.debug(LTag.APS, "applyAPSRequest: Basal set correctly")
                     callback?.result(
-                        PumpEnactResult(injector).percent(request.percent).duration(0)
+                        instantiator.providePumpEnactResult().percent(request.percent).duration(0)
                             .enacted(false).success(true).comment(R.string.basal_set_correctly)
                     )?.run()
                 }
@@ -595,7 +596,7 @@ class LoopPlugin @Inject constructor(
             ) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(
-                    PumpEnactResult(injector).percent(request.percent)
+                    instantiator.providePumpEnactResult().percent(request.percent)
                         .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                         .comment(app.aaps.core.ui.R.string.let_temp_basal_run)
                 )?.run()
@@ -621,7 +622,7 @@ class LoopPlugin @Inject constructor(
             ) {
                 aapsLogger.debug(LTag.APS, "applyAPSRequest: Temp basal set correctly")
                 callback?.result(
-                    PumpEnactResult(injector).absolute(activeTemp.convertedToAbsolute(now, profile))
+                    instantiator.providePumpEnactResult().absolute(activeTemp.convertedToAbsolute(now, profile))
                         .enacted(false).success(true).duration(activeTemp.plannedRemainingMinutes)
                         .comment(app.aaps.core.ui.R.string.let_temp_basal_run)
                 )?.run()
@@ -650,7 +651,7 @@ class LoopPlugin @Inject constructor(
         if (lastBolusTime != 0L && lastBolusTime + 3 * 60 * 1000 > System.currentTimeMillis()) {
             aapsLogger.debug(LTag.APS, "SMB requested but still in 3 min interval")
             callback?.result(
-                PumpEnactResult(injector)
+                instantiator.providePumpEnactResult()
                     .comment(R.string.smb_frequency_exceeded)
                     .enacted(false).success(false)
             )?.run()
@@ -658,12 +659,12 @@ class LoopPlugin @Inject constructor(
         }
         if (!pump.isInitialized()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(R.string.pump_not_initialized))
-            callback?.result(PumpEnactResult(injector).comment(R.string.pump_not_initialized).enacted(false).success(false))?.run()
+            callback?.result(instantiator.providePumpEnactResult().comment(R.string.pump_not_initialized).enacted(false).success(false))?.run()
             return
         }
         if (pump.isSuspended()) {
             aapsLogger.debug(LTag.APS, "applySMBRequest: " + rh.gs(app.aaps.core.ui.R.string.pumpsuspended))
-            callback?.result(PumpEnactResult(injector).comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
+            callback?.result(instantiator.providePumpEnactResult().comment(app.aaps.core.ui.R.string.pumpsuspended).enacted(false).success(false))?.run()
             return
         }
         aapsLogger.debug(LTag.APS, "applySMBRequest: $request")

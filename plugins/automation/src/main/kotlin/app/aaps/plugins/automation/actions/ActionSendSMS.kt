@@ -1,7 +1,6 @@
 package app.aaps.plugins.automation.actions
 
 import android.widget.LinearLayout
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.utils.JsonHelper
@@ -25,7 +24,7 @@ class ActionSendSMS(injector: HasAndroidInjector) : Action(injector) {
 
     override fun doAction(callback: Callback) {
         val result = smsCommunicator.sendNotificationToAllNumbers(text.value)
-        callback.result(PumpEnactResult(injector).success(result).comment(if (result) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.error)).run()
+        callback.result(instantiator.providePumpEnactResult().success(result).comment(if (result) app.aaps.core.ui.R.string.ok else app.aaps.core.ui.R.string.error)).run()
     }
 
     override fun isValid(): Boolean = text.value.isNotEmpty()

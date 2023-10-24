@@ -2,7 +2,6 @@ package app.aaps.plugins.automation.actions
 
 import android.content.Context
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -39,9 +38,6 @@ class ActionNotificationTest : TestBase() {
                 it.rxBus = rxBusMocked
                 it.persistenceLayer = persistenceLayer
                 it.dateUtil = dateUtil
-            }
-            if (it is PumpEnactResult) {
-                it.context = context
             }
         }
     }

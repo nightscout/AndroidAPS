@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -84,7 +85,8 @@ class DanaRSPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val danaHistoryDatabase: DanaHistoryDatabase,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val instantiator: Instantiator
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -193,15 +195,15 @@ class DanaRSPlugin @Inject constructor(
 
     // DanaR interface
     override fun loadHistory(type: Byte): PumpEnactResult {
-        return danaRSService?.loadHistory(type) ?: PumpEnactResult(injector).success(false)
+        return danaRSService?.loadHistory(type) ?: instantiator.providePumpEnactResult().success(false)
     }
 
     override fun loadEvents(): PumpEnactResult {
-        return danaRSService?.loadEvents() ?: PumpEnactResult(injector).success(false)
+        return danaRSService?.loadEvents() ?: instantiator.providePumpEnactResult().success(false)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        return danaRSService?.setUserSettings() ?: PumpEnactResult(injector).success(false)
+        return danaRSService?.setUserSettings() ?: instantiator.providePumpEnactResult().success(false)
     }
 
     // Constraints interface
@@ -240,7 +242,7 @@ class DanaRSPlugin @Inject constructor(
         danaRSService?.isConnected ?: false || danaRSService?.isConnecting ?: false
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
             uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
@@ -313,7 +315,7 @@ class DanaRSPlugin @Inject constructor(
             var connectionOK = false
             if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
                 ?: false
-            val result = PumpEnactResult(injector)
+            val result = instantiator.providePumpEnactResult()
             result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
             result.bolusDelivered = t.insulin
             if (!result.success) {
@@ -329,7 +331,7 @@ class DanaRSPlugin @Inject constructor(
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result
         } else {
-            val result = PumpEnactResult(injector)
+            val result = instantiator.providePumpEnactResult()
             result.success = false
             result.bolusDelivered = 0.0
             result.comment = rh.gs(app.aaps.core.ui.R.string.invalid_input)
@@ -370,7 +372,7 @@ class DanaRSPlugin @Inject constructor(
                 return cancelTempBasal(false)
             }
             aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: doTempOff OK")
-            return PumpEnactResult(injector)
+            return instantiator.providePumpEnactResult()
                 .success(true)
                 .enacted(false)
                 .percent(100)
@@ -385,7 +387,7 @@ class DanaRSPlugin @Inject constructor(
                 if (danaPump.tempBasalPercent == percentRate && danaPump.tempBasalRemainingMin > 4) {
                     if (!enforceNew) {
                         aapsLogger.debug(LTag.PUMP, "setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)")
-                        return PumpEnactResult(injector)
+                        return instantiator.providePumpEnactResult()
                             .success(true)
                             .percent(percentRate)
                             .enacted(false)
@@ -413,14 +415,14 @@ class DanaRSPlugin @Inject constructor(
         }
         // We should never end here
         aapsLogger.error("setTempBasalAbsolute: Internal error")
-        return PumpEnactResult(injector)
+        return instantiator.providePumpEnactResult()
             .success(false)
             .comment("Internal error")
     }
 
     @Synchronized
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
         if (percentAfterConstraint < 0) {
             result.isTempCancel = false
@@ -469,7 +471,7 @@ class DanaRSPlugin @Inject constructor(
     }
 
     @Synchronized private fun setHighTempBasalPercent(percent: Int): PumpEnactResult {
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         val connectionOK = danaRSService?.highTempBasal(percent) ?: false
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percent) {
             result.enacted = true
@@ -495,7 +497,7 @@ class DanaRSPlugin @Inject constructor(
         // needs to be rounded
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
-        val result = PumpEnactResult(injector)
+        val result = instantiator.providePumpEnactResult()
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
             result.success = true
@@ -533,14 +535,14 @@ class DanaRSPlugin @Inject constructor(
         if (danaPump.isTempBasalInProgress) {
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: Failed")
             danaRSService?.tempBasalStop()
-            return PumpEnactResult(injector)
+            return instantiator.providePumpEnactResult()
                 .success(!danaPump.isTempBasalInProgress)
                 .enacted(true)
                 .isTempCancel(true)
                 .comment(app.aaps.core.ui.R.string.canceling_tbr_failed)
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
-            return PumpEnactResult(injector)
+            return instantiator.providePumpEnactResult()
                 .success(true)
                 .enacted(false)
                 .isTempCancel(true)
@@ -552,13 +554,13 @@ class DanaRSPlugin @Inject constructor(
         if (danaPump.isExtendedInProgress) {
             danaRSService?.extendedBolusStop()
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: Failed")
-            return PumpEnactResult(injector)
+            return instantiator.providePumpEnactResult()
                 .success(!danaPump.isExtendedInProgress)
                 .enacted(true)
                 .comment(app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
-            return PumpEnactResult(injector)
+            return instantiator.providePumpEnactResult()
                 .success(true)
                 .enacted(false)
                 .isTempCancel(true)

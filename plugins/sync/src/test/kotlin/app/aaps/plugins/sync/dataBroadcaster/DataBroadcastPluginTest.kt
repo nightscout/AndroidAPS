@@ -12,7 +12,6 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.profile.DefaultValueHelper
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.shared.tests.BundleMock
@@ -59,7 +58,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
         Mockito.`when`(processedDeviceStatusData.uploaderStatus).thenReturn("100%")
         Mockito.`when`(loop.lastRun).thenReturn(Loop.LastRun().also {
             it.lastTBREnact = 1000
-            it.tbrSetByPump = PumpEnactResult(injector).success(true).enacted(true)
+            it.tbrSetByPump = instantiator.providePumpEnactResult().success(true).enacted(true)
         }
         )
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)

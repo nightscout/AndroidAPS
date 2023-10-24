@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.objects.Instantiator;
 import app.aaps.core.interfaces.plugin.ActivePlugin;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
@@ -78,6 +79,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     @Inject PumpSync pumpSync;
     @Inject ActivePlugin activePlugin;
     @Inject UiInteraction uiInteraction;
+    @Inject Instantiator instantiator;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -242,7 +244,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     public PumpEnactResult loadHistory(byte type) {
-        PumpEnactResult result = new PumpEnactResult(injector);
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         if (!isConnected()) return result;
         MessageBase msg = null;
         switch (type) {

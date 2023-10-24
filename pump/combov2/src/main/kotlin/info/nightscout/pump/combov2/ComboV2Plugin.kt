@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.Pump
@@ -120,7 +121,8 @@ class ComboV2Plugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val androidPermission: AndroidPermission,
     private val config: Config,
-    private val decimalFormatter: DecimalFormatter
+    private val decimalFormatter: DecimalFormatter,
+    private val instantiator: Instantiator
 ) :
     PumpPluginBase(
         PluginDescription()
@@ -864,7 +866,7 @@ class ComboV2Plugin @Inject constructor(
                 Notification.URGENT
             )
 
-            return PumpEnactResult(injector).apply {
+            return instantiator.providePumpEnactResult().apply {
                 success = false
                 enacted = false
                 comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
@@ -876,7 +878,7 @@ class ComboV2Plugin @Inject constructor(
         rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
 
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
 
         val requestedBasalProfile = profile.toComboCtlBasalProfile()
         aapsLogger.debug(LTag.PUMP, "Basal profile to set: $requestedBasalProfile")
@@ -1036,12 +1038,12 @@ class ComboV2Plugin @Inject constructor(
 
         val requestedBolusAmount = detailedBolusInfo.insulin.iuToCctlBolus()
         val bolusReason = when (detailedBolusInfo.bolusType) {
-            BS.Type.NORMAL -> ComboCtlPump.StandardBolusReason.NORMAL
-            BS.Type.SMB    -> ComboCtlPump.StandardBolusReason.SUPERBOLUS
+            BS.Type.NORMAL  -> ComboCtlPump.StandardBolusReason.NORMAL
+            BS.Type.SMB     -> ComboCtlPump.StandardBolusReason.SUPERBOLUS
             BS.Type.PRIMING -> ComboCtlPump.StandardBolusReason.PRIMING_INFUSION_SET
         }
 
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         pumpEnactResult.success = false
 
         if (isSuspended()) {
@@ -1186,7 +1188,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         pumpEnactResult.isPercent = false
 
         // Corner case: Current base basal rate is 0 IU. We cannot do
@@ -1237,7 +1239,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         pumpEnactResult.isPercent = true
 
         val roundedPercentage = ((percent + 5) / 10) * 10
@@ -1269,7 +1271,7 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         pumpEnactResult.isPercent = true
         pumpEnactResult.isTempCancel = enforceNew
         setTbrInternal(100, 0, tbrType = ComboCtlTbr.Type.NORMAL, force100Percent = enforceNew, pumpEnactResult)
@@ -1526,7 +1528,7 @@ class ComboV2Plugin @Inject constructor(
     override val isFakingTempsByExtendedBoluses = false
 
     override fun loadTDDs(): PumpEnactResult {
-        val pumpEnactResult = PumpEnactResult(injector)
+        val pumpEnactResult = instantiator.providePumpEnactResult()
         val acquiredPump = getAcquiredPump()
 
         runBlocking {
@@ -2432,7 +2434,7 @@ class ComboV2Plugin @Inject constructor(
         reportFinishedBolus(rh.gs(stringId), pumpEnactResult, succeeded)
 
     private fun createFailurePumpEnactResult(comment: Int) =
-        PumpEnactResult(injector)
+        instantiator.providePumpEnactResult()
             .success(false)
             .enacted(false)
             .comment(comment)

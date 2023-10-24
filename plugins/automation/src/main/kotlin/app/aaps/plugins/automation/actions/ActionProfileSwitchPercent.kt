@@ -6,7 +6,6 @@ import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R
@@ -52,10 +51,10 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
                 )
             )
         ) {
-            callback.result(PumpEnactResult(injector).success(true).comment(app.aaps.core.ui.R.string.ok)).run()
+            callback.result(instantiator.providePumpEnactResult().success(true).comment(app.aaps.core.ui.R.string.ok)).run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(PumpEnactResult(injector).success(false).comment(app.aaps.core.ui.R.string.ok)).run()
+            callback.result(instantiator.providePumpEnactResult().success(false).comment(app.aaps.core.ui.R.string.ok)).run()
         }
     }
 

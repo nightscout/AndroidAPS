@@ -12,6 +12,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
@@ -64,7 +65,8 @@ abstract class PumpPluginAbstract protected constructor(
     var aapsSchedulers: AapsSchedulers,
     var pumpSync: PumpSync,
     var pumpSyncStorage: PumpSyncStorage,
-    var decimalFormatter: DecimalFormatter
+    var decimalFormatter: DecimalFormatter,
+    protected val instantiator: Instantiator
 ) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, PluginConstraints, PumpSyncEntriesCreator {
 
     protected val disposable = CompositeDisposable()
@@ -309,7 +311,7 @@ abstract class PumpPluginAbstract protected constructor(
             if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input")
-                PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).comment(app.aaps.core.ui.R.string.invalid_input)
+                instantiator.providePumpEnactResult().success(false).enacted(false).bolusDelivered(0.0).comment(app.aaps.core.ui.R.string.invalid_input)
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)
@@ -324,7 +326,7 @@ abstract class PumpPluginAbstract protected constructor(
                 bolusingEvent.percent = 100
                 rxBus.send(bolusingEvent)
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(0.0).comment(R.string.common_resultok)
+                instantiator.providePumpEnactResult().success(true).enacted(true).bolusDelivered(0.0).comment(R.string.common_resultok)
             }
         } finally {
             triggerUIChange()
@@ -344,7 +346,7 @@ abstract class PumpPluginAbstract protected constructor(
     protected abstract fun triggerUIChange()
 
     private fun getOperationNotSupportedWithCustomText(resourceId: Int): PumpEnactResult =
-        PumpEnactResult(injector).success(false).enacted(false).comment(resourceId)
+        instantiator.providePumpEnactResult().success(false).enacted(false).comment(resourceId)
 
     init {
         pumpDescription.fillFor(pumpType)

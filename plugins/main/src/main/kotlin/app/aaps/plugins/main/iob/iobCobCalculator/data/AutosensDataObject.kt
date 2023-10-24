@@ -5,26 +5,16 @@ import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import dagger.android.HasAndroidInjector
 import java.util.Locale
-import javax.inject.Inject
 import kotlin.math.min
 
-class AutosensDataObject(injector: HasAndroidInjector) : AutosensData {
-
-    @Inject lateinit var aapsLogger: AAPSLogger
-    @Inject lateinit var sp: SP
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var dateUtil: DateUtil
-
-    init {
-        injector.androidInjector().inject(this)
-    }
+class AutosensDataObject(
+    private val aapsLogger: AAPSLogger,
+    private val sp: SP,
+    private val dateUtil: DateUtil
+) : AutosensData {
 
     override var time = 0L
     override var bg = 0.0 // mgdl

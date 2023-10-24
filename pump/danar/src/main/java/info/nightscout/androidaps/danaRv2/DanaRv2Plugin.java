@@ -18,6 +18,7 @@ import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.constraints.ConstraintsChecker;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.objects.Instantiator;
 import app.aaps.core.interfaces.plugin.ActivePlugin;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
@@ -89,9 +90,11 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             PumpSync pumpSync,
             UiInteraction uiInteraction,
             DanaHistoryDatabase danaHistoryDatabase,
-            DecimalFormatter decimalFormatter
+            DecimalFormatter decimalFormatter,
+            Instantiator instantiator
     ) {
-        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter);
+        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter,
+                instantiator);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.rh = rh;
@@ -192,7 +195,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, carbTimeStamp, t);
-            PumpEnactResult result = new PumpEnactResult(getInjector());
+            PumpEnactResult result = instantiator.providePumpEnactResult();
             result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
                     .bolusDelivered(t.getInsulin());
             if (!result.getSuccess())
@@ -204,7 +207,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             // remove carbs because it's get from history separately
             return result;
         } else {
-            PumpEnactResult result = new PumpEnactResult(getInjector());
+            PumpEnactResult result = instantiator.providePumpEnactResult();
             result.success(false).bolusDelivered(0d).comment(app.aaps.core.ui.R.string.invalid_input);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
@@ -224,7 +227,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
 
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
 
         absoluteRate = constraintChecker.applyBasalConstraints(new ConstraintObject<>(absoluteRate, getAapsLogger()), profile).value();
 
@@ -291,7 +294,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull @Override
     public PumpEnactResult setTempBasalPercent(int percent, int durationInMinutes, @NonNull Profile profile, boolean enforceNew, @NonNull PumpSync.TemporaryBasalType tbrType) {
         DanaPump pump = danaPump;
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         percent = constraintChecker.applyBasalPercentConstraints(new ConstraintObject<>(percent, getAapsLogger()), profile).value();
         if (percent < 0) {
             result.isTempCancel(false).enacted(false).success(false).comment(app.aaps.core.ui.R.string.invalid_input);
@@ -325,7 +328,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     private PumpEnactResult setHighTempBasalPercent(Integer percent, int durationInMinutes) {
         DanaPump pump = danaPump;
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         boolean connectionOK = sExecutionService.highTempBasal(percent, durationInMinutes);
         if (connectionOK && pump.isTempBasalInProgress() && pump.getTempBasalPercent() == percent) {
             result.enacted(true).success(true).comment(app.aaps.core.ui.R.string.ok).isTempCancel(false).duration(pump.getTempBasalRemainingMin()).percent(pump.getTempBasalPercent()).isPercent(true);
@@ -339,7 +342,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         if (danaPump.isTempBasalInProgress()) {
             sExecutionService.tempBasalStop();
             result.success(true).enacted(true).isTempCancel(true);
@@ -358,7 +361,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.INSTANCE.roundTo(insulin, getPumpDescription().getExtendedBolusStep());
 
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         if (danaPump.isExtendedInProgress() && Math.abs(danaPump.getExtendedBolusAmount() - insulin) < pumpDescription.getExtendedBolusStep()) {
             result.enacted(false)
                     .success(true)
@@ -391,7 +394,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = new PumpEnactResult(getInjector());
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
             result.enacted(true).success(!danaPump.isExtendedInProgress()).isTempCancel(true);

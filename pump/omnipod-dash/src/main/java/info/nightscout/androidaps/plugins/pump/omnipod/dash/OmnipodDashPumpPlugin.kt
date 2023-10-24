@@ -14,6 +14,7 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -105,6 +106,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val decimalFormatter: DecimalFormatter,
+    private val instantiator: Instantiator,
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
@@ -391,7 +393,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         if (!podStateManager.isActivationCompleted) {
-            return PumpEnactResult(injector).success(true).enacted(true)
+            return instantiator.providePumpEnactResult().success(true).enacted(true)
         }
         aapsLogger.debug(LTag.PUMP, "setNewBasalProfile profile=$profile")
         return setNewBasalProfile(profile, OmnipodCommandType.SET_BASAL_PROFILE)
@@ -563,7 +565,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 detailedBolusInfo.insulin == 0.0
             ) {
                 // Accept only valid insulin requests
-                return PumpEnactResult(injector)
+                return instantiator.providePumpEnactResult()
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
@@ -571,14 +573,14 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val requestedBolusAmount = detailedBolusInfo.insulin
             if (requestedBolusAmount > reservoirLevel) {
-                return PumpEnactResult(injector)
+                return instantiator.providePumpEnactResult()
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
                     .comment(rh.gs(R.string.omnipod_dash_not_enough_insulin))
             }
             if (podStateManager.deliveryStatus?.bolusDeliveringActive() == true) {
-                return PumpEnactResult(injector)
+                return instantiator.providePumpEnactResult()
                     .success(false)
                     .enacted(false)
                     .bolusDelivered(0.0)
@@ -640,10 +642,10 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     }
                 }
             }.toSingle {
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
+                instantiator.providePumpEnactResult().success(true).enacted(true).bolusDelivered(deliveredBolusAmount)
             }.onErrorReturnItem(
                 // success if canceled
-                PumpEnactResult(injector).success(bolusCanceled).enacted(false)
+                instantiator.providePumpEnactResult().success(bolusCanceled).enacted(false)
             )
                 .blockingGet()
             aapsLogger.info(
@@ -922,13 +924,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
         tbrType: PumpSync.TemporaryBasalType
     ): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false)
+        return instantiator.providePumpEnactResult().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support percentage temp basals")
     }
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false)
+        return instantiator.providePumpEnactResult().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support extended boluses")
     }
 
@@ -952,7 +954,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             pumpSync.expectedPumpState().temporaryBasal == null
         ) {
             // nothing to cancel
-            return PumpEnactResult(injector).success(true).enacted(false)
+            return instantiator.providePumpEnactResult().success(true).enacted(false)
         }
 
         return executeProgrammingCommand(
@@ -975,17 +977,17 @@ class OmnipodDashPumpPlugin @Inject constructor(
     }
 
     private fun Completable.toPumpEnactResultImpl(): PumpEnactResult {
-        return this.toSingleDefault(PumpEnactResult(injector).success(true).enacted(true))
+        return this.toSingleDefault(instantiator.providePumpEnactResult().success(true).enacted(true))
             .doOnError { throwable ->
                 aapsLogger.error(LTag.PUMP, "toPumpEnactResult, error executing command: $throwable")
             }
-            .onErrorReturnItem(PumpEnactResult(injector).success(false).enacted(false))
+            .onErrorReturnItem(instantiator.providePumpEnactResult().success(false).enacted(false))
             .blockingGet()
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false)
+        return instantiator.providePumpEnactResult().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support extended boluses")
     }
 
@@ -1086,7 +1088,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     override fun loadTDDs(): PumpEnactResult {
         // TODO i18n
-        return PumpEnactResult(injector).success(false).enacted(false)
+        return instantiator.providePumpEnactResult().success(false).enacted(false)
             .comment("Omnipod Dash driver does not support TDD")
     }
 
@@ -1127,7 +1129,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
             else                               -> {
                 aapsLogger.warn(LTag.PUMP, "Unsupported custom command: " + customCommand.javaClass.name)
-                PumpEnactResult(injector).success(false).enacted(false).comment(
+                instantiator.providePumpEnactResult().success(false).enacted(false).comment(
                     rh.gs(
                         info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_unsupported_custom_command,
                         customCommand.javaClass.name
@@ -1144,7 +1146,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 historyEntry = history.createRecord(commandType = OmnipodCommandType.ACKNOWLEDGE_ALERTS),
                 command = omnipodManager.silenceAlerts(it).ignoreElements(),
             ).toPumpEnactResultImpl()
-        } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No active alerts") // TODO i18n
+        } ?: instantiator.providePumpEnactResult().success(false).enacted(false).comment("No active alerts") // TODO i18n
     }
 
     private fun disableSuspendAlerts(): PumpEnactResult {
@@ -1192,7 +1194,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     app.aaps.core.ui.R.raw.boluserror
                 )
             }.toPumpEnactResultImpl()
-        } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active") // TODO i18n
+        } ?: instantiator.providePumpEnactResult().success(false).enacted(false).comment("No profile active") // TODO i18n
     }
 
     private fun deactivatePod(): PumpEnactResult {
@@ -1218,7 +1220,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun handleTimeChange(): PumpEnactResult {
         return profileFunction.getProfile()?.let {
             setNewBasalProfile(it, OmnipodCommandType.SET_TIME)
-        } ?: PumpEnactResult(injector).success(false).enacted(false).comment("No profile active")
+        } ?: instantiator.providePumpEnactResult().success(false).enacted(false).comment("No profile active")
     }
 
     private fun updateAlertConfiguration(): PumpEnactResult {
@@ -1240,12 +1242,12 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 lowReservoirAlertUnits
             )                             -> {
                 aapsLogger.debug(LTag.PUMP, "Ignoring updateAlertConfiguration because the settings did not change")
-                return PumpEnactResult(injector).success(true).enacted(false)
+                return instantiator.providePumpEnactResult().success(true).enacted(false)
             }
 
             !podStateManager.isPodRunning -> {
                 aapsLogger.debug(LTag.PUMP, "Ignoring updateAlertConfiguration because there is no active pod")
-                return PumpEnactResult(injector).success(true).enacted(false)
+                return instantiator.providePumpEnactResult().success(true).enacted(false)
             }
         }
 
@@ -1256,7 +1258,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 LTag.PUMPBTCOMM,
                 "updateAlertConfiguration negative expiryAlertDuration=$expiryReminderDelay"
             )
-            PumpEnactResult(injector).success(false).enacted(false)
+            instantiator.providePumpEnactResult().success(false).enacted(false)
         }
         // expiry Alarm Delay, add 8 hours (grace period)
         val expiryAlarmDelay = podLifeLeft.minus(Duration.ofHours(expirationAlarmHours.toLong())).plus(Duration.ofHours(8))
@@ -1265,7 +1267,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 LTag.PUMPBTCOMM,
                 "updateAlertConfiguration negative expiryAlarmDuration=$expiryAlarmDelay"
             )
-            PumpEnactResult(injector).success(false).enacted(false)
+            instantiator.providePumpEnactResult().success(false).enacted(false)
         }
         val expiryImminentDelay = podLifeLeft.minus(Duration.ofHours(POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING)).plus(Duration.ofHours(8))
         if (expiryImminentDelay.isNegative) {
@@ -1273,7 +1275,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 LTag.PUMPBTCOMM,
                 "updateAlertConfiguration negative expiryImminentDuration=$expiryImminentDelay"
             )
-            PumpEnactResult(injector).success(false).enacted(false)
+            instantiator.providePumpEnactResult().success(false).enacted(false)
         }
         val alerts = listOf(
             AlertConfiguration(

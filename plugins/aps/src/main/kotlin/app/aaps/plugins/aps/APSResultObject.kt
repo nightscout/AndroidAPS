@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.convertedToPercent
@@ -32,8 +31,7 @@ import kotlin.math.max
 /**
  * Created by mike on 09.06.2016.
  */
-@Suppress("LeakingThis")
-open class APSResultObject @Inject constructor(val injector: HasAndroidInjector) : APSResult {
+open class APSResultObject @Inject constructor(protected val injector: HasAndroidInjector) : APSResult {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -42,8 +40,12 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var decimalFormatter: DecimalFormatter
+
+    init {
+        @Suppress("LeakingThis")
+        injector.androidInjector().inject(this)
+    }
 
     override var date: Long = 0
     override var reason: String = ""
@@ -64,10 +66,6 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
     override var rateConstraint: Constraint<Double>? = null
     override var percentConstraint: Constraint<Int>? = null
     override var smbConstraint: Constraint<Double>? = null
-
-    init {
-        injector.androidInjector().inject(this)
-    }
 
     override val carbsRequiredText: String
         get() = rh.gs(R.string.carbsreq, carbsReq, carbsReqWithin)
@@ -133,26 +131,6 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
         val newResult = APSResultObject(injector)
         doClone(newResult)
         return newResult
-    }
-
-    protected fun doClone(newResult: APSResultObject) {
-        newResult.date = date
-        newResult.reason = reason
-        newResult.rate = rate
-        newResult.duration = duration
-        newResult.isTempBasalRequested = isTempBasalRequested
-        newResult.iob = iob
-        newResult.json = JSONObject(json.toString())
-        newResult.hasPredictions = hasPredictions
-        newResult.smb = smb
-        newResult.deliverAt = deliverAt
-        newResult.rateConstraint = rateConstraint
-        newResult.smbConstraint = smbConstraint
-        newResult.percent = percent
-        newResult.usePercent = usePercent
-        newResult.carbsReq = carbsReq
-        newResult.carbsReqWithin = carbsReqWithin
-        newResult.targetBG = targetBG
     }
 
     override fun json(): JSONObject? {

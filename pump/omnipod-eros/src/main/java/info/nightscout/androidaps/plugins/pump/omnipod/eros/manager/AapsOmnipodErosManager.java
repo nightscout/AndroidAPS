@@ -18,6 +18,7 @@ import app.aaps.core.data.time.T;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.objects.Instantiator;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import app.aaps.core.interfaces.pump.PumpEnactResult;
@@ -100,6 +101,7 @@ public class AapsOmnipodErosManager {
     private final OmnipodAlertUtil omnipodAlertUtil;
     private final PumpSync pumpSync;
     private final UiInteraction uiInteraction;
+    private final Instantiator instantiator;
 
     private boolean basalBeepsEnabled;
     private boolean bolusBeepsEnabled;
@@ -129,7 +131,9 @@ public class AapsOmnipodErosManager {
                                   HasAndroidInjector injector,
                                   OmnipodAlertUtil omnipodAlertUtil,
                                   PumpSync pumpSync,
-                                  UiInteraction uiInteraction) {
+                                  UiInteraction uiInteraction,
+                                  Instantiator instantiator
+    ) {
 
         this.podStateManager = podStateManager;
         this.erosHistory = erosHistory;
@@ -142,6 +146,7 @@ public class AapsOmnipodErosManager {
         this.omnipodAlertUtil = omnipodAlertUtil;
         this.pumpSync = pumpSync;
         this.uiInteraction = uiInteraction;
+        this.instantiator = instantiator;
 
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
@@ -180,7 +185,7 @@ public class AapsOmnipodErosManager {
     }
 
     public PumpEnactResult initializePod() {
-        PumpEnactResult result = new PumpEnactResult(injector);
+        PumpEnactResult result = instantiator.providePumpEnactResult();
         try {
             Boolean res = executeCommand(delegate::pairAndPrime)
                     .blockingGet();
@@ -202,10 +207,10 @@ public class AapsOmnipodErosManager {
     public PumpEnactResult insertCannula(Profile profile) {
         if (profile == null) {
             String comment = getStringResource(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_set_initial_basal_schedule_no_profile);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(comment);
         }
 
-        PumpEnactResult result = new PumpEnactResult(injector);
+        PumpEnactResult result = instantiator.providePumpEnactResult();
 
         try {
             BasalSchedule basalSchedule = mapProfileToBasalSchedule(profile);
@@ -243,11 +248,11 @@ public class AapsOmnipodErosManager {
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.CONFIGURE_ALERTS, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         addSuccessToHistory(PodHistoryEntryType.CONFIGURE_ALERTS, alertConfigurations);
-        return new PumpEnactResult(injector).success(true).enacted(false);
+        return instantiator.providePumpEnactResult().success(true).enacted(false);
     }
 
     public PumpEnactResult playTestBeep(BeepConfigType beepType) {
@@ -256,11 +261,11 @@ public class AapsOmnipodErosManager {
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.PLAY_TEST_BEEP, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         addSuccessToHistory(PodHistoryEntryType.PLAY_TEST_BEEP, beepType);
-        return new PumpEnactResult(injector).success(true).enacted(false);
+        return instantiator.providePumpEnactResult().success(true).enacted(false);
     }
 
     public PumpEnactResult getPodStatus() {
@@ -271,12 +276,12 @@ public class AapsOmnipodErosManager {
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.GET_POD_STATUS, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         addSuccessToHistory(PodHistoryEntryType.GET_POD_STATUS, statusResponse);
 
-        return new PumpEnactResult(injector).success(true).enacted(false);
+        return instantiator.providePumpEnactResult().success(true).enacted(false);
     }
 
     public PumpEnactResult deactivatePod() {
@@ -285,7 +290,7 @@ public class AapsOmnipodErosManager {
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.DEACTIVATE_POD, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         addSuccessToHistory(PodHistoryEntryType.DEACTIVATE_POD, null);
@@ -293,7 +298,7 @@ public class AapsOmnipodErosManager {
 
         dismissNotification(Notification.OMNIPOD_POD_FAULT);
 
-        return new PumpEnactResult(injector).success(true).enacted(true);
+        return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
     public PumpEnactResult setBasalProfile(Profile profile, boolean showNotifications) {
@@ -302,7 +307,7 @@ public class AapsOmnipodErosManager {
             if (showNotifications) {
                 showNotification(Notification.FAILED_UPDATE_PROFILE, note, Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(note);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(note);
         }
 
         // #1963 return synthetic success if pre-activation
@@ -310,7 +315,7 @@ public class AapsOmnipodErosManager {
         // otherwise a catch-22
         if (!podStateManager.getActivationProgress().isCompleted()) {
             // TODO: i18n string
-            return new PumpEnactResult(injector).success(true).enacted(false).comment("pre" +
+            return instantiator.providePumpEnactResult().success(true).enacted(false).comment("pre" +
                     "-activation basal change moot");
         }
 
@@ -326,14 +331,14 @@ public class AapsOmnipodErosManager {
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(historyEntryType, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         } catch (PrecedingCommandFailedUncertainlyException ex) {
             if (showNotifications) {
                 showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_basal_failed_delivery_might_be_suspended), Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(historyEntryType, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
             if (showNotifications) {
                 String note;
@@ -346,7 +351,7 @@ public class AapsOmnipodErosManager {
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(historyEntryType, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
 
@@ -364,7 +369,7 @@ public class AapsOmnipodErosManager {
         dismissNotification(Notification.OMNIPOD_POD_SUSPENDED);
         dismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC);
 
-        return new PumpEnactResult(injector).success(true).enacted(true);
+        return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
     public PumpEnactResult discardPodState() {
@@ -378,7 +383,7 @@ public class AapsOmnipodErosManager {
         sendEvent(new EventOmnipodErosPumpValuesChanged());
         sendEvent(new EventRefreshOverview("Omnipod command: " + OmnipodCommandType.DISCARD_POD, false));
 
-        return new PumpEnactResult(injector).success(true).enacted(true);
+        return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
     public PumpEnactResult bolus(DetailedBolusInfo detailedBolusInfo) {
@@ -403,7 +408,7 @@ public class AapsOmnipodErosManager {
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
             addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.SET_BOLUS, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
@@ -458,7 +463,7 @@ public class AapsOmnipodErosManager {
 
         sp.remove(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS);
 
-        return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
+        return instantiator.providePumpEnactResult().success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
     }
 
     public PumpEnactResult cancelBolus() {
@@ -473,7 +478,7 @@ public class AapsOmnipodErosManager {
                 aapsLogger.debug(LTag.PUMP, "Not cancelling bolus: bolus command failed");
                 String comment = getStringResource(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_bolus_did_not_succeed);
                 addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.CANCEL_BOLUS, comment);
-                return new PumpEnactResult(injector).success(true).enacted(false).comment(comment);
+                return instantiator.providePumpEnactResult().success(true).enacted(false).comment(comment);
             }
         }
 
@@ -485,11 +490,11 @@ public class AapsOmnipodErosManager {
                 executeCommand(() -> delegate.cancelBolus(isBolusBeepsEnabled()));
                 aapsLogger.debug(LTag.PUMP, "Successfully cancelled bolus", i);
                 addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.CANCEL_BOLUS, null);
-                return new PumpEnactResult(injector).success(true).enacted(true);
+                return instantiator.providePumpEnactResult().success(true).enacted(true);
             } catch (PodFaultException ex) {
                 aapsLogger.debug(LTag.PUMP, "Successfully cancelled bolus (implicitly because of a Pod Fault)");
                 addSuccessToHistory(System.currentTimeMillis(), PodHistoryEntryType.CANCEL_BOLUS, null);
-                return new PumpEnactResult(injector).success(true).enacted(true);
+                return instantiator.providePumpEnactResult().success(true).enacted(true);
             } catch (Exception ex) {
                 aapsLogger.debug(LTag.PUMP, "Failed to cancel bolus", ex);
                 comment = translateException(ex);
@@ -497,7 +502,7 @@ public class AapsOmnipodErosManager {
         }
 
         addFailureToHistory(System.currentTimeMillis(), PodHistoryEntryType.CANCEL_BOLUS, comment);
-        return new PumpEnactResult(injector).success(false).enacted(false).comment(comment);
+        return instantiator.providePumpEnactResult().success(false).enacted(false).comment(comment);
     }
 
     public PumpEnactResult setTemporaryBasal(TempBasalPair tempBasalPair) {
@@ -508,7 +513,7 @@ public class AapsOmnipodErosManager {
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         } catch (PrecedingCommandFailedUncertainlyException ex) {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
@@ -517,7 +522,7 @@ public class AapsOmnipodErosManager {
 
             splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
 
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
             long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
@@ -535,7 +540,7 @@ public class AapsOmnipodErosManager {
                 addTempBasalTreatment(System.currentTimeMillis(), pumpId, tempBasalPair);
             }
 
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         long pumpId = addSuccessToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, tempBasalPair);
@@ -544,7 +549,7 @@ public class AapsOmnipodErosManager {
 
         sendEvent(new EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS));
 
-        return new PumpEnactResult(injector)
+        return instantiator.providePumpEnactResult()
                 .duration(tempBasalPair.getDurationMinutes())
                 .absolute(PumpTypeExtensionKt.determineCorrectBasalSize(PumpType.OMNIPOD_EROS, tempBasalPair.getInsulinRate()))
                 .success(true).enacted(true);
@@ -561,7 +566,7 @@ public class AapsOmnipodErosManager {
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         long pumpId = addSuccessToHistory(PodHistoryEntryType.CANCEL_TEMPORARY_BASAL, null);
@@ -575,7 +580,7 @@ public class AapsOmnipodErosManager {
 
         sendEvent(new EventDismissNotification(Notification.OMNIPOD_TBR_ALERTS));
 
-        return new PumpEnactResult(injector).success(true).enacted(true);
+        return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
     public PumpEnactResult acknowledgeAlerts() {
@@ -584,11 +589,11 @@ public class AapsOmnipodErosManager {
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.ACKNOWLEDGE_ALERTS, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         addSuccessToHistory(PodHistoryEntryType.ACKNOWLEDGE_ALERTS, null);
-        return new PumpEnactResult(injector).success(true).enacted(true);
+        return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
     public PumpEnactResult suspendDelivery() {
@@ -597,7 +602,7 @@ public class AapsOmnipodErosManager {
         } catch (Exception ex) {
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.SUSPEND_DELIVERY, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         addSuccessToHistory(PodHistoryEntryType.SUSPEND_DELIVERY, null);
@@ -606,7 +611,7 @@ public class AapsOmnipodErosManager {
         dismissNotification(Notification.FAILED_UPDATE_PROFILE);
         dismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC);
 
-        return new PumpEnactResult(injector).success(true).enacted(true);
+        return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
     // Updates the pods current time based on the device timezone and the pod's time zone
@@ -620,21 +625,21 @@ public class AapsOmnipodErosManager {
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         } catch (PrecedingCommandFailedUncertainlyException ex) {
             if (showNotifications) {
                 showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
             if (showNotifications) {
                 showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
-            return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
+            return instantiator.providePumpEnactResult().success(false).enacted(false).comment(errorMessage);
         }
 
         addSuccessToHistory(PodHistoryEntryType.SET_TIME, null);
@@ -643,7 +648,7 @@ public class AapsOmnipodErosManager {
         dismissNotification(Notification.OMNIPOD_POD_SUSPENDED);
         dismissNotification(Notification.OMNIPOD_TIME_OUT_OF_SYNC);
 
-        return new PumpEnactResult(injector).success(true).enacted(true);
+        return instantiator.providePumpEnactResult().success(true).enacted(true);
     }
 
     public PodInfoRecentPulseLog readPulseLog() {

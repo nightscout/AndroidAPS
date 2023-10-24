@@ -34,8 +34,4 @@ dependencies {
     //RxBus
     api(Libs.Rx.rxKotlin)
     testImplementation(Libs.Rx.rxAndroid)
-
-    // TODO eliminate kapt from low level modules
-    kapt(Libs.Dagger.compiler)
-    kapt(Libs.Dagger.androidProcessor)
 }

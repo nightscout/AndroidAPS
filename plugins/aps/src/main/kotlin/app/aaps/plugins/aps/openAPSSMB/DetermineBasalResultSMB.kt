@@ -2,12 +2,16 @@ package app.aaps.plugins.aps.openAPSSMB
 
 import app.aaps.core.interfaces.aps.VariableSensitivityResult
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.plugins.aps.APSResultObject
 import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject
+import javax.inject.Inject
 
 class DetermineBasalResultSMB private constructor(injector: HasAndroidInjector) : APSResultObject(injector), VariableSensitivityResult {
+
+    @Inject lateinit var dateUtil: DateUtil
 
     private var eventualBG = 0.0
     private var snoozeBG = 0.0
