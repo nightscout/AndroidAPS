@@ -11,17 +11,15 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
-import dagger.android.HasAndroidInjector
 import kotlin.math.max
 import kotlin.math.min
 
 abstract class AbstractSensitivityPlugin(
     pluginDescription: PluginDescription,
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     val sp: SP
-) : PluginBase(pluginDescription, aapsLogger, rh, injector), Sensitivity {
+) : PluginBase(pluginDescription, aapsLogger, rh), Sensitivity {
 
     abstract override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult
 

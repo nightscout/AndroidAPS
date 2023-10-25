@@ -26,14 +26,12 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.shared.impl.extensions.safeGetInstalledPackages
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class IntelligoPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP,
@@ -50,7 +48,7 @@ class IntelligoPlugin @Inject constructor(
         .pluginName(R.string.intelligo)
         .shortName(R.string.intelligo)
         .description(R.string.description_source_intelligo),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, resourceHelper
 ), BgSource {
 
     private val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)

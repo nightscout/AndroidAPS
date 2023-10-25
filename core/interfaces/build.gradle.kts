@@ -24,8 +24,6 @@ dependencies {
     api(Libs.AndroidX.appCompat)
     api(Libs.AndroidX.preference)
 
-    api(Libs.Dagger.androidSupport)
-
     api(Libs.KotlinX.serializationJson)
     api(Libs.KotlinX.serializationProtobuf)
 

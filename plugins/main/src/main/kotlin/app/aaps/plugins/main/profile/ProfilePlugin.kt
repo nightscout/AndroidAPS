@@ -33,7 +33,6 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.main.R
-import dagger.android.HasAndroidInjector
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -43,7 +42,6 @@ import javax.inject.Singleton
 
 @Singleton
 class ProfilePlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     rh: ResourceHelper,
@@ -66,7 +64,7 @@ class ProfilePlugin @Inject constructor(
         .shortName(R.string.localprofile_shortname)
         .description(R.string.description_profile_local)
         .setDefault(),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), ProfileSource {
 
     private var rawProfile: ProfileStore? = null

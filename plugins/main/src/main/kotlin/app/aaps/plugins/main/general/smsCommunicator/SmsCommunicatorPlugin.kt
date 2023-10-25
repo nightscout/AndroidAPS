@@ -79,7 +79,7 @@ import kotlin.math.min
 
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val smsManager: SmsManager?,
@@ -111,7 +111,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         .shortName(R.string.smscommunicator_shortname)
         .preferencesId(R.xml.pref_smscommunicator)
         .description(R.string.description_sms_communicator),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), SmsCommunicator {
 
     private val disposable = CompositeDisposable()

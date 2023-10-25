@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.utils.isRunningTest
-import dagger.android.HasAndroidInjector
 import java.security.SecureRandom
 import java.util.Calendar
 import java.util.GregorianCalendar
@@ -33,7 +32,6 @@ import kotlin.math.sin
 @Singleton
 class RandomBgPlugin @Inject constructor(
     private val context: Context,
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val persistenceLayer: PersistenceLayer,
@@ -48,7 +46,7 @@ class RandomBgPlugin @Inject constructor(
         .pluginName(R.string.random_bg)
         .shortName(R.string.random_bg_short)
         .description(R.string.description_source_random_bg),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource {
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)

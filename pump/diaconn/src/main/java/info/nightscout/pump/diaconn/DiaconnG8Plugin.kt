@@ -53,7 +53,6 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
-import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.database.DiaconnHistoryDatabase
 import info.nightscout.pump.diaconn.events.EventDiaconnG8DeviceChange
 import info.nightscout.pump.diaconn.service.DiaconnG8Service
@@ -67,7 +66,6 @@ import kotlin.math.max
 
 @Singleton
 class DiaconnG8Plugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val context: Context,
@@ -96,7 +94,7 @@ class DiaconnG8Plugin @Inject constructor(
         .shortName(R.string.diaconn_g8_pump_shortname)
         .preferencesId(R.xml.pref_diaconn)
         .description(R.string.description_pump_diaconn_g8),
-    injector, aapsLogger, rh, commandQueue
+    aapsLogger, rh, commandQueue
 ), Pump, Diaconn, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()

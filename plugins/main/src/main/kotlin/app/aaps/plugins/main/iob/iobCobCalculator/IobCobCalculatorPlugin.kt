@@ -50,7 +50,6 @@ import app.aaps.core.main.iob.round
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.iob.iobCobCalculator.data.AutosensDataStoreObject
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.concurrent.Executors
@@ -63,7 +62,6 @@ import kotlin.math.min
 
 @Singleton
 class IobCobCalculatorPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -85,7 +83,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         .showInList(false)
         .neverVisible(true)
         .alwaysEnabled(true),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), IobCobCalculator {
 
     private val disposable = CompositeDisposable()

@@ -52,7 +52,6 @@ import app.aaps.plugins.sync.xdrip.events.EventXdripUpdateGUI
 import app.aaps.plugins.sync.xdrip.extensions.toXdripJson
 import app.aaps.plugins.sync.xdrip.workers.XdripDataSyncWorker
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
@@ -68,7 +67,6 @@ import javax.inject.Singleton
 
 @Singleton
 class XdripPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
     private val profileUtil: ProfileUtil,
@@ -93,7 +91,7 @@ class XdripPlugin @Inject constructor(
         .shortName(R.string.xdrip_shortname)
         .preferencesId(R.xml.pref_xdrip)
         .description(R.string.description_xdrip),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     @Suppress("PrivatePropertyName")

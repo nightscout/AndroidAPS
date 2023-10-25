@@ -35,7 +35,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
@@ -57,7 +56,6 @@ import kotlin.math.roundToInt
 
 @Singleton
 class EopatchPumpPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
@@ -80,7 +78,7 @@ class EopatchPumpPlugin @Inject constructor(
         .pluginName(R.string.eopatch)
         .shortName(R.string.eopatch_shortname)
         .preferencesId(R.xml.pref_eopatch)
-        .description(R.string.eopatch_pump_description), injector, aapsLogger, rh, commandQueue
+        .description(R.string.eopatch_pump_description), aapsLogger, rh, commandQueue
 ), Pump {
 
     private val mDisposables = CompositeDisposable()

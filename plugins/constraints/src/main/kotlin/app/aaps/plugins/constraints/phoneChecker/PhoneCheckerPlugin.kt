@@ -10,13 +10,11 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.constraints.R
 import com.scottyab.rootbeer.RootBeer
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PhoneCheckerPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val context: Context
@@ -27,7 +25,7 @@ class PhoneCheckerPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.phone_checker),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints {
 
     var phoneRooted: Boolean = false

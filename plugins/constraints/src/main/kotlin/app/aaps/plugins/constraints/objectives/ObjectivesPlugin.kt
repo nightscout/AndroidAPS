@@ -37,7 +37,7 @@ import javax.inject.Singleton
 
 @Singleton
 class ObjectivesPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
@@ -53,7 +53,7 @@ class ObjectivesPlugin @Inject constructor(
         .pluginName(app.aaps.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)
         .description(R.string.description_objectives),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints, Objectives {
 
     var objectives: MutableList<Objective> = ArrayList()

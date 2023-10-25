@@ -14,14 +14,12 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventThemeSwitch
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.main.R
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ThemeSwitcherPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
@@ -33,7 +31,7 @@ class ThemeSwitcherPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.theme_switcher),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private val compositeDisposable = CompositeDisposable()

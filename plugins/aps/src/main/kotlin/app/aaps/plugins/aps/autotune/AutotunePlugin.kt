@@ -50,7 +50,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AutotunePlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     private val sp: SP,
     private val rxBus: RxBus,
@@ -75,7 +75,7 @@ class AutotunePlugin @Inject constructor(
         .preferencesId(R.xml.pref_autotune)
         .showInList(config.isEngineeringMode() && config.isDev())
         .description(app.aaps.core.ui.R.string.autotune_description),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, resourceHelper
 ), Autotune {
 
     @Volatile override var lastRunSuccess: Boolean = false

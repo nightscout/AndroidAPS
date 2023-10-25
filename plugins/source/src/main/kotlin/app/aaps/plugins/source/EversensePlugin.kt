@@ -28,7 +28,6 @@ import javax.inject.Singleton
 
 @Singleton
 class EversensePlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
 ) : PluginBase(
@@ -40,7 +39,7 @@ class EversensePlugin @Inject constructor(
         .pluginName(R.string.eversense)
         .shortName(R.string.eversense_shortname)
         .description(R.string.description_source_eversense),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource {
 
     override var sensorBatteryLevel = -1

@@ -10,14 +10,12 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smoothing.Smoothing
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
 @Singleton
 class AvgSmoothingPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper
 ) : PluginBase(
@@ -27,7 +25,7 @@ class AvgSmoothingPlugin @Inject constructor(
         .pluginName(R.string.avg_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_avg_smoothing),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Smoothing {
 
     override fun smooth(data: MutableList<InMemoryGlucoseValue>): MutableList<InMemoryGlucoseValue> {

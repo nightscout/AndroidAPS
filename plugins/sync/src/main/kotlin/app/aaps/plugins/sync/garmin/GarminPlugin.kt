@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.sync.R
 import com.google.gson.JsonObject
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.net.SocketAddress
@@ -39,7 +38,6 @@ import kotlin.math.roundToInt
  */
 @Singleton
 class GarminPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     resourceHelper: ResourceHelper,
     private val loopHub: LoopHub,
@@ -53,8 +51,9 @@ class GarminPlugin @Inject constructor(
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)
         .preferencesId(R.xml.pref_garmin),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, resourceHelper
 ) {
+
     /** HTTP Server for local HTTP server communication (device app requests values) .*/
     private var server: HttpServer? = null
 
@@ -64,6 +63,7 @@ class GarminPlugin @Inject constructor(
     var clock: Clock = Clock.systemUTC()
 
     private val valueLock = ReentrantLock()
+
     @VisibleForTesting
     var newValue: Condition = valueLock.newCondition()
     private var lastGlucoseValueTimestamp: Long? = null
@@ -120,7 +120,7 @@ class GarminPlugin @Inject constructor(
         val timestamp = event.glucoseValueTimestamp ?: return
         aapsLogger.info(LTag.GARMIN, "onNewBloodGlucose ${Date(timestamp)}")
         valueLock.withLock {
-            if ((lastGlucoseValueTimestamp?: 0) >= timestamp) return
+            if ((lastGlucoseValueTimestamp ?: 0) >= timestamp) return
             lastGlucoseValueTimestamp = timestamp
             newValue.signalAll()
         }
@@ -141,7 +141,8 @@ class GarminPlugin @Inject constructor(
         val delay = Duration.ofMillis(clock.millis() - last.timestamp)
         return if (!maxWait.isZero
             && delay > glucoseFrequency
-            && delay < glucoseFrequency.plusMinutes(1)) {
+            && delay < glucoseFrequency.plusMinutes(1)
+        ) {
             valueLock.withLock {
                 aapsLogger.debug(LTag.GARMIN, "waiting for new glucose (delay=$delay)")
                 newValue.awaitNanos(maxWait.toNanos())
@@ -200,11 +201,12 @@ class GarminPlugin @Inject constructor(
     private fun getQueryParameter(
         uri: URI,
         @Suppress("SameParameterValue") name: String,
-        @Suppress("SameParameterValue") defaultValue: Boolean): Boolean {
+        @Suppress("SameParameterValue") defaultValue: Boolean
+    ): Boolean {
         return when (getQueryParameter(uri, name)?.lowercase()) {
-            "true" -> true
+            "true"  -> true
             "false" -> false
-            else -> defaultValue
+            else    -> defaultValue
         }
     }
 
@@ -229,12 +231,14 @@ class GarminPlugin @Inject constructor(
         val device: String? = getQueryParameter(uri, "device")
         receiveHeartRate(
             Instant.ofEpochSecond(samplingStartSec), Instant.ofEpochSecond(samplingEndSec),
-            avg, device, getQueryParameter(uri, "test", false))
+            avg, device, getQueryParameter(uri, "test", false)
+        )
     }
 
     private fun receiveHeartRate(
         samplingStart: Instant, samplingEnd: Instant,
-        avg: Int, device: String?, test: Boolean) {
+        avg: Int, device: String?, test: Boolean
+    ) {
         aapsLogger.info(LTag.GARMIN, "average heart rate $avg BPM test=$test")
         if (test) return
         if (avg > 10 && samplingStart > Instant.ofEpochMilli(0L) && samplingEnd > samplingStart) {

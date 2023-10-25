@@ -42,7 +42,6 @@ import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import app.aaps.plugins.sync.nsclient.data.AlarmAck
 import app.aaps.plugins.sync.nsclient.extensions.toJson
 import app.aaps.plugins.sync.nsclient.services.NSClientService
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -50,7 +49,6 @@ import javax.inject.Singleton
 
 @Singleton
 class NSClientPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -74,7 +72,7 @@ class NSClientPlugin @Inject constructor(
         .shortName(R.string.ns_client_short_name)
         .preferencesId(R.xml.pref_ns_client)
         .description(R.string.description_ns_client),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private val disposable = CompositeDisposable()

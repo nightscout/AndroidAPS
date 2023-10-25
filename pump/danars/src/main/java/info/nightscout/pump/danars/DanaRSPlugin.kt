@@ -49,7 +49,6 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
-import dagger.android.HasAndroidInjector
 import info.nightscout.pump.dana.DanaFragment
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.comm.RecordTypes
@@ -67,7 +66,6 @@ import kotlin.math.max
 
 @Singleton
 class DanaRSPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -97,7 +95,7 @@ class DanaRSPlugin @Inject constructor(
         .shortName(info.nightscout.pump.dana.R.string.danarspump_shortname)
         .preferencesId(R.xml.pref_danars)
         .description(info.nightscout.pump.dana.R.string.description_pump_dana_rs),
-    injector, aapsLogger, rh, commandQueue
+    aapsLogger, rh, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()

@@ -18,7 +18,6 @@ import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.Arrays
@@ -28,7 +27,6 @@ import kotlin.math.roundToInt
 
 @Singleton
 class SensitivityAAPSPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     sp: SP,
@@ -43,7 +41,7 @@ class SensitivityAAPSPlugin @Inject constructor(
         .shortName(R.string.sensitivity_shortname)
         .preferencesId(R.xml.pref_absorption_aaps)
         .description(R.string.description_sensitivity_aaps),
-    injector, aapsLogger, rh, sp
+    aapsLogger, rh, sp
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {

@@ -32,7 +32,6 @@ import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.iob.generateCOBString
 import app.aaps.core.main.iob.round
 import app.aaps.plugins.main.R
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -41,7 +40,6 @@ import javax.inject.Singleton
 @Suppress("PrivatePropertyName", "DEPRECATION")
 @Singleton
 class PersistentNotificationPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -68,7 +66,7 @@ class PersistentNotificationPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .description(R.string.description_persistent_notification),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     // For Android Auto

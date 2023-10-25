@@ -46,7 +46,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.utils.DateTimeUtil
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDeactivatePod
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandDisableSuspendAlerts
@@ -107,12 +106,11 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val decimalFormatter: DecimalFormatter,
     private val instantiator: Instantiator,
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
     private val dashHistoryDatabase: DashHistoryDatabase
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, OmnipodDash, OwnDatabasePlugin {
+) : PumpPluginBase(pluginDescription, aapsLogger, rh, commandQueue), Pump, OmnipodDash, OwnDatabasePlugin {
 
     @Volatile var bolusCanceled = false
     @Volatile var bolusDeliveryInProgress = false

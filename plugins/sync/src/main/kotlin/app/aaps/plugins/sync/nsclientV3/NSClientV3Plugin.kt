@@ -83,7 +83,6 @@ import app.aaps.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import app.aaps.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.serialization.json.Json
@@ -93,7 +92,6 @@ import javax.inject.Singleton
 
 @Singleton
 class NSClientV3Plugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -118,7 +116,7 @@ class NSClientV3Plugin @Inject constructor(
         .shortName(R.string.ns_client_v3_short_name)
         .preferencesId(R.xml.pref_ns_client_v3)
         .description(R.string.description_ns_client_v3),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     @Suppress("PropertyName")

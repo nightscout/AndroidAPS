@@ -24,7 +24,6 @@ import javax.inject.Singleton
 
 @Singleton
 class GlimpPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
 ) : PluginBase(
@@ -35,7 +34,7 @@ class GlimpPlugin @Inject constructor(
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.glimp)
         .description(R.string.description_source_glimp),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource {
 
     // cannot be inner class because of needed injection

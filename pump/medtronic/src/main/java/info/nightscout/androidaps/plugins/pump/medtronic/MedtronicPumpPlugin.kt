@@ -91,7 +91,7 @@ import kotlin.math.floor
  */
 @Singleton
 class MedtronicPumpPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
     context: Context,
@@ -122,7 +122,7 @@ class MedtronicPumpPlugin @Inject constructor(
         .preferencesId(R.xml.pref_medtronic)
         .description(R.string.description_pump_medtronic),  //
     PumpType.MEDTRONIC_522_722,  // we default to most basic model, correct model from config is loaded later
-    injector, rh, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage, decimalFormatter, instantiator
+    rh, aapsLogger, commandQueue, rxBus, activePlugin, sp, context, fabricPrivacy, dateUtil, aapsSchedulers, pumpSync, pumpSyncStorage, decimalFormatter, instantiator
 ), Pump, RileyLinkPumpDevice, info.nightscout.pump.common.sync.PumpSyncEntriesCreator {
 
     private var rileyLinkMedtronicService: RileyLinkMedtronicService? = null

@@ -37,7 +37,6 @@ import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.interfaces.utils.DecimalFormatter;
 import app.aaps.core.interfaces.utils.Round;
 import app.aaps.core.main.constraints.ConstraintObject;
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.pump.dana.DanaFragment;
 import info.nightscout.pump.dana.DanaPump;
@@ -71,7 +70,6 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected Instantiator instantiator;
 
     protected AbstractDanaRPlugin(
-            HasAndroidInjector injector,
             DanaPump danaPump,
             ResourceHelper rh,
             ConstraintsChecker constraintChecker,
@@ -96,7 +94,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                         .shortName(info.nightscout.pump.dana.R.string.danarpump_shortname)
                         .preferencesId(R.xml.pref_danar)
                         .description(info.nightscout.pump.dana.R.string.description_pump_dana_r),
-                injector, aapsLogger, rh, commandQueue
+                aapsLogger, rh, commandQueue
         );
         this.danaPump = danaPump;
         this.constraintChecker = constraintChecker;

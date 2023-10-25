@@ -18,7 +18,6 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
 import app.aaps.plugins.sensitivity.extensions.isTherapyEventEvent5minBack
-import dagger.android.HasAndroidInjector
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
@@ -27,7 +26,6 @@ import kotlin.math.roundToInt
 
 @Singleton
 class SensitivityWeightedAveragePlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     sp: SP,
@@ -42,7 +40,7 @@ class SensitivityWeightedAveragePlugin @Inject constructor(
         .shortName(R.string.sensitivity_shortname)
         .preferencesId(R.xml.pref_absorption_aaps)
         .description(R.string.description_sensitivity_weighted_average),
-    injector, aapsLogger, rh, sp
+    aapsLogger, rh, sp
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {

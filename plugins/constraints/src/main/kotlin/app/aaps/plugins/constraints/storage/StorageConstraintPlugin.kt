@@ -15,14 +15,12 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @OpenForTesting
 @Singleton
 class StorageConstraintPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val activeNames: UiInteraction
@@ -33,7 +31,7 @@ class StorageConstraintPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.storage),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints {
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {

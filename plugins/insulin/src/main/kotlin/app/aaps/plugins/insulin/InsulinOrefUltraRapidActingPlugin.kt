@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,7 +17,6 @@ import javax.inject.Singleton
  */
 @Singleton
 class InsulinOrefUltraRapidActingPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     profileFunction: ProfileFunction,
     rxBus: RxBus,
@@ -26,7 +24,7 @@ class InsulinOrefUltraRapidActingPlugin @Inject constructor(
     config: Config,
     hardLimits: HardLimits,
     uiInteraction: UiInteraction
-) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
+) : InsulinOrefBasePlugin(rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_ULTRA_RAPID_ACTING
     override val friendlyName get(): String = rh.gs(R.string.ultra_rapid_oref)

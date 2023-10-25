@@ -27,6 +27,7 @@ dependencies {
     api(Libs.Rx.rxAndroid)
     api(Libs.jodaTimeAndroid)
 
+    api(Libs.Dagger.androidSupport)
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)
 }

@@ -38,7 +38,6 @@ import kotlin.math.abs
 
 @Singleton
 class DexcomPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val context: Context,
@@ -52,7 +51,7 @@ class DexcomPlugin @Inject constructor(
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
         .description(R.string.description_source_dexcom),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource, DexcomBoyda {
 
     init {

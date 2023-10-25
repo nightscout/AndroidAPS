@@ -29,7 +29,7 @@ import javax.inject.Singleton
 
 @Singleton
 class OpenAPSSMBDynamicISFPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rxBus: RxBus,
     constraintChecker: ConstraintsChecker,

@@ -54,7 +54,6 @@ import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.validators.ValidatingEditTextPreference
-import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
@@ -68,7 +67,6 @@ import javax.inject.Singleton
 import kotlin.math.abs
 
 @Singleton class MedtrumPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
@@ -93,7 +91,7 @@ import kotlin.math.abs
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(R.xml.pref_medtrum_pump)
-        .description(R.string.medtrum_pump_description), injector, aapsLogger, rh, commandQueue
+        .description(R.string.medtrum_pump_description), aapsLogger, rh, commandQueue
 ), Pump, Medtrum {
 
     private val disposable = CompositeDisposable()

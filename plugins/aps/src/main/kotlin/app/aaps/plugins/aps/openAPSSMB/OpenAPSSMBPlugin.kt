@@ -46,7 +46,7 @@ import kotlin.math.floor
 
 @Singleton
 open class OpenAPSSMBPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
@@ -74,7 +74,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         .preferencesId(R.xml.pref_openapssmb)
         .description(R.string.description_smb)
         .setDefault(),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), APS, PluginConstraints {
 
     // DynamicISF specific

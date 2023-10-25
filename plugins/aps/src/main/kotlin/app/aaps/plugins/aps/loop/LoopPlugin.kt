@@ -75,7 +75,6 @@ import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.aps.loop.extensions.json
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
@@ -85,7 +84,6 @@ import kotlin.math.abs
 
 @Singleton
 class LoopPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -118,7 +116,7 @@ class LoopPlugin @Inject constructor(
         .preferencesId(R.xml.pref_loop)
         .enableByDefault(config.APS)
         .description(R.string.description_loop),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Loop {
 
     private val disposable = CompositeDisposable()

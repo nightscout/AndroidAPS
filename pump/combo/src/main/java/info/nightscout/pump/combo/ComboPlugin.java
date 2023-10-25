@@ -51,7 +51,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.ui.UiInteraction;
 import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.utils.fabric.InstanceId;
-import dagger.android.HasAndroidInjector;
 import info.nightscout.pump.combo.events.EventComboPumpUpdateGUI;
 import info.nightscout.pump.combo.ruffyscripter.BasalProfile;
 import info.nightscout.pump.combo.ruffyscripter.BolusProgressReporter;
@@ -164,7 +163,6 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
 
     @Inject
     public ComboPlugin(
-            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             RxBus rxBus,
             ResourceHelper rh,
@@ -185,7 +183,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, PluginConstrain
                         .shortName(R.string.combopump_shortname)
                         .preferencesId(R.xml.pref_combo)
                         .description(R.string.description_pump_combo),
-                injector, aapsLogger, rh, commandQueue
+                aapsLogger, rh, commandQueue
         );
         this.rxBus = rxBus;
         this.profileFunction = profileFunction;

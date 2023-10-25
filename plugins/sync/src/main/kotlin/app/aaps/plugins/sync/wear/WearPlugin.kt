@@ -23,7 +23,6 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.wear.wearintegration.DataHandlerMobile
 import app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobileHelper
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -31,7 +30,6 @@ import javax.inject.Singleton
 
 @Singleton
 class WearPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -51,7 +49,7 @@ class WearPlugin @Inject constructor(
         .shortName(R.string.wear_shortname)
         .preferencesId(R.xml.pref_wear)
         .description(R.string.description_wear),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private val disposable = CompositeDisposable()

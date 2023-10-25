@@ -14,14 +14,12 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import java.util.Calendar
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DstHelperPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
@@ -34,7 +32,7 @@ class DstHelperPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.dst_plugin_name),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints {
 
     companion object {

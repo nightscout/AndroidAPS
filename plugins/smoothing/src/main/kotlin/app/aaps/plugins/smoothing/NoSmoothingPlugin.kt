@@ -7,13 +7,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smoothing.Smoothing
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NoSmoothingPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper
 ) : PluginBase(
@@ -24,7 +22,7 @@ class NoSmoothingPlugin @Inject constructor(
         .pluginName(R.string.no_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_no_smoothing),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Smoothing {
 
     override fun smooth(data: MutableList<InMemoryGlucoseValue>): MutableList<InMemoryGlucoseValue> = data

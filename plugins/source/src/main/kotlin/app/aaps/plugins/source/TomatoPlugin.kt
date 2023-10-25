@@ -24,7 +24,6 @@ import javax.inject.Singleton
 
 @Singleton
 class TomatoPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
 ) : PluginBase(
@@ -36,7 +35,7 @@ class TomatoPlugin @Inject constructor(
         .pluginName(R.string.tomato)
         .shortName(R.string.tomato_short)
         .description(R.string.description_source_tomato),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource {
 
     // cannot be inner class because of needed injection

@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.constraints.ConstraintObject
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
@@ -46,7 +45,6 @@ import kotlin.math.max
 
 @Singleton
 class DanaRKoreanPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     aapsSchedulers: AapsSchedulers,
     rxBus: RxBus,
@@ -65,7 +63,6 @@ class DanaRKoreanPlugin @Inject constructor(
     decimalFormatter: DecimalFormatter,
     instantiator: Instantiator
 ) : AbstractDanaRPlugin(
-    injector,
     danaPump,
     rh,
     constraintChecker,

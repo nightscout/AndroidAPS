@@ -78,7 +78,7 @@ import javax.inject.Singleton
 
 @Singleton
 class AutomationPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     rh: ResourceHelper,
     private val context: Context,
     private val sp: SP,
@@ -104,7 +104,7 @@ class AutomationPlugin @Inject constructor(
         .neverVisible(!config.APS)
         .preferencesId(R.xml.pref_automation)
         .description(R.string.automation_description),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Automation {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

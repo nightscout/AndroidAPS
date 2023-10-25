@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,7 +22,6 @@ import kotlin.math.roundToInt
 
 @Singleton
 class VersionCheckerPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     private val sp: SP,
     rh: ResourceHelper,
     private val versionCheckerUtils: VersionCheckerUtils,
@@ -39,7 +37,7 @@ class VersionCheckerPlugin @Inject constructor(
         .alwaysEnabled(true)
         .showInList(false)
         .pluginName(R.string.version_checker),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints {
 
     enum class GracePeriod(val warning: Long, val old: Long, val veryOld: Long) {

@@ -8,13 +8,11 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.plugins.main.R
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ActionsPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     config: Config
@@ -28,5 +26,5 @@ class ActionsPlugin @Inject constructor(
         .pluginName(R.string.actions)
         .shortName(R.string.actions_shortname)
         .description(R.string.description_actions),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Actions

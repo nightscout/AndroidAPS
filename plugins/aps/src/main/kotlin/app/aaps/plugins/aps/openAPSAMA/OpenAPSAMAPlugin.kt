@@ -43,7 +43,7 @@ import kotlin.math.floor
 
 @Singleton
 class OpenAPSAMAPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private val constraintChecker: ConstraintsChecker,
@@ -69,7 +69,7 @@ class OpenAPSAMAPlugin @Inject constructor(
         .shortName(R.string.oaps_shortname)
         .preferencesId(R.xml.pref_openapsama)
         .description(R.string.description_ama),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), APS, PluginConstraints {
 
     // last values

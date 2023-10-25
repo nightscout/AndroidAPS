@@ -20,14 +20,12 @@ import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class XdripSourcePlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
 ) : PluginBase(
@@ -38,7 +36,7 @@ class XdripSourcePlugin @Inject constructor(
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.source_xdrip)
         .description(R.string.description_source_xdrip),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource, XDripSource {
 
     private var advancedFiltering = false

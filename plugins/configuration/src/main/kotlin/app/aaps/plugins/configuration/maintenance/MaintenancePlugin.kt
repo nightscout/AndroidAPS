@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.configuration.R
-import dagger.android.HasAndroidInjector
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
@@ -30,7 +29,6 @@ import javax.inject.Singleton
 
 @Singleton
 class MaintenancePlugin @Inject constructor(
-    injector: HasAndroidInjector,
     private val context: Context,
     rh: ResourceHelper,
     private val sp: SP,
@@ -50,7 +48,7 @@ class MaintenancePlugin @Inject constructor(
         .shortName(R.string.maintenance_shortname)
         .preferencesId(R.xml.pref_maintenance)
         .description(R.string.description_maintenance),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     fun sendLogs() {

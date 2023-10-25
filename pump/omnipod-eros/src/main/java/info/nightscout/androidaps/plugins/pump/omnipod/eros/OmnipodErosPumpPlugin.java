@@ -129,6 +129,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
     public static final double RESERVOIR_OVER_50_UNITS_DEFAULT = 75.0;
     private static final long RILEY_LINK_CONNECT_TIMEOUT_MILLIS = 3 * 60 * 1_000L; // 3 minutes
     private static final long STATUS_CHECK_INTERVAL_MILLIS = 60 * 1_000L; // 1 minute
+    private final HasAndroidInjector injector;
     private final ErosPodStateManager podStateManager;
     private final RileyLinkServiceData rileyLinkServiceData;
     private final AapsOmnipodErosManager aapsOmnipodErosManager;
@@ -201,7 +202,8 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                         .shortName(R.string.omnipod_eros_name_short) //
                         .preferencesId(R.xml.omnipod_eros_preferences) //
                         .description(R.string.omnipod_eros_pump_description), //
-                injector, aapsLogger, rh, commandQueue);
+                aapsLogger, rh, commandQueue);
+        this.injector = injector;
         this.aapsLogger = aapsLogger;
         this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
@@ -1132,7 +1134,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         try {
             aapsLogger.debug(LTag.PUMP, "Executing command: {}", commandType);
 
-            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(getInjector(), commandType));
+            rileyLinkUtil.getRileyLinkHistory().add(new RLHistoryItemOmnipod(injector, commandType));
 
             return supplier.get();
         } finally {

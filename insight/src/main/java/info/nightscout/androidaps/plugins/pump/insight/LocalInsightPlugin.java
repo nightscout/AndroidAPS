@@ -222,7 +222,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
                         .description(R.string.description_pump_insight_local)
                         .fragmentClass(LocalInsightFragment.class.getName())
                         .preferencesId(config.getAPS() ? R.xml.pref_insight_local_full : R.xml.pref_insight_local_pumpcontrol),
-                injector, aapsLogger, rh, commandQueue
+                aapsLogger, rh, commandQueue
 
         );
         this.aapsLogger = aapsLogger;

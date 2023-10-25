@@ -48,7 +48,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
-import dagger.android.HasAndroidInjector
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
@@ -108,7 +107,6 @@ internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
 
 @Singleton
 class ComboV2Plugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
@@ -133,13 +131,8 @@ class ComboV2Plugin @Inject constructor(
             .shortName(R.string.combov2_plugin_shortname)
             .description(R.string.combov2_plugin_description)
             .preferencesId(R.xml.pref_combov2),
-        injector,
-        aapsLogger,
-        rh,
-        commandQueue
-    ),
-    Pump,
-    PluginConstraints {
+        aapsLogger, rh, commandQueue
+    ), Pump, PluginConstraints {
 
     // Coroutine scope and the associated job. All coroutines
     // that are started in this plugin are part of this scope.

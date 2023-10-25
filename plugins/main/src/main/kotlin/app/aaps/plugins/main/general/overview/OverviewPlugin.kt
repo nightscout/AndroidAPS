@@ -47,7 +47,7 @@ import javax.inject.Singleton
 
 @Singleton
 class OverviewPlugin @Inject constructor(
-    injector: HasAndroidInjector,
+    private val injector: HasAndroidInjector,
     private val notificationStore: NotificationStore,
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
@@ -71,7 +71,7 @@ class OverviewPlugin @Inject constructor(
         .shortName(R.string.overview_shortname)
         .preferencesId(R.xml.pref_overview)
         .description(R.string.description_overview),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Overview {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

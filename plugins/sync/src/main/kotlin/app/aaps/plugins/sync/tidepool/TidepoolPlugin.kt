@@ -34,7 +34,6 @@ import app.aaps.plugins.sync.tidepool.events.EventTidepoolResetData
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolStatus
 import app.aaps.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
 import app.aaps.plugins.sync.tidepool.utils.RateLimit
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -42,7 +41,6 @@ import javax.inject.Singleton
 
 @Singleton
 class TidepoolPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -63,7 +61,7 @@ class TidepoolPlugin @Inject constructor(
         .fragmentClass(TidepoolFragment::class.qualifiedName)
         .preferencesId(R.xml.pref_tidepool)
         .description(R.string.description_tidepool),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private var disposable: CompositeDisposable = CompositeDisposable()

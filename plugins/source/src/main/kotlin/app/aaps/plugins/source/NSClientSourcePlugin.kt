@@ -10,13 +10,11 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.NSClientSource
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NSClientSourcePlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     config: Config
@@ -30,7 +28,7 @@ class NSClientSourcePlugin @Inject constructor(
         .description(R.string.description_source_ns_client)
         .alwaysEnabled(config.NSCLIENT)
         .setDefault(config.NSCLIENT),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource, NSClientSource {
 
     private var lastBGTimeStamp: Long = 0

@@ -39,7 +39,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter;
 import app.aaps.core.interfaces.utils.Round;
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
 import app.aaps.core.main.constraints.ConstraintObject;
-import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
@@ -70,7 +69,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
 
     @Inject
     public DanaRv2Plugin(
-            HasAndroidInjector injector,
             AAPSLogger aapsLogger,
             AapsSchedulers aapsSchedulers,
             RxBus rxBus,
@@ -91,7 +89,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             DecimalFormatter decimalFormatter,
             Instantiator instantiator
     ) {
-        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter,
+        super(danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter,
                 instantiator);
         this.aapsLogger = aapsLogger;
         this.context = context;

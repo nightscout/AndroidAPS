@@ -35,7 +35,6 @@ import app.aaps.core.main.extensions.toStringFull
 import app.aaps.core.main.iob.round
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -43,7 +42,6 @@ import javax.inject.Singleton
 
 @Singleton
 class DataBroadcastPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
@@ -69,7 +67,7 @@ class DataBroadcastPlugin @Inject constructor(
         .pluginName(R.string.data_broadcaster)
         .shortName(R.string.data_broadcaster_short)
         .description(R.string.data_broadcaster_description),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private val disposable = CompositeDisposable()

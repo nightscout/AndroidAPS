@@ -15,13 +15,11 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class HistoryBrowserData @Inject constructor(
-    injector: HasAndroidInjector,
     aapsSchedulers: AapsSchedulers,
     rxBus: RxBus,
     aapsLogger: AAPSLogger,
@@ -51,7 +49,6 @@ class HistoryBrowserData @Inject constructor(
         )
     val iobCobCalculator =
         IobCobCalculatorPlugin(
-            injector,
             aapsLogger,
             aapsSchedulers,
             rxBus,

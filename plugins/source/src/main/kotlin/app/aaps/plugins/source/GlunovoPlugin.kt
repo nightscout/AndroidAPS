@@ -23,14 +23,12 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class GlunovoPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     resourceHelper: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP,
@@ -47,7 +45,7 @@ class GlunovoPlugin @Inject constructor(
         .pluginName(R.string.glunovo)
         .shortName(R.string.glunovo)
         .description(R.string.description_source_glunovo),
-    aapsLogger, resourceHelper, injector
+    aapsLogger, resourceHelper
 ), BgSource {
 
     private val handler = Handler(HandlerThread(this::class.java.simpleName + "Handler").also { it.start() }.looper)

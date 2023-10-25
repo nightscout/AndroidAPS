@@ -21,14 +21,12 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AidexPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val config: Config
@@ -41,7 +39,7 @@ class AidexPlugin @Inject constructor(
         .pluginName(R.string.aidex)
         .shortName(R.string.aidex_short)
         .description(R.string.description_source_aidex),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), BgSource {
 
     // Allow only for pumpcontrol or dev & engineering_mode

@@ -45,14 +45,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.configBuilder.events.EventConfigBuilderUpdateGui
-import dagger.android.HasAndroidInjector
 import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ConfigBuilderPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
@@ -73,7 +71,7 @@ class ConfigBuilderPlugin @Inject constructor(
         .pluginName(R.string.config_builder)
         .shortName(R.string.config_builder_shortname)
         .description(R.string.description_config_builder),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), ConfigBuilder {
 
     override fun initialize() {

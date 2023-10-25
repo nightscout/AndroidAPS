@@ -16,7 +16,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import dagger.android.HasAndroidInjector
 import kotlin.math.exp
 import kotlin.math.pow
 
@@ -27,7 +26,6 @@ import kotlin.math.pow
  *
  */
 abstract class InsulinOrefBasePlugin(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     val profileFunction: ProfileFunction,
     val rxBus: RxBus,
@@ -43,7 +41,7 @@ abstract class InsulinOrefBasePlugin(
         .shortName(R.string.insulin_shortname)
         .visibleByDefault(false)
         .neverVisible(config.NSCLIENT),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Insulin {
 
     private var lastWarned: Long = 0

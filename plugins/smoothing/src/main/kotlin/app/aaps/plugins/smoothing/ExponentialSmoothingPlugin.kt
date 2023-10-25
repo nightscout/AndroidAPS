@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smoothing.Smoothing
-import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -16,7 +15,6 @@ import kotlin.math.round
 
 @Singleton
 class ExponentialSmoothingPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper
 ) : PluginBase(
@@ -26,7 +24,7 @@ class ExponentialSmoothingPlugin @Inject constructor(
         .pluginName(R.string.exponential_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_exponential_smoothing),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), Smoothing {
 
     @Suppress("LocalVariableName")

@@ -32,14 +32,12 @@ import app.aaps.core.main.utils.extensions.storeDouble
 import app.aaps.core.main.utils.extensions.storeInt
 import app.aaps.core.main.utils.extensions.storeString
 import app.aaps.plugins.constraints.R
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class SafetyPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
@@ -59,7 +57,7 @@ class SafetyPlugin @Inject constructor(
         .showInList(false)
         .pluginName(R.string.safety)
         .preferencesId(R.xml.pref_safety),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ), PluginConstraints, Safety {
 
     /**

@@ -45,7 +45,6 @@ import app.aaps.core.main.extensions.plannedRemainingMinutes
 import app.aaps.core.utils.fabric.InstanceId
 import app.aaps.pump.virtual.events.EventVirtualPumpUpdateGui
 import app.aaps.pump.virtual.extensions.toText
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONException
@@ -56,7 +55,6 @@ import kotlin.math.min
 
 @Singleton
 open class VirtualPumpPlugin @Inject constructor(
-    injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
     private var fabricPrivacy: FabricPrivacy,
@@ -82,7 +80,7 @@ open class VirtualPumpPlugin @Inject constructor(
         .description(R.string.description_pump_virtual)
         .setDefault()
         .neverVisible(config.NSCLIENT),
-    injector, aapsLogger, rh, commandQueue
+    aapsLogger, rh, commandQueue
 ), Pump, VirtualPump {
 
     private val disposable = CompositeDisposable()

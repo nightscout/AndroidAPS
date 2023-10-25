@@ -35,7 +35,6 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import dagger.android.HasAndroidInjector
 import info.nightscout.pump.common.data.PumpStatus
 import info.nightscout.pump.common.defs.PumpDriverState
 import info.nightscout.pump.common.sync.PumpDbEntryCarbs
@@ -52,7 +51,6 @@ import org.json.JSONObject
 abstract class PumpPluginAbstract protected constructor(
     pluginDescription: PluginDescription,
     pumpType: PumpType,
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     commandQueue: CommandQueue,
@@ -67,7 +65,7 @@ abstract class PumpPluginAbstract protected constructor(
     var pumpSyncStorage: PumpSyncStorage,
     var decimalFormatter: DecimalFormatter,
     protected val instantiator: Instantiator
-) : PumpPluginBase(pluginDescription, injector, aapsLogger, rh, commandQueue), Pump, PluginConstraints, PumpSyncEntriesCreator {
+) : PumpPluginBase(pluginDescription, aapsLogger, rh, commandQueue), Pump, PluginConstraints, PumpSyncEntriesCreator {
 
     protected val disposable = CompositeDisposable()
 

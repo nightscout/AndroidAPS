@@ -36,7 +36,6 @@ import app.aaps.plugins.sync.openhumans.delegates.OHCounterDelegate
 import app.aaps.plugins.sync.openhumans.delegates.OHStateDelegate
 import app.aaps.plugins.sync.openhumans.ui.OHFragment
 import app.aaps.plugins.sync.openhumans.ui.OHLoginActivity
-import dagger.android.HasAndroidInjector
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +57,6 @@ import javax.inject.Singleton
 
 @Singleton
 class OpenHumansUploaderPlugin @Inject internal constructor(
-    injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
     private val sp: SP,
@@ -78,7 +76,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
         .description(R.string.open_humans_description)
         .preferencesId(R.xml.pref_openhumans)
         .fragmentClass(OHFragment::class.qualifiedName),
-    aapsLogger, rh, injector
+    aapsLogger, rh
 ) {
 
     private var openHumansState by stateDelegate
