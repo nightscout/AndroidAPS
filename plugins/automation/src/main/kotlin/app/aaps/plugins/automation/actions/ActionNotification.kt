@@ -8,9 +8,9 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.notifications.NotificationUserMessage
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.asAnnouncement
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.automation.R

@@ -1,6 +1,5 @@
-package app.aaps.core.main.events
+package app.aaps.core.interfaces.rx.events
 
 import app.aaps.core.interfaces.notifications.Notification
-import app.aaps.core.interfaces.rx.events.Event
 
 class EventNewNotification(var notification: Notification) : Event()

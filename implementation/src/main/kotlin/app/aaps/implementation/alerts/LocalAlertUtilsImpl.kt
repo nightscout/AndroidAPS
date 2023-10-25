@@ -17,11 +17,12 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.events.EventNewNotification
 import app.aaps.core.main.extensions.asAnnouncement
+import app.aaps.core.ui.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -62,22 +63,22 @@ class LocalAlertUtilsImpl @Inject constructor(
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert, true)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated)
                 sp.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold())
-                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(app.aaps.core.ui.R.string.pump_unreachable), Notification.URGENT).also {
+                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(R.string.pump_unreachable), Notification.URGENT).also {
                     it.soundId =
-                        app.aaps.core.ui.R.raw.alarm
+                        R.raw.alarm
                 }))
                 if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true))
                     disposable += persistenceLayer.insertPumpTherapyEventIfNewByTimestamp(
-                        therapyEvent = TE.asAnnouncement(rh.gs(app.aaps.core.ui.R.string.pump_unreachable)),
+                        therapyEvent = TE.asAnnouncement(rh.gs(R.string.pump_unreachable)),
                         timestamp = dateUtil.now(),
                         action = Action.CAREPORTAL,
                         source = Sources.Aaps,
-                        note = rh.gs(app.aaps.core.ui.R.string.pump_unreachable),
+                        note = rh.gs(R.string.pump_unreachable),
                         listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                     ).subscribe()
             }
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_smscommunicator_report_pump_unreachable, true))
-                smsCommunicator.sendNotificationToAllNumbers(rh.gs(app.aaps.core.ui.R.string.pump_unreachable))
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(R.string.pump_unreachable))
         }
         if (!isStatusOutdated && !alarmTimeoutExpired) rxBus.send(EventDismissNotification(Notification.PUMP_UNREACHABLE))
     }
@@ -129,8 +130,8 @@ class LocalAlertUtilsImpl @Inject constructor(
             && bgReading.timestamp + missedReadingsThreshold() < System.currentTimeMillis()
             && sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()
         ) {
-            val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(app.aaps.core.ui.R.string.missed_bg_readings), Notification.URGENT)
-            n.soundId = app.aaps.core.ui.R.raw.alarm
+            val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(R.string.missed_bg_readings), Notification.URGENT)
+            n.soundId = R.raw.alarm
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
             if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_create_announcements_from_errors, true)) {
@@ -139,7 +140,7 @@ class LocalAlertUtilsImpl @Inject constructor(
                     timestamp = dateUtil.now(),
                     action = Action.CAREPORTAL,
                     source = Sources.Aaps,
-                    note = rh.gs(app.aaps.core.ui.R.string.missed_bg_readings),
+                    note = rh.gs(R.string.missed_bg_readings),
                     listValues = listOf(ValueWithUnit.TEType(TE.Type.ANNOUNCEMENT))
                 ).subscribe()
             }
