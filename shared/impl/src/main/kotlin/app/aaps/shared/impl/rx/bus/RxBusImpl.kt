@@ -1,6 +1,5 @@
 package app.aaps.shared.impl.rx.bus
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -11,7 +10,6 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class RxBusImpl @Inject constructor(
     val aapsSchedulers: AapsSchedulers,

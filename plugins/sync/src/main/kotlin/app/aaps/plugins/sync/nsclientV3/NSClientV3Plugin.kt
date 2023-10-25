@@ -15,7 +15,6 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.HasIDs
 import app.aaps.core.data.plugin.PluginDescription
@@ -92,7 +91,6 @@ import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class NSClientV3Plugin @Inject constructor(
     injector: HasAndroidInjector,

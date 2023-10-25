@@ -3,7 +3,6 @@
 package app.aaps.plugins.sync.nsclient.data
 
 import android.content.Context
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.configuration.Config
@@ -116,7 +115,6 @@ import javax.inject.Singleton
  "activeProfile": "2016 +30%"
  }
  */
-@OpenForTesting
 @Singleton
 class NSSettingsStatusImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,

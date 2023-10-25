@@ -1,6 +1,5 @@
 package app.aaps.wear.interaction.utils
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.CwfData
@@ -21,7 +20,6 @@ import javax.inject.Singleton
  * Refactored by MilosKozak 25/04/2022
  */
 @Singleton
-@OpenForTesting
 open class Persistence @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,

@@ -23,10 +23,10 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class TddCalculatorImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,

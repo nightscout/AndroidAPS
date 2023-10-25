@@ -12,7 +12,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.BS
@@ -84,7 +83,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
-@OpenForTesting
 @Singleton
 class LoopPlugin @Inject constructor(
     injector: HasAndroidInjector,

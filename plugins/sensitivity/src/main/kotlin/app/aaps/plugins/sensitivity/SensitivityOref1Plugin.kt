@@ -1,6 +1,5 @@
 package app.aaps.plugins.sensitivity
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
@@ -30,7 +29,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@OpenForTesting
 @Singleton
 class SensitivityOref1Plugin @Inject constructor(
     injector: HasAndroidInjector,

@@ -41,9 +41,11 @@ import app.aaps.ui.dialogs.WizardDialog
 import app.aaps.ui.services.AlarmSoundService
 import app.aaps.ui.services.AlarmSoundServiceHelper
 import app.aaps.ui.widget.Widget
+import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
+@Reusable
 class UiInteractionImpl @Inject constructor(
     private val context: Context,
     private val rxBus: RxBus,

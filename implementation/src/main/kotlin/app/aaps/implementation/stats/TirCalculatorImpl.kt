@@ -17,10 +17,10 @@ import app.aaps.core.interfaces.stats.TIR
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class TirCalculatorImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val profileUtil: ProfileUtil,

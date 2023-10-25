@@ -1,7 +1,6 @@
 package app.aaps.implementation.utils.fabric
 
 import android.os.Bundle
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
@@ -12,25 +11,24 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.ktx.Firebase
+import dagger.Reusable
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Some users do not wish to be tracked, Fabric Answers and Crashlytics do not provide an easy way
  * to disable them and make calls from a potentially invalid singleton reference. This wrapper
  * emulates the methods but ignores the request if the instance is null or invalid.
  */
-@OpenForTesting
-@Singleton
+@Reusable
 class FabricPrivacyImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP
 ) : FabricPrivacy {
 
-    private final val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
+    private val firebaseAnalytics: FirebaseAnalytics = Firebase.analytics
 
     init {
         firebaseAnalytics.setAnalyticsCollectionEnabled(!java.lang.Boolean.getBoolean("disableFirebase") && fabricEnabled())

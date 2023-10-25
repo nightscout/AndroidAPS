@@ -4,10 +4,10 @@ import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class ProfileUtilImpl @Inject constructor(
     private val sp: SP,
     private val decimalFormatter: DecimalFormatter

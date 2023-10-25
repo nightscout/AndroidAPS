@@ -14,13 +14,13 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.plugins.constraints.R
 import dagger.Lazy
+import dagger.Reusable
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class VersionCheckerUtilsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,

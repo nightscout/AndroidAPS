@@ -1,6 +1,5 @@
 package app.aaps.plugins.smoothing
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.plugin.PluginDescription
@@ -16,7 +15,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
 
-@OpenForTesting
 @Singleton
 class AvgSmoothingPlugin @Inject constructor(
     injector: HasAndroidInjector,

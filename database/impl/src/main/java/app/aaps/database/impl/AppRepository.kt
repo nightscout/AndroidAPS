@@ -1,6 +1,5 @@
 package app.aaps.database.impl
 
-import androidx.annotation.OpenForTesting
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.BolusCalculatorResult
@@ -34,7 +33,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@OpenForTesting
 @Singleton
 class AppRepository @Inject internal constructor(
     internal val database: AppDatabase

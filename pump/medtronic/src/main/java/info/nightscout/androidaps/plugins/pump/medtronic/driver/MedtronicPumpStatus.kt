@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -25,7 +24,6 @@ import javax.inject.Singleton
  * Created by andy on 4/28/18.
  */
 @Singleton
-@OpenForTesting
 class MedtronicPumpStatus @Inject constructor(
     private val rh: ResourceHelper,
     private val sp: SP,

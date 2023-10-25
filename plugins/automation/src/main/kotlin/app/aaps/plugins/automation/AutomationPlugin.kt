@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -77,7 +76,6 @@ import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class AutomationPlugin @Inject constructor(
     injector: HasAndroidInjector,

@@ -1,7 +1,6 @@
 package app.aaps.plugins.sensitivity
 
 import androidx.collection.LongSparseArray
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.TE
@@ -26,7 +25,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.roundToInt
 
-@OpenForTesting
 @Singleton
 class SensitivityWeightedAveragePlugin @Inject constructor(
     injector: HasAndroidInjector,

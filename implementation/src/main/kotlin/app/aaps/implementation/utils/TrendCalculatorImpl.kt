@@ -9,10 +9,10 @@ import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.main.extensions.fromGv
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class TrendCalculatorImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val rh: ResourceHelper,

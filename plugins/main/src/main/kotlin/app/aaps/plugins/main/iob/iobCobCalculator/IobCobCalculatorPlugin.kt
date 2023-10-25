@@ -1,7 +1,6 @@
 package app.aaps.plugins.main.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.BasalData
@@ -62,7 +61,6 @@ import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
-@OpenForTesting
 @Singleton
 class IobCobCalculatorPlugin @Inject constructor(
     injector: HasAndroidInjector,

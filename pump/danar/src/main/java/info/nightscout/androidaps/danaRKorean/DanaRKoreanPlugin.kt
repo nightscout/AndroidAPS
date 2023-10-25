@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.db.BS
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -46,7 +45,6 @@ import kotlin.math.abs
 import kotlin.math.max
 
 @Singleton
-@OpenForTesting
 class DanaRKoreanPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,

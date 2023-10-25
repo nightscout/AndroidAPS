@@ -61,20 +61,20 @@ import app.aaps.plugins.configuration.maintenance.data.PrefsStatusImpl
 import app.aaps.plugins.configuration.maintenance.dialogs.PrefImportSummaryDialog
 import app.aaps.plugins.configuration.maintenance.formats.EncryptedPrefsFormat
 import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
+import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.system.exitProcess
 
 /**
  * Created by mike on 03.07.2016.
  */
 
-@Singleton
+@Reusable
 class ImportExportPrefsImpl @Inject constructor(
     private var log: AAPSLogger,
     private val rh: ResourceHelper,

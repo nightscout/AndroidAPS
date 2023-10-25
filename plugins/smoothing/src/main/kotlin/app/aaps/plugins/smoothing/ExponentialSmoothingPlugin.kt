@@ -1,6 +1,5 @@
 package app.aaps.plugins.smoothing
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.plugin.PluginDescription
@@ -15,7 +14,6 @@ import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.round
 
-@OpenForTesting
 @Singleton
 class ExponentialSmoothingPlugin @Inject constructor(
     injector: HasAndroidInjector,

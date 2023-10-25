@@ -9,7 +9,6 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
@@ -78,7 +77,6 @@ import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
-@OpenForTesting
 @Singleton
 class SmsCommunicatorPlugin @Inject constructor(
     injector: HasAndroidInjector,

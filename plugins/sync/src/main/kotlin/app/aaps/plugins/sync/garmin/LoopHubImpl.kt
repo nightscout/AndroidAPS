@@ -16,10 +16,10 @@ import java.time.Instant
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
 /**
  * Interface to the functionality of the looping algorithm and storage systems.
  */
+@Singleton
 class LoopHubImpl @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val loop: Loop,

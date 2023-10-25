@@ -2,7 +2,6 @@ package app.aaps.plugins.configuration.maintenance
 
 import android.content.Context
 import android.os.Environment
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
@@ -33,7 +32,6 @@ import javax.inject.Inject
 import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")
-@OpenForTesting
 @Reusable
 class PrefFileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,

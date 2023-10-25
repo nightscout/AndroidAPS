@@ -1,7 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
 import android.content.Context
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
@@ -28,7 +27,6 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     injector: HasAndroidInjector,

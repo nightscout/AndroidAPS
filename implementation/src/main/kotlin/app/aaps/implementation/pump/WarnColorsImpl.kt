@@ -6,10 +6,11 @@ import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.main.extensions.isOlderThan
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton class WarnColorsImpl @Inject constructor(
+@Reusable
+class WarnColorsImpl @Inject constructor(
     private val rh: ResourceHelper, private val dateUtil: DateUtil
 ) : WarnColors {
 

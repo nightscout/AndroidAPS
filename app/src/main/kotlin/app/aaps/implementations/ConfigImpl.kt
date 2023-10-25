@@ -5,12 +5,12 @@ import app.aaps.BuildConfig
 import app.aaps.R
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import dagger.Reusable
 import java.io.File
 import javax.inject.Inject
-import javax.inject.Singleton
 
 @Suppress("KotlinConstantConditions")
-@Singleton
+@Reusable
 class ConfigImpl @Inject constructor(
     fileListProvider: PrefFileListProvider
 ) : Config {

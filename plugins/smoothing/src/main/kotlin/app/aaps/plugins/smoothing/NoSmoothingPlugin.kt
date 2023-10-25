@@ -1,6 +1,5 @@
 package app.aaps.plugins.smoothing
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -12,7 +11,6 @@ import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class NoSmoothingPlugin @Inject constructor(
     injector: HasAndroidInjector,

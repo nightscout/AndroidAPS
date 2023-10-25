@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclient
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
@@ -17,7 +16,6 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class ReceiverDelegate @Inject constructor(
     private val rxBus: RxBus,

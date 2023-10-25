@@ -1,16 +1,14 @@
 package app.aaps.implementation.profile
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.sharedPreferences.SP
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@OpenForTesting
-@Singleton
+@Reusable
 class DefaultValueHelperImpl @Inject constructor(
     private val sp: SP,
     private val profileUtil: ProfileUtil

@@ -2,7 +2,6 @@ package app.aaps.plugins.main.iob.iobCobCalculator.data
 
 import androidx.collection.LongSparseArray
 import androidx.collection.size
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.iob.InMemoryGlucoseValue
@@ -15,7 +14,6 @@ import app.aaps.core.main.extensions.fromGv
 import kotlin.math.abs
 import kotlin.math.roundToLong
 
-@OpenForTesting
 class AutosensDataStoreObject : AutosensDataStore {
 
     override val dataLock = Any()

@@ -11,10 +11,10 @@ import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class DexcomTirCalculatorImpl @Inject constructor(
     private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,

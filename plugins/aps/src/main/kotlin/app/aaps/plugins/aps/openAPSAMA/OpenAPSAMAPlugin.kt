@@ -1,7 +1,6 @@
 package app.aaps.plugins.aps.openAPSAMA
 
 import android.content.Context
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
@@ -42,7 +41,6 @@ import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.floor
 
-@OpenForTesting
 @Singleton
 class OpenAPSAMAPlugin @Inject constructor(
     injector: HasAndroidInjector,

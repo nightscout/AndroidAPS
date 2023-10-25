@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsShared
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.FD
 import app.aaps.core.data.db.GV
@@ -36,7 +35,6 @@ import app.aaps.core.nssdk.localmodel.treatment.NSTemporaryTarget
 import app.aaps.core.nssdk.localmodel.treatment.NSTherapyEvent
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
 import app.aaps.core.utils.JsonHelper
-
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsclient.extensions.fromJson
 import app.aaps.plugins.sync.nsclientV3.extensions.toBolus
@@ -56,7 +54,6 @@ import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class NsIncomingDataProcessor @Inject constructor(
     private val aapsLogger: AAPSLogger,

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.db.GV
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
@@ -23,7 +22,6 @@ import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class GlimpPlugin @Inject constructor(
     injector: HasAndroidInjector,

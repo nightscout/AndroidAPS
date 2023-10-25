@@ -1,6 +1,5 @@
 package app.aaps.implementation.logging
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.db.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -13,7 +12,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-@OpenForTesting
 @Reusable
 class UserEntryLoggerImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer,

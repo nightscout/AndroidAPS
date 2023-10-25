@@ -21,12 +21,12 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 import app.aaps.plugins.configuration.R
+import dagger.Reusable
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class RunningConfigurationImpl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val configBuilder: ConfigBuilder,

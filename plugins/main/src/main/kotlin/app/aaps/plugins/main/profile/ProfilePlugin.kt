@@ -1,7 +1,6 @@
 package app.aaps.plugins.main.profile
 
 import androidx.fragment.app.FragmentActivity
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
@@ -42,7 +41,6 @@ import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class ProfilePlugin @Inject constructor(
     injector: HasAndroidInjector,

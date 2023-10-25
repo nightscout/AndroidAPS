@@ -2,7 +2,6 @@ package app.aaps.wear.interaction.utils
 
 import android.content.Context
 import android.os.PowerManager
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import kotlinx.datetime.Clock
@@ -14,7 +13,6 @@ import javax.inject.Singleton
  * Adapted by dlvoy on 2019-11-06 using code from jamorham JoH class
  */
 @Singleton
-@OpenForTesting
 open class WearUtil @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,

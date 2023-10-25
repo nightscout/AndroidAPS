@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclient.data
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -66,7 +65,6 @@ import javax.inject.Singleton
  */
 @Suppress("SpellCheckingInspection")
 @Singleton
-@OpenForTesting
 class NSDeviceStatusHandler @Inject constructor(
     private val sp: SP,
     private val config: Config,

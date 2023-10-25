@@ -1,6 +1,5 @@
 package app.aaps.plugins.sync.nsclientV3
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -21,7 +20,6 @@ import app.aaps.plugins.sync.nsShared.extensions.onlyNsIdAdded
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@OpenForTesting
 @Singleton
 class DataSyncSelectorV3 @Inject constructor(
     private val sp: SP,
@@ -567,7 +565,7 @@ class DataSyncSelectorV3 @Inject constructor(
                     ps.first.id == ps.second.id && ps.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Loaded from NS: ${ps.second.id} ")
                     // only NsId changed, no need to upload
-                    ps.first.onlyNsIdAdded(ps.second)                                         ->
+                    ps.first.onlyNsIdAdded(ps.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Only NS id changed ID: ${ps.second.id} ")
                     // without nsId = create new
                     ps.first.ids.nightscoutId == null                                ->
@@ -608,7 +606,7 @@ class DataSyncSelectorV3 @Inject constructor(
                     ps.first.id == ps.second.id && ps.first.ids.nightscoutId != null ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Loaded from NS: ${ps.second.id} ")
                     // only NsId changed, no need to upload
-                    ps.first.onlyNsIdAdded(ps.second)                                         ->
+                    ps.first.onlyNsIdAdded(ps.second)                                ->
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Only NS id changed ID: ${ps.second.id} ")
                     // without nsId = create new
                     ps.first.ids.nightscoutId == null                                ->

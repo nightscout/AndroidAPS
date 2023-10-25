@@ -1,7 +1,6 @@
 package app.aaps.implementation.utils
 
 import android.content.Context
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
@@ -14,15 +13,14 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.main.extensions.asAnnouncement
+import dagger.Reusable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.math.max
 import kotlin.math.min
 
-@OpenForTesting
-@Singleton
+@Reusable
 class HardLimitsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val uiInteraction: UiInteraction,

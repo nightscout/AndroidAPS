@@ -1,6 +1,5 @@
 package app.aaps.shared.tests
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
@@ -15,7 +14,6 @@ import app.aaps.implementation.pump.PumpEnactResultObject
 import org.json.JSONObject
 
 @Suppress("MemberVisibilityCanBePrivate")
-@OpenForTesting
 class TestPumpPlugin(val rh: ResourceHelper) : Pump {
 
     var connected = false

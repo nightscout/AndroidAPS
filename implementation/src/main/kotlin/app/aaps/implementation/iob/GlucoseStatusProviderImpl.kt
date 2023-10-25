@@ -1,6 +1,5 @@
 package app.aaps.implementation.iob
 
-import app.aaps.annotations.OpenForTesting
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -15,7 +14,6 @@ import javax.inject.Inject
 import kotlin.math.roundToLong
 
 @Reusable
-@OpenForTesting
 class GlucoseStatusProviderImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,

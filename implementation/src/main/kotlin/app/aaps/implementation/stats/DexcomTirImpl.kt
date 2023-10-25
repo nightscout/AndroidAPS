@@ -10,11 +10,13 @@ import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.implementation.R
+import dagger.Reusable
 import java.util.Calendar
 import kotlin.math.pow
 import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
+@Reusable
 class DexcomTirImpl : DexcomTIR {
 
     private var veryLow = 0

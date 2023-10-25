@@ -6,10 +6,10 @@ import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.main.extensions.toTemporaryBasal
+import dagger.Reusable
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
+@Reusable
 class ProcessedTbrEbDataImpl @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val activePlugin: ActivePlugin,
