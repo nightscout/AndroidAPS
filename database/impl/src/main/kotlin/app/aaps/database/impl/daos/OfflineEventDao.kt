@@ -35,10 +35,6 @@ internal interface OfflineEventDao : TraceableDao<OfflineEvent> {
     @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE unlikely(timestamp BETWEEN :start AND :end) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getOfflineEventDataFromTimeToTime(start: Long, end: Long): Single<List<OfflineEvent>>
 
-    // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE unlikely(id > :id) AND likely(referenceId IS NULL) OR id IN (SELECT DISTINCT referenceId FROM $TABLE_OFFLINE_EVENTS WHERE id > :id) ORDER BY id ASC")
-    fun getModifiedFrom(id: Long): Single<List<OfflineEvent>>
-
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE id > :id ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfter(id: Long): Maybe<OfflineEvent>

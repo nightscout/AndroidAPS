@@ -48,10 +48,6 @@ internal interface ProfileSwitchDao : ProfileSwitchDaoWorkaround {
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(timestamp >= :timestamp) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getProfileSwitchDataFromTime(timestamp: Long): Single<List<ProfileSwitch>>
 
-    // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE unlikely(id > :id) AND likely(referenceId IS NULL) OR id IN (SELECT DISTINCT referenceId FROM $TABLE_PROFILE_SWITCHES WHERE id > :id) ORDER BY id ASC")
-    fun getModifiedFrom(id: Long): Single<List<ProfileSwitch>>
-
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_PROFILE_SWITCHES WHERE id > :id ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfter(id: Long): Maybe<ProfileSwitch>

@@ -31,10 +31,6 @@ internal interface FoodDao : TraceableDao<Food> {
     @Query("SELECT * FROM $TABLE_FOODS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id DESC")
     fun getFoodData(): Single<List<Food>>
 
-    // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_FOODS WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_FOODS WHERE id > :id) ORDER BY id ASC")
-    fun getModifiedFrom(id: Long): Single<List<Food>>
-
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_FOODS WHERE id > :id ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfter(id: Long): Maybe<Food>

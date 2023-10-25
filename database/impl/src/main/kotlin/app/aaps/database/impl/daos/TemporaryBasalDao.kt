@@ -44,9 +44,6 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE unlikely(temporaryId = :temporaryId) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL)")
     fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): TemporaryBasal?
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
-    fun getTemporaryBasalActiveAt(timestamp: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Maybe<TemporaryBasal>
-
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getTemporaryBasalActiveAt(timestamp: Long): Maybe<TemporaryBasal>
 
@@ -61,9 +58,6 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getTemporaryBasalDataIncludingInvalidFromTime(timestamp: Long): Single<List<TemporaryBasal>>
-
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE referenceId = :id ORDER BY id DESC LIMIT 1")
-    fun getLastHistoryRecord(id: Long): TemporaryBasal?
 
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE unlikely(id > :id) AND likely(pumpId IS NOT NULL) ORDER BY id ASC limit 1")

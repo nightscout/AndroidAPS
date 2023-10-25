@@ -39,16 +39,13 @@ internal interface BolusDao : TraceableDao<Bolus> {
     fun findByPumpTempIds(temporaryId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Bolus?
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE likely(isValid = 1) AND type <> :exclude AND likely(referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
-    fun getLastBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Bolus?
-
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE likely(isValid = 1) AND type <> :exclude AND likely(referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
-    fun getLastBolusRecordMaybe(exclude: Bolus.Type = Bolus.Type.PRIMING): Maybe<Bolus>
+    fun getLastBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Maybe<Bolus>
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE likely(isValid = 1) AND type == :only AND likely(referenceId IS NULL) ORDER BY timestamp DESC LIMIT 1")
     fun getLastBolusRecordOfType(only: Bolus.Type): Maybe<Bolus>
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE likely(isValid = 1) AND unlikely(type <> :exclude) AND unlikely(referenceId IS NULL) ORDER BY timestamp ASC LIMIT 1")
-    fun getOldestBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Bolus?
+    fun getOldestBolusRecord(exclude: Bolus.Type = Bolus.Type.PRIMING): Maybe<Bolus>
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE likely(isValid = 1) AND unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY id DESC")
     fun getBolusesFromTime(timestamp: Long): Single<List<Bolus>>

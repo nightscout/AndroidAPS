@@ -38,9 +38,6 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(endId = :endPumpId) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL)")
     fun findByPumpEndIds(endPumpId: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): ExtendedBolus?
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(pumpType = :pumpType) AND likely(pumpSerial = :pumpSerial) AND likely(referenceId IS NULL) AND unlikely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
-    fun getExtendedBolusActiveAt(timestamp: Long, pumpType: InterfaceIDs.PumpType, pumpSerial: String): Maybe<ExtendedBolus>
-
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp <= :timestamp) AND unlikely((timestamp + duration) > :timestamp) AND likely(referenceId IS NULL) AND likely(isValid = 1) ORDER BY timestamp DESC LIMIT 1")
     fun getExtendedBolusActiveAt(timestamp: Long): Maybe<ExtendedBolus>
 
@@ -52,10 +49,6 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun getExtendedBolusDataIncludingInvalidFromTime(timestamp: Long): Single<List<ExtendedBolus>>
-
-    // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_EXTENDED_BOLUSES WHERE id > :id) ORDER BY id ASC")
-    fun getModifiedFrom(id: Long): Single<List<ExtendedBolus>>
 
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE id > :id ORDER BY id ASC limit 1")

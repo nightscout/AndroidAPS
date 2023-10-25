@@ -5,7 +5,6 @@ import androidx.room.Query
 import app.aaps.database.entities.APSResult
 import app.aaps.database.entities.TABLE_APS_RESULTS
 
-@Suppress("FunctionName")
 @Dao
 internal interface APSResultDao : TraceableDao<APSResult> {
 

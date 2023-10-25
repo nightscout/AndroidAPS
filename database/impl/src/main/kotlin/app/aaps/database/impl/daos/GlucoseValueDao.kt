@@ -40,13 +40,6 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(timestamp BETWEEN :start AND :end) AND likely(isValid = 1) AND likely(referenceId IS NULL) AND likely(value >= 39) ORDER BY timestamp ASC")
     fun compatGetBgReadingsDataFromTime(start: Long, end: Long): Single<List<GlucoseValue>>
 
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(id > :lastId) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
-    fun getDataFromId(lastId: Long): Single<List<GlucoseValue>>
-
-    // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE unlikely(id > :id) AND likely(referenceId IS NULL) OR id IN (SELECT DISTINCT referenceId FROM $TABLE_GLUCOSE_VALUES WHERE id > :id) ORDER BY id ASC")
-    fun getModifiedFrom(id: Long): Single<List<GlucoseValue>>
-
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE id > :id ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfter(id: Long): Maybe<GlucoseValue>

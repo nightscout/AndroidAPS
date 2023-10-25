@@ -49,10 +49,6 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE unlikely(timestamp BETWEEN :from AND :to) AND likely(isValid = 1) AND likely(referenceId IS NULL) ORDER BY timestamp ASC")
     fun compatGetTherapyEventDataFromToTime(from: Long, to: Long): Single<List<TherapyEvent>>
 
-    // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE unlikely(id > :id) AND likely(referenceId IS NULL) OR id IN (SELECT DISTINCT referenceId FROM $TABLE_THERAPY_EVENTS WHERE id > :id) ORDER BY id ASC")
-    fun getModifiedFrom(id: Long): Single<List<TherapyEvent>>
-
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE id > :id ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfter(id: Long): Maybe<TherapyEvent>

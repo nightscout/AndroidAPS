@@ -113,6 +113,7 @@ class PersistenceLayerImpl @Inject constructor(
     private val config: Config
 ) : PersistenceLayer {
 
+    @Suppress("unused")
     private fun <S, D> Single<ValueWrapper<S>>.fromDb(converter: S.() -> D): Single<ValueWrapper<D>> =
         this.map { wrapper ->
             when (wrapper) {
@@ -134,8 +135,8 @@ class PersistenceLayerImpl @Inject constructor(
     override fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = repository.cleanupDatabase(keepDays, deleteTrackedChanges)
 
     // BS
-    override fun getNewestBolus(): BS? = repository.getNewestBolus()?.fromDb()
-    override fun getOldestBolus(): BS? = repository.getOldestBolus()?.fromDb()
+    override fun getNewestBolus(): BS? = repository.getNewestBolus().blockingGet()?.fromDb()
+    override fun getOldestBolus(): BS? = repository.getOldestBolus().blockingGet()?.fromDb()
 
     override fun getNewestBolusOfType(type: BS.Type): BS? =
         repository.getLastBolusRecordOfType(type.toDb()).blockingGet()?.fromDb()

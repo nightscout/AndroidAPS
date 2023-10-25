@@ -38,10 +38,6 @@ internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult
     @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY id DESC")
     fun getBolusCalculatorResultsIncludingInvalidFromTime(timestamp: Long): Single<List<BolusCalculatorResult>>
 
-    // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE unlikely(id > :id) AND likely(referenceId IS NULL) OR id IN (SELECT DISTINCT referenceId FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE id > :id) ORDER BY id ASC")
-    fun getModifiedFrom(id: Long): Single<List<BolusCalculatorResult>>
-
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE id > :id ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfter(id: Long): Maybe<BolusCalculatorResult>

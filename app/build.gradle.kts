@@ -189,7 +189,6 @@ dependencies {
     implementation(project(":plugins:source"))
     implementation(project(":plugins:sync"))
     implementation(project(":implementation"))
-    implementation(project(":database:entities"))
     implementation(project(":database:impl"))
     implementation(project(":database:persistence"))
     implementation(project(":pump:combo"))

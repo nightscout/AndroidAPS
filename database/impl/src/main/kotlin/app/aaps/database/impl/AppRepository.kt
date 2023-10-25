@@ -148,11 +148,6 @@ class AppRepository @Inject internal constructor(
     fun findBgReadingByNSId(nsId: String): GlucoseValue? =
         database.glucoseValueDao.findByNSId(nsId)
 
-    @Suppress("unused")
-    fun getModifiedBgReadingsDataFromId(lastId: Long): Single<List<GlucoseValue>> =
-        database.glucoseValueDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getLastGlucoseValueId(): Long? =
         database.glucoseValueDao.getLastId()
 
@@ -251,11 +246,6 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    @Suppress("unused")
-    fun getModifiedProfileSwitchDataFromId(lastId: Long): Single<List<ProfileSwitch>> =
-        database.profileSwitchDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getProfileSwitchActiveAt(timestamp: Long): ProfileSwitch? {
         val tps = database.profileSwitchDao.getTemporaryProfileSwitchActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
@@ -276,9 +266,6 @@ class AppRepository @Inject internal constructor(
     fun getAllProfileSwitches(): Single<List<ProfileSwitch>> =
         database.profileSwitchDao.getAllProfileSwitches()
             .subscribeOn(Schedulers.io())
-
-    fun deleteAllProfileSwitches() =
-        database.profileSwitchDao.deleteAllEntries()
 
     fun getProfileSwitchesFromTime(timestamp: Long, ascending: Boolean): Single<List<ProfileSwitch>> =
         database.profileSwitchDao.getProfileSwitchDataFromTime(timestamp)
@@ -316,11 +303,6 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    @Suppress("unused")
-    fun getModifiedEffectiveProfileSwitchDataFromId(lastId: Long): Single<List<EffectiveProfileSwitch>> =
-        database.effectiveProfileSwitchDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun createEffectiveProfileSwitch(profileSwitch: EffectiveProfileSwitch) {
         database.effectiveProfileSwitchDao.insert(profileSwitch)
     }
@@ -348,9 +330,6 @@ class AppRepository @Inject internal constructor(
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun deleteAllEffectiveProfileSwitches() =
-        database.effectiveProfileSwitchDao.deleteAllEntries()
-
     fun getLastEffectiveProfileSwitchId(): Long? =
         database.effectiveProfileSwitchDao.getLastId()
 
@@ -377,11 +356,6 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    @Suppress("unused")
-    fun getModifiedTherapyEventDataFromId(lastId: Long): Single<List<TherapyEvent>> =
-        database.therapyEventDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getTherapyEventDataFromTime(timestamp: Long, ascending: Boolean): Single<List<TherapyEvent>> =
         database.therapyEventDao.getTherapyEventDataFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
@@ -396,13 +370,6 @@ class AppRepository @Inject internal constructor(
         database.therapyEventDao.getTherapyEventDataIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
-
-    @Suppress("unused")
-    fun getValidTherapyEventsByType(type: TherapyEvent.Type): List<TherapyEvent> =
-        database.therapyEventDao.getValidByType(type)
-
-    fun deleteAllTherapyEventsEntries() =
-        database.therapyEventDao.deleteAllEntries()
 
     fun getLastTherapyRecordUpToNow(type: TherapyEvent.Type): Maybe<TherapyEvent> =
         database.therapyEventDao.getLastTherapyRecord(type, System.currentTimeMillis())
@@ -435,18 +402,9 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    @Suppress("unused")
-    fun getModifiedFoodDataFromId(lastId: Long): Single<List<Food>> =
-        database.foodDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getFoodData(): Single<List<Food>> =
         database.foodDao.getFoodData()
             .subscribeOn(Schedulers.io())
-
-    @Suppress("unused")
-    fun deleteAllFoods() =
-        database.foodDao.deleteAllEntries()
 
     fun getLastFoodId(): Long? =
         database.foodDao.getLastId()
@@ -474,20 +432,17 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    fun getNewestBolus(): Bolus? =
+    fun getNewestBolus(): Maybe<Bolus> =
         database.bolusDao.getLastBolusRecord()
-
-    fun getLastBolusRecordWrapped(): Single<ValueWrapper<Bolus>> =
-        database.bolusDao.getLastBolusRecordMaybe()
             .subscribeOn(Schedulers.io())
-            .toWrappedSingle()
 
     fun getLastBolusRecordOfType(type: Bolus.Type): Maybe<Bolus> =
         database.bolusDao.getLastBolusRecordOfType(type)
             .subscribeOn(Schedulers.io())
 
-    fun getOldestBolus(): Bolus? =
+    fun getOldestBolus(): Maybe<Bolus> =
         database.bolusDao.getOldestBolusRecord()
+            .subscribeOn(Schedulers.io())
 
     fun getBolusesDataFromTime(timestamp: Long, ascending: Boolean): Single<List<Bolus>> =
         database.bolusDao.getBolusesFromTime(timestamp)
@@ -503,9 +458,6 @@ class AppRepository @Inject internal constructor(
         database.bolusDao.getBolusesIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
-
-    fun deleteAllBoluses() =
-        database.bolusDao.deleteAllEntries()
 
     fun getLastBolusId(): Long? =
         database.bolusDao.getLastId()
@@ -552,14 +504,6 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    @Suppress("unused")
-    fun getModifiedCarbsDataFromId(lastId: Long): Single<List<Carbs>> =
-        database.carbsDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
-    fun getLastCarbsRecord(): Carbs? =
-        database.carbsDao.getLastCarbsRecord()
-
     fun getLastCarbs(): Maybe<Carbs> =
         database.carbsDao.getLastCarbsRecordMaybe()
             .subscribeOn(Schedulers.io())
@@ -598,9 +542,6 @@ class AppRepository @Inject internal constructor(
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    fun deleteAllCarbs() =
-        database.carbsDao.deleteAllEntries()
-
     fun getLastCarbsId(): Long? =
         database.carbsDao.getLastId()
 
@@ -627,11 +568,6 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    @Suppress("unused")
-    fun getModifiedBolusCalculatorResultsDataFromId(lastId: Long): Single<List<BolusCalculatorResult>> =
-        database.bolusCalculatorResultDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getBolusCalculatorResultsDataFromTime(timestamp: Long, ascending: Boolean): Single<List<BolusCalculatorResult>> =
         database.bolusCalculatorResultDao.getBolusCalculatorResultsFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
@@ -641,9 +577,6 @@ class AppRepository @Inject internal constructor(
         database.bolusCalculatorResultDao.getBolusCalculatorResultsIncludingInvalidFromTime(timestamp)
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
-
-    fun deleteAllBolusCalculatorResults() =
-        database.bolusCalculatorResultDao.deleteAllEntries()
 
     fun getLastBolusCalculatorResultId(): Long? =
         database.bolusCalculatorResultDao.getLastId()
@@ -747,11 +680,6 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    @Suppress("unused")
-    fun getModifiedExtendedBolusDataFromId(lastId: Long): Single<List<ExtendedBolus>> =
-        database.extendedBolusDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getExtendedBolusActiveAt(timestamp: Long): Maybe<ExtendedBolus> =
         database.extendedBolusDao.getExtendedBolusActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
@@ -820,18 +748,9 @@ class AppRepository @Inject internal constructor(
             .map { if (!ascending) it.reversed() else it }
             .subscribeOn(Schedulers.io())
 
-    @Suppress("unused")
-    fun getModifiedOfflineEventsDataFromId(lastId: Long): Single<List<OfflineEvent>> =
-        database.offlineEventDao.getModifiedFrom(lastId)
-            .subscribeOn(Schedulers.io())
-
     fun getOfflineEventActiveAt(timestamp: Long): Maybe<OfflineEvent> =
         database.offlineEventDao.getOfflineEventActiveAt(timestamp)
             .subscribeOn(Schedulers.io())
-
-    @Suppress("unused")
-    fun deleteAllOfflineEventEntries() =
-        database.offlineEventDao.deleteAllEntries()
 
     fun getLastOfflineEventId(): Long? =
         database.offlineEventDao.getLastId()
@@ -867,7 +786,7 @@ class AppRepository @Inject internal constructor(
     )
 }
 
-@Suppress("USELESS_CAST")
+@Suppress("USELESS_CAST", "unused")
 inline fun <reified T : Any> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>> =
     this.map { ValueWrapper.Existing(it) as ValueWrapper<T> }
         .switchIfEmpty(Maybe.just(ValueWrapper.Absent()))

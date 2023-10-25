@@ -25,8 +25,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":database:entities"))
-
     api(Libs.Kotlin.stdlibJdk8)
     api(Libs.Kotlin.reflect)
     api(Libs.AndroidX.core)

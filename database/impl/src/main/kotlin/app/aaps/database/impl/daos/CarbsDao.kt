@@ -32,9 +32,6 @@ internal interface CarbsDao : TraceableDao<Carbs> {
     fun findByTimestamp(timestamp: Long): Carbs?
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id DESC LIMIT 1")
-    fun getLastCarbsRecord(): Carbs?
-
-    @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id DESC LIMIT 1")
     fun getLastCarbsRecordMaybe(): Maybe<Carbs>
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
@@ -51,13 +48,6 @@ internal interface CarbsDao : TraceableDao<Carbs> {
 
     @Query("SELECT * FROM $TABLE_CARBS WHERE unlikely(timestamp >= :timestamp) AND likely(referenceId IS NULL) ORDER BY id DESC")
     fun getCarbsIncludingInvalidFromTime(timestamp: Long): Single<List<Carbs>>
-
-    @Query("SELECT * FROM $TABLE_CARBS WHERE unlikely(timestamp BETWEEN :from AND :to) AND likely(referenceId IS NULL) ORDER BY id DESC")
-    fun getCarbsIncludingInvalidFromTimeToTime(from: Long, to: Long): Single<List<Carbs>>
-
-    // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_CARBS WHERE unlikely(id > :id) AND likely(referenceId IS NULL) OR id IN (SELECT DISTINCT referenceId FROM $TABLE_CARBS WHERE id > :id) ORDER BY id ASC")
-    fun getModifiedFrom(id: Long): Single<List<Carbs>>
 
     // for WS we need 1 record only
     @Query("SELECT * FROM $TABLE_CARBS WHERE id > :id ORDER BY id ASC limit 1")
