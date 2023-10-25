@@ -11,8 +11,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,14 +30,13 @@ class InsulinOrefBasePluginTest {
     var shortDiaNotificationSend = false
 
     inner class InsulinBaseTest(
-        injector: HasAndroidInjector,
         rh: ResourceHelper,
         profileFunction: ProfileFunction,
         rxBus: RxBus,
         aapsLogger: AAPSLogger,
         config: Config,
         hardLimits: HardLimits
-    ) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
+    ) : InsulinOrefBasePlugin(rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
         override fun sendShortDiaNotification(dia: Double) {
             shortDiaNotificationSend = true
@@ -68,14 +65,9 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var hardLimits: HardLimits
     @Mock lateinit var uiInteraction: UiInteraction
 
-    private var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
-        }
-    }
-
     @BeforeEach
     fun setUp() {
-        sut = InsulinBaseTest(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits)
+        sut = InsulinBaseTest(rh, profileFunction, rxBus, aapsLogger, config, hardLimits)
         `when`(hardLimits.minDia()).thenReturn(5.0)
     }
 

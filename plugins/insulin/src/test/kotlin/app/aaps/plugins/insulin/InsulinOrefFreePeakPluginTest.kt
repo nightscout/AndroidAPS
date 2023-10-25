@@ -9,8 +9,6 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -33,14 +31,9 @@ class InsulinOrefFreePeakPluginTest : TestBase() {
     @Mock lateinit var hardLimits: HardLimits
     @Mock lateinit var uiInteraction: UiInteraction
 
-    private var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
-        }
-    }
-
     @BeforeEach
     fun setup() {
-        sut = InsulinOrefFreePeakPlugin(injector, sp, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction)
+        sut = InsulinOrefFreePeakPlugin(sp, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction)
     }
 
     @Test

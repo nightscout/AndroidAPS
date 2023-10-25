@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -19,7 +18,6 @@ import java.io.File
 
 class MaintenancePluginTest : TestBase() {
 
-    @Mock lateinit var injector: HasAndroidInjector
     @Mock lateinit var context: Context
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
@@ -32,7 +30,7 @@ class MaintenancePluginTest : TestBase() {
 
     @BeforeEach
     fun mock() {
-        sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils)
+        sut = MaintenancePlugin(context, rh, sp, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")
         `when`(loggerUtils.logDirectory).thenReturn("src/test/assets/logger")
         `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/assets/logger"))

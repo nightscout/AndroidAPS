@@ -96,7 +96,7 @@ internal class LoadBgWorkerTest : TestBase() {
         dataWorkerStorage = DataWorkerStorage(context)
         receiverDelegate = ReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
         nsClientV3Plugin = NSClientV3Plugin(
-            injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
+            aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
             sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
             nsClientSource, storeDataForDb, decimalFormatter
         )

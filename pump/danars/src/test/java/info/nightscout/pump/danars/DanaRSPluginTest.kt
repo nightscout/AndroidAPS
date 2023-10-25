@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.main.constraints.ConstraintObject
-import dagger.android.AndroidInjector
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -61,7 +60,6 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
         danaRSPlugin =
             DanaRSPlugin(
-                { AndroidInjector { } },
                 aapsLogger,
                 aapsSchedulers,
                 rxBus,

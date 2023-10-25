@@ -7,8 +7,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.shared.tests.TestBase
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.BeforeEach
@@ -35,14 +33,9 @@ class GarminPluginTest : TestBase() {
     @Mock private lateinit var loopHub: LoopHub
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
 
-    private var injector: HasAndroidInjector = HasAndroidInjector {
-        AndroidInjector {
-        }
-    }
-
     @BeforeEach
     fun setup() {
-        gp = GarminPlugin(injector, aapsLogger, rh, loopHub, rxBus, sp)
+        gp = GarminPlugin(aapsLogger, rh, loopHub, rxBus, sp)
         gp.clock = clock
         `when`(loopHub.currentProfileName).thenReturn("Default")
     }

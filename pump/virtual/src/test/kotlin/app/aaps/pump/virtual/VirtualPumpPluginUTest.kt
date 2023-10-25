@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import dagger.android.AndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -25,7 +24,6 @@ class VirtualPumpPluginUTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepareMocks() {
         virtualPumpPlugin = VirtualPumpPlugin(
-            { AndroidInjector { } },
             aapsLogger, rxBus, fabricPrivacy, rh, aapsSchedulers, sp, profileFunction,
             commandQueue, pumpSync, config, dateUtil, processedDeviceStatusData, persistenceLayer, instantiator
         )

@@ -29,7 +29,7 @@ class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
     private val dia = 7.0
 
     @BeforeEach fun setup() {
-        insulin = InsulinLyumjevPlugin(injector, rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction)
+        insulin = InsulinLyumjevPlugin(rh, profileFunctions, rxBus, aapsLogger, config, hardLimits, uiInteraction)
         Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
     }

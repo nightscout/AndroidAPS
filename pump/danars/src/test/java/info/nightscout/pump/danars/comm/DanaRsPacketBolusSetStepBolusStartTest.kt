@@ -9,6 +9,7 @@ import app.aaps.core.main.constraints.ConstraintObject
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
+import info.nightscout.pump.danars.DanaRSPlugin
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -25,7 +26,7 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
 
-    private lateinit var danaRSPlugin: info.nightscout.pump.danars.DanaRSPlugin
+    private lateinit var danaRSPlugin: DanaRSPlugin
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -54,8 +55,7 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
     @BeforeEach
     fun mock() {
         danaRSPlugin =
-            info.nightscout.pump.danars.DanaRSPlugin(
-                { AndroidInjector { } },
+            DanaRSPlugin(
                 aapsLogger,
                 aapsSchedulers,
                 rxBus,

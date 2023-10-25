@@ -71,7 +71,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, persistenceLayer, sp, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
         sut =
             NSClientV3Plugin(
-                injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
+                aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
                 sp, receiverDelegate, config, dateUtil, dataSyncSelectorV3, persistenceLayer,
                 nsClientSource, storeDataForDb, decimalFormatter
             )

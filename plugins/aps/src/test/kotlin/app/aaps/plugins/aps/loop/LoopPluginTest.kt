@@ -37,7 +37,7 @@ class LoopPluginTest : TestBaseWithProfile() {
     @BeforeEach fun prepare() {
 
         loopPlugin = LoopPlugin(
-            injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
+            aapsLogger, aapsSchedulers, rxBus, sp, config,
             constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, processedTbrEbData, receiverStatusStore, fabricPrivacy, dateUtil, uel,
             persistenceLayer, runningConfiguration, uiInteraction, instantiator
         )

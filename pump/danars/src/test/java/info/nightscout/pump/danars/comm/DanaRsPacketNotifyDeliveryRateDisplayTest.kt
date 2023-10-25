@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
+import info.nightscout.pump.danars.DanaRSPlugin
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -26,7 +27,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
     @Mock lateinit var temporaryBasalStorage: TemporaryBasalStorage
     @Mock lateinit var pumpSync: PumpSync
 
-    private lateinit var danaRSPlugin: info.nightscout.pump.danars.DanaRSPlugin
+    private lateinit var danaRSPlugin: DanaRSPlugin
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -58,8 +59,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
     @BeforeEach
     fun mock() {
         danaRSPlugin =
-            info.nightscout.pump.danars.DanaRSPlugin(
-                packetInjector,
+            DanaRSPlugin(
                 aapsLogger,
                 aapsSchedulers,
                 rxBus,

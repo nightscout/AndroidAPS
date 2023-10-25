@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.tests.TestBaseWithProfile
-import dagger.android.HasAndroidInjector
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -32,10 +31,9 @@ ActionsTestBase : TestBaseWithProfile() {
     open class TestLoopPlugin(
         aapsLogger: AAPSLogger,
         rh: ResourceHelper,
-        injector: HasAndroidInjector,
         pluginDescription: PluginDescription
     ) : PluginBase(
-        pluginDescription, aapsLogger, rh, injector
+        pluginDescription, aapsLogger, rh
     ), Loop {
 
         private var suspended = false

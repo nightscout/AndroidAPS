@@ -130,14 +130,14 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
-        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction, instantiator)
+        comboPlugin = ComboPlugin(aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction, instantiator)
         danaRPlugin = DanaRPlugin(
-            injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
+            aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
             uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
         )
         danaRSPlugin =
             DanaRSPlugin(
-                injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction,
+                aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction,
                 sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
                 fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
@@ -162,7 +162,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             )
         safetyPlugin =
             SafetyPlugin(
-                injector, aapsLogger, rh, sp, constraintChecker, activePlugin, hardLimits,
+                aapsLogger, rh, sp, constraintChecker, activePlugin, hardLimits,
                 config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter
             )
         val constraintsPluginsList = ArrayList<PluginBase>()
