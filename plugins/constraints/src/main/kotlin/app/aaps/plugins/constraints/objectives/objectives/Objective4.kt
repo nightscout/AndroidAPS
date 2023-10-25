@@ -21,9 +21,9 @@ class Objective4(injector: HasAndroidInjector) : Objective(injector, "maxbasal",
             object : Task(this, R.string.objectives_maxbasal_gate) {
                 override fun isCompleted(): Boolean {
                     val profile = profileFunction.getProfile() ?: return false
-                    val maxBasalSet = (activePlugin.activeAPS as PluginConstraints).applyBasalConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger), profile)
+                    val maxBasalSet = sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 0.0)
                     val maxDailyBasal = profile.getMaxDailyBasal()
-                    return maxBasalSet.value() > 2.8 * maxDailyBasal
+                    return maxBasalSet > 2.8 * maxDailyBasal
                 }
             }.learned(Learned(R.string.objectives_maxbasal_learned))
         )
