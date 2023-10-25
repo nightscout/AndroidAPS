@@ -5,7 +5,6 @@ import app.aaps.core.data.db.TE
 import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.isOlderThan
 import dagger.Reusable
 import javax.inject.Inject
 

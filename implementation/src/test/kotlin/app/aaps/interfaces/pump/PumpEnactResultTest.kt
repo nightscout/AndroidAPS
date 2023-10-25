@@ -1,8 +1,8 @@
 package app.aaps.interfaces.pump
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
-import app.aaps.core.main.pump.toHtml
 import app.aaps.implementation.pump.PumpEnactResultObject
+import app.aaps.plugins.aps.extensions.toHtml
 import app.aaps.plugins.aps.loop.extensions.json
 import app.aaps.pump.virtual.extensions.toText
 import app.aaps.shared.tests.TestBaseWithProfile

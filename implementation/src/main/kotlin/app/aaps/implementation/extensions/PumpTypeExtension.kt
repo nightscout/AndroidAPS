@@ -1,4 +1,4 @@
-package app.aaps.core.main.pump
+package app.aaps.implementation.extensions
 
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Sources

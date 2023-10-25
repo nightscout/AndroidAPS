@@ -1,11 +1,11 @@
-package app.aaps.plugins.main.extensions
+package app.aaps.implementation.extensions
 
 import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
-import app.aaps.core.main.extensions.isOlderThan
+import app.aaps.implementation.pump.isOlderThan
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

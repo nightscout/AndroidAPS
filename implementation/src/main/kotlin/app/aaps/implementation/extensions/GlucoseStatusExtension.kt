@@ -1,4 +1,4 @@
-package app.aaps.core.main.iob
+package app.aaps.implementation.extensions
 
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.interfaces.utils.DecimalFormatter

@@ -1,4 +1,4 @@
-package app.aaps.core.main.pump
+package app.aaps.plugins.aps.extensions
 
 import app.aaps.core.interfaces.pump.PumpEnactResult
 import app.aaps.core.interfaces.resources.ResourceHelper

@@ -7,8 +7,8 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.main.iob.asRounded
-import app.aaps.core.main.iob.log
+import app.aaps.implementation.extensions.asRounded
+import app.aaps.implementation.extensions.log
 import dagger.Reusable
 import javax.inject.Inject
 import kotlin.math.roundToLong

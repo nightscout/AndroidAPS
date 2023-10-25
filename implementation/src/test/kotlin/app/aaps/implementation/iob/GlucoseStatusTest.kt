@@ -7,8 +7,8 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.iob.IobCobCalculator
-import app.aaps.core.main.iob.asRounded
-import app.aaps.core.main.iob.log
+import app.aaps.implementation.extensions.asRounded
+import app.aaps.implementation.extensions.log
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
