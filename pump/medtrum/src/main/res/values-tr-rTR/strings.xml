@@ -112,6 +112,8 @@
     <string name="alarm_setting_summary">Tercih ettiğiniz pompa alarm ayarlarını seçin.</string>
     <string name="pump_warning_notification_title">Pompa uyarısı hakkında bildirim</string>
     <string name="pump_warning_notification_summary">Kritik olmayan pompa uyarılarıyla ilgili bildirimi göster: düşük pil, düşük rezervuar (20 birim) ve yakında süresi doluyor. Pompa alarmları sessize ayarlandığında etkin bırakılması önerilir.</string>
+    <string name="pump_warning_expiry_hour_title">Pompa sona erme süresi uyarısı [hours]</string>
+    <string name="pump_warning_expiry_hour_summary">Etkinleştirmeden sonra belirtilen saatte bildirimi göster.</string>
     <string name="patch_expiration_title">Patch süre sonu</string>
     <string name="patch_expiration_summary">Etkinleştirildiğinde, patch 3 gün sonra sona erecek ve bunun ardından 8 saatlik bir ek süre tanınacaktır.</string>
     <string name="hourly_max_insulin_title">Saatlik Maksimum insülin</string>
