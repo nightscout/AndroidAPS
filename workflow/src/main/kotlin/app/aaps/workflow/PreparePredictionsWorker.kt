@@ -4,20 +4,19 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.time.T
+import app.aaps.core.graph.data.DataPointWithLabelInterface
+import app.aaps.core.graph.data.GlucoseValueDataPoint
+import app.aaps.core.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.GlucoseValueDataPoint
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
-import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
-import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import javax.inject.Inject
@@ -30,7 +29,6 @@ class PreparePredictionsWorker(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
-    @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var overviewData: OverviewData
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var config: Config

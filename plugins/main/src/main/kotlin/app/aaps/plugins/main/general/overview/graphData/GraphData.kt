@@ -4,29 +4,35 @@ import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.graph.data.AreaGraphSeries
+import app.aaps.core.graph.data.BarGraphSeries
+import app.aaps.core.graph.data.BolusDataPoint
+import app.aaps.core.graph.data.DataPointWithLabelInterface
+import app.aaps.core.graph.data.DeviationDataPoint
+import app.aaps.core.graph.data.DoubleDataPoint
+import app.aaps.core.graph.data.EffectiveProfileSwitchDataPoint
+import app.aaps.core.graph.data.FixedLineGraphSeries
+import app.aaps.core.graph.data.GlucoseValueDataPoint
+import app.aaps.core.graph.data.LineGraphSeries
+import app.aaps.core.graph.data.PointsWithLabelGraphSeries
+import app.aaps.core.graph.data.ScaledDataPoint
+import app.aaps.core.graph.data.TimeAsXAxisLabelFormatter
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.main.graph.OverviewData
-import app.aaps.core.main.graph.data.BolusDataPoint
-import app.aaps.core.main.graph.data.EffectiveProfileSwitchDataPoint
-import app.aaps.core.main.graph.data.GlucoseValueDataPoint
 import app.aaps.core.ui.toast.ToastUtils
-import app.aaps.interfaces.graph.data.AreaGraphSeries
-import app.aaps.interfaces.graph.data.DoubleDataPoint
-import app.aaps.interfaces.graph.data.TimeAsXAxisLabelFormatter
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
-import com.jjoe64.graphview.series.LineGraphSeries
 import com.jjoe64.graphview.series.Series
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
 
-class GraphData(
+@Suppress("UNCHECKED_CAST") class GraphData(
     injector: HasAndroidInjector,
     private val graph: GraphView,
     private val overviewData: OverviewData
@@ -48,7 +54,7 @@ class GraphData(
     }
 
     fun addBucketedData() {
-        addSeries(overviewData.bucketedGraphSeries)
+        addSeries(overviewData.bucketedGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
     }
 
     fun addBgReadings(addPredictions: Boolean, context: Context?) {
@@ -56,9 +62,9 @@ class GraphData(
             if (units == GlucoseUnit.MGDL) 180.0 else 10.0
         } else overviewData.maxBgValue
         minY = 0.0
-        addSeries(overviewData.bgReadingGraphSeries)
-        if (addPredictions) addSeries(overviewData.predictionsGraphSeries)
-        overviewData.bgReadingGraphSeries.setOnDataPointTapListener { _, dataPoint ->
+        addSeries(overviewData.bgReadingGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
+        if (addPredictions) addSeries(overviewData.predictionsGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
+        (overviewData.bgReadingGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>).setOnDataPointTapListener { _, dataPoint ->
             if (dataPoint is GlucoseValueDataPoint) ToastUtils.infoToast(context, dataPoint.label)
         }
     }
@@ -77,32 +83,38 @@ class GraphData(
 
     fun addBasals() {
         overviewData.basalScale.multiplier = 1.0 // get unscaled Y-values for max calculation
-        var maxBasalValue = maxOf(0.1, overviewData.baseBasalGraphSeries.highestValueY, overviewData.tempBasalGraphSeries.highestValueY)
-        maxBasalValue = maxOf(maxBasalValue, overviewData.basalLineGraphSeries.highestValueY, overviewData.absoluteBasalGraphSeries.highestValueY)
-        addSeries(overviewData.baseBasalGraphSeries)
-        addSeries(overviewData.tempBasalGraphSeries)
-        addSeries(overviewData.basalLineGraphSeries)
-        addSeries(overviewData.absoluteBasalGraphSeries)
+        var maxBasalValue =
+            maxOf(0.1, (overviewData.baseBasalGraphSeries as LineGraphSeries<ScaledDataPoint>).highestValueY, (overviewData.tempBasalGraphSeries as LineGraphSeries<ScaledDataPoint>).highestValueY)
+        maxBasalValue =
+            maxOf(
+                maxBasalValue,
+                (overviewData.basalLineGraphSeries as LineGraphSeries<ScaledDataPoint>).highestValueY,
+                (overviewData.absoluteBasalGraphSeries as LineGraphSeries<ScaledDataPoint>).highestValueY
+            )
+        addSeries(overviewData.baseBasalGraphSeries as LineGraphSeries<ScaledDataPoint>)
+        addSeries(overviewData.tempBasalGraphSeries as LineGraphSeries<ScaledDataPoint>)
+        addSeries(overviewData.basalLineGraphSeries as LineGraphSeries<ScaledDataPoint>)
+        addSeries(overviewData.absoluteBasalGraphSeries as LineGraphSeries<ScaledDataPoint>)
         maxY = max(maxY, defaultValueHelper.determineHighLine())
         val scale = defaultValueHelper.determineLowLine() / maxY / 1.2
         overviewData.basalScale.multiplier = maxY * scale / maxBasalValue
     }
 
     fun addTargetLine() {
-        addSeries(overviewData.temporaryTargetSeries)
+        addSeries(overviewData.temporaryTargetSeries as LineGraphSeries<DataPoint>)
     }
 
     fun addTreatments(context: Context?) {
         maxY = maxOf(maxY, overviewData.maxTreatmentsValue)
-        addSeries(overviewData.treatmentsSeries)
-        overviewData.treatmentsSeries.setOnDataPointTapListener { _, dataPoint ->
+        addSeries(overviewData.treatmentsSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
+        (overviewData.treatmentsSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>).setOnDataPointTapListener { _, dataPoint ->
             if (dataPoint is BolusDataPoint) ToastUtils.infoToast(context, dataPoint.label)
         }
     }
 
     fun addEps(context: Context?, scale: Double) {
-        addSeries(overviewData.epsSeries)
-        overviewData.epsSeries.setOnDataPointTapListener { _, dataPoint ->
+        addSeries(overviewData.epsSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
+        (overviewData.epsSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>).setOnDataPointTapListener { _, dataPoint ->
             if (dataPoint is EffectiveProfileSwitchDataPoint) ToastUtils.infoToast(context, dataPoint.data.originalCustomizedName)
         }
         overviewData.epsScale.multiplier = maxY * scale / overviewData.maxEpsValue
@@ -110,12 +122,12 @@ class GraphData(
 
     fun addTherapyEvents() {
         maxY = maxOf(maxY, overviewData.maxTherapyEventValue)
-        addSeries(overviewData.therapyEventSeries)
+        addSeries(overviewData.therapyEventSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
     }
 
     fun addActivity(scale: Double) {
-        addSeries(overviewData.activitySeries)
-        addSeries(overviewData.activityPredictionSeries)
+        addSeries(overviewData.activitySeries as FixedLineGraphSeries<ScaledDataPoint>)
+        addSeries(overviewData.activityPredictionSeries as FixedLineGraphSeries<ScaledDataPoint>)
         overviewData.actScale.multiplier = maxY * scale / overviewData.maxIAValue
     }
 
@@ -126,8 +138,8 @@ class GraphData(
             minY = -overviewData.maxBGIValue
         }
         overviewData.bgiScale.multiplier = maxY * scale / overviewData.maxBGIValue
-        addSeries(overviewData.minusBgiSeries)
-        addSeries(overviewData.minusBgiHistSeries)
+        addSeries(overviewData.minusBgiSeries as FixedLineGraphSeries<ScaledDataPoint>)
+        addSeries(overviewData.minusBgiHistSeries as FixedLineGraphSeries<ScaledDataPoint>)
     }
 
     // scale in % of vertical size (like 0.3)
@@ -137,8 +149,8 @@ class GraphData(
             minY = -overviewData.maxIobValueFound
         }
         overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
-        addSeries(overviewData.iobSeries)
-        addSeries(overviewData.iobPredictions1Series)
+        addSeries(overviewData.iobSeries as FixedLineGraphSeries<ScaledDataPoint>)
+        addSeries(overviewData.iobPredictions1Series as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
         //addSeries(overviewData.iobPredictions2Series)
     }
 
@@ -149,7 +161,7 @@ class GraphData(
             minY = -overviewData.maxIobValueFound
         }
         overviewData.iobScale.multiplier = maxY * scale / overviewData.maxIobValueFound
-        addSeries(overviewData.absIobSeries)
+        addSeries(overviewData.absIobSeries as FixedLineGraphSeries<ScaledDataPoint>)
     }
 
     // scale in % of vertical size (like 0.3)
@@ -159,8 +171,8 @@ class GraphData(
             minY = 0.0
         }
         overviewData.cobScale.multiplier = maxY * scale / overviewData.maxCobValueFound
-        addSeries(overviewData.cobSeries)
-        addSeries(overviewData.cobMinFailOverSeries)
+        addSeries(overviewData.cobSeries as FixedLineGraphSeries<ScaledDataPoint>)
+        addSeries(overviewData.cobMinFailOverSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
     }
 
     // scale in % of vertical size (like 0.3)
@@ -170,7 +182,7 @@ class GraphData(
             minY = -maxY
         }
         overviewData.devScale.multiplier = maxY * scale / overviewData.maxDevValueFound
-        addSeries(overviewData.deviationsSeries)
+        addSeries(overviewData.deviationsSeries as BarGraphSeries<DeviationDataPoint>)
     }
 
     // scale in % of vertical size (like 0.3)
@@ -184,7 +196,7 @@ class GraphData(
             overviewData.ratioScale.multiplier = maxY * scale / max(overviewData.maxRatioValueFound, abs(overviewData.minRatioValueFound))
             overviewData.ratioScale.shift = 0.0
         }
-        addSeries(overviewData.ratioSeries)
+        addSeries(overviewData.ratioSeries as LineGraphSeries<ScaledDataPoint>)
     }
 
     // scale in % of vertical size (like 0.3)
@@ -204,8 +216,8 @@ class GraphData(
         }
         overviewData.dsMaxScale.multiplier = graphMaxY * scale / overviewData.maxFromMaxValueFound
         overviewData.dsMinScale.multiplier = graphMaxY * scale / overviewData.maxFromMinValueFound
-        addSeries(overviewData.dsMaxSeries)
-        addSeries(overviewData.dsMinSeries)
+        addSeries(overviewData.dsMaxSeries as LineGraphSeries<ScaledDataPoint>)
+        addSeries(overviewData.dsMinSeries as LineGraphSeries<ScaledDataPoint>)
     }
 
     // scale in % of vertical size (like 0.3)
@@ -262,12 +274,12 @@ class GraphData(
     }
 
     fun addHeartRate(useForScale: Boolean, scale: Double) {
-        val maxHR = overviewData.heartRateGraphSeries.highestValueY
+        val maxHR = (overviewData.heartRateGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>).highestValueY
         if (useForScale) {
             minY = 30.0
             maxY = maxHR
         }
-        addSeries(overviewData.heartRateGraphSeries)
+        addSeries(overviewData.heartRateGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
         overviewData.heartRateScale.multiplier = maxY * scale / maxHR
     }
 }

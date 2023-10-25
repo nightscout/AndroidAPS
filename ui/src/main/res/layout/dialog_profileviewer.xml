@@ -249,7 +249,7 @@
 
         </LinearLayout>
 
-        <app.aaps.core.main.graph.IcProfileGraph
+        <app.aaps.core.graph.IcProfileGraph
             android:id="@+id/ic_graph"
             android:layout_width="match_parent"
             android:layout_height="100dip"
@@ -301,7 +301,7 @@
 
         </LinearLayout>
 
-        <app.aaps.core.main.graph.IsfProfileGraph
+        <app.aaps.core.graph.IsfProfileGraph
             android:id="@+id/isf_graph"
             android:layout_width="match_parent"
             android:layout_height="100dip"
@@ -388,7 +388,7 @@
 
         </LinearLayout>
 
-        <app.aaps.core.main.graph.BasalProfileGraph
+        <app.aaps.core.graph.BasalProfileGraph
             android:id="@+id/basal_graph"
             android:layout_width="match_parent"
             android:layout_height="100dip"
@@ -440,7 +440,7 @@
 
         </LinearLayout>
 
-        <app.aaps.core.main.graph.TargetBgProfileGraph
+        <app.aaps.core.graph.TargetBgProfileGraph
             android:id="@+id/target_graph"
             android:layout_width="match_parent"
             android:layout_height="100dip"

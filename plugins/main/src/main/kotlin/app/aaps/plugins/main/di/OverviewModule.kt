@@ -1,6 +1,8 @@
 package app.aaps.plugins.main.di
 
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
+import app.aaps.plugins.main.general.overview.OverviewDataImpl
 import app.aaps.plugins.main.general.overview.OverviewFragment
 import app.aaps.plugins.main.general.overview.OverviewMenusImpl
 import app.aaps.plugins.main.general.overview.graphData.GraphData
@@ -27,5 +29,6 @@ abstract class OverviewModule {
     interface Bindings {
 
         @Binds fun bindOverviewMenus(overviewMenusImpl: OverviewMenusImpl): OverviewMenus
+        @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
     }
 }

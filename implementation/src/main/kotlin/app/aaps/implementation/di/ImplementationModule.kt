@@ -33,7 +33,6 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.graph.OverviewData
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
 import app.aaps.implementation.db.ProcessedTbrEbDataImpl
@@ -42,7 +41,6 @@ import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.implementation.logging.LoggerUtilsImpl
 import app.aaps.implementation.logging.UserEntryLoggerImpl
 import app.aaps.implementation.overview.LastBgDataImpl
-import app.aaps.implementation.overview.OverviewDataImpl
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.implementation.profile.DefaultValueHelperImpl
 import app.aaps.implementation.profile.ProfileFunctionImpl
@@ -94,7 +92,6 @@ abstract class ImplementationModule {
 
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
-        @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
         @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData
         @Binds fun bindProcessedTbrEbData(pProcessedTbrEbData: ProcessedTbrEbDataImpl): ProcessedTbrEbData
         @Binds fun bindUserEntryLogger(userEntryLoggerImpl: UserEntryLoggerImpl): UserEntryLogger

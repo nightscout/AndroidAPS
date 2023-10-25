@@ -5,9 +5,9 @@ import androidx.work.WorkerParameters
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.main.events.EventIobCalculationProgress
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
 import kotlinx.coroutines.Dispatchers
 import java.security.spec.InvalidParameterSpecException
 import javax.inject.Inject

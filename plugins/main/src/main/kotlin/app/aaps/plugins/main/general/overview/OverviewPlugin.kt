@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.overview.Overview
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -23,7 +24,6 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.main.events.EventIobCalculationProgress
 import app.aaps.core.main.events.EventNewNotification
-import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.utils.extensions.putDouble
 import app.aaps.core.main.utils.extensions.putInt
 import app.aaps.core.main.utils.extensions.putString

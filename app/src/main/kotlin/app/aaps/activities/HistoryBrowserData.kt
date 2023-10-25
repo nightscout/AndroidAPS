@@ -12,8 +12,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.workflow.CalculationWorkflow
-import app.aaps.implementation.overview.OverviewDataImpl
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.plugins.main.general.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import javax.inject.Inject
 import javax.inject.Singleton

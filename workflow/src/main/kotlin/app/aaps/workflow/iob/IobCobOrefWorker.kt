@@ -23,9 +23,9 @@ import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.main.events.EventIobCalculationProgress
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers

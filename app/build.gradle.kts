@@ -170,6 +170,7 @@ dependencies {
     implementation(project(":shared:impl"))
     implementation(project(":core:data"))
     implementation(project(":core:main"))
+    implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:libraries"))

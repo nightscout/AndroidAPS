@@ -13,6 +13,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core:data"))
     implementation(project(":core:graphview"))
+    implementation(project(":core:interfaces"))
     implementation(project(":core:ui"))
 }

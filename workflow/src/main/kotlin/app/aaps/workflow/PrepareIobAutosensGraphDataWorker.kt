@@ -9,31 +9,31 @@ import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.graph.data.BarGraphSeries
+import app.aaps.core.graph.data.DataPointWithLabelInterface
+import app.aaps.core.graph.data.DeviationDataPoint
+import app.aaps.core.graph.data.FixedLineGraphSeries
+import app.aaps.core.graph.data.LineGraphSeries
+import app.aaps.core.graph.data.PointsWithLabelGraphSeries
+import app.aaps.core.graph.data.ScaledDataPoint
+import app.aaps.core.graph.data.Shape
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.graph.Scale
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.main.events.EventIobCalculationProgress
-import app.aaps.core.main.graph.OverviewData
 import app.aaps.core.main.iob.combine
 import app.aaps.core.main.iob.copy
 import app.aaps.core.main.utils.worker.LoggingWorker
-import app.aaps.core.main.workflow.CalculationWorkflow
 import app.aaps.core.utils.receivers.DataWorkerStorage
-import app.aaps.interfaces.graph.data.DataPointWithLabelInterface
-import app.aaps.interfaces.graph.data.DeviationDataPoint
-import app.aaps.interfaces.graph.data.FixedLineGraphSeries
-import app.aaps.interfaces.graph.data.PointsWithLabelGraphSeries
-import app.aaps.interfaces.graph.data.Scale
-import app.aaps.interfaces.graph.data.ScaledDataPoint
-import app.aaps.interfaces.graph.data.Shape
-import com.jjoe64.graphview.series.BarGraphSeries
-import com.jjoe64.graphview.series.LineGraphSeries
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlin.math.abs
@@ -272,7 +272,7 @@ class PrepareIobAutosensGraphDataWorker(
             data.overviewData.iobPredictions1Series = PointsWithLabelGraphSeries(Array(iobPrediction.size) { i -> iobPrediction[i] })
             aapsLogger.debug(LTag.AUTOSENS, "IOB prediction for AS=" + decimalFormatter.to2Decimal(lastAutosensResult.ratio) + ": " + data.iobCobCalculator.iobArrayToString(iobPredictionArray))
         } else {
-            data.overviewData.iobPredictions1Series = PointsWithLabelGraphSeries()
+            data.overviewData.iobPredictions1Series = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
         }
 
         // COB

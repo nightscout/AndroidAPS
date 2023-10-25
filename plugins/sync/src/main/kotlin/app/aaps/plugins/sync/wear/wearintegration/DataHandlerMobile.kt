@@ -56,7 +56,6 @@ import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.main.extensions.convertedToAbsolute
 import app.aaps.core.main.extensions.toStringShort
 import app.aaps.core.main.extensions.valueToUnits
-import app.aaps.core.main.graph.data.GlucoseValueDataPoint
 import app.aaps.core.main.iob.generateCOBString
 import app.aaps.core.main.iob.round
 import app.aaps.core.main.wizard.BolusWizard
@@ -73,7 +72,6 @@ import java.util.Date
 import java.util.LinkedList
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-import java.util.stream.Collectors
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -873,18 +871,16 @@ class DataHandlerMobile @Inject constructor(
         val finalLastRun = loop.lastRun
         if (finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
             val predArray = finalLastRun.constraintsProcessed!!.predictions
-                .stream().map { bg -> GlucoseValueDataPoint(bg, profileUtil, rh) }
-                .collect(Collectors.toList())
             if (predArray.isNotEmpty())
-                for (bg in predArray) if (bg.data.value > 39)
+                for (bg in predArray) if (bg.value > 39)
                     predictions.add(
                         EventData.SingleBg(
-                            timeStamp = bg.data.timestamp,
+                            timeStamp = bg.timestamp,
                             glucoseUnits = GlucoseUnit.MGDL.asText,
-                            sgv = bg.data.value,
+                            sgv = bg.value,
                             high = 0.0,
                             low = 0.0,
-                            color = bg.color(null)
+                            color = rh.gac(context, app.aaps.core.ui.R.attr.originalBgValueColor)
                         )
                     )
         }
