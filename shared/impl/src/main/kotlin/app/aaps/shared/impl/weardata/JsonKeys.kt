@@ -50,5 +50,8 @@ enum class JsonKeys(val key: String) {
     DYNPREF("dynPref"),
     DYNPREFCOLOR("dynPrefColor"),
     PREFKEY("prefKey"),
+    INVALIDTOPOFFSET("invalidTopOffset"),
+    INVALIDLEFTOFFSET("invalidLeftOffset"),
+    INVALIDROTATIONOFFSET("invalidRotationOffset"),
     DEFAULT("default")
 }

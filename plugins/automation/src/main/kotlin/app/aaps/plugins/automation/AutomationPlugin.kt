@@ -211,14 +211,14 @@ class AutomationPlugin @Inject constructor(
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
                     val o = array.getJSONObject(i)
-                    val event = AutomationEventObject(injector).fromJSON(o.toString(), i)
+                    val event = AutomationEventObject(injector).fromJSON(o.toString())
                     automationEvents.add(event)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
         else
-            automationEvents.add(AutomationEventObject(injector).fromJSON(event, 0))
+            automationEvents.add(AutomationEventObject(injector).fromJSON(event))
     }
 
     internal fun processActions() {
@@ -309,7 +309,6 @@ class AutomationPlugin @Inject constructor(
     @Synchronized
     fun add(event: AutomationEventObject) {
         automationEvents.add(event)
-        event.position = automationEvents.size - 1
         rxBus.send(EventAutomationDataChanged())
     }
 
@@ -336,14 +335,6 @@ class AutomationPlugin @Inject constructor(
     fun set(event: AutomationEventObject, index: Int) {
         automationEvents[index] = event
         rxBus.send(EventAutomationDataChanged())
-    }
-
-    @Synchronized
-    fun removeAt(index: Int) {
-        if (index >= 0 && index < automationEvents.size) {
-            automationEvents.removeAt(index)
-            rxBus.send(EventAutomationDataChanged())
-        }
     }
 
     @Synchronized
