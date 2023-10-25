@@ -117,7 +117,7 @@
     <string name="xdrip_local_broadcasts_title">Включить трансляции для xDrip+.</string>
     <!--    DataBroadcast-->
     <string name="data_broadcaster_short">DBRO</string>
-    <string name="data_broadcaster_description">Передавать данные на приложению Garmin\'s G-Watch Wear</string>
+    <string name="data_broadcaster_description">Передавать данные приложению Garmin\'s G-Watch Wear</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Подключение к устройству Garmin (Fenix, Edge, …)</string>
