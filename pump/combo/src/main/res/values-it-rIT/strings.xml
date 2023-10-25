@@ -29,7 +29,7 @@
     <string name="combo_notification_check_time_date">Necessario aggiornare orologio micro</string>
     <string name="combo_pump_tbr_cancelled_warrning">Avviso TBR CANCELLATO: confermato</string>
     <string name="combo_error_no_connection_no_bolus_delivered">Il micro potrebbe non essere raggiungibile. Nessun bolo erogato</string>
-    <string name="combo_error_no_bolus_delivered">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza, controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
+    <string name="combo_error_no_bolus_delivered">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
     <string name="combo_error_partial_bolus_delivered">Solo la quantità di %1$.2f U del bolo richiesto di %2$.2f U è stata erogata a causa di un errore. Controlla il micro per verificare quanto accaduto e intraprendi le azioni necessarie.</string>
     <string name="combo_error_bolus_verification_failed">Erogazione del bolo e verifica dello storico del micro fallite. Controlla il micro. Se è stato erogato un bolo, sarà aggiunto ai trattamenti durante la successiva connessione al micro.</string>
     <string name="combo_reservoir_level_insufficient_for_bolus">Insulina nel serbatoio insufficiente per erogare il bolo</string>
