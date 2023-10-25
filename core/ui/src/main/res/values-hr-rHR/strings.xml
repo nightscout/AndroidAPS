@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    General-->
+    <string name="refresh">Osvježi</string>
+    <string name="error">Greška</string>
+    <string name="profile_set_ok">Ažuriran bazalni profil u pumpi</string>
+    <string name="invalid_input">Nevažeći ulazni podaci</string>
+    <string name="bolus_delivering">Isporuka %1$.2f U</string>
+    <string name="constraint_applied">Primijenjeno ograničenje!</string>
+    <string name="tempbasals_iobtotal_label_string">Ukupni aktivni inzulin:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Pumpa nedostupna</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pumpa nije pokrenuta, profil nije postavljen!</string>
+    <string name="failed_update_basal_profile">Ažuriranje bazalnog profila nije uspjelo</string>
+    <string name="reload">Ponovno učitaj</string>
+    <string name="save">Spremi</string>
+    <string name="snooze">Snooze</string>
+    <string name="virtual_pump">Virtualna pumpa</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="result">Rezultat</string>
+    <string name="settings">Postavke</string>
+    <string name="configbuilder_insulin">Inzulin</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Glavna lozinka</string>
+    <string name="ue_export_to_csv">Izvoz korisničkih unosa u Excel (csv)</string>
+    <string name="confirm">Potvrdi</string>
+    <string name="pump">Pumpa</string>
+    <string name="missed_bg_readings">Propušteno očitanje razine glukoze u krvi</string>
+    <string name="treatments_iob_label_string">Aktivni inzulin:</string>
+    <string name="mute5min">Isključite zvuk na 5 minuta</string>
+    <string name="mute">Isključi zvuk</string>
+    <string name="success">Uspješno</string>
+    <string name="paused">Pauzirano</string>
+    <string name="tdd_total">TDD Total</string>
+    <string name="goingtodeliver">Isporučit ću %1$.2f U</string>
+    <string name="waitingforpump">Čekanje pumpe</string>
+    <string name="androidaps_start">AAPS je počeo</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d mins</string>
+    <string name="objectives">Ciljevi</string>
+    <string name="please_wait">Molimo pričekajte…</string>
+    <string name="stop">Zaustavi</string>
+    <string name="carbs">UH</string>
+    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="date">Datum</string>
+    <string name="units_label">Jedinice</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Bazal</string>
+    <string name="target_label">Cilj</string>
+    <string name="dia_long_label">Trajanje djelovanja inzulina</string>
+    <string name="ic_long_label">Omjer inzulina i ugljikohidrata</string>
+    <string name="isf_long_label">Faktor osjetljivosti na inzulin</string>
+    <string name="basal_long_label">Bazalna stopa</string>
+    <string name="target_long_label">Ciljana razina glukoze u krvi</string>
+    <string name="shortgram">g</string>
+    <string name="pump_time_updated">Vrijeme pumpe ažurirano</string>
+    <string name="exit">Izlaz</string>
+    <string name="iob">Aktivni inzulin</string>
+    <string name="cob">Aktivni UGH</string>
+    <string name="remove_button">Ukloniti</string>
+    <string name="bg_label">GUK</string>
+    <string name="calibration">Kalibracija</string>
+    <string name="alarminxmin">Uključi alarm za %1$d min</string>
+    <string name="treatmentdeliveryerror">Bolus je prijavio pogrešku. Ručno provjerite stvarni isporučeni iznos</string>
+    <string name="bolus_reminder">Podsjetnik za bolus</string>
+    <string name="duration_label">Trajanje</string>
+    <string name="shortgramm">g</string>
+    <string name="loopsuspended">Petlja suspendirana</string>
+    <string name="trend_arrow">Strelica trenda</string>
+    <string name="a11y_autosens_label">Auto sens</string>
+    <string name="required">potrebno</string>
+    <string name="a11y_arrow_double_down">brzo padajući</string>
+    <string name="a11y_arrow_single_down">padanje</string>
+    <string name="a11y_arrow_forty_five_down">polako padanje</string>
+    <string name="a11y_arrow_flat">stabilan</string>
+    <string name="a11y_arrow_forty_five_up">diže se polako</string>
+    <string name="a11y_arrow_single_up">rastuće</string>
+    <string name="a11y_arrow_double_up">brzo raste</string>
+    <string name="a11y_arrow_none">none</string>
+    <string name="a11y_arrow_unknown">nepoznato</string>
+    <string name="a11y_high">visoko</string>
+    <string name="a11y_inrange">u rasponu</string>
+    <string name="a11y_low">nisko</string>
+    <string name="average">Prosječno</string>
+    <string name="tir">TIR</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">UKLONITI</string>
+    <string name="activate_profile">Aktiviraj profil</string>
+    <string name="reset">reset</string>
+    <string name="profileswitch_ismissing">ProfileSwitch nedostaje. Promijenite profil ili pritisnite \"Aktiviraj profil\" u lokalnom profilu.</string>
+    <string name="profile">Profil</string>
+    <string name="select_for_removal">Odaberite za uklanjanje</string>
+    <string name="confirm_remove_multiple_items">Jeste li sigurni da želite ukloniti %1$d stavke</string>
+    <string name="overview_treatment_label">Tretman</string>
+    <string name="copytolocalprofile">Napraviti novi profil iz ovog profila?</string>
+    <string name="wear_wizard_settings">Postavke čarobnjaka</string>
+    <string name="bg_trend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">Aktivni UGH</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Bazalni aktivni inzulin</string>
+    <string name="invalid">GREŠKA</string>
+    <string name="login">Login</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Pogrešna lozinka</string>
+    <string name="wrongpin">Pogrešan PIN</string>
+    <string name="passwords_dont_match">Lozinke se ne podudaraju</string>
+    <string name="pin_dont_match">PIN-ovi se ne podudaraju</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Bazalne vrijednosti nisu usklađene sa satima: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Bazalna vrijednost zamijenjena minimalnom podržanom vrijednošću: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Bazalna vrijednost zamijenjena maksimalnom podržanom vrijednošću: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <!--    ProfileFunction-->
+    <string name="startprofile">Pokrenite profil %1$d%% na %2$d min</string>
+    <!--    APSResult-->
+    <string name="let_temp_basal_run">Pustite privremeni bazal da radi</string>
+    <string name="rate">Stopa</string>
+    <string name="duration">Trajanje</string>
+    <string name="reason">Razlog</string>
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <string name="careportal_profileswitch">Zamjena profila</string>
+    <string name="glucosetype_sensor">Senzor</string>
+    <string name="wear">Wear</string>
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <string name="percent">Postotak</string>
+    <string name="absolute">Apsolutna</string>
+    <string name="waitingforpumpresult">Čekanje rezultata</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g dodatnih ugljikohidrata potrebnih unutar %2$d minuta</string>
+    <!--    TDDStatsActivity-->
+    <string name="expweight">Eksponencijalno ponderirani TDD</string>
+    <string name="basalrate">Bazal</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Omjer</string>
+    <string name="amount_days"># dana</string>
+    <string name="weight">Težina</string>
+    <string name="warning_Message">Moguće netočno ako se koriste bolusi za pripremu/punjenje!</string>
+    <string name="olddata_Message">Stari podaci, pritisnite \"UČITAJ PONOVNO\"</string>
+    <string name="tbb">Ukupna baza bazala</string>
+    <string name="tbb2">TBB * 2</string>
+    <!--    Ntp-->
+    <string name="timedetection">Detekcija vremena</string>
+    <!-- User Entry -->
+    <string name="uel_bolus">BOLUS</string>
+    <string name="uel_bolus_calculator">BOLUS KALKULATOR</string>
+    <string name="uel_treatment_removed">TRETMAN UKLONJEN</string>
+    <string name="uel_tt_removed">PRIVREMENI CILJ UKLONJEN</string>
+    <string name="uel_ns_paused">NS PAUZIRAN</string>
+    <string name="uel_ns_resume">NS NASTAVAK RADA</string>
+    <string name="uel_ns_queue_cleared">NS RED ČEKANJA OBRISAN</string>
+    <string name="uel_ns_settings_copied">NS POSTAVKE KOPIRANE</string>
+    <string name="uel_error_dialog_ok">DIJALOG POGREŠKE OK</string>
+    <string name="uel_error_dialog_mute">ISKLJUČIVANJE DIJALOGA POGREŠKE </string>
+    <string name="uel_error_dialog_mute_5min">DIJALOG POGREŠKE ISKLJUČEN 5MIN</string>
+    <string name="uel_objective_started">CILJ POČEO</string>
+    <string name="uel_objective_unstarted">CILJ NIJE STARTAN</string>
+    <string name="uel_objectives_skipped">CILJEVI PRESKOČEN</string>
+    <string name="uel_stat_reset">STAT RESET</string>
+    <string name="uel_delete_logs">IZBRIŠI DNEVNIKE</string>
+    <string name="uel_delete_future_treatments">IZBRIŠITE BUDUĆE TRETMANE</string>
+    <string name="delete_future_treatments">Izbrišite buduće tretmane</string>
+    <string name="uel_export_settings">IZVOZ POSTAVKI</string>
+    <string name="uel_import_settings">UVOZ POSTAVKI</string>
+    <string name="uel_reset_databases">RESETIRAJ BAZE PODATAKA</string>
+    <string name="uel_cleanup_databases">ČIŠĆENJE BAZA PODATAKA</string>
+    <string name="uel_export_databases">IZVOZ BAZA PODATAKA</string>
+    <string name="uel_import_databases">UVOZ BAZA PODATAKA</string>
+    <string name="uel_otp_export">OTP IZVOZ</string>
+    <string name="uel_otp_reset">OTP RESET</string>
+    <string name="uel_stop_sms">STOP SMS</string>
+    <string name="uel_export_csv">IZVOZ KORISNIČKIH UNOSA</string>
+    <string name="uel_start_aaps">START AAPS</string>
+    <string name="uel_exit_aaps">UGASI AAPS</string>
+    <string name="uel_plugin_enabled">DODATAK OMOGUĆEN</string>
+    <string name="uel_plugin_disabled">PLUGIN ONEMOGUĆEN</string>
+    <string name="uel_unknown">NEPOZNATO</string>
+    <string name="ue_string">Niz</string>
+    <string name="ue_source">Izvor</string>
+    <string name="ue_utc_offset">UTC pomak</string>
+    <string name="ue_action">Aktivnost</string>
+    <string name="ue_timestamp">Vremenska oznaka</string>
+    <string name="ue_none">Nema uređaja</string>
+    <string name="uel_loop_change">PETLJA PROMIJENJENA</string>
+    <string name="uel_loop_removed">PETLJA UKLONJENA</string>
+    <string name="uel_other">OSTALO</string>
+    <!-- HardLimits -->
+    <string name="profile_low_target">Profil niski cilj</string>
+    <string name="profile_high_target">Profil visoki cilj</string>
+    <string name="temp_target_low_target">Privremena ciljana donja vrijednost</string>
+    <string name="temp_target_high_target">Privremena ciljna gornja vrijednost</string>
+    <string name="temp_target_value">Privremena ciljna vrijednost</string>
+    <string name="profile_dia">Profil DIA vrijednost</string>
+    <string name="profile_sensitivity_value">Vrijednost osjetljivosti profila</string>
+    <string name="profile_max_daily_basal_value">Maksimalna bazalna vrijednost profila</string>
+    <string name="current_basal_value">Trenutna bazalna vrijednost</string>
+    <string name="profile_carbs_ratio_value">Vrijednost omjera ugljikohidrata profila</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="a11y_file">datoteka</string>
+    <string name="a11y_user">korisnik</string>
+    <!-- Autotune -->
+    <string name="autotune_categorize_uam_as_basal_summary">Omogućite samo ako ste pouzdano unijeli sve pojedene ugljikohidrate, uz ovu opciju iznenadna povećanja koja vidi Autotune koristit će se za preporučivanje promjena bazalne doze.</string>
+    <string name="autotune_tune_insulin_curve_title">Podesite krivulju inzulina</string>
+    <string name="autotune_tune_insulin_curve_summary">Omogućite samo ako koristite besplatni vrh. Ova opcija će podesiti trajanje vršne vrijednosti i DIA</string>
+    <string name="autotune_default_tune_days_title">Broj dana podataka</string>
+    <string name="autotune_circadian_ic_isf_title">Primijeni prosječni rezultat u cirkadijanskom IC/ISF</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune neće ugoditi cirkadijalne varijacije, ova opcija samo primjenjuje prosječno ugađanje IC i ISF na vaš cirkadijalni ulazni profil</string>
+    <string name="autotune_additional_log_title">Uključite više podataka dnevnika za otklanjanje pogrešaka</string>
+    <string name="autotune_additional_log_summary">Uključite samo ako razvojni programer to zatraži za slanje više informacija o dnevniku za pomoć u otklanjanju pogrešaka dodatka Autotune</string>
+    <string name="autotune_default_tune_days_summary">Zadani broj dana podataka koje će obraditi Autotune (do 30)</string>
+    <string name="autotune_tunedprofile_name">Ugođen</string>
+    <string name="autotune_profile">Profile :</string>
+    <string name="autotune_tune_days">Dani prilagodbe:</string>
+    <string name="autotune_last_run">Zadnje izvođenje:</string>
+    <string name="autotune_warning">Upozorenje:</string>
+    <string name="autotune_select_profile">Odaberite profil za podešavanje</string>
+    <string name="autotune_ic_warning">Odabrani profil ima %1$d IC vrijednosti. Autotune će koristiti %2$.2f g/U</string>
+    <string name="autotune_isf_warning">Odabrani profil ima %1$d ISF vrijednosti. Autotune će koristiti %2$.1f %3$s/U</string>
+    <string name="autotune_error">Pogreška u unosu podataka, pokušajte ponovno pokrenuti automatsko podešavanje ili smanjite broj dana</string>
+    <string name="autotune_warning_during_run">Autotune izračun je započeo, molimo za strpljenje</string>
+    <string name="autotune_warning_after_run">Prije uporabe pažljivo provjerite rezultate!</string>
+    <string name="autotune_partial_result">Djelomični rezultat dan %1$d / %2$d podešeno</string>
+    <string name="autotune_result">Rezultat: %1$s</string>
+    <string name="autotune_param">Param</string>
+    <string name="autotune_percent">%</string>
+    <string name="autotune_missing">Nedostaje</string>
+    <string name="autotune_profile_name">Automatsko podešavanje profila %1$s</string>
+    <string name="autotune_run">Pokrenite Autotune</string>
+    <string name="autotune_check_input_profile_button">Provjerite ulazni profil</string>
+    <string name="autotune_compare_profile">Usporedite profile</string>
+    <string name="autotune_copy_localprofile_button">Kopiraj na lokalni profil</string>
+    <string name="autotune_update_input_profile_button">Ažurirajte ulazni profil</string>
+    <string name="autotune_revert_input_profile_button">Vrati profil unosa</string>
+    <string name="autotune_copy_local_profile_message">Napraviti novi lokalni profil iz ovog Autotune profila?</string>
+    <string name="autotune_update_local_profile_message">Želite li ažurirati %1$s profil pomoću Autotune profila?</string>
+    <string name="autotune_revert_local_profile_message">Vratiti profil %1$s s profilom unosa?</string>
+    <string name="autotune_profile_invalid">Profil nije valjan</string>
+    <string name="autotune_run_without_autoswitch">Autotune je odradio bez promjene profila</string>
+    <string name="autotune_run_with_autoswitch">Autotune je pokrenut i profil se automatski promijenio</string>
+    <string name="autotune_run_with_error">Pogreška tijekom zadnjeg pokretanja automatskog podešavanja</string>
+    <string name="autotune_run_cancelled">Otkriveno je još jedno pokretanje Autotunea, pokretanje je otkazano</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Koristite obavijesti sustava za upozorenja i obavijesti</string>
+    <string name="urgent_alarm">Hitan alarm</string>
+    <string name="info">INFO</string>
+    <!-- BolusWizard -->
+    <string name="bolus_advisor">Savjetnik za bolus</string>
+    <string name="bolus_advisor_message">Imate visoku glikemiju. Umjesto da jedete sada, preporuča se pričekati bolju glikemiju. Želite li sada napraviti korekcijski bolus i podsjetiti vas kada je vrijeme za jelo? U ovom slučaju neće biti zabilježeni ugljikohidrati i morate ponovno koristiti čarobnjaka kada vas podsjetimo.</string>
+    <string name="no_action_selected">Nije odabrana radnja, ništa se neće dogoditi</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <!--    Preferences-->
+    <!--    Protection-->
+    <string name="unlock_settings">Otključaj postavke</string>
+    <!--    Pumps -->
+    <string name="battery_label">Baterija</string>
+    <string name="last_connection_label">Zadnja uspostava veze</string>
+    <string name="last_bolus_label">Zadnji bolus</string>
+    <string name="serial_number">Serijski broj</string>
+    <string name="disconnected">Odspojen</string>
+    <string name="connecting">Povezivanje</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="stats">Statistika</string>
+    <string name="temp_basal_delivery_error">Pogreška isporuke temp bazala</string>
+    <string name="not_set_short">Nije postavljeno</string>
+    <string name="pump_busy">Pumpa je zauzeta</string>
+    <string name="connection_error">Greška u spajanju pumpe</string>
+    <string name="initializing">Pokretanje...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Ograničavanje maksimalne bazalne doze na %1$.2f U/h zbog %2$s</string>
+    <string name="pumplimit">ograničenje pumpe</string>
+    <string name="limitingpercentrate">Ograničavanje maksimalne postotne stope na %1$d%% zbog %2$s</string>
+    <string name="itmustbepositivevalue">mora biti pozitivna vrijednost</string>
+    <string name="limitingbolus">Ograničavanje bolusa na %1$.1f U zbog %2$s</string>
+    <!-- Locale -->
+    <!--    Dialogs-->
+    <string name="confirmation">Potvrda</string>
+    <string name="message">Poruka</string>
+    <string name="ok">U redu</string>
+    <string name="cancel">Otkaži</string>
+    <string name="dismiss">ODBACITI</string>
+    <string name="close">Zatvori</string>
+    <!-- TwoMessagesDialog -->
+    <!-- NumberPicker -->
+    <string name="you_are_on_allowed_limit">Dosegnuto je dopušteno ograničenje</string>
+    <string name="format_hour_minute">%1$dh %2$dm</string>
+    <!-- datetime layout -->
+    <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Aplikacija treba bluetooth dozvolu</string>
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nije podržan.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nije podržan ili uređaj nije uparen.</string>
+    <string name="ble_not_enabled">Bluetooth nije omogućen.</string>
+    <string name="location_not_found_title">Lokacija nije omogućena</string>
+    <string name="location_not_found_message">Da bi Bluetooth otkrivanje radilo na novijim uređajima, lokacija mora biti omogućena. AAPS ne prati vašu lokaciju i može se onemogućiti nakon uspješnog uparivanja.</string>
+    <!--    Preferences -->
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Nedostaje dopuštenje za SMS</string>
+    <!-- About -->
+    <plurals name="days">
+        <item quantity="one">%1$d dan</item>
+        <item quantity="few">%1$d dana</item>
+        <item quantity="other">%1$d dana</item>
+    </plurals>
+    <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Po</string>
+    <string name="tuesday_short">Ut</string>
+    <string name="wednesday_short">Sr</string>
+    <string name="thursday_short">Če</string>
+    <string name="friday_short">Pe</string>
+    <string name="saturday_short">Su</string>
+    <string name="sunday_short">Ne</string>
+    <!--    DecimalFormatterImpl -->
+</resources>

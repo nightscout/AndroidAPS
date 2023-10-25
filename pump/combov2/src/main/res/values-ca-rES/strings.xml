@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_error_2">Bateria esgotada</string>
+    <string name="combov2_error_4">Oclusió</string>
+    <string name="combov2_error_6">Error mecànic</string>
+    <string name="bluetooth_address">Adreça Bluetooth</string>
+    <string name="combov2_suspended">En pausa</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Establint perfil basal</string>
+    <string name="combov2_bolus_cancelled">Bolus cancel·lat</string>
+    <string name="combov2_bolus_delivery_failed">Error en lliurar bolus. Sembla que no s\'ha lliurat cap bolus. Per estar segurs, comproveu-ho a la bomba, i així evitareu un possible bolus doble. Per raons de seguretat, els bolus no es reintenten automàticament.</string>
+    <string name="combov2_current_tbr">%1$d%% (queden %2$d min)</string>
+    <string name="combov2_battery_low_warning">Bateria baixa</string>
+    <string name="combov2_short_status_last_connection">Darrera connexió: fa %1$d min</string>
+    <string name="combov2_short_status_temp_basal">Temp: %s</string>
+    <string name="combov2_short_status_reservoir">Reservori.: %d U</string>
+    <string name="combov2_short_status_battery_state_empty">buit</string>
+    <string name="combov2_short_status_battery_state_low">baix</string>
+</resources>

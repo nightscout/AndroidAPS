@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_show_seconds"
+        android:title="@string/custom_pref_show_seconds"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_week_number"
+        android:title="@string/pref_show_weeknumber"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_dark"
+        android:title="@string/pref_dark"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_match_divider"
+        android:summary="Status bar divider background matches watchface background"
+        android:title="@string/pref_matching_divider"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_date"
+        android:title="@string/pref_show_date"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_vibrate_hourly"
+        android:title="@string/pref_vibrate_hourly"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <ListPreference
+        android:defaultValue="off"
+        android:entries="@array/watchface_simplify_ui_name"
+        android:entryValues="@array/watchface_simplify_ui_values"
+        android:key="@string/key_simplify_ui"
+        android:summary="@string/pref_simplify_ui_sum"
+        android:title="@string/pref_simplify_ui" />
+
+</PreferenceScreen>

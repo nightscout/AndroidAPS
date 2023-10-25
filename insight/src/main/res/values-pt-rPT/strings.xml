@@ -11,13 +11,11 @@
     <string name="stop_pump">Parar Bomba</string>
     <string name="started">Iniciado</string>
     <string name="stopped">Parado</string>
-    <string name="paused">Em pausa</string>
     <string name="operating_mode">Modo de funcionamento</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
-    <string name="tdd_bolus">TDI Bolus</string>
-    <string name="tdd_basal">TDI Basal</string>
-    <string name="tdd_total">TDI Total</string>
+    <string name="tdd_bolus">TID Bólus</string>
+    <string name="tdd_basal">TID Basal</string>
     <string name="tbr_formatter">%1$d%% para %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bólus Multi-Onda</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
@@ -38,16 +36,13 @@
     <string name="timeout_during_handshake">Tempo de operação excedido - reinicar bluetooth</string>
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
-    <string name="pump_paused">Bomba suspensa</string>
     <string name="short_status_last_connected">Última ligação:%1$d minutos atrás</string>
     <string name="short_status_tbr">DBT: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Prolongado: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
-    <string name="short_status_tdd">TDI: %1$.2f</string>
+    <string name="short_status_tdd">TID: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Confirmar</string>
-    <string name="mute_alert">Silêncio</string>
     <string name="release_software_version">Lançar versão de software</string>
     <string name="ui_processor_software_version">Versão de software do processador de interface do utilizador</string>
     <string name="pc_processor_software_version">Versão do software do processador de PC</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="pump_alert">Alerta da Bomba</string>
     <string name="pairing_information">Informações de emparelhamento</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Botão de Atualização da Insight</string>
 </resources>

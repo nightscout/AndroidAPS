@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="biometric_title">Authentifizierung erforderlich</string>
+    <string name="biometric_description">Lege Deinen Finger auf den Fingerabdrucksensor, um Deine Identität zu bestätigen.</string>
+    <string name="settings_protection">Schutz der Einstellungen</string>
+    <string name="application_protection">Schutz der App</string>
+    <string name="bolus_protection">Bolus-Schutz</string>
+    <string name="settings_password">Passwort für Einstellungen</string>
+    <string name="settings_pin">Einstellungs-PIN</string>
+    <string name="application_password">Anwendungspasswort</string>
+    <string name="application_pin">Anwendungs-PIN</string>
+    <string name="bolus_password">Passwort für Bolus</string>
+    <string name="bolus_pin">Bolus PIN</string>
+    <string name="protection_timeout_title">Passwort und PIN Sperrung [s]</string>
+    <string name="protection_timeout_summary">Zeit bis das Passwort oder die PIN eingegeben werden sollen</string>
+    <string name="biometric">Biometrisch</string>
+    <string name="custom_password">Benutzerdefiniertes Passwort</string>
+    <string name="custom_pin">Eigene PIN</string>
+    <string name="noprotection">Kein Schutz</string>
+    <string name="unsecure_fallback_biometric">Unsicherer Fallback</string>
+    <string name="unsecure_fallback_descriotion_biometric">Zur Absicherung braucht der biometrischer Schutz ein Masterpasswort als Fallback.\n\nBitte gib ein Master-Passwort ein!</string>
+    <string name="password_set">Passwort festgelegt!</string>
+    <string name="pin_set">PIN festgelegt!</string>
+    <string name="password_not_set">Passwort nicht festgelegt</string>
+    <string name="pin_not_set">Keine PIN gesetzt</string>
+    <string name="password_not_changed">Passwort nicht geändert</string>
+    <string name="pin_not_changed">PIN nicht geändert</string>
+    <string name="pin_cleared">PIN gelöscht!</string>
+    <string name="password_hint">Passwort hier eingeben</string>
+    <string name="pin_hint">PIN hier eintragen</string>
+</resources>

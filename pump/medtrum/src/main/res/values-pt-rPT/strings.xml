@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MedtrumPump -->
+    <string name="medtrum_pump_description">Integração com a bomba Medtrum Nano e Medtrum 300U</string>
+    <!-- overview fragment -->
+    <string name="active_bolus_label">Bólus ativo</string>
+    <!-- Alarm strings -->
+    <!-- wizard-->
+    <!-- settings-->
+    <!-- treatment state-->
+</resources>

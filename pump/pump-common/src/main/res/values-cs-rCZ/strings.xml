@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operace není podporována pumpou a/nebo ovladačem.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operace prozatím pumpou nepodporována.</string>
+    <string name="common_resultok">OK</string>
+    <string name="pump_serial_number">Sériové číslo pumpy</string>
+    <string name="bolus_delivered_so_far">Vydáno %1$.2f U / %2$.2f U</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">Není inicializován</string>
+    <string name="pump_status_initialized">Inicializováno</string>
+    <string name="pump_status_encrypt">Šifrování komunikace</string>
+    <string name="pump_status_ready">Připraven</string>
+    <string name="pump_status_busy">Zaneprázdněný</string>
+    <string name="pump_status_suspended">Pozastaveno</string>
+    <string name="pump_status_executing_command">Provádění příkazu</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bazály</string>
+    <string name="history_group_configuration">Konfigurace</string>
+    <string name="history_group_notification">Oznámení</string>
+    <string name="history_group_statistic">Statistika</string>
+    <string name="history_group_unknown">Neznámé</string>
+    <string name="history_group_all">Vše</string>
+    <string name="history_group_bolus">Bolusy</string>
+    <string name="history_group_prime">Doplňování</string>
+    <string name="history_group_alarm">Alarmy</string>
+    <string name="history_group_glucose">Glykémie</string>
+    <string name="history_group_base">Základ</string>
+    <string name="history_group_other">Jiné</string>
+    <string name="history_group_events">Všechny události</string>
+    <string name="history_group_events_no_stat">Události (bez statistik)</string>
+    <!-- Time -->
+    <string name="time_today">Dnes</string>
+    <string name="time_last_hour">Poslední hodinu</string>
+    <string name="time_last_3_hours">Poslední 3 hodiny</string>
+    <string name="time_last_6_hours">Posledních 6 hodin</string>
+    <string name="time_last_12_hours">Posledních 12 hodin</string>
+    <string name="time_last_2_days">Poslední 2 dny</string>
+    <string name="time_last_4_days">Poslední 4 dny</string>
+    <string name="time_last_week">Minulý týden</string>
+    <string name="time_last_month">Minulý měsíc</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Vyhledat</string>
+    <string name="ble_config_scan_stop">Zastavit</string>
+    <string name="ble_config_scan_selected">Vybráno</string>
+    <string name="ble_config_scan_scanning">Vyhledávání</string>
+    <string name="ble_config_scan_finished">Vyhledávání dokončeno</string>
+    <string name="ble_config_scan_error">Chyba při vyhledávání: %1$d</string>
+    <string name="ble_config_connected_never">Nikdy</string>
+    <string name="ble_config_remove">Odebrat</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth je zakázáno</string>
+    <string name="ble_error_no_bt_adapter">Žádný Bluetooth adaptér</string>
+    <string name="ble_error_configured_pump_not_found">Konfigurovaná pumpa nenalezena</string>
+    <string name="ble_error_pump_unreachable">Pumpa nedostupná</string>
+    <string name="ble_error_failed_to_conn_to_ble_device">Nepodařilo se připojit k BLE zařízení</string>
+    <string name="ble_error_encryption_failed">Šifrování selhalo</string>
+    <string name="ble_error_pump_found_unbonded">Nalezena nespárovaná pumpa</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">Nastavení bazálních profilů/vzorů není na pumpě povoleno. Povolte je na pumpě.</string>
+    <string name="pump_settings_error_incorrect_basal_profile_selected">Bazální profil nastavený na pumpě je nesprávný (musí být %s).</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">Chybný typ dočasného bazálu nastaven na pumpě (musí být %s).</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">Chybný maximální bolus na pumpě (musí být %1$.2f).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">Chybný maximální bazál na pumpě (musí být %1$.2f).</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Typ:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nikdy nekontaktováno</string>
+    <string name="pump_status_sleeping">Spící</string>
+    <string name="pump_status_waking_up">Probouzení</string>
+    <string name="pump_status_active">Aktivní</string>
+    <string name="pump_status_error_comm">Chyba komunikace</string>
+    <string name="pump_status_timeout_comm">Vypršel časový limit komunikace</string>
+    <string name="pump_status_pump_unreachable">Pumpa nedostupná</string>
+    <string name="pump_status_invalid_config">Neplatná konfigurace</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d den</item>
+        <item quantity="few">%1$d dnů</item>
+        <item quantity="many">%1$d dnů</item>
+        <item quantity="other">%1$d dnů</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodin</item>
+        <item quantity="many">%1$d hodin</item>
+        <item quantity="other">%1$d hodin</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">před %1$d hodinou</item>
+        <item quantity="few">před %1$d hodinami</item>
+        <item quantity="many">před %1$d hodinami</item>
+        <item quantity="other">před %1$d hodinami</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">před %1$d dnem</item>
+        <item quantity="few">před %1$d dny</item>
+        <item quantity="many">před %1$d dny</item>
+        <item quantity="other">před %1$d dny</item>
+    </plurals>
+</resources>

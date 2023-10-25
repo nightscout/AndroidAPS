@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">휴마로그와 노보래피드에 대한 인슐린 설정</string>
+    <string name="description_insulin_ultra_rapid">피아스프에 대한 인슐린 설정</string>
+    <string name="description_insulin_lyumjev">Lyumjev에 대한 인슐린 설정</string>
+    <string name="description_insulin_free_peak">인슐린활동의 피크를 직접 정의할 수 있습니다. 고급 사용자만 사용해야 합니다.</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IOB 커브 피크 시간</string>
+    <string name="insulin_peak_time">피크 시간 [min]</string>
+    <string name="free_peak_oref">사용자지정-피크 Oref</string>
+    <string name="rapid_acting_oref">초속효성 Oref</string>
+    <string name="ultra_rapid_oref">초고속 Oref</string>
+    <string name="dia_too_short">DIA %1$f는 너무 짧습니다. 대신 %2$f을 사용하세요!</string>
+    <string name="fast_acting_insulin_comment">노보래피드, 노보로그, 휴마로그</string>
+    <string name="ultra_fast_acting_insulin_comment">피아스프</string>
+</resources>

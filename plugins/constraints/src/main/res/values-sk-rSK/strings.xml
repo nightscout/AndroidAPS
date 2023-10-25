@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Zmena letného času za menej ako 24 hodín</string>
+    <string name="dst_loop_disabled_warning">Zmena letného času za menej ako 3 hodiny - Uzavretý okruh pozastavený</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Uvoľnite aspoň %1$d MB z interného úložiska! Uzavretý okruh zakázaný!</string>
+    <!-- Version Checker -->
+    <string name="old_version">stará verzia</string>
+    <string name="very_old_version">veľmi stará verzia</string>
+    <string name="application_expired">Aplikácia expirovala</string>
+    <string name="new_version_warning">Nová verzia nebola skontrolovaná najmenej %1$d dní! V prípade, že uplynie %2$d dní, prepne sa režim na LGS a po %3$d dňoch bude uzavretý okruh vypnutý. Obnovte pripojenie k internetu!</string>
+    <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
+    <string name="versionavailable">Verzia %1$s je k dispozícii</string>
+    <string name="version_expire">Verzia %1$s expiruje dňa %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Použité prepočítané dáta</string>
+    <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">prepočítané</string>
+    <string name="a11y_bg_quality_doubles">dvojité zápisy</string>
+    <string name="a11y_bg_quality_flat">\"Ploché\" dáta. Považujú sa za nesprávne.</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Predĺžený bolus obmedzený na %1$.1f JI z dôvodu %2$s</string>
+    <string name="limitingcarbs">Sacharidy obmedzené na %1$d g: %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
+    <string name="closedmodedisabledinpreferences">Uzavretý okruh zakázaný v nastaveniach</string>
+    <string name="closed_loop_disabled_on_dev_branch">Bežiaca vývojárska verzia. Uzavretý okruh je zakázaný.</string>
+    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu predĺženému bolusu</string>
+    <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jedle\" zakázané pretože zdroj glykémie nepodporuje rozšírené filtrovánie</string>
+    <string name="smbnotallowedinopenloopmode">SBM nie sú povolené pri otvorenom okruhu</string>
+    <string name="maxvalueinpreferences">maximálna hodnota v nastaveniach</string>
+    <string name="hardlimit">pevný limit</string>
+    <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Hotovo, gratulujeme!</string>
+    <string name="not_completed_yet">Nedokončené</string>
+    <string name="time_elapsed">Uplynutý čas</string>
+    <string name="maxiobset">Maximálne IOB nastavené správne</string>
+    <string name="hasbgdata">Glykémie dostupné z vybraného zdroja</string>
+    <string name="synchaswritepermission">Služba synchronizácie má oprávnenie k zápisu</string>
+    <string name="loopenabled">Uzavretý okruh povolený</string>
+    <string name="apsselected">APS vybrané</string>
+    <string name="closedmodeenabled">Uzavretý okruh povolený</string>
+    <string name="objectives_shortname">CIEĽ</string>
+    <string name="description_objectives">Výukový program</string>
+    <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
+    <string name="objectives_next_button">Ďalej</string>
+    <string name="objectives_previous_button">Späť</string>
+    <string name="objectives_button_unfinish">Vymazanie dokončené</string>
+    <string name="objectives_button_unstart">Vymazanie začaté</string>
+</resources>

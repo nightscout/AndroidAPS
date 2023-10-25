@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Leeg reservoir\nPatch is gedeactiveerd en insulinetoediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a003">Patch verlopen\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a004">Verstopping\nPatch is gedeactiveerd en insulinetoediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a005">Zelftest tijdens opstarten mislukt\nPatch is gedeactiveerd. Patch nu vervangen.</string>
+    <string name="string_a007">Ongeschikte temperatuur\nInsuline toediening of \'Activeer Patch\' proces gestopt. Vermijd extreme temperatuur.</string>
+    <string name="string_a016">Naald inbreng fout\nControleer de knop positie en tik op \'Opnieuw proberen\'.</string>
+    <string name="string_a018">Patch batterij fout\nPatch is gedeactiveerd en\ninsuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a019">Patch batterij fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a020">Patch activatie fout\n\'Activeer patch\' proces is verlopen. Tik op \'Bevestigen\' om de huidige patch te deactiveren. Patch nu vervangen.</string>
+    <string name="string_a022">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a023">Patch fout\nPatch is gedeactiveerd en\ninsuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a034">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a041">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a042">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a043">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a044">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a106">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a107">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a108">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a116">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a117">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a118">Patch fout\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_b000">De gebruiksduur van de patch verloopt %s. Wees voorbereid om de patch te vervangen.</string>
+    <string name="string_b001">Einde van insuline onderbreking\nTik op \'Hervatten\' om de insuline toediening te herstarten.</string>
+    <string name="string_b003">Laag reservoir\nPatch spoedig vervangen.</string>
+    <string name="string_b005">Patch levensduur verlopen\nPatch nu vervangen.</string>
+    <string name="string_b006">Patch vervalt binnenkort\nPatch nu vervangen.</string>
+    <string name="string_b012">Onvolledige Patch activatie\nVoltooi \'Activeer Patch\' proces.</string>
+    <string name="string_b018">Patch batterij bijna leeg\nWees voorbereid om de patch te vervangen.</string>
+</resources>

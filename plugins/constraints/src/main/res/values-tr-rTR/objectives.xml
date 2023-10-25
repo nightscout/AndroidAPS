@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">Başlat</string>
+    <string name="objectives_button_verify">Doğrulayın</string>
+    <string name="nth_objective">Görev %1$d.</string>
+    <string name="objectivenotstarted">Görev %1$d başlanmadı</string>
+    <string name="objectivenotfinished">Görev %1$d tamamlanmadı</string>
+    <string name="objectives_0_objective">Nightscout üzerinden izlemeyi ve görselleştirmeyi yapılandırın, bazalları ve oranlarını analiz edin</string>
+    <string name="objectives_0_gate">Nightscout\'ta KŞ\'nin bulunduğunu ve pompadaki insülin verilerinin yüklenmekte olduğunu doğrulayın</string>
+    <string name="objectives_0_learned">AAPS ekosisteminin temel kurulumunu yaptınız. AAPS\'nin çalışması için Nightscout gerekli değildir, ancak diğer hastaların raporlanması veya izlenmesi için çok yararlıdır. NS\'yi yalnızca kendiniz için kullanıyorsanız, her zaman NS\'ye bağlı olmanız gerekmez. Örneğin, yalnızca evdeki wifi üzerinden veri yüklemek için kurulum yapabilir ve böylelikle pil tasarrufu sağlarsınız.</string>
+    <string name="objectives_openloop_objective">Açık Döngü modu başlatılıyor</string>
+    <string name="objectives_openloop_gate">Birkaç gün boyunca Açık Döngü modunda çalıştırın ve birçok geçici bazalı el yordamı ile girin. Geçici ve varsayılan geçici hedefleri düzenleyin ve kullanın (örn. egzersiz ve hipo-tedaviyi desteklemek için)</string>
+    <string name="objectives_openloop_learned">Uyumlu pompanız yoksa veya kapalı döngüye hazır değilseniz, tavsiyeler için açık döngü kullanılabilir.</string>
+    <string name="objectives_maxbasal_objective">Geçici bazal tavsiyeleri de dahil olmak üzere Açık Döngüyü anlamak</string>
+    <string name="objectives_maxbasal_gate">Bu deneyime dayanarak, max bazalın ne olması gerektiğine karar vermeli ve bunu pompa ve tercihlere koymalısınız</string>
+    <string name="objectives_maxbasal_learned">Güvenlik özelliklerine dikkat edin ve gerektiğinde güvenlik parametrelerini ayarlayın.</string>
+    <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Glikoz Duraklatma modunda başlatılıyor</string>
+    <string name="objectives_maxiobzero_gate">Kapalı Döngüyü, maks IOB = 0 olacak şekilde çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca deneyin</string>
+    <string name="objectives_maxiobzero_learned">MaksAİNS\'i sıfıra ayarlamak, sizi hipodan korur ve bazal oranın üzerine daha fazla insülin eklemez (negatif AİNS durumu hariç)</string>
+    <string name="objectives_maxiob_objective">Kapalı Döngü\'de ince ayarlar, maks (IOB) Aktif İnsülini 0\'ın üzerine yükseltme ve yavaş yavaş KŞ hedeflerini aşağıya çekme</string>
+    <string name="objectives_maxiob_gate">KŞ hedefini azaltmadan önce birkaç gün ve en az bir gece düşük KŞ (Hipo) alarmı olmadan deneyin</string>
+    <string name="objectives_maxiob_learned">Bir çocuk büyüdükçe MaksAİNS\'i güncelleyin. Sistemin size yiyecekleri karşılayabildiğinden daha fazla insülin vermesine izin vermeyin = gerçekten yüksek değer kötü bir fikirdir.</string>
+    <string name="objectives_autosens_objective">Gerekirse, bazal ve oranları ayarlayın ve sonra auto-sens\'i (otoduyarlılık) etkinleştirin</string>
+    <string name="objectives_autosens_gate">Bir hafta boyunca düzenli karbonhidrat girdileri yaparak gün boyunca Kapalı Döngüyü çalıştırın</string>
+    <string name="objectives_autosens_learned">Otoduyarlılık sonucunuz %100 civarında salınmıyorsa muhtemelen profiliniz yanlıştır.</string>
+    <string name="objectives_smb_objective">SMB (Super Micro Bolus) gibi gündüz kullanımı için ek özelliklerin etkinleştirilmesi</string>
+    <string name="objectives_smb_gate">(Super Micro Bolus) SMB\'lerın iyi çalışabilmesi için wiki\'yi okumalısınız ve maxIOB\'u yükseltmelisiniz! İyi bir başlangıç için maxIOB = ortalama yemek bolusu + 3 x max günlük bazaldır</string>
+    <string name="objectives_smb_learned">SMB\'yi kullanmak sizin hedefinizdir. Oref1 algoritması, boluslarınızda da size yardımcı olmak için tasarlanmıştır. Yemeğiniz için bolusun tamamını değil, sadece bir kısmını vermeli ve gerekirse AAPS\'in size geri kalanını vermesine izin vermelisiniz. Bu şekilde yanlış hesaplanmış karbonhidratlar için daha fazla alanınız olur. Bolus miktarını azaltmak için bolus hesaplayıcı sonucunun bir yüzdesini ayarlayabileceğinizi biliyor muydunuz?</string>
+    <string name="objectives_dyn_isf_objective">Dinamik duyarlılık eklentisi gibi gündüz kullanımına yönelik ek özelliklerin etkinleştirilmesi</string>
+    <string name="objectives_dyn_isf_gate">SMB\'nin düzgün çalıştığından emin olun. DinamikİDF eklentisini etkinleştirin ve vücudunuza en uygun kalibrasyonu belirleyin. Güvenlik açısından %100\'den daha düşük bir değerle başlamanız tavsiye edilir.</string>
+    <string name="objectives_dyn_isf_learned">Dinamik Duyarlılık eklentisi, toplam insülin alımının ve mevcut glisemi seviyelerinin gerçek duyarlılığı etkilediği fikrine dayanmaktadır. DinamikİDF eklentisi, algoritmanın kullandığı İnsülin Duyarlılık Faktörünü (İDF) sizin için ayarlayabilir.</string>
+    <string name="objectives_auto_objective">Otomasyonu etkinleştirme</string>
+    <string name="objectives_auto_gate">Otomasyonun nasıl çalıştığına dair dokümanları okuyun. İlk basit kurallarınızı belirleyin. Eylem yerine AAPS\'in yalnızca bildirim göndermesine izin verin. Otomasyonun doğru zamanda tetiklendiğinden emin olduğunuzda, bildirimi gerçek eylemle değiştirin. (https://wiki.aaps.app/tr/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Otomasyon iyi bir hizmetkar ama kötü bir efendi olabilir. Aşırı kullanmayın. Altta yatan algoritmayı değiştirmeye çalışmayın. Kuralı yalnızca kullanmadan önce mesajla test edin. Onayınıza bağlıdır.</string>
+    <string name="objectives_bgavailableinns">KŞ NS veya Tidepool\'da mevcut</string>
+    <string name="objectives_pumpstatusavailableinns">Pompa durumu NS veya Tidepool\'da mevcut</string>
+    <string name="objectives_manualenacts">Manuel eylemler</string>
+    <string name="accomplished">Başarıldı: %1$s</string>
+    <string name="objectives_usage_objective">AAPS\'yi nasıl kontrol edeceğinizi öğrenin</string>
+    <string name="objectives_usage_gate">AAPS\'de farklı eylemler gerçekleştirin</string>
+    <string name="objectives_usage_learned">AAPS\'in temellerini nasıl ele alacağınızı öğrendiniz. Ana kontroller, tıklamayla veya uzun tıklamayla erişilebilen Genel Bakış ekranındadır, daha fazla kontrol Eylem ekranındadır. Kaydırılabilir üst menüye bir eklenti ekranını nasıl koyacağınızı veya sol üst etkin eklentiler listesinde gösterilmesini nasıl sağlayacağınızı bilmelisiniz.</string>
+    <string name="objectives_useprofileswitch">Profili 10 dakika boyunca %90 olarak ayarla (Ana sayfada profil adına uzun basın)</string>
+    <string name="objectives_usedisconnectpump">Duşu simüle edin. 1 saat boyunca pompanın bağlantısını kesin (Açık Döngü işaretine Uzun Basın)</string>
+    <string name="objectives_usereconnectpump">... ve aynı şekilde tekrar bağlanın</string>
+    <string name="objectives_usetemptarget">10 dakika süreyle geçici hedef oluşturun (Mevcut hedefinize uzun basın)</string>
+    <string name="objectives_useactions">Konfigürasyon oluşturucuda, Eylemler eklentisini etkinleştirin, görünür yapın ve içeriğini üst menüden görüntüleyin</string>
+    <string name="objectives_useloop">Döngü eklentisinin içeriğini görüntüle</string>
+    <string name="objectives_usescale">KŞ tablosuna uzun basarak ölçeği değiştirebilirsiniz</string>
+    <string name="objectives_exam_objective">Bilginizi sınayın</string>
+    <string name="objectives_exam_gate">Sorulara çalışın. Her soru için size dört olası cevap verilir. Birden fazla doğru cevap olabilir. Lütfen doğru olanların hepsini kontrol edin ve DOĞRULA\'yı seçin.</string>
+    <string name="objectives_exam_learned_prerequisites">Geliştirici olmanıza gerek yok, ancak Görevleri geçmek için NS\'ye, pompaya, ilk kez ve her güncellemede AAPS oluşturmak için bir bilgisayara ihtiyacınız var.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS çevrimdışı çalıştırılabilir.</string>
+    <string name="objectives_exam_learned_basaltest">Profil gözden geçirilmeli ve güncellenmelidir. Daha iyi profil = daha iyi sonuçlar.</string>
+    <string name="objectives_exam_learned_dia">Döngüdeki İES, klasik pompa tedavisinden (insülin emilene kadar geçen süre) farklı bir anlama sahiptir (tüm insülin emilene kadar geçen süre).</string>
+    <string name="objectives_exam_learned_isf">İDF değerinin anlamını ve kan şekeri düzeltmesi için ne kadar insülin kullanacağınızı öğrendiniz.</string>
+    <string name="objectives_exam_learned_ic">Kİ oranının anlamını ve karbonhidratları karşılamak için gereken insülin miktarını nasıl hesaplayacağınızı öğrendiniz.</string>
+    <string name="objectives_exam_learned_hypott">Hipo geçici hedefi yalnızca genellikle birikmiş negatif AİNS olduğunda, hipodan sonra aşırı düzeltmeyi önlemek için kullanılır. Gelecekte bu durumu tekrar önlemek için ek eylemler değerlendirilmelidir.</string>
+    <string name="objectives_exam_learned_profileswitch">Yüzde kullanmak, hedef KŞ\'leri etkilemez ancak bazal, İDF ve Kİ daha fazla insülin (%%100\'ün üzerinde) veya daha az insülin (%%100\'ün altında) verecek şekilde ayarlanır.</string>
+    <string name="objectives_exam_learned_profileswitchtime">Profil değişimindeki zaman kaydırmayı kullanarak sirkadiyen profilini geç uyanma gibi düzensizliklere uyarlayabilirsiniz.</string>
+    <string name="objectives_exam_learned_profileswitch4">Değişiklik yapmak için profili düzenlemek yeterli değildir. Değişiklikleri etkinleştirmek için yine de bir profil değiştirme yapmanız gerekir.</string>
+    <string name="objectives_exam_learned_exercise">%100\'ün altında bir profil seçerek egzersize başlamadan en az 1 saat önce vücuttaki insülin miktarını azaltmalısınız.</string>
+    <string name="objectives_exam_learned_exercise2">Egzersizden en az 1 saat önce daha yüksek geçici hedef belirlemek, vücuttaki insülin miktarının azalmasına da yardımcı olur.</string>
+    <string name="objectives_exam_learned_noisycgm">CGM değerlerine güvenemediğinizde, gözetimsiz döngü kullanmamalısınız.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS, AİNS\'i doğru saymak için pompanın bağlı olmadığını bilmelidir.</string>
+    <string name="objectives_exam_learned_insulin">AİNS hesaplamasını etkilediği için hangi insülinin pompada olduğunu bilmek gereklidir.</string>
+    <string name="objectives_exam_learned_sensitivity">Duyarlılık tespiti, insülin dozajının farklı durumlara uyarlanmasına izin veren algoritmanın bir parçasıdır.</string>
+    <string name="objectives_exam_learned_objectives">Görevlerdeki ilerlemeniz, diğer ayarlarla birlikte saklanır ve yedeklenmesi gerekir.</string>
+    <string name="objectives_exam_learned_objectives2">Her zaman dışa aktarılan ayarları ve oluşturulan APK\'yı telefonun dışında bir yere de kaydedin. Telefon kaybolabilir, hasar görebilir vb. Telefondan erişilebilen herhangi bir bulut iyi bir yer olabilir. Bu durumda AAPS\'i başka bir cihaza birkaç dakika içinde geri yükleyebilirsiniz. En iyisi, kullanılan ana parolayı da güvenli bir yerde saklamaktır. Onsuz yedeklemeniz işe yaramaz. Aynısı, AAPS oluşturmak için kullanılan imzalama anahtarları (.jks dosyası) ve parolalar için de geçerlidir. Gerisi önemli değil - her zaman internetten tekrar indirilebilir.</string>
+    <string name="objectives_exam_learned_wrongcarbs">AAPS\'e yanlış giriş yaptıysanız veya gerçekle uyuşmuyorsa bir an önce düzeltin. Aşırı doza yol açabilir. AAPS her zaman karbonhidratlar, insülin vb. hakkında mümkün olan en iyi şekilde bilgilendirilmelidir.</string>
+    <string name="objectives_exam_learned_iob">APPS\'in sizin için iyi çalışıp çalışmadığını analiz ederseniz, AİNS grafiğini izlemek size birçok yararlı bilgi verebilir.</string>
+    <string name="objectives_exam_learned_cob">AKRB hesaplaması, İDF ile Kİ arasındaki ilişkiye bağlıdır. Artan İDF veya azalan Kİ, daha uzun emilim sürelerine yol açacaktır. Ancak yüzdeli profil değiştirme, her iki değeri aynı anda değiştirir ve emilim süresi etkilenmez.</string>
+    <string name="objectives_exam_learned_breadgrams">Karbonhidratların girişinde sadece grama izin verilir.</string>
+    <string name="objectives_exam_learned_ecarbs">E-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
+    <string name="objectives_exam_learned_nsclient">Uzaktan izleme ve kontrol mümkündür, ancak tüm özelliklerin uzaktan kullanılabilir olması gerekmez.</string>
+    <string name="answerdisabledto">Yanıtlama devre dışı bırakıldı: %1$s</string>
+    <string name="wronganswer">Yanlış Cevap!</string>
+    <string name="unfinshed_button">Tamamlanmayan bir sonraki</string>
+    <string name="requestcode">Kod: %1$s</string>
+    <string name="objectives_hint">(tüm doğru cevapları kontrol edin)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/tr/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">İnternete bağlı değil</string>
+    <string name="failedretrievetime">Geri almada hata</string>
+    <string name="requirementnotmet">Görev gereksinimleri karşılanmadı</string>
+    <string name="what_i_ve_learned">Ne öğrendim:</string>
+</resources>

@@ -11,13 +11,11 @@
     <string name="stop_pump">Остановить помпу</string>
     <string name="started">Начало запуска</string>
     <string name="stopped">Остановлено</string>
-    <string name="paused">на паузе</string>
     <string name="operating_mode">Режим работы</string>
     <string name="description_pump_insight_local">Интеграция с помпой Accu-Chek Insight</string>
     <string name="not_inserted">Не вставлено</string>
     <string name="tdd_bolus">Суммарный суточный болюс TDD</string>
     <string name="tdd_basal">Суммарный суточный Базал TDD</string>
-    <string name="tdd_total">Суммарный суточный инсулин TDD</string>
     <string name="tbr_formatter">%1$d%% за %2$d / %3$d мин</string>
     <string name="multiwave_bolus">Мульти-болюс</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U за %3$d мин</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">Тайм-аут сопряжения - сбросьте bluetooth</string>
     <string name="pump_stopped">Помпа остановлена</string>
     <string name="pump_started">Помпа запущена</string>
-    <string name="pump_paused">Помпа приостановлена</string>
     <string name="short_status_last_connected">Недавнее соединение: %1$d мин. назад</string>
     <string name="short_status_tbr">Врем базал (TBR): %1$d%% на %2$d / %3$d мин</string>
     <string name="short_status_extended">Пролонгированный: %1$.2f / %2$.2f ед. на %3$d мин</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">Суммарный инсулин TDD: %1$.2f</string>
     <string name="short_status_reservoir">Резерв.: %1$.2f ед</string>
     <string name="short_status_battery">Батарея: %1$d%%</string>
-    <string name="confirm">Подтверждаю</string>
-    <string name="mute_alert">Отключить звук</string>
     <string name="release_software_version">Версия ПО</string>
     <string name="ui_processor_software_version">Версия процессора UI</string>
     <string name="pc_processor_software_version">Версия процессора ПК</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Мин. продолжительность восстановления [s]</string>
     <string name="pump_alert">Оповещение помпы</string>
     <string name="pairing_information">Информация о сопряжении</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Кнопка \"Обновить Insight\"</string>
 </resources>

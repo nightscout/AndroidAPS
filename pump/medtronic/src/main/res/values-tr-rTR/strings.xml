@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Medtronic için pompa entegrasyonu, RileyLink cihazı ve özel Pompa Modeli gerektirir</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Pompa Seri Numarası</string>
+    <string name="medtronic_pump_type">Pompa Tipi</string>
+    <string name="medtronic_pump_frequency">Pompa Frekansı</string>
+    <string name="medtronic_pump_bolus_delay">Bolus göndermeden önceki bekleme süresi (sn)</string>
+    <string name="medtronic_pump_max_bolus">Pompadaki Maks Bolus (Ü)</string>
+    <string name="medtronic_pump_max_basal">Pompadaki Maks Bazal (Ü/s)</string>
+    <string name="medtronic_pump_encoding">Medtronic Kodlama</string>
+    <string name="medtronic_pump_frequency_us_ca">ABD &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Dünya geneli (868 Mhz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">Yazılım 4b6b Kodlama</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">Donanım 4b6b Kodlama</string>
+    <string name="medtronic_custom_action_wake_and_tune">Uyan ve Ayarla</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Bolus Bloğunu Temizle</string>
+    <string name="medtronic_custom_action_reset_rileylink">RileyLink Yapılandırmasını Sıfırla</string>
+    <string name="medtronic_pump_battery_select">Pil Türü (Güç Görünümü)</string>
+    <string name="medtronic_pump_battery_no">Seçilmedi (Basit görünüm)</string>
+    <string name="medtronic_pump_battery_alkaline">Alkali (Genişletilmiş görünüm)</string>
+    <string name="medtronic_pump_battery_lithium">Lityum (Genişletilmiş görünüm)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Genişletilmiş görünüm)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Genişletilmiş görünüm)</string>
+    <string name="medtronic_bolus_debugging">Bolus/Tedavilerde Hata Ayıklama</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink Pili</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Hatalar</string>
+    <string name="medtronic_error_serial_not_set">Seri no # ayarlanmadı.</string>
+    <string name="medtronic_error_serial_invalid">Seri no # geçersiz.</string>
+    <string name="medtronic_error_pump_type_not_set">Pompa Tipi ayarlanmadı.</string>
+    <string name="medtronic_error_pump_type_invalid">Pompa Tipi desteklenmiyor.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Pompa Frekansı ayarlanmadı.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Pompa Frekansı desteklenmiyor.</string>
+    <string name="medtronic_error_rileylink_address_invalid">RileyLink Adresi geçersiz.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Algılanan pompa tipi, yapılandırılmış tiple aynı değil.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Bazal profiller/şablon ayarı pompada etkinleştirilmemiştir. Pompada etkinleştirin.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Pompada ayarlanan bazal profili yanlış (STD olmalıdır).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Pompada yanlış TBR (geçici bazal oranı) tipi ayarlanmış (Mutlak olmalıdır).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Pompada Yanlış Maksimum Bolus ayarlanmış (%1$.2f olmalıdır).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Pompada Yanlış Maksimum Bazal ayarlanmış (%1$.2f olmalıdır).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Çalıştırmak mümkün değil.\n\n Bu işlemi kullanmadan önce Medtronic Pompayı yapılandırmanız gerekir.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">24 saatten fazla zaman değişikliği istendi.</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Medtronic Pompa Geçmişi</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Pompa üzerinde ayarlandıktan sonra Bolus\'u iptal ettiniz. Medtronic Pompa iptali desteklemediğinden, elle iptal etmeniz gerekecektir. Pompayı Askıya Al moduna getirin ve ardından Devam et\'e basın. (yine de iptal etmek istiyorsanız). Uygulama, bir sonraki güncellemede (5 dakikadan daha kısa sürede) değişiklikleri alacaktır.</string>
+    <string name="medtronic_cmd_cant_read_tbr">Mevcut TBR (geçici bazal oranı) okunamadı.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Mevcut GBO iptal edilemedi. İşlem durduruldu.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Profil kümesi başarısız oldu, çünkü aşağıdaki şablonlar çok büyük bazal orana sahip: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus gönderilemedi.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">Bolus gönderilemedi, çünkü mevcut insülin miktarı (%1$.2f) gereken bolustan (%2$.2f) az.</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">TBR (geçici bazal oranı) ayarlanamadı.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Mevcut TBR (geçici bazal oranı) iptal edilemedi.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Bazal profil ayarlanamadı.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Bazal profil aynı olduğu için tekrar ayarlanmayacaktır.</string>
+    <string name="medtronic_cmd_desc_get_history">Geçmiş Alınıyor - Sayfa %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Geçmiş Alınıyor - Sayfa %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Pompa zamanı alınıyor</string>
+    <string name="medtronic_cmd_desc_set_time">Pompa Zamanını Ayarla</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Pil Durumu alınıyor</string>
+    <string name="medtronic_cmd_desc_get_settings">Ayarlar alınıyor</string>
+    <string name="medtronic_cmd_desc_get_model">Pompa Modeli alınıyor</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Bazal Profili alınıyor</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Bazal Profili Ayarla</string>
+    <string name="medtronic_cmd_desc_get_tbr">Geçici Bazal alınıyor</string>
+    <string name="medtronic_cmd_desc_set_tbr">Geçici Bazalı Ayarla</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Geçici Bazal İptal Et</string>
+    <string name="medtronic_cmd_desc_set_bolus">Bolusu Ayarla</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Kalan İnsülin alınıyor</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pompa\'ya ulaşılamıyor</string>
+    <string name="medtronic_warning">Uyarı</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Şimdi</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">önce</string>
+    <string name="medtronic_notification_check_time_date">Pompa saati güncellemesi gerekli</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="common_on">Aç</string>
+    <string name="common_off">Kapa</string>
+    <string name="pump_time_updated">Pompa zamanı güncellendi</string>
+    <string name="set_neutral_temps_title">Sık kullanılan Geçici Bazalları ayarla</string>
+    <string name="set_neutral_temps_summary">Etkinleştirilirse, her saatin sonunda geçici bazali iptal eder. Bu yöntem, bazı pompaların saatte bip sesini/titremesini durdurmaya yardımcı olabilir.</string>
+    <string name="mdt_tbr_remaining">%1$.1f Ü/sa (%2$d dk. kaldı)</string>
+    <string name="invalid_history_data">Geçersiz pompa geçmişi verisi tespit edildi. Yeni hata bildirim konusu açın ve günlükleri gönderin.</string>
+    <string name="riley_statistics">RL İstatistikleri</string>
+    <string name="medtronic_history_type">Tip:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Yenileme tıklandı</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Zamanlanmış Durum Yenileme</string>
+</resources>

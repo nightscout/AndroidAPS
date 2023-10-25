@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="high_temptarget_raises_sensitivity_title">Objectiu temporal alt augmenta la sensibilitat</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Augmentar sensibilitat per objectius temporals >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Objectiu temporal baix disminueix sensibilitat</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Disminuir sensibilitat per objectius temporals < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="smb_interval_summary">Amb quina freqüència (en min.) s\'administraran els SMB</string>
+    <string name="resistance_lowers_target_title">Resistència disminueix objectiu</string>
+    <string name="resistance_lowers_target_summary">Quan es detecta resistència, disminuir objectiu de glucèmia</string>
+    <string name="sensitivity_raises_target_title">Sensibilitat augmenta objectiu</string>
+    <string name="sensitivity_raises_target_summary">Quan es detecta sensibilitat, augmentar objectiu de glucèmia</string>
+    <string name="openapsma_disabled">Plugin desactivat</string>
+    <string name="openapsma_no_glucose_data">Dades de glucèmia no disponibles</string>
+    <string name="openaps_no_as_data">Dades d\'autosens no disponibles</string>
+    <string name="executing">Executant</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Array de %1$d elements.\nValor actual:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Estat de l\'algoritme el 2017</string>
+    <string name="description_smb">Algoritme més nou per usuaris avançats</string>
+    <string name="openapsama_bolus_snooze_dia_divisor">Retard de bolus - Divisor de DIA (Durada de l\'Acció de la Insulina)</string>
+    <string name="openapsma_run">Executar ara</string>
+    <string name="openapsma_last_run_label">Última execució</string>
+    <string name="openapsma_input_parameters_label">Paràmetres d\'entrada</string>
+    <string name="openapsma_glucose_status_label">Estat glucèmia</string>
+    <string name="openapsma_current_temp_label">Temp actual</string>
+    <string name="openapsma_iob_data_label">Dades d\'IOB</string>
+    <string name="openapsma_profile_label">Perfil</string>
+    <string name="openapsma_meal_data_label">Dades àpat</string>
+    <string name="openapsma_request_label">Petició</string>
+    <string name="constraints">Restriccions</string>
+    <string name="openapsma_autosensdata_label">Dades autosens</string>
+    <string name="openapsma_script_debug_data_label">Depurar script</string>
+    <string name="openapsama_use_autosens">Utilitzar funció Autosens</string>
+    <string name="openapsma_max_basal_title">Max U/h per una basal temporal</string>
+    <string name="openapsma_max_basal_summary">A OpenAPS d\'aquest valor se\'n diu basal màxima</string>
+    <string name="openapsma_max_iob_title">Màxima basal IOB que OpenAPS pot suministrar [U]</string>
+    <string name="openapsma_max_iob_summary">A OpenAPS d\'aquest valor se\'n diu Màx IOB\nÉs la màxima quantitat d\'insulina en [U] que APS pot suministrar d\'una vegada.</string>
+    <string name="openapsama_autosens_adjust_targets_summary">Valor per defecte: true\nPermetre a autosens ajustar objectius de glucèmia a més d\'ISF i basals.</string>
+    <string name="openapsama_autosens_adjust_targets">Autosens també ajusta objectius</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valor per defecte: 3 (AMA) o 8.0 (SMB). Aquest paràmetre indica el valor per defecte d\'absorció de carbohidrats en 5 minuts, quan diem 3 volem dir 3mg/dl/5min. Afecta a com de ràpid decauen els COB i quina absorció de carbohidrats es considera al calcular la predicció de glucèmia futura, quan la glucèmia cau més ràpid de l\'esperat o no puja tant com era de preveure.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Valor per defecte: 3. Valor clau de seguretat per OpenAPS. Limita, en aquest cas, la basal a 3x la basal màxima. Normalment no cal modificar-lo, però per motius de seguretat cal tenir present què vol dir quan parlem de, per exemple \"3x max diari; 4x actual\".</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Valor per defecte: 4. Valor clau de seguretat per OpenAPS, per quan parlem de \"3x max diari; 4x actual\". Significa que la vostra basal, independentment de la max. basal configurada a la bomba, no pot ser més gran que aquest valor multiplicat per la vostra basal en un moment determinat. Pretén evitar basals màximes excessivament altes abans de dominar l\'algoritme. Normalment no cal modificar el valor per defecte i, en cas de conflicte amb el valor màxim de basal, sol ser més habitual haver de modificar altres paràmetres que no pas aquest.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Valor per defecte: 2\nEl retard de bolus s\'activa després d\'un bolus d\'àpat, de manera que el llaç no contrarresti amb basals temporals baixes just després d\'haver menjat. El valor per defecte i el de l\'exemple és 2, d\'aquesta manera amb una DIA de 3 hores el bolus es retardaria gradualment durant 1.5 hores (3DIA/2).</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Atenció!\nNormalment no cal modificar els valors d\'aquí sota. Si us plau FEU CLIC AQUÍ, LLEGIU el text i assegureu-vos de COMPRENDRE\'L abans de modificar-ne qualsevol.</string>
+    <string name="always_use_short_avg">Utilitzar sempre delta mitjana curta enlloc de delta simple</string>
+    <string name="always_use_short_avg_summary">Útil quan les dades de fonts no filtrades, com xDrip+, esdevenen sorolloses.</string>
+    <string name="openapsama_max_daily_safety_multiplier">Màxim multiplicador diari de seguretat</string>
+    <string name="openapsama_current_basal_safety_multiplier">Multiplicador actual basal de seguretat</string>
+    <string name="openapssmb_max_iob_title">Insulina activa (IOB) total màxima que OpenAPS no pot superar [U]</string>
+    <string name="openapssmb_max_iob_summary">Aquest valor és anomenat Màx IOB en el context OpenAPS\nOpenAPS no afegirà més insulina si l\'IOB actual supera aquest valor</string>
+    <string name="enable_uam">Activar UAM</string>
+    <string name="enable_smb">Activar SMB</string>
+    <string name="enable_smb_summary">Utilitzar Super Micro Bolus enlloc de basals temporals per guanyar temps</string>
+    <string name="enable_uam_summary">Detecció d\'àpats no anunciats (UAM)</string>
+    <string name="enable_smb_always">Habilitar SMB sempre</string>
+    <string name="enable_smb_always_summary">Habilitar SMB independentment dels bolus. Possible només si la font de glucèmia te un bon filtrat de dades, com G5</string>
+    <string name="enable_smb_after_carbs">Habilitar SMB després de carbohidrats</string>
+    <string name="enable_smb_after_carbs_summary">Habilitar SMB durant 6h després de carbohidrats, fins i tot amb COB = 0. Possible només si la font de glucèmia te un bon filtrat de dades, com G5</string>
+    <string name="enable_smb_with_cob">Habilitar SMB amb COB</string>
+    <string name="enable_smb_with_cob_summary">Habilitar SMB quan CBO actiu.</string>
+    <string name="enable_smb_with_temp_target">Habilitar SMB amb objectius temporals</string>
+    <string name="enable_smb_with_temp_target_summary">Habilitar SMB quan hi ha un objectiu temporal actiu (menjar aviat, esport)</string>
+    <string name="enable_smb_with_high_temp_target">Habilitar SMB amb objectius temporals alts</string>
+    <string name="enable_smb_with_high_temp_target_summary">Habilitar SMB quan un objectiu temporal alt està actiu (esport, &gt; 100mg/dl o 5,5 mmol/l)</string>
+    <string name="smb_max_minutes_summary">Max. minuts de basal als quals limitar SMB</string>
+    <string name="uam_smb_max_minutes">Max. minuts d\'UAM SMB</string>
+    <string name="uam_smb_max_minutes_summary">Max. minuts de basal als quals limitar SMB per UAM</string>
+    <string name="carbs_req_threshold">Mínim carbs per rebre recomanacions</string>
+    <string name="carbs_req_threshold_summary">Minim grs. de carbohidrats per mostrar alerta carbohidrats recomanats. Recomanacions d\'hidrats per sota d\'aquest llindar no generaran avís.</string>
+    <string name="increasing_max_basal">Augmentant basal màxima perquè està configurada més baixa que la basal màxima del perfil</string>
+    <string name="max_basal_multiplier">màxim multiplicador de basal</string>
+    <string name="max_daily_basal_multiplier">màxim multiplicador de basal diaria</string>
+    <string name="smb_disabled_in_preferences">SMB desactivat a la configuració</string>
+    <string name="uam_disabled_in_preferences">UAM desactivat a la configuració</string>
+    <string name="autosens_disabled_in_preferences">Autosens desactivat a la configuració</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">Limitant IOB a %1$.1f U a causa de %2$s</string>
+    <string name="maxvalueinpreferences">valor màxim a la configuració</string>
+    <string name="hardlimit">límit estricte</string>
+    <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">S\'ha lliurat un bolus els darrers 3 minuts, ignorant SMB</string>
+    <string name="loop_shortname">LLAÇ</string>
+    <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
+    <string name="ignore5m">Ignorar 5m</string>
+    <string name="ignore15m">Ignorar 15m</string>
+    <string name="ignore30m">Ignorar 30m</string>
+    <string name="basal_set_correctly">Basal configurada ok</string>
+    <string name="loop_aps_label">APS</string>
+</resources>

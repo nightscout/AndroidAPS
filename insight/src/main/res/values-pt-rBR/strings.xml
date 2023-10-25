@@ -11,16 +11,15 @@
     <string name="stop_pump">Parar Bomba</string>
     <string name="started">Iniciado</string>
     <string name="stopped">Parado</string>
-    <string name="paused">Pausado</string>
     <string name="operating_mode">Modo de funcionamento</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
     <string name="tdd_bolus">DDT de Bolus</string>
     <string name="tdd_basal">DDT Basal</string>
-    <string name="tdd_total">DDT Total</string>
     <string name="tbr_formatter">%1$d%% para %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bólus Multi-Onda</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
+    <string name="insight_last_bolus">Último bolus</string>
     <string name="searching_for_devices">A pesquisar dispositivos…</string>
     <string name="pairing_completed">Emparelhamento concluído</string>
     <string name="code_compare">Os códigos exibidos neste dispositivo e na sua bomba correspondem?</string>
@@ -30,18 +29,20 @@
     <string name="tube_changed">Tubo mudado</string>
     <string name="insightpump_shortname">Visão</string>
     <string name="insight_alert_notification_channel">Alertas Bomba Insight</string>
+    <string name="disable_vibration">Desativar vibrações na entrega manual de bolus</string>
+    <string name="disable_vibration_summary">Para bolus e bolus estendido (disponível apenas com firmware Insight 3.x)</string>
+    <string name="disable_vibration_auto">Desativar vibrações na entrega automática de bolus</string>
+    <string name="disable_vibration_auto_summary">Para SMB e basal temporária com com emulação da taxa basal temporária (disponível apenas com firmware Insight 3.x)</string>
     <string name="timeout_during_handshake">Tempo de operação excedido - reinicar bluetooth</string>
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
-    <string name="pump_paused">Bomba suspensa</string>
     <string name="short_status_last_connected">Última ligação:%1$d minutos atrás</string>
     <string name="short_status_tbr">Basal temporária: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Estendido: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Reservatório: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Confirmar</string>
-    <string name="mute_alert">Silêncio</string>
     <string name="release_software_version">Lançar versão de software</string>
     <string name="ui_processor_software_version">Versão de software do processador de interface do utilizador</string>
     <string name="pc_processor_software_version">Versão do software do processador de PC</string>
@@ -65,4 +66,5 @@
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="pump_alert">Alerta da Bomba</string>
     <string name="pairing_information">Informações de emparelhamento</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Botão Atualizar Insight</string>
 </resources>

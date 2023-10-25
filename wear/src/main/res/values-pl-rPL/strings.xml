@@ -2,6 +2,15 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface_large">AAPS(Duży)</string>
+    <string name="label_watchface_big_chart">AAPS(DużyWykres)</string>
+    <string name="label_watchface_no_chart">AAPS(BezWykresu)</string>
+    <string name="label_watchface_circle">AAPS(Koło)</string>
+    <string name="label_watchface_digital_style">AAPS(StylCyfrowy)</string>
+    <string name="label_watchface_custom">AAPS(niestandardowy)</string>
+    <string name="label_actions_tile">AAPS(Ustawienia)</string>
+    <string name="label_temp_target_tile">AAPS(Cel Tymczasowy)</string>
+    <string name="label_quick_wizard_tile">AAPS(Szybki kreator)</string>
     <string name="label_warning_sync">Brak danych!</string>
     <string name="label_warning_old">Stare dane!</string>
     <string name="label_warning_since">Od %1$s</string>
@@ -10,20 +19,33 @@
     <string name="msg_warning_old">Dane z AAPS są %1$s stare! Sprawdź swój sensor, xDrip+, NS, konfigurację AAPS i inne ustawienia!</string>
     <string name="pref_vibrate_on_bolus">Wibruj przy Bolusie</string>
     <string name="pref_units_for_actions">Jednostki dla akcji</string>
+    <string name="units_short">U</string>
+    <string name="pref_display_settings">Wyświetlanie</string>
+    <string name="pref_graph_settings">Wykres</string>
+    <string name="pref_interface_settings">Interfejs</string>
+    <string name="pref_others_settings">Inne</string>
+    <string name="pref_complication_settings">Komplikacje</string>
     <string name="pref_show_date">Pokaż Datę</string>
     <string name="pref_show_iob">Pokaż IOB</string>
+    <string name="pref_show_detailed_iob">Pokaż szczegółowe IOB</string>
     <string name="pref_show_cob">Pokaż COB</string>
     <string name="pref_show_delta">Pokaż Deltę</string>
+    <string name="pref_show_detailed_delta">Pokaż szczegółowo Deltę</string>
     <string name="pref_show_avgdelta">Pokaż Śr. Deltę</string>
     <string name="pref_show_phone_battery">Pokaż Baterię Telefonu</string>
     <string name="pref_show_rig_battery">Pokaż Baterię Zestawu</string>
     <string name="pref_show_basal_rate">Pokaż Bazę</string>
     <string name="pref_show_loop_status">Pokaż Status Pętli</string>
     <string name="pref_show_bg">Pokaż glikemię</string>
+    <string name="pref_show_bgi">Pokaż BGI</string>
     <string name="pref_show_direction_arrow">Pokaż strzałkę trendu</string>
     <string name="pref_show_ago">Pokaż aktualność</string>
+    <string name="pref_show_temp_basal">Pokaż TBR</string>
+    <string name="pref_show_bolus">Pokaż Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Pokaż siatkę</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tryb ciemny</string>
     <string name="pref_highlight_basals">Podświetl Bazę</string>
+    <string name="pref_prediction_lines">Pokazuj predykcje</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Separator pod kolor</string>
     <string name="pref_chart_timeframe">Ramy czasowe wykresu</string>
     <string name="pref_1_hour">1 godzina</string>
@@ -36,7 +58,6 @@
     <string name="pref_quick_righty">Szybki prawy</string>
     <string name="pref_quick_lefty">Szybki lewy</string>
     <string name="pref_modern_sparse">Minimalistyczny</string>
-    <string name="pref_delta_granularity">Granularność Delty (Steampunk)</string>
     <string name="pref_low">Niska</string>
     <string name="pref_medium">Średnia</string>
     <string name="pref_high">Wysoka</string>
@@ -45,16 +66,23 @@
     <string name="pref_ring_history">Historia glikemi</string>
     <string name="pref_light_ring_history">Dyskretniejsza historia</string>
     <string name="pref_animations">Animacje</string>
+    <string name="pref_wizard_in_menu">Kalkulator w Menu</string>
     <string name="pref_prime_in_menu">Wypełnianie w menu</string>
     <string name="pref_single_target">Pojedyńcza wartość Celu</string>
+    <string name="pref_wizard_percentage">Procent kalkulatora</string>
     <string name="pref_complication_tap_action">Akcja po kliknięciu komplikacji</string>
     <string name="pref_unicode_in_complications">Unicode w Komplikacjach</string>
     <string name="pref_version">Wersja:</string>
+    <string name="pref_moreWatchfaceSettings">Więcej ustawień zegarka</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Proszę, zajrzyj do konfiguracji zegarka.</string>
     <string name="menu_tempt">CelTymcz.</string>
     <string name="menu_wizard">Kalkulator</string>
     <string name="menu_wizard_short">Kalk</string>
+    <string name="menu_treatment">Terapia</string>
+    <string name="menu_treatment_short">Lecz</string>
     <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Węglowodany</string>
+    <string name="menu_ecarb">wirtualne węgle</string>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Ponowna synchronizacja</string>
@@ -62,10 +90,21 @@
     <string name="menu_none">Brak</string>
     <string name="menu_default">Domyślnie</string>
     <string name="menu_menu">Menu</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Czas trwania akcji</string>
+    <string name="action_tempt_confirmation">Żądany cel tymczasowy</string>
+    <string name="action_quick_wizard_confirmation">Szybki kreator</string>
+    <string name="action_treatment_confirmation">Wymagane leczenie</string>
+    <string name="action_bolus_confirmation">Żądany bolus</string>
+    <string name="action_wizard_confirmation">Żądane obliczenia</string>
+    <string name="action_fill_confirmation">Wypełnij</string>
+    <string name="action_ecarb_confirmation">Żądane węglowodany</string>
+    <string name="action_profile_switch_confirmation">Prośba o zmianę profilu</string>
     <string name="action_target" comment="In temp target menu, single target value">Cel</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Niski</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Wysoki</string>
     <string name="action_carbs">Węglowodany</string>
+    <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Procent</string>
     <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Czas trwania [h]</string>
@@ -73,7 +112,7 @@
     <string name="action_preset_1">Ustawienie 1</string>
     <string name="action_preset_2">Ustawienie 2</string>
     <string name="action_preset_3">Ustawienie 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Podana wartość</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Podana wartość</string>
     <string name="action_confirm">POTWIERDŹ</string>
     <string name="action_timeshift">przesunięcie czasu</string>
     <string name="action_bolus">Bolus</string>
@@ -82,6 +121,7 @@
     <string name="cancel_bolus">ANULUJ BOLUS</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Pętla</string>
+    <string name="status_profile_switch">Zmiana profilu</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Węgl.</string>
     <string name="activity_IOB">IOB</string>
@@ -112,6 +152,7 @@
     <string name="pref_simplify_ui_sum">Pokaż tylko czas i glikemię</string>
     <string name="pref_vibrate_hourly">Wibruj co godzinę</string>
     <string name="pref_show_weeknumber">Pokaż numer tygodnia</string>
+    <string name="custom_pref_show_seconds">Pokaż sekundy</string>
     <string name="digitalstyle_pref_your_style">Styl:</string>
     <string name="digitalstyle_style_none">brak stylu</string>
     <string name="digitalstyle_style_minimal">minimalistyczny</string>
@@ -133,5 +174,34 @@
     <string name="temp_target_activity">Ćwiczenia</string>
     <string name="temp_target_manual">Ręczne</string>
     <string name="temp_target_cancel">Anuluj</string>
+    <string name="tile_none">Brak</string>
     <string name="tile_no_config">Konfiguracja nie jest dostępna</string>
+    <string name="wear_control_not_enabled">Sterowanie wear wyłączone</string>
+    <string name="wear_control_no_data">Brak dostępnych danych</string>
+    <string name="increment">zwiększenie</string>
+    <string name="decrement">zmniejszenie</string>
+    <string name="abbreviation_average">śr</string>
+    <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Min temu</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Brak Statusu Pętli</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
+    <string name="snooze_alert">Wycisz Alarm AAPS</string>
+    <string name="sending_snooze">Wysyłanie wyciszenia do AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">t</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="old">stare</string>
+    <string name="old_warning">!stare!</string>
+    <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">Tętno</string>
 </resources>

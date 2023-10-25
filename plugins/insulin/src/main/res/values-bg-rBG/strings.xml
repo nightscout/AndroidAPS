@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Действие на инсулините Humalog и NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Действие на инсулин Fiasp</string>
+    <string name="description_insulin_lyumjev">Действие на инсулин Lyumjev</string>
+    <string name="description_insulin_free_peak">Позволява да зададете сами пика на инсулиновата активност (не използвайте, ако сте нови потребители)</string>
+    <string name="insulin_shortname">ИНС</string>
+    <string name="insulin_oref_peak">Пик на кривата на IOB</string>
+    <string name="insulin_peak_time">Време на пик [мин.]</string>
+    <string name="free_peak_oref">Със свободен пик по Oref</string>
+    <string name="rapid_acting_oref">Бързодействащ по Oref</string>
+    <string name="ultra_rapid_oref">Ултра бързодействащ по Oref</string>
+    <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
+    <string name="fast_acting_insulin_comment">Novorapid Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+</resources>

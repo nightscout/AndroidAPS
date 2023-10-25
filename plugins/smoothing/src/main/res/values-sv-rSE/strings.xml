@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">UTJÄMNING</string>
+    <string name="exponential_smoothing_name">Exponentiell utjämning</string>
+    <string name="description_exponential_smoothing">"Andra ordningens exponentiella utjämningsalgoritm"</string>
+    <string name="avg_smoothing_name">Genomsnittlig utjämning</string>
+    <string name="description_avg_smoothing">"Genomsnittlig utjämningsalgoritm, det nyaste värdet påverkas inte"</string>
+    <string name="no_smoothing_name">Ingen utjämning</string>
+    <string name="description_no_smoothing">"Ingen utjämning utförs på inmatade glukosdata. Använd detta när du redan har filtrerat data, t.ex. från BYODA G6."</string>
+</resources>

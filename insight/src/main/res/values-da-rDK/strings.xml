@@ -11,13 +11,11 @@
     <string name="stop_pump">Stop pumpe</string>
     <string name="started">Startet</string>
     <string name="stopped">Stoppet</string>
-    <string name="paused">Pauset</string>
     <string name="operating_mode">Driftstilstand</string>
     <string name="description_pump_insight_local">Pumpeintegration til Accu-Chek Insight pumper</string>
     <string name="not_inserted">Ikke sat i</string>
     <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Basal</string>
-    <string name="tdd_total">TDD Total</string>
     <string name="tbr_formatter">%1$d%% i %2$d / %3$d min</string>
     <string name="multiwave_bolus">Kombineret bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f IE i %3$d min</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">En timeout opstod i parringsprosessen - genstart Bluetooth</string>
     <string name="pump_stopped">Pumpe stoppet</string>
     <string name="pump_started">Pumpe startet</string>
-    <string name="pump_paused">Pumpe på pause</string>
     <string name="short_status_last_connected">Seneste forb: %1$d min siden</string>
     <string name="short_status_tbr">MBR: %1$d%% i %2$d / %3$d min</string>
     <string name="short_status_extended">Forlænget: %1$.2f / %2$.2f IE i %3$d min</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Ampul: %1$.2f IE</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="confirm">Bekræft</string>
-    <string name="mute_alert">Lydløs</string>
     <string name="release_software_version">Release software version</string>
     <string name="ui_processor_software_version">UI processor software version</string>
     <string name="pc_processor_software_version">PC processor software version</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Min pause mellem forbindelsesforsøg [s]</string>
     <string name="pump_alert">Pumpe advarsel</string>
     <string name="pairing_information">Information om parring</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Opdater-knap</string>
 </resources>

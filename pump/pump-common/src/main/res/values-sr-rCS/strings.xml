@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <!-- PumpCommon - Pump Status -->
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_other">Ostalo</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <!-- BLE Errors -->
+    <!-- Pump Error -->
+    <!-- Pump History -->
+    <!-- PumpDeviceState -->
+</resources>

@@ -1,0 +1,251 @@
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="2dp"
+    tools:context=".maintenance.MaintenanceFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/unlock"
+            style="@style/GrayButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/unlock_settings" />
+
+        <LinearLayout
+            android:id="@+id/main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/log"
+                style="@style/Widget.MaterialComponents.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="4dp"
+                app:cardCornerRadius="4dp"
+                app:contentPadding="2dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="false"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/log_files" />
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dip"
+                    app:columnCount="2">
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/nav_logsettings"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_log_settings"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/nav_logsettings"
+                        android:textSize="11sp"
+                        app:layout_column="0"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0" />
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/log_send"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_send_log"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/send_all_logs"
+                        android:textSize="11sp"
+                        app:layout_column="1"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0" />
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/log_delete"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_log_delete"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/delete_logs"
+                        android:textSize="11sp"
+                        app:layout_column="0"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="1" />
+
+                </androidx.gridlayout.widget.GridLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/nav"
+                style="@style/Widget.MaterialComponents.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="4dp"
+                app:cardCornerRadius="4dp"
+                app:contentPadding="2dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="false"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/settings" />
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dip"
+                    app:columnCount="2">
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/nav_export"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_export_settings"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/nav_export"
+                        android:textSize="11sp"
+                        app:layout_column="0"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0" />
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/nav_import"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_import_settings"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/import_setting"
+                        android:textSize="11sp"
+                        app:layout_column="1"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0" />
+
+                </androidx.gridlayout.widget.GridLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/misc"
+                style="@style/Widget.MaterialComponents.CardView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginTop="4dp"
+                app:cardCornerRadius="4dp"
+                app:contentPadding="2dp"
+                app:cardElevation="2dp"
+                app:cardUseCompatPadding="false"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/miscellaneous" />
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="10dip"
+                    app:columnCount="2">
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/export_csv"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_excel"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/ue_export_to_csv"
+                        android:textSize="11sp"
+                        app:layout_column="0"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0" />
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/cleanup_db"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_database_cleanup"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/database_cleanup"
+                        android:textSize="11sp"
+                        app:layout_column="0"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="1" />
+
+                    <app.aaps.core.ui.elements.SingleClickButton
+                        android:id="@+id/nav_resetdb"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/ic_reset_database"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/nav_resetdb"
+                        android:textSize="11sp"
+                        app:layout_column="1"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="1" />
+
+                </androidx.gridlayout.widget.GridLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

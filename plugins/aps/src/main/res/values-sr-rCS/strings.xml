@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="openapsma_disabled">Dodatak je onemogućen</string>
+    <string name="openapsma_no_glucose_data">Nema dostupnih podataka o glukozi</string>
+    <string name="description_ama">Stanje algoritma u 2017</string>
+    <string name="description_smb">Najnoviji algoritam za napredne korisnike</string>
+    <string name="description_smb_dynamic_isf">Najnoviji algoritam za napredne korisnike sa dinamičkim/automatskim ISF-om</string>
+    <string name="openapsma_run">Pokreni sada</string>
+    <string name="openapsma_last_run_label">Poslednje pokretanje</string>
+    <string name="openapsma_input_parameters_label">Ulazni parametri</string>
+    <string name="openapsma_glucose_status_label">Status glukoze</string>
+    <string name="openapsma_current_temp_label">Trenutni TBR</string>
+    <string name="openapsma_iob_data_label">IOB podaci</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="openapsma_meal_data_label">Podaci o obroku</string>
+    <string name="openapsma_request_label">Zahtev</string>
+    <string name="constraints">Ograničenja</string>
+    <string name="openapsma_max_basal_title">Max U/h privremeni Basal se može postaviti na</string>
+    <string name="openapsma_max_basal_summary">Ova vrednost se naziva maksimalni bazal u OpenAPS kontekstu</string>
+    <string name="openapsma_max_iob_title">Maksimalni bazalni IOB OpenAPS može da isporuči [U]</string>
+    <string name="openapsma_max_iob_summary">Ova vrednost se naziva Max IOB u OpenAPS kontekstu\nOvo je maksimalni insulin u [U] APS-u koji se može isporuči odjednom.</string>
+    <string name="lgs_threshold_title">Nivo GUK ispod kojeg dolazi do suspenzije niske glukoze</string>
+    <!--    Verify if needed in safety-->
+    <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="description_loop">Aktivirajte ili deaktivirajte implementaciju koja pokreće petlju.</string>
+    <string name="loop_aps_label">APS</string>
+</resources>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application android:supportsRtl="true">
+
+        <activity
+            android:name=".widget.WidgetConfigureActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Material.Dialog.NoActionBar">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".widget.Widget"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info" />
+        </receiver>
+
+        <activity
+            android:name=".activities.TDDStatsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="app.aaps.ui.activities.BolusProgressHelperActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Translucent" />
+        <activity
+            android:name=".activities.ErrorHelperActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MaterialComponents.Translucent" />
+        <activity
+            android:name=".activities.SurveyActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.StatsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.TreatmentsActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.ProfileHelperActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name="app.aaps.ui.activities.QuickWizardListActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="app.aaps.ui.activities.QuickWizardListActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".services.AlarmSoundService"
+            android:enabled="true"
+            android:exported="false" />
+
+    </application>
+
+</manifest>

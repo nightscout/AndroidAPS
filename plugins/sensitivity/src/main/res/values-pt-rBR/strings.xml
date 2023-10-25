@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensibilidade Oref1</string>
+    <string name="sensitivity_aaps">Sensibilidade AAPS</string>
+    <string name="sensitivity_weighted_average">Média ponderada da Sensibilidade</string>
+    <string name="description_sensitivity_aaps">A sensibilidade é calculada da mesma forma que Oref0, mas você pode especificar um período de tempo no passado. A absorção mínima de carboidratos é calculada a partir do tempo de absorção máxima especificado nas preferências.</string>
+    <string name="description_sensitivity_oref1">A sensibilidade é calculada a partir de dados de 8h ou 24h no passado (usando o que é mais sensível). Carboidratos (se não absorvidos) são cortados após o tempo especificado nas preferências. O plugin também calcula o UAM.</string>
+    <string name="description_sensitivity_weighted_average">A sensibilidade é calculada como uma média ponderada de desvios. Desvios mais recentes têm maior peso. A absorção mínima de hidratos de carbono é calculada a partir do tempo máximo de absorção de hidratos de carbono das preferências. Este algoritmo é o mais rápido em seguir as mudanças de sensibilidade.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM desativado porque confia no plugin de sensibilidade Oref1</string>
+    <string name="absorption_settings_title">Configurações de absorção</string>
+    <string name="absorption_max_time_title">Tempo máx. absorção refeição [h]</string>
+    <string name="absorption_max_time_summary">Tempo em horas, espectável para que todos os hidratos de carbono da refeição sejam absorvidos</string>
+    <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Quantidade de horas observadas para a deteção de sensibilidade (o tempo de absorção dos hidratos de carbono é excluído)</string>
+    <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
+    <string name="openapsama_autosens_min_summary">Valor padrão: 0,7\nO outro lado dos limites de segurança do Autosens, colocando um limite no quanto o Autosens pode ajustar os basais e no quanto pode ajustar os alvos FSI e alvos de Glicose.</string>
+    <string name="openapsama_autosens_max">Razão máx. autosens</string>
+    <string name="openapsama_autosens_min">Razão min. autosens</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valor padrão: 3.0 para assitência avançada de refeições (AAR) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glicemia (BG) devido à absorção de carboidratos. O padrão é 3mg/dl/5min. Isso afeta a rapidez com que decaem os carboidratos ativos (CA) e quanta absorção de carboidrato será considerada no cálculo da previsão de glicemia futura, tornando possível notar que glicemia está baixando mais do que o esperado ou não subindo como esperado.</string>
+    <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
+    <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
+</resources>

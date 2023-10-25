@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <import type="info.nightscout.androidaps.plugins.pump.eopatch.code.PatchStep" />
+
+        <variable
+            name="viewModel"
+            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.EopatchActivity">
+
+            <TextView
+                android:id="@+id/text_patch_wake_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="@string/patch_wake_up"
+                android:textSize="24sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_patch_wake_up_progress"
+                android:layout_width="50dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="7dp"
+                android:gravity="center"
+                android:text="@string/patch_wake_up_step"
+
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_patch_wake_up" />
+
+            <TextView
+                android:id="@+id/text_patch_wake_up_desc_num_1"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:text="@string/patch_step_desc_1"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_patch_wake_up_desc_1" />
+
+            <TextView
+                android:id="@+id/text_patch_wake_up_desc_1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="43dp"
+                android:text="@string/patch_wake_up_desc_1"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/text_patch_wake_up_desc_num_1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_patch_wake_up_progress" />
+
+            <TextView
+                android:id="@+id/text_patch_wake_up_desc_num_2"
+                android:layout_width="25dp"
+                android:layout_height="wrap_content"
+                android:text="@string/patch_step_desc_2"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_patch_wake_up_desc_2" />
+
+            <TextView
+                android:id="@+id/text_patch_wake_up_desc_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/patch_wake_up_desc_2"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/text_patch_wake_up_desc_num_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_patch_wake_up_desc_1" />
+
+            <ImageView
+                android:id="@+id/image_point_red"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="3dp"
+                android:contentDescription="@string/string_caution_not_remove_needle_cap"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/text_string_caution_not_remove_needle_cap" />
+
+            <TextView
+                android:id="@+id/text_string_caution_not_remove_needle_cap"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="9dp"
+                android:layout_marginTop="12dp"
+                android:text="@string/string_caution_not_remove_needle_cap"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/image_point_red"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_patch_wake_up_desc_2" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" >
+
+                <Button
+                    android:id="@+id/btn_negative"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/cancel"
+                    android:contentDescription="@string/cancel"
+                    app:layout_constraintEnd_toStartOf="@id/btn_positive"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.CANCEL)}" />
+
+                <Button
+                    android:id="@+id/btn_positive"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:text="@string/patch_start_pairing"
+                    android:contentDescription="@string/patch_start_pairing"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btn_negative"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.CONNECT_NEW)}" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</layout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Wrażliwość Oref1</string>
+    <string name="sensitivity_aaps">Wrażliwość AAPS</string>
+    <string name="sensitivity_weighted_average">Wrażliwość ŚredniaWażona</string>
+    <string name="description_sensitivity_aaps">Wrażliwość jest obliczana w taki sam sposób, jak algorytm Oref0, ale możliwe jest podanie okresu z przeszłości. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu.</string>
+    <string name="description_sensitivity_oref1">Wrażliwość oblicza się na podstawie danych z ostatnich 8 lub 24 godzin (przy użyciu danych o wyższej wrażliwości). Węglowodany (jeśli nie są wchłonięte) są skracane po upływie czasu określonego w ustawieniach. Wtyczka również oblicza UAM.</string>
+    <string name="description_sensitivity_weighted_average">Wrażliwość jest obliczana jako średnia ważona z odchyleń. Nowsze wartości mają większą wagę. Minimalne wchłanianie węglowodanów jest obliczana na podstawie czasu wchłaniania max carb, określonego w ustawieniu. Algorytm ten najszybciej śledzi zmiany wrażliwości.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM jest wyłączone ponieważ zależy od wtyczki wrażliwości Oref1</string>
+    <string name="absorption_settings_title">Ustawienia wchłaniania</string>
+    <string name="absorption_max_time_title">Maks. czas wchłaniania posiłku [h]</string>
+    <string name="absorption_max_time_summary">Oczekiwany czas w godzinach, w którym wszystkie węglowodany zostają wchłonięte</string>
+    <string name="openapsama_autosens_period">Przedział czasowy dla autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Ilość minionych godzin brana pod uwagę do określenia wrażliwości \"sensitivity\" (wyklucza się czas wchłaniania węglowodanów)</string>
+    <string name="openapsama_autosens_max_summary">Wartość domyślna: 1.2\nTo jest mnożnik dla autosens (wkrótce autotune), ustawia 20%% maks. limit dla najwyższej wartości jaką autosens może przyjąć, co z kolei określa jak wysoko autosens może zwiększyć bazę, jak nisko może ustawić współczynnik wrażliwości insuliny ISF, i jak nisko może ustawić docelową wartość glikemii.</string>
+    <string name="openapsama_autosens_min_summary">Wartość domyślna: 0.7\nDruga strona limitu bezpieczeństwa dla autosens, ustawia mnożnik minimalny dla wartości, do jakiej autosens może obniżyć bazę, i jak wysoko może ustawić ISF i wartość docelową BG.</string>
+    <string name="openapsama_autosens_max">Maks. mnożnik autosens</string>
+    <string name="openapsama_autosens_min">Min. mnożnik autosens</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Wartość domyślna: 3.0 (AMA) lub 8.0 (SMB). To jest ustawienie domyślnego wpływu wchłaniania węglowodanów w czasie 5 min. Wartością domyślną jest spodziewane 3mg/dl/5min. Ma to wpływ na szybkość zaniku COB, oraz jak duże wchłanianie węglowodanów będzie przyjęte do obliczeń przyszłych przewidywanych wartości BG, jeżeli BG obniża się bardziej niż w założono, lub nie wzrasta tak szybko jak się spodziewano.</string>
+    <string name="absorption_cutoff_title">Maksymalny czas wchłaniania posiłku [h]</string>
+    <string name="absorption_cutoff_summary">Czas, w którym każdy posiłek jest uznany za wchłonięty. Pozostałe węglowodany zostaną wyzerowane.</string>
+</resources>

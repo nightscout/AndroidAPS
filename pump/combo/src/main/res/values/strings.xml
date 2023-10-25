@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combopump" translatable="false">Accu-Chek Combo (Ruffy)</string>
+    <string name="combopump_shortname" translatable="false">COMBO</string>
+    <string name="description_pump_combo">Pump integration for Accu-Chek Combo pumps, requires having ruffy installed</string>
+    <string name="combo_programming_bolus">Programming pump for bolusing</string>
+    <string name="combo_pump_state_label">State</string>
+    <string name="combo_pump_activity_label">Activity</string>
+    <string name="combo_no_pump_connection">No connection for %1$d min</string>
+    <string name="combo_tbr_remaining">%1$d%% (%2$d min remaining)</string>
+    <string name="combo_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
+    <string name="combo_pump_state_initializing">Initializing</string>
+    <string name="combo_pump_state_suspended_due_to_error">Suspended due to error</string>
+    <string name="combo_pump_state_suspended_by_user">Suspended by user</string>
+    <string name="combo_pump_state_running">Running</string>
+    <string name="combo_pump_action_cancelling_tbr">Cancelling TBR</string>
+    <string name="combo_pump_action_setting_tbr">Setting TBR (%1$d%% / %2$d min)</string>
+    <string name="combo_pump_action_bolusing">Bolusing (%1$.1f U)</string>
+    <string name="combo_pump_action_refreshing">Refreshing</string>
+    <string name="combo_pump_unsupported_operation">Requested operation not supported by pump</string>
+    <string name="combo_low_suspend_forced_notification">Unsafe usage: extended or multiwave boluses are active. Loop mode has been set to low-suspend only 6 hours. Only normal boluses are supported in loop mode</string>
+    <string name="combo_force_disabled_notification">Unsafe usage: the pump uses a different basal rate profile than the first. The loop has been disabled. Select the first profile on the pump and refresh.</string>
+    <string name="bolus_frequency_exceeded">A bolus with the same amount was requested within the last two minutes. To prevent accidental double boluses and to guard against bugs this is disallowed.</string>
+    <string name="combo_pump_connected_now">Now</string>
+    <string name="combo_activity_setting_basal_profile">Setting basal profile</string>
+    <string name="combo_pump_cartridge_low_warrning">Pump cartridge level is low</string>
+    <string name="combo_pump_battery_low_warrning">Pump battery is low</string>
+    <string name="combo_is_in_error_state">The pump is showing the error E%1$d: %2$s</string>
+    <string name="combo_reservoir_low">Low</string>
+    <string name="combo_reservoir_empty">Empty</string>
+    <string name="combo_reservoir_normal">Normal</string>
+    <string name="combo_notification_check_time_date">Pump clock update needed</string>
+    <string name="combo_pump_tbr_cancelled_warrning">TBR CANCELLED warning was confirmed</string>
+    <string name="combo_error_no_connection_no_bolus_delivered">The pump could not be reached. No bolus was given</string>
+    <string name="combo_error_no_bolus_delivered">Bolus delivery failed. It appears no bolus was delivered. To be sure, please check the pump to avoid a double bolus and then bolus again. To guard against bugs, boluses are not automatically retried.</string>
+    <string name="combo_error_partial_bolus_delivered">Only %1$.2f U of the requested bolus of %2$.2f U was delivered due to an error. Please check the pump to verify this and take appropriate actions.</string>
+    <string name="combo_error_bolus_verification_failed">Delivering the bolus and verifying the pump\'s history failed, please check the pump. If a bolus was delivered, it will be added to treatments during the next connection to the pump.</string>
+    <string name="combo_reservoir_level_insufficient_for_bolus">Not enough insulin for bolus left in reservoir</string>
+    <string name="combo_invalid_setup">Invalid pump setup, check the docs and verify that the Quick Info menu is named QUICK INFO using the 360 configuration software.</string>
+    <string name="combo_actvity_reading_basal_profile">Reading basal profile</string>
+    <string name="combo_bolus_rejected_due_to_pump_history_change">The pump history has changed after the bolus calculation was performed. The bolus was not delivered. Please recalculate if a bolus is still needed.</string>
+    <string name="combo_error_updating_treatment_record">Bolus successfully delivered, but adding the treatment entry failed. This can happen if two small boluses of the same size are administered within the last two minutes. Please check the pump history and treatment entries and use the Careportal to add missing entries. Make sure not to add any entries for the exact same minute and same amount.</string>
+    <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rejecting high temp since calculation didn\'t consider recently changed pump history</string>
+    <string name="combo_activity_checking_pump_state">Refreshing pump state</string>
+    <string name="combo_warning_pump_basal_rate_changed">The basal rate on the pump has changed and will be updated soon</string>
+    <string name="combo_error_failure_reading_changed_basal_rate">Basal rate changed on pump, but reading it failed</string>
+    <string name="combo_activity_checking_for_history_changes">Checking for history changes</string>
+    <string name="combo_error_multiple_boluses_with_identical_timestamp">Multiple boluses with the same amount within the same minute were just imported. Only one record could be added to treatments. Please check the pump and manually add a bolus record using the Careportal tab. Make sure to create a bolus with a time no other bolus uses.</string>
+    <string name="combo_check_date">The last bolus is older than 24 hours or is in the future. Please check the date on the pump is set correctly.</string>
+    <string name="combo_suspious_bolus_time">Time/date of the delivered bolus on pump seems wrong, IOB is likely incorrect. Please check pump time/date.</string>
+    <string name="combo_bolus_count">Bolus count</string>
+    <string name="combo_tbr_count">TBR count</string>
+    <string name="bolusstopped">Bolus stopped</string>
+    <string name="bolusstopping">Stopping bolus</string>
+    <string name="combo_pump_serial" translatable="false">combo_pump_serial</string>
+    <string name="combo_tbrs_set" translatable="false">combo_tbrs_set</string>
+    <string name="combo_boluses_delivered" translatable="false">combo_boluses_delivered</string>
+    <string name="pump_commerror_label">Comm. Error count</string>
+    <string name="key_combo_error_count" translatable="false">combo_error_count</string>
+    <string name="key_combo_name_settings" translatable="false">combo_name_settings</string>
+    <string name="key_show_comm_error_count" translatable="false">show_error_count</string>
+    <string name="show_comm_error_count_title">Show comm. error count</string>
+    <string name="show_comm_error_count_summary">Shows count of errors, when communicating with Ruffy. In most cases number higher than 0 denotes, Ruffy communication problems (restart might be needed).</string>
+
+    <string name="combo_error_display_never">Never</string>
+    <string name="combo_error_display_error">When Error</string>
+    <string name="combo_error_display_always">Always</string>
+
+    <string name="key_combo_error_display_never" translatable="false">NEVER</string>
+    <string name="key_combo_error_display_error" translatable="false">ON_ERROR</string>
+    <string name="key_combo_error_display_always" translatable="false">ALWAYS</string>
+
+    <string name="unsafeusage">unsafe usage</string>
+
+</resources>

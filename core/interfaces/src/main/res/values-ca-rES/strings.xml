@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpPluginBase -->
+    <!--    DateUtil-->
+    <string name="minago">Fa %1$d m</string>
+    <string name="hoursago">Fa %1$.1f h</string>
+    <string name="shorthour">h</string>
+    <string name="days">dies</string>
+    <string name="hours">hores</string>
+    <string name="unit_second">segon</string>
+    <string name="unit_minute">minut</string>
+    <string name="unit_hour">hora</string>
+    <string name="unit_day">dia</string>
+    <string name="unit_week">setmana</string>
+    <string name="unit_seconds">segons</string>
+    <string name="unit_minutes">minuts</string>
+    <string name="unit_hours">hores</string>
+    <string name="unit_days">dies</string>
+    <string name="unit_weeks">setmanes</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <!-- Rx -->
+    <string name="connecting_for">Connectant %1$d s</string>
+    <string name="handshaking">Establint comunicació</string>
+    <string name="connected">Connectat</string>
+    <string name="disconnecting">Desconnectant</string>
+    <string name="waiting_for_disconnection">S\'està esperant la desconnexió</string>
+    <!-- Custom Watchface -->
+    <string name="pref_show_iob">Mostrar IOB</string>
+    <string name="pref_show_cob">Mostrar COB</string>
+    <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_avgdelta">Mostrar delta promig</string>
+    <string name="pref_show_phone_battery">Mostrar bateria telèfon</string>
+    <string name="pref_show_rig_battery">Mostrar bateria rig</string>
+    <string name="pref_show_basal_rate">Mostrar basal</string>
+    <string name="pref_show_loop_status">Mostrar estat llaç</string>
+    <string name="pref_show_bg">Mostrar glucèmia</string>
+    <string name="pref_show_direction_arrow">Mostrar fletxa direcció</string>
+    <string name="pref_show_ago">Mostrar històric</string>
+</resources>

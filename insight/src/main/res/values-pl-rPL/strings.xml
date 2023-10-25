@@ -11,13 +11,11 @@
     <string name="stop_pump">Zatrzymaj pompę</string>
     <string name="started">Rozpoczęte</string>
     <string name="stopped">Zatrzymane</string>
-    <string name="paused">Wstrzymano</string>
     <string name="operating_mode">Tryb działania</string>
     <string name="description_pump_insight_local">Integracja pompy dla pomp Accu-Check Insight</string>
     <string name="not_inserted">Nie wprowadzono</string>
     <string name="tdd_bolus">TDD Bolus</string>
     <string name="tdd_basal">TDD Baza</string>
-    <string name="tdd_total">TDD Całkowita</string>
     <string name="tbr_formatter">%1$d%% na %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus złożony (wielofalowy)</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U na %3$d min</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">Przekroczony czas przywitania - zresetuj bluetooth</string>
     <string name="pump_stopped">Pompa zatrzymana</string>
     <string name="pump_started">Pompa uruchomiona</string>
-    <string name="pump_paused">Pompa wstrzymana</string>
     <string name="short_status_last_connected">Połączenie: %1$d min temu</string>
     <string name="short_status_tbr">TBR: %1$d%% na %2$d / %3$d min</string>
     <string name="short_status_extended">Przedłużony: %1$.2f / %2$.2f U na %3$d min</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Zbiornik: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="confirm">Potwierdź</string>
-    <string name="mute_alert">Wycisz</string>
     <string name="release_software_version">Wersja oprogramowania</string>
     <string name="ui_processor_software_version">Wersja oprogramowania procesora interfejsu użytkownika</string>
     <string name="pc_processor_software_version">Wersja oprogramowania procesora PC</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Min. czas odzyskiwania [s]</string>
     <string name="pump_alert">Alarm pompy</string>
     <string name="pairing_information">Informacja o sparowaniu</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Przycisk Odświeżania Insight</string>
 </resources>

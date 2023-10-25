@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">SMOOTH</string>
+    <string name="exponential_smoothing_name">Uniformizare exponenţială</string>
+    <string name="description_exponential_smoothing">"Algoritm de uniformizare exponenţială de ordine secundară"</string>
+    <string name="avg_smoothing_name">Uniformizare medie</string>
+    <string name="description_avg_smoothing">"Medie algoritm de uniformizare, cea mai nouă valoare nu este afectată"</string>
+    <string name="no_smoothing_name">Fără uniformizare</string>
+    <string name="description_no_smoothing">"Nu s-a efectuat nicio uniformizare pe datele de glicemie introduse. Folosește opțiunea asta când ai deja datele filtrate. De exemplu de la BYODA G6."</string>
+</resources>

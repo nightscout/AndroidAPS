@@ -82,7 +82,7 @@
                 android:key="@string/key_bolus_pin"
                 android:title="@string/bolus_pin" />
 
-            <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+            <app.aaps.core.validators.ValidatingEditTextPreference
                 android:defaultValue="1"
                 android:digits="0123456789"
                 android:inputType="number"
@@ -97,7 +97,7 @@
 
         </PreferenceCategory>
 
-        <info.nightscout.androidaps.skins.SkinListPreference
+        <app.aaps.plugins.main.skins.SkinListPreference
             android:key="@string/key_skin"
             android:title="@string/skin" />
 

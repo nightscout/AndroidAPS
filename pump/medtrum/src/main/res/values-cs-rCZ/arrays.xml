@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Světlo, vibrace a pípnutí</item>
+        <item>Světlo a vibrace</item>
+        <item>Světlo a pípnutí</item>
+        <item>Světlo</item>
+        <item>Vibrace a pípnutí</item>
+        <item>Vibrace</item>
+        <item>Pípnutí</item>
+        <item>Ticho</item>
+    </string-array>
+</resources>

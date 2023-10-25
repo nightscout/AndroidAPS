@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <application>
+
+        <activity
+            android:name=".setupwizard.SetupWizardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".maintenance.activities.LogSettingActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".maintenance.activities.PrefImportListActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".maintenance.activities.CustomWatchfaceImportListActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".activities.SingleFragmentActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+
+    </application>
+</manifest>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">Pradėti</string>
+    <string name="objectives_button_verify">Patikrinti</string>
+    <string name="nth_objective">%1$d. tikslas </string>
+    <string name="objectivenotstarted">%1$d tikslas nepradėtas</string>
+    <string name="objectivenotfinished">%1$d tikslas nepasiektas</string>
+    <string name="objectives_0_objective">Nustatymai vizualizacijai, monitoringui ir bazės verčių bei koeficientų analizei</string>
+    <string name="objectives_0_gate">Įsitikinkite, kad glikemijos duomenys rodomi Nightscout ir pompos insulino duomenys yra įkelti</string>
+    <string name="objectives_0_learned">Jūs užbaigėte bazinius AAPS nustatymus. Tam, kad veiktų AAPS, nėra privaloma nuolat kelti duomenis į Nightscout, bet tai reikalinga norint stebėti kitus pacientus bei kurti ataskaitas. Jei NS naudojate tik sau, galite nustatyti, kad duomenų perdavimas nebūtų nuolatinis. Pvz.: galite duomenis įkelti tik namuose, naudojant wifi, taip taupysite ir bateriją.</string>
+    <string name="objectives_openloop_objective">Aktyvuojamas atviras ciklas</string>
+    <string name="objectives_openloop_gate">Keletą dienų praleiskite atvirojo ciklo (Open Loop) režime, rankiniu būdu tvirtindami kuo daugiau siūlomų bazės pakeitimų. Nustatykite ir naudokite laikinus bei numatytuosiuos tikslus (pvz.: fiziniam aktyvumui ir hipo korekcijai angliavandeniais)</string>
+    <string name="objectives_openloop_learned">Atviras ciklas gali būti naudojamas rekomendacijoms gauti, kol neturite tinkamos pompos arba nesate pasiruošę uždaram ciklui.</string>
+    <string name="objectives_maxbasal_objective">Perpraskite atvirojo ciklo veikimą bei laikinos bazės rekomendacijas</string>
+    <string name="objectives_maxbasal_gate">Remdamiesi šia patirtimi, nuspręskite, koks turėtų būti maksimalus bazės dydis bei įveskite jį pompoje ir programos Nustatymuose</string>
+    <string name="objectives_maxbasal_learned">Būkite dėmesingi nustatydami saugumo parametrus ir derinkite juos, kai reikia.</string>
+    <string name="objectives_maxiobzero_objective">Pradėkite uždaro ciklo režimą su pompos stabdymu esant žemai glikemijai</string>
+    <string name="objectives_maxiobzero_gate">Keletą dienų praleiskite uždaro ciklo režime su kuo mažiau hipoglikemijų, kai AIO = 0</string>
+    <string name="objectives_maxiobzero_learned">Nustačius nulinį MaksAIO, sistema saugos Jus nuo hipoglikemijų ir nedidins nustatytos bazės (išskyrus tas situacijas, kai AIO yra minusinis)</string>
+    <string name="objectives_maxiob_objective">Koreguokite savo uždarąjį ciklą po truputį didindami maks AIO ir mažindami tikslinę glikemijos reikšmę</string>
+    <string name="objectives_maxiob_gate">Praleiskite keletą dienų ir bent vieną naktį be hipoglikemijos aliarmų</string>
+    <string name="objectives_maxiob_learned">Vaikui augant MaksAIO pamažu didinkite. Tačiau niekada nenustatykite itin didelės vertės, tik tokią, kokią realiai galite padengti maistu.</string>
+    <string name="objectives_autosens_objective">Jei reikia, paderinkite valandines bazės vertes bei pagrindinius parametrus ir įgalinkite Autosens funkciją</string>
+    <string name="objectives_autosens_gate">1 savaitę praleiskite sėkmingai naudodami uždarąjį ciklą dienos metu ir įvesdami visus valgomus angliavandenius</string>
+    <string name="objectives_autosens_learned">Jei Jūsų autosens rezultatai nesvyruoja apie 100%, tikėtina, kad profilis turi klaidų.</string>
+    <string name="objectives_smb_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip SMB (Super Mikro Bolusas)</string>
+    <string name="objectives_smb_gate">Norėdami, kad SMB veiktų gerai, turite perskaityti dokumentaciją ir padidinti maks AIO! Pradžiai patartina skaičiuoti taip: maksAIO=(didžiausia valandinė bazė x 3) + vidutinis bolusas</string>
+    <string name="objectives_smb_learned">SMB yra Jūsų tikslas. Oref1 algoritmas sukurtas taip, kad taptų Jums pagalba su bolusavimu. Jūs galite nesileisti viso boluso maistui, susileiskite dalį, o AAPS padarys likusį darbą, jei reikės. Taip išvengsite klaidų dėl neteisingai apskaičiuotų AV. Ar žinote, kad galite skaičiuotuve nurodyti, kiek % apskaičiuoto boluso suleisti?</string>
+    <string name="objectives_dyn_isf_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip DinaminisJIF</string>
+    <string name="objectives_dyn_isf_gate">Įsitikinkite, kad SMB veikia teisingai. Įgalinkite įskiepį DinaminisJIF ir nustatykite savo organizmo ypatybes atitinkantį kalibravimo režimą. Saugumo sumetimais rekomenduojama pradėti nuo verčių, mažesnių nei 100%.</string>
+    <string name="objectives_dyn_isf_learned">DinaminisJIF remiasi tuo, kad bendra insulino paros dozė ir esama glikemija turi įtakos dabartiniam jautrumui. Įskiepis gali pagal specialų algoritmą paderinti jautrumo insulinui faktorių (JIF).</string>
+    <string name="objectives_auto_objective">Automatizavimo įjungimas</string>
+    <string name="objectives_auto_gate">Perskaitykite dokumentaciją apie automatizacijos veikimą. Nustatykite kelias paprastas taisykles. Nustatykite, kad AAPS tik parodytų pranešimą, o ne atliktų realų veiksmą. Kai įsitikinsite, kad automatizacija suveikia reikalingu metu, vietoj pranešimo įjunkite veiksmą. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Automatizacija gali būti lazda su dviem galais. Nepiktnaudžiaukite. Nebandykite keisti ją aprašančių algoritmų. Prieš įgalindami veiksmą, išbandykite rezultatą su pranešimu. Rezultatas labai priklauso nuo sąlygų eiliškumo.</string>
+    <string name="objectives_bgavailableinns">Glikemija matoma NS arba Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Pompos statusas matomas NS arba Tidepool</string>
+    <string name="objectives_manualenacts">Įvesti rankiniu būdu</string>
+    <string name="accomplished">Įvykdyta: %1$s</string>
+    <string name="objectives_usage_objective">Išmokite valdyti AAPS</string>
+    <string name="objectives_usage_gate">Atlikite įvairius veiksmus su AAPS</string>
+    <string name="objectives_usage_learned">Sužinojote AAPS valdymo pagrindus. Pagrindiniai valdikliai yra Pradžios lange, pasiekiami spustelėjus arba ilgai spustelėjus, daugiau valdiklių yra Veiksmų lange. Turite mokėti, kaip įdėti įskiepio langą į viršutinį slenkantį meniu arba leisti jį rodyti viršutiniame kairiajame įgalintų įskiepių sąraše.</string>
+    <string name="objectives_useprofileswitch">Nustatykite profilį 90% 10 min (ilgai paspauskite profilio pavadinimą Pradžios ekrane)</string>
+    <string name="objectives_usedisconnectpump">Imituokite maudynes duše. Atjunkite pompą 1 valandai (ilgai paspauskite Atviras Ciklas)</string>
+    <string name="objectives_usereconnectpump">... ir iš naujo prisijunkite tuo pačiu būdu</string>
+    <string name="objectives_usetemptarget">Nustatykite 10 min trukmės laikiną tikslą (ilgai spausti ant dabartinio tikslo)</string>
+    <string name="objectives_useactions">Konfigūracijoje įjunkite Veiksmų įskiepį, padarykite jį ir jo turinį matomą viršutiniame meniu</string>
+    <string name="objectives_useloop">Parodyti Ciklo įskiepio turinį</string>
+    <string name="objectives_usescale">Panaudokite vaizdo dydžio keitimo funkciją ilgai spaudžiant ant glikemijos kreivės</string>
+    <string name="objectives_exam_objective">Patvirtinkite savo žinias</string>
+    <string name="objectives_exam_gate">Išanalizuokite klausimus.  Į kiekvieną klausimą jums pateikiami keturi galimi atsakymai. Teisingų atsakymų gali būti daugiau nei vienas. Pažymėkite visus teisingus ir pasirinkite PATVIRTINTI.</string>
+    <string name="objectives_exam_learned_prerequisites">Jums nereikia būti programuotoju, bet tam, kad praeitumėte mokymo programą Jums reikės NS ir suderinamos pompos. Jums taip pat reikia kompiuterio AAPS programinio failo sukūrimui ir vėlesniems atnaujinimams.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS gali veikti be interneto.</string>
+    <string name="objectives_exam_learned_basaltest">Profilis turi būti patikrintas ir atnaujintas. Tikslesnis profilis = geresni rezultatai.</string>
+    <string name="objectives_exam_learned_dia">IVT uždaro ciklo sistemoje traktuojama kitaip (laikas, per kurį nustoja veikti visas insulinas), nei įprastoje pompos terapijoje (laikas, per kurį nustoja veikti didžioji dalis insulino).</string>
+    <string name="objectives_exam_learned_isf">Jūs sužinojote, kas yra JIF ir kaip jo dydis lemia insulino kiekio, naudojamo glikemijos korekcijoms, apskaičiavimus.</string>
+    <string name="objectives_exam_learned_ic">Jūs sužinojote, kas yra IA ir kaip jo dydis lemia insulino kiekio, naudojamo angliavandeniams padengti, apskaičiavimus.</string>
+    <string name="objectives_exam_learned_hypott">Hipo laikinas tikslas naudojamas tam, kad sistema nepradėtų agresyviai koreguoti greitai kylančios glikemijos suvalgius AV hipo metu, kai įprastai AIO būna minusinis. Tam, kad šios situacijos būtų išvengta ateityje, reikalingi papildomi veiksmai.</string>
+    <string name="objectives_exam_learned_profileswitch">Keičiant profilį procentaliai, glikemijos tikslas nepasikeičia, tačiau bazė, JIF ir IA yra perskaičiuojami, kad būtų leidžiama daugiau (virš 100%%) ar mažiau insulino (žemiau 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Laiko perstūmimas keičiant profilį padeda prisitaikyti prie cirkadinių ritmų pokyčių, pvz.: vėlyvo atsikėlimo.</string>
+    <string name="objectives_exam_learned_profileswitch4">Vien pakeisti profilio reikšmes nepakanka, kad profilis įsigaliotų. Po bet kokių pakietimų būtina aktyvuoti profilį.</string>
+    <string name="objectives_exam_learned_exercise">Reikėtų sumažinti aktyvaus insulino kiekį organizme. Tam reikia bent 1 val. iki fizinio aktyvumo pakeisti profilį į mažesnį nei 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Bent 1 val. iki fizinio aktyvumo nustatytas aukštesnis laikinas tikslas taipogi padeda sumažinti aktyvaus insulino kiekį organizme.</string>
+    <string name="objectives_exam_learned_noisycgm">Jei NGJ duomenys nepatikimi, leisti ciklui veikti be priežiūros pavojinga.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS turi gauti informaciją apie pompos fizinį atjungimą, tam, kad AIO skaičiavimai būtų tikslūs.</string>
+    <string name="objectives_exam_learned_insulin">Būtina nurodyti, kokį insuliną naudojate pompoje, nes tai turi įtakos AIO skaičiavimams.</string>
+    <string name="objectives_exam_learned_sensitivity">Jautrumo nustatymo algoritmas padeda adaptuoti automatinį insulino dozavimą įvairioms situacijoms.</string>
+    <string name="objectives_exam_learned_objectives">Jūsų pažanga mokymo programoje Tikslai yra išsaugoma kartu su kitais nustatymais, kai sukuriate jų atsarginę kopiją.</string>
+    <string name="objectives_exam_learned_objectives2">Eksportuotą nustatymų failą ir programos APK failą papildomai išsaugokite ne telefone. Telefoną galite pamesti, sugadinti ir pan. Gera vieta saugojimui yra interneto debesų saugyklos, kurias galite pasiekti iš telefono. Iš jų galėsite atkurti AAPS kitame telefone vos per kelias minutes. Patartina ten pat išsaugoti ir pagrindinį programos slaptažodį, nes be jo atsarginė nustatymų kopija yra bevertė. Tas pats galioja AAPS kūrimui naudotiems pasirašymo raktams (.jks failas) ir slaptažodžiams. Visa kita nėra taip svarbu, nes bet kuriuo metu galima atsisiųsti iš interneto.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Jei suklydote kažką įvesdami į AAPS, taisykite tai tuoj pat. Klaidos gali reikšti perdozavimą. Visada kruopščiai į AAPS įvedinėkite AV, insuliną ir pan.</string>
+    <string name="objectives_exam_learned_iob">Analizuojant, ar gerai veikia AAPS, AIO grafiko stebėjimas gali suteikti daug naudingos informacijos.</string>
+    <string name="objectives_exam_learned_cob">AAO apskaičiavimas priklauso nuo JIF ir IA tarpusavio ryšio. Kuo didesnis JIF ar mažesnis IA, tuo angliavandeniai įsisavinami lėčiau. Tačiau profilio keitimas procentaliai abi reikšmes pakeičia proporcingai, todėl AV įsisavinimo laikas nepakinta.</string>
+    <string name="objectives_exam_learned_breadgrams">Angliavandeniai įvedami tik gramais.</string>
+    <string name="objectives_exam_learned_ecarbs">Ištęsti AV pakeičia pompose įprastai naudojamus ištęstus bolusus.</string>
+    <string name="objectives_exam_learned_nsclient">Nuotolinis stebėjimas ir valdymas galimi, bet kai kurios funkcijos neveikia.</string>
+    <string name="answerdisabledto">Atsakymas sustabdytas: %1$s</string>
+    <string name="wronganswer">Neteisingas atsakymas!</string>
+    <string name="unfinshed_button">Kitas neužbaigtas</string>
+    <string name="requestcode">Paprašyti kodo: %1$s</string>
+    <string name="objectives_hint">(pasirinkite visus teisingus atsakymus)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="notconnected">Neprisijungta prie interneto</string>
+    <string name="failedretrievetime">Nepavyko nuskaityti laiko</string>
+    <string name="requirementnotmet">Tikslo reikalavimai neįvykdyti</string>
+    <string name="what_i_ve_learned">Ką išmokote:</string>
+</resources>

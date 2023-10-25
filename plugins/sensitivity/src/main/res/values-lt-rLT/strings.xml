@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">JAUTR</string>
+    <string name="sensitivity_oref1">Jautrumo nustatymo algoritmas Oref1</string>
+    <string name="sensitivity_aaps">Jautrumo nustatymo algoritmas AAPS</string>
+    <string name="sensitivity_weighted_average">Jautrumas pagal svertinį vidurkį</string>
+    <string name="description_sensitivity_aaps">Jautrumas insulinui apskaičiuojamas taip pat kaip ir Oref0, tačiau jūs galite nustatyti, koks praeities laikotarpis bus naudojamas. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas remiantis maksimaliu angliavandenių įsisavinimo greičiu, kuris įvestas Nustatymuose.</string>
+    <string name="description_sensitivity_oref1">Jautrumas insulinui apskaičiuojamas remiantis praėjusių 8 val. duomenimis, o (neįsisavinti) angliavandeniai neįtraukiami į skaičiavimus praėjus Nustatymuose nurodytam laikui. Įskiepis taip pat įskaičiuoja NDM (nedeklaruotą maistą).</string>
+    <string name="description_sensitivity_weighted_average">Jautrumas insulinui apskaičiuojamas kaip nuokrypių svertinis vidurkis. Naujausių nuokrypių svoris yra didesnis. Minimalus angliavandenių įsisavinimo greitis apskaičiuojamas iš maksimalaus angliavandenių įsisavinimo greičio, kuris nurodytas Nustatymuose. Šis algoritmas greičiausiai aptinka pasikeitusį jautrumą insulinui.</string>
+    <string name="uam_disabled_oref1_not_selected">NDM neveikia, nes priklauso nuo Oref1 jautrumo įskiepio</string>
+    <string name="absorption_settings_title">Angliavandenių įsisavinimo parametrai</string>
+    <string name="absorption_max_time_title">Maksimalus angliavandenių įsisavinimo laikas [h]</string>
+    <string name="absorption_max_time_summary">Laikas, per kurį visi maisto angliavandeniai, tikėtina, bus įsisavinti</string>
+    <string name="openapsama_autosens_period">Autosens intervalas [h]</string>
+    <string name="openapsama_autosens_period_summary">Valandų skaičius praeityje jautrumo nustatymui (angliavandenių įsisavinimo laikas neįtrauktas)</string>
+    <string name="openapsama_autosens_max_summary">Numatytoji reikšmė: 1.2\nTai daugiklis Autosens (ir netrukus Autotune) funkcijoje, kuris nustato 20%% maksimalią ribą iki kurios Autosens gali padidinti valandinę bazę, sumažinti JIF ir tikslinės glikemijos vertę.</string>
+    <string name="openapsama_autosens_min_summary">Numatytoji reikšmė: 0.7\nTai antras daugiklis Autosens funkcijoje, kuris nustato, kad Autosens gali iki minimalios 70 % ribos sumažinti valandinę bazę bei padidinti JIF ir tikslinės glikemijos vertę.</string>
+    <string name="openapsama_autosens_max">Maksimali Autosens reikšmė</string>
+    <string name="openapsama_autosens_min">Minimali Autosens reikšmė</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį glikemijai per 5 min. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiuojant, kaip greitai mažės AAO, kokia bus glikemijos kitimo prognozė, ypač kai ji mažėja labiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
+    <string name="absorption_cutoff_title">Maksimalus maisto įsisavinimo laikas [h]</string>
+    <string name="absorption_cutoff_summary">Laikas, per kurį bet koks maistas laikomas įsisavintu. Likę angliavandeniai bus atmesti.</string>
+</resources>

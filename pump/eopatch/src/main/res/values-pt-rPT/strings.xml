@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="category_alerts">Alertas</string>
+    <string name="eopatch_status">Estado</string>
+    <string name="eopatch_base_basal_rate">Taxa Basal do Perfil</string>
+    <string name="eopatch_temp_basal_rate">Taxa Basal Temp</string>
+    <string name="eopatch_total_delivered">Total Administrado</string>
+    <string name="symbol_day">dia</string>
+    <string name="patch_finish">Terminar</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="patch_step_desc_2">2.</string>
+    <string name="symbol_days">dias</string>
+    <string name="string_resume">Retomar</string>
+    <string name="string_suspend">Suspender</string>
+    <string name="string_suspended">Suspenso</string>
+    <string name="string_running">A correr</string>
+    <string name="cancel">Cancelar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="string_alarm">Alarme</string>
+    <string name="string_connecting">A ligar</string>
+    <string name="retry">Tentar Novamente</string>
+    <string name="string_suspended_insulin_delivery_message">A entrega de insulina está suspensa.</string>
+    <string name="finish">Terminar</string>
+    <string name="next">Seguinte</string>
+</resources>

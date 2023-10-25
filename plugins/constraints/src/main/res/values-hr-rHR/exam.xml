@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dia_whatmeansdia">Što je istina o DIA-i?</string>
+    <string name="dia_label_exam">Trajanje djelovanja inzulina (DIA)</string>
+    <string name="dia_profile">Trebali biste postaviti vrijednost za DIA u svom profilu.</string>
+    <string name="pumpdisconnect_label">Razlozi za primjenu \"Otkači pumpu\" u AAPS</string>
+    <string name="pumpdisconnect_openloop">Poslat će AAPS u način rada otvorene petlje.</string>
+    <string name="objectives_label">AAPS postavke</string>
+    <string name="objectives2_label">AAPS postavke</string>
+    <string name="noisycgm_nothing">Ne činiti ništa - AAPS će se pozabaviti time.</string>
+    <string name="prerequisites_what">Što je bitno za postavljanje i korištenje AAPS-a?</string>
+    <string name="prerequisites2_what">Što je bitno za postavljanje i korištenje AAPS-a?</string>
+    <string name="update_label">Ažuriranje AAPS-a</string>
+    <string name="update_asap">Kada se objave ažurirane verzije AAPS-a, starije verzije mogu biti udaljeno ograničene nakon određenog vremena.</string>
+    <string name="troubleshooting_wheretoask">Gdje možete potražiti pomoć za AAPS?</string>
+    <string name="troubleshooting_fb">Za savjet možete zatražiti u Facebook grupi Korisnici AAPS-a.</string>
+    <string name="troubleshooting_wiki">Trebali biste pročitati (i ponovno pročitati) AAPS dokumentaciju.</string>
+    <string name="troubleshooting_gitter">Možete zatražiti savjet i prijaviti tehničke probleme ili probleme u AAPS Discord.</string>
+    <string name="sensitivity_adjust">Dodaci za osjetljivost omogućuju AAPS-u da se prilagodi privremenim ili kratkotrajnim promjenama u osjetljivosti na inzulin (na primjer, hormonalne promjene ili problemi s apsorpcijom na mjestu infuzije).</string>
+    <string name="wrongcarbs_donothing">Ne poduzimati ništa – AAPS će izvršiti odgovarajuće prilagodbe.</string>
+    <string name="wronginsulin_compare">Usporedite vrijednosti u AAPS i povijesti pumpe (ako pumpa to podržava).</string>
+    <string name="wronginsulin_donothing">Ne poduzimajte ništa i dopustite APPS-u da ispravi sve rezultirajuće visoke razine glukoze u krvi.</string>
+    <string name="extendedcarbs_free">Za bilježenje \'besplatnih\' ugljikohidrata za vježbanje koje želite sakriti od AAPS-a.</string>
+    <string name="extendedcarbs_fat">e-ugljikohidrati (distribuirani u budućnosti) mogu pomoći AAPS-u u rješavanju obroka s visokim udjelom masti/proteina.</string>
+    <string name="nsclient_howcanyou">Kako možete nadzirati APPS (na primjer za svoje dijete) na daljinu?</string>
+    <string name="nsclient_nightscout">Aplikacija AAPSClient, aplikacija Nightscout i web stranica Nightscout omogućuju vam praćenje AAPS-a na daljinu.</string>
+    <string name="nsclient_data">Da biste pratili AAPS na daljinu, oba uređaja moraju imati pristup internetu (npr. putem Wi-Fi ili podatkovne mreže mobilne/mobilne mreže).</string>
+    <string name="nsclient_fullcontrol">AAPSClient koji se koristi kao daljinski pratitelj nadzirat će i pružiti potpunu kontrolu nad AAPS-om.</string>
+    <string name="isf_preferences">ISF trebate unijeti u svoje postavke AAPS-a.</string>
+    <string name="profileswitchtime_iwant">Ako ustanete 2 sata ranije nego inače, kako biste trebali obavijestiti AAPS o promjeni svog rasporeda?</string>
+    <string name="profileswitch4_internet">Aktiviranje promjena vašeg Nightscout profila zahtijeva da vaš AAPS telefon ima internetsku vezu.</string>
+</resources>

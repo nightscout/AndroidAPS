@@ -11,13 +11,11 @@
     <string name="stop_pump">Detener bomba</string>
     <string name="started">Iniciado</string>
     <string name="stopped">Detenido</string>
-    <string name="paused">Pausado</string>
     <string name="operating_mode">Modo de funcionamiento</string>
     <string name="description_pump_insight_local">Integración de bomba de insulina Accu-Chek Insight</string>
     <string name="not_inserted">No insertado</string>
     <string name="tdd_bolus">Bolo TDD</string>
     <string name="tdd_basal">Basal TDD</string>
-    <string name="tdd_total">Total TDD</string>
     <string name="tbr_formatter">%1$d%% durante %2$d / %3$d minutos</string>
     <string name="multiwave_bolus">Bolo multionda</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U durante %3$d min</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">Tiempo de emparejamiento excedido - Reiniciar bluetooth</string>
     <string name="pump_stopped">Bomba parada</string>
     <string name="pump_started">Bomba iniciada</string>
-    <string name="pump_paused">Bomba pausada</string>
     <string name="short_status_last_connected">Última conexión: hace %1$d minutos</string>
     <string name="short_status_tbr">TBR: %1$d%% por %2$d / %3$d min</string>
     <string name="short_status_extended">Extendido: %1$.2f / %2$.2f U durante %3$d min</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reservorio.: %1$.2f U</string>
     <string name="short_status_battery">Batería.: %1$d%%</string>
-    <string name="confirm">Confirmar</string>
-    <string name="mute_alert">Silenciar</string>
     <string name="release_software_version">Versión de software</string>
     <string name="ui_processor_software_version">Versión de software de procesador de interfaz de usuario</string>
     <string name="pc_processor_software_version">Versión del software del procesador de PC</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Mínima duración de la recuperación [s]</string>
     <string name="pump_alert">Alerta de infusor</string>
     <string name="pairing_information">Información de emparejamiento</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Botón de refresco de Insight</string>
 </resources>

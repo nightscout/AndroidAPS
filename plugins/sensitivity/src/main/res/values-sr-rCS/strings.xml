@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="description_sensitivity_aaps">Osetljivost se izračunava na isti način kao Oref0, ali možete odrediti vremenski okvir u prošlosti. Minimalna apsorpcija ugljenih hidrata se izračunava na osnovu maksimalnog vremena apsorpcije ugljenih hidrata iz postavki.</string>
+    <string name="description_sensitivity_oref1">Osetljivost se izračunava na osnovu podataka za 8 ili 24 sata u prošlosti (koristeći bilo koji od onih koji su osetljiviji). Ugljeni hidrati (ako se ne apsorbuju) smanjuju se nakon vremena navedenog u postavkama. Dodatak takođe izračunava UAM.</string>
+    <string name="description_sensitivity_weighted_average">Osetljivost se računa kao težinski prosek odstupanja. Novija odstupanja imaju veću težinu. Minimalna apsorpcija ugljenih hidrata se izračunava na osnovu maksimalnog vremena apsorpcije ugljenih hidrata iz postavki. Ovaj algoritam je najbrži u praćenju promena osetljivosti.</string>
+</resources>

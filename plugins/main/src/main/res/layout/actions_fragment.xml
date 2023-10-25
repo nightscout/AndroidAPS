@@ -1,0 +1,380 @@
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".general.actions.ActionsFragment">
+
+    <LinearLayout
+        android:id="@+id/buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/actions"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="2dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="false"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/actions" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dip"
+                app:columnCount="2">
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/profile_switch"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_actions_profileswitch"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/careportal_profileswitch"
+                    android:textSize="11sp"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="0" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/temp_target"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_temptarget_high"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/temporary_target"
+                    android:textSize="11sp"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="0" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/set_temp_basal"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_actions_start_temp_basal"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/tempbasal_button"
+                    android:textSize="11sp"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="1" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/cancel_temp_basal"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_cancel_basal"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/cancel_temp"
+                    android:textSize="11sp"
+                    android:visibility="gone"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="1" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/extended_bolus"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_actions_start_extended_bolus"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/extended_bolus_button"
+                    android:textSize="11sp"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="1" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/extended_bolus_cancel"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_actions_cancel_extended_bolus"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/extended_bolus_cancel_button"
+                    android:textSize="11sp"
+                    android:visibility="gone"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="1" />
+
+            </androidx.gridlayout.widget.GridLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/careportal_statuslight"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="2dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="false"
+            android:layout_gravity="center">
+
+            <include
+                android:id="@+id/status"
+                layout="@layout/actions_stats_fragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/careportal_statuslight_button"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="2dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="false"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:text="@string/careportal" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dip"
+                app:columnCount="2">
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/bg_check"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/ic_cp_bgcheck"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/careportal_bgcheck"
+                    android:textSize="11sp"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="2" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/fill"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_cp_pump_cannula"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/prime_fill"
+                    android:textSize="11sp"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="2" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/cgm_sensor_insert"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/ic_cp_cgm_insert"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/cgm_sensor_insert"
+                    android:textSize="11sp"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="3" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/pump_battery_change"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/ic_cp_pump_battery"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/pump_battery_change"
+                    android:textSize="11sp"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="3" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/note"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/ic_cp_note"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/careportal_note"
+                    android:textSize="11sp"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="4" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/exercise"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/ic_cp_exercise"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/careportal_exercise"
+                    android:textSize="11sp"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="4" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/announcement"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/ic_cp_announcement"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/careportal_announcement"
+                    android:textSize="11sp"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="5" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/question"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/ic_cp_question"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/careportal_question"
+                    android:textSize="11sp"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="5" />
+
+            </androidx.gridlayout.widget.GridLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/careportal_tools"
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="2dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="false"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:text="@string/tools" />
+
+            <androidx.gridlayout.widget.GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dip"
+                app:columnCount="2">
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/history_browser"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_pump_history"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/nav_history_browser"
+                    android:textSize="11sp"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="6" />
+
+                <app.aaps.core.ui.elements.SingleClickButton
+                    android:id="@+id/tdd_stats"
+                    style="@style/GrayButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:drawableTop="@drawable/ic_cp_stats"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="0dp"
+                    android:text="@string/tdd"
+                    android:textSize="11sp"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="6" />
+
+            </androidx.gridlayout.widget.GridLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

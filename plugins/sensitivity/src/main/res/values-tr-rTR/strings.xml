@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Oref1 duyarlılık</string>
+    <string name="sensitivity_aaps">AAPS duyarlılık</string>
+    <string name="sensitivity_weighted_average">Ağırlıklı ortalama duyarlılık</string>
+    <string name="description_sensitivity_aaps">Duyarlılık, Oref0 ile aynı şekilde hesaplanır, ancak geçmişe yönelik zaman aralığı belirleyebilirsiniz. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
+    <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş öğünler) hesaplar.</string>
+    <string name="description_sensitivity_weighted_average">Duyarlılık, sapmalardan ağırlıklı bir ortalama olarak hesaplanır. Daha yeni sapmalar daha yüksek ağırlığa sahiptir. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır. Bu algoritma, hassasiyet değişikliklerini takip etmede en hızlı olanıdır.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM (UnAnnounced Meals), Oref1 duyarlılık eklentisine bağlı olduğu için devre dışı bırakıldı</string>
+    <string name="absorption_settings_title">Emilim ayarları</string>
+    <string name="absorption_max_time_title">Besinin maksimum emilim süresi [h]</string>
+    <string name="absorption_max_time_summary">Yemekteki tüm karbonhidratların emilmesinin beklendiği saat cinsinden süre</string>
+    <string name="openapsama_autosens_period">Otoduyarlılık süresi [h]</string>
+    <string name="openapsama_autosens_period_summary">Duyarlılık tespiti için geçmesi gereken süre (saat) miktarı (karbonhidrat emilim süresi hariç)</string>
+    <string name="openapsama_autosens_max_summary">Varsayılan değer: 1.2\nOtoduyarlılık (yakında otoayar) çarpanı. Varsayılan değere %20 maksimum limit atamak, otoduyarlılığın bazalları ne kadar yüksek ayarlayabileceğini, ISF ve KŞ hedefini de ne kadar düşük ayarlayabileceğini belirler.</string>
+    <string name="openapsama_autosens_min_summary">Varsayılan değer: 0.7\nBu otoduyarlılık için diğer güvenlik önlemidir. Otoduyarlılığın bazal oranlarını ne kadar düşürebileceğini ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
+    <string name="openapsama_autosens_max">Maks. otoduyarlılık oranı</string>
+    <string name="openapsama_autosens_min">Min. otoduyarlılık oranı</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Varsayılan değer: 3.0 (AMA) Gelişmiş Yemek Asistanı veya 8.0 (SMB) Super Micro Bolus. Bu 5 dakika başına varsayılan karbonhidrat emilimi için bir ayardır. Standart değer AMA için 3mg/dl/5dk aynı şekilde SMB 8mg/dl/5dk dir.
+Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden daha fazla düştüğü veya beklenildiği kadar yükselmediği zamanlarda gelecekte yapılacak tahminlerde KŞ\'nin hesaplanmasında ne kadar karbonhidrat emilimi gerçekleşeceğini öngörür.</string>
+    <string name="absorption_cutoff_title">Besinin maksimum emilim süresi [h]</string>
+    <string name="absorption_cutoff_summary">Herhangi bir öğünün emildiği kabul edilen zaman. Kalan karbonhidratlar kesilecek.</string>
+</resources>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">הפעולה לא נתמכת ע\"י המשאבה ו\\או מנהל ההתקן.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">הפעולה עוד לא נתמכת על ידי המשאבה.</string>
+    <string name="common_resultok">אישור</string>
+    <string name="pump_serial_number">המספר הסידורי של המשאבה</string>
+    <string name="bolus_delivered_so_far">%1$.2f יח\' מתוך %2$.2f יח\' הוזרקו</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">לא מאותחל</string>
+    <string name="pump_status_initialized">מאותחל</string>
+    <string name="pump_status_encrypt">מצפין תקשורת</string>
+    <string name="pump_status_ready">מוכן</string>
+    <string name="pump_status_busy">עסוק</string>
+    <string name="pump_status_suspended">מושהה</string>
+    <string name="pump_status_executing_command">מבצע פקודה</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">בזאלים</string>
+    <string name="history_group_configuration">תצורות</string>
+    <string name="history_group_notification">התראות</string>
+    <string name="history_group_statistic">סטטיסטיקה</string>
+    <string name="history_group_unknown">לא ידועים</string>
+    <string name="history_group_all">הכול</string>
+    <string name="history_group_bolus">בולוסים</string>
+    <string name="history_group_prime">תיחול</string>
+    <string name="history_group_alarm">התראות</string>
+    <string name="history_group_glucose">גלוקוז</string>
+    <string name="history_group_base">בסיס</string>
+    <string name="history_group_other">אחר</string>
+    <string name="history_group_events">כל האירועים</string>
+    <string name="history_group_events_no_stat">אירועים(ללא סטטיסטיקה)</string>
+    <!-- Time -->
+    <string name="time_today">היום</string>
+    <string name="time_last_hour">בשעה האחרונה</string>
+    <string name="time_last_3_hours">ב-3 השעות האחרונות</string>
+    <string name="time_last_6_hours">ב-6 השעות האחרונות</string>
+    <string name="time_last_12_hours">ב-12 השעות האחרונות</string>
+    <string name="time_last_2_days">ביומיים אחרונים</string>
+    <string name="time_last_4_days">ב-4 הימים האחרונים</string>
+    <string name="time_last_week">בשבוע שעבר</string>
+    <string name="time_last_month">בחודש שעבר</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">סריקה</string>
+    <string name="ble_config_scan_stop">עצור</string>
+    <string name="ble_config_scan_selected">נבחר</string>
+    <string name="ble_config_scan_scanning">סורק</string>
+    <string name="ble_config_scan_finished">הסריקה הושלמה</string>
+    <string name="ble_config_scan_error">שגיאת סריקה: %1$d</string>
+    <string name="ble_config_connected_never">אף פעם</string>
+    <string name="ble_config_remove">הסרה</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">בלוטות\' כבוי</string>
+    <string name="ble_error_no_bt_adapter">אין מתאם בלוטות\'</string>
+    <string name="ble_error_configured_pump_not_found">לא נמצאה משאבה מוגדרת</string>
+    <string name="ble_error_pump_unreachable">המשאבה אינה זמינה</string>
+    <string name="ble_error_failed_to_conn_to_ble_device">נכשל החיבור למכשיר בלוטות\'</string>
+    <string name="ble_error_encryption_failed">ההצפנה נכשלה</string>
+    <string name="ble_error_pump_found_unbonded">נמצאה משאבה שאינה מצומדת</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">הגדרת פרופילי הבזאלי\\תבניות אינה מאופשרת במשאבה. הפעילו אותן בגוף המשאבה.</string>
+    <string name="pump_settings_error_incorrect_basal_profile_selected">הפרופיל הבזאלי שהוגדר במשאבה שגוי (חייב להיות %s).</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">סוג הבזאלי הזמני שהוגדר במשאבה שגוי (חייב להיות %s).</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">מינון הבולוס המרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
+    <string name="pump_settings_error_wrong_max_basal_set">המינון הבזאלי המרבי המוגדר במשאבה אינו נכון (חייב להיות %1$.2f).</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">סוג:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
+    <string name="pump_status_sleeping">בשינה</string>
+    <string name="pump_status_waking_up">מתעורר</string>
+    <string name="pump_status_active">פעיל</string>
+    <string name="pump_status_error_comm">שגיאת תקשורת</string>
+    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
+    <string name="pump_status_pump_unreachable">המשאבה אינה זמינה</string>
+    <string name="pump_status_invalid_config">תצורה לא תקפה</string>
+    <plurals name="duration_days">
+        <item quantity="one">יום %1$d</item>
+        <item quantity="two">יומיים</item>
+        <item quantity="many">%1$d ימים</item>
+        <item quantity="other">%1$d ימים</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">שעה</item>
+        <item quantity="two">שעתיים</item>
+        <item quantity="many">%1$d שעות</item>
+        <item quantity="other">%1$d שעות</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">לפני שעה</item>
+        <item quantity="two">לפני שעתיים</item>
+        <item quantity="many">לפני %1$d שעות</item>
+        <item quantity="other">לפני %1$d שעות</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">לפני יום אחד</item>
+        <item quantity="two">לפני יומיים</item>
+        <item quantity="many">לפני %1$d ימים</item>
+        <item quantity="other">לפני %1$d ימים</item>
+    </plurals>
+</resources>

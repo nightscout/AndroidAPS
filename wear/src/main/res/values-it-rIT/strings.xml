@@ -2,15 +2,12 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS(Large)</string>
     <string name="label_watchface_big_chart">AAPS(BigChart)</string>
     <string name="label_watchface_no_chart">AAPS(NoChart)</string>
     <string name="label_watchface_circle">AAPS(Circle)</string>
-    <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS(Personalizzato)</string>
     <string name="label_actions_tile">AAPS(azioni)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -22,20 +19,30 @@
     <string name="msg_warning_old">I dati di AAPS sono vecchi di %1$s ! Controlla il tuo sensore, xDrip+, NS, la configurazione di AAPS o altro!</string>
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
     <string name="pref_units_for_actions">Unità per azioni</string>
+    <string name="units_short">U</string>
+    <string name="pref_display_settings">Schermo</string>
+    <string name="pref_graph_settings">Grafico</string>
+    <string name="pref_interface_settings">Interfaccia</string>
+    <string name="pref_others_settings">Altri</string>
+    <string name="pref_complication_settings">Complicazione</string>
     <string name="pref_show_date">Mostra data</string>
     <string name="pref_show_iob">Mostra IOB</string>
+    <string name="pref_show_detailed_iob">Mostra IOB dettagliato</string>
     <string name="pref_show_cob">Mostra COB</string>
     <string name="pref_show_delta">Mostra delta</string>
+    <string name="pref_show_detailed_delta">Mostra delta dettagliato</string>
     <string name="pref_show_avgdelta">Mostra AvgDelta</string>
     <string name="pref_show_phone_battery">Mostra batteria telefono</string>
     <string name="pref_show_rig_battery">Mostra batteria rig</string>
     <string name="pref_show_basal_rate">Mostra velocità basale</string>
     <string name="pref_show_loop_status">Mostra stato loop</string>
     <string name="pref_show_bg">Mostra BG</string>
+    <string name="pref_show_bgi">Mostra BGI</string>
     <string name="pref_show_direction_arrow">Mostra frecce direzionali</string>
     <string name="pref_show_ago">Mostra Indietro</string>
     <string name="pref_dark" comment="Enables dark visual theme">Scuro</string>
     <string name="pref_highlight_basals">Evidenzia basali</string>
+    <string name="pref_prediction_lines">Visualizza previsioni</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matching divider</string>
     <string name="pref_chart_timeframe">Timeframe Grafico</string>
     <string name="pref_1_hour">1 ora</string>
@@ -48,7 +55,6 @@
     <string name="pref_quick_righty">Quick righty</string>
     <string name="pref_quick_lefty">Quick lefty</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_delta_granularity">Delta Granularity (Steampunk)</string>
     <string name="pref_low">Basso</string>
     <string name="pref_medium">Medio</string>
     <string name="pref_high">Alto</string>
@@ -103,7 +109,7 @@
     <string name="action_preset_1">Preset 1</string>
     <string name="action_preset_2">Preset 2</string>
     <string name="action_preset_3">Preset 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Quantità libera</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Quantità libera</string>
     <string name="action_confirm">CONFERMA</string>
     <string name="action_timeshift">timeshift</string>
     <string name="action_bolus">Bolo</string>
@@ -143,6 +149,7 @@
     <string name="pref_simplify_ui_sum">Mostra solo tempo e BG</string>
     <string name="pref_vibrate_hourly">Vibra a ogni ora</string>
     <string name="pref_show_weeknumber">Mostra numero settimana</string>
+    <string name="custom_pref_show_seconds">Mostra secondi</string>
     <string name="digitalstyle_pref_your_style">Il tuo stile:</string>
     <string name="digitalstyle_style_none">nessuno stile</string>
     <string name="digitalstyle_style_minimal">stile minimale</string>
@@ -170,15 +177,13 @@
     <string name="wear_control_no_data">Nessun dato disponibile</string>
     <string name="increment">incremento</string>
     <string name="decrement">decremento</string>
-    <string name="first_char_high">H</string>
-    <string name="first_char_low">L</string>
     <string name="abbreviation_average">media</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">Caricamento: ---%</string>
-    <string name="no_status">S: nessuno stato</string>
-    <string name="time_stamp_na_min_ago">-- Minuti fa</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Min. fa</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Nessun stato di loop</string>
     <string name="cob_000g">000g</string>
@@ -186,4 +191,14 @@
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Avviso snooze AAPS</string>
     <string name="sending_snooze">Invio snooze ad AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">w</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="old">vecchio</string>
+    <string name="old_warning">!vecchio!</string>
+    <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">Frequenza cardiaca</string>
 </resources>

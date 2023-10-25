@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_button_start">开始</string>
+    <string name="objectives_button_verify">验证</string>
+    <string name="nth_objective">%1$d．目标</string>
+    <string name="objectivenotstarted">目标 %1$d 未开始</string>
+    <string name="objectivenotfinished">目标 %1$d 未完成</string>
+    <string name="objectives_0_objective">设置可视化的连续血糖监测系统，并且分析胰岛素基础率和比率。</string>
+    <string name="objectives_0_gate">验证Nightscout中血糖(BG) 数据可用，并且泵的胰岛素数据正在上传。</string>
+    <string name="objectives_openloop_objective">开始开环</string>
+    <string name="objectives_openloop_gate">在开环模式下运行几天，手动设定多次临时基础率。设置临时目标默认值并使用临时目标功能（例如，在运动或低血糖补充碳水化合物时）</string>
+    <string name="objectives_maxbasal_objective">了解你的开环，包括它的临时基础率建议</string>
+    <string name="objectives_maxbasal_gate">基于使用开环的经验，决定基础率的最大值，在胰岛素泵和AAPS的参数选项上设置它</string>
+    <string name="objectives_maxiobzero_objective">从低血糖维持模式(用于测算基础率) 开始闭环功能</string>
+    <string name="objectives_maxiobzero_gate">设置最大活性胰岛素IOB=0，在闭环的低血糖维持模式下运行几天，确保没有太多的低血糖事件</string>
+    <string name="objectives_maxiob_objective">优化闭环，逐渐增加活性胰岛素IOB的最大值，并逐渐降低血糖的目标值</string>
+    <string name="objectives_maxiob_gate">运行几天，至少一个晚上没有低血糖报警，然后才可以继续调低血糖的目标值</string>
+    <string name="objectives_autosens_objective">必要时调整胰岛素基础率和比率，然后再启用auto-sens胰岛素敏感系数自动调整功能</string>
+    <string name="objectives_autosens_gate">规律的进行碳水记录，成功在一个星期的白天开启闭环</string>
+    <string name="objectives_smb_objective">在白天启用额外的功能，例如微型大剂量 SMB</string>
+    <string name="objectives_auto_objective">启用自动操作功能插件</string>
+    <string name="objectives_manualenacts">手动执行</string>
+    <string name="accomplished">已完成: %1$s</string>
+    <string name="objectives_useprofileswitch">将个人配置文件设置为90%持续10分钟 (长按首页概览左上角的配置文件名称)</string>
+    <string name="objectives_usedisconnectpump">模拟淋浴。 将泵断开连接1个小时(长按开环图标)</string>
+    <string name="objectives_usereconnectpump">... 然后以同样的方式重新连接</string>
+    <string name="objectives_usetemptarget">创建具有 10 分钟持续时间的定制临时目标 (当前目标上长按 )</string>
+    <string name="objectives_useactions">在配置生成器中启用Actions(常用操作) 插件，使其可视并在顶部菜单显示其内容</string>
+    <string name="objectives_useloop">显示闭环插件的内容</string>
+    <string name="objectives_usescale">长按血糖图来使用缩放功能</string>
+    <string name="objectives_exam_objective">证明你的知识</string>
+    <string name="objectives_exam_gate">研究这些问题。每个问题都有四个可能的答案。答案可能不止一个。请选择所有正确的选项，然后点击验证。</string>
+    <string name="answerdisabledto">禁止答题，直到： %1$s</string>
+    <string name="wronganswer">错误答案！</string>
+    <string name="unfinshed_button">下一个未完成的</string>
+    <string name="requestcode">请求码： %1$s</string>
+    <string name="objectives_hint">(选择所有正确的答案)</string>
+    <string name="notconnected">未连接到网络</string>
+    <string name="failedretrievetime">时间同步失败</string>
+    <string name="requirementnotmet">未满足目标要求。</string>
+</resources>

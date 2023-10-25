@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/nav_remove_items"
+        android:icon="@drawable/ic_trash"
+        android:iconTint="?attr/colorControlNormal"
+        android:orderInCategory="0"
+        android:title="@string/remove_items"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/nav_sort_items"
+        android:icon="@drawable/ic_sort"
+        android:orderInCategory="0"
+        android:title="@string/sort_items"
+        app:showAsAction="ifRoom" />
+
+</menu>

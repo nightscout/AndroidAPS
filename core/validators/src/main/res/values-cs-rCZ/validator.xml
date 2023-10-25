@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="error_only_numeric_digits_allowed">Jsou povoleny pouze číslice.</string>
+    <string name="error_only_numeric_digits_range_allowed">Povolena jsou pouze čísla v rozsahu %1$s - %2$s.</string>
+    <string name="error_this_field_cannot_contain_special_character">Toto pole nesmí obsahovat speciální znaky</string>
+    <string name="error_only_standard_letters_are_allowed">Jsou povolena pouze standardní písmena</string>
+    <string name="error_field_must_not_be_empty">Položka nesmí být prázdná</string>
+    <string name="error_email_address_not_valid">E-mailová adresa je neplatná</string>
+    <string name="error_creditcard_number_not_valid">Číslo kreditní karty není platné</string>
+    <string name="error_phone_not_valid">Neplatné telefonní číslo</string>
+    <string name="error_domain_not_valid">Název domény není platný</string>
+    <string name="error_ip_not_valid">IP adresa není platná</string>
+    <string name="error_url_not_valid">Adresa Url není platná</string>
+    <string name="error_notvalid_personname">Neplatné jméno nebo příjmení.</string>
+    <string name="error_notvalid_personfullname">Není platné celé jméno.</string>
+    <string name="error_date_not_valid">Formát není platný</string>
+    <string name="error_mustbe4digitnumber">Musí být čtyřmístné číslo</string>
+    <string name="error_mustbe6digitnumber">Musí být šestimístné číslo</string>
+    <string name="error_mustbe12hexadidits">Musí být 12 znaků ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Musí být 8 znaků ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Musí obsahovat 4 znaky ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">Není splněna minimální délka</string>
+    <string name="error_pin_not_valid">Pin by měl být 3 až 6 číslic, které nesmí být stejné nebo v sériích</string>
+</resources>

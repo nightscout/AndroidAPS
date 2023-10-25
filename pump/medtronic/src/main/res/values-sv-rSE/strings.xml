@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Pumpintegration för Medtronic. Kräver Riley Link-enhet och fungerar bara mot vissa pumpmodeller</string>
+    <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">Serienummer på pumpen</string>
+    <string name="medtronic_pump_type">Pumptyp</string>
+    <string name="medtronic_pump_frequency">Pumpfrekvens</string>
+    <string name="medtronic_pump_bolus_delay">Fördröjning innan bolus startas (s)</string>
+    <string name="medtronic_pump_max_bolus">Max bolus enligt pumpen (U)</string>
+    <string name="medtronic_pump_max_basal">Max basal på pumpen (U/h)</string>
+    <string name="medtronic_pump_encoding">Medtronickodning</string>
+    <string name="medtronic_pump_frequency_us_ca">USA &amp; Kanada (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">Resten av världen (868 MHz)</string>
+    <string name="medtronic_pump_encoding_4b6b_local">4b6b Mjukvarukodning</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">4b6b Hårdvarukodning</string>
+    <string name="medtronic_custom_action_wake_and_tune">Väck och finjustera frekvens</string>
+    <string name="medtronic_custom_action_clear_bolus_block">Ta bort bolusblockering</string>
+    <string name="medtronic_custom_action_reset_rileylink">Återställ Riley Link-konfiguration</string>
+    <string name="medtronic_pump_battery_select">Batterityp</string>
+    <string name="medtronic_pump_battery_no">Ej vald</string>
+    <string name="medtronic_pump_battery_alkaline">Alkaliskt</string>
+    <string name="medtronic_pump_battery_lithium">Litium</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (utökad vy)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (utökad vy)</string>
+    <string name="medtronic_bolus_debugging">Avlusning av Bolus/Behandlingar</string>
+    <!-- MDT Fragment -->
+    <string name="rl_battery_label">RileyLink-batteri</string>
+    <!-- MDT Errors -->
+    <string name="medtronic_errors">Fel</string>
+    <string name="medtronic_error_serial_not_set">Serienummer ej angett.</string>
+    <string name="medtronic_error_serial_invalid">Serienummer felaktigt.</string>
+    <string name="medtronic_error_pump_type_not_set">Pumptyp ej vald.</string>
+    <string name="medtronic_error_pump_type_invalid">Pumptypen stöds inte.</string>
+    <string name="medtronic_error_pump_frequency_not_set">Pumpfrekvens ej vald.</string>
+    <string name="medtronic_error_pump_frequency_invalid">Pumpfrekvens stöds inte.</string>
+    <string name="medtronic_error_rileylink_address_invalid">Riley Link adress felaktig.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Pumptypen verkar inte vara samma som den inställda.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Basalprofiler är inte aktiverade på pumpen. Aktivera det i pumpens menyer.</string>
+    <string name="medtronic_error_pump_incorrect_basal_profile_selected">Fel basalprofiltyp inställt på pumpen (måste vara STD).</string>
+    <string name="medtronic_error_pump_wrong_tbr_type_set">Fel typ av temp basal på pumpen (måste vara satt till Absolut).</string>
+    <string name="medtronic_error_pump_wrong_max_bolus_set">Fel max bolus i pumpen (måste vara %1$.2f).</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Fel max basal i pumpen (måste vara %1$.2f).</string>
+    <string name="medtronic_error_operation_not_possible_no_configuration">Operationen inte möjlig. \n\n Du måste konfigurera Medtronicpump innan du kan använda denna funktion.</string>
+    <string name="medtronic_error_pump_24h_time_change_requested">Mer än 24 timmars tidsändring efterfrågades.</string>
+    <!-- MDT History -->
+    <!--    <string name="medtronic_history_group_basal">Basals</string>-->
+    <!--    <string name="medtronic_history_group_configuration">Configurations</string>-->
+    <!--    <string name="medtronic_history_group_notification">Notifications</string>-->
+    <!--    <string name="medtronic_history_group_statistic">Statistics</string>-->
+    <!--    <string name="medtronic_history_group_unknown">Unknowns</string>-->
+    <!--    <string name="medtronic_history_group_all">All</string>-->
+    <string name="medtronic_pump_history">Pumphistorik</string>
+    <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Du avbröt bolusen efter att kommandot skickats till pumpen. Detta stöds inte av Medtronicpumpar, så därför måste du avbryta på själva pumpen. Det kan man göra genom att pausa insulintillförseln tillfälligt och sedan starta den igen. Appen kommer att uppdatera bolusmängd vid nästa anslutning (inom 5 min).</string>
+    <string name="medtronic_cmd_cant_read_tbr">Kunde inte hämta nuvarande temp basal.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Kunde inte avbryta nuvarande temp basal. Avbryter kommandot.</string>
+    <string name="medtronic_cmd_set_profile_pattern_overflow">Misslyckades med att sätta basalprofilen. Följande timmar har för högt värde angivet: %1$s</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered">Bolus misslyckades.</string>
+    <string name="medtronic_cmd_bolus_could_not_be_delivered_no_insulin">En bolus om %2$.2f enheter kan inte levereras när reservoaren bara innehåller %1$.2f enheter.</string>
+    <string name="medtronic_cmd_tbr_could_not_be_delivered">Temp basal kunde inte anges.</string>
+    <string name="medtronic_cmd_cant_cancel_tbr">Kunde inte avbryta temp basal.</string>
+    <string name="medtronic_cmd_basal_profile_could_not_be_set">Kunde inte byta basalprofil.</string>
+    <string name="medtronic_cmd_basal_profile_not_set_is_same">Basalprofilen är samma som nuvarande. Ingen ändring gjord.</string>
+    <string name="medtronic_cmd_desc_get_history">Hämta historik - Sida %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Hämta historik - Sida %1$d</string>
+    <string name="medtronic_cmd_desc_get_time">Hämta tid och datum från pumpen</string>
+    <string name="medtronic_cmd_desc_set_time">Ställ in pumptid</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Hämta batteristatus</string>
+    <string name="medtronic_cmd_desc_get_settings">Hämta inställningar</string>
+    <string name="medtronic_cmd_desc_get_model">Hämta pumpmodell</string>
+    <string name="medtronic_cmd_desc_get_basal_profile">Hämta basalprofil</string>
+    <string name="medtronic_cmd_desc_set_basal_profile">Sätt basalprofil</string>
+    <string name="medtronic_cmd_desc_get_tbr">Hämta temp basal</string>
+    <string name="medtronic_cmd_desc_set_tbr">Sätt temp basal</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Avbryt temporär basal</string>
+    <string name="medtronic_cmd_desc_set_bolus">Leverera bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Hämta återstående insulinmängd</string>
+    <string name="medtronic_pump_status_pump_unreachable">Pumpen kan inte nås</string>
+    <string name="medtronic_warning">Varning</string>
+    <!-- medtronic_warning -->
+    <string name="medtronic_pump_connected_now">Nu</string>
+    <!-- combo_pump_connected_now -->
+    <string name="ago">sedan</string>
+    <string name="medtronic_notification_check_time_date">Pumpens klocka behöver ställas om</string>
+    <!-- combo_notification_check_time_date -->
+    <string name="common_on">På</string>
+    <string name="common_off">Av</string>
+    <string name="pump_time_updated">Tiden uppdaterad i pumpen</string>
+    <string name="set_neutral_temps_title">Sätt neutrala temp basaler</string>
+    <string name="set_neutral_temps_summary">Om aktiverad, kommer en eventuell temporär basal automatiskt avbrytas före utgången av varje timme. Denna metod kan förhindra att vissa pumpar piper/vibrerar.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min kvar)</string>
+    <string name="invalid_history_data">Ogiltig pumpdata upptäckt. Öppna nytt ärende och bifoga loggar.</string>
+    <string name="riley_statistics">RL-statistik</string>
+    <string name="medtronic_history_type">Typ:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Klickade Uppdatering</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Schemalagd statusuppdat</string>
+</resources>

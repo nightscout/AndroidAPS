@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Bomba virtual</string>
+    <string name="virtual_pump_definition">Definición de la bomba</string>
+    <string name="virtual_pump_pump_def">Bolo: Paso =%1$s\nBolo Extendido: [paso =%2$s, Duración =%3$smin -%4$sh] \nBasal: Paso =%5$s\nTBR: %6$s ( %7$s), Duración =%8$sMin -%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">BOMBAV</string>
+    <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (bucle abierto)</string>
+    <string name="virtual_pump_label">BOMBA VIRTUAL</string>
+    <string name="virtualpump_settings">Ajustes de bomba virtual</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Sólo se admiten valores discretos, no rangos, como granularidad para basal/bolos en la bomba virtual.</string>
+</resources>

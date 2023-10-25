@@ -11,13 +11,11 @@
     <string name="stop_pump">Zastavit pumpu</string>
     <string name="started">Spuštěno</string>
     <string name="stopped">Zastaveno</string>
-    <string name="paused">Pozastaveno</string>
     <string name="operating_mode">Provozní režim</string>
     <string name="description_pump_insight_local">Integrace pro pumpu Accu-Chek Insight</string>
     <string name="not_inserted">Není vloženo</string>
     <string name="tdd_bolus">CDD bolusů</string>
     <string name="tdd_basal">CDD bazálů</string>
-    <string name="tdd_total">CDD celkem</string>
     <string name="tbr_formatter">%1$d%% for %2$d / %3$d min</string>
     <string name="multiwave_bolus">Duální bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U for %3$d min</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">Vypršel limit spojení - resetujte Bluetooth</string>
     <string name="pump_stopped">Pumpa zastavena</string>
     <string name="pump_started">Pumpa spuštěna</string>
-    <string name="pump_paused">Pumpa pozastavena</string>
     <string name="short_status_last_connected">Poslední spojení: před %1$d min</string>
     <string name="short_status_tbr">Doč. bazál: %1$d%% na %2$d / %3$d min</string>
     <string name="short_status_extended">Prodl. bolus: %1$.2f / %2$.2f U na %3$d min</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">CDD: %1$.2f</string>
     <string name="short_status_reservoir">Zásobník: %1$.2f U</string>
     <string name="short_status_battery">Baterie: %1$d%%</string>
-    <string name="confirm">Potvrdit</string>
-    <string name="mute_alert">Ztlumit</string>
     <string name="release_software_version">Verze softwaru</string>
     <string name="ui_processor_software_version">Verze softwaru UI procesoru</string>
     <string name="pc_processor_software_version">Verze softwaru PC procesoru</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Min. doba čekání na obnovení spojení [s]</string>
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="pairing_information">Informace o párování</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
 </resources>

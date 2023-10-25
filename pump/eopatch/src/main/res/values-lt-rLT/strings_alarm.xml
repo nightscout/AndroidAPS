@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Rezervuaras tuščias\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a003">Rezervuaro galiojimas pasibaigė\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a004">Užsikimšimas\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a005">Įjungimo savitikros klaida\nRezervuaras deaktyvuotas. Pakeiskite rezervuarą.</string>
+    <string name="string_a007">Netinkama temperatūra\nInsulino tiekimas ir rezervuaro aktyvavimo procesas sustabdyti. Venkite ekstremalių temperatūrų.</string>
+    <string name="string_a016">Adatos įvedimo klaida\nPatikrinkite mygtuką ir spauskite \'Kartoti\'.</string>
+    <string name="string_a018">Rezervuaro baterijos klaida\nRezervuaras deaktyvuotas,\ninsulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a019">Rezervuaro baterijos klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a020">Rezervuaro aktyvavimo klaida\nAktyvavimo procesas sustabdytas. Paspauskite \'Patvirtinti\' ir rezervuaras bus deaktyvuotas. Pakeiskite rezervuarą.</string>
+    <string name="string_a022">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a023">Rezervuaro klaida\nRezervuaras deaktyvuotas,\ninsulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a034">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a041">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a042">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a043">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a044">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a106">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a107">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a108">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a116">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a117">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_a118">Rezervuaro klaida\nRezervuaras deaktyvuotas, insulino tiekimas sustabdytas. Pakeiskite rezervuarą.</string>
+    <string name="string_b000">Rezervuaras baigs galioti %s. Būkite pasiruošę pakeisti rezervuarą.</string>
+    <string name="string_b001">Insulino tiekimo sustabdymo pabaiga\nNorėdami atnaujinti insulino tiekimą, spauskite \'Atnaujinti\'.</string>
+    <string name="string_b003">Mažai insulino\nNetrukus reikės keisti rezervuarą.</string>
+    <string name="string_b005">Rezervuaras baigė galioti\nPakeiskite rezervuarą.</string>
+    <string name="string_b006">Rezervuaras netrukus baigs galioti\nPakeiskite rezervuarą.</string>
+    <string name="string_b012">Rezervuaras nepilnai aktyvuotas\nUžbaikite aktyvavimo procesą.</string>
+    <string name="string_b018">Rezervuaro baterija senka\nBūkite pasiruošę pakeisti rezervuarą.</string>
+</resources>

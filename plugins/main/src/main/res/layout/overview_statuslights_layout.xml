@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/status_lights_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="-3dp"
+    android:layout_marginBottom="-3dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    app:alignContent="stretch"
+    app:alignItems="stretch"
+    app:flexDirection="row"
+    app:flexWrap="wrap"
+    app:justifyContent="space_around">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:gravity="center"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:id="@+id/cannula_or_patch"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@string/statuslights_cannula_age"
+            app:srcCompat="@drawable/ic_cp_age_cannula" />
+
+        <TextView
+            android:id="@+id/cannula_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            tools:text="1d12h" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@string/a11y_insulin_label"
+            app:srcCompat="@drawable/ic_cp_age_insulin" />
+
+        <TextView
+            android:id="@+id/insulin_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            tools:text="12h" />
+
+        <TextView
+            android:id="@+id/reservoir_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:paddingStart="2dp"
+            android:paddingEnd="0dp"
+            tools:text="50+U" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:gravity="center"
+        tools:ignore="UseCompoundDrawables">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@string/sensor_label"
+            app:srcCompat="@drawable/ic_cp_age_sensor" />
+
+        <TextView
+            android:id="@+id/sensor_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            tools:text="1d12h" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/battery_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:focusable="true"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@string/battery_label"
+            app:srcCompat="@drawable/ic_cp_age_battery" />
+
+        <TextView
+            android:id="@+id/pb_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:text="-"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/pb_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:paddingStart="2dp"
+            android:paddingEnd="0dp"
+            tools:text="100%" />
+
+    </LinearLayout>
+
+</com.google.android.flexbox.FlexboxLayout>

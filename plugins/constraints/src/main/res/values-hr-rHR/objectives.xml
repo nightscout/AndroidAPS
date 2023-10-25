@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="objectives_usage_objective">Naučite kako kontrolirati AAPS</string>
+    <string name="objectives_usage_gate">Izvršite različite radnje u AAPS-u</string>
+</resources>

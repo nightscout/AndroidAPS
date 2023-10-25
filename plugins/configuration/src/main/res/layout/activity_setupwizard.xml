@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".setupwizard.SetupWizardActivity">
+
+    <TextView
+        android:id="@+id/sw_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:keepScreenOn="true"
+        android:textAlignment="center"
+        android:textSize="32sp"
+        tools:text="Title" />
+
+    <ScrollView
+        android:id="@+id/sw_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/sw_content_fields"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp" />
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:background="@color/black_alpha_40"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <Button
+            android:id="@+id/previous_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:onClick="showPreviousPage"
+            android:text="@string/previous_button" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/next_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:onClick="showNextPage"
+            android:text="@string/next_button" />
+
+        <Button
+            android:id="@+id/finish_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:onClick="finishSetupWizard"
+            android:text="@string/setupwizard_finish" />
+
+    </LinearLayout>
+
+</LinearLayout>

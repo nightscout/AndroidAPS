@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="common_resultok">Ceart go leor</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_suspended">Ar fionraí</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Bunaidhi</string>
+    <string name="history_group_all">Ar fad</string>
+    <string name="history_group_bolus">Bólasi</string>
+    <string name="history_group_alarm">Aláraim</string>
+    <string name="history_group_glucose">Glúcóis</string>
+    <string name="history_group_other">Eile</string>
+    <!-- Time -->
+    <!-- BLE Config -->
+    <string name="ble_config_scan_stop">Stad</string>
+    <string name="ble_config_connected_never">Riamh</string>
+    <!-- BLE Errors -->
+    <!-- Pump Error -->
+    <!-- Pump History -->
+    <plurals name="duration_days">
+        <item quantity="one">%1$d lá</item>
+        <item quantity="two">%1$d lá</item>
+        <item quantity="few">%1$d lá</item>
+        <item quantity="many">%1$d lá</item>
+        <item quantity="other">%1$d lá</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d uair</item>
+        <item quantity="two">%1$d uair</item>
+        <item quantity="few">%1$d uair</item>
+        <item quantity="many">%1$d uair</item>
+        <item quantity="other">%1$d uair</item>
+    </plurals>
+</resources>

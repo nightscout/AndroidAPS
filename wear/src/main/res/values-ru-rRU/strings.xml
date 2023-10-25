@@ -2,15 +2,12 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS (Большой)</string>
     <string name="label_watchface_big_chart">AAPS (Крупный график)</string>
     <string name="label_watchface_no_chart">AAPS (Без графика)</string>
     <string name="label_watchface_circle">AAPS (круглый)</string>
-    <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS (кабина пилота)</string>
-    <string name="label_watchface_steampunk">AAPS (Стимпанк)</string>
     <string name="label_watchface_digital_style">AAPS (ЦифровойСтиль)</string>
+    <string name="label_watchface_custom">AAPS (настраиваемый)</string>
     <string name="label_actions_tile">AAPS (Действия)</string>
     <string name="label_temp_target_tile">AAPS(ВремЦель)</string>
     <string name="label_quick_wizard_tile">AAPS(Мастер)</string>
@@ -22,20 +19,33 @@
     <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
     <string name="pref_units_for_actions">Единицы для начала действий</string>
+    <string name="units_short">ед</string>
+    <string name="pref_display_settings">Экран</string>
+    <string name="pref_graph_settings">График</string>
+    <string name="pref_interface_settings">Интерфейс</string>
+    <string name="pref_others_settings">Другое</string>
+    <string name="pref_complication_settings">Дополнения</string>
     <string name="pref_show_date">Показать дату</string>
     <string name="pref_show_iob">Показать акт инс IOB</string>
+    <string name="pref_show_detailed_iob">Отображать IOB подробно</string>
     <string name="pref_show_cob">Показать акт угл COB</string>
     <string name="pref_show_delta">Показывать дельту</string>
+    <string name="pref_show_detailed_delta">Отображать дельту подробно</string>
     <string name="pref_show_avgdelta">Показывать среднюю дельту</string>
     <string name="pref_show_phone_battery">Показывать заряд батареи телефона</string>
     <string name="pref_show_rig_battery">Показывать заряд батареи системы</string>
     <string name="pref_show_basal_rate">Показать базальную скорость</string>
     <string name="pref_show_loop_status">Показывать состояние цикла</string>
     <string name="pref_show_bg">Показывать ГК</string>
+    <string name="pref_show_bgi">Отображать ГКИ (BGI)</string>
     <string name="pref_show_direction_arrow">Показывать стрелку тренда</string>
     <string name="pref_show_ago">Показывать ретро события</string>
+    <string name="pref_show_temp_basal">Показывать ВБС</string>
+    <string name="pref_show_bolus">Показывать болюс &amp; СМБ</string>
+    <string name="pref_show_grid">Показывать сетку</string>
     <string name="pref_dark" comment="Enables dark visual theme">Тёмная</string>
     <string name="pref_highlight_basals">Выделить базалы</string>
+    <string name="pref_prediction_lines">Показывать прогноз</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Соответствующий делитель</string>
     <string name="pref_chart_timeframe">Временной диапазон графика</string>
     <string name="pref_1_hour">1 час</string>
@@ -48,7 +58,6 @@
     <string name="pref_quick_righty">Быстрый правосторонний</string>
     <string name="pref_quick_lefty">Быстрый левосторонний</string>
     <string name="pref_modern_sparse">Современный разреженный</string>
-    <string name="pref_delta_granularity">Дельта детально (Стимпанк)</string>
     <string name="pref_low">Низкий</string>
     <string name="pref_medium">Средний</string>
     <string name="pref_high">Высокий</string>
@@ -103,7 +112,7 @@
     <string name="action_preset_1">Предустановка 1</string>
     <string name="action_preset_2">Предустановка 2</string>
     <string name="action_preset_3">Предустановка 3</string>
-    <string name="action_free_amount" comment="In prime/fill menu, allows to enter any amount to be used for priming/filling">Произвольное количество</string>
+    <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Произвольное количество</string>
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
     <string name="action_timeshift">сдвиг по времени</string>
     <string name="action_bolus">Болюс</string>
@@ -143,6 +152,7 @@
     <string name="pref_simplify_ui_sum">Показывать только время и ГК</string>
     <string name="pref_vibrate_hourly">Почасовая вибрация</string>
     <string name="pref_show_weeknumber">Показывать номер недели</string>
+    <string name="custom_pref_show_seconds">Показывать секунды</string>
     <string name="digitalstyle_pref_your_style">Ваш стиль:</string>
     <string name="digitalstyle_style_none">без стиля</string>
     <string name="digitalstyle_style_minimal">минималистский</string>
@@ -170,20 +180,28 @@
     <string name="wear_control_no_data">Нет данных</string>
     <string name="increment">приращение</string>
     <string name="decrement">декремент</string>
-    <string name="first_char_high">В</string>
-    <string name="first_char_low">Н</string>
     <string name="abbreviation_average">сред</string>
     <string name="no_iob_u">--ед</string>
     <string name="no_cob_g">--г</string>
     <string name="no_tmp_basal_u_h">-.--ед/ч</string>
-    <string name="uploader_na">Загрузчик: --%</string>
-    <string name="no_status">S: статус отсутствует</string>
-    <string name="time_stamp_na_min_ago">-- Минут назад</string>
+    <string name="uploader_na">Ед: --%</string>
+    <string name="no_status">Сост: --</string>
+    <string name="time_stamp_na_min_ago">-- Мин. назад</string>
     <string name="delta_na">--- мг/дл</string>
     <string name="no_loop_status">Нет статуса</string>
     <string name="cob_000g">000г</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 ед</string>
-    <string name="snooze_alert">Отложить оповещения AAPS</string>
+    <string name="snooze_alert">Оповещение о переходе AAPS в режим энергосбережения</string>
     <string name="sending_snooze">Отправка команды отложить оповещения AAPS</string>
+    <string name="short_hour">ч</string>
+    <string name="week_short">н</string>
+    <string name="day_short">д</string>
+    <string name="hour_short">ч</string>
+    <string name="hour_minute">%1$s%2$s</string>
+    <string name="hour_minute_second">%1$s%2$s%3$s</string>
+    <string name="old">старые</string>
+    <string name="old_warning">!старое!</string>
+    <string name="error">!ошибка!</string>
+    <string name="pref_heartRateSampling">Частота сердечных сокращений</string>
 </resources>

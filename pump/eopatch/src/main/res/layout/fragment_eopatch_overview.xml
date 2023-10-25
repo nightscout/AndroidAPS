@@ -1,0 +1,549 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils"/>
+        <variable
+            name="viewmodel"
+            type="info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/eopatch_overview_buttons"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="5dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/text1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/initializing"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/list_delimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_ble_status"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/omnipod_overview_riley_link_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{viewmodel.bleStatus}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/list_delimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="3dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_serial_number"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_overview_pod_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{viewmodel.patchConfig.patchSerialNumber}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="3dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_lot_number"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_overview_pod_lot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{viewmodel.patchConfig.patchLotNumber}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="3dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_wakeup_time"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_overview_time_on_pod"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{CommonUtils.dateString(viewmodel.patchConfig.patchWakeupTimestamp)}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="3dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_expiration_time"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_overview_pod_expiry_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{CommonUtils.dateString(viewmodel.patchConfig.expireTimestamp)}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="3dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_status"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/omnipod_overview_pod_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{viewmodel.status}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/list_delimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_base_basal_rate"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_overview_base_basal_rate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{viewmodel.normalBasal}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/list_delimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_temp_basal_rate"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_overview_temp_basal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{viewmodel.tempBasal}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/list_delimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/patch_remaining_insulin"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_overview_reservoir"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{viewmodel.patchRemainingInsulin}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/list_delimiter" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@string/eopatch_total_delivered"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0"
+                        android:gravity="center_horizontal"
+                        android:paddingStart="2dp"
+                        android:paddingEnd="2dp"
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/omnipod_overview_total_delivered"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="5dp"
+                        android:text="@{viewmodel.patchConfig.insulinInjectionAmountStr}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/list_delimiter" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/eopatch_overview_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button1"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_pod_activate_pod"
+                android:textAllCaps="false"
+                android:text="@string/string_activate_patch"
+                android:enabled="@{!viewmodel.patchConfig.activated}"
+                app:onSafeClick="@{() -> viewmodel.onClickActivation()}"/>
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button2"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_pod_deactivate_pod"
+                android:text="@string/string_change_patch"
+                android:textAllCaps="false"
+                android:enabled="@{viewmodel.patchConfig.activated}"
+                app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}"/>
+
+            <app.aaps.core.ui.elements.SingleClickButton
+                android:id="@+id/button3"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_pod_resume_delivery"
+                android:enabled="@{viewmodel.alarms.occurred.size() == 0}"
+                app:text="@{viewmodel.pauseBtnStr}"
+                android:textAllCaps="false"
+                app:visibleOrGone="@{viewmodel.patchConfig.activated}"
+                app:onSafeClick="@{() -> viewmodel.onClickSuspendOrResume()}"/>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

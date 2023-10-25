@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">大剂量约束条件应用了</string>
+    <string name="carbs_constraint_applied">碳水化合物约束条件应用了</string>
+    <string name="temp_target_short">临时目标</string>
+    <string name="dialog_canceled">对话框已取消</string>
+    <string name="start_activity_tt">开始运动临时目标</string>
+    <string name="start_eating_soon_tt">开始很快吃饭TT(临时目标)</string>
+    <string name="start_hypo_tt">开始低的临时目标</string>
+    <string name="time_offset">时区偏移</string>
+    <string name="unit_minute_short">分钟</string>
+    <string name="remind_to_bolus_later">稍后提醒输注大剂量</string>
+    <string name="a11y_carb_reminder">设置提醒</string>
+    <!--    Widget-->
+    <string name="configure">配置透明度</string>
+    <!--     Activities-->
+    <string name="activity_monitor">活动监视器</string>
+    <string name="do_you_want_reset_stats">您想要重置所有的统计信息吗？</string>
+    <string name="statistics">统计</string>
+    <string name="calculation_in_progress">正在进行计算</string>
+    <string name="invalid_age">输入的年龄无效</string>
+    <string name="invalid_weight">输入的权重无效</string>
+    <string name="id">ID：</string>
+    <string name="submit">提交</string>
+    <string name="age">年龄</string>
+    <string name="weight_label">重量</string>
+    <string name="most_common_profile">最常见的配置文件:</string>
+    <string name="glucose_type">血糖类型</string>
+    <string name="bg_other">其他</string>
+    <string name="bg_meter">血糖仪</string>
+    <string name="bg_sensor">传感器</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">总计</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">请确保数量和输液器里的药量匹配</string>
+    <string name="record_pump_site_change">记录泵管路更换</string>
+    <string name="record_insulin_cartridge_change">记录胰岛素储药器变化</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">不打大剂量，只记录</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">重新使用%1$d%% %2$d小时</string>
+    <string name="timeshift_label">时间偏移</string>
+    <string name="percentage_label">百分比</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">暂停闭环一个小时</string>
+    <string name="suspendloopfor2h">暂停闭环2个小时</string>
+    <string name="suspendloopfor3h">暂停闭环3个小时</string>
+    <string name="suspendloopfor10h">暂停闭环10个小时</string>
+    <string name="disconnectpump">断开泵连接</string>
+    <string name="disconnectpumpfor15m">与泵断开连接15分钟</string>
+    <string name="disconnectpumpfor30m">与泵断开连接30分钟</string>
+    <string name="disconnectpumpfor1h">与泵断开连接1个小时</string>
+    <string name="disconnectpumpfor2h">与泵断开连接2个小时</string>
+    <string name="disconnectpumpfor3h">与泵断开连接3个小时</string>
+    <string name="resume">恢复</string>
+    <string name="reconnect">重新连接泵</string>
+    <string name="duration15m">15 分钟</string>
+    <string name="duration30m">30 分钟</string>
+    <string name="duration1h">1 小时</string>
+    <string name="duration2h">2 小时</string>
+    <string name="duration3h">3 小时</string>
+    <string name="duration10h">10 小时</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">校正结果使用%</string>
+    <string name="a11_correction_units">校正结果使用单位</string>
+    <string name="two_hours">2小时</string>
+    <string name="result_insulin_carbs">结果: %1$s %2$s</string>
+    <string name="missing_carbs">缺少 %1$d 克</string>
+    <string name="a11y_current_bg">当前血糖</string>
+    <string name="carb_time_label">碳水时间</string>
+    <string name="a11y_set_carb_timer">设置碳水计时器提醒</string>
+    <string name="show_calculation">显示计时器</string>
+    <!-- Treatments -->
+    <string name="no_records_available">当前暂无记录</string>
+    <string name="calculation_short">计算</string>
+    <string name="treatments_iob_label_string">IOB活性胰岛素:</string>
+    <string name="treatments_insulin_label_string">胰岛素:</string>
+    <string name="treatments_carbs_label_string">碳水化合物:</string>
+    <string name="treatments_iobtotal_label_string">总 IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">总IOB activity(活动):</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="tempbasals_netratio_label_string">比率：</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB活性胰岛素:</string>
+    <string name="treatments_wizard_correction_label">矫正值</string>
+    <string name="meal_bolus">饮食</string>
+    <string name="prime">充盈</string>
+    <string name="profile_changes">配置文件更改</string>
+    <string name="tempt_targets">临时目标</string>
+    <string name="carbs_and_bolus">碳水与大剂量</string>
+    <string name="show_invalidated_records">显示无效/已删除的记录</string>
+    <string name="hide_invalidated_records">隐藏无效/已删除的记录</string>
+    <string name="refresh_from_nightscout">从 Nightscout 刷新</string>
+    <string name="refresheventsfromnightscout">从NS刷新</string>
+    <string name="show_invalidated">显示无效项</string>
+    <string name="hide_invalidated">隐藏失效项</string>
+    <string name="careportal_remove_started_events">删除 AAPS 启动的条目</string>
+    <string name="hide_loop">隐藏闭环</string>
+    <string name="show_loop">显示闭环</string>
+    <string name="user_entry">用户条目</string>
+    <string name="clone_label">克隆</string>
+    <string name="show_loop_records">显示闭环记录</string>
+    <string name="show_hide_records">隐藏闭环记录</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">配置文件 1</string>
+    <string name="profile2">配置文件 2</string>
+    <string name="profile_type">配置文件类型</string>
+    <string name="basal_pct_from_tdd_label">基础率%</string>
+    <string name="selected_profile">已选择:</string>
+    <string name="compare_profile">比较配置文件</string>
+    <string name="nav_profile_helper">配置文件助手</string>
+    <string name="motol_default_profile">默认个人配置文件</string>
+    <string name="current_profile">当前配置文件</string>
+    <string name="available_profile">可用配置文件</string>
+    <string name="format_with_tdd">年龄: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">年龄: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">年龄: %1$d 体重: %2$.0f 千克</string>
+    <string name="dpv_default_profile">DPV默认个人配置</string>
+    <string name="invalid_pct">输入的百分比无效</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">基础率</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">停止键按下了</string>
+    <!--QuickWizard-->
+</resources>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <!--    PumpType-->
+    <string name="def_extended_note">* Csak diszkrét értékek, tartományok nem támogatottak a virtuális pumpa bázis/bólus felbontásaként.</string>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Configuració preestablerta per insulina Humalog i NovoRapid/NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Configuració preestablerta per insulina Fiasp</string>
+    <string name="description_insulin_lyumjev">Configuració preestablerta per insulina Lyumjev</string>
+    <string name="description_insulin_free_peak">Permet definir el pic d\'activitat de la insulina. A utilitzar només per usuaris avançats</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Pic de la corba IOB</string>
+    <string name="insulin_peak_time">Temps del pic [min]</string>
+    <string name="free_peak_oref">Oref sense pic</string>
+    <string name="rapid_acting_oref">Oref ràpida</string>
+    <string name="dia_too_short">DIA de %1$f massa curt - utilitzant %2$f!</string>
+</resources>

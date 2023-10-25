@@ -11,13 +11,11 @@
     <string name="stop_pump">Stoppa micro</string>
     <string name="started">Avviato</string>
     <string name="stopped">Stoppato</string>
-    <string name="paused">In pausa</string>
     <string name="operating_mode">Modalità operativa</string>
     <string name="description_pump_insight_local">Integrazione del microinfusore Accu-Chek Insight</string>
     <string name="not_inserted">Non inserito</string>
     <string name="tdd_bolus">TDD da bolo</string>
     <string name="tdd_basal">TDD da basale</string>
-    <string name="tdd_total">TDD totale</string>
     <string name="tbr_formatter">%1$d%% per %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolo multiwave</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U per %3$d min</string>
@@ -38,7 +36,6 @@
     <string name="timeout_during_handshake">Timeout durante la connessione - riavvia il bluetooth</string>
     <string name="pump_stopped">Micro stoppato</string>
     <string name="pump_started">Micro avviato</string>
-    <string name="pump_paused">Micro in pausa</string>
     <string name="short_status_last_connected">Ultima conn: %1$d min fa</string>
     <string name="short_status_tbr">TBR: %1$d%% per %2$d / %3$d min</string>
     <string name="short_status_extended">Esteso: %1$.2f / %2$.2f U per %3$d min</string>
@@ -46,8 +43,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Serb.: %1$.2f U</string>
     <string name="short_status_battery">Batt: %1$d%%</string>
-    <string name="confirm">Conferma</string>
-    <string name="mute_alert">Muto</string>
     <string name="release_software_version">Versione Release software</string>
     <string name="ui_processor_software_version">Versione UI processor software</string>
     <string name="pc_processor_software_version">Versione PC processor software</string>
@@ -71,4 +66,5 @@
     <string name="min_recovery_duration">Min. durata recupero [s]</string>
     <string name="pump_alert">Avviso micro</string>
     <string name="pairing_information">Informazioni associazione</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Tasto aggiornamento Insight</string>
 </resources>

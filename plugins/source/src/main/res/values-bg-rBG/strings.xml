@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">КЗ от NS</string>
+    <string name="ns_client_bg_short">NS КЗ</string>
+    <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
+    <string name="source_xdrip">КЗ от xDrip+</string>
+    <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Да получава данни за КЗ от модифицираното приложение на Dexcom BYODA.</string>
+    <string name="eversense">Eversense приложение(модифицирано)</string>
+    <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Получавай данни за КЗ от Poctech апликацията.</string>
+    <string name="glunovo">Глуново</string>
+    <string name="description_source_glunovo">Получавай данните от Glunowo апликацията</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Получавай данните от Intelligo апликацията</string>
+    <string name="tomato">Tomato(MяоМяо)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">КЗ от  GlucoRx Aidex CGMS.</string>
+    <string name="random_bg">Произволна КЗ</string>
+    <string name="description_source_random_bg">Генерира произволни захари(демо режим)</string>
+    <string name="random_bg_short">КЗ</string>
+    <string name="do_xdrip_upload_title">Изпращай данни за КЗ към xDrip+</string>
+    <string name="do_xdrip_upload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
+    <string name="bgsource_upload">Настройки при качване на КЗ към Nightscout</string>
+    <string name="dexcom_log_ns_sensor_change_title">Записвай смяната на сензор в NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Създаване на събитие \"Смяна на сеснзор\" в NS автоматично при старт на сензор</string>
+    <string name="direction">Посока</string>
+</resources>

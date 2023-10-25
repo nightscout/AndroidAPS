@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Primijenjeno ograničenje bolusa</string>
+    <string name="carbs_constraint_applied">Primijenjeno je ograničenje ugljikohidrata</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dijalog otkazan</string>
+    <string name="start_activity_tt">Započni aktivnost TT</string>
+    <string name="start_eating_soon_tt">Započnite uskoro počnite jesti TT</string>
+    <string name="start_hypo_tt">Pokrenite Hypo TT</string>
+    <string name="time_offset">Vremenski odmak</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Podsjetite na kasniji bolus</string>
+    <string name="a11y_carb_reminder">postavi podsjetnik</string>
+    <!--    Widget-->
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="weight_label">Težina</string>
+    <string name="survey_comment">Napomena: Anonimno će se učitati samo podaci vidljivi na ovom zaslonu. ID je dodijeljen ovoj instalaciji AAPS-a. Možete ponovno poslati podatke ako se vaš glavni profil promijeni, ali pustite ga da radi barem tjedan dana kako bi rezultat bio vidljiv u određenom vremenskom rasponu. Cijenimo vašu pomoć.</string>
+    <string name="glucose_type">Vrsta glukoze</string>
+    <string name="bg_other">Ostalo</string>
+    <string name="bg_meter">Aparatić</string>
+    <string name="bg_sensor">Senzor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Total</string>
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
+    <string name="a11y_set_carb_timer">postavite timer alarma ugljikohidrata</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Nema dostupnih zapisa</string>
+    <string name="calculation_short">Izračun</string>
+    <string name="treatments_iob_label_string">Aktivni inzulin:</string>
+    <string name="treatments_insulin_label_string">Inzulin:</string>
+    <string name="treatments_carbs_label_string">Ugljikohidrati (UH):</string>
+    <string name="treatments_iobtotal_label_string">Ukupni aktivni inzulin:</string>
+    <string name="treatments_iob_activity_total_label_string">Ukupna IOB aktivnost:</string>
+    <string name="tempbasals_realduration_label_string">Trajanje:</string>
+    <string name="tempbasals_netratio_label_string">Omjer:</string>
+    <string name="tempbasals_netinsulin_label_string">Inz:</string>
+    <string name="tempbasals_iob_label_string">Aktivni inzulin:</string>
+    <string name="treatments_wizard_correction_label">Korekcija</string>
+    <string name="meal_bolus">Obrok</string>
+    <string name="prime">Punjenje katetera</string>
+    <string name="profile_changes">Promjena profila</string>
+    <string name="tempt_targets">Privremeni ciljevi</string>
+    <string name="carbs_and_bolus">Ugljikohidrati i bolus</string>
+    <string name="show_invalidated_records">Prikaži poništene/uklonjene zapise</string>
+    <string name="hide_invalidated_records">Sakrij poništene/uklonjene zapise</string>
+    <string name="refresh_from_nightscout">Osvježite iz Nightscout-a</string>
+    <string name="refresheventsfromnightscout">Osvježite iz Nightscout-a</string>
+    <string name="show_invalidated">Prikaži poništen</string>
+    <string name="hide_invalidated">Sakrij poništeno</string>
+    <string name="careportal_remove_started_events">Uklonite započete unose AAPS-a</string>
+    <string name="hide_loop">Sakrij petlju</string>
+    <string name="show_loop">Prikaži petlju</string>
+    <string name="user_entry">Unos korisnika</string>
+    <string name="clone_label">Kloniraj</string>
+    <string name="show_loop_records">Prikaži zapise petlje</string>
+    <string name="show_hide_records">Sakrij zapise petlje</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="selected_profile">Odabrano:</string>
+    <string name="compare_profile">Usporedite profile</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Bazalna stopa</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STOP PRITISNUT</string>
+    <!--QuickWizard-->
+</resources>

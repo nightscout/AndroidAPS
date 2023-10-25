@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Aplikované obmedzenie bolusu</string>
+    <string name="carbs_constraint_applied">Aplikované obmedzenie sacharidov</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Dialóg zrušený</string>
+    <string name="start_activity_tt">Spustiť Dočasný cieľ Aktivita</string>
+    <string name="start_eating_soon_tt">Spustiť Dočasný cieľ Blížiace sa jedlo</string>
+    <string name="start_hypo_tt">Spustiť doč. cieľ Hypo</string>
+    <string name="time_offset">Časový posun</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Upozorniť na bolus neskôr</string>
+    <string name="a11y_carb_reminder">nastaviť pripomienku</string>
+    <!--    Widget-->
+    <string name="configure">Konfigurovať priehľadnosť</string>
+    <string name="widget_description">AAPS widget</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Monitor aktivity</string>
+    <string name="do_you_want_reset_stats">Chcete resetovať štatistiky aktivity?</string>
+    <string name="do_you_want_reset_tdd_stats">Chcete resetovať štatistiky CDD?</string>
+    <string name="statistics">Štatistika</string>
+    <string name="calculation_in_progress">Prebieha výpočet</string>
+    <string name="invalid_age">Neplatný záznam veku</string>
+    <string name="invalid_weight">Neplatný záznam váhy</string>
+    <string name="id">ID:</string>
+    <string name="submit">Odoslať</string>
+    <string name="age">Vek</string>
+    <string name="weight_label">Váha</string>
+    <string name="most_common_profile">Najčastejšie používaný profil:</string>
+    <string name="survey_comment">Poznámka: Len údaje zobrazené na tejto obrazovke budú odosielané anonymne. ID je pridelené na túto inštaláciu AndroidAPS. Údaje môžete odoslať znova, ak sa váš hlavný profil zmení, ale nechajte ho bežať aspoň týždeň, aby bol výsledok času v rozsahu viditeľný. Vaša pomoc je vítaná.</string>
+    <string name="glucose_type">Zadanie glykémie</string>
+    <string name="bg_other">Iné</string>
+    <string name="bg_meter">Glukomer</string>
+    <string name="bg_sensor">Senzor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Spolu</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Prosím uistite sa, že hodnota zodpovedá špecifikácií Vášho setu!</string>
+    <string name="record_pump_site_change">Zaznamenať výmenu setu</string>
+    <string name="record_insulin_cartridge_change">Zaznamenať výmenu inzulínu</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Nepodať bolus, iba zaznamenať</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Znovu použiť %1$d%% %2$dh</string>
+    <string name="timeshift_label">Posun času</string>
+    <string name="percentage_label">% zmena</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Pozastaviť uzavretý okruh na 1 h</string>
+    <string name="suspendloopfor2h">Pozastaviť uzavretý okruh na 2 h</string>
+    <string name="suspendloopfor3h">Pozastaviť uzavretý okruh na 3 h</string>
+    <string name="suspendloopfor10h">Pozastaviť uzavretý okruh na 10 h</string>
+    <string name="disconnectpump">Odpojenie pumpy</string>
+    <string name="disconnectpumpfor15m">Odpojiť pumpu na 15 min</string>
+    <string name="disconnectpumpfor30m">Odpojiť pumpu na 30 min</string>
+    <string name="disconnectpumpfor1h">Odpojiť pumpu na 1 h</string>
+    <string name="disconnectpumpfor2h">Odpojiť pumpu na 2 h</string>
+    <string name="disconnectpumpfor3h">Odpojiť pumpu na 3 h</string>
+    <string name="resume">Pokračovať</string>
+    <string name="reconnect">Znovu pripojiť pumpu</string>
+    <string name="duration15m">15 minút</string>
+    <string name="duration30m">30 minút</string>
+    <string name="duration1h">1 hodina</string>
+    <string name="duration2h">2 hodiny</string>
+    <string name="duration3h">3 hodiny</string>
+    <string name="duration10h">10 hodiny</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">správny výsledok v %</string>
+    <string name="a11_correction_units">správny výsledok s jednotkami</string>
+    <string name="two_hours">2h</string>
+    <string name="result_insulin_carbs">Výsledok: %1$s %2$s</string>
+    <string name="missing_carbs">Chýba %1$d g</string>
+    <string name="a11y_current_bg">aktuálna glykémia</string>
+    <string name="carb_time_label">Čas jedla</string>
+    <string name="a11y_set_carb_timer">nastaviť upozornenie na sacharidy</string>
+    <string name="show_calculation">Zobraziť kalkuláciu</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Nie sú k dispozícii žiadne záznamy</string>
+    <string name="calculation_short">Kalk</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Inzulín:</string>
+    <string name="treatments_carbs_label_string">Sacharidy:</string>
+    <string name="treatments_iobtotal_label_string">Celkový IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Celková aktivita IOB:</string>
+    <string name="tempbasals_realduration_label_string">Trv:</string>
+    <string name="tempbasals_netratio_label_string">Pomer:</string>
+    <string name="tempbasals_netinsulin_label_string">Inz:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Korekcia</string>
+    <string name="meal_bolus">Jedlo</string>
+    <string name="prime">Plnenie</string>
+    <string name="profile_changes">Zmeny profilu</string>
+    <string name="tempt_targets">Dočasné ciele</string>
+    <string name="carbs_and_bolus">Sacharidy a bolusy</string>
+    <string name="show_invalidated_records">Zobraziť zneplatnené / odstránené záznamy</string>
+    <string name="hide_invalidated_records">Skryť zneplatnené / odstránené záznamy</string>
+    <string name="refresh_from_nightscout">Obnoviť z Nightscoutu</string>
+    <string name="refresheventsfromnightscout">Aktualizovať z NS</string>
+    <string name="show_invalidated">Zobraziť zneplatnené</string>
+    <string name="hide_invalidated">Skryť zneplatnené</string>
+    <string name="careportal_remove_started_events">Odstrániť všetky záznamy AAPS spustený</string>
+    <string name="hide_loop">Skryť uzavretý okruh</string>
+    <string name="show_loop">Zobraziť uzavretý okruh</string>
+    <string name="user_entry">Záznam užívateľa</string>
+    <string name="clone_label">Klonovať</string>
+    <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
+    <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="profile_type">Typ profilu</string>
+    <string name="basal_pct_from_tdd_label">% bazálu</string>
+    <string name="selected_profile">Vybrané:</string>
+    <string name="compare_profile">Porovnať profily</string>
+    <string name="nav_profile_helper">Pomocník s profilom</string>
+    <string name="motol_default_profile">Predvolený profil</string>
+    <string name="current_profile">Aktuálny profil</string>
+    <string name="available_profile">Dostupný profil</string>
+    <string name="format_with_tdd">Vek: %1$.0f CDD: %2$.0f JI</string>
+    <string name="format_with_tdd_and_pct">Vek: %1$d CDD: %2$.0f JI %3$d%%</string>
+    <string name="format_with_weight">Vek: %1$.0f Hmotnosť: %2$.0f kg</string>
+    <string name="dpv_default_profile">Predvolený DPV profil</string>
+    <string name="invalid_pct">Neplatný vstup %</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Bazál</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STLAČENÝ STOP</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">iba na hodinkách</string>
+    <string name="a11y_only_on_phone">iba na telefóne</string>
+    <string name="quickwizard_settings">Nastavenie rýchleho bolusu</string>
+    <string name="overview_edit_quickwizard_button_text">Text na tlačidle:</string>
+    <string name="overview_edit_quickwizard_carbs">Sacharidy:</string>
+    <string name="overview_edit_quickwizard_valid">Platnosť:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Pridať</string>
+    <string name="overview_quickwizard_item_edit_button">Upraviť</string>
+    <string name="overview_edit_quickwizard_show_on_device">Zobraziť záznam na zariadení:</string>
+    <string name="overview_edit_quickwizard_use_bg">Výpočet glykémie</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Výpočet bolusového IOB</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Výpočet bazálneho IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Výpočet trendu</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Výpočet superbolusu</string>
+    <string name="overview_edit_quickwizard_percentage">Percento</string>
+    <string name="device_all">Všetko</string>
+    <string name="device_phone">Telefón</string>
+    <string name="device_watch">Hodinky</string>
+    <string name="positive_only">Iba kladné</string>
+    <string name="negative_only">Iba záporné</string>
+    <string name="overview_editquickwizard_usecob">Výpočet COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Výpočet dočasného cieľa</string>
+    <string name="overview_editquickwizard_usepercentage">Percentuálny výpočet</string>
+    <string name="app_default">Predvolené aplikáciou</string>
+    <string name="a11y_drag_and_drop_handle">Režim \"Potiahni a pusť\"</string>
+</resources>

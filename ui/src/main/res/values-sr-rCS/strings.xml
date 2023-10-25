@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Primenjeno ograničenje bolusa</string>
+    <string name="carbs_constraint_applied">Primenjeno ograničenje ugljenih hidrata</string>
+    <string name="temp_target_short">TT</string>
+    <!--    Widget-->
+    <!--     Activities-->
+    <string name="glucose_type">Tip glukoze</string>
+    <string name="bg_other">Ostalo</string>
+    <string name="bg_meter">Glucometar</string>
+    <string name="bg_sensor">Senzor</string>
+    <!-- WizardDialog -->
+    <!-- FillDialog -->
+    <!-- InsulinDialog -->
+    <!-- ProfileSwitchDialog -->
+    <!-- LoopDialog -->
+    <!-- WizardDialog -->
+    <string name="result_insulin_carbs">Rezultat: %1$s %2$s</string>
+    <string name="missing_carbs">Nedostaje %1$d g</string>
+    <string name="carb_time_label">Vreme ugljenih hidrata</string>
+    <!-- Treatments -->
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulin:</string>
+    <string name="treatments_carbs_label_string">Ugljeni hidrati:</string>
+    <string name="treatments_iobtotal_label_string">Ukupno IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Ukupna aktivnost IOB-a:</string>
+    <string name="tempbasals_realduration_label_string">Trajanje:</string>
+    <string name="tempbasals_netratio_label_string">Odnos:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Korekcija</string>
+    <string name="meal_bolus">Obrok</string>
+    <!-- ProfileHelperActivity -->
+    <!-- Other dialogs -->
+    <!--    BolusProgressDialog-->
+    <!--QuickWizard-->
+</resources>

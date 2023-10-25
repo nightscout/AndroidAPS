@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="dynisf_adjust_sensitivity">Regola sensibilità e BG</string>
+    <string name="DynISFAdjust_title" formatted="false">Fattore di regolazione per ISF Dinamico (%)</string>
+    <string name="DynISFAdjust_summary" formatted="false">Fattore di regolazione per ISF Dinamico. Imposta più del 100% per dosi di correzione più aggressive e meno del 100% per correzioni meno aggressive.</string>
+    <string name="high_temptarget_raises_sensitivity_title">Temp-Target \"alto\" aumenta la sensibilità</string>
+    <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumenta la sensibilità per temp-target >= 100]]></string>
+    <string name="low_temptarget_lowers_sensitivity_title">Temp-Target \"basso\" riduce la sensibilità</string>
+    <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Riduci la sensibilità per temp-target < 100]]></string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">ISF Dinamico</string>
+    <string name="smb_interval_summary">Frequenza erogazione SMB (min)</string>
+    <string name="resistance_lowers_target_title">La resistenza abbassa il target</string>
+    <string name="resistance_lowers_target_summary">Quando viene rilevata resistenza, ridurre la glicemia target</string>
+    <string name="sensitivity_raises_target_title">La sensibilità aumenta il target</string>
+    <string name="sensitivity_raises_target_summary">Quando viene rilevata sensibilità, aumentare la glicemia target</string>
+    <string name="openapsma_disabled">Il plugin è disabilitato</string>
+    <string name="openapsma_no_glucose_data">Dati glicemia non disponibili</string>
+    <string name="openaps_no_as_data">Nessun dato autosens disponibile</string>
+    <string name="dynisf_shortname">ISFDIN</string>
+    <string name="executing">Esecuzione</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="array_of_elements">Matrice di %1$d elementi.\nValore attuale:</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="description_ama">Stato dell\'algoritmo nel 2017</string>
+    <string name="description_smb">Algoritmo più recente per utenti avanzati</string>
+    <string name="description_smb_dynamic_isf">Algoritmo più recente per utenti avanzati con ISF dinamico/automatico</string>
+    <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze - divisore DIA</string>
+    <string name="openapsma_run">Esegui ora</string>
+    <string name="openapsma_last_run_label">Ultima esecuzione</string>
+    <string name="openapsma_input_parameters_label">Parametri di input</string>
+    <string name="openapsma_glucose_status_label">Stato glicemia</string>
+    <string name="openapsma_current_temp_label">Temp. corrente</string>
+    <string name="openapsma_iob_data_label">Dati IOB</string>
+    <string name="openapsma_profile_label">Profilo</string>
+    <string name="openapsma_meal_data_label">Dati pasto</string>
+    <string name="openapsma_request_label">Richiesta</string>
+    <string name="constraints">Vincoli</string>
+    <string name="openapsma_autosensdata_label">Dati autosens</string>
+    <string name="openapsma_script_debug_data_label">Script debug</string>
+    <string name="openapsama_use_autosens">Usa la funzione Autosens</string>
+    <string name="openapsma_max_basal_title">Max U/h a cui limitare una basale temporanea</string>
+    <string name="openapsma_max_basal_summary">Questo valore è chiamato max basale nel contesto OpenAPS</string>
+    <string name="openapsma_max_iob_title">Max IOB da basale a cui limitare OpenAPS [U]</string>
+    <string name="openapsma_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nIndica l\'insulina massima in [U] che APS può erogare in contemporanea.</string>
+    <string name="openapsama_autosens_adjust_targets_summary">[Valore predefinito: vero]\nViene usato per consentire ad autosens di regolare i target glicemici, in aggiunta a ISF e basali.</string>
+    <string name="openapsama_autosens_adjust_targets">Autosens regola anche i target</string>
+    <string name="openapsama_min_5m_carb_impact_summary">[Valore predefinito: 3.0 (AMA) o 8.0 (SMB)]. Questa è un\'impostazione per l\'impatto di assorbimento predefinito dei carboidrati in 5 minuti. L\'impostazione predefinita è una previsione di 3mg/dl/5min. Ha effetto sulla velocità di decadimento dei COB (carboidrati attivi) e su quanto il loro assorbimento incide nella previsione dell’andamento glicemico, quando la glicemia sta scendendo più del previsto o non sta salendo quanto previsto.</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">[Valore predefinito: 3] Questo è un parametro di sicurezza chiave in OpenAPS. Ciò che fa è limitare le tue basali a essere 3 volte, al più, la tua velocità basale massima. Probabilmente non avrai bisogno di cambiare questo valore, ma dovresti essere consapevole di cosa significa il gruppo di parametri \"3x max giornaliera; 4x corrente\" e per quali motivi di sicurezza siano stati impostati tali valori.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">[Valore predefinito: 4] Questo è un ulteriore parametro di sicurezza chiave in OpenAPS. La tua basale temporanea, indipendentemente dalla basale massima impostata sul micro, non può mai essere più alta di questo valore moltiplicato per la tua basale corrente in ogni specifico momento. Questo serve a impedire alle persone di addentrarsi in \"territori pericolosi\" impostando basali massime eccessivamente alte prima di aver capito come funziona l\'algoritmo. Ancora una volta, il valore predefinito è 4x; la maggior parte delle persone non avrà bisogno di modificare questo valore e avrà, invece, maggiori probabilità di dover regolare altre impostazioni se ha la sensazione di \"scontrarsi\" con questo limite di sicurezza.</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">[Valore predefinito: 2]\nBolus snooze è attivato dopo un bolo pasto per fare in modo che il loop non imposti basali temporanee basse quando hai appena mangiato. AndroidAPS non imposterà velocità basali troppo basse nel periodo corrispondente a DIA diviso il parametro bolus snooze - divisore DIA. Con DIA di 3 ore \"bolus snooze\" durerà 1.5 ore (3/2).</string>
+    <string name="openapsama_link_to_preference_json_doc_txt">Attenzione!\nNormalmente non dovresti modificare questi valori. FAI CLICK QUI e leggi il testo e assicurati di AVERLO CAPITO prima di cambiare uno di questi valori.</string>
+    <string name="always_use_short_avg">Usa sempre il delta medio ridotto</string>
+    <string name="always_use_short_avg_summary">Utile quando i dati provenienti da sorgenti non filtrate come xDrip+ diventano \"rumorosi\" (instabili).</string>
+    <string name="openapsama_max_daily_safety_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
+    <string name="openapsama_current_basal_safety_multiplier">Moltiplicatore di sicurezza basale corrente</string>
+    <string name="openapssmb_max_iob_title">Max IOB totale a cui limitare OpenAPS [U]</string>
+    <string name="openapssmb_max_iob_summary">Questo valore è chiamato Max IOB nel contesto OpenAPS\nOpenAPS non aggiungerà ulteriore insulina se IOB corrente è maggiore di questo valore</string>
+    <string name="enable_uam">Abilita UAM</string>
+    <string name="enable_smb">Abilita SMB</string>
+    <string name="enable_smb_summary">Usa super-micro-boli al posto della basale temporanea per un\'azione più veloce</string>
+    <string name="enable_uam_summary">Rilevamento dei pasti non annunciati</string>
+    <string name="enable_smb_always">Abilita SMB sempre</string>
+    <string name="enable_smb_always_summary">Abilita SMB sempre, indipendentemente dai boli. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
+    <string name="enable_smb_after_carbs">Abilita SMB dopo i CHO</string>
+    <string name="enable_smb_after_carbs_summary">Abilita SMB per 6h dopo i carboidrati, anche con 0 COB. Possibile solo con sorgente glicemia con un buon filtraggio dei dati, come G5</string>
+    <string name="enable_smb_with_cob">Abilita SMB con COB</string>
+    <string name="enable_smb_with_cob_summary">Abilita SMB quando COB è attivo (ci sono carboidrati non assorbiti).</string>
+    <string name="enable_smb_with_temp_target">Abilita SMB con target temporanei</string>
+    <string name="enable_smb_with_temp_target_summary">Abilita SMB quando è attivo un target temporaneo (pasto a breve, attività fisica)</string>
+    <string name="enable_smb_with_high_temp_target">Abilita SMB con target temporanei \"alti\"</string>
+    <string name="enable_smb_with_high_temp_target_summary">Abilita SMB quando è attivo un target temporaneo \"alto\" (attività fisica, sopra 100 mg/dl o 5.5 mmol/l)</string>
+    <string name="smb_max_minutes_summary">Max minuti di basale a cui limitare SMB</string>
+    <string name="uam_smb_max_minutes">SMB UAM max minuti</string>
+    <string name="uam_smb_max_minutes_summary">Max minuti di basale a cui limitare SMB per UAM</string>
+    <string name="carbs_req_threshold">CHO minimi richiesti per il suggerimento</string>
+    <string name="carbs_req_threshold_summary">Quantità minima di carboidrati (in grammi) necessaria per visualizzare un avviso di suggerimento CHO. Al di sotto di questo numero non verrà attivata alcuna notifica.</string>
+    <string name="lgs_threshold_summary">Glicemia sotto la quale l\'erogazione d\'insulina è sospesa. Il valore predefinito utilizza il modello target standard. L\'utente può impostare un valore compreso tra 60 mg/dl (3.3mmol/l) e 100mg/dl (5.5mmol/l). Con valori inferiori a 65/3.6 viene usato il modello predefinito</string>
+    <string name="lgs_threshold_title">Glicemia sotto la quale si attiva la sospensione per glicemia bassa</string>
+    <string name="increasing_max_basal">Aumento del valore max basale perché l\'impostazione è inferiore alla tua basale massima nel profilo</string>
+    <string name="max_basal_multiplier">moltiplicatore max basale</string>
+    <string name="max_daily_basal_multiplier">moltiplicatore max basale giornaliera</string>
+    <string name="smb_disabled_in_preferences">SMB disabilitato nelle preferenze</string>
+    <string name="uam_disabled_in_preferences">UAM disabilitato nelle preferenze</string>
+    <string name="autosens_disabled_in_preferences">Autosens disabilitato nelle preferenze</string>
+    <!--    Verify if needed in safety-->
+    <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
+    <string name="maxvalueinpreferences">valore max nelle preferenze</string>
+    <string name="hardlimit">limite fisso</string>
+    <!--    Autotune   -->
+    <string name="insulin_peak">Picco</string>
+    <!--    Loop -->
+    <string name="run_now">Esegui ora</string>
+    <string name="smb_frequency_exceeded">Un bolo è stato erogato negli ultimi 3 minuti, SMB ignorato</string>
+    <string name="pump_not_initialized">Micro non inizializzato!</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
+    <string name="no_aps_selected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
+    <string name="ignore5m">Ignora | 5m</string>
+    <string name="ignore15m">Ignora | 15m</string>
+    <string name="ignore30m">Ignora | 30m</string>
+    <string name="carbs_suggestion">Suggerimento CHO</string>
+    <string name="open_loop_new_suggestion">Nuovo suggerimento disponibile</string>
+    <string name="basal_set_correctly">Basale impostata correttamente</string>
+    <string name="last_run_label">Ultima esecuzione</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Richiesta</string>
+    <string name="loop_constraints_processed_label">Dopo elaborazione vincoli</string>
+    <string name="loop_tbr_request_time_label">Richiesta basale temporanea (momento)</string>
+    <string name="loop_tbr_execution_time_label">Esecuzione basale temporanea (momento)</string>
+    <string name="loop_tbr_set_by_pump_label">Basale temporanea impostata dal micro</string>
+    <string name="loop_smb_request_time_label">Richiesta SMB (momento)</string>
+    <string name="loop_smb_execution_time_label">Esecuzione SMB (momento)</string>
+    <string name="loop_smb_set_by_pump_label">SMB impostato dal micro</string>
+    <string name="loop_open_mode_min_change">Richiesta minima di modifica [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
+</resources>

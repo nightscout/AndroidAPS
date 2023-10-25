@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Předvolba pro Novorapid</string>
+    <string name="description_insulin_ultra_rapid">Předvolba pro Fiasp</string>
+    <string name="description_insulin_lyumjev">Předvolba pro Lyumjev</string>
+    <string name="description_insulin_free_peak">Možnost definice vrcholu účinnosti inzulínu pro pokročilé uživatele</string>
+    <string name="insulin_shortname">INZ</string>
+    <string name="insulin_oref_peak">Čas vrcholu IOB křivky</string>
+    <string name="insulin_peak_time">Vrchol křivky [min]</string>
+    <string name="free_peak_oref">Volitelný vrchol - Oref</string>
+    <string name="rapid_acting_oref">Rychle působící - Oref</string>
+    <string name="ultra_rapid_oref">Ultra rychlý - Oref</string>
+    <string name="dia_too_short">DIA %1$f je příliš krátké - použito %2$f !</string>
+    <string name="fast_acting_insulin_comment">Novorapid</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
+</resources>

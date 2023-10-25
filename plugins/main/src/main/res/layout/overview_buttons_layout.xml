@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/buttons_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <app.aaps.core.ui.elements.SingleClickButton
+        android:id="@+id/accept_temp_button"
+        style="@style/ButtonSmallFontStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:text="@string/set_basal_question"
+        android:textColor="?attr/acceptTempButtonColor"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/user_buttons_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="0dp"
+        android:paddingEnd="5dp">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="0dp"
+        android:paddingEnd="5dp">
+
+        <app.aaps.core.ui.elements.SingleClickButton
+            android:id="@+id/treatment_button"
+            style="@style/ButtonSmallFontStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-2dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/icon_insulin_carbs"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/overview_treatment_label"
+            android:textColor="?attr/icTreatmentColor"
+            android:visibility="gone"
+            app:iconPadding="-4dp" />
+
+        <app.aaps.core.ui.elements.SingleClickButton
+            android:id="@+id/insulin_button"
+            style="@style/ButtonSmallFontStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-2dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_bolus"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/overview_insulin_label"
+            android:textColor="?attr/icBolusColor"
+            app:iconPadding="-4dp" />
+
+        <app.aaps.core.ui.elements.SingleClickButton
+            android:id="@+id/carbs_button"
+            style="@style/ButtonSmallFontStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-2dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_cp_bolus_carbs"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/carbs"
+            android:textColor="?attr/icBolusCarbsColor"
+            app:iconPadding="-4dp" />
+
+        <app.aaps.core.ui.elements.SingleClickButton
+            android:id="@+id/wizard_button"
+            style="@style/ButtonSmallFontStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-2dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_calculator"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/calculator_label"
+            android:textColor="?attr/icCalculatorColor"
+            app:iconPadding="-4dp" />
+
+        <app.aaps.core.ui.elements.SingleClickButton
+            android:id="@+id/calibration_button"
+            style="@style/ButtonSmallFontStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-2dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_calibration"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/calibration"
+            android:textColor="?attr/icCalibrationColor"
+            android:visibility="gone"
+            app:iconPadding="-4dp" />
+
+        <app.aaps.core.ui.elements.SingleClickButton
+            android:id="@+id/cgm_button"
+            style="@style/ButtonSmallFontStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-2dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_xdrip"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="@string/overview_cgm"
+            android:textColor="?attr/icCalibrationColor"
+            android:visibility="gone"
+            app:iconPadding="-4dp" />
+
+        <app.aaps.core.ui.elements.SingleClickButton
+            android:id="@+id/quick_wizard_button"
+            style="@style/ButtonSmallFontStyle"
+            android:layout_width="0px"
+            android:layout_height="fill_parent"
+            android:layout_marginEnd="-2dp"
+            android:layout_weight="0.5"
+            android:drawableTop="@drawable/ic_quick_wizard"
+            android:hint="@string/quickwizard"
+            android:text="@string/quickwizard"
+            android:textColor="?attr/icQuickWizardColor"
+            app:iconPadding="-4dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

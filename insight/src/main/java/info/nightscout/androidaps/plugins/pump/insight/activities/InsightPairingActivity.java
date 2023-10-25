@@ -32,15 +32,17 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity;
+import app.aaps.core.interfaces.pump.BlePreCheck;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.utils.extensions.BluetoothAdapterExtensionKt;
+import app.aaps.core.utils.extensions.IntentExtensionKt;
+import dagger.android.support.DaggerAppCompatActivity;
 import info.nightscout.androidaps.insight.R;
-import info.nightscout.androidaps.interfaces.PumpSync;
-import info.nightscout.androidaps.plugins.pump.common.ble.BlePreCheck;
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService;
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState;
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator;
 
-public class InsightPairingActivity extends NoSplashAppCompatActivity implements InsightConnectionService.StateCallback, View.OnClickListener, InsightConnectionService.ExceptionCallback {
+public class InsightPairingActivity extends DaggerAppCompatActivity implements InsightConnectionService.StateCallback, View.OnClickListener, InsightConnectionService.ExceptionCallback {
 
     @Inject BlePreCheck blePreCheck;
     @Inject Context context;
@@ -66,13 +68,13 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = ((InsightConnectionService.LocalBinder) binder).getService();
-            if (service.isPaired()) return;
-            else {
+            if (service.isPaired()) {
+            } else {
                 service.requestConnection(InsightPairingActivity.this);
                 service.registerStateCallback(InsightPairingActivity.this);
                 service.registerExceptionCallback(InsightPairingActivity.this);
                 onStateChanged(service.getState());
-                pumpSync.connectNewPump();
+                pumpSync.connectNewPump(true);
             }
         }
 
@@ -189,7 +191,7 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
         if (!scanning) {
             BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
             if (bluetoothAdapter != null) {
-                if (!bluetoothAdapter.isEnabled()) bluetoothAdapter.enable();
+                BluetoothAdapterExtensionKt.safeEnable(bluetoothAdapter, 0, null);
                 IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
                 intentFilter.addAction(BluetoothDevice.ACTION_FOUND);
@@ -234,7 +236,8 @@ public class InsightPairingActivity extends NoSplashAppCompatActivity implements
             if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED))
                 ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter().startDiscovery();
             else if (action.equals(BluetoothDevice.ACTION_FOUND)) {
-                BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                BluetoothDevice bluetoothDevice =
+                        IntentExtensionKt.safeGetParcelableExtra(intent, BluetoothDevice.EXTRA_DEVICE, BluetoothDevice.class);
                 deviceAdapter.addDevice(bluetoothDevice);
             }
         }

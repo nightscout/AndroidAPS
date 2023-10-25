@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
+    <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡El lazo se encuentra desactivado!</string>
+    <!-- Version Checker -->
+    <string name="old_version">versión antigua</string>
+    <string name="very_old_version">versión muy antigua</string>
+    <string name="application_expired">Aplicación caducada</string>
+    <string name="new_version_warning">¡La nueva versión no se ha comprobado desde hace al menos %1$d días! Volverás a LGS después de %2$d días, el lazo se deshabilitará después de %3$d días. ¡Restaura la conexión a Internet!</string>
+    <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
+    <string name="versionavailable">Versión %1$s disponible</string>
+    <string name="version_expire">La versión %1$s caduca el %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Datos recalculados usados</string>
+    <string name="bg_too_close">Datos de glucosa demasiado cercanos:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculado</string>
+    <string name="a11y_bg_quality_doubles">entradas dobles</string>
+    <string name="a11y_bg_quality_flat">Datos planos. Considerados erróneos</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Limitando el bolo extendido a %1$.1f U debido a %2$s</string>
+    <string name="limitingcarbs">Limitando carbohidratos a %1$d g debido a %2$s</string>
+    <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad de basal temporal</string>
+    <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
+    <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
+    <string name="closed_loop_disabled_with_eb">Lazo cerrado deshabilitado debido a la ejecución de un bolo extendido</string>
+    <string name="smbalwaysdisabled">SMB siempre y después de carbohidratos desactivados porque la fuente activa de BG no soporta filtrado avanzado</string>
+    <string name="smbnotallowedinopenloopmode">SMB no permitido en modo de lazo abierto</string>
+    <string name="maxvalueinpreferences">valor máximo en preferencias</string>
+    <string name="hardlimit">límite estricto</string>
+    <string name="treatmentssafety_title">Seguridad de tratamientos</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">¡Completado, bien hecho!</string>
+    <string name="not_completed_yet">No completado</string>
+    <string name="time_elapsed">Tiempo agotado</string>
+    <string name="maxiobset">Máximo IOB ajustado correctamente</string>
+    <string name="hasbgdata">Glucosa disponible desde la fuente seleccionada</string>
+    <string name="synchaswritepermission">El servicio de sincronización tiene permiso de escritura</string>
+    <string name="loopenabled">Lazo activado</string>
+    <string name="apsselected">APS seleccionado</string>
+    <string name="closedmodeenabled">Lazo cerrado activado</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Programa de aprendizaje</string>
+    <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
+    <string name="objectives_next_button">Siguiente</string>
+    <string name="objectives_previous_button">Anterior</string>
+    <string name="objectives_button_unfinish">Restablecer estado finalizado</string>
+    <string name="objectives_button_unstart">Restablecer estado iniciado</string>
+</resources>

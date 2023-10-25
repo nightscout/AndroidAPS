@@ -1,0 +1,555 @@
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".loop.LoopFragment">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/last_run_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/lastrun"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    tools:text="5/9/22 21:34" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal"
+                android:screenReaderFocusable="true">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/loop_aps_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/source"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    tools:text="OpenAPS SMB" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/request_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/request"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp"
+                    tools:text="Rate: ..." />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/loop_constraints_processed_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/constraintsprocessed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/constraints"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/constraints"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/loop_tbr_request_time_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/tbrrequest_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/loop_tbr_execution_time_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/tbrexecution_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/loop_tbr_set_by_pump_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/tbrsetbypump"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/loop_smb_request_time_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/smbrequest_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/loop_smb_execution_time_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/smbexecution_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="5dp"
+                    android:text="@string/loop_smb_set_by_pump_label"
+                    android:textAlignment="viewEnd"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:text=":"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
+
+                <TextView
+                    android:id="@+id/smbsetbypump"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="0dp"
+                    android:textAlignment="viewStart"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="2dip"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="5dp"
+                android:background="?android:attr/dividerHorizontal" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+

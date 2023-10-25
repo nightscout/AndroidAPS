@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Omschakeling van zomer- of wintertijd in 24 uur of minder</string>
+    <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Gesloten Lus modus gedeactiveerd</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
+    <!-- Version Checker -->
+    <string name="old_version">oude versie</string>
+    <string name="very_old_version">zeer oude versie</string>
+    <string name="application_expired">Applicatie is verlopen</string>
+    <string name="new_version_warning">Er is tenminste %1$d dagen niet op een nieuwe versie gecontroleerd! Terugval naar LGS na %2$d dagen, na %3$d dagen zal de loop worden uitgeschakeld. Herstel de internetverbinding!</string>
+    <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
+    <string name="versionavailable">Versie %1$s is beschikbaar</string>
+    <string name="version_expire">Versie %1$s verloopt op %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Herberekende data gebruikt</string>
+    <string name="bg_too_close">BG data interval to kort:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">opnieuw berekend</string>
+    <string name="a11y_bg_quality_doubles">dubbele invoer</string>
+    <string name="a11y_bg_quality_flat">Vlakke data. Beschouwd als onjuist</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Vertraagde bolus beperkt tot %1$.1f E vanwege %2$s</string>
+    <string name="limitingcarbs">Koolhydraten worden beperkt tot %1$d gr doordat %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
+    <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de instellingen</string>
+    <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
+    <string name="closed_loop_disabled_with_eb">Closed loop modus uitgeschakeld vanwege afgeven Vertraagde bolus</string>
+    <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
+    <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
+    <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
+    <string name="hardlimit">max limiet (SC)</string>
+    <string name="treatmentssafety_title">Behandelingen veiligheid</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Voltooid, goed gedaan!</string>
+    <string name="not_completed_yet">Nog niet voltooid</string>
+    <string name="time_elapsed">Verstreken tijd</string>
+    <string name="maxiobset">Maximum IOB juist ingesteld</string>
+    <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
+    <string name="synchaswritepermission">Synchronisatieservice heeft schrijfrechten</string>
+    <string name="loopenabled">Loop Actief</string>
+    <string name="apsselected">APS geslecteerd</string>
+    <string name="closedmodeenabled">Closed modus actief</string>
+    <string name="objectives_shortname">DOEL</string>
+    <string name="description_objectives">Leerprogramma</string>
+    <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
+    <string name="objectives_next_button">Volgende</string>
+    <string name="objectives_previous_button">Vorige</string>
+    <string name="objectives_button_unfinish">Voltooiing wissen</string>
+    <string name="objectives_button_unstart">Start wissen</string>
+</resources>

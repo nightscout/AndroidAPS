@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/careportal_cardview"
+    style="@style/Widget.MaterialComponents.CardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginTop="4dp"
+    app:cardCornerRadius="4dp"
+    app:contentPadding="2dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="false"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="3dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/custom_watchface"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginBottom="1dp"
+            android:contentDescription="@string/a11y_file" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            tools:ignore="UseCompoundDrawables">
+
+
+            <TextView
+                android:id="@+id/custom_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="4dp"
+                android:ellipsize="none"
+                android:maxLines="2"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:scrollHorizontally="false"
+                android:text="Default Custom Watchface"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="?attr/importListFileNameColor"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/filelist_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:ellipsize="none"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:scrollHorizontally="false"
+                android:text="Filename"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?attr/importListFileNameColor"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:ellipsize="none"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:scrollHorizontally="false"
+                android:text="Author: Name"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?attr/importListFileNameColor"
+                android:textSize="11sp"
+                tools:ignore="HardcodedText" />
+
+            <TextView
+                android:id="@+id/created_at"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="10dp"
+                android:text="created at: lqkjdshflqkdjhflqdskfhlqdsf"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="?attr/importListFileNameColor"
+                android:textSize="11sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="0dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/cwf_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="0dp"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="10dp"
+                    android:layout_weight="1"
+                    android:text="CWF version:"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?attr/importListFileNameColor"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:id="@+id/cwf_pref_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="0dp"
+                    android:paddingStart="5dp"
+                    android:paddingEnd="5dp"
+                    android:textAlignment="viewStart"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="?attr/metadataTextWarningColor"
+                    android:textSize="11sp" />
+
+                <ImageView
+                    android:id="@+id/pref_warning"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="1dp"
+                    android:foreground="@drawable/ic_meta_format"
+                    android:foregroundTint="?attr/metadataTextWarningColor" />
+
+                <ImageView
+                    android:id="@+id/pref_info"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="1dp"
+                    android:visibility="gone"
+                    android:foreground="@drawable/ic_meta_format"
+                    android:foregroundTint="?attr/importListFileNameColor" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
+
+
+

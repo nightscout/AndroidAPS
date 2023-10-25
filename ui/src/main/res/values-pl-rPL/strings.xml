@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bolus_constraint_applied">Ograniczenia bolusa wprowadzone</string>
+    <string name="carbs_constraint_applied">Ograniczenie stosowania węglowodanów</string>
+    <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Okno dialogowe anulowane</string>
+    <string name="start_activity_tt">Rozpocznij TT Ćwiczenia</string>
+    <string name="start_eating_soon_tt">Rozpocznij TT WkrótcePosiłek</string>
+    <string name="start_hypo_tt">Rozpocznij TT Hipo</string>
+    <string name="time_offset">Przesunięcie czasu</string>
+    <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Przypomnij o bolusie</string>
+    <string name="a11y_carb_reminder">ustaw przypomnienie</string>
+    <!--    Widget-->
+    <string name="configure">Skonfiguruj przezroczystość</string>
+    <string name="widget_description">Widżet AAPS</string>
+    <!--     Activities-->
+    <string name="activity_monitor">Monitor aktywności</string>
+    <string name="do_you_want_reset_stats">Czy chcesz zresetować statystyki aktywności?</string>
+    <string name="do_you_want_reset_tdd_stats">Czy chcesz zresetować statystyki TDD?</string>
+    <string name="statistics">Statystyki</string>
+    <string name="calculation_in_progress">Trwa obliczanie</string>
+    <string name="invalid_age">Nieprawidłowy wpis wieku</string>
+    <string name="invalid_weight">Nieprawidłowy wpis wagi</string>
+    <string name="id">ID:</string>
+    <string name="submit">Wyślij</string>
+    <string name="age">Czas</string>
+    <string name="weight_label">Waga</string>
+    <string name="most_common_profile">Najczęściej używany profil:</string>
+    <string name="survey_comment">Uwaga: Tylko dane widoczne na tym ekranie zostaną anonimowo przesłane. Tej instalacji AAPS przypisano ID. Możesz przesłać dane ponownie jeśli twój główny profil ulegnie zmianie, ale pozwól mu działać przez co najmniej tydzień aby zobaczyć jego wpływ na wartość czasu w zakresie. Dziękujemy za wsparcie i pomoc.</string>
+    <string name="glucose_type">Typ glukozy</string>
+    <string name="bg_other">Inne</string>
+    <string name="bg_meter">Glukometr</string>
+    <string name="bg_sensor">Sensor</string>
+    <!-- WizardDialog -->
+    <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
+    <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
+    <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
+    <string name="treatments_wizard_total_label">Razem</string>
+    <!-- FillDialog -->
+    <string name="fill_warning">Proszę upewnij się, że ilość wypełnienia odpowiada ilości właściwej dla twojego wkłucia!</string>
+    <string name="record_pump_site_change">Zapisz zmianę wkłucia</string>
+    <string name="record_insulin_cartridge_change">Zapisz zmianę zasobnika insuliny</string>
+    <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Nie podawaj bolusa, tylko zapisz rekord</string>
+    <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Użyj ponownie %1$d%% %2$dh</string>
+    <string name="timeshift_label">Zmiana czasu</string>
+    <string name="percentage_label">Procent</string>
+    <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Wstrzymaj pętlę na 1h</string>
+    <string name="suspendloopfor2h">Wstrzymaj pętlę na 2h</string>
+    <string name="suspendloopfor3h">Wstrzymaj pętlę na 3h</string>
+    <string name="suspendloopfor10h">Wstrzymaj pętlę na 10 h</string>
+    <string name="disconnectpump">Odłącz pompę</string>
+    <string name="disconnectpumpfor15m">Wyłącz pompę na 15 min</string>
+    <string name="disconnectpumpfor30m">Wyłącz pompę na 30 min</string>
+    <string name="disconnectpumpfor1h">Wyłącz pompę na 1 h</string>
+    <string name="disconnectpumpfor2h">Wyłącz pompę na 2 h</string>
+    <string name="disconnectpumpfor3h">Wyłącz pompę na 3 h</string>
+    <string name="resume">Wznów</string>
+    <string name="reconnect">Połącz ponownie pompę</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 godzina</string>
+    <string name="duration2h">2 godziny</string>
+    <string name="duration3h">3 godziny</string>
+    <string name="duration10h">10 godzin</string>
+    <!-- WizardDialog -->
+    <string name="a11_correction_percentage">poprawny wynik w %</string>
+    <string name="a11_correction_units">poprawny wynik w jednostkach</string>
+    <string name="two_hours">2 h</string>
+    <string name="result_insulin_carbs">Wynik: %1$s %2$s</string>
+    <string name="missing_carbs">Brakuje %1$d g</string>
+    <string name="a11y_current_bg">bieżąca glikemia</string>
+    <string name="carb_time_label">Czas węglow.</string>
+    <string name="a11y_set_carb_timer">ustaw alarm dla węglowodanów</string>
+    <string name="show_calculation">Pokaż obliczenia</string>
+    <!-- Treatments -->
+    <string name="no_records_available">Brak wpisów</string>
+    <string name="calculation_short">Kalk</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_insulin_label_string">Insulina:</string>
+    <string name="treatments_carbs_label_string">Węglow.:</string>
+    <string name="treatments_iobtotal_label_string">Całkowita IOB:</string>
+    <string name="treatments_iob_activity_total_label_string">Aktywna IOB:</string>
+    <string name="tempbasals_realduration_label_string">Czas:</string>
+    <string name="tempbasals_netratio_label_string">Iloczyn:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="treatments_wizard_correction_label">Poprawka</string>
+    <string name="meal_bolus">Posiłek</string>
+    <string name="prime">Wypełnianie</string>
+    <string name="profile_changes">Zmiany profilu</string>
+    <string name="tempt_targets">Cele tymczasowe</string>
+    <string name="carbs_and_bolus">Węglowodany i bolus</string>
+    <string name="show_invalidated_records">Pokaż niepoprawne / usunięte wpisy</string>
+    <string name="hide_invalidated_records">Ukryj niepoprawne / usunięte wpisy</string>
+    <string name="refresh_from_nightscout">Odśwież z Nightscout</string>
+    <string name="refresheventsfromnightscout">Odśwież z NS</string>
+    <string name="show_invalidated">Pokaż niepoprawne</string>
+    <string name="hide_invalidated">Ukryj niepoprawne</string>
+    <string name="careportal_remove_started_events">Usuń wpisy o uruchomieniu AAPS</string>
+    <string name="hide_loop">Ukryj pętlę</string>
+    <string name="show_loop">Pokaż pętlę</string>
+    <string name="user_entry">Wpis użytkownika</string>
+    <string name="clone_label">Sklonuj</string>
+    <string name="show_loop_records">Pokaż wpisy pętli</string>
+    <string name="show_hide_records">Ukryj wpisy pętli</string>
+    <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="profile_type">Typ profilu</string>
+    <string name="basal_pct_from_tdd_label">% bazy</string>
+    <string name="selected_profile">Wybrany:</string>
+    <string name="compare_profile">Porównaj profile</string>
+    <string name="nav_profile_helper">Pomocnik profilu</string>
+    <string name="motol_default_profile">Profil domyślny</string>
+    <string name="current_profile">Bieżący profil</string>
+    <string name="available_profile">Dostępny profil</string>
+    <string name="format_with_tdd">Wiek: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Wiek: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Wiek: %1$d Waga: %2$.0f kg</string>
+    <string name="dpv_default_profile">Domyślny profil DPV</string>
+    <string name="invalid_pct">Nieprawidłowa wartość procentowa</string>
+    <!-- Other dialogs -->
+    <string name="basal_rate">Dawka bazowa</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">NACIŚNIĘTY STOP</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">tylko na zegarku</string>
+    <string name="a11y_only_on_phone">tylko na telefonie</string>
+    <string name="quickwizard_settings">Ustawienia Szybkiego Bolusa</string>
+    <string name="overview_edit_quickwizard_button_text">Tekst przycisku:</string>
+    <string name="overview_edit_quickwizard_carbs">Węglowodany:</string>
+    <string name="overview_edit_quickwizard_valid">Ważny:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Dodaj</string>
+    <string name="overview_quickwizard_item_edit_button">Edytuj</string>
+    <string name="overview_edit_quickwizard_show_on_device">Pokaż wpis na urządzeniu:</string>
+    <string name="overview_edit_quickwizard_use_bg">Obliczenia BG</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Obliczenia IOB z bolusów</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Obliczenia IOB z bazy</string>
+    <string name="overview_edit_quickwizard_use_trend">Obliczenia trendu</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Obliczenia Superbolusa</string>
+    <string name="overview_edit_quickwizard_percentage">Procent</string>
+    <string name="device_all">Wszystkie</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Zegarek</string>
+    <string name="positive_only">Tylko pozytywne</string>
+    <string name="negative_only">Tylko negatywne</string>
+    <string name="overview_editquickwizard_usecob">Obliczenia COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Obliczenie celu tymczasowego</string>
+    <string name="overview_editquickwizard_usepercentage">Obliczenia procentowe</string>
+    <string name="app_default">Domyślny aplikacji</string>
+    <string name="a11y_drag_and_drop_handle">tryb \"Przeciągnij i upuść\"</string>
+</resources>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- RL keys -->
+    <!-- RL BLE Config -->
+    <string name="riley_link_ble_config_button_scan_start">Søk</string>
+    <string name="riley_link_ble_config_scan_stop">Stopp</string>
+    <string name="riley_link_ble_config_scan_selected">Valgt</string>
+    <string name="riley_link_ble_config_scan_title">RileyLink søk</string>
+    <string name="riley_link_ble_config_scan_scanning">Søker</string>
+    <string name="riley_link_ble_config_scan_finished">Søk fullført</string>
+    <string name="riley_link_ble_config_scan_error">Søk feilet: %1$d</string>
+    <string name="riley_link_ble_config_connected_never">Aldri</string>
+    <string name="riley_link_ble_config_scan_currently_selected_riley_link">Valgt RileyLink</string>
+    <string name="riley_link_ble_config_remove_riley_link">Fjern</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation">Er du sikker på at du vil fjerne din RileyLink?</string>
+    <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Fjern RileyLink</string>
+    <string name="riley_link_ble_config_no_riley_link_selected">Ingen RileyLink er valgt</string>
+    <!-- RL Status Page -->
+    <string name="rileylink_settings_tab1">Innstillinger</string>
+    <string name="rileylink_settings_tab2">Historikk</string>
+    <string name="rileylink_status">RileyLink Status</string>
+    <string name="medtronic_pump_status">Pumpe Status</string>
+    <string name="title_activity_rileylink_settings">RileyLink Innstillinger</string>
+    <string name="rileylink_title">RileyLink</string>
+    <string name="rileylink_address">Adresse:</string>
+    <string name="rileylink_name">Navn:</string>
+    <string name="rileylink_battery_level">Batterinivå:</string>
+    <string name="rileylink_battery_level_value">%1$d%%</string>
+    <string name="rileylink_connection_status">Tilkoblingsstatus:</string>
+    <string name="rileylink_connection_error">Tilkoblingsfeil:</string>
+    <string name="rileylink_device">Enhet</string>
+    <string name="rileylink_device_type">Enhets type:</string>
+    <string name="rileylink_configured_device_model">Konfigurert enhetsmodell:</string>
+    <string name="rileylink_connected_device_model">Tilkoblet enhetsmodell:</string>
+    <string name="rileylink_last_used_frequency">Sist brukte frekvens:</string>
+    <string name="rileylink_last_device_contact">Siste tilkobling:</string>
+    <string name="rileylink_firmware_version">Firmware versjon:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
+    <string name="rileylink_pump_serial_number">Pumpens serienummer:</string>
+    <string name="rileylink_pump_frequency">Pumpens frekvens:</string>
+    <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
+    <!-- RL State -->
+    <string name="rileylink_state_bt_init">Bluetooth initialiserer…</string>
+    <string name="rileylink_state_bt_error">Bluetoothfeil</string>
+    <string name="rileylink_state_bt_ready">Bluetooth klar</string>
+    <string name="rileylink_state_not_started">Ikke startet</string>
+    <string name="rileylink_state_rl_init">RileyLink initialisering…</string>
+    <string name="rileylink_state_rl_error">RileyLink feil</string>
+    <string name="rileylink_state_pc_tune_up">Tuning av RileyLink og pumpe</string>
+    <string name="rileylink_state_pc_error">Problemer med tilkobling til pumpe</string>
+    <string name="rileylink_state_connected">Tilkoblet</string>
+    <string name="rileylink_state_rl_ready">RileyLink er klar</string>
+    <!-- RL Errors -->
+    <string name="rileylink_error_not_rl">Enheten er ikke RileyLink</string>
+    <string name="rileylink_error_unreachable">RileyLink utilgjengelig</string>
+    <string name="rileylink_error_bt_disabled">Bluetooth deaktivert</string>
+    <string name="rileylink_error_no_bt_adapter">Ingen Bluetooth adapter</string>
+    <string name="rileylink_error_tuneup_failed">TuneUp mislyktes</string>
+    <string name="rileylink_error_pump_unreachable">Pumpe utilgjengelig</string>
+    <string name="rileylink_error_pod_unreachable">Pod utilgjengelig</string>
+    <!-- RileyLink - Common -->
+    <string name="rileylink_target_device_medtronic">Medtronic pumpe</string>
+    <string name="rileylink_target_device_omnipod">Omnipod (Eros)</string>
+    <string name="riley_link_common_yes">Ja</string>
+    <string name="riley_link_common_no">Nei</string>
+    <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Vis batterinivå rapportert av OrangeLink/EmaLink/DiaLink</string>
+    <string name="riley_link_show_battery_level_summary">Virker IKKE med RileyLink. Kan hende den ikke fungerer med andre RileyLink alternativer.</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dager</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <string name="orange_use_scanning_level">Bruk Skanning</string>
+    <string name="orange_use_scanning_level_summary">Skann før du kobler til OrangeLink, det bør forbedre tilkoblingene (kan også brukes med andre RileyLink enheter, hvis nødvendig)</string>
+    <string name="rileylink_configuration">RileyLink konfigurasjon</string>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Theme switcher dark and light mode-->
+    <string-array name="darkMode">
+        <item>@string/dark_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/follow_system_theme</item>
+    </string-array>
+    <string-array name="darkModeValues">
+        <item>@string/value_dark_theme</item>
+        <item>@string/value_light_theme</item>
+        <item>@string/value_system_theme</item>
+    </string-array>
+
+</resources>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Εγγενής ενσωμάτωση αντλίας για τις αντλίες Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Αδυναμία σύνδεσης με την αντλία</string>
+    <string name="combov2_not_paired">Δεν υπάρχει σύζευξη με μία αντλία</string>
+    <string name="combov2_pump_terminated_connection">Η σύνδεση με την αντλία τερματίστηκε</string>
+    <string name="combov2_warning">Προειδοποίηση Combo</string>
+    <string name="combov2_error">Σφάλμα Combo</string>
+    <string name="combov2_warning_4">Καλέστε την hotline για ενημέρωση</string>
+    <string name="combov2_warning_10">Σφάλμα Bluetooth. Κάντε σύζευξη εκ νέου</string>
+    <string name="combov2_error_1">Δεξαμενή άδεια</string>
+    <string name="combov2_error_2">Μπαταρία άδεια</string>
+    <string name="combov2_error_4">Έμφραξη</string>
+    <string name="combov2_error_5">Τερματισμός λειτουργίας εφεδρικής αντλίας</string>
+    <string name="combov2_error_6">Μηχανικό σφάλμα</string>
+    <string name="combov2_error_7">Ηλεκτρονικό σφάλμα</string>
+    <string name="combov2_error_8">Διακοπή ισχύος</string>
+    <string name="combov2_error_9">Τέλος λειτουργίας της δανεικής αντλίας</string>
+    <string name="combov2_error_10">Σφάλμα δεξαμενής</string>
+    <string name="combov2_error_11">Μη προετοιμασμένο σετ έγχυσης</string>
+    <string name="combov2_extended_bolus_not_supported">Το εκτεταμένο bolus δεν υποστηρίζεται</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Σύζευξη με αντλία</string>
+    <string name="combov2_unpair_pump_title">Αποσύζευξη αντλίας</string>
+    <string name="combov2_driver_state_label">Κατάσταση οδηγού</string>
+    <string name="combov2_current_activity_label">Τρέχουσα δραστηριότητα</string>
+    <string name="bluetooth_address">Διεύθυνση Bluetooth</string>
+    <string name="combov2_start_pairing">Έναρξη σύζευξης</string>
+    <string name="combov2_pairing_in_progress">Σύζευξη Combo σε εξέλιξη</string>
+    <string name="combov2_pairing_start_steps">Βήματα για σύζευξη με την Combo:\n\n
+1. Στην αντλία σας, μεταβείτε στις ρυθμίσεις Bluetooth\n
+2. Ελέγξτε αν μια συσκευή εμφανίζεται ως συζευγμένη. αν ναι, μεταβείτε στην οθόνη της αντλίας \"Διαγραφή συσκευής\" για να διαγράψετε/αποσυνδέσετε τη συσκευή\n
+3. Μεταβείτε στην οθόνη \"Προσθήκη συσκευής\" της αντλίας και αρχίστε την σύζευξη με την αντλία\n
+4. Κάντε κλικ στο κουμπί \"Έναρξη σύζευξης\" παρακάτω για να ξεκινήσει η σύζευξη στο AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Μετά από λίγο, το όνομα του τηλεφώνου θα εμφανιστεί στην οθόνη της αντλίας. Πατήστε CHECK για επιβεβαίωση.\n\n
+Όταν η σύζευξη ολοκληρωθεί με επιτυχία, επιβεβαιώστε την ολοκληρωμένη σύζευξη στην αντλία σας και επιστρέψτε στην κύρια οθόνη της αντλίας πατώντας το κουμπί CHECK δύο φορές.\n\n
+Εάν δεν έχει δημιουργηθεί σύνδεση μετά από περισσότερο από ~5 λεπτά:\n\n
+1. Πατήστε Πίσω ή το κουμπί \"Ακύρωση σύζευξης\"\n
+2. Ακυρώστε τη σύζευξη στο Combo (πατήστε ταυτόχρονα τα πλήκτρα UP και MENU
+για να ακυρώσετε τη σύζευξη)\n
+3. Προσπαθήστε να κάνετε σύζευξη ξανά</string>
+    <string name="combov2_enter_pin">Εισαγωγή PIN</string>
+    <string name="combov2_cancel_pairing">Ακύρωση σύζευξης</string>
+    <string name="combov2_pin_hint">10-ψήφιο PIN</string>
+    <string name="combov2_pairing_finished_successfully">Επιτυχής σύζευξη με Combo</string>
+    <string name="combov2_pairing_cancelled">Η σύζευξη με Combo ακυρώθηκε από το χρήστη</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Φτάσατε το χρονικό όριο σάρωσης για Combo</string>
+    <string name="combov2_pairing_failed_due_to_error">Η σύζευξη απέτυχε λόγω σφάλματος: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Η σύζευξη ματαιώθηκε για άγνωστους λόγους</string>
+    <string name="combov2_pairing_invalid_pin_length">"Μη έγκυρο μήκος PIN: χρειάζονται %1$d ψηφία, ελήφθησαν %2$d"</string>
+    <string name="combov2_scanning_for_pump">Σάρωση για αντλία</string>
+    <string name="combov2_establishing_bt_connection">Δημιουργία σύνδεσης Bluetooth (προσπάθεια αριθμ. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Εκτέλεση χειραψίας με αντλία</string>
+    <string name="combov2_pairing_pump_requests_pin">Αιτήσεις αντλίας για 10-ψήφιο PIN</string>
+    <string name="combov2_pairing_finishing">Ολοκλήρωση σύζευξης</string>
+    <string name="combov2_no_connection_for_n_mins">Δεν υπάρχει σύνδεση για %1$d λεπτά</string>
+    <string name="combov2_less_than_one_minute_ago">Λιγότερο από 1 λεπτό πριν</string>
+    <string name="combov2_setting_current_pump_time">Ρύθμιση τρέχουσας ώρας αντλίας</string>
+    <string name="combov2_setting_current_pump_date">Ρύθμιση τρέχουσας ημερομηνίας αντλίας</string>
+    <string name="combov2_not_initialized">Δεν αρχικοποιήθηκε</string>
+    <string name="combov2_checking_pump">Έλεγχος αντλίας</string>
+    <string name="combov2_ready">Έτοιμο</string>
+    <string name="combov2_suspended">Σε αναστολή</string>
+    <string name="combov2_pump_is_suspended">Η αντλία είναι σε αναστολή</string>
+    <string name="combov2_executing_command">Εκτέλεση εντολής</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Λήψη προφίλ βασικού ρυθμού</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Ρύθμιση βασικού προφίλ</string>
+    <string name="combov2_setting_tbr_cmddesc">Ρύθμιση %1$d%% TBR για %2$d λεπτά</string>
+    <string name="combov2_cancelling_tbr">Ακύρωση TBR σε εξέλιξη</string>
+    <string name="combov2_delivering_bolus_cmddesc">Έγχυση bolus %1$.1f U</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Ανάκτηση ιστορικού TDD</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Ενημέρωση ημερομηνίας/ώρας αντλίας</string>
+    <string name="combov2_updating_pump_status_cmddesc">Ενημέρωση κατάστασης αντλίας</string>
+    <string name="combov2_pairing_pin_failure">Το PIN δεν λειτούργησε. Ελέγξτε αν υπάρχει τυπογραφικό λάθος. Εάν αυτό συνεχίζει να συμβαίνει, ακυρώστε και προσπαθήστε να κάνετε νέα σύζευξη.</string>
+    <string name="combov2_discovery_duration">Διάρκεια εξεύρεσης (σε δευτερόλεπτα)</string>
+    <string name="combov2_verbose_logging">Ενεργοποίηση λεπτομερής καταγραφή Combo</string>
+    <string name="combov2_getting_basal_profile">Λήψη βασικού προφίλ, ανάγνωση %1$d παράγοντα(ων)</string>
+    <string name="combov2_setting_basal_profile">Ρύθμιση βασικού προφίλ, γράφτηκαν %1$d παράγοντας(ες)</string>
+    <string name="combov2_delivering_bolus">Χορήγηση bolus (%1$.1f από %2$.1f U χορηγήθηκε)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Δεν μπορεί να χορηγηθεί ινσουλίνη - η αντλία έχει ανασταλεί</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Ανεπαρκής ινσουλίνη στο ρεζερβουάρ</string>
+    <string name="combov2_bolus_cancelled">Bolus ακυρώθηκε</string>
+    <string name="combov2_bolus_delivery_failed">Η έγχυση bolus απέτυχε. Δεν φαίνεται να παραδόθηκε κάποιο bolus. Για να σιγουρευτείτε, ελέγξτε την αντλία για να αποφευχθεί διπλό bolus. Για ασφάλεια σε λάθος του προγράμματος, δεν επιτρέπετε ξανά bolus αυτόματα.</string>
+    <string name="combov2_bolus_not_delivered">Το Bolus δεν παραδόθηκε</string>
+    <string name="combov2_cannot_access_pump_data">Δεν είναι δυνατή η πρόσβαση στα δεδομένα της αντλίας. Η αντλία πρέπει να συζευχθεί ξανά</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Ανιχνεύθηκαν μη υπολογισμένες χορηγήσεις bolus. Ακύρωση bolus για λόγους ασφαλείας.</string>
+    <string name="combov2_incorrect_active_basal_profile">Λανθασμένο ενεργό προφίλ βασικού ρυθμού, το προφίλ 1 πρέπει να είναι ενεργό, όχι το προφίλ %1$d</string>
+    <string name="combov2_unrecognized_alert">Μη αναγνωρίσιμη ειδοποίηση Combo</string>
+    <string name="combov2_combo_alert">Ειδοποίηση Combo</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d λεπτά απομένουν)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (μένει λιγότερο από 1 λεπτό)</string>
+    <string name="combov2_load_tdds_cancelled">Η φόρτωση των TDD ακυρώθηκε</string>
+    <string name="combov2_retrieving_tdds_failed">Η ανάκτηση των TDD απέτυχε</string>
+    <string name="combov2_battery_low_warning">Η μπαταρία της αντλίας είναι χαμηλά</string>
+    <string name="combov2_reservoir_low_warning">Το επίπεδο δεξαμενής αντλίας είναι χαμηλό</string>
+    <string name="combov2_setting_tbr_succeeded">Η ρύθμιση TBR ολοκληρώθηκε</string>
+    <string name="combov2_setting_tbr_failed">Η ρύθμιση TBR απέτυχε</string>
+    <string name="combov2_set_emulated_100_tbr">Ορισμός εξομοίωσης 100% TBR</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Αφήνοντας την σε εξέλιξη εξομοιωθεί 100% TBR να ολοκληρωθεί</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Αγνόηση περιττού αιτήματος 100% TBR</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Παρουσιάστηκε απρόσμενο όριο κατά τη ρύθμιση του TBR, το ποσοστό στόχος που ήταν %1$d%%, έφτασε το όριο %2$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Αδυναμία ορισμού απόλυτου TBR αν ο βασικός ρυθμός είναι μηδέν</string>
+    <string name="combov2_pair_with_pump_summary">Σύζευξη του AndroidAPS και του Android με μια μη συζευγμένη αντλία Accu-Chek Combo</string>
+    <string name="combov2_unpair_pump_summary">Αποσύζευξη του AndroidAPS και του Android από την τρέχουσα συζευγμένη αντλία Accu-Chek Combo</string>
+    <string name="combov2_unknown_tbr_detected">Άγνωστο TBR ανιχνεύθηκε και διακόπηκε: ποσοστό: %1$d%%; εναπομένουσα διάρκεια: %2$s</string>
+    <string name="combov2_connection_error">Σφάλμα σύνδεσης: %1$s</string>
+    <string name="combov2_short_status_last_connection">Τελευταία Σύνδεση: %1$d λεπτά πριν</string>
+    <string name="combov2_short_status_alert">Ειδοποίηση: %s</string>
+    <string name="combov2_short_status_last_bolus">Τελευταίο Bolus: %1$sU @ %2$s</string>
+    <string name="combov2_short_status_temp_basal">Προσωρινός Ρυθμός: %s</string>
+    <string name="combov2_short_status_reservoir">Δεξαμενή: %dU</string>
+    <string name="combov2_short_status_battery_state_empty">κενή</string>
+    <string name="combov2_short_status_battery_state_low">χαμηλό</string>
+    <string name="combov2_short_status_battery_state_full">πλήρης</string>
+    <string name="combov2_short_status_battery_state">Μπαταρία.:%s</string>
+    <string name="combov2_automatic_reservoir_entry">Αυτόματη ανίχνευση και αυτόματη εισαγωγή αλλαγής δεξαμενής ινσουλίνης</string>
+    <string name="combov2_automatic_battery_entry">Αυτόματη ανίχνευση και αυτόματη εισαγωγή αλλαγής μπαταρίας</string>
+    <string name="combov2_note_reservoir_change">Αλλαγή δεξαμενής ινσουλίνης εισήχθηκε αυτόματα από τον οδηγό combov2</string>
+    <string name="combov2_note_battery_change">Αλλαγή μπαταρίας εισήχθηκε αυτόματα από τον οδηγό combov2</string>
+    <string name="combov2_timezone_changed">Η ζώνη ώρας άλλαξε</string>
+    <string name="combov2_datetime_changed">Ημερομηνία ή/και ώρα άλλαξε</string>
+    <string name="combov2_dst_started">Η θερινή ώρα (DST) ξεκίνησε</string>
+    <string name="combov2_dst_ended">Λήξη θερινής ώρας (DST)</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Δεν είναι δυνατή η σύνδεση με την αντλία επειδή η αντλία ανέφερε σφάλμα. Ο χρήστης πρέπει να χειριστεί το σφάλμα και στη συνέχεια είτε περιμένετε 5 λεπτά ή πατήστε το κουμπί Ανανέωση στην καρτέλα του οδηγού.</string>
+    <string name="combov2_refresh_pump_status_after_error">Ανανέωση κατάστασης αντλίας αφότου η αντλία ανέφερε ένα σφάλμα</string>
+    <string name="combov2_go_back">Επιστροφή</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Δεν είναι δυνατή η σύζευξη επειδή ο οδηγός δεν έχει αρχικοποιηθεί. Αυτό συνήθως συμβαίνει επειδή δεν έχουν χορηγηθεί τα απαραίτητα δικαιώματα Bluetooth. Πηγαίνετε πίσω, εκχωρήστε τα δικαιώματα Bluetooth, και προσπαθήστε ξανά.</string>
+    <string name="combov2_bluetooth_disabled">Αδυναμία εκκίνησης οδηγού - το Bluetooth είναι απενεργοποιημένο</string>
+    <string name="combov2_bluetooth_not_supported">Ο οδηγός δεν μπορεί να τρέξει - αυτή η συσκευή δεν υποστηρίζει Bluetooth</string>
+</resources>

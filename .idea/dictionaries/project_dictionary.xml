@@ -2,12 +2,14 @@
   <dictionary name="project-dictionary">
     <words>
       <w>aaps</w>
+      <w>aapsclient</w>
       <w>abcdef</w>
       <w>accu</w>
       <w>acked</w>
       <w>actionstring</w>
       <w>aidex</w>
       <w>alarmack</w>
+      <w>alexpr</w>
       <w>allowednumbers</w>
       <w>androidaps</w>
       <w>autosens</w>
@@ -17,11 +19,13 @@
       <w>bage</w>
       <w>basaliob</w>
       <w>basals</w>
+      <w>batt</w>
       <w>bgcheck</w>
       <w>bgsource</w>
       <w>boluscalc</w>
       <w>bolusing</w>
       <w>boluswizard</w>
+      <w>boyda</w>
       <w>carb</w>
       <w>carbratio</w>
       <w>carbs</w>
@@ -30,6 +34,7 @@
       <w>cellnovo</w>
       <w>chek</w>
       <w>clearalarm</w>
+      <w>combov</w>
       <w>crashlytics</w>
       <w>danar</w>
       <w>danars</w>
@@ -43,28 +48,43 @@
       <w>dexcom</w>
       <w>dexdrip</w>
       <w>diaconn</w>
+      <w>dlvoy</w>
+      <w>dttm</w>
+      <w>ecarbs</w>
       <w>enteredby</w>
       <w>enteredinsulin</w>
+      <w>eoflow</w>
       <w>eopatch</w>
+      <w>epss</w>
       <w>eveningoutpost</w>
       <w>eversense</w>
       <w>extendedbolus</w>
+      <w>fiasp</w>
       <w>fileprovider</w>
       <w>firebase</w>
       <w>glimp</w>
       <w>glunovo</w>
+      <w>glycemia</w>
       <w>gson</w>
       <w>hmac</w>
+      <w>humalog</w>
       <w>iage</w>
+      <w>infinivocgm</w>
+      <w>instantiator</w>
       <w>insulet</w>
+      <w>intelligo</w>
       <w>iobtotal</w>
       <w>joda</w>
+      <w>joul</w>
       <w>libre</w>
       <w>listdelimiter</w>
       <w>localprofile</w>
+      <w>lyumjev</w>
       <w>mdtp</w>
       <w>medtronic</w>
+      <w>medtrum</w>
       <w>mgdl</w>
+      <w>miao</w>
       <w>misformatted</w>
       <w>mmol</w>
       <w>motol</w>
@@ -73,7 +93,10 @@
       <w>netratio</w>
       <w>nightscout</w>
       <w>notif</w>
+      <w>novolog</w>
+      <w>novorapid</w>
       <w>nsclient</w>
+      <w>oaps</w>
       <w>okcancel</w>
       <w>omnipod</w>
       <w>openaps</w>
@@ -81,6 +104,7 @@
       <w>oref</w>
       <w>otpauth</w>
       <w>passcode</w>
+      <w>pbage</w>
       <w>pdus</w>
       <w>philoul</w>
       <w>poctech</w>
@@ -88,22 +112,30 @@
       <w>profileswitch</w>
       <w>pumpbtcomm</w>
       <w>pumpcontrol</w>
+      <w>pumpdrivers</w>
       <w>quickwizard</w>
+      <w>rawbg</w>
       <w>readstatus</w>
       <w>realduration</w>
       <w>refresheventsfromnightscout</w>
+      <w>rfspy</w>
       <w>rileylink</w>
       <w>roboelectric</w>
       <w>rozman</w>
+      <w>sbat</w>
+      <w>setupwizard</w>
       <w>sgvs</w>
       <w>shortgramm</w>
       <w>sitechange</w>
+      <w>skippable</w>
       <w>smscommunicator</w>
       <w>sntp</w>
       <w>sooil</w>
       <w>soundid</w>
       <w>splitted</w>
       <w>ssid</w>
+      <w>statuslight</w>
+      <w>statuslights</w>
       <w>superbolus</w>
       <w>targethigh</w>
       <w>targetlow</w>
@@ -119,6 +151,7 @@
       <w>totp</w>
       <w>tunedays</w>
       <w>uart</w>
+      <w>unfinshed</w>
       <w>urgentalarm</w>
       <w>wizzardpage</w>
       <w>xdrip</w>

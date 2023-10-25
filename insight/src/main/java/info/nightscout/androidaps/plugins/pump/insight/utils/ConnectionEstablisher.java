@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
+import app.aaps.core.utils.extensions.BluetoothAdapterExtensionKt;
+
 public class ConnectionEstablisher extends Thread {
 
     private final Callback callback;
@@ -26,14 +28,7 @@ public class ConnectionEstablisher extends Thread {
 
     @Override
     public void run() {
-        try {
-            if (!bluetoothAdapter.isEnabled()) {
-                bluetoothAdapter.enable();
-                Thread.sleep(2000);
-            }
-        } catch (InterruptedException ignored) {
-            return;
-        }
+        BluetoothAdapterExtensionKt.safeEnable(bluetoothAdapter, 2000, null);
         if (forPairing && bluetoothDevice.getBondState() != BluetoothDevice.BOND_NONE) {
             try {
                 Method removeBond = bluetoothDevice.getClass().getMethod("removeBond", (Class[]) null);

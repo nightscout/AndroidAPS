@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumoCommon - Pump Abstract -->
+    <string name="pump_operation_not_supported_by_pump_driver">Operación no soportada por la bomba y/o por el controlador.</string>
+    <string name="pump_operation_not_yet_supported_by_pump">Operación no soportada todavía por la bomba.</string>
+    <string name="common_resultok">OK</string>
+    <string name="pump_serial_number">Número de serie de la bomba</string>
+    <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U entregado</string>
+    <!-- PumpCommon - Pump Status -->
+    <string name="pump_status_not_initialized">No Inicializado</string>
+    <string name="pump_status_initialized">Inicializado</string>
+    <string name="pump_status_encrypt">Encriptando comunicación</string>
+    <string name="pump_status_ready">Preparado</string>
+    <string name="pump_status_busy">Ocupado</string>
+    <string name="pump_status_suspended">Suspendido</string>
+    <string name="pump_status_executing_command">Ejecutando comando</string>
+    <!-- PumpCommon - History Group -->
+    <string name="history_group_basal">Basales</string>
+    <string name="history_group_configuration">Configuraciones</string>
+    <string name="history_group_notification">Notificaciones</string>
+    <string name="history_group_statistic">Estadísticas</string>
+    <string name="history_group_unknown">Desconocidas</string>
+    <string name="history_group_all">Todo</string>
+    <string name="history_group_bolus">Bolos</string>
+    <string name="history_group_prime">Cebado</string>
+    <string name="history_group_alarm">Alarmas</string>
+    <string name="history_group_glucose">Glucosa</string>
+    <string name="history_group_base">Base</string>
+    <string name="history_group_other">Otro</string>
+    <string name="history_group_events">Todos los Eventos</string>
+    <string name="history_group_events_no_stat">Eventos (sin estadísticas)</string>
+    <!-- Time -->
+    <string name="time_today">Hoy</string>
+    <string name="time_last_hour">Última hora</string>
+    <string name="time_last_3_hours">Últimas 3 horas</string>
+    <string name="time_last_6_hours">Últimas 6 horas</string>
+    <string name="time_last_12_hours">Últimas 12 horas</string>
+    <string name="time_last_2_days">Últimos 2 días</string>
+    <string name="time_last_4_days">Últimos 4 días</string>
+    <string name="time_last_week">Última semana</string>
+    <string name="time_last_month">Último mes</string>
+    <!-- BLE Config -->
+    <string name="ble_config_button_scan_start">Escanear</string>
+    <string name="ble_config_scan_stop">Parar</string>
+    <string name="ble_config_scan_selected">Seleccionado</string>
+    <string name="ble_config_scan_scanning">Escaneando</string>
+    <string name="ble_config_scan_finished">Escaneo finalizado</string>
+    <string name="ble_config_scan_error">Error escaneando: %1$d</string>
+    <string name="ble_config_connected_never">Nunca</string>
+    <string name="ble_config_remove">Eliminar</string>
+    <!-- BLE Errors -->
+    <string name="ble_error_bt_disabled">Bluetooth desactivado</string>
+    <string name="ble_error_no_bt_adapter">No hay adaptador Bluetooth</string>
+    <string name="ble_error_configured_pump_not_found">Bomba configurada no encontrada</string>
+    <string name="ble_error_pump_unreachable">Bomba inalcanzable</string>
+    <string name="ble_error_failed_to_conn_to_ble_device">Error al conectar al dispositivo BLE</string>
+    <string name="ble_error_encryption_failed">Encriptación fallida</string>
+    <string name="ble_error_pump_found_unbonded">Encontrada bomba no vinculada</string>
+    <!-- Pump Error -->
+    <string name="pump_settings_error_basal_profiles_not_enabled">La configuración de perfiles basales no está habilitada en la bomba. Habilítalo en la bomba.</string>
+    <string name="pump_settings_error_incorrect_basal_profile_selected">El perfil basal establecido en la bomba es incorrecto (debe ser %s).</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">EL TBR establecido en la bomba es incorrecto (debe ser %s).</string>
+    <string name="pump_settings_error_wrong_max_bolus_set">El máximo bolo establecido en la bomba es incorrecto (debe ser %1$.2f),</string>
+    <string name="pump_settings_error_wrong_max_basal_set">La basal máxima establecida en la bomba es incorrecta (debe ser %1$.2f).</string>
+    <!-- Pump History -->
+    <string name="pump_history_type">Tipo:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nunca conectado</string>
+    <string name="pump_status_sleeping">En reposo</string>
+    <string name="pump_status_waking_up">Iniciando</string>
+    <string name="pump_status_active">Activo</string>
+    <string name="pump_status_error_comm">Error en la comunicación</string>
+    <string name="pump_status_timeout_comm">Tiempo de espera agotado en la comunicación</string>
+    <string name="pump_status_pump_unreachable">Bomba inaccesible</string>
+    <string name="pump_status_invalid_config">Configuración inválida</string>
+    <plurals name="duration_days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
+    <plurals name="duration_hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d horas</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">Hace %1$d hora</item>
+        <item quantity="other">Hace %1$d horas</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">Hace %1$d día</item>
+        <item quantity="other">Hace %1$d días</item>
+    </plurals>
+</resources>

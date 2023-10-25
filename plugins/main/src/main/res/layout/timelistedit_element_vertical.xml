@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:textAppearance="?android:attr/textAppearanceSmall">
+
+    <Spinner
+        android:id="@+id/timelistedit_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="10dp"
+        android:minWidth="80dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <app.aaps.core.ui.elements.NumberPickerVertical
+            android:id="@+id/timelistedit_edit1"
+            android:layout_width="60dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="5dp" />
+
+        <app.aaps.core.ui.elements.NumberPickerVertical
+            android:id="@+id/timelistedit_edit2"
+            android:layout_width="60dp"
+            android:layout_height="100dp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/timelistedit_add"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="15dp"
+        android:contentDescription="@string/addnew_above"
+        app:srcCompat="@drawable/ic_add" />
+
+    <ImageView
+        android:id="@+id/timelistedit_remove"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="15dp"
+        android:contentDescription="@string/remove_label"
+        app:srcCompat="@drawable/ic_remove" />
+</LinearLayout>
