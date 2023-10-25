@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -25,6 +24,7 @@ import app.aaps.core.interfaces.rx.weardata.CwfMetadataMap
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.databinding.CustomWatchfaceImportListActivityBinding
 import app.aaps.plugins.configuration.databinding.CustomWatchfaceImportListItemBinding

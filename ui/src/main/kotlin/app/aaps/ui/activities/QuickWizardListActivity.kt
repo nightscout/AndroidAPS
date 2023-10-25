@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -31,6 +30,7 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dragHelpers.ItemTouchHelperAdapter
 import app.aaps.core.ui.dragHelpers.OnStartDragListener
 import app.aaps.core.ui.dragHelpers.SimpleItemTouchHelperCallback
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.ui.R
 import app.aaps.ui.databinding.ActivityQuickwizardListBinding
 import app.aaps.ui.databinding.QuickwizardListItemBinding

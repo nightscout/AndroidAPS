@@ -16,7 +16,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.annotation.StyleRes
 import androidx.appcompat.view.ContextThemeWrapper
-import app.aaps.core.interfaces.extensions.runOnUiThread
+import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.maintenance.data.Prefs

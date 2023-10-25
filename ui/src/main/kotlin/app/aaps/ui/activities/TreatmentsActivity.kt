@@ -4,11 +4,10 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.resources.ResourceHelper
-import com.google.android.material.tabs.TabLayout
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.ui.R
 import app.aaps.ui.activities.fragments.TreatmentsBolusCarbsFragment
 import app.aaps.ui.activities.fragments.TreatmentsCareportalFragment
@@ -18,6 +17,7 @@ import app.aaps.ui.activities.fragments.TreatmentsTempTargetFragment
 import app.aaps.ui.activities.fragments.TreatmentsTemporaryBasalsFragment
 import app.aaps.ui.activities.fragments.TreatmentsUserEntryFragment
 import app.aaps.ui.databinding.TreatmentsFragmentBinding
+import com.google.android.material.tabs.TabLayout
 import javax.inject.Inject
 
 class TreatmentsActivity : TranslatedDaggerAppCompatActivity() {

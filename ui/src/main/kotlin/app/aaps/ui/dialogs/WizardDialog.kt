@@ -21,8 +21,6 @@ import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.extensions.runOnUiThread
-import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
@@ -47,6 +45,8 @@ import app.aaps.core.main.iob.round
 import app.aaps.core.main.profile.ProfileSealed
 import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.main.wizard.BolusWizard
+import app.aaps.core.ui.extensions.runOnUiThread
+import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.ui.R

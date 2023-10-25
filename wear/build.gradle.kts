@@ -97,6 +97,7 @@ allprojects {
 dependencies {
     implementation(project(":shared:impl"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:ui"))
 
     implementation(Libs.AndroidX.appCompat)
     implementation(Libs.AndroidX.core)

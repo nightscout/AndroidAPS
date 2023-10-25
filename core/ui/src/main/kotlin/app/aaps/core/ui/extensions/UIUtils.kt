@@ -1,4 +1,4 @@
-package app.aaps.core.interfaces.extensions
+package app.aaps.core.ui.extensions
 
 import android.os.Handler
 import android.os.Looper
