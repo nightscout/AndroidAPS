@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
 import app.aaps.core.data.db.BCR
+import app.aaps.core.data.db.IDs
 import app.aaps.core.data.db.TE
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
@@ -40,7 +41,7 @@ fun BCR.Companion.fromJson(jsonObject: JSONObject): BCR? {
             .also {
                 it.id = 0
                 it.isValid = isValid
-                it.ids.nightscoutId = id
+                it.ids = IDs().apply { nightscoutId = id }
                 it.version = 0
             }
     } catch (e: JsonSyntaxException) {
