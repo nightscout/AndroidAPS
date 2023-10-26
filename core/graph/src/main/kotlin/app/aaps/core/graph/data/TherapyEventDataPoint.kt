@@ -3,8 +3,8 @@ package app.aaps.core.graph.data
 import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Translator

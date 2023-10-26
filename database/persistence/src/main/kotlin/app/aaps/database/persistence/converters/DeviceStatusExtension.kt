@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.DS
+import app.aaps.core.data.model.DS
 import app.aaps.database.entities.DeviceStatus
 
 fun DeviceStatus.fromDb(): DS =

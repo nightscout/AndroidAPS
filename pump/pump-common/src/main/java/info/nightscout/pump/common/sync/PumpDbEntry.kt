@@ -1,6 +1,6 @@
 package info.nightscout.pump.common.sync
 
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.pump.PumpSync

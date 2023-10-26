@@ -1,10 +1,10 @@
 package app.aaps.implementation.aps
 
 import android.text.Spanned
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.constraints.Constraint

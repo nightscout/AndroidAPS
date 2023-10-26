@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.utils
 
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.TrendArrow
 
 /**
  *  Convert BG direction value to trend arrow or calculate it if not provided

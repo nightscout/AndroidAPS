@@ -3,7 +3,7 @@ package app.aaps.plugins.sensitivity
 import androidx.collection.LongSparseArray
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.aps.AutosensDataStore

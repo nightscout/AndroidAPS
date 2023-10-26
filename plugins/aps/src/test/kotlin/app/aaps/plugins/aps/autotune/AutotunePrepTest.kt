@@ -1,14 +1,14 @@
 package app.aaps.plugins.aps.autotune
 
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.CA
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
-import app.aaps.core.data.db.data.Block
-import app.aaps.core.data.db.data.TargetBlock
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger

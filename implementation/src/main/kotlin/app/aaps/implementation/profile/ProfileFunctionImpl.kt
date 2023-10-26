@@ -1,7 +1,7 @@
 package app.aaps.implementation.profile
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.PS
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources

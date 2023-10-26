@@ -13,8 +13,8 @@ import androidx.work.Data
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.alerts.LocalAlertUtils

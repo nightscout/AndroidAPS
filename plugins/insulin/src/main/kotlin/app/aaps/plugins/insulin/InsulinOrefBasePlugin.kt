@@ -1,8 +1,8 @@
 package app.aaps.plugins.insulin
 
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.ICfg
 import app.aaps.core.data.iob.Iob
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T

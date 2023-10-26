@@ -14,7 +14,7 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import app.aaps.core.data.db.TDD
+import app.aaps.core.data.model.TDD
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer

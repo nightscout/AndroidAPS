@@ -18,7 +18,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit

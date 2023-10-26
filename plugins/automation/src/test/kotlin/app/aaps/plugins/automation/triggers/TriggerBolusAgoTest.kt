@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONException

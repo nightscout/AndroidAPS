@@ -1,4 +1,4 @@
-package app.aaps.core.data.db
+package app.aaps.core.data.model
 
 data class FD(
     override var id: Long = 0,

@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.HR
+import app.aaps.core.data.model.HR
 import app.aaps.database.entities.HeartRate
 
 fun HeartRate.fromDb(): HR =

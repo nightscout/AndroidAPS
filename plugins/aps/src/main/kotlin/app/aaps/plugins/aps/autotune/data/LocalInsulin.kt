@@ -1,7 +1,7 @@
 package app.aaps.plugins.aps.autotune.data
 
-import app.aaps.core.data.db.BS
 import app.aaps.core.data.iob.Iob
+import app.aaps.core.data.model.BS
 import kotlin.math.exp
 import kotlin.math.pow
 

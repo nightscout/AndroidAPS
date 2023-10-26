@@ -1,7 +1,7 @@
 package app.aaps.core.interfaces.pump
 
 import android.widget.TextView
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 
 interface WarnColors {
 

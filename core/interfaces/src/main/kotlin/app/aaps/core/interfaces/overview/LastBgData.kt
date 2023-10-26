@@ -12,7 +12,7 @@ interface LastBgData {
     /**
      * Get newest glucose value from bucketed data.
      * If there are less than 3 glucose values, bucketed data is not created.
-     * In this case take newest [app.aaps.core.data.db.GV] from db and convert it to [InMemoryGlucoseValue]
+     * In this case take newest [app.aaps.core.data.model.GV] from db and convert it to [InMemoryGlucoseValue]
      *
      * Intended for display on screen only
      *

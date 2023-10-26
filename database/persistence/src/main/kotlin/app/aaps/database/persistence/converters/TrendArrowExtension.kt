@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.database.entities.GlucoseValue
 
 fun GlucoseValue.TrendArrow.fromDb(): TrendArrow =

@@ -3,7 +3,7 @@ package app.aaps.core.interfaces.stats
 import android.content.Context
 import android.util.LongSparseArray
 import android.widget.TableLayout
-import app.aaps.core.data.db.TDD
+import app.aaps.core.data.model.TDD
 
 interface TddCalculator {
 

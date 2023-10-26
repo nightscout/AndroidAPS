@@ -26,8 +26,8 @@ import java.util.TimeZone;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.core.data.db.BS;
-import app.aaps.core.data.db.TE;
+import app.aaps.core.data.model.BS;
+import app.aaps.core.data.model.TE;
 import app.aaps.core.data.plugin.PluginDescription;
 import app.aaps.core.data.plugin.PluginType;
 import app.aaps.core.data.pump.defs.ManufacturerType;

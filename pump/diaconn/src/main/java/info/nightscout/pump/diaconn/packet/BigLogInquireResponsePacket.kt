@@ -1,7 +1,7 @@
 package info.nightscout.pump.diaconn.packet
 
 import android.content.Context
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T

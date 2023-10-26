@@ -1,7 +1,7 @@
 package app.aaps.implementation.utils
 
 import android.content.Context
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType

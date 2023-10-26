@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.source
 
-import app.aaps.core.data.db.GV
+import app.aaps.core.data.model.GV
 
 interface NSClientSource {
 

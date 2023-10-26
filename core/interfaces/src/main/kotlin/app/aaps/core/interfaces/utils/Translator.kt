@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.utils
 
-import app.aaps.core.data.db.OE
-import app.aaps.core.data.db.TE
-import app.aaps.core.data.db.TT
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit

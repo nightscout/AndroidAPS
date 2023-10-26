@@ -3,11 +3,11 @@ package app.aaps.core.objects.wizard
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.Spanned
-import app.aaps.core.data.db.BCR
-import app.aaps.core.data.db.OE
-import app.aaps.core.data.db.TE
-import app.aaps.core.data.db.TT
 import app.aaps.core.data.iob.GlucoseStatus
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action

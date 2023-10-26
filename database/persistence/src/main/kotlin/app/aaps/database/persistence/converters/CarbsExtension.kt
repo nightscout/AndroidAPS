@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.CA
+import app.aaps.core.data.model.CA
 import app.aaps.database.entities.Carbs
 
 fun Carbs.fromDb(): CA =

@@ -1,8 +1,8 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.PS
-import app.aaps.core.data.db.data.Block
-import app.aaps.core.data.db.data.TargetBlock
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.database.entities.ProfileSwitch
 
 fun ProfileSwitch.fromDb(): PS =

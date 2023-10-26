@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.TB
+import app.aaps.core.data.model.TB
 import app.aaps.database.entities.TemporaryBasal
 
 fun TemporaryBasal.fromDb(): TB =

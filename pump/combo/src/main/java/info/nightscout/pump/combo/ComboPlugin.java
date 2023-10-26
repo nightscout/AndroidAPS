@@ -19,7 +19,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.core.data.db.BS;
+import app.aaps.core.data.model.BS;
 import app.aaps.core.data.plugin.PluginDescription;
 import app.aaps.core.data.plugin.PluginType;
 import app.aaps.core.data.pump.defs.ManufacturerType;

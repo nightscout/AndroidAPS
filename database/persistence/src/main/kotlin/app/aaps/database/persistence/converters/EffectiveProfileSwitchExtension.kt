@@ -1,8 +1,8 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.EPS
-import app.aaps.core.data.db.data.Block
-import app.aaps.core.data.db.data.TargetBlock
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.database.entities.EffectiveProfileSwitch
 
 fun EffectiveProfileSwitch.fromDb(): EPS =

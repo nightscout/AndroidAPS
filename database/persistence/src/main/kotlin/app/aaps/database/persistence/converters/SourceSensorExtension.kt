@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.database.entities.GlucoseValue
 
 fun GlucoseValue.SourceSensor.fromDb(): SourceSensor =

@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.TDD
+import app.aaps.core.data.model.TDD
 import app.aaps.database.entities.TotalDailyDose
 
 fun TotalDailyDose.fromDb(): TDD =

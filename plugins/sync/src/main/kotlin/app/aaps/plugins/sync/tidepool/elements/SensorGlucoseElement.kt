@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.tidepool.elements
 
-import app.aaps.core.data.db.GV
+import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
 import java.util.LinkedList

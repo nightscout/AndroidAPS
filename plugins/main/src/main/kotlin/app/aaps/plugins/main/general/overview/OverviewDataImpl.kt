@@ -3,7 +3,7 @@ package app.aaps.plugins.main.general.overview
 import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
-import app.aaps.core.data.db.GV
+import app.aaps.core.data.model.GV
 import app.aaps.core.data.time.T
 import app.aaps.core.graph.data.BarGraphSeries
 import app.aaps.core.graph.data.DataPointWithLabelInterface

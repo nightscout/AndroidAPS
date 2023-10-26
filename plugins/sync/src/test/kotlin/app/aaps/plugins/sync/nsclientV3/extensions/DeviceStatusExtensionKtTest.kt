@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.data.db.DS
+import app.aaps.core.data.model.DS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.objects.Instantiator

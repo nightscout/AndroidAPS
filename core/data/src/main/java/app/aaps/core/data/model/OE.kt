@@ -1,8 +1,8 @@
-package app.aaps.core.data.db
+package app.aaps.core.data.model
 
 import java.util.TimeZone
 
-data class TT(
+data class OE(
     override var id: Long = 0,
     override var version: Int = 0,
     override var dateCreated: Long = -1,
@@ -12,44 +12,35 @@ data class TT(
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
     var reason: Reason,
-    var highTarget: Double, // in mgdl
-    var lowTarget: Double, // in mgdl
     var duration: Long // in millis
 ) : HasIDs {
 
-    fun contentEqualsTo(other: TT): Boolean =
+    fun contentEqualsTo(other: OE): Boolean =
         timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&
             reason == other.reason &&
-            highTarget == other.highTarget &&
-            lowTarget == other.lowTarget &&
             duration == other.duration &&
             isValid == other.isValid
 
-    fun onlyNsIdAdded(previous: TT): Boolean =
+    fun onlyNsIdAdded(previous: OE): Boolean =
         previous.id != id &&
             contentEqualsTo(previous) &&
             previous.ids.nightscoutId == null &&
             ids.nightscoutId != null
 
-    enum class Reason(val text: String) {
-        CUSTOM("Custom"),
-        HYPOGLYCEMIA("Hypo"),
-        ACTIVITY("Activity"),
-        EATING_SOON("Eating Soon"),
-        AUTOMATION("Automation"),
-        WEAR("Wear")
+    enum class Reason {
+        DISCONNECT_PUMP,
+        SUSPEND,
+        DISABLE_LOOP,
+        SUPER_BOLUS,
+        OTHER
         ;
 
         companion object {
 
-            fun fromString(reason: String?) = entries.firstOrNull { it.text == reason }
-                ?: CUSTOM
+            fun fromString(reason: String?) = entries.firstOrNull { it.name == reason } ?: OTHER
         }
     }
-
-    val end
-        get() = timestamp + duration
 
     companion object
 }

@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.TT
+import app.aaps.core.data.model.TT
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources

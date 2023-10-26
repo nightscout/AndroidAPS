@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.data.db.HR
+import app.aaps.core.data.model.HR
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat

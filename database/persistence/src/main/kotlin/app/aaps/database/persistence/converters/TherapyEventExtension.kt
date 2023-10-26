@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.database.entities.TherapyEvent
 
 fun TherapyEvent.Type.fromDb(): TE.Type = when (this) {

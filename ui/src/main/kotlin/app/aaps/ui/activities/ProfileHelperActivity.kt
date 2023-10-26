@@ -6,7 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import app.aaps.core.data.db.EPS
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin

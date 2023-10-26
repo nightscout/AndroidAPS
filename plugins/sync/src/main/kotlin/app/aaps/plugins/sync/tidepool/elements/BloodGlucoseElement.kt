@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.tidepool.elements
 
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose

@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.db
 
-import app.aaps.core.data.db.TB
+import app.aaps.core.data.model.TB
 
 interface ProcessedTbrEbData {
 

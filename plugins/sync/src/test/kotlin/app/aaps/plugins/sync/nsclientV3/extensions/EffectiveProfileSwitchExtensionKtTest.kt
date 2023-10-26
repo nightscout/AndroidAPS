@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.data.db.EPS
-import app.aaps.core.data.db.ICfg
-import app.aaps.core.data.db.IDs
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.IDs
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.nssdk.localmodel.treatment.NSEffectiveProfileSwitch

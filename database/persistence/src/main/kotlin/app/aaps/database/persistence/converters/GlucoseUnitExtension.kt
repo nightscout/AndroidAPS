@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 
 fun app.aaps.database.entities.data.GlucoseUnit.fromDb(): GlucoseUnit =
     when (this) {

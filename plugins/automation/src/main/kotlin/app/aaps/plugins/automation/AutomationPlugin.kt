@@ -4,7 +4,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T

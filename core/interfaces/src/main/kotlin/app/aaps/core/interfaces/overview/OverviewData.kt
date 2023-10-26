@@ -3,7 +3,7 @@ package app.aaps.core.interfaces.overview
 import android.content.Context
 import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
-import app.aaps.core.data.db.GV
+import app.aaps.core.data.model.GV
 import app.aaps.core.interfaces.graph.Scale
 import app.aaps.core.interfaces.graph.SeriesData
 

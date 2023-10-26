@@ -6,7 +6,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.SystemClock
 import androidx.preference.Preference
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType

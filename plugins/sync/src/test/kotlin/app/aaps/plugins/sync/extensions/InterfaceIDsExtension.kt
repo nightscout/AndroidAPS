@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.extensions
 
-import app.aaps.core.data.db.IDs
+import app.aaps.core.data.model.IDs
 
 fun IDs.contentEqualsTo(other: IDs): Boolean =
     nightscoutId == other.nightscoutId &&

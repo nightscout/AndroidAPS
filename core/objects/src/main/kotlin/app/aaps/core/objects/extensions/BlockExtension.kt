@@ -1,7 +1,7 @@
 package app.aaps.core.objects.extensions
 
-import app.aaps.core.data.db.data.Block
-import app.aaps.core.data.db.data.TargetBlock
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil
 import org.json.JSONArray

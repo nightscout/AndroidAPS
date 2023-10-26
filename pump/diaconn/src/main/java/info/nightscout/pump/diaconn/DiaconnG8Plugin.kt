@@ -8,7 +8,7 @@ import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType

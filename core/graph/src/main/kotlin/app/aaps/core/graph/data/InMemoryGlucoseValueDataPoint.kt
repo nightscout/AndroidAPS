@@ -5,8 +5,8 @@ import android.graphics.Paint
 import androidx.annotation.ColorInt
 import androidx.core.graphics.ColorUtils
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper

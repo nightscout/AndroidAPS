@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data
 
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag

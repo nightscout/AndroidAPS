@@ -6,9 +6,9 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.PowerManager
 import android.os.SystemClock
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T

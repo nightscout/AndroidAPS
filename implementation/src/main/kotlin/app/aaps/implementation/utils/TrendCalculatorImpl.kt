@@ -1,8 +1,8 @@
 package app.aaps.implementation.utils
 
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator

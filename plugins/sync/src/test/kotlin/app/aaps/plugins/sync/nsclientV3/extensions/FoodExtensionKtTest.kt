@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.data.db.FD
-import app.aaps.core.data.db.IDs
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.IDs
 import app.aaps.core.nssdk.localmodel.food.NSFood
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import app.aaps.plugins.sync.extensions.contentEqualsTo

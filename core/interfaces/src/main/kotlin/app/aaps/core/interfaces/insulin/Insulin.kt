@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.insulin
 
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.ICfg
 import app.aaps.core.data.iob.Iob
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.configuration.ConfigExportImport
 
 interface Insulin : ConfigExportImport {

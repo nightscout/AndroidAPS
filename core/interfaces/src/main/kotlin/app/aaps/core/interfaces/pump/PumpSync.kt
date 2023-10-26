@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.pump
 
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.TB
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources

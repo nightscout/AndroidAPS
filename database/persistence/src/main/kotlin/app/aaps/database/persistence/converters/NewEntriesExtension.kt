@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.NE
+import app.aaps.core.data.model.NE
 import app.aaps.database.entities.data.NewEntries
 
 fun NewEntries.fromDb(): NE =

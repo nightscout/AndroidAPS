@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.ICfg
+import app.aaps.core.data.model.ICfg
 import app.aaps.database.entities.embedments.InsulinConfiguration
 
 fun InsulinConfiguration.fromDb(): ICfg =

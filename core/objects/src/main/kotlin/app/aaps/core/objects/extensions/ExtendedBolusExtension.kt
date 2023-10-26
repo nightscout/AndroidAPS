@@ -1,10 +1,10 @@
 package app.aaps.core.objects.extensions
 
 import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.EB
-import app.aaps.core.data.db.TB
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.profile.Profile

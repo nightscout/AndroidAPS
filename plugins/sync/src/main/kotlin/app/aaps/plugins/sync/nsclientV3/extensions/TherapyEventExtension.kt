@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.IDs
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NsUnits

@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.tidepool.elements
 
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.CA
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
 import app.aaps.core.interfaces.utils.DateUtil
 import com.google.gson.annotations.Expose
 import java.util.UUID

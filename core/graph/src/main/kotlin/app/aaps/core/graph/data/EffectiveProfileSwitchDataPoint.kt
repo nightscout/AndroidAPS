@@ -2,7 +2,7 @@ package app.aaps.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
-import app.aaps.core.data.db.EPS
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.graph.Scale
 import app.aaps.core.interfaces.resources.ResourceHelper

@@ -3,7 +3,7 @@ package app.aaps.core.interfaces.userEntry
 import android.text.Spanned
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import app.aaps.core.data.db.UE
+import app.aaps.core.data.model.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit

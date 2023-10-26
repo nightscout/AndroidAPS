@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.resources.ResourceHelper
 
 class InputCarePortalMenu(private val rh: ResourceHelper) : Element {

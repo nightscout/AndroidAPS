@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation
 
 import android.content.Context
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker

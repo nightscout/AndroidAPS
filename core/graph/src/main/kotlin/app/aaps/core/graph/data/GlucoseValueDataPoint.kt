@@ -3,9 +3,9 @@ package app.aaps.core.graph.data
 import android.content.Context
 import android.graphics.Paint
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 

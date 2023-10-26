@@ -16,7 +16,7 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.HasIDs
+import app.aaps.core.data.model.HasIDs
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T

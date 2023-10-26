@@ -3,7 +3,7 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.graph.data.DataPointWithLabelInterface
 import app.aaps.core.graph.data.GlucoseValueDataPoint
 import app.aaps.core.graph.data.PointsWithLabelGraphSeries

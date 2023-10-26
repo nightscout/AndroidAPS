@@ -6,7 +6,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.os.SystemClock
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger

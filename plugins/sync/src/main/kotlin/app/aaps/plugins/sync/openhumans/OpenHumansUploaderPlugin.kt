@@ -18,8 +18,8 @@ import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import app.aaps.core.data.db.HasIDs
-import app.aaps.core.data.db.data.Block
+import app.aaps.core.data.model.HasIDs
+import app.aaps.core.data.model.data.Block
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.db.PersistenceLayer

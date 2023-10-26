@@ -1,6 +1,6 @@
 package app.aaps.ui.defaultProfile
 
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

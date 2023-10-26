@@ -1,6 +1,6 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil

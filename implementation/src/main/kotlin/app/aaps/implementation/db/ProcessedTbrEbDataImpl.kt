@@ -1,6 +1,6 @@
 package app.aaps.implementation.db
 
-import app.aaps.core.data.db.TB
+import app.aaps.core.data.model.TB
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.plugin.ActivePlugin

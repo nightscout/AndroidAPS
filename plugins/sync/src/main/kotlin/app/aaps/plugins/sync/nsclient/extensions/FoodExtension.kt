@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.core.data.db.FD
+import app.aaps.core.data.model.FD
 import app.aaps.core.utils.JsonHelper
 
 import org.json.JSONObject

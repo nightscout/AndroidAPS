@@ -1,7 +1,7 @@
 package info.nightscout.pump.dana
 
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger

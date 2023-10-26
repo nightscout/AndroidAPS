@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.tidepool.elements
 
-import app.aaps.core.data.db.TB
+import app.aaps.core.data.model.TB
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.objects.extensions.convertedToAbsolute

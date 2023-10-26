@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.database.entities.Bolus
 
 fun Bolus.fromDb(): BS =

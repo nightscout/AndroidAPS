@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.data.db.OE
-import app.aaps.core.data.db.TT
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R

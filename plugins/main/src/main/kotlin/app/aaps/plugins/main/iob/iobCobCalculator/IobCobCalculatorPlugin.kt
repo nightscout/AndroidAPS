@@ -5,11 +5,11 @@ import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.BasalData
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.TB
 import app.aaps.core.data.iob.CobInfo
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.iob.MealData
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.TB
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.time.T

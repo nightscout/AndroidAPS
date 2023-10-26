@@ -5,7 +5,7 @@ import android.content.Context
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import app.aaps.core.data.db.TDD
+import app.aaps.core.data.model.TDD
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.implementation.R

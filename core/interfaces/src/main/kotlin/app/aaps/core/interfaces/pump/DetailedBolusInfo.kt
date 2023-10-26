@@ -1,11 +1,11 @@
 package app.aaps.core.interfaces.pump
 
 import android.content.Context
-import app.aaps.core.data.db.BCR
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.CA
-import app.aaps.core.data.db.IDs
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 
 class DetailedBolusInfo {

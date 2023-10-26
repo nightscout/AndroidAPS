@@ -1,7 +1,7 @@
 package app.aaps.implementation.pump
 
 import android.widget.TextView
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil

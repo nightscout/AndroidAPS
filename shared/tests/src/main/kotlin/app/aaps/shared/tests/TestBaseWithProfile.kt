@@ -1,9 +1,9 @@
 package app.aaps.shared.tests
 
 import android.content.Context
-import app.aaps.core.data.db.EPS
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.ICfg
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.ProcessedTbrEbData

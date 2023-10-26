@@ -1,7 +1,7 @@
 package app.aaps.plugins.source
 
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.SourceSensor
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config

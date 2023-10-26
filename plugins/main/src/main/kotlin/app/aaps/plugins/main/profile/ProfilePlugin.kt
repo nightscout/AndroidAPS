@@ -2,7 +2,7 @@ package app.aaps.plugins.main.profile
 
 import androidx.fragment.app.FragmentActivity
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config

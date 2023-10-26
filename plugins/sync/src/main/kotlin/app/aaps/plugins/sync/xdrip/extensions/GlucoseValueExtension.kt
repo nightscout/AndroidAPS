@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.xdrip.extensions
 
-import app.aaps.core.data.db.GV
+import app.aaps.core.data.model.GV
 import org.json.JSONObject
 
 fun GV.toXdripJson(): JSONObject =

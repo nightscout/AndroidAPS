@@ -1,6 +1,6 @@
 package app.aaps.implementation.pump
 
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.utils.DateUtil
 
 fun TE.isOlderThan(hours: Double, dateUtil: DateUtil): Boolean {

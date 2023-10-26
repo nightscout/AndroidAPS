@@ -1,7 +1,7 @@
 package app.aaps.plugins.insulin
 
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.logging.AAPSLogger

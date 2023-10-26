@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.StringRes
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources

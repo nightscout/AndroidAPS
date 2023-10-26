@@ -1,6 +1,6 @@
 package app.aaps.ui.defaultProfile
 
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profile.PureProfile
 import app.aaps.core.interfaces.utils.DateUtil

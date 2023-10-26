@@ -1,8 +1,8 @@
-package app.aaps.core.data.db
+package app.aaps.core.data.model
 
 import java.util.TimeZone
 
-data class GV(
+data class TDD(
     override var id: Long = 0,
     override var version: Int = 0,
     override var dateCreated: Long = -1,
@@ -11,9 +11,11 @@ data class GV(
     override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
-    var raw: Double?,
-    var value: Double,
-    var trendArrow: TrendArrow,
-    var noise: Double?,
-    var sourceSensor: SourceSensor
-) : HasIDs
+    var basalAmount: Double = 0.0,
+    var bolusAmount: Double = 0.0,
+    var totalAmount: Double = 0.0, // if zero it's calculated as basalAmount + bolusAmount
+    var carbs: Double = 0.0
+) : HasIDs {
+
+    companion object
+}

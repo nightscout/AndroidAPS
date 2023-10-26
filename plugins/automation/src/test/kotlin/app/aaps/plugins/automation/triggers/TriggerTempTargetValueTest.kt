@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.triggers
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.TT
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TT
 import app.aaps.plugins.automation.R
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat

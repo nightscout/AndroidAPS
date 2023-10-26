@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.IDs
+import app.aaps.core.data.model.IDs
 import app.aaps.database.entities.embedments.InterfaceIDs
 
 fun InterfaceIDs.fromDb(): IDs =

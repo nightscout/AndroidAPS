@@ -1,8 +1,8 @@
 package app.aaps.core.interfaces.profile
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.data.Block
-import app.aaps.core.data.db.data.TargetBlock
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 import org.json.JSONObject
 import java.util.TimeZone
 

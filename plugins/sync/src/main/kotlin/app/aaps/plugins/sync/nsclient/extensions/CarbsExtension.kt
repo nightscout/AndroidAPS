@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.core.data.db.CA
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper

@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum
 
 import android.util.Base64
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger

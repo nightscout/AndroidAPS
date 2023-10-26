@@ -1,7 +1,7 @@
-package app.aaps.core.data.db
+package app.aaps.core.data.model
 
-import app.aaps.core.data.db.data.Block
-import app.aaps.core.data.db.data.TargetBlock
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 import java.util.TimeZone
 
 data class EPS(

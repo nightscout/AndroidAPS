@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.core.data.db.DS
+import app.aaps.core.data.model.DS
 import app.aaps.core.interfaces.utils.DateUtil
 
 import org.json.JSONObject

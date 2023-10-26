@@ -11,7 +11,7 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import app.aaps.core.data.aps.ApsMode
-import app.aaps.core.data.db.OE
+import app.aaps.core.data.model.OE
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription
 import app.aaps.core.data.time.T

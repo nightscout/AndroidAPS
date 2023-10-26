@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.FD
+import app.aaps.core.data.model.FD
 import app.aaps.database.entities.Food
 
 fun Food.fromDb(): FD =

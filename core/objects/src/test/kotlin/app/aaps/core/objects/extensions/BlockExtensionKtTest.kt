@@ -1,8 +1,8 @@
 package app.aaps.core.objects.extensions
 
-import app.aaps.core.data.db.data.Block
-import app.aaps.core.data.db.data.TargetBlock
-import app.aaps.core.data.db.data.checkSanity
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
+import app.aaps.core.data.model.data.checkSanity
 import app.aaps.core.data.time.T
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

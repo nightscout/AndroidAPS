@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsShared.extensions
 
-import app.aaps.core.data.db.GV
+import app.aaps.core.data.model.GV
 
 fun GV.contentEqualsTo(other: GV): Boolean =
     isValid == other.isValid &&

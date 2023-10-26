@@ -1,4 +1,4 @@
-package app.aaps.core.data.db
+package app.aaps.core.data.model
 
 import app.aaps.core.data.pump.defs.PumpType
 

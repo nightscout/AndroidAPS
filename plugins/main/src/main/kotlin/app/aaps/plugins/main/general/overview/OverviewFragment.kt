@@ -25,8 +25,8 @@ import android.widget.TextView
 import androidx.core.text.toSpanned
 import androidx.recyclerview.widget.LinearLayoutManager
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources

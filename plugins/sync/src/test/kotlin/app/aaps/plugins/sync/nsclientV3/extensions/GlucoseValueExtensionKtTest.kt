@@ -1,9 +1,9 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.IDs
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.nssdk.mapper.convertToRemoteAndBack
 import app.aaps.plugins.sync.extensions.contentEqualsTo
 import app.aaps.plugins.sync.nsShared.extensions.contentEqualsTo

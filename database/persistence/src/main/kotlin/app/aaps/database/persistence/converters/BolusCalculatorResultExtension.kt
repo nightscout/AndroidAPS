@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.BCR
+import app.aaps.core.data.model.BCR
 import app.aaps.database.entities.BolusCalculatorResult
 
 fun BolusCalculatorResult.fromDb(): BCR =

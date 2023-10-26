@@ -2,8 +2,8 @@ package app.aaps.implementation.userEntry
 
 import android.text.Spanned
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.UE
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.UE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit

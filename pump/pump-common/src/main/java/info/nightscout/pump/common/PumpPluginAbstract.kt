@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.text.format.DateFormat
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.pump.defs.ManufacturerType
 import app.aaps.core.data.pump.defs.PumpDescription

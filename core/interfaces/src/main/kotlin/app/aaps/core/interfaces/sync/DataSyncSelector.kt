@@ -1,18 +1,18 @@
 package app.aaps.core.interfaces.sync
 
-import app.aaps.core.data.db.BCR
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.CA
-import app.aaps.core.data.db.DS
-import app.aaps.core.data.db.EB
-import app.aaps.core.data.db.EPS
-import app.aaps.core.data.db.FD
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.OE
-import app.aaps.core.data.db.PS
-import app.aaps.core.data.db.TB
-import app.aaps.core.data.db.TE
-import app.aaps.core.data.db.TT
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.DS
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
 import org.json.JSONObject
 
 interface DataSyncSelector {

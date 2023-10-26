@@ -1,8 +1,8 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.IDs
-import app.aaps.core.data.db.TT
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TT
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.plugins.automation.R

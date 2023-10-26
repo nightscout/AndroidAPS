@@ -14,10 +14,10 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import app.aaps.core.data.aps.ApsMode
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.DS
-import app.aaps.core.data.db.OE
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.DS
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.PumpDescription

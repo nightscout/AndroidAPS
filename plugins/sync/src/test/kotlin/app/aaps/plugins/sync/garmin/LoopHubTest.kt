@@ -1,13 +1,13 @@
 package app.aaps.plugins.sync.garmin
 
-import app.aaps.core.data.db.EPS
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.HR
-import app.aaps.core.data.db.ICfg
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.model.EPS
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.HR
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.ConstraintsChecker

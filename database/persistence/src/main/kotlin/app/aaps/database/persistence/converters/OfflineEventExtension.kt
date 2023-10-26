@@ -1,6 +1,6 @@
 package app.aaps.database.persistence.converters
 
-import app.aaps.core.data.db.OE
+import app.aaps.core.data.model.OE
 import app.aaps.database.entities.OfflineEvent
 
 fun OfflineEvent.Reason.fromDb(): OE.Reason =

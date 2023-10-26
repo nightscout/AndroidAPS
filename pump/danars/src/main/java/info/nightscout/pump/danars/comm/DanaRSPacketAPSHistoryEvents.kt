@@ -1,6 +1,6 @@
 package info.nightscout.pump.danars.comm
 
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage

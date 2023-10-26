@@ -2,7 +2,7 @@ package info.nightscout.pump.dana.activities
 
 import android.content.Context
 import android.os.Bundle
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag

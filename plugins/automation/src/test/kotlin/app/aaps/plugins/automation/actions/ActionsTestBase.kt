@@ -1,7 +1,7 @@
 package app.aaps.plugins.automation.actions
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.OE
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.OE
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources

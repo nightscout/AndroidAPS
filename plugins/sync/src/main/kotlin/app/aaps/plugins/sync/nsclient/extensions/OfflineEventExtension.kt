@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.core.data.db.OE
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.utils.DateUtil

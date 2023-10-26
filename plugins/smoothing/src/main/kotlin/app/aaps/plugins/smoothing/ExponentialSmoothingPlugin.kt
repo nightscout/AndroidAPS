@@ -1,7 +1,7 @@
 package app.aaps.plugins.smoothing
 
-import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.logging.AAPSLogger

@@ -3,9 +3,9 @@ package app.aaps.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.graph.data.BolusDataPoint
 import app.aaps.core.graph.data.CarbsDataPoint

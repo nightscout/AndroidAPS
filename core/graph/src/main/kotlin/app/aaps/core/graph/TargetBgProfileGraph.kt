@@ -3,7 +3,7 @@ package app.aaps.core.graph
 import android.content.Context
 import android.util.AttributeSet
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.graph.data.AreaGraphSeries
 import app.aaps.core.graph.data.DoubleDataPoint
 import app.aaps.core.interfaces.profile.Profile

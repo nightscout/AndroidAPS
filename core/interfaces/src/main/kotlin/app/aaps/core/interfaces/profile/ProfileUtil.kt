@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.profile
 
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 
 interface ProfileUtil {
 

@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer

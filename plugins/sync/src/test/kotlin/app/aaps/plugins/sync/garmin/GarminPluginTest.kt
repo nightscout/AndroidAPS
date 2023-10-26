@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.garmin
 
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.sharedPreferences.SP

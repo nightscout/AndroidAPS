@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.widget.TextView
 import androidx.annotation.StringRes
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer

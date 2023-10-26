@@ -2,7 +2,7 @@ package app.aaps.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter

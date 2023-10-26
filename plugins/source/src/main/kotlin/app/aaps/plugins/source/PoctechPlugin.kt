@@ -5,10 +5,10 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources

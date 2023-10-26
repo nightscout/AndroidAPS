@@ -1,6 +1,6 @@
 package app.aaps.ui.extensions
 
-import app.aaps.core.data.db.IDs
+import app.aaps.core.data.model.IDs
 import app.aaps.shared.tests.TestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

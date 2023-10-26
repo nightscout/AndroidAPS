@@ -3,7 +3,7 @@ package app.aaps.plugins.main.general.overview.graphData
 import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.graph.data.AreaGraphSeries
 import app.aaps.core.graph.data.BarGraphSeries
 import app.aaps.core.graph.data.BolusDataPoint

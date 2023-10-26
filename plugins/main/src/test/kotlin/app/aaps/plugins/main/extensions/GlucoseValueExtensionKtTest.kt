@@ -1,10 +1,10 @@
 package app.aaps.plugins.main.extensions
 
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.objects.R
 import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.objects.extensions.valueToUnits

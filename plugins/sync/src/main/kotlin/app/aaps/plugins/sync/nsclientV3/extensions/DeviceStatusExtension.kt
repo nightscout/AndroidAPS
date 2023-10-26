@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.data.db.DS
+import app.aaps.core.data.model.DS
 import app.aaps.core.nssdk.localmodel.devicestatus.NSDeviceStatus
 
 import com.google.gson.GsonBuilder

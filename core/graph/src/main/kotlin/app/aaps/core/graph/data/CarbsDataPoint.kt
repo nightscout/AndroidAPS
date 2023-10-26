@@ -2,7 +2,7 @@ package app.aaps.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
-import app.aaps.core.data.db.CA
+import app.aaps.core.data.model.CA
 import app.aaps.core.interfaces.resources.ResourceHelper
 
 class CarbsDataPoint(

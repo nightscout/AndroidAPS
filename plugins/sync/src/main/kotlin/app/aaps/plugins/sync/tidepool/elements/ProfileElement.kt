@@ -1,6 +1,6 @@
 package app.aaps.plugins.sync.tidepool.elements
 
-import app.aaps.core.data.db.EPS
+import app.aaps.core.data.model.EPS
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash
 import android.os.Handler
 import android.os.HandlerThread
 import android.text.format.DateFormat
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType

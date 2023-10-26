@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.core.data.db.BS;
+import app.aaps.core.data.model.BS;
 import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.constraints.ConstraintsChecker;
 import app.aaps.core.interfaces.logging.AAPSLogger;

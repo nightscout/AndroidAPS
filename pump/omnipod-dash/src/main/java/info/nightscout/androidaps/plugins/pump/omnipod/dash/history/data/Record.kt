@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data
 
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.profile.Profile
 
 sealed class Record
@@ -26,7 +26,7 @@ enum class BolusType {
         fun fromBolusInfoBolusType(type: BS.Type): BolusType {
             return when (type) {
                 BS.Type.SMB -> SMB
-                else                            -> DEFAULT
+                else        -> DEFAULT
             }
         }
     }

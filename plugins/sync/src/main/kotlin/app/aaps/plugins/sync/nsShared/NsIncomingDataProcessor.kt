@@ -1,11 +1,11 @@
 package app.aaps.plugins.sync.nsShared
 
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.FD
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.IDs
-import app.aaps.core.data.db.SourceSensor
-import app.aaps.core.data.db.TrendArrow
+import app.aaps.core.data.model.FD
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger

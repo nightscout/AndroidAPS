@@ -1,9 +1,9 @@
 package app.aaps.core.data.ue
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.OE
-import app.aaps.core.data.db.TE
-import app.aaps.core.data.db.TT
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.model.TT
 
 sealed class ValueWithUnit {          //I use a sealed class because of StringResource that contains a listOf as second parameter
 
@@ -40,19 +40,19 @@ sealed class ValueWithUnit {          //I use a sealed class because of StringRe
     data class OEReason(val value: OE.Reason) : ValueWithUnit()
     companion object {
 
-        fun fromGlucoseUnit(value: Double, glucoseUnit: GlucoseUnit): ValueWithUnit? =
+        fun fromGlucoseUnit(value: Double, glucoseUnit: GlucoseUnit): ValueWithUnit =
             when (glucoseUnit) {
                 GlucoseUnit.MGDL -> Mgdl(value)
                 GlucoseUnit.MMOL -> Mmoll(value)
             }
 
-/*
-        fun fromGlucoseUnit(value: Double, string: String): ValueWithUnit? =
-            when (string) {
-                GlucoseUnit.MGDL.asText, "mgdl"   -> Mgdl(value)
-                GlucoseUnit.MMOL.asText, "mmol/l" -> Mmoll(value)
-                else                              -> null
-            }
-*/
+        /*
+                fun fromGlucoseUnit(value: Double, string: String): ValueWithUnit? =
+                    when (string) {
+                        GlucoseUnit.MGDL.asText, "mgdl"   -> Mgdl(value)
+                        GlucoseUnit.MMOL.asText, "mmol/l" -> Mmoll(value)
+                        else                              -> null
+                    }
+        */
     }
 }

@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.ui.elements.NumberPicker

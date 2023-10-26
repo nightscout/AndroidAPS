@@ -2,9 +2,9 @@ package app.aaps.core.grap.data
 
 import android.content.Context
 import android.graphics.Color
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.iob.InMemoryGlucoseValue
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.graph.data.InMemoryGlucoseValueDataPoint
 import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction

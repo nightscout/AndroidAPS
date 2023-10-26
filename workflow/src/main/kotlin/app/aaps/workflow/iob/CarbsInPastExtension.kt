@@ -3,7 +3,7 @@ package app.aaps.workflow.iob
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.CA
+import app.aaps.core.data.model.CA
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction

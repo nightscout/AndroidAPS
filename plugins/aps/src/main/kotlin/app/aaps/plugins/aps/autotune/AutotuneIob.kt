@@ -1,15 +1,15 @@
 package app.aaps.plugins.aps.autotune
 
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.CA
-import app.aaps.core.data.db.EB
-import app.aaps.core.data.db.GV
-import app.aaps.core.data.db.IDs
-import app.aaps.core.data.db.TB
-import app.aaps.core.data.db.TE
 import app.aaps.core.data.iob.Iob
 import app.aaps.core.data.iob.IobTotal
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.EB
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TB
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger

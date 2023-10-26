@@ -1,6 +1,6 @@
 package app.aaps.core.interfaces.aps
 
-import app.aaps.core.data.db.OE
+import app.aaps.core.data.model.OE
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit

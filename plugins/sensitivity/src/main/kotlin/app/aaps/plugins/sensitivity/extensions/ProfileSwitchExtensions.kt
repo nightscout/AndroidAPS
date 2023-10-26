@@ -1,6 +1,6 @@
 package app.aaps.plugins.sensitivity.extensions
 
-import app.aaps.core.data.db.PS
+import app.aaps.core.data.model.PS
 import app.aaps.core.data.time.T
 
 fun List<PS>.isPSEvent5minBack(time: Long): Boolean {

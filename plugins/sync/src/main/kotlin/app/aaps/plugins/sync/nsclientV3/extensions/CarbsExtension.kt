@@ -1,7 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
-import app.aaps.core.data.db.CA
-import app.aaps.core.data.db.IDs
+import app.aaps.core.data.model.CA
+import app.aaps.core.data.model.IDs
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.treatment.EventType

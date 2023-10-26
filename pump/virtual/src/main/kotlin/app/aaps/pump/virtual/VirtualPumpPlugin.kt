@@ -3,7 +3,7 @@ package app.aaps.pump.virtual
 import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.pump.defs.ManufacturerType

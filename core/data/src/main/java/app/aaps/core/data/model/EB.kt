@@ -1,8 +1,8 @@
-package app.aaps.core.data.db
+package app.aaps.core.data.model
 
 import java.util.TimeZone
 
-data class CA(
+data class EB(
     override var id: Long = 0,
     override var version: Int = 0,
     override var dateCreated: Long = -1,
@@ -11,24 +11,34 @@ data class CA(
     override var ids: IDs = IDs(),
     var timestamp: Long,
     var utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong(),
-    var duration: Long, // in milliseconds
+    var duration: Long,
     var amount: Double,
-    var notes: String? = null
+    var isEmulatingTempBasal: Boolean = false
 ) : HasIDs {
 
-    fun contentEqualsTo(other: CA): Boolean =
+    init {
+        require(duration > 0)
+    }
+
+    fun contentEqualsTo(other: EB): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&
-            amount == other.amount &&
-            notes == other.notes &&
-            duration == other.duration
+            isEmulatingTempBasal == other.isEmulatingTempBasal &&
+            duration == other.duration &&
+            rate == other.rate
 
-    fun onlyNsIdAdded(previous: CA): Boolean =
+    fun onlyNsIdAdded(previous: EB): Boolean =
         previous.id != id &&
             contentEqualsTo(previous) &&
             previous.ids.nightscoutId == null &&
             ids.nightscoutId != null
+
+    val rate: Double // in U/h
+        get() = amount * (60 * 60 * 1000.0) / duration
+
+    val end
+        get() = timestamp + duration
 
     companion object
 }

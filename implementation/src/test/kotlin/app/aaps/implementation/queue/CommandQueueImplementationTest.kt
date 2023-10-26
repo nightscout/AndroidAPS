@@ -3,7 +3,7 @@ package app.aaps.implementation.queue
 import android.content.Context
 import android.os.Handler
 import android.os.PowerManager
-import app.aaps.core.data.db.BS
+import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker

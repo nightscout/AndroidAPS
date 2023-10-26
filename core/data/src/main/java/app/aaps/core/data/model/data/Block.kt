@@ -1,4 +1,4 @@
-package app.aaps.core.data.db.data
+package app.aaps.core.data.model.data
 
 import java.util.concurrent.TimeUnit
 

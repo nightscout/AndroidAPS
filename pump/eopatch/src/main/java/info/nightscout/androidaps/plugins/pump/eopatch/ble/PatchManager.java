@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import app.aaps.core.data.db.TE;
+import app.aaps.core.data.model.TE;
 import app.aaps.core.data.pump.defs.PumpType;
 import app.aaps.core.interfaces.pump.DetailedBolusInfo;
 import app.aaps.core.interfaces.pump.PumpSync;

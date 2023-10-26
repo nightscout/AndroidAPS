@@ -8,8 +8,8 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import app.aaps.annotations.OpenForTesting
-import app.aaps.core.data.db.BS
-import app.aaps.core.data.db.EPS
+import app.aaps.core.data.model.BS
+import app.aaps.core.data.model.EPS
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission

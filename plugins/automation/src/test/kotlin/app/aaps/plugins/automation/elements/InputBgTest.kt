@@ -1,6 +1,6 @@
 package app.aaps.plugins.automation.elements
 
-import app.aaps.core.data.db.GlucoseUnit
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.plugins.automation.triggers.TriggerTestBase
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach

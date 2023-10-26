@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.nsclient.extensions
 
-import app.aaps.core.data.db.BCR
-import app.aaps.core.data.db.IDs
-import app.aaps.core.data.db.TE
+import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.utils.JsonHelper

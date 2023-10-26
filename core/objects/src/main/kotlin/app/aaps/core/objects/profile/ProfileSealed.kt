@@ -1,10 +1,10 @@
 package app.aaps.core.objects.profile
 
-import app.aaps.core.data.db.GlucoseUnit
-import app.aaps.core.data.db.ICfg
-import app.aaps.core.data.db.IDs
-import app.aaps.core.data.db.data.Block
-import app.aaps.core.data.db.data.TargetBlock
+import app.aaps.core.data.model.GlucoseUnit
+import app.aaps.core.data.model.ICfg
+import app.aaps.core.data.model.IDs
+import app.aaps.core.data.model.data.Block
+import app.aaps.core.data.model.data.TargetBlock
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.Notification
@@ -47,7 +47,7 @@ sealed class ProfileSealed(
     val utcOffset: Long
 ) : Profile {
 
-    data class PS(val value: app.aaps.core.data.db.PS) : ProfileSealed(
+    data class PS(val value: app.aaps.core.data.model.PS) : ProfileSealed(
         value.id,
         value.isValid,
         value.ids,
@@ -64,7 +64,7 @@ sealed class ProfileSealed(
         value.utcOffset
     )
 
-    data class EPS(val value: app.aaps.core.data.db.EPS) : ProfileSealed(
+    data class EPS(val value: app.aaps.core.data.model.EPS) : ProfileSealed(
         value.id,
         value.isValid,
         value.ids,
