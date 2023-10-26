@@ -130,8 +130,8 @@
     <string name="diaconn_g8_logsuccess">OK</string>
     <string name="diaconn_g8_logmealsuccess">Pasto: OK</string>
     <string name="diaconn_g8_errorcode_1">Ricerca non possibile a causa di un errore CRC del pacchetto.</string>
-    <string name="diaconn_g8_errorcode_2">Impostazione non possibile - errore di un parametro di input.</string>
-    <string name="diaconn_g8_errorcode_3">Impostazione non possibile - errore di specifica del protocollo.</string>
+    <string name="diaconn_g8_errorcode_2">Impostazione non possibile per errore di un parametro di input.</string>
+    <string name="diaconn_g8_errorcode_3">Impostazione non possibile per errore di specifica del protocollo.</string>
     <string name="diaconn_g8_errorcode_4">Pasti programmati, erogazione non possibile ora.</string>
     <string name="diaconn_g8_errorcode_6">Cancellato dal micro</string>
     <string name="diaconn_g8_errorcode_7">Altre azioni in corso, limitazione impostazioni app.</string>
@@ -148,7 +148,7 @@
     <string name="diaconn_g8_logtubechange_summary">Aggiungi evento \"cambio catetere\" alle note quando rilevato nello storico</string>
     <string name="diaconn_g8_logtempstart">Avvio basale temporanea</string>
     <string name="diaconn_g8_errorcode_32">Durante l\'esecuzione di LGS, l’erogazione è limitata</string>
-    <string name="diaconn_g8_errorcode_33">Stato LGS già su ON. Comando di attivazione rifiutato.</string>
+    <string name="diaconn_g8_errorcode_33">Stato LGS già su ON, comando di attivazione rifiutato.</string>
     <string name="diaconn_g8_errorcode_34">Stato LGS già su OFF. Comando di disattivazione rifiutato.</string>
     <string name="diaconn_g8_errorcode_35">L\'avvio della basale temporanea viene rifiutato quando è già in esecuzione una basale temporanea</string>
     <string name="diaconn_g8_errorcode_36">Lo stop della basale temporanea viene rifiutato quando non è in esecuzione alcuna basale temporanea</string>

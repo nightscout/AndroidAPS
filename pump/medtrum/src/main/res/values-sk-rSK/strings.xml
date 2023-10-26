@@ -112,6 +112,8 @@
     <string name="alarm_setting_summary">Vyberte preferované nastavenie výstrah.</string>
     <string name="pump_warning_notification_title">Oznámenie o výstrahe pumpy</string>
     <string name="pump_warning_notification_summary">Zobraziť upozornenie na nie kritické varovanie pumpy: vybitá batéria, takmer prázdny zásobník (20 jednotiek) a čoskoro dojde inzulín. Doporučené ponechať zapnuté, keď sú výstrahy pumpy nastavené na ticho.</string>
+    <string name="pump_warning_expiry_hour_title">Výstraha expirácie pumpy (hodiny)</string>
+    <string name="pump_warning_expiry_hour_summary">Zobraziť notifikáciu v určenej hodine po aktivácii.</string>
     <string name="patch_expiration_title">Expirácia Patch</string>
     <string name="patch_expiration_summary">Pokiaľ je povolené, Patch expiruje po 3 dňoch s maximálnou dobou odkladu 8 hodín.</string>
     <string name="hourly_max_insulin_title">Hodinové maximum inzulínu</string>
