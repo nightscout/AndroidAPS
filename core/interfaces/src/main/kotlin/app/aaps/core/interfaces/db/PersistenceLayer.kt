@@ -13,6 +13,7 @@ import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.NE
 import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TE
@@ -281,10 +282,6 @@ interface PersistenceLayer {
      * Invalidate record with id
      *
      * @param id record id
-     * @param action Action for UserEntry logging
-     * @param source Source for UserEntry logging
-     * @param note Note for UserEntry logging
-     * @param listValues Values for UserEntry logging
      * @return List of changed records
      */
     fun cutCarbs(id: Long, timestamp: Long): Single<TransactionResult<CA>>
@@ -1262,6 +1259,42 @@ interface PersistenceLayer {
      * @return List of inserted/updated records
      */
     fun insertOrUpdateTotalDailyDose(totalDailyDose: TDD): Single<TransactionResult<TDD>>
+
+    // SC
+
+    /**
+     * Get step counts records from time
+     *
+     * @param from time
+     * @return list of step count records
+     */
+    fun getStepsCountFromTime(from: Long): List<SC>
+
+    /**
+     * Get step counts records from interval
+     *
+     * @param startTime from
+     * @param endTime to
+     * @return list of step count records
+     */
+    fun getStepsCountFromTimeToTime(startTime: Long, endTime: Long): List<SC>
+
+    /**
+     * Get latest step counts record from interval
+     *
+     * @param startTime from
+     * @param endTime to
+     * @return step count record
+     */
+    fun getLastStepsCountFromTimeToTime(startTime: Long, endTime: Long): SC?
+
+    /**
+     * Insert or update if exists record
+     *
+     * @param totalDailyDose record
+     * @return List of inserted/updated records
+     */
+    fun insertOrUpdateStepsCount(stepsCount: SC): Single<TransactionResult<SC>>
 
     // VersionChange
 

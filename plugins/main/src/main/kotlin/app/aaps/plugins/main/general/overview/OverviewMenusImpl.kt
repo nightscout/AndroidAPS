@@ -138,6 +138,14 @@ class OverviewMenusImpl @Inject constructor(
             secondary = true,
             shortnameId = R.string.heartRate_shortname
         ),
+        STEPS(
+            R.string.overview_show_steps,
+            app.aaps.core.ui.R.attr.stepsColor,
+            app.aaps.core.ui.R.attr.menuTextColor,
+            primary = false,
+            secondary = true,
+            shortnameId = R.string.steps_shortname
+        ),
     }
 
     companion object {

@@ -18,6 +18,8 @@ import javax.inject.Inject
 class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Suppress("PrivatePropertyName")
+    private val PHYSICAL_ACTIVITY = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +42,14 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String?) {
         if (key == getString(R.string.key_heart_rate_sampling) && sp.getBoolean(key, false))
             requestBodySensorPermission()
+        if (key == getString(R.string.key_steps_sampling)) {
+            if (sp.getBoolean(key, false)) {
+                // Check if the permission is already granted, if not, request it
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_DENIED) {
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACTIVITY_RECOGNITION), PHYSICAL_ACTIVITY)
+                }
+            }
+        }
     }
 
     private fun requestBodySensorPermission() {

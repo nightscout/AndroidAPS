@@ -200,7 +200,7 @@ open class PointsWithLabelGraphSeries<E : DataPointWithLabelInterface> : BaseSer
                         mPaint.isFakeBoldText = true
                         canvas.drawText(value.label, endX, endY, mPaint)
                     }
-                } else if (value.shape == Shape.HEARTRATE) {
+                } else if (value.shape == Shape.HEARTRATE || value.shape === Shape.STEPS) {
                     mPaint.strokeWidth = 0f
                     val bounds = Rect(endX.toInt(), endY.toInt() - 8, xPlusLength.toInt(), endY.toInt() + 8)
                     mPaint.style = Paint.Style.FILL_AND_STROKE

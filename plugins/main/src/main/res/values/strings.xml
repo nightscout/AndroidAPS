@@ -334,5 +334,7 @@
     <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="old_data">OLD DATA</string>
+    <string name="overview_show_steps">steps</string>
+    <string name="steps_shortname">STEPS</string>
 
 </resources>

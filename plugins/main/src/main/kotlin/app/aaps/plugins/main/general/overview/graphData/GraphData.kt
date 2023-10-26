@@ -282,4 +282,14 @@ import kotlin.math.max
         addSeries(overviewData.heartRateGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
         overviewData.heartRateScale.multiplier = maxY * scale / maxHR
     }
+
+    fun addSteps(useForScale: Boolean, scale: Double) {
+        val maxSteps = (overviewData.stepsCountGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>).highestValueY
+        if (useForScale) {
+            minY = 30.0
+            maxY = maxSteps
+        }
+        addSeries(overviewData.stepsCountGraphSeries as PointsWithLabelGraphSeries<DataPointWithLabelInterface>)
+        overviewData.stepsForScale.multiplier = maxY * scale / maxSteps
+    }
 }

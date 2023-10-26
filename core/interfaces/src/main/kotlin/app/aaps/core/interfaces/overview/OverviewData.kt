@@ -107,5 +107,7 @@ interface OverviewData {
     var dsMinSeries: SeriesData
     var heartRateScale: Scale
     var heartRateGraphSeries: SeriesData
+    var stepsForScale: Scale
+    var stepsCountGraphSeries: SeriesData
 
 }

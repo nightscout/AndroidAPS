@@ -14,6 +14,7 @@ import app.aaps.core.graph.data.EffectiveProfileSwitchDataPoint
 import app.aaps.core.graph.data.ExtendedBolusDataPoint
 import app.aaps.core.graph.data.HeartRateDataPoint
 import app.aaps.core.graph.data.PointsWithLabelGraphSeries
+import app.aaps.core.graph.data.StepsDataPoint
 import app.aaps.core.graph.data.TherapyEventDataPoint
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.overview.OverviewData
@@ -135,6 +136,12 @@ class PrepareTreatmentsDataWorker(
             persistenceLayer.getHeartRatesFromTimeToTime(fromTime, endTime)
                 .map { hr -> HeartRateDataPoint(hr, rh) }
                 .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.heartRateColor) }
+
+        data.overviewData.stepsCountGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>(
+            persistenceLayer.getStepsCountFromTimeToTime(fromTime, endTime)
+                .map { steps -> StepsDataPoint(steps, rh) }
+                .toTypedArray()).apply { color = rh.gac(null, app.aaps.core.ui.R.attr.stepsColor) }
+
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
         return Result.success()

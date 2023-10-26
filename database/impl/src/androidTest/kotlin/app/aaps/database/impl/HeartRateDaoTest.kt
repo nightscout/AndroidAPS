@@ -51,7 +51,7 @@ class HeartRateDaoTest {
             InstrumentationRegistry.getInstrumentation(),
             AppDatabase::class.java
         )
-        val startVersion = 22
+        val startVersion = 24
         val supportDb = helper.createDatabase(TEST_DB_NAME, startVersion)
         assertFalse(getTableNames(supportDb).contains(TABLE_HEART_RATE))
         DatabaseModule().migrations.filter { m -> m.startVersion >= startVersion }.forEach { m -> m.migrate(supportDb) }

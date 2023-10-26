@@ -8,6 +8,7 @@ import app.aaps.core.data.model.BCR
 import app.aaps.core.data.model.BS
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
+import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TT
@@ -314,6 +315,10 @@ class DataHandlerMobile @Inject constructor(
             .toObservable(EventData.ActionHeartRate::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ handleHeartRate(it) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.ActionStepsRate::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ handleStepsCount(it) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.ActionGetCustomWatchface::class.java)
             .observeOn(aapsSchedulers.io)
@@ -1259,6 +1264,22 @@ class DataHandlerMobile @Inject constructor(
             device = actionHeartRate.device
         )
         disposable += persistenceLayer.insertOrUpdateHeartRate(hr).subscribe()
+    }
+
+    private fun handleStepsCount(actionStepsRate: EventData.ActionStepsRate) {
+        aapsLogger.debug(LTag.WEAR, "Steps count received $actionStepsRate from ${actionStepsRate.sourceNodeId}")
+        val stepsCount = SC(
+            duration = actionStepsRate.duration,
+            timestamp = actionStepsRate.timestamp,
+            steps5min = actionStepsRate.steps5min,
+            steps10min = actionStepsRate.steps10min,
+            steps15min = actionStepsRate.steps15min,
+            steps30min = actionStepsRate.steps30min,
+            steps60min = actionStepsRate.steps60min,
+            steps180min = actionStepsRate.steps180min,
+            device = actionStepsRate.device
+        )
+        disposable += persistenceLayer.insertOrUpdateStepsCount(stepsCount).subscribe()
     }
 
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {

@@ -13,6 +13,7 @@ import app.aaps.core.data.model.HR
 import app.aaps.core.data.model.NE
 import app.aaps.core.data.model.OE
 import app.aaps.core.data.model.PS
+import app.aaps.core.data.model.SC
 import app.aaps.core.data.model.TB
 import app.aaps.core.data.model.TDD
 import app.aaps.core.data.model.TE
@@ -44,6 +45,7 @@ import app.aaps.database.impl.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateCarbsTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateProfileSwitch
+import app.aaps.database.impl.transactions.InsertOrUpdateStepsCountTransaction
 import app.aaps.database.impl.transactions.InsertTemporaryBasalWithTempIdTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InvalidateBolusTransaction
@@ -1702,6 +1704,32 @@ class PersistenceLayerImpl @Inject constructor(
                 }
                 result.updated.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated TotalDailyDose $it")
+                    transactionResult.updated.add(it.fromDb())
+                }
+                transactionResult
+            }
+
+    // SC
+    override fun getStepsCountFromTime(from: Long): List<SC> =
+        repository.getStepsCountFromTime(from).map { list -> list.asSequence().map { it.fromDb() }.toList() }.blockingGet()
+
+    override fun getStepsCountFromTimeToTime(startTime: Long, endTime: Long): List<SC> =
+        repository.getStepsCountFromTimeToTime(startTime, endTime).map { list -> list.asSequence().map { it.fromDb() }.toList() }.blockingGet()
+
+    override fun getLastStepsCountFromTimeToTime(startTime: Long, endTime: Long): SC? =
+        repository.getLastStepsCountFromTimeToTime(startTime, endTime).blockingGet()?.fromDb()
+
+    override fun insertOrUpdateStepsCount(stepsCount: SC): Single<PersistenceLayer.TransactionResult<SC>> =
+        repository.runTransactionForResult(InsertOrUpdateStepsCountTransaction(stepsCount.toDb()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while saving StepsCount $it") }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<SC>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted StepsCount $it")
+                    transactionResult.inserted.add(it.fromDb())
+                }
+                result.updated.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated StepsCount $it")
                     transactionResult.updated.add(it.fromDb())
                 }
                 transactionResult

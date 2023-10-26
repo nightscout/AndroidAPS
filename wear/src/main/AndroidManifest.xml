@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.BODY_SENSORS" />
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
     <uses-sdk tools:overrideLibrary="androidx.wear.tiles" />
 
@@ -203,12 +204,13 @@
             </intent-filter>
         </service>
 
-        <service
-            android:name=".heartrate.HeartRateListener"
-            android:exported="true" />
+        <service android:name=".heartrate.HeartRateListener" />
+
+        <service android:name=".wearStepCount.StepCountListener" />
 
         <service
             android:name=".complications.LongStatusComplication"
+            android:exported="true"
             android:icon="@drawable/ic_aaps_full"
             android:label="Full Status"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -226,6 +228,7 @@
 
         <service
             android:name=".complications.LongStatusFlippedComplication"
+            android:exported="true"
             android:icon="@drawable/ic_aaps_full"
             android:label="Full Status (flipped)"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -243,6 +246,7 @@
 
         <service
             android:name=".complications.SgvComplication"
+            android:exported="true"
             android:icon="@drawable/ic_sgv"
             android:label="Blood Glucose"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -260,6 +264,7 @@
 
         <service
             android:name=".complications.BrCobIobComplication"
+            android:exported="true"
             android:icon="@drawable/ic_br_cob_iob"
             android:label="BR, CoB &amp; IoB"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -277,6 +282,7 @@
 
         <service
             android:name=".complications.CobIobComplication"
+            android:exported="true"
             android:icon="@drawable/ic_cob_iob"
             android:label="CoB &amp; IoB"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -294,6 +300,7 @@
 
         <service
             android:name=".complications.CobIconComplication"
+            android:exported="true"
             android:icon="@drawable/ic_carbs"
             android:label="CoB Icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -311,6 +318,7 @@
 
         <service
             android:name=".complications.CobDetailedComplication"
+            android:exported="true"
             android:icon="@drawable/ic_cob_detailed"
             android:label="CoB Detailed"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -328,6 +336,7 @@
 
         <service
             android:name=".complications.IobIconComplication"
+            android:exported="true"
             android:icon="@drawable/ic_ins"
             android:label="IoB Icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -345,6 +354,7 @@
 
         <service
             android:name=".complications.IobDetailedComplication"
+            android:exported="true"
             android:icon="@drawable/ic_iob_detailed"
             android:label="IoB Detailed"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -362,6 +372,7 @@
 
         <service
             android:name=".complications.UploaderBatteryComplication"
+            android:exported="true"
             android:icon="@drawable/ic_battery_charging_wireless_50"
             android:label="Uploader/Phone Battery"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -379,6 +390,7 @@
 
         <service
             android:name=".complications.WallpaperLightComplication"
+            android:exported="true"
             android:icon="@drawable/ic_aaps_light"
             android:label="Light Wallpaper"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -396,6 +408,7 @@
 
         <service
             android:name=".complications.WallpaperDarkComplication"
+            android:exported="true"
             android:icon="@drawable/ic_aaps_dark"
             android:label="Dark Wallpaper"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -413,6 +426,7 @@
 
         <service
             android:name=".complications.WallpaperGrayComplication"
+            android:exported="true"
             android:icon="@drawable/ic_aaps_gray"
             android:label="Gray Wallpaper"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
@@ -480,6 +494,7 @@
 
         <activity
             android:name=".interaction.menus.MainMenuActivity"
+            android:exported="true"
             android:label="@string/label_actions_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -544,7 +559,9 @@
             android:name=".interaction.actions.BackgroundActionActivity"
             android:exported="true" />
 
-        <activity android:name=".interaction.ConfigurationActivity">
+        <activity
+            android:name=".interaction.ConfigurationActivity"
+            android:exported="true">
             <intent-filter>
                 <!-- action-name must be equal with name of xml-resource where the configuration is describe -->
                 <action android:name="watch_face_configuration_bigchart" />
@@ -559,7 +576,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".interaction.TileConfigurationActivity">
+        <activity
+            android:name=".interaction.TileConfigurationActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="tile_configuration_activity" />
                 <action android:name="tile_configuration_tempt" />
@@ -571,6 +590,7 @@
 
         <activity
             android:name=".interaction.actions.QuickSnoozeActivity"
+            android:exported="true"
             android:icon="@drawable/ic_icon_snooze"
             android:label="@string/snooze_alert"
             android:launchMode="singleTask">

@@ -26,5 +26,6 @@ enum class Shape {
     COB_FAIL_OVER,
     IOB_PREDICTION,
     BUCKETED_BG,
-    HEARTRATE
+    HEARTRATE,
+    STEPS
 }

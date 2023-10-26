@@ -12,6 +12,7 @@ import app.aaps.core.graph.data.FixedLineGraphSeries
 import app.aaps.core.graph.data.LineGraphSeries
 import app.aaps.core.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.graph.data.ScaledDataPoint
+import app.aaps.core.graph.data.StepsDataPoint
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.graph.Scale
@@ -93,6 +94,7 @@ class OverviewDataImpl @Inject constructor(
         maxTherapyEventValue = 0.0
         therapyEventSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
         heartRateGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
+        stepsCountGraphSeries = PointsWithLabelGraphSeries<StepsDataPoint>()
     }
 
     override fun initRange() {
@@ -242,4 +244,6 @@ class OverviewDataImpl @Inject constructor(
     override var dsMinSeries: SeriesData = LineGraphSeries<ScaledDataPoint>()
     override var heartRateScale = Scale()
     override var heartRateGraphSeries: SeriesData = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
+    override var stepsForScale = Scale()
+    override var stepsCountGraphSeries: SeriesData = PointsWithLabelGraphSeries<DataPointWithLabelInterface>()
 }

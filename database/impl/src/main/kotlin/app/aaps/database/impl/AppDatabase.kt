@@ -16,6 +16,7 @@ import app.aaps.database.entities.MultiwaveBolusLink
 import app.aaps.database.entities.OfflineEvent
 import app.aaps.database.entities.PreferenceChange
 import app.aaps.database.entities.ProfileSwitch
+import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TemporaryBasal
 import app.aaps.database.entities.TemporaryTarget
 import app.aaps.database.entities.TherapyEvent
@@ -43,9 +44,10 @@ import app.aaps.database.impl.daos.TherapyEventDao
 import app.aaps.database.impl.daos.TotalDailyDoseDao
 import app.aaps.database.impl.daos.UserEntryDao
 import app.aaps.database.impl.daos.VersionChangeDao
+import app.aaps.database.impl.daos.StepsCountDao
 import java.io.Closeable
 
-const val DATABASE_VERSION = 24
+const val DATABASE_VERSION = 25
 
 @Database(
     version = DATABASE_VERSION,
@@ -53,7 +55,7 @@ const val DATABASE_VERSION = 24
         EffectiveProfileSwitch::class, ExtendedBolus::class, GlucoseValue::class, ProfileSwitch::class,
         TemporaryBasal::class, TemporaryTarget::class, TherapyEvent::class, TotalDailyDose::class, app.aaps.database.entities.APSResultLink::class,
         MultiwaveBolusLink::class, PreferenceChange::class, VersionChange::class, UserEntry::class,
-        Food::class, DeviceStatus::class, OfflineEvent::class, HeartRate::class],
+        Food::class, DeviceStatus::class, OfflineEvent::class, HeartRate::class, StepsCount::class],
     exportSchema = true
 )
 @TypeConverters(Converters::class)
@@ -100,4 +102,6 @@ internal abstract class AppDatabase : Closeable, RoomDatabase() {
     abstract val offlineEventDao: OfflineEventDao
 
     abstract val heartRateDao: HeartRateDao
+
+    abstract val stepsCountDao: StepsCountDao
 }
