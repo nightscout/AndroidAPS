@@ -1,4 +1,4 @@
-package app.aaps.implementation.aps
+package app.aaps.core.objects.aps
 
 import android.text.Spanned
 import app.aaps.core.data.iob.IobTotal

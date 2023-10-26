@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.implementation.aps.APSResultObject
+import app.aaps.core.objects.aps.APSResultObject
 import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.pump.PumpEnactResultObject

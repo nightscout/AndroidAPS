@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.implementation.aps.APSResultObject
+import app.aaps.core.objects.aps.APSResultObject
 import app.aaps.implementation.instantiator.InstantiatorImpl
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
