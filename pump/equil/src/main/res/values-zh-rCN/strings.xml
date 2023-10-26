@@ -34,7 +34,7 @@
     <string name="equil_alarm_text_startup">非正常输注停止！</string>
     <string name="equil_alert_text_auto_off">泵15分钟后自动关机！</string>
     <string name="equil_authentication_unbind">清空密码</string>
-    <string name="equil_basal_speed">基础率速率</string>
+    <string name="equil_basal_speed">Base Basal Rate</string>
     <string name="equil_bluetooth_connecting">蓝牙</string>
     <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U 已经注射</string>
     <string name="equil_bolus_speed">大剂量速率</string>

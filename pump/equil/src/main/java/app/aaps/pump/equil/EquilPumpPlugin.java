@@ -440,7 +440,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
             pumpEnactResult.setPercent(false);
             pumpEnactResult.setAbsolute(absoluteRate);
         }
-
         return pumpEnactResult;
     }
 

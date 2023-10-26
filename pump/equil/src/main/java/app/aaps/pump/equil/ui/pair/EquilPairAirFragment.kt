@@ -161,6 +161,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                 if (activity == null) return
                 aapsLogger.debug(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
                 if (result.success) {
+                    equilPumpPlugin.equilManager.basalSchedule=basalSchedule
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                     dismissLoading()
                     setTime()

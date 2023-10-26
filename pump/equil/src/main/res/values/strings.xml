@@ -14,7 +14,7 @@
 
 
     <!--  start  -->
-    <string name="equil_basal_speed">Basal speed</string>
+    <string name="equil_basal_speed">Base Basal Rate</string>
     <string name="equil_bluetooth_connecting">Bluetooth</string>
     <string name="equil_bolus_delivered">%1$.3f U / %2$.3f U Delivered</string>
     <string name="equil_bolus_speed">Bolus speed</string>

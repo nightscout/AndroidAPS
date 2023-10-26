@@ -1,10 +1,8 @@
 package app.aaps.pump.equil.manager.command;
 
 
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
-import app.aaps.pump.equil.manager.Utils;
-
 import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
 
@@ -45,8 +43,10 @@ public class CmdTempBasalSet extends BaseSetting {
         this.duration = duration;
         if (insulin != 0) {
             step = (int) (insulin / 0.05d * 8) / 2;
-            this.pumpTime = duration * 60;
+        } else {
+            step = 0;
         }
+        this.pumpTime = duration * 60;
     }
 
     @Override

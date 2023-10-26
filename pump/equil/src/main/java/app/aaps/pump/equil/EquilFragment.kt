@@ -136,7 +136,7 @@ class EquilFragment : DaggerFragment() {
         if (!TextUtils.isEmpty(devName)) {
             binding.battery.text = equilPumpPlugin.equilManager.battery.toString() + "%"
             binding.insulinReservoir.text = equilPumpPlugin.equilManager.currentInsulin.toString()
-            binding.basalSpeed.text = String.format(rh.gs(R.string.equil_unit_u_hours), equilPumpPlugin.equilManager.rate.toString())
+            binding.basalSpeed.text = String.format(rh.gs(R.string.equil_unit_u_hours), equilPumpPlugin.baseBasalRate)
             binding.firmwareVersion.text = equilPumpPlugin.equilManager.firmwareVersion?.toString()
             equilPumpPlugin.equilManager.startInsulin.let {
                 if (it == -1) {
