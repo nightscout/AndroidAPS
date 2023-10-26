@@ -118,35 +118,11 @@ open class DatabaseModule {
         override fun migrate(database: SupportSQLiteDatabase) {
             // Creation of table TABLE_STEPS_COUNT
             database.execSQL(
-                """CREATE TABLE IF NOT EXISTS `$TABLE_STEPS_COUNT` (
-            `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            `duration` INTEGER NOT NULL,
-            `timestamp` INTEGER NOT NULL,
-            `steps` INTEGER NOT NULL,
-            `device` TEXT NOT NULL,
-            `utcOffset` INTEGER NOT NULL,
-            `version` INTEGER NOT NULL,
-            `dateCreated` INTEGER NOT NULL,
-            `isValid` INTEGER NOT NULL,
-            `referenceId` INTEGER,
-            `nightscoutSystemId` TEXT,
-            `nightscoutId` TEXT,
-            `pumpType` TEXT,
-            `pumpSerial` TEXT,
-            `temporaryId` INTEGER,
-            `pumpId` INTEGER, `startId` INTEGER,
-            `endId` INTEGER,
-            `steps5min` INTEGER NOT NULL DEFAULT 0,
-            `steps10min` INTEGER NOT NULL DEFAULT 0,
-            `steps15min` INTEGER NOT NULL DEFAULT 0,
-            `steps30min` INTEGER NOT NULL DEFAULT 0,
-            `steps60min` INTEGER NOT NULL DEFAULT 0,
-            `steps180min` INTEGER NOT NULL DEFAULT 0
-            )""".trimIndent()
+                "CREATE TABLE IF NOT EXISTS `${TABLE_STEPS_COUNT}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `duration` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `steps5min` INTEGER NOT NULL, `steps10min` INTEGER NOT NULL, `steps15min` INTEGER NOT NULL, `steps30min` INTEGER NOT NULL, `steps60min` INTEGER NOT NULL, `steps180min` INTEGER NOT NULL, `device` TEXT NOT NULL, `utcOffset` INTEGER NOT NULL, `version` INTEGER NOT NULL, `dateCreated` INTEGER NOT NULL, `isValid` INTEGER NOT NULL, `referenceId` INTEGER, `nightscoutSystemId` TEXT, `nightscoutId` TEXT, `pumpType` TEXT, `pumpSerial` TEXT, `temporaryId` INTEGER, `pumpId` INTEGER, `startId` INTEGER, `endId` INTEGER)"
             )
             // Creation of index for table TABLE_STEPS_COUNT
-            database.execSQL("""CREATE INDEX IF NOT EXISTS `index_stepsCount_id` ON `$TABLE_STEPS_COUNT` (`id`)""")
-            database.execSQL("""CREATE INDEX IF NOT EXISTS `index_stepsCount_timestamp` ON `$TABLE_STEPS_COUNT` (`timestamp`)""")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_stepsCount_id` ON `${TABLE_STEPS_COUNT}` (`id`)")
+            database.execSQL("CREATE INDEX IF NOT EXISTS `index_stepsCount_timestamp` ON `${TABLE_STEPS_COUNT}` (`timestamp`)")
 
             // Custom indexes must be dropped on migration to pass room schema checking after upgrade
             dropCustomIndexes(database)
