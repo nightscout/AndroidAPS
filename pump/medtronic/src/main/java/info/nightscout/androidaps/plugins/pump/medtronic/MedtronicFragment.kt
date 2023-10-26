@@ -14,6 +14,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.pump.WarnColors
+import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -29,6 +30,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import dagger.android.support.DaggerFragment
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
+import info.nightscout.androidaps.plugins.pump.common.extensions.stringResource
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
@@ -41,7 +43,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.common.defs.PumpDeviceState
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -214,12 +215,12 @@ class MedtronicFragment : DaggerFragment() {
             PumpDeviceState.ErrorWhenCommunicating,
             PumpDeviceState.TimeoutWhenCommunicating,
             PumpDeviceState.InvalidConfiguration ->
-                binding.pumpStatusIcon.text = " " + rh.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
+                binding.pumpStatusIcon.text = " " + rh.gs(medtronicPumpStatus.pumpDeviceState.stringResource())
 
             PumpDeviceState.Active               -> {
                 val cmd = medtronicUtil.getCurrentCommand()
                 if (cmd == null)
-                    binding.pumpStatusIcon.text = " " + rh.gs(medtronicPumpStatus.pumpDeviceState.resourceId)
+                    binding.pumpStatusIcon.text = " " + rh.gs(medtronicPumpStatus.pumpDeviceState.stringResource())
                 else {
                     aapsLogger.debug(LTag.PUMP, "Command: $cmd")
                     val cmdResourceId = cmd.resourceId //!!

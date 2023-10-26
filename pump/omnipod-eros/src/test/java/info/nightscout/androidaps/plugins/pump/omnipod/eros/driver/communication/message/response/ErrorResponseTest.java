@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import app.aaps.core.utils.pump.ByteUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-import info.nightscout.pump.common.utils.ByteUtil;
 
 class ErrorResponseTest {
     @Test

@@ -4,7 +4,7 @@ import org.joda.time.Duration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import info.nightscout.pump.common.utils.ByteUtil;
+import app.aaps.core.utils.pump.ByteUtil;
 
 class TempBasalExtraCommandTest {
     @Test

@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception;
 
-import info.nightscout.pump.common.utils.ByteUtil;
+import app.aaps.core.utils.pump.ByteUtil;
 
 public class NotEnoughDataException extends OmnipodException {
     private final byte[] data;

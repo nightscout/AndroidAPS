@@ -1,4 +1,4 @@
-package info.nightscout.pump.common.utils
+package app.aaps.core.utils.pump
 
 /**
  * Created by geoff on 5/27/16.

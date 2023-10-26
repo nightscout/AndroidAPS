@@ -15,7 +15,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:ui"))
-    implementation(project(":pump:pump-common"))
+    implementation(project(":core:utils"))
 
     testImplementation(project(":shared:tests"))
 

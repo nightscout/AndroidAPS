@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
 import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.utils.pump.ByteUtil;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
@@ -83,7 +84,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.Om
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
 import info.nightscout.pump.common.defs.TempBasalPair;
-import info.nightscout.pump.common.utils.ByteUtil;
 import io.reactivex.rxjava3.subjects.SingleSubject;
 
 @Singleton

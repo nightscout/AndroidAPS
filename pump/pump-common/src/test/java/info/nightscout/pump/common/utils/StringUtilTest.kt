@@ -1,5 +1,6 @@
 package info.nightscout.pump.common.utils
 
+import app.aaps.core.utils.StringUtil
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 

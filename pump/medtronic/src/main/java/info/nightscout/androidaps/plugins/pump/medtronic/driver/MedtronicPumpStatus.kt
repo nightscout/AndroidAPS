@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver
 
 import app.aaps.core.data.pump.defs.PumpType
+import app.aaps.core.interfaces.pump.defs.PumpDeviceState
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -13,7 +14,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.pump.common.data.PumpStatus
-import info.nightscout.pump.common.defs.PumpDeviceState
 import info.nightscout.pump.common.sync.PumpDbEntryTBR
 import java.util.Calendar
 import java.util.GregorianCalendar

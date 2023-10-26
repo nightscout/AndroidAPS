@@ -1,4 +1,4 @@
-package info.nightscout.pump.common.utils
+package app.aaps.core.utils.pump
 
 import java.nio.ByteBuffer
 import java.util.Locale
