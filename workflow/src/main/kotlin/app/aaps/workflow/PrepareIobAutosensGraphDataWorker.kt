@@ -30,9 +30,9 @@ import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
-import app.aaps.core.main.iob.combine
-import app.aaps.core.main.iob.copy
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.extensions.combine
+import app.aaps.core.objects.extensions.copy
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject

@@ -1,7 +1,7 @@
 package app.aaps.di
 
 import app.aaps.MainApp
-import app.aaps.core.main.di.CoreModule
+import app.aaps.core.objects.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
 import app.aaps.database.impl.DatabaseModule
 import app.aaps.database.persistence.di.PersistenceModule

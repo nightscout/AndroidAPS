@@ -5,7 +5,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.main.extensions.toTemporaryBasal
+import app.aaps.core.objects.extensions.toTemporaryBasal
 import dagger.Reusable
 import javax.inject.Inject
 

@@ -26,7 +26,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.asAnnouncement
+import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.R
 import app.aaps.implementation.extensions.toUeSource
 import io.reactivex.rxjava3.disposables.CompositeDisposable

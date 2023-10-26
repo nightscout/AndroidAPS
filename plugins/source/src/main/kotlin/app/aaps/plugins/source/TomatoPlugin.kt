@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class TomatoPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_sensor)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_sensor)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.tomato)
         .shortName(R.string.tomato_short)

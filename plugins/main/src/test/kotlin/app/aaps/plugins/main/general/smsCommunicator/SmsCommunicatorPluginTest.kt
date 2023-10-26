@@ -24,8 +24,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.extensions.fromGv
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.fromGv
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.smsCommunicator.otp.OneTimePassword

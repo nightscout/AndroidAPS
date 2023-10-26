@@ -23,11 +23,11 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.main.R
-import app.aaps.core.main.extensions.convertedToPercent
-import app.aaps.core.main.extensions.isInProgress
-import app.aaps.core.main.extensions.toStringFull
-import app.aaps.core.main.extensions.toStringShort
+import app.aaps.core.objects.R
+import app.aaps.core.objects.extensions.convertedToPercent
+import app.aaps.core.objects.extensions.isInProgress
+import app.aaps.core.objects.extensions.toStringFull
+import app.aaps.core.objects.extensions.toStringShort
 import com.jjoe64.graphview.series.DataPoint
 import java.util.Calendar
 import javax.inject.Inject

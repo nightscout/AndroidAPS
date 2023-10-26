@@ -16,7 +16,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class GlimpPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_glimp)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_glimp)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.glimp)
         .description(R.string.description_source_glimp),

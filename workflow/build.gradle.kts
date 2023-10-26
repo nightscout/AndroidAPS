@@ -13,11 +13,11 @@ android {
 
 dependencies {
     implementation(project(":core:data"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:libraries"))
+    implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":plugins:main"))

@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.main.wizard.BolusWizard
+import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

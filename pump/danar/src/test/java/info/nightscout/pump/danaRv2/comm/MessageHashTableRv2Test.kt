@@ -1,6 +1,6 @@
 package info.nightscout.pump.danaRv2.comm
 
-import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.objects.constraints.ConstraintObject
 import info.nightscout.androidaps.danaRv2.comm.MessageHashTableRv2
 import info.nightscout.androidaps.danaRv2.comm.MsgStatusAPS_v2
 import info.nightscout.androidaps.danar.comm.MessageBase

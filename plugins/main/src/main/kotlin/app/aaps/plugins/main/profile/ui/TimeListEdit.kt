@@ -94,7 +94,7 @@ class TimeListEdit(
         val factor = layout.context.resources.displayMetrics.density
         ImageView(context).also {
             this.finalAdd = it
-            it.setImageResource(app.aaps.core.main.R.drawable.ic_add)
+            it.setImageResource(app.aaps.core.objects.R.drawable.ic_add)
             it.contentDescription = layout.context.resources.getString(R.string.a11y_add_new_to_list)
             layout.addView(it)
             it.layoutParams = LinearLayout.LayoutParams((35.0 * factor).toInt(), (35 * factor).toInt()).also { llp ->

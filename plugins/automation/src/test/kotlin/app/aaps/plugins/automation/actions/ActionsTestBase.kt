@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.profile.ProfileSource
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
-import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.plugins.automation.triggers.Trigger
 import app.aaps.shared.tests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach

@@ -22,7 +22,7 @@ import app.aaps.core.interfaces.rx.events.EventTempBasalChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.toStringFull
+import app.aaps.core.objects.extensions.toStringFull
 import app.aaps.pump.virtual.databinding.VirtualPumpFragmentBinding
 import app.aaps.pump.virtual.events.EventVirtualPumpUpdateGui
 import dagger.android.support.DaggerFragment

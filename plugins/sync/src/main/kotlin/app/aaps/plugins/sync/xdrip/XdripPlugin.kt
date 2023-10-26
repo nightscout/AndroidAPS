@@ -41,9 +41,9 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.toStringShort
-import app.aaps.core.main.iob.generateCOBString
-import app.aaps.core.main.iob.round
+import app.aaps.core.objects.extensions.generateCOBString
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.extensions.toStringShort
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.plugins.sync.R
@@ -86,7 +86,7 @@ class XdripPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(XdripFragment::class.java.name)
-        .pluginIcon((app.aaps.core.main.R.drawable.ic_blooddrop_48))
+        .pluginIcon((app.aaps.core.objects.R.drawable.ic_blooddrop_48))
         .pluginName(R.string.xdrip)
         .shortName(R.string.xdrip_shortname)
         .preferencesId(R.xml.pref_xdrip)

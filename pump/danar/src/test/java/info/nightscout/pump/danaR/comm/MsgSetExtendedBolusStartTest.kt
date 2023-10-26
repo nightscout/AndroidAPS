@@ -1,6 +1,6 @@
 package info.nightscout.pump.danaR.comm
 
-import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.objects.constraints.ConstraintObject
 import info.nightscout.androidaps.danar.comm.MsgSetExtendedBolusStart
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

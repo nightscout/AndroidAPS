@@ -4,7 +4,7 @@ import app.aaps.core.data.db.EPS
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.plugins.sync.tidepool.comm.TidepoolUploader
 import com.google.gson.annotations.Expose
 import java.util.UUID

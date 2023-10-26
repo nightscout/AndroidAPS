@@ -30,8 +30,8 @@ import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.utils.CryptoUtil
+import app.aaps.core.objects.crypto.CryptoUtil
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.isRunningTest
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.setupwizard.elements.SWBreak

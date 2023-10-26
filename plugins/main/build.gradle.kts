@@ -12,16 +12,16 @@ android {
 }
 
 dependencies {
-    implementation(project(":shared:impl"))
     implementation(project(":core:data"))
     implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:objects"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":core:validators"))
+    implementation(project(":shared:impl"))
 
     testImplementation(project(":implementation"))
     testImplementation(project(":plugins:insulin"))

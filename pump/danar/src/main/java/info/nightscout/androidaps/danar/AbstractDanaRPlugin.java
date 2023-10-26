@@ -36,7 +36,7 @@ import app.aaps.core.interfaces.ui.UiInteraction;
 import app.aaps.core.interfaces.utils.DateUtil;
 import app.aaps.core.interfaces.utils.DecimalFormatter;
 import app.aaps.core.interfaces.utils.Round;
-import app.aaps.core.main.constraints.ConstraintObject;
+import app.aaps.core.objects.constraints.ConstraintObject;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
 import info.nightscout.pump.dana.DanaFragment;
 import info.nightscout.pump.dana.DanaPump;

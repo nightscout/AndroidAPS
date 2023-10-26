@@ -8,7 +8,7 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.asAnnouncement
+import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.ui.alertDialogs.ErrorDialog
 import app.aaps.ui.services.AlarmSoundService

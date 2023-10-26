@@ -13,7 +13,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.friendlyDescription
+import app.aaps.core.objects.extensions.friendlyDescription
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
@@ -49,7 +49,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.starttemptarget
     override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh, profileUtil)
-    @DrawableRes override fun icon(): Int = app.aaps.core.main.R.drawable.ic_temptarget_high
+    @DrawableRes override fun icon(): Int = app.aaps.core.objects.R.drawable.ic_temptarget_high
 
     override fun doAction(callback: Callback) {
         disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(

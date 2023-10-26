@@ -6,7 +6,7 @@ import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.convertedToAbsolute
+import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.utils.JsonHelper
 import org.json.JSONObject
 

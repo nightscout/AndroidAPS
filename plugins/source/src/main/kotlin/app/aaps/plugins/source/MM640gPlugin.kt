@@ -17,7 +17,7 @@ import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
@@ -34,7 +34,7 @@ class MM640gPlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .preferencesId(R.xml.pref_bgsource)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_generic_cgm)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_generic_cgm)
         .pluginName(R.string.mm640g)
         .description(R.string.description_source_mm640g),
     aapsLogger, rh

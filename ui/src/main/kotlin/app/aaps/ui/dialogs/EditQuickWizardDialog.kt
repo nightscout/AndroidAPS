@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.main.wizard.QuickWizard
-import app.aaps.core.main.wizard.QuickWizardEntry
+import app.aaps.core.objects.wizard.QuickWizard
+import app.aaps.core.objects.wizard.QuickWizardEntry
 import app.aaps.core.ui.extensions.selectedItemPosition
 import app.aaps.core.ui.extensions.setEnableForChildren
 import app.aaps.core.ui.extensions.setSelection

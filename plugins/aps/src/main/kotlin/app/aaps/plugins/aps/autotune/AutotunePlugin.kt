@@ -26,8 +26,8 @@ import app.aaps.core.interfaces.rx.events.EventLocalProfileChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.main.extensions.pureProfileFromJson
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.objects.extensions.pureProfileFromJson
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.elements.WeekDay
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.aps.R
@@ -69,7 +69,7 @@ class AutotunePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutotuneFragment::class.qualifiedName)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_autotune)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_autotune)
         .pluginName(app.aaps.core.ui.R.string.autotune)
         .shortName(app.aaps.core.ui.R.string.autotune_shortname)
         .preferencesId(R.xml.pref_autotune)

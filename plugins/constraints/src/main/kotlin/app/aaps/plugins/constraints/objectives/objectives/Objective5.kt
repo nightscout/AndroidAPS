@@ -2,7 +2,7 @@ package app.aaps.plugins.constraints.objectives.objectives
 
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.plugins.constraints.R
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import dagger.android.HasAndroidInjector

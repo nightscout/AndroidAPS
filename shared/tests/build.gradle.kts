@@ -11,13 +11,13 @@ android {
 }
 
 dependencies {
-    implementation(project(":shared:impl"))
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:objects"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
     implementation(project(":implementation"))
+    implementation(project(":shared:impl"))
 
 
     api(Libs.Mockito.jupiter)

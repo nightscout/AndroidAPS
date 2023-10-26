@@ -22,8 +22,8 @@ android {
 
 dependencies {
     implementation(project(":core:data"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:libraries"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
 
@@ -33,7 +33,8 @@ dependencies {
     kapt(Libs.AndroidX.Room.compiler)
 
     testImplementation(project(":shared:tests"))
-    testImplementation(project(":core:main")) // create profile from json
+    testImplementation(project(":core:objects"))
+    // create profile from json
 
     kapt(Libs.Dagger.compiler)
     kapt(Libs.Dagger.androidProcessor)

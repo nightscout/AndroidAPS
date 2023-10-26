@@ -19,11 +19,11 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.core.main.extensions.durationInMinutes
-import app.aaps.core.main.extensions.toJson
-import app.aaps.core.main.extensions.toTemporaryBasal
-import app.aaps.core.main.iob.round
+import app.aaps.core.objects.extensions.convertedToAbsolute
+import app.aaps.core.objects.extensions.durationInMinutes
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.extensions.toJson
+import app.aaps.core.objects.extensions.toTemporaryBasal
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.plugins.aps.autotune.data.ATProfile
 import app.aaps.plugins.aps.autotune.data.LocalInsulin

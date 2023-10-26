@@ -33,7 +33,7 @@ class ActionAlarm(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = app.aaps.core.ui.R.string.alarm
     override fun shortDescription(): String = rh.gs(R.string.alarm_message, text.value)
-    @DrawableRes override fun icon(): Int = app.aaps.core.main.R.drawable.ic_access_alarm_24dp
+    @DrawableRes override fun icon(): Int = app.aaps.core.objects.R.drawable.ic_access_alarm_24dp
 
     override fun isValid(): Boolean = true // empty alarm will show app name
 

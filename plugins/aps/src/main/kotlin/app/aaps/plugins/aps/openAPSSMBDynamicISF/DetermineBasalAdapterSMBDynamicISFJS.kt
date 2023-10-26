@@ -17,10 +17,10 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.main.extensions.convertedToAbsolute
-import app.aaps.core.main.extensions.getPassedDurationToTimeInMinutes
-import app.aaps.core.main.extensions.plannedRemainingMinutes
-import app.aaps.core.main.iob.convertToJSONArray
+import app.aaps.core.objects.extensions.convertToJSONArray
+import app.aaps.core.objects.extensions.convertedToAbsolute
+import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
+import app.aaps.core.objects.extensions.plannedRemainingMinutes
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalResultSMB

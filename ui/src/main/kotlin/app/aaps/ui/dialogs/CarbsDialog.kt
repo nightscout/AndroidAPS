@@ -34,8 +34,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.utils.extensions.formatColor
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
@@ -284,7 +284,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                 rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(
                     context,
                     app.aaps.core.ui.R.attr.carbsColor
-                ) + "'>" + rh.gs(app.aaps.core.main.R.string.format_carbs, carbsAfterConstraints) + "</font>"
+                ) + "'>" + rh.gs(app.aaps.core.objects.R.string.format_carbs, carbsAfterConstraints) + "</font>"
             )
             if (carbsAfterConstraints != carbs)
                 actions.add("<font color='" + rh.gac(context, app.aaps.core.ui.R.attr.warningColor) + "'>" + rh.gs(R.string.carbs_constraint_applied) + "</font>")

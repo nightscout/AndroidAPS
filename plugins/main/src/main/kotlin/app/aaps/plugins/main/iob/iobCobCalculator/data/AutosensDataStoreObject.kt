@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.fromGv
+import app.aaps.core.objects.extensions.fromGv
 import kotlin.math.abs
 import kotlin.math.roundToLong
 

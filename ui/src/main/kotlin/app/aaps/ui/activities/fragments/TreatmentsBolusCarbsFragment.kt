@@ -35,8 +35,8 @@ import app.aaps.core.interfaces.rx.events.EventTreatmentChange
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.iobCalc
-import app.aaps.core.main.utils.ActionModeHelper
+import app.aaps.core.objects.extensions.iobCalc
+import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
@@ -260,7 +260,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             holder.binding.carbsLayout.visibility = (ml.carbs != null && (ml.carbs.isValid || showInvalidated)).toVisibility()
             ml.carbs?.let { carbs ->
                 holder.binding.carbsTime.text = dateUtil.timeString(carbs.timestamp)
-                holder.binding.carbs.text = rh.gs(app.aaps.core.main.R.string.format_carbs, carbs.amount.toInt())
+                holder.binding.carbs.text = rh.gs(app.aaps.core.objects.R.string.format_carbs, carbs.amount.toInt())
                 holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(app.aaps.core.ui.R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
                 holder.binding.carbsNs.visibility = (carbs.ids.nightscoutId != null).toVisibility()
                 holder.binding.carbsPump.visibility = carbs.ids.isPumpHistory().toVisibility()
@@ -401,7 +401,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                     rh.gs(app.aaps.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
             val carbs = mealLink.carbs
             if (carbs != null)
-                return rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.main.R.string.format_carbs, carbs.amount.toInt()) + "\n" +
+                return rh.gs(app.aaps.core.ui.R.string.carbs) + ": " + rh.gs(app.aaps.core.objects.R.string.format_carbs, carbs.amount.toInt()) + "\n" +
                     rh.gs(app.aaps.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(carbs.timestamp)
         }
         return rh.gs(app.aaps.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())

@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.TrendCalculator
-import app.aaps.core.main.extensions.fromGv
+import app.aaps.core.objects.extensions.fromGv
 import dagger.Reusable
 import javax.inject.Inject
 

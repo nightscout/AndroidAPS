@@ -1,12 +1,12 @@
 package app.aaps.plugins.constraints
 
-import app.aaps.core.main.constraints.ConstraintObject
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.objects.constraints.ConstraintObject
 import javax.inject.Inject
 import javax.inject.Singleton
 

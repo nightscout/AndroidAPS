@@ -53,7 +53,7 @@ fun TDD.toTableRow(context: Context, rh: ResourceHelper, dateUtil: DateUtil, inc
             if (includeCarbs)
                 row.addView(TextView(context).apply {
                     gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 5 }; text = rh.gs(
-                    app.aaps.core.main.R.string.format_carbs, carbs
+                    app.aaps.core.objects.R.string.format_carbs, carbs
                         .toInt()
                 )
                 })
@@ -87,7 +87,7 @@ fun TDD.toTableRow(context: Context, rh: ResourceHelper, days: Int, includeCarbs
             if (includeCarbs)
                 row.addView(TextView(context).apply {
                     gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 5 }; text = rh.gs(
-                    app.aaps.core.main.R.string.format_carbs, carbs
+                    app.aaps.core.objects.R.string.format_carbs, carbs
                         .toInt()
                 )
                 })

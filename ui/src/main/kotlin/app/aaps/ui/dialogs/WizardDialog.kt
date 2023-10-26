@@ -39,12 +39,12 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.constraints.ConstraintObject
-import app.aaps.core.main.extensions.valueToUnits
-import app.aaps.core.main.iob.round
-import app.aaps.core.main.profile.ProfileSealed
-import app.aaps.core.main.utils.extensions.formatColor
-import app.aaps.core.main.wizard.BolusWizard
+import app.aaps.core.objects.constraints.ConstraintObject
+import app.aaps.core.objects.extensions.formatColor
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.extensions.valueToUnits
+import app.aaps.core.objects.profile.ProfileSealed
+import app.aaps.core.objects.wizard.BolusWizard
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
@@ -516,7 +516,7 @@ class WizardDialog : DaggerDialogFragment() {
                 val insulinText =
                     if (wizard.calculatedTotalInsulin > 0.0) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                         .formatColor(context, rh, app.aaps.core.ui.R.attr.bolusColor) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(app.aaps.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(
+                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(app.aaps.core.objects.R.string.format_carbs, carbsAfterConstraint).formatColor(
                     context, rh, app.aaps.core.ui.R.attr
                         .carbsColor
                 ) else ""

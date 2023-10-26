@@ -169,7 +169,7 @@ dependencies {
     // https://github.com/nightscout/iconify.git
     implementation(project(":shared:impl"))
     implementation(project(":core:data"))
-    implementation(project(":core:main"))
+    implementation(project(":core:objects"))
     implementation(project(":core:graph"))
     implementation(project(":core:graphview"))
     implementation(project(":core:interfaces"))

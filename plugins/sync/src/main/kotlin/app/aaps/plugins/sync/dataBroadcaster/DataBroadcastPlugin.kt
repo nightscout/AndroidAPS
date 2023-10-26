@@ -30,9 +30,9 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.durationInMinutes
-import app.aaps.core.main.extensions.toStringFull
-import app.aaps.core.main.iob.round
+import app.aaps.core.objects.extensions.durationInMinutes
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.extensions.toStringFull
 import app.aaps.plugins.sync.R
 import app.aaps.shared.impl.extensions.safeQueryBroadcastReceivers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -63,7 +63,7 @@ class DataBroadcastPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .pluginName(R.string.data_broadcaster)
         .shortName(R.string.data_broadcaster_short)
         .description(R.string.data_broadcaster_description),

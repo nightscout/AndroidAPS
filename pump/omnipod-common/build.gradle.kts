@@ -12,8 +12,8 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:libraries"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:libraries"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
 

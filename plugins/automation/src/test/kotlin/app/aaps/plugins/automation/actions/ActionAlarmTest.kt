@@ -50,7 +50,7 @@ class ActionAlarmTest : TestBaseWithProfile() {
     }
 
     @Test fun iconTest() {
-        assertThat(sut.icon()).isEqualTo(app.aaps.core.main.R.drawable.ic_access_alarm_24dp)
+        assertThat(sut.icon()).isEqualTo(app.aaps.core.objects.R.drawable.ic_access_alarm_24dp)
     }
 
     @Test fun doActionTest() {

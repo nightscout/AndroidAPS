@@ -44,7 +44,7 @@ class WearPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(WearFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .pluginName(app.aaps.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)
         .preferencesId(R.xml.pref_wear)

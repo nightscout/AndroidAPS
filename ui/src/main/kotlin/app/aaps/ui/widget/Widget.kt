@@ -35,10 +35,10 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
-import app.aaps.core.main.extensions.directionToIcon
-import app.aaps.core.main.iob.displayText
-import app.aaps.core.main.iob.round
-import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.objects.extensions.directionToIcon
+import app.aaps.core.objects.extensions.displayText
+import app.aaps.core.objects.extensions.round
+import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
 import app.aaps.ui.R
@@ -273,9 +273,9 @@ class Widget : AppWidgetProvider() {
 
     private fun updateSensitivity(views: RemoteViews) {
         if (constraintChecker.isAutosensModeEnabled().value())
-            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_swap_vert_black_48dp_green)
+            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.objects.R.drawable.ic_swap_vert_black_48dp_green)
         else
-            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.main.R.drawable.ic_x_swap_vert)
+            views.setImageViewResource(R.id.sensitivity_icon, app.aaps.core.objects.R.drawable.ic_x_swap_vert)
         views.setTextViewText(R.id.sensitivity, iobCobCalculator.ads.getLastAutosensData("Overview", aapsLogger, dateUtil)?.let { autosensData ->
             String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
         } ?: "")

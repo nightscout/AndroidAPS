@@ -7,7 +7,6 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.plugins.automation.elements.Comparator
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
-import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -76,7 +75,7 @@ class TriggerBgTest : TriggerTestBase() {
 
     @Test
     fun iconTest() {
-        assertThat(TriggerBg(injector).icon().get()).isEqualTo(app.aaps.core.main.R.drawable.ic_cp_bgcheck)
+        assertThat(TriggerBg(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_cp_bgcheck)
     }
 
     private fun generateOneCurrentRecordBgData(): MutableList<InMemoryGlucoseValue> {

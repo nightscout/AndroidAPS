@@ -29,9 +29,9 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.main.extensions.iobCalc
-import app.aaps.core.main.extensions.isInProgress
-import app.aaps.core.main.utils.ActionModeHelper
+import app.aaps.core.objects.extensions.iobCalc
+import app.aaps.core.objects.extensions.isInProgress
+import app.aaps.core.objects.ui.ActionModeHelper
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils

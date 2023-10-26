@@ -5,10 +5,10 @@ import app.aaps.core.data.db.IDs
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.profile.Profile
-import app.aaps.core.main.extensions.toTemporaryBasal
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSExtendedBolus
 import app.aaps.core.nssdk.localmodel.treatment.NSTreatment
+import app.aaps.core.objects.extensions.toTemporaryBasal
 import java.security.InvalidParameterException
 
 fun NSExtendedBolus.toExtendedBolus(): EB =

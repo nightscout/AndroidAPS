@@ -14,12 +14,12 @@ android {
 
 dependencies {
     implementation(project(":core:data"))
-    implementation(project(":shared:impl"))
     implementation(project(":core:interfaces"))
-    implementation(project(":core:main"))
+    implementation(project(":core:objects"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:ui"))
     implementation(project(":core:utils"))
+    implementation(project(":shared:impl"))
 
     testImplementation(project(":shared:tests"))
 

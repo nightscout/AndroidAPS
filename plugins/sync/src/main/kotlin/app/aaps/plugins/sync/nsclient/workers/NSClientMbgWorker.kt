@@ -6,7 +6,7 @@ import androidx.work.workDataOf
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.StoreDataForDb
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.sync.nsclient.data.NSMbg
 import app.aaps.plugins.sync.nsclient.extensions.therapyEventFromNsMbg

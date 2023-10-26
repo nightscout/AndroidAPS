@@ -82,13 +82,13 @@ class CareDialog : DialogFragmentWithDate() {
 
         binding.icon.setImageResource(
             when (options) {
-                UiInteraction.EventType.BGCHECK        -> app.aaps.core.main.R.drawable.ic_cp_bgcheck
-                UiInteraction.EventType.SENSOR_INSERT  -> app.aaps.core.main.R.drawable.ic_cp_cgm_insert
-                UiInteraction.EventType.BATTERY_CHANGE -> app.aaps.core.main.R.drawable.ic_cp_pump_battery
-                UiInteraction.EventType.NOTE           -> app.aaps.core.main.R.drawable.ic_cp_note
-                UiInteraction.EventType.EXERCISE       -> app.aaps.core.main.R.drawable.ic_cp_exercise
-                UiInteraction.EventType.QUESTION       -> app.aaps.core.main.R.drawable.ic_cp_question
-                UiInteraction.EventType.ANNOUNCEMENT   -> app.aaps.core.main.R.drawable.ic_cp_announcement
+                UiInteraction.EventType.BGCHECK        -> app.aaps.core.objects.R.drawable.ic_cp_bgcheck
+                UiInteraction.EventType.SENSOR_INSERT  -> app.aaps.core.objects.R.drawable.ic_cp_cgm_insert
+                UiInteraction.EventType.BATTERY_CHANGE -> app.aaps.core.objects.R.drawable.ic_cp_pump_battery
+                UiInteraction.EventType.NOTE           -> app.aaps.core.objects.R.drawable.ic_cp_note
+                UiInteraction.EventType.EXERCISE       -> app.aaps.core.objects.R.drawable.ic_cp_exercise
+                UiInteraction.EventType.QUESTION       -> app.aaps.core.objects.R.drawable.ic_cp_question
+                UiInteraction.EventType.ANNOUNCEMENT   -> app.aaps.core.objects.R.drawable.ic_cp_announcement
             }
         )
         binding.title.text = rh.gs(

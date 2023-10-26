@@ -46,7 +46,7 @@ class GarminPlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_watch)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_watch)
         .pluginName(R.string.garmin)
         .shortName(R.string.garmin)
         .description(R.string.garmin_description)

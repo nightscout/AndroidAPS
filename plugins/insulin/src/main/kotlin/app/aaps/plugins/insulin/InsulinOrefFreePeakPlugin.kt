@@ -9,8 +9,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.main.utils.extensions.putInt
-import app.aaps.core.main.utils.extensions.storeInt
+import app.aaps.core.objects.extensions.putInt
+import app.aaps.core.objects.extensions.storeInt
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -15,12 +15,12 @@ android {
 }
 
 dependencies {
-    implementation(project(":pump:eopatch-core"))
     implementation(project(":core:data"))
-    implementation(project(":core:libraries"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:libraries"))
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
+    implementation(project(":pump:eopatch-core"))
 
     api(Libs.Google.guava)
 

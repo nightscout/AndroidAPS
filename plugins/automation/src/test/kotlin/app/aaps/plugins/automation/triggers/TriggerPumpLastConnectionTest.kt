@@ -53,7 +53,7 @@ class TriggerPumpLastConnectionTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        assertThat(TriggerPumpLastConnection(injector).icon().get()).isEqualTo(app.aaps.core.main.R.drawable.ic_remove)
+        assertThat(TriggerPumpLastConnection(injector).icon().get()).isEqualTo(app.aaps.core.objects.R.drawable.ic_remove)
     }
 
     @Test fun friendlyNameTest() {

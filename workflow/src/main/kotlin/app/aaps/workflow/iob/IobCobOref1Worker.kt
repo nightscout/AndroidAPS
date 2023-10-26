@@ -25,8 +25,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
-import app.aaps.core.main.extensions.target
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.extensions.target
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers

@@ -22,7 +22,7 @@ class ActionsPlugin @Inject constructor(
         .fragmentClass(ActionsFragment::class.qualifiedName)
         .enableByDefault(config.APS || config.PUMPCONTROL)
         .visibleByDefault(config.APS || config.PUMPCONTROL)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_action)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_action)
         .pluginName(R.string.actions)
         .shortName(R.string.actions_shortname)
         .description(R.string.description_actions),

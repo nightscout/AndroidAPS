@@ -5,9 +5,9 @@ import app.aaps.core.data.db.GlucoseUnit
 import app.aaps.core.data.db.SourceSensor
 import app.aaps.core.data.db.TrendArrow
 import app.aaps.core.data.iob.InMemoryGlucoseValue
-import app.aaps.core.main.R
-import app.aaps.core.main.extensions.directionToIcon
-import app.aaps.core.main.extensions.valueToUnits
+import app.aaps.core.objects.R
+import app.aaps.core.objects.extensions.directionToIcon
+import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test

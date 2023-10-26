@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.main.extensions.fromGv
-import app.aaps.core.main.extensions.valueToUnits
+import app.aaps.core.objects.extensions.fromGv
+import app.aaps.core.objects.extensions.valueToUnits
 import dagger.Reusable
 import javax.inject.Inject
 

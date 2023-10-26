@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
-import app.aaps.core.main.utils.worker.LoggingWorker
+import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.JsonHelper.safeGetString
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +35,7 @@ class PoctechPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_poctech)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_poctech)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.poctech)
         .description(R.string.description_source_poctech),

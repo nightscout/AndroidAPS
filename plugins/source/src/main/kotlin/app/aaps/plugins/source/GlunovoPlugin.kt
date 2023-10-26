@@ -40,7 +40,7 @@ class GlunovoPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(app.aaps.core.main.R.drawable.ic_glunovo)
+        .pluginIcon(app.aaps.core.objects.R.drawable.ic_glunovo)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.glunovo)
         .shortName(R.string.glunovo)
