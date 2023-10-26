@@ -58,6 +58,7 @@
     <string name="pref_show_direction_arrow">Zobraziť trendovú šípku</string>
     <string name="pref_show_ago">Zobraziť aktualizované pred</string>
     <string name="pref_show_week_number">Zobraziť číslo týždňa</string>
+    <string name="pref_show_date">Zobraziť dátum</string>
     <string name="default_custom_watchface_comment">Predvolený ciferník. Môžete kliknúť na tlačítko EXPORTOVAŤ CIFERNÍK pre vygenerovanie šablóny</string>
     <string name="wear_default_watchface">Predvolený ciferník</string>
     <string name="cwf_comment_background">Obrázok pozadia</string>

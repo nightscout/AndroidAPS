@@ -116,11 +116,14 @@
     <string name="xdrip_local_broadcasts_summary">Poslať dáta o glykémii a ošetrení do xDrip+. Musí byť vybraný zdroj dát \"xDrip+ Sync Follower\" a prijímanie dát musí byť povolené v Nastavenia - Nastavenie komunikácie medzi aplikáciami - Prijímať Glykémie/Ošetrenia</string>
     <string name="xdrip_local_broadcasts_title">Povoliť odosielanie do xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="data_broadcaster_short">DBRO</string>
+    <string name="data_broadcaster_description">Odosielanie dát do Garmin aplikácie G-Watch Wear</string>
     <!-- GarminPlugin -->
     <string name="garmin">Garmin</string>
     <string name="garmin_description">Pripájanie k zariadeniu Garmin (Fénix, Edge, ...)</string>
     <string name="key_garmin_settings">Garmin nastavenia</string>
     <!--    Wear-->
+    <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
     <string name="pump_status">Stav pumpy</string>
