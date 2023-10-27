@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.insight.utils;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -26,7 +27,7 @@ public class ConnectionEstablisher extends Thread {
         this.socket = socket;
     }
 
-    @Override
+    @SuppressLint("MissingPermission") @Override
     public void run() {
         BluetoothAdapterExtensionKt.safeEnable(bluetoothAdapter, 2000, null);
         if (forPairing && bluetoothDevice.getBondState() != BluetoothDevice.BOND_NONE) {

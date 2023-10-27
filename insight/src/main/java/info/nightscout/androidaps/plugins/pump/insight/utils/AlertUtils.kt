@@ -76,19 +76,19 @@ class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
 
     fun getAlertDescription(alert: Alert): String? {
         val decimalFormat = DecimalFormat("##0.00")
-        val hours = alert.tbrDuration / 60
-        val minutes = alert.tbrDuration - hours * 60
-        return when (alert.alertType!!) {
+        val hours = alert.tBRDuration / 60
+        val minutes = alert.tBRDuration - hours * 60
+        return when (alert.alertType) {
             AlertType.REMINDER_01    -> null
             AlertType.REMINDER_02    -> null
             AlertType.REMINDER_03    -> null
             AlertType.REMINDER_04    -> null
-            AlertType.REMINDER_07    -> rh.gs(R.string.alert_r7_description, alert.tbrAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
+            AlertType.REMINDER_07    -> rh.gs(R.string.alert_r7_description, alert.tBRAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
             AlertType.WARNING_31     -> rh.gs(R.string.alert_w31_description, decimalFormat.format(alert.cartridgeAmount))
             AlertType.WARNING_32     -> rh.gs(R.string.alert_w32_description)
             AlertType.WARNING_33     -> rh.gs(R.string.alert_w33_description)
             AlertType.WARNING_34     -> rh.gs(R.string.alert_w34_description)
-            AlertType.WARNING_36     -> rh.gs(R.string.alert_w36_description, alert.tbrAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
+            AlertType.WARNING_36     -> rh.gs(R.string.alert_w36_description, alert.tBRAmount, DecimalFormat("#0").format(hours.toLong()) + ":" + DecimalFormat("00").format(minutes.toLong()))
             AlertType.WARNING_38     -> rh.gs(R.string.alert_w38_description, decimalFormat.format(alert.programmedBolusAmount), decimalFormat.format(alert.deliveredBolusAmount))
             AlertType.WARNING_39     -> null
             AlertType.MAINTENANCE_20 -> rh.gs(R.string.alert_m20_description)
@@ -105,6 +105,7 @@ class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
             AlertType.ERROR_6        -> rh.gs(R.string.alert_e6_description)
             AlertType.ERROR_10       -> rh.gs(R.string.alert_e10_description)
             AlertType.ERROR_13       -> rh.gs(R.string.alert_e13_description)
+            else           -> null
         }
     }
 

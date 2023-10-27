@@ -151,9 +151,9 @@
 
         <com.google.android.material.button.MaterialButton
             style="@style/GrayButton"
+            android:id="@+id/delete_pairing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="deletePairing"
             android:text="@string/delete_pairing" />
     </LinearLayout>
 </ScrollView>
