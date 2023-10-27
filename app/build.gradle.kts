@@ -200,7 +200,7 @@ dependencies {
     implementation(project(":pump:diaconn"))
     implementation(project(":pump:eopatch"))
     implementation(project(":pump:medtrum"))
-    implementation(project(":insight"))
+    implementation(project(":pump:insight"))
     implementation(project(":pump:medtronic"))
     implementation(project(":pump:pump-common"))
     implementation(project(":pump:omnipod-common"))
