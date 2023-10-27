@@ -9,7 +9,7 @@
 
         <Preference android:title="@string/insight_pairing">
             <intent
-                android:targetClass="info.nightscout.androidaps.plugins.pump.insight.activities.InsightPairingInformationActivity"
+                android:targetClass="app.aaps.pump.insight.app_layer.activities.InsightPairingInformationActivity"
                 android:targetPackage="info.nightscout.androidaps" />
         </Preference>
 

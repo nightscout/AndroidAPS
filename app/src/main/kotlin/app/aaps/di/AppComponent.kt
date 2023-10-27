@@ -15,6 +15,8 @@ import app.aaps.plugins.main.di.PluginsModule
 import app.aaps.plugins.source.di.SourceModule
 import app.aaps.plugins.sync.di.OpenHumansModule
 import app.aaps.plugins.sync.di.SyncModule
+import app.aaps.pump.insight.di.InsightDatabaseModule
+import app.aaps.pump.insight.di.InsightModule
 import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.ui.di.UiModule
@@ -24,8 +26,6 @@ import dagger.Component
 import dagger.android.AndroidInjectionModule
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.danar.di.DanaRModule
-import info.nightscout.androidaps.insight.di.InsightDatabaseModule
-import info.nightscout.androidaps.insight.di.InsightModule
 import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule

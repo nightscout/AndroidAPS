@@ -22,12 +22,10 @@ import app.aaps.plugins.insulin.InsulinOrefRapidActingPlugin
 import app.aaps.plugins.insulin.InsulinOrefUltraRapidActingPlugin
 import app.aaps.plugins.main.general.actions.ActionsPlugin
 import app.aaps.plugins.main.general.food.FoodPlugin
-import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.persistentNotification.PersistentNotificationPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.main.general.themes.ThemeSwitcherPlugin
-import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import app.aaps.plugins.main.profile.ProfilePlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
@@ -48,11 +46,14 @@ import app.aaps.plugins.source.RandomBgPlugin
 import app.aaps.plugins.source.TomatoPlugin
 import app.aaps.plugins.source.XdripSourcePlugin
 import app.aaps.plugins.sync.dataBroadcaster.DataBroadcastPlugin
+import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.sync.nsclient.NSClientPlugin
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
+import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
+import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.Binds
 import dagger.Module
@@ -62,7 +63,6 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
-import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
@@ -170,7 +170,7 @@ abstract class PluginsListModule {
     @PumpDriver
     @IntoMap
     @IntKey(130)
-    abstract fun bindLocalInsightPlugin(plugin: LocalInsightPlugin): PluginBase
+    abstract fun bindLocalInsightPlugin(plugin: InsightPlugin): PluginBase
 
     @Binds
     @PumpDriver

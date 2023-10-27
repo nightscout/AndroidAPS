@@ -43,8 +43,6 @@ import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
-import app.aaps.plugins.sync.garmin.GarminPlugin
-import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
 import app.aaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
@@ -56,18 +54,20 @@ import app.aaps.plugins.source.GlunovoPlugin
 import app.aaps.plugins.source.IntelligoPlugin
 import app.aaps.plugins.source.PoctechPlugin
 import app.aaps.plugins.source.TomatoPlugin
+import app.aaps.plugins.sync.garmin.GarminPlugin
 import app.aaps.plugins.sync.nsclient.NSClientPlugin
 import app.aaps.plugins.sync.nsclientV3.NSClientV3Plugin
 import app.aaps.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import app.aaps.plugins.sync.tidepool.TidepoolPlugin
+import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
+import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import dagger.android.support.AndroidSupportInjection
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
-import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
@@ -97,7 +97,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var combov2Plugin: ComboV2Plugin
     @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
-    @Inject lateinit var localInsightPlugin: LocalInsightPlugin
+    @Inject lateinit var insightPlugin: InsightPlugin
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
@@ -209,7 +209,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(danaRKoreanPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(danaRv2Plugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(insightPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(combov2Plugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
@@ -445,49 +445,49 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun onPreferenceTreeClick(preference: Preference): Boolean =
         context?.let { context ->
             when (preference.key) {
-                rh.gs(app.aaps.core.utils.R.string.key_master_password)      -> {
+                rh.gs(app.aaps.core.utils.R.string.key_master_password)        -> {
                     passwordCheck.queryPassword(context, app.aaps.plugins.configuration.R.string.current_master_password, app.aaps.core.utils.R.string.key_master_password, {
                         passwordCheck.setPassword(context, app.aaps.core.ui.R.string.master_password, app.aaps.core.utils.R.string.key_master_password)
                     })
                     true
                 }
 
-                rh.gs(app.aaps.core.utils.R.string.key_settings_password)    -> {
+                rh.gs(app.aaps.core.utils.R.string.key_settings_password)      -> {
                     passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_password, app.aaps.core.utils.R.string.key_settings_password)
                     true
                 }
 
-                rh.gs(app.aaps.core.utils.R.string.key_bolus_password)       -> {
+                rh.gs(app.aaps.core.utils.R.string.key_bolus_password)         -> {
                     passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_password, app.aaps.core.utils.R.string.key_bolus_password)
                     true
                 }
 
-                rh.gs(app.aaps.core.utils.R.string.key_application_password) -> {
+                rh.gs(app.aaps.core.utils.R.string.key_application_password)   -> {
                     passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_password, app.aaps.core.utils.R.string.key_application_password)
                     true
                 }
 
-                rh.gs(app.aaps.core.utils.R.string.key_settings_pin)         -> {
+                rh.gs(app.aaps.core.utils.R.string.key_settings_pin)           -> {
                     passwordCheck.setPassword(context, app.aaps.core.ui.R.string.settings_pin, app.aaps.core.utils.R.string.key_settings_pin, pinInput = true)
                     true
                 }
 
-                rh.gs(app.aaps.core.utils.R.string.key_bolus_pin)            -> {
+                rh.gs(app.aaps.core.utils.R.string.key_bolus_pin)              -> {
                     passwordCheck.setPassword(context, app.aaps.core.ui.R.string.bolus_pin, app.aaps.core.utils.R.string.key_bolus_pin, pinInput = true)
                     true
                 }
 
-                rh.gs(app.aaps.core.utils.R.string.key_application_pin)      -> {
+                rh.gs(app.aaps.core.utils.R.string.key_application_pin)        -> {
                     passwordCheck.setPassword(context, app.aaps.core.ui.R.string.application_pin, app.aaps.core.utils.R.string.key_application_pin, pinInput = true)
                     true
                 }
                 // NSClient copy settings
-                rh.gs(app.aaps.plugins.main.R.string.key_statuslights_copy_ns)      -> {
+                rh.gs(app.aaps.plugins.main.R.string.key_statuslights_copy_ns) -> {
                     nsSettingStatus.copyStatusLightsNsSettings(context)
                     true
                 }
 
-                else                                                                -> super.onPreferenceTreeClick(preference)
+                else                                                           -> super.onPreferenceTreeClick(preference)
             }
         } ?: super.onPreferenceTreeClick(preference)
 
