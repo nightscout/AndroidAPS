@@ -32,8 +32,6 @@ import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.pump.combo.ComboPlugin
-import info.nightscout.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
@@ -57,7 +55,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
-    @Mock lateinit var ruffyScripter: RuffyScripter
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
     @Mock lateinit var insightDatabase: InsightDatabase
@@ -69,7 +66,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     private lateinit var constraintChecker: ConstraintsCheckerImpl
     private lateinit var safetyPlugin: SafetyPlugin
     private lateinit var objectivesPlugin: ObjectivesPlugin
-    private lateinit var comboPlugin: ComboPlugin
     private lateinit var danaRPlugin: DanaRPlugin
     private lateinit var danaRSPlugin: DanaRSPlugin
     private lateinit var insightPlugin: LocalInsightPlugin
@@ -113,7 +109,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
         `when`(rh.gs(app.aaps.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(rh.gs(info.nightscout.pump.combo.R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
         `when`(rh.gs(app.aaps.plugins.constraints.R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
@@ -130,7 +125,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
-        comboPlugin = ComboPlugin(aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction, instantiator)
         danaRPlugin = DanaRPlugin(
             aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
             uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
@@ -168,7 +162,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)
         constraintsPluginsList.add(objectivesPlugin)
-        constraintsPluginsList.add(comboPlugin)
         constraintsPluginsList.add(danaRPlugin)
         constraintsPluginsList.add(danaRSPlugin)
         constraintsPluginsList.add(insightPlugin)
@@ -181,12 +174,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     // Combo & Objectives
     @Test
     fun isLoopInvocationAllowedTest() {
-        `when`(activePlugin.activePump).thenReturn(comboPlugin)
-        comboPlugin.setPluginEnabled(PluginType.PUMP, true)
-        comboPlugin.setValidBasalRateProfileSelectedOnPump(false)
         val c = constraintChecker.isLoopInvocationAllowed()
-        assertThat(c.reasonList).hasSize(2) // Combo & Objectives
-        assertThat(c.mostLimitedReasonList).hasSize(2) // Combo & Objectives
+        assertThat(c.reasonList).hasSize(1) // Objectives
+        assertThat(c.mostLimitedReasonList).hasSize(1) // Objectives
         assertThat(c.value()).isFalse()
     }
 
