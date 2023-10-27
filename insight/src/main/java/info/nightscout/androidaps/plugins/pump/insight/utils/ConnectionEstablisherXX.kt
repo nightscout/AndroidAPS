@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.insight.utils
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothSocket
+import app.aaps.core.utils.extensions.safeEnable
 import java.io.IOException
 import java.util.*
 
@@ -12,7 +13,7 @@ class ConnectionEstablisherXX(private val callback: Callback, private val forPai
     override fun run() {
         try {
             if (!bluetoothAdapter.isEnabled) {
-                bluetoothAdapter.enable()
+                bluetoothAdapter.safeEnable()
                 sleep(2000)
             }
         } catch (ignored: InterruptedException) {

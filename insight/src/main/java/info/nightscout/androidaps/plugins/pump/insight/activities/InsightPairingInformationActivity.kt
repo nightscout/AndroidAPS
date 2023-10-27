@@ -21,6 +21,7 @@ class InsightPairingInformationActivity : DaggerAppCompatActivity() {
             connectionService = (binder as InsightConnectionService.LocalBinder).service
             connectionService?.let {
                 if (!it.isPaired) {
+                    @Suppress("DEPRECATION")
                     overridePendingTransition(0, 0)
                     finish()
                     startActivity(Intent(this@InsightPairingInformationActivity, InsightPairingActivity::class.java))

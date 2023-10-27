@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.insight.utils
 
-import info.nightscout.core.utils.notifyAll
-import info.nightscout.core.utils.wait
+import app.aaps.core.utils.notifyAll
+import app.aaps.core.utils.wait
 import java.io.IOException
 import java.io.OutputStream
 

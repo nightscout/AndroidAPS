@@ -20,7 +20,7 @@ class ReadParameterBlockMessage : AppLayerMessage(MessagePriority.NORMAL, true, 
         }
 
     @Throws(Exception::class) override fun parse(byteBuf: ByteBuf) {
-        parameterBlock = ParameterBlocks.fromId(byteBuf.readUInt16LE())?.type?.newInstance()
+        parameterBlock = ParameterBlocks.fromId(byteBuf.readUInt16LE())?.type?.getDeclaredConstructor()?.newInstance()
         parameterBlock?.let {
             byteBuf.shift(2) //Restriction level
             it.parse(byteBuf)

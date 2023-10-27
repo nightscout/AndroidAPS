@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.view.View
 import androidx.core.content.ContextCompat
+import app.aaps.core.utils.HtmlHelper
 import javax.inject.Inject
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.insight.databinding.ActivityInsightAlertBinding
@@ -15,7 +16,6 @@ import info.nightscout.androidaps.plugins.pump.insight.InsightAlertService
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.Alert
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.AlertStatus
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils
-import info.nightscout.core.utils.HtmlHelper.fromHtml
 
 class InsightAlertActivity : DaggerAppCompatActivity() {
 
@@ -72,7 +72,7 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
         val description = alertUtils.getAlertDescription(alert)
         if (description == null) binding.errorDescription.visibility = View.GONE else {
             binding.errorDescription.visibility = View.VISIBLE
-            binding.errorDescription.text = fromHtml(description)
+            binding.errorDescription.text = HtmlHelper.fromHtml(description)
         }
     }
 }

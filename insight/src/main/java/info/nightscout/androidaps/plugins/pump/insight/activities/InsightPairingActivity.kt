@@ -29,8 +29,10 @@ import info.nightscout.androidaps.plugins.pump.insight.connection_service.Insigh
 import info.nightscout.androidaps.plugins.pump.insight.connection_service.InsightConnectionService.ExceptionCallback
 import info.nightscout.androidaps.plugins.pump.insight.descriptors.InsightState
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
-import info.nightscout.interfaces.pump.BlePreCheck
-import info.nightscout.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.BlePreCheck
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.utils.extensions.safeDisable
+import app.aaps.core.utils.extensions.safeGetParcelableExtra
 import javax.inject.Inject
 
 class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionService.StateCallback, View.OnClickListener, ExceptionCallback {
@@ -156,7 +158,7 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
         if (!scanning) {
             val bluetoothAdapter = (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter
             if (bluetoothAdapter != null) {
-                if (!bluetoothAdapter.isEnabled) bluetoothAdapter.enable()
+                if (!bluetoothAdapter.isEnabled) bluetoothAdapter.safeDisable()
                 val intentFilter = IntentFilter()
                 intentFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
                 intentFilter.addAction(BluetoothDevice.ACTION_FOUND)
@@ -196,7 +198,7 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
             if (action == BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
                 (context.getSystemService(BLUETOOTH_SERVICE) as BluetoothManager).adapter.startDiscovery()
             else if (action == BluetoothDevice.ACTION_FOUND) {
-                val bluetoothDevice = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                val bluetoothDevice = intent.safeGetParcelableExtra(BluetoothDevice.EXTRA_DEVICE, BluetoothDevice::class.java)
                 bluetoothDevice?.let { deviceAdapter.addDevice(it) }
             }
         }

@@ -1,8 +1,8 @@
 package info.nightscout.androidaps
 
-import info.nightscout.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import info.nightscout.rx.TestAapsSchedulers
-import info.nightscout.rx.logging.AAPSLoggerTest
+import app.aaps.core.interfaces.logging.AAPSLoggerTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito

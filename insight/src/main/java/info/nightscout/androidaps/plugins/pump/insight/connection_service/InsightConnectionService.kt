@@ -45,9 +45,9 @@ import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.generateRSAKey
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.Cryptograph.getServicePasswordHash
 import info.nightscout.androidaps.plugins.pump.insight.utils.crypto.KeyPair
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.sharedPreferences.SP
 import org.spongycastle.crypto.InvalidCipherTextException
 import java.io.IOException
 import java.security.SecureRandom

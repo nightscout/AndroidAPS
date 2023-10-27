@@ -16,8 +16,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.MutableLiveData
 import javax.inject.Inject
 import dagger.android.DaggerService
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.ConfirmAlertMessage
 import info.nightscout.androidaps.plugins.pump.insight.app_layer.remote_control.SnoozeAlertMessage
@@ -31,8 +31,8 @@ import info.nightscout.androidaps.plugins.pump.insight.exceptions.InsightExcepti
 import info.nightscout.androidaps.plugins.pump.insight.exceptions.app_layer_errors.AppLayerErrorException
 import info.nightscout.androidaps.plugins.pump.insight.utils.AlertUtils
 import info.nightscout.androidaps.plugins.pump.insight.utils.ExceptionTranslator
-import info.nightscout.core.utils.HtmlHelper.fromHtml
-import info.nightscout.shared.interfaces.ResourceHelper
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.utils.HtmlHelper
 
 class InsightAlertService : DaggerService(), InsightConnectionService.StateCallback {
 
@@ -255,7 +255,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         alert.alertCategory?.let { notificationBuilder.setSmallIcon(alertUtils.getAlertIcon(it)) }
         alert.alertType?.let { notificationBuilder.setContentTitle(alertUtils.getAlertCode(it) + " – " + alertUtils.getAlertTitle(it)) }
         val description = alertUtils.getAlertDescription(alert)
-        if (description != null) notificationBuilder.setContentText(fromHtml(description).toString())
+        if (description != null) notificationBuilder.setContentText(HtmlHelper.fromHtml(description).toString())
         val fullScreenIntent = Intent(this, InsightAlertActivity::class.java)
         val fullScreenPendingIntent = PendingIntent.getActivity(this, 0, fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         notificationBuilder.setFullScreenIntent(fullScreenPendingIntent, true)
@@ -263,15 +263,15 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
             AlertStatus.ACTIVE  -> {
                     val muteIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "mute")
                     val mutePendingIntent = PendingIntent.getService(this, 1, muteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    notificationBuilder.addAction(0, resourceHelper.gs(info.nightscout.core.ui.R.string.mute), mutePendingIntent)
+                    notificationBuilder.addAction(0, resourceHelper.gs(app.aaps.core.ui.R.string.mute), mutePendingIntent)
                     val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
                     val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    notificationBuilder.addAction(0, resourceHelper.gs(info.nightscout.core.ui.R.string.confirm), confirmPendingIntent)
+                    notificationBuilder.addAction(0, resourceHelper.gs(app.aaps.core.ui.R.string.confirm), confirmPendingIntent)
                 }
             AlertStatus.SNOOZED -> {
                 val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
                 val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                notificationBuilder.addAction(0, resourceHelper.gs(info.nightscout.core.ui.R.string.confirm), confirmPendingIntent)
+                notificationBuilder.addAction(0, resourceHelper.gs(app.aaps.core.ui.R.string.confirm), confirmPendingIntent)
             }
             else                -> Unit
         }
