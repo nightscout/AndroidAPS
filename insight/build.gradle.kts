@@ -27,6 +27,7 @@ dependencies {
     implementation(project(":core:utils"))
     implementation(project(":core:ui"))
     implementation(project(":pump:pump-common"))
+    testImplementation(project(":shared:tests"))
 
     api(Libs.Google.Android.material)
     api(Libs.AndroidX.Room.room)
