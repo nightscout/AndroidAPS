@@ -225,7 +225,7 @@
     <string name="secondcarbsincrement">Secondo incremento di CHO</string>
     <string name="thirdcarbsincrement">Terzo incremento di CHO</string>
     <string name="cgm">CGM</string>
-    <string name="default_temptargets">Temp-Target predefiniti</string>
+    <string name="default_temptargets">Target temporanei predefiniti</string>
     <string name="eatingsoon_duration">target \"pasto a breve\" - durata</string>
     <string name="eatingsoon_target">target \"pasto a breve\"</string>
     <string name="activity_duration">target \"attività fisica\" - durata</string>
