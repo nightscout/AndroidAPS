@@ -147,10 +147,10 @@ class Widget : AppWidgetProvider() {
                 else                -> rh.gc(app.aaps.core.ui.R.color.widget_inrange)
             }
         )
-        trendCalculator.getTrendArrow()?.let {
+        trendCalculator.getTrendArrow(iobCobCalculator.ads)?.let {
             views.setImageViewResource(R.id.arrow, it.directionToIcon())
         }
-        views.setViewVisibility(R.id.arrow, (trendCalculator.getTrendArrow() != null).toVisibilityKeepSpace())
+        views.setViewVisibility(R.id.arrow, (trendCalculator.getTrendArrow(iobCobCalculator.ads) != null).toVisibilityKeepSpace())
         views.setInt(
             R.id.arrow, "setColorFilter", when {
                 lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)

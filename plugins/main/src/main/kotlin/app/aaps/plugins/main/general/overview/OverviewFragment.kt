@@ -792,8 +792,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val lastBgColor = lastBgData.lastBgColor(context)
         val isActualBg = lastBgData.isActualBg()
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        val trendDescription = trendCalculator.getTrendDescription()
-        val trendArrow = trendCalculator.getTrendArrow()
+        val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
+        val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
         val lastBgDescription = lastBgData.lastBgDescription()
         runOnUiThread {
             _binding ?: return@runOnUiThread
