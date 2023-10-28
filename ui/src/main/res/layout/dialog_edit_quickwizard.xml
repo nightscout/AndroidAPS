@@ -232,7 +232,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
-                    android:text="@string/overview_edit_quickwizard_use_bg"
+                    android:text="@string/bg_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <CheckBox
@@ -240,7 +240,7 @@
                     android:layout_width="155dp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
-                    android:text="@string/overview_editquickwizard_usetemptarget"
+                    android:text="@string/tt_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             </TableRow>
@@ -257,7 +257,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
-                    android:text="@string/overview_edit_quickwizard_use_iob"
+                    android:text="@string/iob"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <CheckBox
@@ -282,7 +282,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
-                    android:text="@string/overview_editquickwizard_usecob"
+                    android:text="@string/treatments_wizard_cob_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             </TableRow>
@@ -299,7 +299,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
-                    android:text="@string/overview_edit_quickwizard_use_trend"
+                    android:text="@string/bg_trend_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <LinearLayout
@@ -338,7 +338,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
-                    android:text="@string/overview_edit_quickwizard_use_superbolus"
+                    android:text="@string/overview_edit_quickwizard_superbolus"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             </TableRow>
