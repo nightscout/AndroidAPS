@@ -793,7 +793,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val lastBgDescription = overviewData.lastBgDescription(iobCobCalculator.ads)
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.smoothed)
+            binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.recalculated)
             binding.infoLayout.bg.setTextColor(lastBgColor)
             trendArrow?.let { binding.infoLayout.arrow.setImageResource(it.directionToIcon()) }
             binding.infoLayout.arrow.visibility = (trendArrow != null).toVisibilityKeepSpace()
