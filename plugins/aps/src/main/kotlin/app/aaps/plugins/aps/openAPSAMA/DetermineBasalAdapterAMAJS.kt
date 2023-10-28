@@ -64,6 +64,16 @@ class DetermineBasalAdapterAMAJS internal constructor(private val scriptReader: 
     override var scriptDebug = ""
 
     @Suppress("SpellCheckingInspection")
+    override fun json(): JSONObject = JSONObject().apply {
+        put("glucoseStatus", glucoseStatus)
+        put("currenttemp", currentTemp)
+        put("iob_data", iobData)
+        put("profile", profile)
+        put("autosens_data", autosensData)
+        put("meal_data", mealData)
+    }
+
+    @Suppress("SpellCheckingInspection")
     override operator fun invoke(): APSResult? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
         aapsLogger.debug(LTag.APS, "Glucose status: " + glucoseStatus.toString().also { glucoseStatusParam = it })

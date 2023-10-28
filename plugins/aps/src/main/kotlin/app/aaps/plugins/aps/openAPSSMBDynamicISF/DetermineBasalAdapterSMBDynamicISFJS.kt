@@ -73,6 +73,20 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
     override var scriptDebug = ""
 
     @Suppress("SpellCheckingInspection")
+    override fun json(): JSONObject = JSONObject().apply {
+        put("glucoseStatus", mGlucoseStatus)
+        put("currenttemp", currentTemp)
+        put("iob_data", iobData)
+        put("profile", profile)
+        put("autosens_data", autosensData)
+        put("meal_data", mealData)
+        put("microBolusAllowed", microBolusAllowed)
+        put("reservoir_data", null)
+        put("currentTime", currentTime)
+        put("flatBGsDetected", flatBGsDetected)
+    }
+
+    @Suppress("SpellCheckingInspection")
     override operator fun invoke(): DetermineBasalResultSMB? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
         aapsLogger.debug(LTag.APS, "Glucose status: " + mGlucoseStatus.toString().also { glucoseStatusParam = it })

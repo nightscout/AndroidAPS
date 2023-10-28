@@ -3,6 +3,7 @@ package app.aaps.plugins.aps.openAPSSMB
 import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
+import androidx.work.OneTimeWorkRequest
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.plugin.PluginDescription
@@ -19,6 +20,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
@@ -63,7 +65,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val bgQualityCheck: BgQualityCheck,
-    private val tddCalculator: TddCalculator
+    private val tddCalculator: TddCalculator,
+private val    importExportPrefs: ImportExportPrefs
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -295,6 +298,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                 lastDetermineBasalAdapter = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMB
                 lastAPSRun = now
+                importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json())
             }
         }
         rxBus.send(EventOpenAPSUpdateGui())
