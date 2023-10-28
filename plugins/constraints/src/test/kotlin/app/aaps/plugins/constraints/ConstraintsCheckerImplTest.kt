@@ -24,14 +24,14 @@ import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.source.GlimpPlugin
+import app.aaps.pump.insight.InsightPlugin
+import app.aaps.pump.insight.database.InsightDatabase
+import app.aaps.pump.insight.database.InsightDatabaseDao
+import app.aaps.pump.insight.database.InsightDbHelper
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.insight.database.InsightDatabase
-import info.nightscout.androidaps.insight.database.InsightDatabaseDao
-import info.nightscout.androidaps.insight.database.InsightDbHelper
-import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
@@ -68,7 +68,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     private lateinit var objectivesPlugin: ObjectivesPlugin
     private lateinit var danaRPlugin: DanaRPlugin
     private lateinit var danaRSPlugin: DanaRSPlugin
-    private lateinit var insightPlugin: LocalInsightPlugin
+    private lateinit var insightPlugin: InsightPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     private lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
@@ -135,8 +135,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
                 sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
                 fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter, instantiator
             )
-        insightPlugin = LocalInsightPlugin(
-            injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction,
+        insightPlugin = InsightPlugin(
+            aapsLogger, rxBus, rh, sp, commandQueue, profileFunction,
             context, config, dateUtil, insightDbHelper, pumpSync, insightDatabase, instantiator
         )
         openAPSSMBPlugin =

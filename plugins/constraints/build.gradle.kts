@@ -21,7 +21,7 @@ dependencies {
     implementation(project(":core:validators"))
 
     testImplementation(project(":implementation"))
-    testImplementation(project(":insight"))
+    testImplementation(project(":pump:insight"))
     testImplementation(project(":plugins:aps"))
     testImplementation(project(":plugins:source"))
     testImplementation(project(":pump:dana"))
