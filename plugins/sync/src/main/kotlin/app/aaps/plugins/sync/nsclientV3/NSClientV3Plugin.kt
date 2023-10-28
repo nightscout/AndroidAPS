@@ -189,7 +189,7 @@ class NSClientV3Plugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ if (nsClientV3Service != null) context.unbindService(serviceConnection) }, fabricPrivacy::logException)
+            .subscribe({ stopService() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventConnectivityOptionChanged::class.java)
             .observeOn(aapsSchedulers.io)
@@ -352,7 +352,11 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private fun stopService() {
-        if (nsClientV3Service != null) context.unbindService(serviceConnection)
+        try {
+            if (nsClientV3Service != null) context.unbindService(serviceConnection)
+        } catch (e: Exception) {
+            nsClientV3Service = null
+        }
     }
 
     override fun resend(reason: String) {
