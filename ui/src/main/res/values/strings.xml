@@ -157,24 +157,15 @@
     <string name="overview_edit_quickwizard_valid">Valid:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Add</string>
     <string name="overview_quickwizard_item_edit_button">Edit</string>
-    <string name="overview_edit_quickwizard_use_bg">BG</string>
-    <string name="overview_edit_quickwizard_use_iob">IOB</string>
     <string name="overview_edit_quickwizard_use_positive_iob_only">Positive only</string>
-    <string name="overview_edit_quickwizard_use_trend">15min trend</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superbolus</string>
-    <string name="overview_edit_quickwizard_custom">Custom %</string>
+    <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="overview_edit_quickwizard_percentage_to_high">Percentage to high!</string>
-    <string name="overview_editquickwizard_usecob">COB</string>
-    <string name="overview_editquickwizard_usetemptarget">TT</string>
-    <string name="overview_editquickwizard_usepercentage">Percentage</string>
-    <string name="app_default">APP DEFAULT</string>
+    <string name="overview_editquickwizard_percentage">Percentage</string>
     <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
     <string name="additional_ecarbs">Add eCarbs</string>
     <string name="overview_edit_quickwizard_useforcalculation">Use for calculation:</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="change_your_input">Change your input!</string>
-    <string name="quickwizard_phone">Phone</string>
-    <string name="quickwizard_watch">Watch</string>
 
     <string-array name="yes_no_positiveonly_negativeonly">
         <item>Both</item>
