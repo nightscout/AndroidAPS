@@ -49,7 +49,7 @@ class PrefFileListProviderImpl @Inject constructor(
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
     private val tempPath = File(path, "AAPS" + File.separator + "temp")
     private val extraPath = File(path, "AAPS" + File.separator + "extra")
-    private val resultPath = File(path, "AAPS" + File.separator + "results")
+    override val resultPath = File(path, "AAPS" + File.separator + "results")
     override val logsPath: String = File(path, "AAPS" + File.separator + "logs" + File.separator + context.packageName).absolutePath
 
     companion object {

@@ -109,6 +109,9 @@ android {
         buildConfigField("String", "REMOTE", "\"${generateGitRemote()}\"")
         buildConfigField("String", "HEAD", "\"${generateGitBuild()}\"")
         buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
+
+        // For Dagger injected instrumentation tests in app module
+        testInstrumentationRunner = "app.aaps.InjectedTestRunner"
     }
 
     flavorDimensions.add("standard")
@@ -210,6 +213,10 @@ dependencies {
     implementation(project(":workflow"))
 
     testImplementation(project(":shared:tests"))
+    androidTestImplementation(Libs.AndroidX.Test.rules)
+
+
+    kaptAndroidTest(Libs.Dagger.androidProcessor)
 
     /* Dagger2 - We are going to use dagger.android which includes
      * support for Activity and fragment injection so we need to include

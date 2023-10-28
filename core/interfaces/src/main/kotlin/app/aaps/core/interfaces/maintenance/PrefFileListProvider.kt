@@ -6,6 +6,7 @@ import java.io.File
 interface PrefFileListProvider {
 
     val logsPath: String
+    val resultPath: File
     fun ensureTempDirExists(): File
     fun ensureExportDirExists(): File
     fun ensureExtraDirExists(): File
