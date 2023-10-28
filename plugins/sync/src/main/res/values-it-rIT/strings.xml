@@ -98,7 +98,7 @@
     <string name="upload_now">Carica adesso</string>
     <string name="not_connected">Non connesso</string>
     <string name="read_only">Sola lettura</string>
-    <string name="working">Lavorazione</string>
+    <string name="working">In esecuzione</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
@@ -138,7 +138,7 @@
     <string name="no_success">non riuscito - controlla il telefono</string>
     <string name="wear_settings">Impostazioni smartwatch</string>
     <string name="wearcontrol_title">Controlli da smartwatch</string>
-    <string name="wearcontrol_summary">Imposta Temp-Target e inserisci trattamenti dallo smartwatch.</string>
+    <string name="wearcontrol_summary">Imposta Target temporanei e inserisci trattamenti dallo smartwatch.</string>
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
     <string name="wear_general_settings">Impostazioni generali</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>

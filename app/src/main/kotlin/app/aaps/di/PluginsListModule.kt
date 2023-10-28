@@ -66,7 +66,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.OmnipodDashPumpPlugin
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugin
-import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
@@ -176,12 +175,6 @@ abstract class PluginsListModule {
     @PumpDriver
     @IntoMap
     @IntKey(140)
-    abstract fun bindComboPlugin(plugin: ComboPlugin): PluginBase
-
-    @Binds
-    @PumpDriver
-    @IntoMap
-    @IntKey(141)
     abstract fun bindComboV2Plugin(plugin: ComboV2Plugin): PluginBase
 
     @Binds
