@@ -8,6 +8,7 @@ import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.constraints.PluginConstraints
 import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
@@ -60,6 +61,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Mock lateinit var insightDatabase: InsightDatabase
     @Mock lateinit var bgQualityCheck: BgQualityCheck
     @Mock lateinit var tddCalculator: TddCalculator
+    @Mock lateinit var importExportPrefs: ImportExportPrefs
 
     private lateinit var danaPump: DanaPump
     private lateinit var insightDbHelper: InsightDbHelper
@@ -142,17 +144,17 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         openAPSSMBPlugin =
             OpenAPSSMBPlugin(
                 injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, sp, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator
+                processedTbrEbData, hardLimits, profiler, sp, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs
             )
         openAPSSMBDynamicISFPlugin =
             OpenAPSSMBDynamicISFPlugin(
                 injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, sp, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator
+                processedTbrEbData, hardLimits, profiler, sp, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
                 injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, fabricPrivacy, dateUtil, persistenceLayer, glucoseStatusProvider, sp
+                processedTbrEbData, hardLimits, profiler, fabricPrivacy, dateUtil, persistenceLayer, glucoseStatusProvider, sp, importExportPrefs
             )
         safetyPlugin =
             SafetyPlugin(

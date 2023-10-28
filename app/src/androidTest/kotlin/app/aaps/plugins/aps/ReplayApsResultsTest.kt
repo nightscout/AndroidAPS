@@ -7,6 +7,8 @@ import app.aaps.TestApplication
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.storage.Storage
+import app.aaps.core.utils.JsonHelper
+import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.Before
@@ -33,7 +35,25 @@ class ReplayApsResultsTest @Inject constructor() {
 
     @Test
     fun replayTest() {
-        assertThat(readResultFiles().size).isGreaterThan(0)
+        val results = readResultFiles()
+        assertThat(results.size).isGreaterThan(0)
+        results.forEach { result ->
+            val algorithm = JsonHelper.safeGetString(result, "algorithm")
+            val input = JsonHelper.safeGetString(result, "input") ?: error("Missing input")
+            val output = JsonHelper.safeGetString(result, "output") ?: error("Missing output")
+            val iJson = JSONObject(input)
+            val oJson = JSONObject
+            when (algorithm) {
+                OpenAPSSMBPlugin::class.simpleName -> testOpenAPSSMB(input, output)
+            }
+        }
+    }
+
+    private fun testOpenAPSSMB(input: JSONObject, output: JSONObject) {
+
+    }
+    private fun testOpenAPSSMBDynamicISF(input: JSONObject, output: JSONObject) {
+
     }
 
     private fun readResultFiles(): MutableList<JSONObject> {
