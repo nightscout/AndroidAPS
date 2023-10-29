@@ -566,7 +566,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 result = sendPacketAndGetResponse(packet, COMMAND_SYNC_TIMEOUT_SEC)
                 if (!result && packet.failed) {
                     // Record may be broken for unkown reasons, try the next packet if that fails abort
-                    failureCount++                    
+                    failureCount++
+                    aapsLogger.error(LTag.PUMPCOMM, "Failed to sync record $sequence, failureCount: $failureCount")
                     if (failureCount == 1) {
                         // Show notification to alert user of failure
                         uiInteraction.addNotificationWithSound(
