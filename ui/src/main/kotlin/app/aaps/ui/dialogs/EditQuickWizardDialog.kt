@@ -87,7 +87,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 entry.storage.put("carbs", SafeParse.stringToInt(binding.carbsInput.text))
                 entry.storage.put("validFrom", fromSeconds)
                 entry.storage.put("validTo", toSeconds)
-                entry.storage.put("useBG", binding.useBg.isChecked)
+                entry.storage.put("useBG", checkBoxToRadioNumbers(binding.useBg.isChecked))
                 entry.storage.put("useCOB", checkBoxToRadioNumbers(binding.useCob.isChecked))
                 entry.storage.put("useIOB", checkBoxToRadioNumbers(binding.useIob.isChecked))
                 entry.storage.put("usePositiveIOBOnly", checkBoxToRadioNumbers(binding.usePositiveIobOnly.isChecked))
