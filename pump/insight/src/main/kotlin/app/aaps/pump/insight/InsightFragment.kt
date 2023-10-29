@@ -14,7 +14,6 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.pump.insight.descriptors.*
@@ -35,7 +34,6 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var _binding: LocalInsightFragmentBinding? = null
 
@@ -185,7 +183,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
             binding.status.text = rh.gs(string)
             binding.recoveryDurationLine.visibility = (it.state == InsightState.RECOVERING).toVisibility()
             if (it.state == InsightState.RECOVERING) {
-                binding.recoveryDuration.text = "${(it.recoveryDuration / 1000)}s"           // todo replace by second short string
+                binding.recoveryDuration.text = rh.gs(app.aaps.core.ui.R.string.secs, it.recoveryDuration / 1000)
             }
         }
     }
@@ -209,7 +207,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
                         dateUtil.hourAgo(lastConnection, rh)
                     }
                     binding.lastConnectedLine.visibility = View.VISIBLE
-                    binding.lastConnected.text = "${dateUtil.timeString(lastConnection)} ($ago)"
+                    binding.lastConnected.text = rh.gs(R.string.last_connection, dateUtil.timeString(lastConnection), ago)
                 }
             }
 
@@ -251,7 +249,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
         insightPlugin.batteryStatus?.let { batteryStatus ->
             binding.batteryLevelLine.visibility = View.VISIBLE
             binding.batteryLevel.text = rh.gs(app.aaps.core.ui.R.string.format_percent, batteryStatus.batteryAmount)
-        } ?:apply {
+        } ?: apply {
             binding.batteryLevelLine.visibility = View.GONE
         }
     }
@@ -259,7 +257,7 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     private fun getCartridgeStatusItem() {
         insightPlugin.cartridgeStatus?.let { cartridgeStatus ->
             binding.reservoirLevelLine.visibility = View.VISIBLE
-            val status: String = if (cartridgeStatus.isInserted) rh.gs( app.aaps.core.ui.R.string.format_insulin_units, cartridgeStatus.remainingAmount)  else rh.gs(R.string.not_inserted)
+            val status: String = if (cartridgeStatus.isInserted) rh.gs(app.aaps.core.ui.R.string.format_insulin_units, cartridgeStatus.remainingAmount) else rh.gs(R.string.not_inserted)
             binding.reservoirLevel.text = status
         } ?: apply {
             binding.reservoirLevelLine.visibility = View.GONE
@@ -269,18 +267,17 @@ class InsightFragment : DaggerFragment(), View.OnClickListener {
     private fun getTDDItems() {
         insightPlugin.totalDailyDose?.let { tdd ->
             binding.tddBolusLine.visibility = View.VISIBLE
-            binding.tddBolus.text = decimalFormatter.to2Decimal(tdd.bolus)
+            binding.tddBolus.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.bolus)
             binding.tddBasalLine.visibility = View.VISIBLE
-            binding.tddBasal.text = decimalFormatter.to2Decimal(tdd.basal)
+            binding.tddBasal.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.basal)
             binding.tddTotalLine.visibility = View.VISIBLE
-            binding.tddTotal.text = decimalFormatter.to2Decimal(tdd.bolusAndBasal)
-        }  ?: apply {
+            binding.tddTotal.text = rh.gs(app.aaps.core.ui.R.string.format_insulin_units, tdd.bolusAndBasal)
+        } ?: apply {
             binding.tddBolusLine.visibility = View.GONE
             binding.tddBasalLine.visibility = View.GONE
             binding.tddTotalLine.visibility = View.GONE
         }
     }
-
 
     private fun getBaseBasalRateItem() {
         insightPlugin.activeBasalRate?.let { activeBasalRate ->

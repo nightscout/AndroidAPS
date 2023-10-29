@@ -82,6 +82,6 @@
     <string name="pump_alert">Pump alert</string>
     <string name="pairing_information">Pairing information</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
-    <string name="separator" translatable="false"> : </string>
+    <string name="last_connection">%1$s (%2$s)</string>
 
 </resources>
