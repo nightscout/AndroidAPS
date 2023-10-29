@@ -75,7 +75,7 @@ internal interface NightscoutRemoteService {
     suspend fun createDeviceStatus(@Body remoteDeviceStatus: RemoteDeviceStatus): Response<RemoteCreateUpdateResponse>
 
     @GET("v3/devicestatus/history/{from}")
-    suspend fun getDeviceStatusModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteDeviceStatus>>>
+    suspend fun getDeviceStatusModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int): Response<NSResponse<List<RemoteDeviceStatus>>>
 
     @GET("v3/food")
     suspend fun getFoods(@Query("limit") limit: Int): Response<NSResponse<List<RemoteFood>>>

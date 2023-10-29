@@ -267,9 +267,9 @@ class NSAndroidClientImpl(
             throw UnsuccessfullNightscoutException()
     }
 
-    override suspend fun getDeviceStatusModifiedSince(from: Long): List<NSDeviceStatus> = callWrapper(dispatcher) {
+    override suspend fun getDeviceStatusModifiedSince(from: Long, limit: Int): List<NSDeviceStatus> = callWrapper(dispatcher) {
 
-        val response = api.getDeviceStatusModifiedSince(from)
+        val response = api.getDeviceStatusModifiedSince(from, limit)
         if (response.isSuccessful) {
             return@callWrapper response.body()?.result?.map(RemoteDeviceStatus::toNSDeviceStatus).toNotNull()
         } else if (response.code() in 400..499)

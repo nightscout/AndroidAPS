@@ -34,7 +34,7 @@ class LoadDeviceStatusWorker(
             nsClientV3Plugin.initialLoadFinished = true
 
             val from = dateUtil.now() - T.mins(7).msecs()
-            val deviceStatuses = nsAndroidClient.getDeviceStatusModifiedSince(from)
+            val deviceStatuses = nsAndroidClient.getDeviceStatusModifiedSince(from, NSClientV3Plugin.RECORDS_TO_LOAD)
             aapsLogger.debug("DEVICESTATUSES: $deviceStatuses")
             if (deviceStatuses.isNotEmpty()) {
                 rxBus.send(EventNSClientNewLog("◄ RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
