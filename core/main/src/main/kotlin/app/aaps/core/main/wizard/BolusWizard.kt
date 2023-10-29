@@ -38,7 +38,6 @@ import app.aaps.core.main.extensions.lowValueToUnitsToString
 import app.aaps.core.main.iob.round
 import app.aaps.core.main.utils.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.core.utils.HtmlHelper
 import app.aaps.database.entities.BolusCalculatorResult
 import app.aaps.database.entities.OfflineEvent
@@ -324,7 +323,7 @@ class BolusWizard @Inject constructor(
         )
     }
 
-    private fun confirmMessageAfterConstraints(context: Context, advisor: Boolean): Spanned {
+    private fun confirmMessageAfterConstraints(context: Context, advisor: Boolean, quickWizardEntry: QuickWizardEntry? = null): Spanned {
 
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
@@ -371,6 +370,23 @@ class BolusWizard @Inject constructor(
             actions.add(rh.gs(app.aaps.core.ui.R.string.alarminxmin, carbTime).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
         if (advisor)
             actions.add(rh.gs(app.aaps.core.ui.R.string.advisoralarm).formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor))
+
+        if (quickWizardEntry != null) {
+            val eCarbsYesNo = quickWizardEntry . storage . get ("useEcarbs")
+            if (eCarbsYesNo == QuickWizardEntry.YES) {
+                val timeOffset = SafeParse.stringToInt(quickWizardEntry.storage.get("time").toString())
+                val duration = SafeParse.stringToInt(quickWizardEntry.storage.get("duration").toString())
+                val carbs2 = SafeParse.stringToInt(quickWizardEntry.storage.get("carbs2").toString())
+
+                if (carbs2>0) {
+                    val ecarbsMessage = rh.gs(app.aaps.core.ui.R.string.format_carbs, carbs2) + "/" + duration + "h (+" + timeOffset + "min)"
+
+                    actions.add(
+                        rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs) + ": " + ecarbsMessage.formatColor(context, rh, app.aaps.core.ui.R.attr.infoColor)
+                    )
+                }
+            }
+        }
 
         return HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions))
     }
@@ -459,7 +475,7 @@ class BolusWizard @Inject constructor(
         val profile = profileFunction.getProfile() ?: return
         val pump = activePlugin.activePump
 
-        val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = false)
+        val confirmMessage = confirmMessageAfterConstraints(ctx, advisor = false, quickWizardEntry)
         OKDialog.showConfirmation(ctx, rh.gs(app.aaps.core.ui.R.string.boluswizard), confirmMessage, {
             if (insulinAfterConstraints > 0 || carbs > 0) {
                 if (useSuperBolus) {
@@ -557,10 +573,10 @@ class BolusWizard @Inject constructor(
                     override fun run() {
                         if (!result.success) {
                             uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                        } else {
+                       /* } else {
                             val messageECarbs =
                                 rh.gs(app.aaps.core.ui.R.string.uel_extended_carbs) + "\n" + "@" + dateUtil.timeString(eventTime) + " " + carbs2 + "g/" + duration + "h"
-                            ToastUtils.Long.infoToast(result.context, messageECarbs)
+                            ToastUtils.Long.infoToast(result.context, messageECarbs)*/
                         }
                     }
                 })
