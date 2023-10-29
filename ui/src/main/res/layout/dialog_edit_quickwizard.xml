@@ -229,7 +229,11 @@
 
                 <CheckBox
                     android:id="@+id/use_bg"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
                     android:text="@string/bg_label"
@@ -237,7 +241,11 @@
 
                 <CheckBox
                     android:id="@+id/use_temp_target"
-                    android:layout_width="155dp"
+                    android:layout_width="140dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
                     android:text="@string/tt_label"
@@ -254,7 +262,11 @@
 
                 <CheckBox
                     android:id="@+id/use_iob"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
                     android:text="@string/iob"
@@ -262,7 +274,11 @@
 
                 <CheckBox
                     android:id="@+id/use_positive_iob_only"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
                     android:text="@string/overview_edit_quickwizard_use_positive_iob_only"
@@ -279,7 +295,11 @@
 
                 <CheckBox
                     android:id="@+id/use_cob"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
                     android:text="@string/treatments_wizard_cob_label"
@@ -296,7 +316,11 @@
 
                 <CheckBox
                     android:id="@+id/use_trend_checkbox"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
                     android:text="@string/bg_trend_label"
@@ -309,7 +333,11 @@
 
                     <Spinner
                         android:id="@+id/use_trend"
-                        android:layout_width="153dp"
+                        android:layout_width="140dp"
+                        android:autoSizeTextType="uniform"
+                        android:autoSizeMinTextSize="7sp"
+                        android:autoSizeMaxTextSize="20sp"
+                        android:autoSizeStepGranularity="2sp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
                         android:entries="@array/yes_no_positiveonly_negativeonly"
@@ -317,7 +345,7 @@
 
                     <View
                         android:id="@+id/use_trend_subline"
-                        android:layout_width="match_parent"
+                        android:layout_width="132dp"
                         android:layout_height="1dp"
                         android:layout_marginStart="6dp"
                         android:background="@android:color/darker_gray"
@@ -335,7 +363,11 @@
 
                 <CheckBox
                     android:id="@+id/use_super_bolus"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
                     android:text="@string/overview_edit_quickwizard_superbolus"
@@ -352,7 +384,11 @@
 
                 <CheckBox
                     android:id="@+id/use_ecarbs"
-                    android:layout_width="match_parent"
+                    android:layout_width="140dp"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
                     android:gravity="start|center_vertical"
                     android:text="@string/additional_ecarbs"
