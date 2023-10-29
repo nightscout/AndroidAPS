@@ -214,6 +214,7 @@ dependencies {
 
     testImplementation(project(":shared:tests"))
     androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.jsonAssert)
 
 
     kaptAndroidTest(Libs.Dagger.androidProcessor)

@@ -3,7 +3,6 @@ package app.aaps.plugins.aps.openAPSSMB
 import android.content.Context
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
-import androidx.work.OneTimeWorkRequest
 import app.aaps.core.data.aps.AutosensResult
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.plugin.PluginDescription
@@ -40,6 +39,8 @@ import app.aaps.plugins.aps.OpenAPSFragment
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
+import app.aaps.plugins.aps.openAPSSMBDynamicISF.DetermineBasalAdapterSMBDynamicISFJS
+import app.aaps.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
@@ -66,7 +67,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val bgQualityCheck: BgQualityCheck,
     private val tddCalculator: TddCalculator,
-private val    importExportPrefs: ImportExportPrefs
+    private val importExportPrefs: ImportExportPrefs
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -298,7 +299,13 @@ private val    importExportPrefs: ImportExportPrefs
                 lastDetermineBasalAdapter = determineBasalAdapterSMBJS
                 lastAPSResult = determineBasalResultSMB as DetermineBasalResultSMB
                 lastAPSRun = now
-                importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json())
+                importExportPrefs.exportApsResult(
+                    when (determineBasalAdapterSMBJS) {
+                        is DetermineBasalAdapterSMBJS -> OpenAPSSMBPlugin::class.simpleName
+                        is DetermineBasalAdapterSMBDynamicISFJS -> OpenAPSSMBDynamicISFPlugin::class.simpleName
+                        else -> "Error"
+                    }, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json()
+                )
             }
         }
         rxBus.send(EventOpenAPSUpdateGui())

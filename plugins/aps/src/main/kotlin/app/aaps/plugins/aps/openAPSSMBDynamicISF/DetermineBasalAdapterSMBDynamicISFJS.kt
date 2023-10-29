@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMBDynamicISF
 
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
@@ -44,7 +45,7 @@ import java.security.InvalidParameterException
 import javax.inject.Inject
 import kotlin.math.ln
 
-class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
+class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
@@ -54,16 +55,21 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var dateUtil: DateUtil
 
-    private var profile = JSONObject()
-    private var mGlucoseStatus = JSONObject()
-    private var iobData: JSONArray? = null
-    private var mealData = JSONObject()
-    private var currentTemp = JSONObject()
-    private var autosensData = JSONObject()
-    private var microBolusAllowed = false
-    private var smbAlwaysAllowed = false
-    private var currentTime: Long = 0
-    private var flatBGsDetected = false
+    @VisibleForTesting var profile = JSONObject()
+    @VisibleForTesting var glucoseStatus = JSONObject()
+    @VisibleForTesting var iobData: JSONArray? = null
+    @VisibleForTesting var mealData = JSONObject()
+    @VisibleForTesting var currentTemp = JSONObject()
+    @VisibleForTesting var autosensData = JSONObject()
+    @VisibleForTesting var microBolusAllowed = false
+    @VisibleForTesting var smbAlwaysAllowed = false
+    @VisibleForTesting var currentTime: Long = 0
+    @VisibleForTesting var flatBGsDetected = false
+    @VisibleForTesting var tdd1D: Double? = null
+    @VisibleForTesting var tdd7D: Double? = null
+    @VisibleForTesting var tddLast24H: Double? = null
+    @VisibleForTesting var tddLast4H: Double? = null
+    @VisibleForTesting var tddLast8to4H: Double? = null
 
     override var currentTempParam: String? = null
     override var iobDataParam: String? = null
@@ -74,7 +80,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
 
     @Suppress("SpellCheckingInspection")
     override fun json(): JSONObject = JSONObject().apply {
-        put("glucoseStatus", mGlucoseStatus)
+        put("glucoseStatus", glucoseStatus)
         put("currenttemp", currentTemp)
         put("iob_data", iobData)
         put("profile", profile)
@@ -84,12 +90,17 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         put("reservoir_data", null)
         put("currentTime", currentTime)
         put("flatBGsDetected", flatBGsDetected)
+        put("tdd1D", tdd1D)
+        put("tdd7D", tdd7D)
+        put("tddLast24H", tddLast24H)
+        put("tddLast4H", tddLast4H)
+        put("tddLast8to4H", tddLast8to4H)
     }
 
     @Suppress("SpellCheckingInspection")
     override operator fun invoke(): DetermineBasalResultSMB? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
-        aapsLogger.debug(LTag.APS, "Glucose status: " + mGlucoseStatus.toString().also { glucoseStatusParam = it })
+        aapsLogger.debug(LTag.APS, "Glucose status: " + glucoseStatus.toString().also { glucoseStatusParam = it })
         aapsLogger.debug(LTag.APS, "IOB data:       " + iobData.toString().also { iobDataParam = it })
         aapsLogger.debug(LTag.APS, "Current temp:   " + currentTemp.toString().also { currentTempParam = it })
         aapsLogger.debug(LTag.APS, "Profile:        " + profile.toString().also { profileParam = it })
@@ -129,7 +140,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
 
                 //prepare parameters
                 val params = arrayOf(
-                    makeParam(mGlucoseStatus, rhino, scope),
+                    makeParam(glucoseStatus, rhino, scope),
                     makeParam(currentTemp, rhino, scope),
                     makeParamArray(iobData, rhino, scope),
                     makeParam(profile, rhino, scope),
@@ -169,7 +180,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         } finally {
             Context.exit()
         }
-        glucoseStatusParam = mGlucoseStatus.toString()
+        glucoseStatusParam = glucoseStatus.toString()
         iobDataParam = iobData.toString()
         currentTempParam = currentTemp.toString()
         profileParam = profile.toString()
@@ -201,11 +212,11 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         tddLast4H: Double?,
         tddLast8to4H: Double?
     ) {
-        tdd1D ?: throw InvalidParameterException()
-        tdd7D ?: throw InvalidParameterException()
-        tddLast24H ?: throw InvalidParameterException()
-        tddLast4H ?: throw InvalidParameterException()
-        tddLast8to4H ?: throw InvalidParameterException()
+        this.tdd1D = tdd1D ?: throw InvalidParameterException()
+        this.tdd7D = tdd7D ?: throw InvalidParameterException()
+        this.tddLast24H = tddLast24H ?: throw InvalidParameterException()
+        this.tddLast4H = tddLast4H ?: throw InvalidParameterException()
+        this.tddLast8to4H = tddLast8to4H ?: throw InvalidParameterException()
 
         val pump = activePlugin.activePump
         val pumpBolusStep = pump.pumpDescription.bolusStep
@@ -276,17 +287,17 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         if (tb != null) currentTemp.put("minutesrunning", tb.getPassedDurationToTimeInMinutes(now))
 
         iobData = iobArray.convertToJSONArray(dateUtil)
-        mGlucoseStatus.put("glucose", glucoseStatus.glucose)
-        mGlucoseStatus.put("noise", glucoseStatus.noise)
+        this.glucoseStatus.put("glucose", glucoseStatus.glucose)
+        this.glucoseStatus.put("noise", glucoseStatus.noise)
         if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
-            mGlucoseStatus.put("delta", glucoseStatus.shortAvgDelta)
+            this.glucoseStatus.put("delta", glucoseStatus.shortAvgDelta)
         } else {
-            mGlucoseStatus.put("delta", glucoseStatus.delta)
+            this.glucoseStatus.put("delta", glucoseStatus.delta)
         }
 
-        mGlucoseStatus.put("short_avgdelta", glucoseStatus.shortAvgDelta)
-        mGlucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
-        mGlucoseStatus.put("date", glucoseStatus.date)
+        this.glucoseStatus.put("short_avgdelta", glucoseStatus.shortAvgDelta)
+        this.glucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
+        this.glucoseStatus.put("date", glucoseStatus.date)
         this.mealData.put("carbs", mealData.carbs)
         this.mealData.put("mealCOB", mealData.mealCOB)
         this.mealData.put("slopeFromMaxDeviation", mealData.slopeFromMaxDeviation)
