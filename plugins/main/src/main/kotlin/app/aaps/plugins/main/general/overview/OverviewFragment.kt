@@ -963,9 +963,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
                 )
             } else {
-                // If the target is not the same as set in the profile then oref has overridden it
                 profileFunction.getProfile()?.let { profile ->
-                    val targetUsed = loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                    // If the target is not the same as set in the profile then oref has overridden it
+                    val targetUsed =
+                        if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                        else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "targetBg")
+                        else 0.0
 
                     if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                         aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
@@ -1111,7 +1114,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val isfMgdl = profile?.getIsfMgdl()
         val variableSens =
             if (config.APS && request is VariableSensitivityResult) request.variableSens ?: 0.0
-            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult(injector).json, "variable_sens")
+            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "variable_sens")
             else 0.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {
