@@ -47,7 +47,7 @@
     <string name="description_objectives">Mokymosi programa</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
     <string name="objectives_next_button">Toliau</string>
-    <string name="objectives_previous_button">Ankstesnis</string>
+    <string name="objectives_previous_button">Atgal</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
 </resources>
