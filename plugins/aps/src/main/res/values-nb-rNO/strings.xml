@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">Juster sensitivitet og basal</string>
+    <string name="dynisf_adjust_sensitivity_summary">Hvis aktivert bruker DynISF de siste 24t TDD/7D TDD som grunnlag for justering av kalkulert ISF og også for økning og reduksjon av basaldose, på samme måte som standard Autosens gjør</string>
     <string name="DynISFAdjust_title" formatted="false">Dynamisk ISF justeringsfaktor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor for dynamisk ISF. Verdier over 100% vil gi mer aggressive korreksjonsdoser, mens verdier under 100% vil gi mildere korreksjonsdoser.</string>
     <string name="high_temptarget_raises_sensitivity_title">Høyt midl. mål øker sensitiviteten</string>
