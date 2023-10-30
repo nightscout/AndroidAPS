@@ -4,11 +4,23 @@ import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.HR
+import app.aaps.core.data.model.OE
+import app.aaps.core.data.model.TE
+import app.aaps.core.data.ue.Action
+import app.aaps.core.data.ue.Sources
+import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.time.Clock
@@ -21,10 +33,15 @@ import javax.inject.Singleton
  */
 @Singleton
 class LoopHubImpl @Inject constructor(
+    private val aapsLogger: AAPSLogger,
+    private val commandQueue: CommandQueue,
+    private val constraintChecker: ConstraintsChecker,
     private val iobCobCalculator: IobCobCalculator,
     private val loop: Loop,
     private val profileFunction: ProfileFunction,
     private val persistenceLayer: PersistenceLayer,
+    private val userEntryLogger: UserEntryLogger,
+    private val sp: SP
 ) : LoopHub {
 
     val disposable = CompositeDisposable()
@@ -41,7 +58,12 @@ class LoopHubImpl @Inject constructor(
 
     /** Returns the glucose unit (mg/dl or mmol/l) as selected by the user. */
     override val glucoseUnit: GlucoseUnit
-        get() = profileFunction.getProfile()?.units ?: GlucoseUnit.MGDL
+        get() = GlucoseUnit.fromText(
+            sp.getString(
+                app.aaps.core.utils.R.string.key_units,
+                GlucoseUnit.MGDL.asText
+            )
+        )
 
     /** Returns the remaining bolus insulin on board. */
     override val insulinOnboard: Double
@@ -64,10 +86,49 @@ class LoopHubImpl @Inject constructor(
             return if (apsResult == null) Double.NaN else apsResult.percent / 100.0
         }
 
+    /** Tells the loop algorithm that the pump is physically connected. */
+    override fun connectPump() {
+        disposable += persistenceLayer.cancelCurrentOfflineEvent(clock.millis(), Action.RECONNECT, Sources.Garmin).subscribe()
+        commandQueue.cancelTempBasal(true, null)
+    }
+
+    /** Tells the loop algorithm that the pump will be physically disconnected
+     *  for the given number of minutes. */
+    override fun disconnectPump(minutes: Int) {
+        currentProfile?.let { p ->
+            loop.goToZeroTemp(
+                durationInMinutes = minutes,
+                profile = p,
+                reason = OE.Reason.DISCONNECT_PUMP,
+                action = Action.DISCONNECT,
+                source = Sources.Garmin,
+                listValues = listOf(ValueWithUnit.Minute(minutes))
+            )
+        }
+    }
+
     /** Retrieves the glucose values starting at from. */
     override fun getGlucoseValues(from: Instant, ascending: Boolean): List<GV> {
         return persistenceLayer.getBgReadingsDataFromTime(from.toEpochMilli(), ascending)
             .blockingGet()
+    }
+
+    /** Notifies the system that carbs were eaten and stores the value. */
+    override fun postCarbs(carbohydrates: Int) {
+        aapsLogger.info(LTag.GARMIN, "post $carbohydrates g carbohydrates")
+        val carbsAfterConstraints =
+            carbohydrates.coerceAtMost(constraintChecker.getMaxCarbsAllowed().value())
+        userEntryLogger.log(
+            action = Action.CARBS,
+            source = Sources.Garmin,
+            note = null,
+            listValues = listOf(ValueWithUnit.Gram(carbsAfterConstraints))
+        )
+        val detailedBolusInfo = DetailedBolusInfo().apply {
+            eventType = TE.Type.CARBS_CORRECTION
+            carbs = carbsAfterConstraints.toDouble()
+        }
+        commandQueue.bolus(detailedBolusInfo, null)
     }
 
     /** Stores hear rate readings that a taken and averaged of the given interval. */

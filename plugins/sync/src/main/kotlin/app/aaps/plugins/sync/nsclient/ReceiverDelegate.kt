@@ -82,7 +82,11 @@ class ReceiverDelegate @Inject constructor(
         val newNetworkState = calculateStatus(ev)
         if (newNetworkState != allowedNetworkState) {
             allowedNetworkState = newNetworkState
-            if (!newNetworkState) blockingReason = rh.gs(R.string.blocked_by_connectivity)
+            if (!newNetworkState) {
+                blockingReason =
+                    if (!ev.isAnyConnection) rh.gs(R.string.no_connectivity)
+                    else rh.gs(R.string.blocked_by_connectivity)
+            }
             processStateChange()
         }
     }
