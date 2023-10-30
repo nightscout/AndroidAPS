@@ -1,6 +1,5 @@
 package app.aaps.core.nssdk.networking
 
-import com.google.gson.JsonObject
 import app.aaps.core.nssdk.remotemodel.LastModified
 import app.aaps.core.nssdk.remotemodel.NSResponse
 import app.aaps.core.nssdk.remotemodel.RemoteCreateUpdateResponse
@@ -9,6 +8,7 @@ import app.aaps.core.nssdk.remotemodel.RemoteEntry
 import app.aaps.core.nssdk.remotemodel.RemoteFood
 import app.aaps.core.nssdk.remotemodel.RemoteStatusResponse
 import app.aaps.core.nssdk.remotemodel.RemoteTreatment
+import com.google.gson.JsonObject
 import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.http.Body
@@ -56,7 +56,7 @@ internal interface NightscoutRemoteService {
     @DELETE("v3/entries/{identifier}")
     suspend fun deleteEntry(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
 
-    @GET("v3/treatments?sort=date")
+    @GET("v3/treatments?sort=created_at")
     suspend fun getTreatmentsNewerThan(@Query(value = "created_at\$gt", encoded = true) createdAt: String, @Query("limit") limit: Int): Response<NSResponse<List<RemoteTreatment>>>
 
     @GET("v3/treatments/history/{from}")

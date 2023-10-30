@@ -52,6 +52,7 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_adjust_sensitivity"
+            android:summary="@string/dynisf_adjust_sensitivity_summary"
             android:title="@string/dynisf_adjust_sensitivity" />
 
         <SwitchPreference
