@@ -46,7 +46,7 @@
     <string name="patch_manually_turning_off_alarm_desc_1">Vienpusiškai deaktyvavus, dėl ryšio klaidos rezervuaro aliarmo garsas gali nesustoti.</string>
     <string name="patch_manually_turning_off_alarm_desc_2">Tokiu atveju Jūs galite jį visiškai nutildyti, pradurdami rankinio aliarmo atšaukimo prievadą, kaip nurodyta toliau:</string>
     <string name="patch_manually_turning_off_alarm_step_1">1. Pašalinkite rezervuarą nuo kūno ir nulupkite lipnią juostą.</string>
-    <string name="patch_manually_turning_off_alarm_step_2">2. Naudodami smeigtuką tvirtai pradurkite skylę šalia insulino užpildymo porto.</string>
+    <string name="patch_manually_turning_off_alarm_step_2">2. Naudodami smeigtuką pradurkite skylę šalia insulino užpildymo porto.</string>
     <string name="patch_wake_up">Pildomas insulinas</string>
     <string name="patch_wake_up_step">1/6</string>
     <string name="patch_step_desc_1">1.</string>
