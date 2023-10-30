@@ -2,7 +2,7 @@
 <resources>
     <string name="units">Vienetai</string>
     <string name="setupwizard_units_prompt">Pasirinkite vienetus, kurių vertes norite parodyti</string>
-    <string name="next_button">Kitas</string>
+    <string name="next_button">Toliau</string>
     <string name="previous_button">Ankstesnis</string>
     <string name="nav_setupwizard">Sąrankos vedlys</string>
     <string name="setupwizard_finish">UŽBAIGTI</string>
