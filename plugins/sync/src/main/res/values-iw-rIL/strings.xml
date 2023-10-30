@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">מסנכרן את הנתונים עם נייטסקאוט באמצעות v3 API</string>
     <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
     <string name="blocked_by_connectivity">חסום ע\"י הגדרות חיבור</string>
+    <string name="no_connectivity">אין חיבור</string>
     <string name="unsupported_ns_version">גרסה לא נתמכת של Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">מעלה</string>
