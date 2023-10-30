@@ -147,6 +147,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             trend = true
         }
         val percentage = if (usePercentage() == DEFAULT) sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100) else percentage()
+
         return BolusWizard(injector).doCalc(
             profile,
             profileName,
@@ -163,8 +164,9 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             superBolus,
             useTempTarget() == YES,
             trend,
-            false,
+            useAlarm() == YES,
             buttonText(),
+            carbTime(),
             quickWizard = true,
             positiveIOBOnly = uPositiveIOBOnly
         ) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
@@ -213,4 +215,6 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     fun time(): Int = safeGetInt(storage, "time")
 
     fun duration(): Int = safeGetInt(storage, "duration")
+    fun carbTime(): Int = safeGetInt(storage, "carbTime")
+    fun useAlarm(): Int = safeGetInt(storage, "useAlarm", NO)
 }

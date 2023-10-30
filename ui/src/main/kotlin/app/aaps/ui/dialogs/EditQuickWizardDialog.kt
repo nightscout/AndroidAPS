@@ -85,6 +85,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             try {
                 entry.storage.put("buttonText", binding.buttonEdit.text.toString())
                 entry.storage.put("carbs", SafeParse.stringToInt(binding.carbsInput.text))
+                entry.storage.put("carbTime", SafeParse.stringToInt(binding.carbTimeInput.text))
+                entry.storage.put("useAlarm", checkBoxToRadioNumbers(binding.alarm.isChecked))
                 entry.storage.put("validFrom", fromSeconds)
                 entry.storage.put("validTo", toSeconds)
                 entry.storage.put("useBG", checkBoxToRadioNumbers(binding.useBg.isChecked))
@@ -206,6 +208,11 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
 
+        binding.carbTimeInput.setParams(
+            savedInstanceState?.getDouble("carb_time_input")
+                ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, timeTextWatcher
+        )
+
         binding.correctionInput.value = entry.percentage().toDouble()
 
         toSeconds = entry.validTo()
@@ -227,6 +234,8 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             }
         }
         binding.carbsInput.value = SafeParse.stringToDouble(entry.carbs().toString())
+        binding.carbTimeInput.value = SafeParse.stringToDouble(entry.carbTime().toString())
+        binding.alarm.isChecked = radioNumbersToCheckBox(entry.useAlarm())
 
         binding.useBg.isChecked = radioNumbersToCheckBox(entry.useBG())
         binding.useCob.isChecked = radioNumbersToCheckBox(entry.useCOB())
@@ -339,6 +348,19 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+    }
+
+    private val timeTextWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable) {
+            _binding?.let { binding ->
+                binding.alarm.isChecked = binding.carbTimeInput.value > 0
+            }
+        }
+
+        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
+
+        }
     }
 
     //Radio Group to CheckBox transition - backward JSON compatibility
