@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Pompă suspendată din cauza depăşirii valorii maxime zilnice a insulinei</string>
     <string name="patch_not_active">Patch neactivat</string>
     <string name="pump_setting_failed">Setarea setărilor utilizatorului pe pompă a eșuat!</string>
+    <string name="pump_sync_error">Eroare la sincronizarea istoricului de la pompă, o înregistrare a fost omisă. Verifică fila de tratament pentru a vedea dacă bolusul este sincronizat corect. Amână alarma și, dacă eroarea reapare, schimbă patch-ul sau baza pompei.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Stare BLE</string>
     <string name="last_connection_label">Ultima conexiune</string>
