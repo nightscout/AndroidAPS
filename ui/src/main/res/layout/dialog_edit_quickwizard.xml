@@ -64,8 +64,8 @@
                 android:id="@+id/device_phone_checkbox"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:gravity="start|center_vertical"
                 android:background="@drawable/ic_smartphone"
+                android:gravity="start|center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <View
@@ -108,8 +108,8 @@
                 android:id="@+id/device_watch_checkbox"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:gravity="start|center_vertical"
                 android:background="@drawable/ic_watch"
+                android:gravity="start|center_vertical"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
@@ -141,7 +141,7 @@
                         android:layout_weight="1"
                         android:labelFor="@id/carbs_input"
                         android:minWidth="70dp"
-                        android:padding="10dp"
+                        android:paddingVertical="10dp"
                         android:text="@string/carbs"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -179,7 +179,7 @@
                     android:layout_weight="1"
                     android:labelFor="@id/carbs_input"
                     android:minWidth="70dp"
-                    android:padding="10dp"
+                    android:paddingVertical="10dp"
                     android:text="@string/treatments_wizard_correction_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -200,6 +200,63 @@
                     android:padding="10dp"
                     android:text="%"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/carb_time_input_label"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autoSizeMaxTextSize="20sp"
+                        android:autoSizeMinTextSize="6sp"
+                        android:autoSizeTextType="uniform"
+                        android:gravity="center_vertical"
+                        android:maxLines="2"
+                        android:paddingEnd="2dp"
+                        android:text="@string/carb_time_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/alarm"
+                        android:layout_width="53dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:checked="false"
+                        android:contentDescription="@string/a11y_set_carb_timer"
+                        android:drawableEnd="@drawable/ic_access_alarm_24dp"
+                        android:layoutDirection="rtl" />
+
+                </LinearLayout>
+
+                <app.aaps.core.ui.elements.NumberPicker
+                    android:id="@+id/carb_time_input"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    app:contentDescription="carb time" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="start"
+                    android:padding="5dp"
+                    android:text="@string/unit_minute_short"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
 
             </TableRow>
 
@@ -230,11 +287,11 @@
                 <CheckBox
                     android:id="@+id/use_bg"
                     android:layout_width="140dp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="7sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
                     android:text="@string/bg_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -242,11 +299,11 @@
                 <CheckBox
                     android:id="@+id/use_temp_target"
                     android:layout_width="140dp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="7sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
                     android:text="@string/tt_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -263,11 +320,11 @@
                 <CheckBox
                     android:id="@+id/use_iob"
                     android:layout_width="140dp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="7sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
                     android:text="@string/iob"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -275,11 +332,11 @@
                 <CheckBox
                     android:id="@+id/use_positive_iob_only"
                     android:layout_width="140dp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="7sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
                     android:text="@string/overview_edit_quickwizard_use_positive_iob_only"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -296,11 +353,11 @@
                 <CheckBox
                     android:id="@+id/use_cob"
                     android:layout_width="140dp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="7sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
                     android:text="@string/treatments_wizard_cob_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -317,11 +374,11 @@
                 <CheckBox
                     android:id="@+id/use_trend_checkbox"
                     android:layout_width="140dp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="7sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
                     android:text="@string/bg_trend_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -334,12 +391,12 @@
                     <Spinner
                         android:id="@+id/use_trend"
                         android:layout_width="140dp"
-                        android:autoSizeTextType="uniform"
-                        android:autoSizeMinTextSize="7sp"
-                        android:autoSizeMaxTextSize="20sp"
-                        android:autoSizeStepGranularity="2sp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="2dp"
+                        android:autoSizeMaxTextSize="20sp"
+                        android:autoSizeMinTextSize="7sp"
+                        android:autoSizeStepGranularity="2sp"
+                        android:autoSizeTextType="uniform"
                         android:entries="@array/yes_no_positiveonly_negativeonly"
                         android:gravity="start" />
 
@@ -364,11 +421,11 @@
                 <CheckBox
                     android:id="@+id/use_super_bolus"
                     android:layout_width="140dp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="7sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
                     android:text="@string/overview_edit_quickwizard_superbolus"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -385,11 +442,11 @@
                 <CheckBox
                     android:id="@+id/use_ecarbs"
                     android:layout_width="140dp"
-                    android:autoSizeTextType="uniform"
-                    android:autoSizeMinTextSize="7sp"
-                    android:autoSizeMaxTextSize="20sp"
-                    android:autoSizeStepGranularity="2sp"
                     android:layout_height="match_parent"
+                    android:autoSizeMaxTextSize="20sp"
+                    android:autoSizeMinTextSize="7sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
                     android:text="@string/additional_ecarbs"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
