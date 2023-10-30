@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Il micro è sospeso a causa del superamento della massima insulina giornaliera</string>
     <string name="patch_not_active">Patch non attivata</string>
     <string name="pump_setting_failed">Errore nella configurazione delle impostazioni utente sul micro!</string>
+    <string name="pump_sync_error">Errore durante la sincronizzazione della cronologia del micro, un record è stato saltato. Controllare la scheda trattamenti per verificare se il bolo è stato sincronizzato correttamente. Posporre l\'allarme e se l\'errore continua a riproporsi cambiare patch o pompa.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Stato BLE</string>
     <string name="last_connection_label">Ultima connessione</string>
