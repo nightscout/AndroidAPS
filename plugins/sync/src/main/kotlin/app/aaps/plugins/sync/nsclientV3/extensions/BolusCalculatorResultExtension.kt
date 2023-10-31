@@ -6,7 +6,6 @@ import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
 import app.aaps.core.nssdk.localmodel.treatment.NSBolusWizard
 import com.google.gson.Gson
-import com.google.gson.JsonSyntaxException
 
 fun NSBolusWizard.toBolusCalculatorResult(): BCR? =
     try {
@@ -17,7 +16,7 @@ fun NSBolusWizard.toBolusCalculatorResult(): BCR? =
                 it.ids.nightscoutId = identifier
                 it.version = 0
             }
-    } catch (e: JsonSyntaxException) {
+    } catch (e: Exception) {
         null
     }
 
