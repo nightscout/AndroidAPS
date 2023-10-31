@@ -1,6 +1,7 @@
 package app.aaps.plugins.sync.nsclientV3.extensions
 
 import app.aaps.core.data.model.BCR
+import app.aaps.core.data.model.IDs
 import app.aaps.core.data.time.T
 import app.aaps.core.nssdk.localmodel.entry.NsUnits
 import app.aaps.core.nssdk.localmodel.treatment.EventType
@@ -14,7 +15,7 @@ fun NSBolusWizard.toBolusCalculatorResult(): BCR? =
             .also {
                 it.id = 0
                 it.isValid = isValid
-                it.ids.nightscoutId = identifier
+                it.ids = IDs().apply { nightscoutId = identifier }
                 it.version = 0
             }
     } catch (e: JsonSyntaxException) {
