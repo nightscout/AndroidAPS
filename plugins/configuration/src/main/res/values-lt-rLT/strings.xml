@@ -29,7 +29,7 @@
     <string name="syncinfotext">Sinchronizuokite duomenis debesyje. Jūs galite kol kas praleisti šį veiksmą, bet negalėsite baigti mokymosi programos, kol nenustatysite duomenų perdavimo į Nightscout arba Tidepool.</string>
     <string name="status">Statusas:</string>
     <string name="patient_name">Paciento vardas</string>
-    <string name="patient_name_summary">Pateikite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
+    <string name="patient_name_summary">Įrašykite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
     <string name="privacy_settings">Privatumo nuostatos</string>
     <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos klaidas. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
     <string name="diawarning">Atminkite: DKS profiliams reikia IVT bent 5 val. IVT = 5 - 6 val DKS profilyje atitinka IVT = 3 val sename (pompos terapijos) insulino profilyje.</string>
