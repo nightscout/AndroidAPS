@@ -170,7 +170,7 @@
     <string name="nsclient_howcanyou">Kaip galite stebėti AndroidAPS (pavyzdžiui, Jūsų vaiko) nuotoliniu būdu?</string>
     <string name="nsclient_nightscout">Nuotoliniu būdu stebėti AndroidAPS galite per AAPSClient, Nightscout programėlę bei Nightscout svetainę.</string>
     <string name="nsclient_dexcomfollow">Kitos programėlės (pvz. Dexcom follow, Xdrip follow) leidžia sekti kai kuriuos parametrus (pvz. glikemiją) nuotoliniu būdu, tačiau naudoja kitus algoritmus, todėl gali pateikti neteisingas AIO ir AAO reikšmes.</string>
-    <string name="nsclient_data">Norint nuotoliniu būdu stebėti AndroidAPS, abu prietaisai turi turėti interneto prieigą (per Wi-Fi arba mobilius duomenis).</string>
+    <string name="nsclient_data">Norint nuotoliniu būdu stebėti AndroidAPS, abu prietaisai turi turėti interneto prieigą (per Wi-Fi arba mobiliuosius duomenis).</string>
     <string name="nsclient_fullcontrol">AAPSClient naudojamas nuotoliniam stebėjimui ir pilnai AndroidAPS kontrolei.</string>
     <string name="nsclient_hint1">https://wiki.aaps.app/en/latest/Children/Children.html</string>
     <string name="isf_label_exam">Jautrumo insulinui faktorius (JIF)</string>
