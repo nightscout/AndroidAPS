@@ -135,7 +135,7 @@
     <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
     <string name="average">Vidurkis</string>
-    <string name="tir">LNR</string>
+    <string name="tir">LTR</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">PAŠALINTI</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
@@ -557,7 +557,7 @@
     <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
     <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių susiejimo.</string>
     <!--    Preferences -->
-    <string name="nav_plugin_preferences">Įskiepių nustatymai</string>
+    <string name="nav_plugin_preferences">Pradžios ekrano nustatymai</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
     <!-- About -->
