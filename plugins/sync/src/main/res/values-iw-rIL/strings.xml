@@ -49,7 +49,7 @@
     <string name="full_sync_comment">סנכרון מלא? זה ייקח שעות מרובות ולא תוכלו לראות נתונים חדשים בנייטסקאוט.</string>
     <string name="ns_sync_options">סינכרון</string>
     <string name="ns_upload_summary">פרופילים, בולוסים, פחמימות ומינונים בזאליים זמניים נטענים לנייטסקאוט</string>
-    <string name="ns_upload">טוען נתוני סוכר לנייטסקאוט</string>
+    <string name="ns_upload">טוען נתוני טיפול לנייטסקאוט</string>
     <string name="ns_receive_profile_store">אחזר פרופילים שמורים</string>
     <string name="ns_receive_profile_store_summary">סינכרון פרופילים מעורך הפרופיל של נייטסקאוט לפרופיל מקומי</string>
     <string name="ns_receive_temp_target">קבלת ערכי מטרה זמניים</string>
