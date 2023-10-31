@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.db.ProcessedTbrEbData
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profiling.Profiler
@@ -46,7 +47,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     persistenceLayer: PersistenceLayer,
     glucoseStatusProvider: GlucoseStatusProvider,
     bgQualityCheck: BgQualityCheck,
-    tddCalculator: TddCalculator
+    tddCalculator: TddCalculator,
+    importExportPrefs: ImportExportPrefs
 ) : OpenAPSSMBPlugin(
     injector,
     aapsLogger,
@@ -65,7 +67,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     persistenceLayer,
     glucoseStatusProvider,
     bgQualityCheck,
-    tddCalculator
+    tddCalculator,
+    importExportPrefs
 ) {
 
     init {

@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSAMA
 
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
@@ -40,7 +41,7 @@ import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import kotlin.math.min
 
-class DetermineBasalAdapterAMAJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
+class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -49,12 +50,12 @@ class DetermineBasalAdapterAMAJS internal constructor(private val scriptReader: 
     @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var dateUtil: DateUtil
 
-    private var profile = JSONObject()
-    private var glucoseStatus = JSONObject()
-    private var iobData: JSONArray? = null
-    private var mealData = JSONObject()
-    private var currentTemp = JSONObject()
-    private var autosensData = JSONObject()
+    @VisibleForTesting var profile = JSONObject()
+    @VisibleForTesting var glucoseStatus = JSONObject()
+    @VisibleForTesting var iobData: JSONArray? = null
+    @VisibleForTesting var mealData = JSONObject()
+    @VisibleForTesting var currentTemp = JSONObject()
+    @VisibleForTesting var autosensData = JSONObject()
 
     override var currentTempParam: String? = null
     override var iobDataParam: String? = null
@@ -62,6 +63,16 @@ class DetermineBasalAdapterAMAJS internal constructor(private val scriptReader: 
     override var profileParam: String? = null
     override var mealDataParam: String? = null
     override var scriptDebug = ""
+
+    @Suppress("SpellCheckingInspection")
+    override fun json(): JSONObject = JSONObject().apply {
+        put("glucoseStatus", glucoseStatus)
+        put("currenttemp", currentTemp)
+        put("iob_data", iobData)
+        put("profile", profile)
+        put("autosens_data", autosensData)
+        put("meal_data", mealData)
+    }
 
     @Suppress("SpellCheckingInspection")
     override operator fun invoke(): APSResult? {

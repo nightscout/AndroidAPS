@@ -34,6 +34,7 @@ abstract class ConfigurationModule {
     @ContributesAndroidInjector abstract fun contributesMaintenanceFragment(): MaintenanceFragment
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
     @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
+    @ContributesAndroidInjector abstract fun contributesApsResultExportWorker(): ImportExportPrefsImpl.ApsResultExportWorker
     @ContributesAndroidInjector abstract fun contributesPrefImportListActivity(): PrefImportListActivity
     @ContributesAndroidInjector abstract fun contributesCustomWatchfaceImportListActivity(): CustomWatchfaceImportListActivity
     @ContributesAndroidInjector abstract fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat

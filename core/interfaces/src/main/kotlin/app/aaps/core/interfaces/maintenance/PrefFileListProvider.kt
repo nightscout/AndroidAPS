@@ -6,11 +6,14 @@ import java.io.File
 interface PrefFileListProvider {
 
     val logsPath: String
+    val resultPath: File
     fun ensureTempDirExists(): File
     fun ensureExportDirExists(): File
     fun ensureExtraDirExists(): File
+    fun ensureResultDirExists(): File
     fun newExportFile(): File
     fun newExportCsvFile(): File
+    fun newResultFile(): File
     fun newCwfFile(filename: String, withDate: Boolean = true): File
     fun listPreferenceFiles(loadMetadata: Boolean = false): MutableList<PrefsFile>
     fun listCustomWatchfaceFiles(): MutableList<CwfFile>

@@ -15,6 +15,7 @@ import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.Profile
@@ -59,7 +60,8 @@ class OpenAPSAMAPlugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val sp: SP
+    private val sp: SP,
+    private val importExportPrefs: ImportExportPrefs
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -230,6 +232,7 @@ class OpenAPSAMAPlugin @Inject constructor(
             lastDetermineBasalAdapter = determineBasalAdapterAMAJS
             lastAPSResult = determineBasalResultAMA as DetermineBasalResultAMA
             lastAPSRun = now
+            importExportPrefs.exportApsResult(this::class.simpleName, determineBasalAdapterAMAJS.json(), determineBasalResultAMA.json())
         }
         rxBus.send(EventOpenAPSUpdateGui())
 

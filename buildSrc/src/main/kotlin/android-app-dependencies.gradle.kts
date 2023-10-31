@@ -10,7 +10,8 @@ android {
         versionCode = Versions.versionCode
         version = Versions.appVersion
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // Removed after Dagger injection setup in instrumentation tests
+        //testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildFeatures {

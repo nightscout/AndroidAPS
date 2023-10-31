@@ -49,6 +49,7 @@ class PrefFileListProviderImpl @Inject constructor(
     private val exportsPath = File(path, "AAPS" + File.separator + "exports")
     private val tempPath = File(path, "AAPS" + File.separator + "temp")
     private val extraPath = File(path, "AAPS" + File.separator + "extra")
+    override val resultPath = File(path, "AAPS" + File.separator + "results")
     override val logsPath: String = File(path, "AAPS" + File.separator + "logs" + File.separator + context.packageName).absolutePath
 
     companion object {
@@ -156,6 +157,13 @@ class PrefFileListProviderImpl @Inject constructor(
         return extraPath
     }
 
+    override fun ensureResultDirExists(): File {
+        if (!resultPath.exists()) {
+            resultPath.mkdirs()
+        }
+        return resultPath
+    }
+
     override fun newExportFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(aapsPath, timeLocal + "_" + config.get().FLAVOR + ".json")
@@ -164,6 +172,11 @@ class PrefFileListProviderImpl @Inject constructor(
     override fun newExportCsvFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(exportsPath, timeLocal + "_UserEntry.csv")
+    }
+
+    override fun newResultFile(): File {
+        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+        return File(resultPath, "$timeLocal.json")
     }
 
     override fun newCwfFile(filename: String, withDate: Boolean): File {

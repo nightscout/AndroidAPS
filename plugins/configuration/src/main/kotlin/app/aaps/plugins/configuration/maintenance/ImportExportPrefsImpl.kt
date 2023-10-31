@@ -51,6 +51,7 @@ import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dialogs.TwoMessagesAlertDialog
 import app.aaps.core.ui.dialogs.WarningDialog
 import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.plugins.configuration.R
 import app.aaps.plugins.configuration.activities.DaggerAppCompatActivityWithResult
 import app.aaps.plugins.configuration.maintenance.data.PrefFileNotFoundError
@@ -64,6 +65,7 @@ import app.aaps.shared.impl.weardata.ZipWatchfaceFormat
 import dagger.Reusable
 import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
+import org.json.JSONObject
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -87,7 +89,9 @@ class ImportExportPrefsImpl @Inject constructor(
     private val prefFileList: PrefFileListProvider,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val context: Context,
+    private val dataWorkerStorage: DataWorkerStorage
 ) : ImportExportPrefs {
 
     override fun prefsFileExists(): Boolean {
@@ -446,6 +450,54 @@ class ImportExportPrefsImpl @Inject constructor(
             } catch (e: IOException) {
                 throw PrefIOError(file.absolutePath)
             }
+        }
+    }
+
+    override fun exportApsResult(algorithm: String?, input: JSONObject, output: JSONObject?) {
+        WorkManager.getInstance(context).enqueueUniqueWork(
+            "export",
+            ExistingWorkPolicy.APPEND,
+            OneTimeWorkRequest.Builder(ApsResultExportWorker::class.java)
+                .setInputData(dataWorkerStorage.storeInputData(ApsResultExportWorker.ApsResultData(algorithm, input, output)))
+                .build()
+        )
+    }
+
+    class ApsResultExportWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
+
+        @Inject lateinit var prefFileList: PrefFileListProvider
+        @Inject lateinit var storage: Storage
+        @Inject lateinit var config: Config
+        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+
+        data class ApsResultData(val algorithm: String?, val input: JSONObject, val output: JSONObject?)
+
+        override suspend fun doWorkAndLog(): Result {
+            if (!config.isEngineeringMode()) return Result.success(workDataOf("Result" to "Export not enabled"))
+            val apsResultData = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as ApsResultData?
+                ?: return Result.failure(workDataOf("Error" to "missing input data"))
+
+            prefFileList.ensureResultDirExists()
+            val newFile = prefFileList.newResultFile()
+            var ret = Result.success()
+            try {
+                val jsonObject = JSONObject().apply {
+                    put("algorithm", apsResultData.algorithm)
+                    put("input", apsResultData.input)
+                    put("output", apsResultData.output)
+                }
+                storage.putFileContents(newFile, jsonObject.toString())
+            } catch (e: FileNotFoundException) {
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                ret = Result.failure(workDataOf("Error" to "Error FileNotFoundException"))
+            } catch (e: IOException) {
+                aapsLogger.error(LTag.CORE, "Unhandled exception", e)
+                ret = Result.failure(workDataOf("Error" to "Error IOException"))
+            }
+            return ret
         }
     }
 }

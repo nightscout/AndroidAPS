@@ -1,5 +1,6 @@
 package app.aaps.plugins.aps.openAPSSMB
 
+import androidx.annotation.VisibleForTesting
 import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
@@ -41,7 +42,7 @@ import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
-class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
+class DetermineBasalAdapterSMBJS(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -51,16 +52,16 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
 
-    private var profile = JSONObject()
-    private var mGlucoseStatus = JSONObject()
-    private var iobData: JSONArray? = null
-    private var mealData = JSONObject()
-    private var currentTemp = JSONObject()
-    private var autosensData = JSONObject()
-    private var microBolusAllowed = false
-    private var smbAlwaysAllowed = false
-    private var currentTime: Long = 0
-    private var flatBGsDetected = false
+    @VisibleForTesting var profile = JSONObject()
+    @VisibleForTesting var glucoseStatus = JSONObject()
+    @VisibleForTesting var iobData: JSONArray? = null
+    @VisibleForTesting var mealData = JSONObject()
+    @VisibleForTesting var currentTemp = JSONObject()
+    @VisibleForTesting var autosensData = JSONObject()
+    @VisibleForTesting var microBolusAllowed = false
+    @VisibleForTesting var smbAlwaysAllowed = false
+    @VisibleForTesting var currentTime: Long = 0
+    @VisibleForTesting var flatBGsDetected = false
 
     override var currentTempParam: String? = null
     override var iobDataParam: String? = null
@@ -70,9 +71,23 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
     override var scriptDebug = ""
 
     @Suppress("SpellCheckingInspection")
+    override fun json(): JSONObject = JSONObject().apply {
+        put("glucoseStatus", glucoseStatus)
+        put("currenttemp", currentTemp)
+        put("iob_data", iobData)
+        put("profile", profile)
+        put("autosens_data", autosensData)
+        put("meal_data", mealData)
+        put("microBolusAllowed", microBolusAllowed)
+        put("reservoir_data", null)
+        put("currentTime", currentTime)
+        put("flatBGsDetected", flatBGsDetected)
+    }
+
+    @Suppress("SpellCheckingInspection")
     override operator fun invoke(): APSResult? {
         aapsLogger.debug(LTag.APS, ">>> Invoking determine_basal <<<")
-        aapsLogger.debug(LTag.APS, "Glucose status: " + mGlucoseStatus.toString().also { glucoseStatusParam = it })
+        aapsLogger.debug(LTag.APS, "Glucose status: " + glucoseStatus.toString().also { glucoseStatusParam = it })
         aapsLogger.debug(LTag.APS, "IOB data:       " + iobData.toString().also { iobDataParam = it })
         aapsLogger.debug(LTag.APS, "Current temp:   " + currentTemp.toString().also { currentTempParam = it })
         aapsLogger.debug(LTag.APS, "Profile:        " + profile.toString().also { profileParam = it })
@@ -112,7 +127,7 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
 
                 //prepare parameters
                 val params = arrayOf(
-                    makeParam(mGlucoseStatus, rhino, scope),
+                    makeParam(glucoseStatus, rhino, scope),
                     makeParam(currentTemp, rhino, scope),
                     makeParamArray(iobData, rhino, scope),
                     makeParam(profile, rhino, scope),
@@ -152,7 +167,7 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         } finally {
             Context.exit()
         }
-        glucoseStatusParam = mGlucoseStatus.toString()
+        glucoseStatusParam = glucoseStatus.toString()
         iobDataParam = iobData.toString()
         currentTempParam = currentTemp.toString()
         profileParam = profile.toString()
@@ -246,16 +261,16 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         if (tb != null) currentTemp.put("minutesrunning", tb.getPassedDurationToTimeInMinutes(now))
 
         iobData = iobArray.convertToJSONArray(dateUtil)
-        mGlucoseStatus.put("glucose", glucoseStatus.glucose)
-        mGlucoseStatus.put("noise", glucoseStatus.noise)
+        this.glucoseStatus.put("glucose", glucoseStatus.glucose)
+        this.glucoseStatus.put("noise", glucoseStatus.noise)
         if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
-            mGlucoseStatus.put("delta", glucoseStatus.shortAvgDelta)
+            this.glucoseStatus.put("delta", glucoseStatus.shortAvgDelta)
         } else {
-            mGlucoseStatus.put("delta", glucoseStatus.delta)
+            this.glucoseStatus.put("delta", glucoseStatus.delta)
         }
-        mGlucoseStatus.put("short_avgdelta", glucoseStatus.shortAvgDelta)
-        mGlucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
-        mGlucoseStatus.put("date", glucoseStatus.date)
+        this.glucoseStatus.put("short_avgdelta", glucoseStatus.shortAvgDelta)
+        this.glucoseStatus.put("long_avgdelta", glucoseStatus.longAvgDelta)
+        this.glucoseStatus.put("date", glucoseStatus.date)
         this.mealData.put("carbs", mealData.carbs)
         this.mealData.put("mealCOB", mealData.mealCOB)
         this.mealData.put("slopeFromMaxDeviation", mealData.slopeFromMaxDeviation)
