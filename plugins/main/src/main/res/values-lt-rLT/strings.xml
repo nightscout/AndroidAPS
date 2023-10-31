@@ -11,7 +11,7 @@
     <string name="smscommunicator_code_verify_label">Kodas patikrinimui:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Patvirtinimo kodą sudaro 6 skaitmenys, kuriuos rodo Authenticator programa (dar vadinama OTP), po 3 ar daugiau privalomo PIN skaitmenų.</string>
-    <string name="smscommunicator_otp_reset_btn">Atstatyti tapatybės nustatymą</string>
+    <string name="smscommunicator_otp_reset_btn">Atstatyti autentikatorius</string>
     <string name="smscommunicator_otp_reset_title">Atstatyti autentifikatoriaus kodą</string>
     <string name="smscommunicator_otp_reset_prompt">Ar tikrai norite iš naujo nustatyti autentifikatoriaus raktą? Dėl to visi šiuo metu konfigūruojami autentifikatoriai negalios, ir jums reikės juos nustatyti dar kartą.</string>
     <string name="smscommunicator_otp_reset_successful">Sukurtas naujas autentifikavimo raktas! Autentifikatoriams pateikti naudokite atnaujintą QR kodą.</string>
@@ -21,7 +21,7 @@
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Skanuokite kodą AndroidAPS OTP kodų nustatymui</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
-    <string name="smscommunicator_otp_reset_header">Atstatyti tapatybės nustatymą</string>
+    <string name="smscommunicator_otp_reset_header">Atstatyti autentikatorius</string>
     <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Turėsite juos vėl nustatyti!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
@@ -237,7 +237,7 @@
     <string name="button2">Mygtukas 2</string>
     <string name="button3">Mygtukas 3</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
-    <string name="prefs_range_summary">Aukštoji ir žemoji riba Pradžios lango grafikuose bei išmaniuosiuose laikrodžiuose</string>
+    <string name="prefs_range_summary">Aukštoji ir žemoji riba Pradžios ekrano grafike bei išmaniuosiuose laikrodžiuose</string>
     <string name="low_mark">Žemoji riba</string>
     <string name="high_mark">Aukštoji riba</string>
     <string name="short_tabtitles">Naudoti sutrumpintus skirtukų pavadinimus</string>
