@@ -219,9 +219,11 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
         }
         scanning = true
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-            bleScanner?.startScan(filters, settings, bleScanCallback)
-            aapsLogger.debug(LTag.PUMPBTCOMM, "startLeDeviceScan: Scanning Start")
-            Toast.makeText(this@RileyLinkBLEConfigActivity, R.string.riley_link_ble_config_scan_scanning, Toast.LENGTH_SHORT).show()
+            if (bluetoothAdapter?.isEnabled == true && bluetoothAdapter?.state == BluetoothAdapter.STATE_ON) {
+                bleScanner?.startScan(filters, settings, bleScanCallback)
+                aapsLogger.debug(LTag.PUMPBTCOMM, "startLeDeviceScan: Scanning Start")
+                Toast.makeText(this@RileyLinkBLEConfigActivity, R.string.riley_link_ble_config_scan_scanning, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
