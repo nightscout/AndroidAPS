@@ -31,7 +31,7 @@ import kotlin.math.max
 /**
  * Created by mike on 09.06.2016.
  */
-open class APSResultObject @Inject constructor(protected val injector: HasAndroidInjector) : APSResult {
+open class APSResultObject(protected val injector: HasAndroidInjector) : APSResult {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker

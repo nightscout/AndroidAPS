@@ -139,7 +139,7 @@ class Widget : AppWidgetProvider() {
     private fun updateBg(views: RemoteViews) {
         views.setTextViewText(
             R.id.bg,
-            lastBgData.lastBg()?.let { profileUtil.fromMgdlToStringInUnits(it.value) } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short))
+            lastBgData.lastBg()?.let { profileUtil.fromMgdlToStringInUnits(it.recalculated) } ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short))
         views.setTextColor(
             R.id.bg, when {
                 lastBgData.isLow()  -> rh.gc(app.aaps.core.ui.R.color.widget_low)
