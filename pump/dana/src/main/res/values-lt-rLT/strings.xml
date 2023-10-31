@@ -75,7 +75,7 @@
     <string name="danar_pump_alarm_both">Abu</string>
     <string name="danar_screen_timeout">Ekrano aktyvumo laikas [seconds]</string>
     <string name="danar_backlight">Ekrano apšvietimo laikas [seconds]</string>
-    <string name="danar_glucose_units">KG vienetai</string>
+    <string name="danar_glucose_units">Glikemijos vienetai</string>
     <string name="danar_shutdown">Išjungimas [hours]</string>
     <string name="danar_low_reservoir">Žemas rezervuaro lygis [Units]</string>
     <string name="danar_save_user_options">Išsaugoti nustatymus pompoje</string>
