@@ -58,8 +58,8 @@ class LoadTreatmentsWorker(
                         val action = if (isFirstLoad) "RCV-F" else "RCV"
                         rxBus.send(EventNSClientNewLog("◄ $action", "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                         // Schedule processing of fetched data and continue of loading
-                        continueLoading = response.code != 304
-                        nsIncomingDataProcessor.processTreatments(response.values)
+                        continueLoading =
+                            response.code != 304 && nsIncomingDataProcessor.processTreatments(response.values)
                     } else {
                         // End first load
                         if (isFirstLoad) {
