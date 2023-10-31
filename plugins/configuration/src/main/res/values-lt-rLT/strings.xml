@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="units">Vienetai</string>
-    <string name="setupwizard_units_prompt">Pasirinkite vienetus, kurių vertes norite parodyti</string>
+    <string name="setupwizard_units_prompt">Pasirinkite glikemijos matavimo vienetus</string>
     <string name="next_button">Toliau</string>
     <string name="previous_button">Atgal</string>
     <string name="nav_setupwizard">Sąrankos vedlys</string>
@@ -48,7 +48,7 @@
     <string name="data_choices">Duomenų pasirinkimas</string>
     <string name="fabric_upload">Duomenų perdavimas kūrėjams</string>
     <string name="allow_automated_crash_reporting">Leisti automatinį pranešimų apie programos trikdžius ir funkcijų naudojimo duomenų siuntimą kūrėjams, naudojant fabric.io servisą.</string>
-    <string name="summary_email_for_crash_report">Šis identifikatorius bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su jumis susisiekti. Jis neprivalomas.</string>
+    <string name="summary_email_for_crash_report">Šis identifikatorius bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su Jumis susisiekti. Jis neprivalomas.</string>
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="request">Užklausa</string>
     <string name="apsmode_title">DKS režimas</string>
