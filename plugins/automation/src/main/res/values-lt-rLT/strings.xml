@@ -73,8 +73,8 @@
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
     <string name="deltacompared">%3$s %1$s %2$s</string>
-    <string name="deltalabel">KG skirtumas</string>
-    <string name="deltalabel_u">KG skirtumas [%1$s]</string>
+    <string name="deltalabel">Glikemijos skirtumas</string>
+    <string name="deltalabel_u">Glikemijos skirtumas [%1$s]</string>
     <string name="currentlocation">Dabartinė vieta</string>
     <string name="location">Vieta</string>
     <string name="latitude_short">Platuma:</string>
