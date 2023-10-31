@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.maintenance.PrefsImportDir
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.weardata.CwfData
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.rx.weardata.ZipWatchfaceFormat
@@ -30,7 +29,6 @@ import org.joda.time.Hours
 import org.joda.time.LocalDateTime
 import org.joda.time.format.DateTimeFormat
 import java.io.File
-import java.util.zip.ZipInputStream
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -89,10 +87,13 @@ class PrefFileListProviderImpl @Inject constructor(
 
         // we sort only if we have metadata to be used for that
         if (loadMetadata) {
-            prefFiles.sortWith(
-                compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status as PrefsStatusImpl }
-                    .thenByDescending { it.metadata[PrefsMetadataKeyImpl.CREATED_AT]?.value }
-            )
+            prefFiles
+                .filter { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status != null }
+                .toMutableList()
+                .sortWith(
+                    compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status as PrefsStatusImpl }
+                        .thenByDescending { it.metadata[PrefsMetadataKeyImpl.CREATED_AT]?.value }
+                )
         }
 
         return prefFiles
