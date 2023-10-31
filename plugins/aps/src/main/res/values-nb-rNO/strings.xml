@@ -40,7 +40,7 @@
     <string name="openapsma_autosensdata_label">Autosens-data</string>
     <string name="openapsma_script_debug_data_label">Script feilsøking</string>
     <string name="openapsama_use_autosens">Bruk Autosens-funksjon</string>
-    <string name="openapsma_max_basal_title">Max E/t en midl. basal kan settes til</string>
+    <string name="openapsma_max_basal_title">Maks E/t en midlertidig basal kan settes til</string>
     <string name="openapsma_max_basal_summary">Denne verdien kalles max basal i OpenAPS</string>
     <string name="openapsma_max_iob_title">Maksimum basal IOB som OpenAPS kan levere [E]</string>
     <string name="openapsma_max_iob_summary">Denne verdien kalles Max IOB i OpenAPS.\nDet er maks insulinmengde i [E] som APS kan levere i en dose.</string>
