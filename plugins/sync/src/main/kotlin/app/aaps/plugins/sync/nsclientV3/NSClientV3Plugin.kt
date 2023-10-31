@@ -222,6 +222,7 @@ class NSClientV3Plugin @Inject constructor(
                                ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_ns_announcements))
                            ) {
                                stopService()
+                               nsAndroidClient = null
                                setClient()
                            }
                            if (ev.isChanged(rh.gs(app.aaps.core.utils.R.string.key_local_profile_last_change)))
