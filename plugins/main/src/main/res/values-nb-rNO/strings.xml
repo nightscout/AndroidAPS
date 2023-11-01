@@ -268,11 +268,11 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">AVVIK</string>
     <string name="activity_shortname">AKT</string>
-    <string name="bgi_shortname">-BGI</string>
+    <string name="bgi_shortname">BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
-    <string name="heartRate_shortname">HR</string>
+    <string name="heartRate_shortname">PULS</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
