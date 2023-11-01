@@ -323,13 +323,14 @@ class CarbsDialog : DialogFragmentWithDate() {
                         )
                     ).subscribe()
                     if (carbsAfterConstraints > 0) {
-                        val detailedBolusInfo = DetailedBolusInfo()
-                        detailedBolusInfo.eventType = TE.Type.CORRECTION_BOLUS
-                        detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
-                        detailedBolusInfo.context = context
-                        detailedBolusInfo.notes = notes
-                        detailedBolusInfo.carbsDuration = T.hours(duration.toLong()).msecs()
-                        detailedBolusInfo.carbsTimestamp = eventTime
+                        val detailedBolusInfo = DetailedBolusInfo().also {
+                            it.eventType = TE.Type.CORRECTION_BOLUS
+                            it.carbs = carbsAfterConstraints.toDouble()
+                            it.context = context
+                            it.notes = notes
+                            it.carbsDuration = T.hours(duration.toLong()).msecs()
+                            it.carbsTimestamp = eventTime
+                        }
                         uel.log(
                             action = if (duration == 0) Action.CARBS else Action.EXTENDED_CARBS, source = Sources.CarbDialog,
                             note = notes,

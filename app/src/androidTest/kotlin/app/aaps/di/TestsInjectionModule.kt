@@ -1,5 +1,6 @@
 package app.aaps.di
 
+import app.aaps.database.persistence.CompatDbHelperTest
 import app.aaps.helpers.RxHelper
 import app.aaps.plugins.aps.LoopTest
 import app.aaps.plugins.aps.ReplayApsResultsTest
@@ -16,4 +17,5 @@ abstract class TestsInjectionModule {
     // Tests
     @ContributesAndroidInjector abstract fun contributesReplayApsResultsTest(): ReplayApsResultsTest
     @ContributesAndroidInjector abstract fun contributesLoopTest(): LoopTest
+    @ContributesAndroidInjector abstract fun contributesCompatDbHelperTest(): CompatDbHelperTest
 }

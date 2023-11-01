@@ -1,43 +1,46 @@
-package app.aaps.plugins.aps
+package app.aaps.database.persistence
 
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.rule.GrantPermissionRule
 import app.aaps.TestApplication
 import app.aaps.core.data.model.GV
 import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TrendArrow
-import app.aaps.core.data.plugin.PluginType
+import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
-import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.rx.events.EventDeviceStatusChange
 import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
+import app.aaps.core.interfaces.rx.events.EventFoodDatabaseChanged
 import app.aaps.core.interfaces.rx.events.EventNewBG
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.rx.events.EventNewHistoryData
+import app.aaps.core.interfaces.rx.events.EventOfflineChange
+import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventTempBasalChange
+import app.aaps.core.interfaces.rx.events.EventTempTargetChange
+import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
+import app.aaps.core.interfaces.rx.events.EventTreatmentChange
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.helpers.RxHelper
-import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
-import app.aaps.plugins.aps.events.EventResetOpenAPSGui
-import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
-import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
 import org.json.JSONObject
 import org.junit.After
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
 
-class LoopTest @Inject constructor() {
+class CompatDbHelperTest @Inject constructor() {
 
     @Inject lateinit var loop: Loop
     @Inject lateinit var profileFunction: ProfileFunction
@@ -46,13 +49,8 @@ class LoopTest @Inject constructor() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxHelper: RxHelper
     @Inject lateinit var l: L
-    @Inject lateinit var config: Config
-    @Inject lateinit var sp: SP
-    @Inject lateinit var objectivesPlugin: ObjectivesPlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
-
-    @get:Rule
-    var runtimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!!
+    @Inject lateinit var commandQueue: CommandQueue
 
     private val context = ApplicationProvider.getApplicationContext<TestApplication>()
 
@@ -69,45 +67,32 @@ class LoopTest @Inject constructor() {
         rxHelper.clear()
     }
     @Test
-    fun loopTest() {
+    fun dbHelperTest() {
         // Prepare
-        rxHelper.listen(EventEffectiveProfileSwitchChanged::class.java)
-        rxHelper.listen(EventLoopSetLastRunGui::class.java)
-        rxHelper.listen(EventResetOpenAPSGui::class.java)
-        rxHelper.listen(EventOpenAPSUpdateGui::class.java)
         rxHelper.listen(EventNewBG::class.java)
-        rxHelper.listen(EventAutosensCalculationFinished::class.java)
-        rxHelper.listen(EventAPSCalculationFinished::class.java)
-        (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
+        rxHelper.listen(EventNewHistoryData::class.java)
+        rxHelper.listen(EventTreatmentChange::class.java)
+        rxHelper.listen(EventTempBasalChange::class.java)
+        rxHelper.listen(EventExtendedBolusChange::class.java)
+        rxHelper.listen(EventProfileSwitchChanged::class.java)
+        rxHelper.listen(EventEffectiveProfileSwitchChanged::class.java)
+        rxHelper.listen(EventTempTargetChange::class.java)
+        rxHelper.listen(EventTherapyEventChange::class.java)
+        rxHelper.listen(EventFoodDatabaseChanged::class.java)
+        rxHelper.listen(EventOfflineChange::class.java)
+        rxHelper.listen(EventDeviceStatusChange::class.java)
 
         // Enable event logging
         l.findByName(LTag.EVENTS.name).enabled = true
 
-        // Are we running full flavor?
-        assertThat(config.APS).isTrue()
-
-        // Loop should be limited by unfinished objectives
-        loop.invoke("test1", allowNotification = false)
-        var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step1")
-        assertThat(loopStatusEvent.first).isTrue()
-        assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("Objective 1 not started")
-
-        // So start objectives
-        objectivesPlugin.objectives[0].startedOn = 1
-
-        // Now there should be missing profile
-        loop.invoke("test2", allowNotification = false)
-        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step2")
-        assertThat(loopStatusEvent.first).isTrue()
-        assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO PROFILE SET")
-
         // Set Profile in ProfilePlugin
+        rxHelper.resetState(EventProfileSwitchChanged::class.java)
+        rxHelper.resetState(EventEffectiveProfileSwitchChanged::class.java)
         nsIncomingDataProcessor.processProfile(JSONObject(profileData))
         assertThat(activePlugin.activeProfileSource.profile).isNotNull()
-
         // Create a profile switch
         assertThat(profileFunction.getProfile()).isNull()
-        val result = profileFunction.createProfileSwitch(
+        val ps = profileFunction.createProfileSwitch(
             profileStore = activePlugin.activeProfileSource.profile ?: error("No profile"),
             profileName = activePlugin.activeProfileSource.profile?.getDefaultProfileName() ?: error("No profile"),
             durationInMinutes = 0,
@@ -122,24 +107,15 @@ class LoopTest @Inject constructor() {
                 ValueWithUnit.Percent(100)
             )
         )
-        assertThat(result).isTrue()
-
-        // wait until PS is processed by pump and EventEffectiveProfileSwitchChanged is received
-        assertThat(rxHelper.waitFor(EventEffectiveProfileSwitchChanged::class.java, comment = "step3").first).isTrue()
-        assertThat(profileFunction.getProfile()).isNotNull()
-
-        // Loop should fail on no result from APS plugin
-        loop.invoke("test3", allowNotification = false)
-        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step4")
-        assertThat(loopStatusEvent.first).isTrue()
-        assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO APS SELECTED OR PROVIDED RESULT")
-        val apsStatusEvent = rxHelper.waitFor(EventResetOpenAPSGui::class.java, comment = "step5")
-        assertThat(apsStatusEvent.first).isTrue()
-        assertThat((apsStatusEvent.second as EventResetOpenAPSGui).text).contains("No glucose data available")
-        assertThat(loop.lastRun).isNull()
+        assertThat(ps).isTrue()
+        // EventProfileSwitchChanged should be fired
+        assertThat(rxHelper.waitFor(EventProfileSwitchChanged::class.java, comment = "step1").first).isTrue()
+        // After pump processing EventEffectiveProfileSwitchChanged should be fired
+        assertThat(rxHelper.waitFor(EventEffectiveProfileSwitchChanged::class.java, comment = "step2").first).isTrue()
 
         // Let generate some BGs
         rxHelper.resetState(EventNewBG::class.java)
+        rxHelper.resetState(EventNewHistoryData::class.java)
         val now = dateUtil.now()
         val glucoseValues = mutableListOf<GV>()
         glucoseValues += GV(timestamp = now - 5 * 60000, value = 100.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
@@ -151,13 +127,46 @@ class LoopTest @Inject constructor() {
         assertThat(persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null).blockingGet().inserted.size).isEqualTo(6)
 
         // EventNewBG should be triggered
-        assertThat(rxHelper.waitFor(EventNewBG::class.java, comment = "step6").first).isTrue()
-        // it should trigger loop, so wait for result
-        //assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, comment = "test4").first).isTrue()
- //       Thread.sleep(10000)
-        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, comment = "step7").first).isTrue()
-        Thread.sleep(1000)
-        assertThat(loop.lastRun).isNotNull()
+        assertThat(rxHelper.waitFor(EventNewBG::class.java, comment = "step3").first).isTrue()
+        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step4").first).isTrue()
+
+        // Let generate some carbs
+        rxHelper.resetState(EventTreatmentChange::class.java)
+        rxHelper.resetState(EventNewHistoryData::class.java)
+        var detailedBolusInfo = DetailedBolusInfo().also {
+            it.eventType = TE.Type.CARBS_CORRECTION
+            it.carbs = 10.0
+            it.context = context
+            it.notes = "Note"
+            it.carbsDuration = T.hours(1).msecs()
+            it.carbsTimestamp = now
+        }
+        commandQueue.bolus(detailedBolusInfo, object : Callback() {
+            override fun run() {
+                assertThat(result.success).isTrue()
+            }
+        })
+        // EventTreatmentChange should be triggered
+        assertThat(rxHelper.waitFor(EventTreatmentChange::class.java, comment = "step5").first).isTrue()
+        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step6").first).isTrue()
+
+        // Let generate some bolus
+        rxHelper.resetState(EventTreatmentChange::class.java)
+        rxHelper.resetState(EventNewHistoryData::class.java)
+        detailedBolusInfo = DetailedBolusInfo().also {
+            it.eventType = TE.Type.CORRECTION_BOLUS
+            it.insulin = 1.0
+            it.context = null
+            it.notes = "Note"
+        }
+        commandQueue.bolus(detailedBolusInfo, object : Callback() {
+            override fun run() {
+                assertThat(result.success).isTrue()
+            }
+        })
+        // EventTreatmentChange should be triggered
+        assertThat(rxHelper.waitFor(EventTreatmentChange::class.java, comment = "step7").first).isTrue()
+        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step8").first).isTrue()
 
     }
 }

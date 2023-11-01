@@ -59,7 +59,7 @@ class RxHelper @Inject constructor(
      * @param maxSeconds max waiting time in seconds
      */
     fun waitFor(clazz: Class<out Event>, maxSeconds: Long = 20, comment: String = ""): Pair<Boolean, Event?> {
-        val watcher = hashMap[clazz] ?: error("Class not registered")
+        val watcher = hashMap[clazz] ?: error("Class not registered ${clazz.simpleName}")
         val start = dateUtil.now()
         while (!watcher.get()) {
             if (start + T.secs(maxSeconds).msecs() < dateUtil.now()) {
