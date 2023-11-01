@@ -1,4 +1,4 @@
-package info.nightscout.androidaps
+package app.aaps.unusedTests
 
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewInteraction

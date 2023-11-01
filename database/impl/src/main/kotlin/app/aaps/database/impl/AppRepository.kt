@@ -306,10 +306,6 @@ class AppRepository @Inject internal constructor(
                 }
             }
 
-    fun createEffectiveProfileSwitch(profileSwitch: EffectiveProfileSwitch) {
-        database.effectiveProfileSwitchDao.insert(profileSwitch)
-    }
-
     fun getOldestEffectiveProfileSwitchRecord(): Maybe<EffectiveProfileSwitch> =
         database.effectiveProfileSwitchDao.getOldestEffectiveProfileSwitchRecord()
             .subscribeOn(Schedulers.io())

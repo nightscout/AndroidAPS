@@ -43,6 +43,7 @@ import app.aaps.database.impl.transactions.InsertIfNewByTimestampTherapyEventTra
 import app.aaps.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateBolusTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateCarbsTransaction
+import app.aaps.database.impl.transactions.InsertEffectiveProfileSwitch
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateProfileSwitch
 import app.aaps.database.impl.transactions.InsertOrUpdateStepsCountTransaction
@@ -691,8 +692,17 @@ class PersistenceLayerImpl @Inject constructor(
             .map { pair -> Pair(pair.first.fromDb(), pair.second.fromDb()) }
 
     override fun getLastEffectiveProfileSwitchId(): Long? = repository.getLastEffectiveProfileSwitchId()
-    override fun insertEffectiveProfileSwitch(effectiveProfileSwitch: EPS) =
-        repository.createEffectiveProfileSwitch(effectiveProfileSwitch.toDb())
+    override fun insertEffectiveProfileSwitch(effectiveProfileSwitch: EPS): Single<PersistenceLayer.TransactionResult<EPS>> =
+        repository.runTransactionForResult(InsertEffectiveProfileSwitch(effectiveProfileSwitch.toDb()))
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while inserting EffectiveProfileSwitch", it) }
+            .map { result ->
+                val transactionResult = PersistenceLayer.TransactionResult<EPS>()
+                result.inserted.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $it")
+                    transactionResult.inserted.add(it.fromDb())
+                }
+                transactionResult
+            }
 
     override fun invalidateEffectiveProfileSwitch(id: Long, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<EPS>> =
         repository.runTransactionForResult(InvalidateEffectiveProfileSwitchTransaction(id))
@@ -782,12 +792,12 @@ class PersistenceLayerImpl @Inject constructor(
     override fun getLastProfileSwitchId(): Long? = repository.getLastProfileSwitchId()
     override fun insertOrUpdateProfileSwitch(profileSwitch: PS, action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>): Single<PersistenceLayer.TransactionResult<PS>> =
         repository.runTransactionForResult(InsertOrUpdateProfileSwitch(profileSwitch.toDb()))
-            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while invalidating ProfileSwitch", it) }
+            .doOnError { aapsLogger.error(LTag.DATABASE, "Error while inserting ProfileSwitch", it) }
             .map { result ->
                 val transactionResult = PersistenceLayer.TransactionResult<PS>()
                 result.inserted.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Invalidated ProfileSwitch from ${source.name} $it")
-                    transactionResult.invalidated.add(it.fromDb())
+                    aapsLogger.debug(LTag.DATABASE, "Inserted ProfileSwitch from ${source.name} $it")
+                    transactionResult.inserted.add(it.fromDb())
                     log(action = action, source = source, note = note, listValues = listValues)
                 }
                 result.updated.forEach {
@@ -1141,7 +1151,7 @@ class PersistenceLayerImpl @Inject constructor(
                             ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(it.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Updated EB $it")
+                    aapsLogger.debug(LTag.DATABASE, "Ended EB $it")
                     transactionResult.ended.add(it.fromDb())
                 }
                 result.updatedNsId.forEach {
@@ -1267,7 +1277,7 @@ class PersistenceLayerImpl @Inject constructor(
                             ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Updated TemporaryTarget from ${Sources.NSClient.name} $tt")
+                    aapsLogger.debug(LTag.DATABASE, "Ended TemporaryTarget from ${Sources.NSClient.name} $tt")
                     transactionResult.ended.add(tt.fromDb())
                 }
                 result.updatedNsId.forEach { tt ->
@@ -1402,7 +1412,7 @@ class PersistenceLayerImpl @Inject constructor(
                     transactionResult.updatedNsId.add(therapyEvent.fromDb())
                 }
                 result.updatedDuration.forEach { therapyEvent ->
-                    aapsLogger.debug(LTag.DATABASE, "Updated nsId TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
+                    aapsLogger.debug(LTag.DATABASE, "Updated duration TherapyEvent from ${Sources.NSClient.name} $therapyEvent")
                     transactionResult.updatedDuration.add(therapyEvent.fromDb())
                 }
                 transactionResult
@@ -1524,7 +1534,7 @@ class PersistenceLayerImpl @Inject constructor(
                             ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(oe.duration).toInt())
                         )
                     )
-                    aapsLogger.debug(LTag.DATABASE, "Updated OfflineEvent from ${Sources.NSClient.name} $oe")
+                    aapsLogger.debug(LTag.DATABASE, "Ended OfflineEvent from ${Sources.NSClient.name} $oe")
                     transactionResult.ended.add(oe.fromDb())
                 }
                 result.updatedNsId.forEach { oe ->
@@ -1591,7 +1601,7 @@ class PersistenceLayerImpl @Inject constructor(
                     transactionResult.inserted.add(it.fromDb())
                 }
                 result.updated.forEach {
-                    aapsLogger.debug(LTag.DATABASE, "Inserted HeartRate $it")
+                    aapsLogger.debug(LTag.DATABASE, "Updated HeartRate $it")
                     transactionResult.updated.add(it.fromDb())
                 }
                 transactionResult

@@ -238,7 +238,7 @@ class LoopPlugin @Inject constructor(
             }
             val pump = activePlugin.activePump
             var apsResult: APSResult? = null
-            if (!isEnabled(PluginType.LOOP)) return
+            if (!isEnabled()) return
             val profile = profileFunction.getProfile()
             if (profile == null || !profileFunction.isProfileValid("Loop")) {
                 aapsLogger.debug(LTag.APS, rh.gs(app.aaps.core.ui.R.string.no_profile_set))

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps
+package app.aaps.unusedTests
 
 //@LargeTest
 //@RunWith(AndroidJUnit4::class)

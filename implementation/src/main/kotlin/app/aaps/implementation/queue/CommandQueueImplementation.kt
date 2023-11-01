@@ -142,8 +142,7 @@ class CommandQueueImplementation @Inject constructor(
                                                originalEnd = it.end,
                                                iCfg = it.iCfg
                                            ).also { eps ->
-                                               persistenceLayer.insertEffectiveProfileSwitch(eps)
-                                               aapsLogger.debug(LTag.DATABASE, "Inserted EffectiveProfileSwitch $eps")
+                                               disposable += persistenceLayer.insertEffectiveProfileSwitch(eps).subscribe()
                                            }
                                        }
                                    }

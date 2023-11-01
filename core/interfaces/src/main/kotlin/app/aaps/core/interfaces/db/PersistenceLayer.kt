@@ -488,7 +488,7 @@ interface PersistenceLayer {
      *
      * @param effectiveProfileSwitch record
      */
-    fun insertEffectiveProfileSwitch(effectiveProfileSwitch: EPS)
+    fun insertEffectiveProfileSwitch(effectiveProfileSwitch: EPS): Single<TransactionResult<EPS>>
 
     /**
      * Invalidate record with id
