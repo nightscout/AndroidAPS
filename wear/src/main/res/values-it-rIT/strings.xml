@@ -40,6 +40,9 @@
     <string name="pref_show_bgi">Mostra BGI</string>
     <string name="pref_show_direction_arrow">Mostra frecce direzionali</string>
     <string name="pref_show_ago">Mostra Indietro</string>
+    <string name="pref_show_temp_basal">Mostra TBR</string>
+    <string name="pref_show_bolus">Mostra boli &amp; SMB</string>
+    <string name="pref_show_grid">Mostra griglia</string>
     <string name="pref_dark" comment="Enables dark visual theme">Scuro</string>
     <string name="pref_highlight_basals">Evidenzia basali</string>
     <string name="pref_prediction_lines">Visualizza previsioni</string>

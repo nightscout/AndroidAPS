@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">Sincronizza i tuoi dati con Nightscout usando API v3</string>
     <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
     <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
+    <string name="no_connectivity">Connettività assente</string>
     <string name="unsupported_ns_version">Versione non supportata di Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
@@ -116,7 +117,12 @@
     <string name="xdrip_local_broadcasts_summary">Invia dati glicemia e trattamenti a xDrip+. La sorgente dati \"xDrip+ Sync Follower\" deve essere selezionata e l\'accettazione dei dati deve essere abilitata in: Settings - Inter-app settings - Accept Glucose/Treatments</string>
     <string name="xdrip_local_broadcasts_title">Abilita trasmissioni a xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="data_broadcaster_short">DBRO</string>
+    <string name="data_broadcaster_description">Trasmetti i dati all\'app G-Watch Wear di Garmin</string>
     <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Connessione al dispositivo Garmin (Fenix, Edge, …)</string>
+    <string name="key_garmin_settings">Impostazioni Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">SMWA</string>
     <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">감도 및 BG 조정</string>
     <string name="DynISFAdjust_title" formatted="false">동적ISF 조정 계수 %</string>
     <string name="DynISFAdjust_summary" formatted="false">동적ISF 에 대한 조정 계수. 더 호전적인 보정 양인 경우 100% 이상으로 설정하고, 덜 호전적인 보정의 경우 100% 미만으로 설정합니다.</string>
     <string name="high_temptarget_raises_sensitivity_title">높은 임시목표는 민감도를 올립니다.</string>

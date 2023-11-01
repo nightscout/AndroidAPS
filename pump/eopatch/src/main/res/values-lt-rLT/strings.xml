@@ -46,7 +46,7 @@
     <string name="patch_manually_turning_off_alarm_desc_1">Vienpusiškai deaktyvavus, dėl ryšio klaidos rezervuaro aliarmo garsas gali nesustoti.</string>
     <string name="patch_manually_turning_off_alarm_desc_2">Tokiu atveju Jūs galite jį visiškai nutildyti, pradurdami rankinio aliarmo atšaukimo prievadą, kaip nurodyta toliau:</string>
     <string name="patch_manually_turning_off_alarm_step_1">1. Pašalinkite rezervuarą nuo kūno ir nulupkite lipnią juostą.</string>
-    <string name="patch_manually_turning_off_alarm_step_2">2. Naudodami smeigtuką tvirtai pradurkite skylę šalia insulino užpildymo porto.</string>
+    <string name="patch_manually_turning_off_alarm_step_2">2. Naudodami smeigtuką pradurkite skylę šalia insulino užpildymo porto.</string>
     <string name="patch_wake_up">Pildomas insulinas</string>
     <string name="patch_wake_up_step">1/6</string>
     <string name="patch_step_desc_1">1.</string>
@@ -59,7 +59,7 @@
     <string name="patch_connect_new_desc">Naujas rezervuaras susietas.\nLaikykite telefoną ir rezervuarą taip arti, kaip tik įmanoma.</string>
     <string name="patch_remove_needle_cap">Pasiruoškite priklijuoti rezervuarą</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
-    <string name="patch_remove_needle_cap_desc_1">Nuimkite pleistro apsaugą ir paspauskite \'Kitas\'.</string>
+    <string name="patch_remove_needle_cap_desc_1">Nuimkite pleistro apsaugą ir paspauskite \'Toliau\'.</string>
     <string name="patch_remove_needle_cap_desc_2">[Caution1] Jei adata kyšo, spauskite \'Išjungti\'.</string>
     <string name="patch_remove_needle_cap_desc_3">[Caution2] Jei rezervuaras yra šlapias ar purvinas, arba pleistras susiraukšlėjęs, spauskite \'Išjungti\'.</string>
     <string name="patch_remove_protection_tape">Rezervuaro prijungimas</string>
@@ -74,7 +74,7 @@
     <string name="patch_rotate_knob">Adatos įvedimas</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Norėdami įdurti adatą, pasukite adatos įvedimo svirtelę daugiau 100 °, po to pilnai pasukite ir pašalinkite ją</string>
-    <string name="patch_rotate_knob_desc_2">Sulaukite 1 pyptelėjimo ir spauskite \'Kitas\'.</string>
+    <string name="patch_rotate_knob_desc_2">Sulaukite 1 pyptelėjimo ir spauskite \'Toliau\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Sulaukite 1 pyptelėjimo ir spauskite \'Kartoti\'.</string>
     <string name="patch_basal_schedule">Rezervuaras aktyvuotas!</string>
     <string name="patch_basal_schedule_desc_1">\'%1$s\' programa įgalinta.</string>
@@ -125,7 +125,7 @@
     <string name="string_resumed_insulin_delivery_message">Insulino tiekimas atnaujintas.</string>
     <string name="finish">Užbaigti</string>
     <string name="string_temp_basal_remained_hhmm">liko laiko: %1$s:%2$s</string>
-    <string name="next">Kitas</string>
+    <string name="next">Toliau</string>
     <string name="patch_connection_fail">Bandykite dar kartą po ryšio patikrinimo.</string>
     <string name="string_pause_failed">Sustabdyti nepavyko.</string>
     <string name="string_resume_failed">Atnaujinti nepavyko.</string>

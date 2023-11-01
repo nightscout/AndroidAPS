@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Bomba suspendida por superar el máximo diario de insulina</string>
     <string name="patch_not_active">Parche no activado</string>
     <string name="pump_setting_failed">Error al configurar los ajustes del usuario en la bomba</string>
+    <string name="pump_sync_error">Error al sincronizar el historial de la bomba, se ha omitido un registro. Verifique la pestaña de tratamientos para asegurarse de que el bolo se haya sincronizado correctamente. Silencia y si el error sigue apareciendo, cambia el parche o la base de la bomba.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Estado BLE</string>
     <string name="last_connection_label">Última conexión</string>

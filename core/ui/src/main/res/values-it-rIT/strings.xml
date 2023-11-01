@@ -51,6 +51,7 @@
     <string name="extended_bolus">Bolo esteso</string>
     <string name="paused">In pausa</string>
     <string name="tdd_total">TDD totale</string>
+    <string name="tdd_old_data">Dati vecchi</string>
     <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
     <string name="waitingforpump">In attesa del micro</string>
     <string name="androidaps_start">AAPS avviato</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Carica stato micro su NS o Tidepool</string>
     <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
+    <string name="loopstatus_targets">TARGET:</string>
+    <string name="loopstatus_OAPS_result">RISULTATO OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
     <string name="wrongpin">PIN errato</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
+    <string name="carb_equal_zero_no_action">CHO = 0. Nessuna azione intrapresa!</string>
+    <string name="wizard_no_insulin_required">Insulina non necessaria!</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
     <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
@@ -581,6 +586,7 @@
     <string name="cleanup_db_confirm_sync">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.\nFarlo velocizzerà considerevolmente la sincronizzazione completa.</string>
     <string name="cleared_entries">Elementi cancellati</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">Dom</string>
     <string name="weekday_saturday_short">Sab</string>
     <string name="weekday_friday_short">Ven</string>
     <string name="weekday_thursday_short">Gio</string>
@@ -596,4 +602,6 @@
     <string name="saturday_short">S</string>
     <string name="sunday_short">D</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

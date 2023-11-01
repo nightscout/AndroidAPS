@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">Synkroniserer dine data med Nightscout v3 API</string>
     <string name="blocked_by_charging">Blokkert på grunn av ladealternativer</string>
     <string name="blocked_by_connectivity">Blokkert på grunn av tilkoblingsalternativer</string>
+    <string name="no_connectivity">Ingen internettforbindelse</string>
     <string name="unsupported_ns_version">Versjonen av Nightscout støttes ikke</string>
     <string name="openaps_short">OpenAPS</string>
     <string name="uploader_short">Opplaster</string>

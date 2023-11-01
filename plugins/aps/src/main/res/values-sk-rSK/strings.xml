@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Upraviť citlivosť a glykémiu</string>
     <string name="DynISFAdjust_title" formatted="false">Korekčný faktor pre Dynamickú ISF v %</string>
     <string name="DynISFAdjust_summary" formatted="false">Korekčný faktor pre dynamickú ISF. Pre agresivnejšie korekčné dávky nastavte hodnoty väčšie ako 100%, pre menej agresívne korekcie, menšie než 100%.</string>
     <string name="high_temptarget_raises_sensitivity_title">Vysoký dočasný cieľ zvýši citlivosť</string>

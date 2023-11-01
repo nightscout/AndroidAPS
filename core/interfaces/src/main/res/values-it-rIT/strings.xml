@@ -57,6 +57,8 @@
     <string name="pref_show_bgi">Mostra BGI</string>
     <string name="pref_show_direction_arrow">Mostra frecce direzionali</string>
     <string name="pref_show_ago">Mostra Indietro</string>
+    <string name="pref_show_week_number">Mostra numeri della settimana</string>
+    <string name="pref_show_date">Mostra la data</string>
     <string name="default_custom_watchface_comment">Watchface predefinita, puoi fare click sul tasto ESPORTA WATCHFACE per generare un template</string>
     <string name="wear_default_watchface">Watchface predefinita</string>
     <string name="cwf_comment_background">Immagine sfondo</string>
@@ -83,6 +85,7 @@
     <string name="cwf_comment_timePeriod">AM o PM</string>
     <string name="cwf_comment_day_name">Nome del giorno della settimana</string>
     <string name="cwf_comment_day">Giorno (DD)</string>
+    <string name="cwf_comment_week_number">Numero settimana (ww)</string>
     <string name="cwf_comment_month">Nome del mese (breve)</string>
     <string name="cwf_comment_loop">Stato loop e indietro</string>
     <string name="cwf_comment_direction">Freccia direzionale</string>
