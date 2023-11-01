@@ -271,35 +271,30 @@ class DiaconnG8Plugin @Inject constructor(
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
-        return if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            val carbs = detailedBolusInfo.carbs
-            detailedBolusInfo.carbs = 0.0
-            var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
-            if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
-            detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
-            var connectionOK = false
-            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
-                ?: false
-            val result = PumpEnactResult(injector)
-            result.success = connectionOK
-            result.bolusDelivered = t.insulin
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
-            if (result.success) result.enacted = true
-            if (!result.success) {
-                setErrorMsg(diaconnG8Pump.resultErrorCode, result)
-            } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-            result
-        } else {
-            val result = PumpEnactResult(injector)
-            result.success = false
-            result.bolusDelivered = 0.0
-            result.comment = rh.gs(app.aaps.core.ui.R.string.invalid_input)
-            aapsLogger.error("deliverTreatment: Invalid input")
-            result
-        }
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
+        val carbs = detailedBolusInfo.carbs
+        detailedBolusInfo.carbs = 0.0
+        var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
+        if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
+        detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
+        val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+        var connectionOK = false
+        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = diaconnG8Service?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
+            ?: false
+        val result = PumpEnactResult(injector)
+        result.success = connectionOK
+        result.bolusDelivered = t.insulin
+
+        if (result.success) result.enacted = true
+        if (!result.success) {
+            setErrorMsg(diaconnG8Pump.resultErrorCode, result)
+        } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
+        return result
     }
 
     override fun stopBolusDelivering() {

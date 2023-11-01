@@ -160,44 +160,40 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
-        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
-            boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
-            PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
-                    .bolusDelivered(t.getInsulin());
-            if (!result.getSuccess())
-                result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(), danaPump.getBolusStartErrorCode()));
-            else
-                result.comment(app.aaps.core.ui.R.string.ok);
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
-            detailedBolusInfo.insulin = t.getInsulin();
-            detailedBolusInfo.timestamp = System.currentTimeMillis();
-            if (detailedBolusInfo.insulin > 0)
-                pumpSync.syncBolusWithPumpId(
-                        detailedBolusInfo.timestamp,
-                        detailedBolusInfo.insulin,
-                        detailedBolusInfo.getBolusType(),
-                        dateUtil.now(),
-                        PumpType.DANA_R,
-                        serialNumber());
-            if (detailedBolusInfo.carbs > 0)
-                pumpSync.syncCarbsWithTimestamp(
-                        detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp,
-                        detailedBolusInfo.carbs,
-                        null,
-                        PumpType.DANA_R,
-                        serialNumber());
-            return result;
-        } else {
-            PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(false).bolusDelivered(0d).comment(app.aaps.core.ui.R.string.invalid_input);
-            aapsLogger.error("deliverTreatment: Invalid input");
-            return result;
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
+        EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
+        boolean connectionOK = false;
+        if (detailedBolusInfo.insulin > 0)
+            connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
+        PumpEnactResult result = new PumpEnactResult(getInjector());
+        result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
+                .bolusDelivered(t.getInsulin());
+        if (!result.getSuccess())
+            result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(), danaPump.getBolusStartErrorCode()));
+        else
+            result.comment(app.aaps.core.ui.R.string.ok);
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
+        detailedBolusInfo.insulin = t.getInsulin();
+        detailedBolusInfo.timestamp = System.currentTimeMillis();
+        if (detailedBolusInfo.insulin > 0)
+            pumpSync.syncBolusWithPumpId(
+                    detailedBolusInfo.timestamp,
+                    detailedBolusInfo.insulin,
+                    detailedBolusInfo.getBolusType(),
+                    dateUtil.now(),
+                    PumpType.DANA_R,
+                    serialNumber());
+        if (detailedBolusInfo.carbs > 0)
+            pumpSync.syncCarbsWithTimestamp(
+                    detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp,
+                    detailedBolusInfo.carbs,
+                    null,
+                    PumpType.DANA_R,
+                    serialNumber());
+        return result;
     }
 
     // This is called from APS
