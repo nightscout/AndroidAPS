@@ -36,7 +36,7 @@
     <string name="pref_show_rig_battery">Rodyti įrenginio bateriją</string>
     <string name="pref_show_basal_rate">Rodyti valandinę bazę</string>
     <string name="pref_show_loop_status">Rodyti Ciklo statusą</string>
-    <string name="pref_show_bg">Rodyti glikemiją</string>
+    <string name="pref_show_bg">Rodyti KG</string>
     <string name="pref_show_bgi">Rodyti GĮ</string>
     <string name="pref_show_direction_arrow">Rodyti krypties rodyklę</string>
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
@@ -149,7 +149,7 @@
     <string name="color_name_black">juoda</string>
     <string name="color_name_multicolor">daug spalvų</string>
     <string name="pref_simplify_ui">Supaprastinta sąsaja</string>
-    <string name="pref_simplify_ui_sum">Rodyti tik laiką ir glikemiją</string>
+    <string name="pref_simplify_ui_sum">Rodyti tik laiką ir KG</string>
     <string name="pref_vibrate_hourly">Vibruoti kas valandą</string>
     <string name="pref_show_weeknumber">Rodyti savaitės numerį</string>
     <string name="custom_pref_show_seconds">Rodyti sekundes</string>
