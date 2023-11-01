@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Pumpa je pozastavena kvůli překročení maximálního množství inzulínu za den</string>
     <string name="patch_not_active">Patch není aktivován</string>
     <string name="pump_setting_failed">Načtení uživatelského nastavení do pumpy selhalo!</string>
+    <string name="pump_sync_error">Chyba při synchronizaci historie z pumpy, záznam byl přeskočen. Zkontrolujte, zda je bolus správně synchronizován. Potvrďte, a pokud se chyba vrátí, změňte patch nebo pumpu.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Stav BLE</string>
     <string name="last_connection_label">Naposledy připojeno</string>

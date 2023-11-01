@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Juster sensitivitet og BS</string>
+    <string name="dynisf_adjust_sensitivity">Juster sensitivitet og basal</string>
+    <string name="dynisf_adjust_sensitivity_summary">Hvis aktivert bruker DynISF de siste 24t TDD/7D TDD som grunnlag for justering av kalkulert ISF og også for økning og reduksjon av basaldose, på samme måte som standard Autosens gjør</string>
     <string name="DynISFAdjust_title" formatted="false">Dynamisk ISF justeringsfaktor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor for dynamisk ISF. Verdier over 100% vil gi mer aggressive korreksjonsdoser, mens verdier under 100% vil gi mildere korreksjonsdoser.</string>
     <string name="high_temptarget_raises_sensitivity_title">Høyt midl. mål øker sensitiviteten</string>
@@ -17,7 +18,7 @@
     <string name="openapsma_disabled">Plugin er deaktivert</string>
     <string name="openapsma_no_glucose_data">Ingen BS data tilgjengelig</string>
     <string name="openaps_no_as_data">Ingen data tilgjengelig for autosens</string>
-    <string name="dynisf_shortname">DYNISF</string>
+    <string name="dynisf_shortname">DISF</string>
     <string name="executing">Utfører</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Liste med %1$d elementer.\nFaktisk verdi:</string>
@@ -39,7 +40,7 @@
     <string name="openapsma_autosensdata_label">Autosens-data</string>
     <string name="openapsma_script_debug_data_label">Script feilsøking</string>
     <string name="openapsama_use_autosens">Bruk Autosens-funksjon</string>
-    <string name="openapsma_max_basal_title">Max E/t en midl. basal kan settes til</string>
+    <string name="openapsma_max_basal_title">Maks E/t en midlertidig basal kan settes til</string>
     <string name="openapsma_max_basal_summary">Denne verdien kalles max basal i OpenAPS</string>
     <string name="openapsma_max_iob_title">Maksimum basal IOB som OpenAPS kan levere [E]</string>
     <string name="openapsma_max_iob_summary">Denne verdien kalles Max IOB i OpenAPS.\nDet er maks insulinmengde i [E] som APS kan levere i en dose.</string>
@@ -58,7 +59,7 @@
     <string name="openapssmb_max_iob_summary">Denne verdien kalles Maks IOB av OpenAPS\nAAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien</string>
     <string name="enable_uam">Aktiver UAM</string>
     <string name="enable_smb">Aktiver SMB</string>
-    <string name="enable_smb_summary">Bruk Supermikrobolus i stedet for midl. basal for raskere resultat</string>
+    <string name="enable_smb_summary">Bruk Super Micro Boluser i kombinasjon med midlertidig basal for raskere resultat</string>
     <string name="enable_uam_summary">Oppdage uannonsert måltid (UAM)</string>
     <string name="enable_smb_always">Aktiver SMB alltid</string>
     <string name="enable_smb_always_summary">Aktiver SMB alltid uavhengig av boluser. Bare mulig med en bra filtrert BS kilde som f.eks. Dexcom G5/G6</string>
@@ -66,10 +67,10 @@
     <string name="enable_smb_after_carbs_summary">Aktiver SMB i 6t etter karbohydratinntak, selv med 0 COB. Bare mulig med en bra filtrert BS kilde som f. eks. Dexcom G5/G6</string>
     <string name="enable_smb_with_cob">Aktiver SMB med COB</string>
     <string name="enable_smb_with_cob_summary">Aktiver SMB når COB (karbohydrater ombord) er aktiv.</string>
-    <string name="enable_smb_with_temp_target">Aktiver SMB med midl. målverdi</string>
-    <string name="enable_smb_with_temp_target_summary">Aktiver SMB når midl. målverdi er aktivert (spise snart, trening)</string>
+    <string name="enable_smb_with_temp_target">Aktiver SMB med midlertidig målverdi</string>
+    <string name="enable_smb_with_temp_target_summary">Aktiver SMB når midlertidig målverdi er aktivert (spise snart, aktivitet)</string>
     <string name="enable_smb_with_high_temp_target">Aktiver SMB ved høy midl. målverdi</string>
-    <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når det er aktiv midl. målverdi (trening, over 100 mg/dl eller 5,5 mmol/l)</string>
+    <string name="enable_smb_with_high_temp_target_summary">Aktiver SMB når det er en høy aktiv midlertidig målverdi (trening, over 100 mg/dl eller 5,5 mmol/l)</string>
     <string name="smb_max_minutes_summary">Maks antall minutter med basal som kan bli SMB</string>
     <string name="uam_smb_max_minutes">UAM SMB maks minutter</string>
     <string name="uam_smb_max_minutes_summary">Maks antall minutter basal som kan bli SMB ved UAM</string>

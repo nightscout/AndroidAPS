@@ -27,7 +27,7 @@
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS til alle numre</string>
     <string name="sendsmsactiontext">Send SMS med tekst</string>
-    <string name="starttemptarget">Start midl. mål</string>
+    <string name="starttemptarget">Start midlertidig mål</string>
     <string name="islesser">er mindre enn</string>
     <string name="isequalorlesser">er lik eller mindre enn</string>
     <string name="isequal">er lik som</string>
@@ -37,7 +37,7 @@
     <string name="glucoseisnotavailable">BS-data er ikke tilgjengelig</string>
     <string name="glucosecomparedmgdl">BS %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">BS %1$s %2$.1f %3$s</string>
-    <string name="notemptarget">Midl. mål finnes ikke</string>
+    <string name="notemptarget">Midlertidig mål finnes ikke</string>
     <string name="temptargetcomparedmgdl">Midl. mål %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Midl. mål %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profilprosent %1$s %2$d</string>

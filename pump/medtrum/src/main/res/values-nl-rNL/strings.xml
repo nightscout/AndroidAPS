@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Pomp is onderbroken als gevolg van overschrijding max insuline per dag</string>
     <string name="patch_not_active">Patch niet geactiveerd</string>
     <string name="pump_setting_failed">Gebruikersinstellingen instellen op de pomp mislukt!</string>
+    <string name="pump_sync_error">Fout bij het synchroniseren van de geschiedenis van de pomp: een record is overgeslagen. Controleer in het behandeling tabblad of de bolus correct is gesynchroniseerd. Stel het alarm uit en vervang als de fout blijft terugkomen de patch of pompbasis.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">BLE Status</string>
     <string name="last_connection_label">Laatste verbinding</string>

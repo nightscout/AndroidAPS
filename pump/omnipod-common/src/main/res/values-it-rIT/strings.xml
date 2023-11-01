@@ -104,6 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostra tasto \"sospendi erogazione\" nella scheda Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Rilevamento ora legale/fuso orario abilitato</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Promemoria scadenza abilitato</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Se abilitato il pod emetterà 1 bip quando il tempo impostato sarà raggiunto</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Promemoria orario prima della scadenza (72 ore)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Allarme scadenza abilitato</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Se abilitato il pod emetterà 1 bip quando il tempo specificato sarà raggiunto e un\'ora prima dello spegnimento</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Allarme orario prima dello spegnimento (80 ore)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Avviso livello serbatoio basso abilitato</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Numero di unità</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenzia automaticamente avvisi pod</string>

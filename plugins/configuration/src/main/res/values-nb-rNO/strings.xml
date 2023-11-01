@@ -153,7 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Mangler krypteringsinformasjon, formatet på innstillinger er ugyldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ugyldig eller ikke spesifisert krypteringsalgoritme!</string>
     <!-- Custom Watchface -->
-    <string name="wear_import_custom_watchface_title">Velg tilpasset klokkebakgrunn</string>
+    <string name="wear_import_custom_watchface_title">Velg tilpasset urskive</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AAPS fra Innstillinger \nellers vil ikke AAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig)!</string>
     <!-- Maintenance -->
