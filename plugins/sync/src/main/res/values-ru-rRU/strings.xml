@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">Синхронизирует данные с Nightscout при помощи API v3</string>
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
+    <string name="no_connectivity">Нет подключения</string>
     <string name="unsupported_ns_version">Неподдерживаемая версия Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">ЗАГРУЗ</string>
