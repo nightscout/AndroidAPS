@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
@@ -306,6 +307,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
                         else -> "Error"
                     }, determineBasalAdapterSMBJS.json(), determineBasalResultSMB.json()
                 )
+                rxBus.send(EventAPSCalculationFinished())
             }
         }
         rxBus.send(EventOpenAPSUpdateGui())

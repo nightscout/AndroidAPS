@@ -24,7 +24,7 @@ abstract class LoggingWorker(context: Context, workerParams: WorkerParameters, p
     override suspend fun doWork(): Result =
         withContext(dispatcher) {
             doWorkAndLog().also {
-                aapsLogger.debug(LTag.WORKER, "Worker result ${it::class.java.simpleName.uppercase()} for ${this@LoggingWorker::class.java}")
+                aapsLogger.debug(LTag.WORKER, "Worker result ${it::class.java.simpleName.uppercase()} for ${this@LoggingWorker::class.java} ${it.outputData}")
             }
         }
 

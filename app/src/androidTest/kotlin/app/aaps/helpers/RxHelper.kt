@@ -2,6 +2,7 @@ package app.aaps.helpers
 
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
@@ -57,18 +58,33 @@ class RxHelper @Inject constructor(
      * @param clazz Class to observe
      * @param maxSeconds max waiting time in seconds
      */
-    fun waitFor(clazz: Class<out Event>, maxSeconds: Long = 20): Pair<Boolean, Event?> {
-        val watcher = hashMap[clazz] ?: return Pair(false, null)
+    fun waitFor(clazz: Class<out Event>, maxSeconds: Long = 20, comment: String = ""): Pair<Boolean, Event?> {
+        val watcher = hashMap[clazz] ?: error("Class not registered")
         val start = dateUtil.now()
         while (!watcher.get()) {
             if (start + T.secs(maxSeconds).msecs() < dateUtil.now()) {
-                aapsLogger.error("${clazz.simpleName} not received")
+                aapsLogger.error("${clazz.simpleName} not received $comment")
                 return Pair(false, null)
             }
             Thread.sleep(100)
-            aapsLogger.debug("Waiting for ${clazz.simpleName}")
+            aapsLogger.debug("Waiting for ${clazz.simpleName} $comment")
         }
+        aapsLogger.info(LTag.EVENTS, "Received ${clazz.simpleName} $comment ${eventHashMap[clazz]}")
         watcher.set(false)
         return Pair(true, eventHashMap[clazz])
+    }
+
+    /**
+     * Reset receiver to wait for new event
+     *
+     * @param clazz Class
+     */
+    fun resetState(clazz: Class<out Event>) {
+        hashMap[clazz]?.set(false)
+        eventHashMap.remove(clazz)
+    }
+
+    fun clear() {
+        disposable.clear()
     }
 }

@@ -1,12 +1,17 @@
 package app.aaps.plugins.aps
 
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.rule.GrantPermissionRule
 import app.aaps.TestApplication
+import app.aaps.core.data.model.GV
+import app.aaps.core.data.model.SourceSensor
+import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
@@ -14,18 +19,25 @@ import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
+import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
+import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.helpers.RxHelper
+import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
+import app.aaps.plugins.aps.events.EventResetOpenAPSGui
 import app.aaps.plugins.aps.loop.events.EventLoopSetLastRunGui
 import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
+import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
 
@@ -45,6 +57,10 @@ class LoopTest @Inject constructor() {
     @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
     @Inject lateinit var objectivesPlugin: ObjectivesPlugin
+    @Inject lateinit var persistenceLayer: PersistenceLayer
+
+    @get:Rule
+    var runtimePermissionRule = GrantPermissionRule.grant(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)!!
 
     private val context = ApplicationProvider.getApplicationContext<TestApplication>()
 
@@ -56,11 +72,20 @@ class LoopTest @Inject constructor() {
         context.androidInjector().inject(this)
     }
 
+    @After
+    fun tearDown() {
+        rxHelper.clear()
+    }
     @Test
     fun loopTest() {
         // Prepare
         rxHelper.listen(EventEffectiveProfileSwitchChanged::class.java)
         rxHelper.listen(EventLoopSetLastRunGui::class.java)
+        rxHelper.listen(EventResetOpenAPSGui::class.java)
+        rxHelper.listen(EventOpenAPSUpdateGui::class.java)
+        rxHelper.listen(EventNewBG::class.java)
+        rxHelper.listen(EventAutosensCalculationFinished::class.java)
+        rxHelper.listen(EventAPSCalculationFinished::class.java)
         (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
 
         // Enable event logging
@@ -69,10 +94,9 @@ class LoopTest @Inject constructor() {
         // Are we running full flavor?
         assertThat(config.APS).isTrue()
 
-
         // Loop should be limited by unfinished objectives
-        loop.invoke("test", allowNotification = false)
-        var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java)
+        loop.invoke("test1", allowNotification = false)
+        var loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step1")
         assertThat(loopStatusEvent.first).isTrue()
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("Objective 1 not started")
 
@@ -80,8 +104,8 @@ class LoopTest @Inject constructor() {
         objectivesPlugin.objectives[0].startedOn = 1
 
         // Now there should be missing profile
-        loop.invoke("test", allowNotification = false)
-        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java)
+        loop.invoke("test2", allowNotification = false)
+        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step2")
         assertThat(loopStatusEvent.first).isTrue()
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO PROFILE SET")
 
@@ -109,13 +133,39 @@ class LoopTest @Inject constructor() {
         assertThat(result).isTrue()
 
         // wait until PS is processed by pump and EventEffectiveProfileSwitchChanged is received
-        assertThat(rxHelper.waitFor(EventEffectiveProfileSwitchChanged::class.java).first).isTrue()
+        assertThat(rxHelper.waitFor(EventEffectiveProfileSwitchChanged::class.java, comment = "step3").first).isTrue()
         assertThat(profileFunction.getProfile()).isNotNull()
 
-        // Now loop should fail on missing APS plugin
-        loop.invoke("test", allowNotification = false)
-        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java)
+        // Loop should fail on no result from APS plugin
+        loop.invoke("test3", allowNotification = false)
+        loopStatusEvent = rxHelper.waitFor(EventLoopSetLastRunGui::class.java, comment = "step4")
         assertThat(loopStatusEvent.first).isTrue()
         assertThat((loopStatusEvent.second as EventLoopSetLastRunGui).text).contains("NO APS SELECTED OR PROVIDED RESULT")
+        var apsStatusEvent = rxHelper.waitFor(EventResetOpenAPSGui::class.java, comment = "step5")
+        assertThat(apsStatusEvent.first).isTrue()
+        assertThat((apsStatusEvent.second as EventResetOpenAPSGui).text).contains("No glucose data available")
+        assertThat(loop.lastRun).isNull()
+
+        // Let generate some BGs
+        rxHelper.resetState(EventNewBG::class.java)
+        val now = dateUtil.now()
+        val glucoseValues = mutableListOf<GV>()
+        glucoseValues += GV(timestamp = now - 5 * 60000, value = 100.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
+        glucoseValues += GV(timestamp = now - 4 * 60000, value = 110.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
+        glucoseValues += GV(timestamp = now - 3 * 60000, value = 120.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
+        glucoseValues += GV(timestamp = now - 2 * 60000, value = 130.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
+        glucoseValues += GV(timestamp = now - 1 * 60000, value = 140.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
+        glucoseValues += GV(timestamp = now - 0 * 60000, value = 150.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
+        assertThat(persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null).blockingGet().inserted.size).isEqualTo(6)
+
+        // EventNewBG should be triggered
+        assertThat(rxHelper.waitFor(EventNewBG::class.java, comment = "step6").first).isTrue()
+        // it should trigger loop, so wait for result
+        //assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, comment = "test4").first).isTrue()
+ //       Thread.sleep(10000)
+        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, comment = "step7").first).isTrue()
+        Thread.sleep(1000)
+        assertThat(loop.lastRun).isNotNull()
+
     }
 }
