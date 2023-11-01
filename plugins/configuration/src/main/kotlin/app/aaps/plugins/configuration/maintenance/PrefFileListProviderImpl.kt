@@ -91,7 +91,7 @@ class PrefFileListProviderImpl @Inject constructor(
                 .filter { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status != null }
                 .toMutableList()
                 .sortWith(
-                    compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status as PrefsStatusImpl }
+                    compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status as? PrefsStatusImpl }
                         .thenByDescending { it.metadata[PrefsMetadataKeyImpl.CREATED_AT]?.value }
                 )
         }
