@@ -29,8 +29,18 @@ interface LoopHub {
     /** Returns the factor by which the basal rate is currently raised (> 1) or lowered (< 1). */
     val temporaryBasal: Double
 
+    /** Tells the loop algorithm that the pump is physically connected. */
+    fun connectPump()
+
+    /** Tells the loop algorithm that the pump will be physically disconnected
+     *  for the given number of minutes. */
+    fun disconnectPump(minutes: Int)
+
     /** Retrieves the glucose values starting at from. */
     fun getGlucoseValues(from: Instant, ascending: Boolean): List<GlucoseValue>
+
+    /** Notifies the system that carbs were eaten and stores the value. */
+    fun postCarbs(carbohydrates: Int)
 
     /** Stores hear rate readings that a taken and averaged of the given interval. */
     fun storeHeartRate(

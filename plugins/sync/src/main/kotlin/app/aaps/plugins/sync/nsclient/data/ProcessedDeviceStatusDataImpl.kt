@@ -116,7 +116,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override val openApsTimestamp: Long
         get() = if (openAPSData.clockSuggested != 0L) openAPSData.clockSuggested else -1
 
-    override fun getAPSResult(injector: HasAndroidInjector): APSResult =
+    override fun getAPSResult(): APSResult =
         instantiator.provideAPSResultObject().also {
             it.json = openAPSData.suggested
             it.date = openAPSData.clockSuggested

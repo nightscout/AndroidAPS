@@ -1,8 +1,8 @@
 package app.aaps.plugins.sync.garmin
 
-
 import app.aaps.core.interfaces.aps.APSResult
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.GlucoseUnit
 import app.aaps.core.interfaces.iob.IobCobCalculator
@@ -10,13 +10,19 @@ import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.GlucoseValue
 import app.aaps.database.entities.HeartRate
+import app.aaps.database.entities.OfflineEvent
+import app.aaps.database.entities.UserEntry
+import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.entities.embedments.InsulinConfiguration
 import app.aaps.database.impl.AppRepository
+import app.aaps.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import app.aaps.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import app.aaps.shared.tests.TestBase
 import io.reactivex.rxjava3.core.Completable
@@ -27,6 +33,8 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.argThat
+import org.mockito.ArgumentMatchers.isNull
 import org.mockito.Mock
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.times
@@ -45,13 +53,17 @@ class LoopHubTest: TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var repo: AppRepository
     @Mock lateinit var userEntryLogger: UserEntryLogger
+    @Mock lateinit var sp: SP
 
     private lateinit var loopHub: LoopHubImpl
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
 
     @BeforeEach
     fun setup() {
-        loopHub = LoopHubImpl(iobCobCalculator, loop, profileFunction, repo)
+        loopHub = LoopHubImpl(
+            aapsLogger, commandQueue, constraints, iobCobCalculator, loop,
+            profileFunction, repo, userEntryLogger, sp
+        )
         loopHub.clock = clock
     }
 
@@ -83,18 +95,10 @@ class LoopHubTest: TestBase() {
 
     @Test
     fun testGlucoseUnit() {
-        val profile = mock(Profile::class.java)
-        `when`(profile.units).thenReturn(GlucoseUnit.MMOL)
-        `when`(profileFunction.getProfile()).thenReturn(profile)
-        assertEquals(GlucoseUnit.MMOL, loopHub.glucoseUnit)
-        verify(profileFunction, times(1)).getProfile()
-    }
-
-    @Test
-    fun testGlucoseUnitNullProfile() {
-        `when`(profileFunction.getProfile()).thenReturn(null)
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mg/dl")
         assertEquals(GlucoseUnit.MGDL, loopHub.glucoseUnit)
-        verify(profileFunction, times(1)).getProfile()
+        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mmol")
+        assertEquals(GlucoseUnit.MMOL, loopHub.glucoseUnit)
     }
 
     @Test
@@ -166,6 +170,32 @@ class LoopHubTest: TestBase() {
     }
 
     @Test
+    fun testConnectPump() {
+        val c = mock(Completable::class.java)
+        val dummy = CancelCurrentOfflineEventIfAnyTransaction(0)
+        val matcher = {
+            argThat<CancelCurrentOfflineEventIfAnyTransaction> { t -> t.timestamp == clock.millis() }}
+        `when`(repo.runTransaction(matcher() ?: dummy)).thenReturn(c)
+        loopHub.connectPump()
+        verify(repo).runTransaction(matcher() ?: dummy)
+        verify(commandQueue).cancelTempBasal(true, null)
+        verify(userEntryLogger).log(UserEntry.Action.RECONNECT, UserEntry.Sources.GarminDevice)
+    }
+
+    @Test
+    fun testDisconnectPump() {
+        val profile = mock(Profile::class.java)
+        `when`(profileFunction.getProfile()).thenReturn(profile)
+        loopHub.disconnectPump(23)
+        verify(profileFunction).getProfile()
+        verify(loop).goToZeroTemp(23, profile, OfflineEvent.Reason.DISCONNECT_PUMP)
+        verify(userEntryLogger).log(
+            UserEntry.Action.DISCONNECT,
+            UserEntry.Sources.GarminDevice,
+            ValueWithUnit.Minute(23))
+    }
+
+    @Test
     fun testGetGlucoseValues() {
         val glucoseValues = listOf(
             GlucoseValue(
@@ -178,6 +208,25 @@ class LoopHubTest: TestBase() {
             glucoseValues.toTypedArray(),
             loopHub.getGlucoseValues(Instant.ofEpochMilli(1001_000), false).toTypedArray())
         verify(repo).compatGetBgReadingsDataFromTime(1001_000, false)
+    }
+
+    @Test
+    fun testPostCarbs() {
+        @Suppress("unchecked_cast")
+        val constraint = mock(Constraint::class.java) as Constraint<Int>
+        `when`(constraint.value()).thenReturn(99)
+        `when`(constraints.getMaxCarbsAllowed()).thenReturn(constraint)
+        loopHub.postCarbs(100)
+        verify(constraints).getMaxCarbsAllowed()
+        verify(userEntryLogger).log(
+            UserEntry.Action.CARBS,
+            UserEntry.Sources.GarminDevice,
+            ValueWithUnit.Gram(99))
+        verify(commandQueue).bolus(
+            argThat { b ->
+                b!!.eventType == DetailedBolusInfo.EventType.CARBS_CORRECTION &&
+                b.carbs == 99.0 }?: DetailedBolusInfo() ,
+            isNull())
     }
 
     @Test

@@ -116,7 +116,7 @@
     <string name="xdrip_local_broadcasts_summary">Envoyer les glycémies et les traitements à xDrip+. La source de données \"xDrip+ Sync Follower\" doit être sélectionnée et l\'acceptation des données doit être activée dans Paramètres - Paramètres Inter-app - Accepter Glycémies/Traitements</string>
     <string name="xdrip_local_broadcasts_title">Activer les diffusions vers xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="data_broadcaster">Diffusue de données</string>
+    <string name="data_broadcaster">Diffuseur de données</string>
     <string name="data_broadcaster_short">DD</string>
     <string name="data_broadcaster_description">Diffuser des données sur l\'application G-Watch Wear de Garmin</string>
     <!-- GarminPlugin -->

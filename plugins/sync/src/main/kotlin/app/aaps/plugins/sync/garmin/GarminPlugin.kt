@@ -94,6 +94,8 @@ class GarminPlugin @Inject constructor(
             server?.close()
             server = HttpServer(aapsLogger, port).apply {
                 registerEndpoint("/get", ::onGetBloodGlucose)
+                registerEndpoint("/carbs", ::onPostCarbs)
+                registerEndpoint("/connect", ::onConnectPump)
             }
         } else if (server != null) {
             aapsLogger.info(LTag.GARMIN, "stopping HTTP server")
@@ -242,5 +244,37 @@ class GarminPlugin @Inject constructor(
         } else {
             aapsLogger.warn(LTag.GARMIN, "Skip saving invalid HR $avg $samplingStart..$samplingEnd")
         }
+    }
+
+    /** Handles carb notification from the device. */
+    @VisibleForTesting
+    @Suppress("UNUSED_PARAMETER")
+    fun onPostCarbs(caller: SocketAddress, uri: URI, requestBody: String?): CharSequence {
+        aapsLogger.info(LTag.GARMIN, "carbs from $caller, req: $uri")
+        postCarbs(getQueryParameter(uri, "carbs", 0L).toInt())
+        return ""
+    }
+
+    private fun postCarbs(carbs: Int) {
+        if (carbs > 0) {
+            loopHub.postCarbs(carbs)
+        }
+    }
+
+    /** Handles pump connected notification that the user entered on the Garmin device. */
+    @VisibleForTesting
+    @Suppress("UNUSED_PARAMETER")
+    fun onConnectPump(caller: SocketAddress, uri: URI, requestBody: String?): CharSequence {
+        aapsLogger.info(LTag.GARMIN, "connect from $caller, req: $uri")
+        val minutes = getQueryParameter(uri, "disconnectMinutes", 0L).toInt()
+        if (minutes > 0) {
+            loopHub.disconnectPump(minutes)
+        } else {
+            loopHub.connectPump()
+        }
+
+        val jo = JsonObject()
+        jo.addProperty("connected", loopHub.isConnected)
+        return jo.toString()
     }
 }

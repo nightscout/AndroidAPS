@@ -52,7 +52,7 @@
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <string name="medtronic_pump_history">Storico micro Medtronic</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Hai cancellato il bolo, dopo che era già stato impostato sul micro. Dal momento che il micro Medtronic non supporta la cancellazione, avrai bisogno di cancellare il bolo manualmente. Metti il micro in modalità sospensione e poi fallo ripartire (se vuoi ancora cancellare il bolo). L\'applicazione rileverà le modifiche al prossimo aggiornamento (in meno di 5 minuti).</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Hai cancellato il bolo dopo che era già stato impostato sul micro. Dal momento che il micro Medtronic non supporta la cancellazione, avrai bisogno di cancellare il bolo manualmente. Metti il micro in modalità sospensione e poi fallo ripartire (se vuoi ancora cancellare il bolo). L\'applicazione rileverà le modifiche al prossimo aggiornamento (in meno di 5 minuti).</string>
     <string name="medtronic_cmd_cant_read_tbr">Impossibile leggere il TBR corrente.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Impossibile cancellare il TBR corrente. Arresto dell\'operazione.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Impostazione del profilo fallita. A causa dei seguenti modelli, hai una velocità basale troppo grande: %1$s</string>

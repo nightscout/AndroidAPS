@@ -524,7 +524,11 @@ class NSClientService : DaggerService() {
                                 }
                             }
 
-                            val devicestatuses = gson.fromJson(data.getString("devicestatus"), Array<NSDeviceStatus>::class.java)
+                            val devicestatuses = try {
+                                gson.fromJson(data.getString("devicestatus"), Array<NSDeviceStatus>::class.java)
+                            } catch (unused: Exception) {
+                                emptyArray<NSDeviceStatus>()
+                            }
                             if (devicestatuses.isNotEmpty()) {
                                 rxBus.send(EventNSClientNewLog("◄ DATA", "received " + devicestatuses.size + " device statuses"))
                                 nsDeviceStatusHandler.handleNewData(devicestatuses)

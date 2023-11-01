@@ -116,7 +116,12 @@
     <string name="xdrip_local_broadcasts_summary">Отправлять данные о глюкозе и терапии на xDrip+. Источником данных должен быть выбран \"xDrip+ Sync Follower\" а в настройках между приложениями надо включить - Принимать глюкозу/терапию</string>
     <string name="xdrip_local_broadcasts_title">Включить трансляции для xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="data_broadcaster_short">DBRO</string>
+    <string name="data_broadcaster_description">Передавать данные приложению Garmin\'s G-Watch Wear</string>
     <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Подключение к устройству Garmin (Fenix, Edge, …)</string>
+    <string name="key_garmin_settings">Настройки Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>

@@ -51,6 +51,7 @@
     <string name="extended_bolus">Yayma Bolus</string>
     <string name="paused">Duraklatıldı</string>
     <string name="tdd_total">GTD Toplam</string>
+    <string name="tdd_old_data">Eski veri</string>
     <string name="goingtodeliver">%1$.2f Ü gönderilecek</string>
     <string name="waitingforpump">Pompa bekleniyor</string>
     <string name="androidaps_start">AAPS başladı</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Pompa durumunu NS veya Tidepool\'a yükleyin</string>
     <string name="suspendloop_label">Döngüyü Devre Dışı bırakma/Askıya alma</string>
     <string name="iob_label">Aktif İnsülin (AİNS)</string>
+    <string name="loopstatus_targets">HEDEFLER:</string>
+    <string name="loopstatus_OAPS_result">OAPS SONUCU:</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
     <string name="wrongpin">Yanlış PIN</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>
     <string name="no_action_selected">Seçili eylem yok, hiçbir şey olmayacak</string>
+    <string name="carb_equal_zero_no_action">Karb = 0. Hiçbir şey yapılmadı!</string>
+    <string name="wizard_no_insulin_required">İnsülin gerekmiyor!</string>
     <string name="wizard_no_actual_bg">Hesaplamayı temel alacak yeni bir KŞ yok!</string>
     <string name="wizard_no_active_profile">Etkin profil ayarlanmadı!</string>
     <string name="wizard_no_cob">Aktif karbonhidrat (AKRB) bilinmiyor! KŞ okuması eksik veya son uygulama yeniden başlatılsın mı?</string>

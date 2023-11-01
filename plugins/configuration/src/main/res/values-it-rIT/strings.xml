@@ -88,7 +88,7 @@
     <string name="preferences_export_canceled">Esportazione annullata! Le preferenze NON sono state esportate!</string>
     <string name="preferences_import_canceled">Importazione annullata! Le preferenze NON sono state importate!</string>
     <string name="preferences_import_impossible">Impossibile importare le preferenze!</string>
-    <string name="check_preferences_details_btn">Descrivi i problemi importazione…</string>
+    <string name="check_preferences_details_btn">Descrivi i problemi di importazione…</string>
     <string name="check_preferences_details_title">Dettagli dei problemi di importazione</string>
     <string name="check_preferences_import_btn">Importa</string>
     <string name="check_preferences_import_anyway_btn">Importa comunque (PERICOLOSO!)</string>
