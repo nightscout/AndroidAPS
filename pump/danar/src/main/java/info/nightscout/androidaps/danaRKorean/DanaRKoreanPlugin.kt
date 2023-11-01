@@ -148,7 +148,7 @@ class DanaRKoreanPlugin @Inject constructor(
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
-        require(detailedBolusInfo.carbs > 0)
+        require(detailedBolusInfo.carbs <= 0)
         return if (detailedBolusInfo.insulin > 0) {
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
             var connectionOK = false
