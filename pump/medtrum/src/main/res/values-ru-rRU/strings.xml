@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Помпа приостановлена в связи с превышением максимального допустимого количества инсулина в сутки</string>
     <string name="patch_not_active">Патч не активирован</string>
     <string name="pump_setting_failed">Сбой передачи пользовательских настроек на помпу!</string>
+    <string name="pump_sync_error">Ошибка при синхронизации журнала с помпы, запись пропущена. Проверьте вкладку терапии, правильно ли синхронизированы болюсы. Уберите предупреждение, а если ошибка повторится, замените патч или базу помпы.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Статус BT</string>
     <string name="last_connection_label">Последнее подключение</string>

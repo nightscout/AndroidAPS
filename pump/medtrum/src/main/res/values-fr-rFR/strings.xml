@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">La pompe est suspendue, la quantité maximum d\'insuline par jour est dépassée</string>
     <string name="patch_not_active">Patch non activé</string>
     <string name="pump_setting_failed">La configuration des paramètres de la pompe a échoué!</string>
+    <string name="pump_sync_error">Erreur lors de la synchronisation de l\'historique de la pompe, un enregistrement a été ignoré. Vérifiez l\'onglet de traitement pour vérifier si le bolus est correctement synchronisé. Mettez en veille et si l\'erreur continue d\'apparaître, changer le patch ou la pompe.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">État BT</string>
     <string name="last_connection_label">Dernière connexion</string>

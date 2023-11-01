@@ -19,8 +19,8 @@
     <string name="omnipod_dash_overview_bluetooth_connection_quality">Ryšio kokybė</string>
     <string name="omnipod_dash_overview_delivery_status">Insulino statusas</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
-    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Užpildykite naują Pod        insulinu, kurio pakaktų 3 dienoms.\n\nTaip pat atkreipkite dėmesį į du pyptelėjimus iš Pod, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 80 v. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę Pod, spustelėkite <b>Kitas</b>.\n\n<b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite Pod adatos apsauginio dangtelio.</string>
-    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Vyksta naujo Pod susiejimas ir užpildymas.\n\nSėkmingai užsibaigus inicijavimo procesui, spauskite <b>Kitas</b>.</string>
+    <string name="omnipod_dash_pod_activation_wizard_start_pod_activation_text">Užpildykite naują Pod        insulinu, kurio pakaktų 3 dienoms.\n\nTaip pat atkreipkite dėmesį į du pyptelėjimus iš Pod, kai pildote. Tai rodo, kad rezervuaras buvo užpildytas mažiausiai 80 v. Visiškai ištuštinkite švirkštą, net jei girdėjote du pyptelėjimus.\n\nUžpildę Pod, spustelėkite <b>Toliau</b>.\n\n<b>Pastaba:</b> vykdant šiuos veiksmus, nenuimkite Pod adatos apsauginio gaubtelio.</string>
+    <string name="omnipod_dash_pod_activation_wizard_initialize_pod_text">Vyksta naujo Pod susiejimas ir užpildymas.\n\nSėkmingai užsibaigus inicijavimo procesui, spauskite <b>Toliau</b>.</string>
     <string name="omnipod_common_preferences_notification_delivery_suspended_sound_enabled">Įjungtas pranešimų apie sustabdytą insulino tiekimą garsas</string>
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Nepavyko prisijungti prie Pod</string>

@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Pumpe er pauset fordi maksimal insulinleveranse per dag er overskredet</string>
     <string name="patch_not_active">Patch ikke aktivert</string>
     <string name="pump_setting_failed">Kunne ikke sende brukerinnstillinger til pumpen!</string>
+    <string name="pump_sync_error">Feil ved synkronisering av historikk fra pumpe, en post har blitt hoppet over. Sjekk behandlingsfanen for å kontrollere om bolusdosen er synkronisert riktig. Slumre og hvis feilen kommer tilbake bytt patch eller pumpebase.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Bluetooth Status</string>
     <string name="last_connection_label">Siste tilkobling</string>
