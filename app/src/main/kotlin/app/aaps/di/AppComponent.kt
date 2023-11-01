@@ -3,7 +3,7 @@ package app.aaps.di
 import app.aaps.MainApp
 import app.aaps.core.objects.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
-import app.aaps.database.impl.DatabaseModule
+import app.aaps.database.impl.di.DatabaseModule
 import app.aaps.database.persistence.di.PersistenceModule
 import app.aaps.implementation.di.ImplementationModule
 import app.aaps.plugins.aps.di.ApsModule

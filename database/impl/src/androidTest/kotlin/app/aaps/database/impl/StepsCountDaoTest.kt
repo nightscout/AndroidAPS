@@ -9,6 +9,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import app.aaps.database.entities.StepsCount
 import app.aaps.database.entities.TABLE_STEPS_COUNT
+import app.aaps.database.impl.di.DatabaseModule
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

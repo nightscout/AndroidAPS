@@ -1,4 +1,4 @@
-package app.aaps.database.impl
+package app.aaps.database.impl.di
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
@@ -8,6 +8,7 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import app.aaps.database.entities.TABLE_HEART_RATE
 import app.aaps.database.entities.TABLE_STEPS_COUNT
+import app.aaps.database.impl.AppDatabase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Qualifier

@@ -15,6 +15,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.HasAndroidInjector
 
+/**
+ * Injections needed for [TestApplication]
+ */
 @Suppress("unused")
 @Module(
     includes = [

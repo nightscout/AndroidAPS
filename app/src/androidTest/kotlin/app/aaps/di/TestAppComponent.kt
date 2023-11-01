@@ -3,7 +3,7 @@ package app.aaps.di
 import app.aaps.TestApplication
 import app.aaps.core.objects.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
-import app.aaps.database.impl.DatabaseModule
+import app.aaps.database.impl.di.TestDatabaseModule
 import app.aaps.database.persistence.di.PersistenceModule
 import app.aaps.implementation.di.ImplementationModule
 import app.aaps.plugins.aps.di.ApsModule
@@ -59,7 +59,8 @@ import javax.inject.Singleton
         ApsModule::class,
         ConfigurationModule::class,
         CoreModule::class,
-        DatabaseModule::class,
+        // -> DatabaseModule::class, replace by in-memory database
+        TestDatabaseModule::class,
         ImplementationModule::class,
         InsulinModule::class,
         OpenHumansModule::class,
