@@ -213,6 +213,7 @@ dependencies {
     implementation(project(":workflow"))
 
     testImplementation(project(":shared:tests"))
+    androidTestImplementation(project(":shared:tests"))
     androidTestImplementation(Libs.AndroidX.Test.rules)
     androidTestImplementation(Libs.jsonAssert)
 

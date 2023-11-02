@@ -1,6 +1,7 @@
 package app.aaps.wear.di
 
 import android.content.Context
+import app.aaps.shared.impl.di.LoggerModule
 import app.aaps.shared.impl.di.SharedImplModule
 import app.aaps.wear.WearApp
 import dagger.Binds
@@ -14,7 +15,8 @@ import kotlinx.datetime.Clock
     includes = [
         WearModule.AppBindings::class,
         WearActivitiesModule::class,
-        SharedImplModule::class
+        SharedImplModule::class,
+        LoggerModule::class
     ]
 )
 open class WearModule {

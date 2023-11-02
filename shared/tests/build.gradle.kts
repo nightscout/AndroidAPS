@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     id("kotlin-android")
+    id("kotlin-kapt")
     id("android-module-dependencies")
     id("test-module-dependencies")
     id("jacoco-module-dependencies")
@@ -24,7 +25,5 @@ dependencies {
     api(Libs.Mockito.kotlin)
     api(Libs.JUnit.jupiterApi)
 
-    //api "com.google.dagger:dagger:$dagger_version"
-    //api "com.google.dagger:dagger-android:$dagger_version"
-    //api "com.google.dagger:dagger-android-support:$dagger_version"
+    kapt(Libs.Dagger.compiler)
 }

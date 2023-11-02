@@ -19,6 +19,7 @@ import app.aaps.pump.insight.di.InsightDatabaseModule
 import app.aaps.pump.insight.di.InsightModule
 import app.aaps.pump.virtual.di.VirtualPumpModule
 import app.aaps.shared.impl.di.SharedImplModule
+import app.aaps.shared.tests.di.TestLoggerModule
 import app.aaps.ui.di.UiModule
 import app.aaps.workflow.di.WorkflowModule
 import dagger.BindsInstance
@@ -66,6 +67,8 @@ import javax.inject.Singleton
         OpenHumansModule::class,
         PluginsModule::class,
         SharedImplModule::class,
+        // -> LoggerModule::class,
+        TestLoggerModule::class,
         UiModule::class,
         ValidatorsModule::class,
         PluginsConstraintsModule::class,
