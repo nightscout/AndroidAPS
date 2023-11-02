@@ -7,7 +7,6 @@ import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsFile
-import app.aaps.core.interfaces.maintenance.PrefsImportDir
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -59,44 +58,29 @@ class PrefFileListProviderImpl @Inject constructor(
     }
 
     /**
-     * This function tries to list possible preference files from main SDCard root dir and AAPS/preferences dir
+     * This function tries to list possible preference files from AAPS/preferences dir
      * and tries to do quick assessment for preferences format plausibility.
-     * It does NOT load full metadata or is 100% accurate - it tries to do QUICK detection, based on:
-     *  - file name and extension
-     *  - predicted file contents
      */
-    override fun listPreferenceFiles(loadMetadata: Boolean): MutableList<PrefsFile> {
+    override fun listPreferenceFiles(): MutableList<PrefsFile> {
         val prefFiles = mutableListOf<PrefsFile>()
-
-        // searching rood dir for legacy files
-        path.walk().maxDepth(1).filter { it.isFile && (it.name.endsWith(".json") || it.name.contains("Preferences")) }.forEach {
-            val contents = storage.getFileContents(it)
-            val detectedNew = encryptedPrefsFormat.isPreferencesFile(it, contents)
-            if (detectedNew) {
-                prefFiles.add(PrefsFile(it.name, it, path, PrefsImportDir.ROOT_DIR, metadataFor(loadMetadata, contents)))
-            }
-        }
 
         // searching dedicated dir, only for new JSON format
         aapsPath.walk().filter { it.isFile && it.name.endsWith(".json") }.forEach {
             val contents = storage.getFileContents(it)
             if (encryptedPrefsFormat.isPreferencesFile(it, contents)) {
-                prefFiles.add(PrefsFile(it.name, it, aapsPath, PrefsImportDir.AAPS_DIR, metadataFor(loadMetadata, contents)))
+                prefFiles.add(PrefsFile(it.name, it, aapsPath, metadataFor(contents)))
             }
         }
 
-        // we sort only if we have metadata to be used for that
-        if (loadMetadata) {
-            prefFiles
-                .filter { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status != null }
-                .toMutableList()
-                .sortWith(
-                    compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status as PrefsStatusImpl }
-                        .thenByDescending { it.metadata[PrefsMetadataKeyImpl.CREATED_AT]?.value }
-                )
-        }
-
-        return prefFiles
+        val filtered = prefFiles
+            .filter { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status != null }
+            .filter { (it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status as PrefsStatusImpl) != PrefsStatusImpl.ERROR }
+            .toMutableList()
+        filtered.sortWith(
+            compareByDescending<PrefsFile> { it.metadata[PrefsMetadataKeyImpl.AAPS_FLAVOUR]?.status as PrefsStatusImpl }
+                .thenByDescending { it.metadata[PrefsMetadataKeyImpl.CREATED_AT]?.value }
+        )
+        return filtered
     }
 
     override fun listCustomWatchfaceFiles(): MutableList<CwfFile> {
@@ -127,12 +111,8 @@ class PrefFileListProviderImpl @Inject constructor(
         return customWatchfaceFiles
     }
 
-    private fun metadataFor(loadMetadata: Boolean, contents: String): PrefMetadataMap {
-        if (!loadMetadata) {
-            return mapOf()
-        }
-        return checkMetadata(encryptedPrefsFormat.loadMetadata(contents))
-    }
+    private fun metadataFor(contents: String): PrefMetadataMap =
+        checkMetadata(encryptedPrefsFormat.loadMetadata(contents))
 
     override fun ensureExportDirExists(): File {
         if (!aapsPath.exists()) {
