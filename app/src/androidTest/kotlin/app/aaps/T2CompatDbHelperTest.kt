@@ -64,9 +64,9 @@ class T2CompatDbHelperTest @Inject constructor() {
 
     @Test
     fun dbHelperTest() {
-        rxHelper.listen(Event1stFinished::class.java)
-        rxHelper.waitFor(Event1stFinished::class.java, 60, "finish 1st test")
+
         // Prepare
+        rxHelper.listen(Event1stFinished::class.java)
         rxHelper.listen(EventNewBG::class.java)
         rxHelper.listen(EventNewHistoryData::class.java)
         rxHelper.listen(EventTreatmentChange::class.java)
@@ -79,6 +79,8 @@ class T2CompatDbHelperTest @Inject constructor() {
         rxHelper.listen(EventFoodDatabaseChanged::class.java)
         rxHelper.listen(EventOfflineChange::class.java)
         rxHelper.listen(EventDeviceStatusChange::class.java)
+
+        assertThat(rxHelper.waitFor(Event1stFinished::class.java, 60, "finish 1st test").first).isTrue()
 
         // Enable event logging
         l.findByName(LTag.EVENTS.name).enabled = true
