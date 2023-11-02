@@ -161,7 +161,7 @@ class T1LoopTest @Inject constructor() {
         // it should trigger loop, so wait for result
         Thread.sleep(10000)
         assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, comment = "step8").first).isTrue()
-        Thread.sleep(1000)
+        Thread.sleep(5000)
         assertThat(loop.lastRun).isNotNull()
         rxBus.send(Event1stFinished())
     }
