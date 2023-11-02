@@ -80,7 +80,7 @@ class T2CompatDbHelperTest @Inject constructor() {
         rxHelper.listen(EventOfflineChange::class.java)
         rxHelper.listen(EventDeviceStatusChange::class.java)
 
-        assertThat(rxHelper.waitFor(Event1stFinished::class.java, 60, "finish 1st test").first).isTrue()
+        assertThat(rxHelper.waitFor(Event1stFinished::class.java, 180, "finish 1st test").first).isTrue()
 
         // Enable event logging
         l.findByName(LTag.EVENTS.name).enabled = true

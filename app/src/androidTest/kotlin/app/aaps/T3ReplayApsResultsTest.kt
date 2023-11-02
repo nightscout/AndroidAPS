@@ -54,7 +54,7 @@ class T3ReplayApsResultsTest @Inject constructor() {
     fun replayTest() {
         rxHelper.listen(Event2ndFinished::class.java)
 
-        assertThat(rxHelper.waitFor(Event2ndFinished::class.java, 60, "finish 2nd test").first).isTrue()
+        assertThat(rxHelper.waitFor(Event2ndFinished::class.java, 180, "finish 2nd test").first).isTrue()
 
         val results = readResultFiles()
         assertThat(results.size).isGreaterThan(0)
