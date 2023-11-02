@@ -85,50 +85,11 @@ class CompatDbHelperTest @Inject constructor() {
         // Enable event logging
         l.findByName(LTag.EVENTS.name).enabled = true
 
-        // Set Profile in ProfilePlugin
-        rxHelper.resetState(EventProfileSwitchChanged::class.java)
-        rxHelper.resetState(EventEffectiveProfileSwitchChanged::class.java)
-        nsIncomingDataProcessor.processProfile(JSONObject(profileData))
-        assertThat(activePlugin.activeProfileSource.profile).isNotNull()
-        // Create a profile switch
-        assertThat(profileFunction.getProfile()).isNull()
-        val ps = profileFunction.createProfileSwitch(
-            profileStore = activePlugin.activeProfileSource.profile ?: error("No profile"),
-            profileName = activePlugin.activeProfileSource.profile?.getDefaultProfileName() ?: error("No profile"),
-            durationInMinutes = 0,
-            percentage = 100,
-            timeShiftInHours = 0,
-            timestamp = dateUtil.now(),
-            action = app.aaps.core.data.ue.Action.PROFILE_SWITCH,
-            source = Sources.ProfileSwitchDialog,
-            note = "Test profile switch",
-            listValues = listOf(
-                ValueWithUnit.SimpleString(activePlugin.activeProfileSource.profile?.getDefaultProfileName() ?: ""),
-                ValueWithUnit.Percent(100)
-            )
-        )
-        assertThat(ps).isTrue()
-        // EventProfileSwitchChanged should be fired
-        assertThat(rxHelper.waitFor(EventProfileSwitchChanged::class.java, comment = "step1").first).isTrue()
-        // After pump processing EventEffectiveProfileSwitchChanged should be fired
-        assertThat(rxHelper.waitFor(EventEffectiveProfileSwitchChanged::class.java, comment = "step2").first).isTrue()
+        // EventProfileSwitchChanged tested in LoopTest
+        // EventEffectiveProfileSwitchChanged tested in LoopTest
+        // EventNewBG and EventNewHistoryData tested in LoopTest
 
-        // Let generate some BGs
-        rxHelper.resetState(EventNewBG::class.java)
-        rxHelper.resetState(EventNewHistoryData::class.java)
         val now = dateUtil.now()
-        val glucoseValues = mutableListOf<GV>()
-        glucoseValues += GV(timestamp = now - 5 * 60000, value = 100.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
-        glucoseValues += GV(timestamp = now - 4 * 60000, value = 110.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
-        glucoseValues += GV(timestamp = now - 3 * 60000, value = 120.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
-        glucoseValues += GV(timestamp = now - 2 * 60000, value = 130.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
-        glucoseValues += GV(timestamp = now - 1 * 60000, value = 140.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
-        glucoseValues += GV(timestamp = now - 0 * 60000, value = 150.0, raw = 0.0, noise = null, trendArrow = TrendArrow.FORTY_FIVE_UP, sourceSensor = SourceSensor.RANDOM)
-        assertThat(persistenceLayer.insertCgmSourceData(Sources.Random, glucoseValues, emptyList(), null).blockingGet().inserted.size).isEqualTo(6)
-
-        // EventNewBG should be triggered
-        assertThat(rxHelper.waitFor(EventNewBG::class.java, comment = "step3").first).isTrue()
-        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step4").first).isTrue()
 
         // Let generate some carbs
         rxHelper.resetState(EventTreatmentChange::class.java)
@@ -147,8 +108,8 @@ class CompatDbHelperTest @Inject constructor() {
             }
         })
         // EventTreatmentChange should be triggered
-        assertThat(rxHelper.waitFor(EventTreatmentChange::class.java, comment = "step5").first).isTrue()
-        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step6").first).isTrue()
+        assertThat(rxHelper.waitFor(EventTreatmentChange::class.java, comment = "step1").first).isTrue()
+        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step2").first).isTrue()
 
         // Let generate some bolus
         rxHelper.resetState(EventTreatmentChange::class.java)
@@ -165,8 +126,8 @@ class CompatDbHelperTest @Inject constructor() {
             }
         })
         // EventTreatmentChange should be triggered
-        assertThat(rxHelper.waitFor(EventTreatmentChange::class.java, comment = "step7").first).isTrue()
-        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step8").first).isTrue()
+        assertThat(rxHelper.waitFor(EventTreatmentChange::class.java, comment = "step3").first).isTrue()
+        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step4").first).isTrue()
 
     }
 }

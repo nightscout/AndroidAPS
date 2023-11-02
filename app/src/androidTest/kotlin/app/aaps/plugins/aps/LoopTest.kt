@@ -21,6 +21,7 @@ import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventNewBG
+import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.helpers.RxHelper
@@ -76,6 +77,7 @@ class LoopTest @Inject constructor() {
         rxHelper.listen(EventResetOpenAPSGui::class.java)
         rxHelper.listen(EventOpenAPSUpdateGui::class.java)
         rxHelper.listen(EventNewBG::class.java)
+        rxHelper.listen(EventNewHistoryData::class.java)
         rxHelper.listen(EventAutosensCalculationFinished::class.java)
         rxHelper.listen(EventAPSCalculationFinished::class.java)
         (loop as PluginBase).setPluginEnabled(PluginType.LOOP, true)
@@ -152,9 +154,10 @@ class LoopTest @Inject constructor() {
 
         // EventNewBG should be triggered
         assertThat(rxHelper.waitFor(EventNewBG::class.java, comment = "step6").first).isTrue()
+        assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step7").first).isTrue()
         // it should trigger loop, so wait for result
         Thread.sleep(10000)
-        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, comment = "step7").first).isTrue()
+        assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, comment = "step8").first).isTrue()
         Thread.sleep(1000)
         assertThat(loop.lastRun).isNotNull()
 
