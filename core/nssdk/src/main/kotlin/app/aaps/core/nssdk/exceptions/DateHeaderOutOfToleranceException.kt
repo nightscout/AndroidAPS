@@ -6,4 +6,4 @@ package app.aaps.core.nssdk.exceptions
  * In practice this will happen if the server time and the phone time are off.
  *
  */
-class DateHeaderOutOfToleranceException : NightscoutException()
+class DateHeaderOutOfToleranceException(message: String) : NightscoutException(message)
