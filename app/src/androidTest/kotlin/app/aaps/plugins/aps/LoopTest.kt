@@ -153,8 +153,7 @@ class LoopTest @Inject constructor() {
         // EventNewBG should be triggered
         assertThat(rxHelper.waitFor(EventNewBG::class.java, comment = "step6").first).isTrue()
         // it should trigger loop, so wait for result
-        //assertThat(rxHelper.waitFor(EventAutosensCalculationFinished::class.java, comment = "test4").first).isTrue()
- //       Thread.sleep(10000)
+        Thread.sleep(10000)
         assertThat(rxHelper.waitFor(EventAPSCalculationFinished::class.java, comment = "step7").first).isTrue()
         Thread.sleep(1000)
         assertThat(loop.lastRun).isNotNull()
