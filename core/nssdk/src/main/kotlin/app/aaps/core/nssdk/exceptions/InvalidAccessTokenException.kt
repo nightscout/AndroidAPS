@@ -1,3 +1,3 @@
 package app.aaps.core.nssdk.exceptions
 
-class InvalidAccessTokenException : NightscoutException()
+class InvalidAccessTokenException(message: String) : NightscoutException(message)

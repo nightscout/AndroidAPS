@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TextView
 import app.aaps.core.data.configuration.Constants
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -31,7 +30,7 @@ class TirCalculatorImpl @Inject constructor(
     override fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
-        val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        val startTime = MidnightTime.calcDaysBack(days)
         val endTime = MidnightTime.calc(dateUtil.now())
 
         val bgReadings = persistenceLayer.getBgReadingsDataFromTimeToTime(startTime, endTime, true)

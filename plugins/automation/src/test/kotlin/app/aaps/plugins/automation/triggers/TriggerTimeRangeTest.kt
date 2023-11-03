@@ -16,7 +16,7 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     @BeforeEach
     fun mock() {
         now = 754 // in minutes from midnight
-        val nowMills = MidnightTime.calcPlusMinutes(now.toInt())
+        val nowMills = MidnightTime.calcMidnightPlusMinutes(now.toInt())
         `when`(dateUtil.now()).thenReturn(nowMills)
         `when`(rh.gs(R.string.timerange_value)).thenReturn("Time is between %1\$s and %2\$s")
     }

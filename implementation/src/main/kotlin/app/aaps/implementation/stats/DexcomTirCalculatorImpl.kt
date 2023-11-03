@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TableLayout
-import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.stats.DexcomTIR
@@ -24,7 +23,7 @@ class DexcomTirCalculatorImpl @Inject constructor(
     val days = 14L
 
     override fun calculate(): DexcomTIR {
-        val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        val startTime = MidnightTime.calcDaysBack(days)
         val endTime = MidnightTime.calc(dateUtil.now())
 
         val bgReadings = persistenceLayer.getBgReadingsDataFromTimeToTime(startTime, endTime, true)

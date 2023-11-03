@@ -38,9 +38,8 @@ class TddCalculatorImpl @Inject constructor(
 ) : TddCalculator {
 
     override fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TDD>? {
-        var startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        var startTime = MidnightTime.calcDaysBack(days)
         val endTime = MidnightTime.calc(dateUtil.now())
-        //val stepSize = T.hours(24).msecs() // this is not true on DST change
 
         val result = LongSparseArray<TDD>()
         // Try to load cached values

@@ -49,7 +49,7 @@ internal class NSAuthInterceptor(private val refreshToken: String, private val r
 
         return when {
             authResponseResponse == null -> initialResponse
-            authResponseResponse.code() in listOf(401, 403) -> throw InvalidAccessTokenException()
+            authResponseResponse.code() in listOf(401, 403) -> throw InvalidAccessTokenException("Invalid access token")
             authResponseResponse.code() != 200 -> initialResponse
             else -> {
                 authResponseResponse.body()?.token?.let { jwtToken = it }
@@ -62,7 +62,7 @@ internal class NSAuthInterceptor(private val refreshToken: String, private val r
     private fun testCanRefresh(initialResponse: Response) {
         // Todo: use proper reason code once it is supplied by remote
         if (initialResponse.body?.string()?.contains(MESSAGE_DATE_HEADER_OUT_OF_TOLERANCE) == true) {
-            throw DateHeaderOutOfToleranceException()
+            throw DateHeaderOutOfToleranceException("Data header out of tolerance")
         }
     }
 }
