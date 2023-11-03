@@ -4,16 +4,11 @@ import androidx.test.core.app.ApplicationProvider
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.Loop
-import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.L
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.rx.bus.RxBus
-import app.aaps.core.interfaces.rx.events.EventAPSCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventDeviceStatusChange
 import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
@@ -27,10 +22,7 @@ import app.aaps.core.interfaces.rx.events.EventTempTargetChange
 import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
 import app.aaps.core.interfaces.rx.events.EventTreatmentChange
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.events.Event1stFinished
-import app.aaps.events.Event2ndFinished
 import app.aaps.helpers.RxHelper
-import app.aaps.plugins.sync.nsShared.NsIncomingDataProcessor
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
@@ -40,15 +32,10 @@ import javax.inject.Inject
 class T2CompatDbHelperTest @Inject constructor() {
 
     @Inject lateinit var loop: Loop
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
-    @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxHelper: RxHelper
     @Inject lateinit var l: L
-    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var rxBus: RxBus
 
     private val context = ApplicationProvider.getApplicationContext<TestApplication>()
 
@@ -63,10 +50,9 @@ class T2CompatDbHelperTest @Inject constructor() {
     }
 
     @Test
-    fun dbHelperTest() {
+    fun compatDbHelperTest() {
 
         // Prepare
-        rxHelper.listen(Event1stFinished::class.java)
         rxHelper.listen(EventNewBG::class.java)
         rxHelper.listen(EventNewHistoryData::class.java)
         rxHelper.listen(EventTreatmentChange::class.java)
@@ -79,8 +65,6 @@ class T2CompatDbHelperTest @Inject constructor() {
         rxHelper.listen(EventFoodDatabaseChanged::class.java)
         rxHelper.listen(EventOfflineChange::class.java)
         rxHelper.listen(EventDeviceStatusChange::class.java)
-
-        assertThat(rxHelper.waitFor(Event1stFinished::class.java, 180, "finish 1st test").first).isTrue()
 
         // Enable event logging
         l.findByName(LTag.EVENTS.name).enabled = true
@@ -128,7 +112,5 @@ class T2CompatDbHelperTest @Inject constructor() {
         // EventTreatmentChange should be triggered
         assertThat(rxHelper.waitFor(EventTreatmentChange::class.java, comment = "step3").first).isTrue()
         assertThat(rxHelper.waitFor(EventNewHistoryData::class.java, comment = "step4").first).isTrue()
-
-        rxBus.send(Event2ndFinished())
     }
 }

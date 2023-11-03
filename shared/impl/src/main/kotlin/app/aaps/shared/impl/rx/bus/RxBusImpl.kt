@@ -5,6 +5,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
+import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
+import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.PublishSubject
 import javax.inject.Inject
@@ -19,7 +21,8 @@ class RxBusImpl @Inject constructor(
     private val publisher = PublishSubject.create<Event>()
 
     override fun send(event: Event) {
-        aapsLogger.debug(LTag.EVENTS, "Sending $event")
+        if (event !is EventIobCalculationProgress && event !is EventUpdateOverviewCalcProgress)
+            aapsLogger.debug(LTag.EVENTS, "Sending $event")
         publisher.onNext(event)
     }
 

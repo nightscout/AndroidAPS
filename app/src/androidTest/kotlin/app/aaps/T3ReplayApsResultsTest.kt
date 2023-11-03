@@ -7,13 +7,8 @@ import androidx.test.rule.GrantPermissionRule
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
-import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.utils.JsonHelper
-import app.aaps.events.Event1stFinished
-import app.aaps.events.Event2ndFinished
-import app.aaps.events.Event3rdFinished
-import app.aaps.helpers.RxHelper
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
@@ -37,8 +32,6 @@ class T3ReplayApsResultsTest @Inject constructor() {
     @Inject lateinit var storage: Storage
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var injector: HasAndroidInjector
-    @Inject lateinit var rxHelper: RxHelper
-    @Inject lateinit var rxBus: RxBus
 
     private val context = ApplicationProvider.getApplicationContext<TestApplication>()
 
@@ -52,10 +45,6 @@ class T3ReplayApsResultsTest @Inject constructor() {
 
     @Test
     fun replayTest() {
-        rxHelper.listen(Event2ndFinished::class.java)
-
-        assertThat(rxHelper.waitFor(Event2ndFinished::class.java, 180, "finish 2nd test").first).isTrue()
-
         val results = readResultFiles()
         assertThat(results.size).isGreaterThan(0)
         results.forEach { result ->
@@ -96,7 +85,6 @@ class T3ReplayApsResultsTest @Inject constructor() {
                 put("timestamp", output.getString("timestamp"))
             }, false
         )
-        rxBus.send(Event3rdFinished())
     }
 
     private fun testOpenAPSSMBDynamicISF(filename: String, input: JSONObject, output: JSONObject, context: Context, injector: HasAndroidInjector) {

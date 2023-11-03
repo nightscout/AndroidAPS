@@ -20,7 +20,6 @@ import javax.inject.Singleton
  * @property listen Register class for listening
  * @property waitFor Wait until event doesn't appear on bus
  */
-@Singleton
 class RxHelper @Inject constructor(
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
@@ -47,6 +46,7 @@ class RxHelper @Inject constructor(
                 .toObservable(clazz)
                 .observeOn(aapsSchedulers.io)
                 .subscribe({
+                               aapsLogger.info(LTag.EVENTS, "==>> ${clazz.simpleName} registered")
                                ab.set(true)
                                eventHashMap[clazz] = it
                            }, fabricPrivacy::logException)
