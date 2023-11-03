@@ -978,7 +978,7 @@ class DataHandlerMobile @Inject constructor(
 
         return EventData.SingleBg(
             timeStamp = glucoseValue.timestamp,
-            sgvString = profileUtil.stringInCurrentUnitsDetect(glucoseValue.value),
+            sgvString = profileUtil.stringInCurrentUnitsDetect(glucoseValue.recalculated),
             glucoseUnits = units.asText,
             slopeArrow = (autosensDataStore?.let { ads -> trendCalculator.getTrendArrow(ads) } ?: GlucoseValue.TrendArrow.NONE).symbol,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
