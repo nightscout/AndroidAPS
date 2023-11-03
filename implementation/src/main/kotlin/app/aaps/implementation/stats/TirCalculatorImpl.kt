@@ -15,7 +15,6 @@ import app.aaps.core.interfaces.stats.TIR
 import app.aaps.core.interfaces.stats.TirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.interfaces.utils.T
 import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,7 +30,7 @@ class TirCalculatorImpl @Inject constructor(
     override fun calculate(days: Long, lowMgdl: Double, highMgdl: Double): LongSparseArray<TIR> {
         if (lowMgdl < 39) throw RuntimeException("Low below 39")
         if (lowMgdl > highMgdl) throw RuntimeException("Low > High")
-        val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        val startTime = MidnightTime.calcDaysBack(days)
         val endTime = MidnightTime.calc(dateUtil.now())
 
         val bgReadings = repository.compatGetBgReadingsDataFromTime(startTime, endTime, true).blockingGet()
