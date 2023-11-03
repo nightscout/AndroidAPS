@@ -9,6 +9,7 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.storage.Storage
 import app.aaps.core.utils.JsonHelper
+import app.aaps.di.TestApplication
 import app.aaps.plugins.aps.openAPSAMA.DetermineBasalAdapterAMAJS
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
@@ -26,7 +27,7 @@ import org.skyscreamer.jsonassert.JSONAssert
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
-class T3ReplayApsResultsTest @Inject constructor() {
+class ReplayApsResultsTest @Inject constructor() {
 
     @Inject lateinit var prefFileListProvider: PrefFileListProvider
     @Inject lateinit var storage: Storage

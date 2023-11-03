@@ -1,7 +1,6 @@
 package app.aaps.di
 
 import android.content.Context
-import app.aaps.TestApplication
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.objects.Instantiator
 import app.aaps.core.interfaces.plugin.PluginBase

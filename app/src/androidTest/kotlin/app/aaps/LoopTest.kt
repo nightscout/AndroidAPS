@@ -23,6 +23,7 @@ import app.aaps.core.interfaces.rx.events.EventNewBG
 import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.di.TestApplication
 import app.aaps.helpers.RxHelper
 import app.aaps.plugins.aps.events.EventOpenAPSUpdateGui
 import app.aaps.plugins.aps.events.EventResetOpenAPSGui
@@ -37,7 +38,7 @@ import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
 
-class T1LoopTest @Inject constructor() {
+class LoopTest @Inject constructor() {
 
     @Inject lateinit var loop: Loop
     @Inject lateinit var profileFunction: ProfileFunction

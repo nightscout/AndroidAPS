@@ -1,8 +1,9 @@
-package app.aaps
+package app.aaps.runners
 
 import android.app.Application
 import android.content.Context
 import androidx.test.runner.AndroidJUnitRunner
+import app.aaps.di.TestApplication
 
 class InjectedTestRunner : AndroidJUnitRunner() {
 

@@ -1,4 +1,4 @@
-package app.aaps
+package app.aaps.di
 
 import app.aaps.core.interfaces.configuration.ConfigBuilder
 import app.aaps.core.interfaces.plugin.PluginBase

@@ -111,7 +111,7 @@ android {
         buildConfigField("String", "COMMITTED", "\"${allCommitted()}\"")
 
         // For Dagger injected instrumentation tests in app module
-        testInstrumentationRunner = "app.aaps.InjectedTestRunner"
+        testInstrumentationRunner = "app.aaps.runners.InjectedTestRunner"
     }
 
     flavorDimensions.add("standard")

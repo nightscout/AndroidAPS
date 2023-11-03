@@ -1,6 +1,5 @@
 package app.aaps.di
 
-import app.aaps.TestApplication
 import app.aaps.core.objects.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
 import app.aaps.database.impl.di.TestDatabaseModule
