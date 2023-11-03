@@ -98,18 +98,24 @@ class NsIncomingDataProcessor @Inject constructor(
         if (sgvs is JSONArray) { // V1 client
             for (i in 0 until sgvs.length()) {
                 val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
-                if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
-                glucoseValues += sgv
+                // allow 1 min in the future
+                if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
+                    latestDateInReceivedData = sgv.timestamp
+                    glucoseValues += sgv
+                }
             }
         } else if (sgvs is List<*>) { // V3 client
 
             for (i in 0 until sgvs.size) {
                 val sgv = (sgvs[i] as NSSgvV3).toTransactionGlucoseValue()
-                if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp
-                glucoseValues += sgv
+                // allow 1 min in the future
+                if (sgv.timestamp < dateUtil.now() + T.mins(1).msecs() && sgv.timestamp > latestDateInReceivedData) {
+                    latestDateInReceivedData = sgv.timestamp
+                    glucoseValues += sgv
+                }
             }
         }
-        if (latestDateInReceivedData > 0) {
+        if (glucoseValues.isNotEmpty()) {
             activePlugin.activeNsClient?.updateLatestBgReceivedIfNewer(latestDateInReceivedData)
             // Was that sgv more less 5 mins ago ?
             if (T.msecs(dateUtil.now() - latestDateInReceivedData).mins() < 5L) {
@@ -118,7 +124,7 @@ class NsIncomingDataProcessor @Inject constructor(
             }
             storeDataForDb.glucoseValues.addAll(glucoseValues)
         }
-        return latestDateInReceivedData > 0
+        return glucoseValues.isNotEmpty()
     }
 
     /**
