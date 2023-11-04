@@ -151,7 +151,7 @@
     <string name="wear_notifysmb_summary">Vis SMB på klokken som en standard bolus.</string>
     <string name="wear_custom_watchface_settings">Innstillinger for tilpasset urskive</string>
     <string name="wear_custom_watchface_authorization_title">Godkjenning for tilpasset urskive</string>
-    <string name="wear_custom_watchface_authorization_summary">Godkjenne at tilpasset urskive endrer AAPS- og klokkeinnstillinger i henhold til urskivens design</string>
+    <string name="wear_custom_watchface_authorization_summary">Godkjenn at innlastet tilpasset urskive endrer og låser noen visningsinnstillinger i henhold til urskivens design</string>
     <string name="wear_custom_watchface">Tilpasset urskive: %1$s</string>
     <string name="wear_load_watchface">Last inn urskive</string>
     <string name="wear_infos_watchface">Info urskive</string>
