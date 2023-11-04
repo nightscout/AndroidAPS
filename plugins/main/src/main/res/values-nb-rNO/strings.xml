@@ -241,7 +241,7 @@
     <string name="low_mark">Lav verdi</string>
     <string name="high_mark">Høy verdi</string>
     <string name="short_tabtitles">Korte navn i menyfaner</string>
-    <string name="overview_show_notes_field_in_dialogs_title">Vis merknadsfelt i dialogvindu for boluskalkulator</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Vis merknadsfelt i dialogvindu for behandlinger, sensorbytte, profilbytte og BS-kontroll</string>
     <string name="deliverpartofboluswizard">Boluskalkulator utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB-algoritmen.</string>
     <string name="deliver_part_of_boluswizard_reset_time">Gi full bolus (100 %) dersom blodsukker er eldre enn</string>
     <string name="enable_bolus_advisor">Aktiver bolusveileder</string>
