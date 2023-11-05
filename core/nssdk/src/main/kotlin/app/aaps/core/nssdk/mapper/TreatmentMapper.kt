@@ -32,6 +32,7 @@ fun String.toNSTreatment(): NSTreatment? =
 
 internal fun RemoteTreatment.toTreatment(): NSTreatment? {
     val treatmentTimestamp = timestamp()
+    val duration = durationAsLong()
     when {
         insulin != null && insulin > 0                                     ->
             return NSBolus(
@@ -75,14 +76,14 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 carbs = this.carbs,
-                duration = this.duration ?: 0L
+                duration = duration ?: 0L
             )
 
         eventType == EventType.TEMPORARY_TARGET                            -> {
             if (treatmentTimestamp == 0L) return null
 
-            this.duration ?: return null
-            val durationInMilliseconds = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration)
+            duration ?: return null
+            val durationInMilliseconds = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(duration)
 
             if (durationInMilliseconds == 0L)
                 return NSTemporaryTarget(
@@ -156,7 +157,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpType = extendedEmulated?.pumpType,
                 pumpSerial = extendedEmulated?.pumpSerial,
                 enteredinsulin = extendedEmulated?.enteredinsulin ?: 0.0,
-                duration = extendedEmulated?.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(extendedEmulated?.duration ?: 0L),
+                duration = extendedEmulated?.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(extendedEmulated?.durationAsLong() ?: 0L),
                 isEmulatingTempBasal = extendedEmulated?.isEmulatingTempBasal,
                 rate = rate
             )
@@ -166,8 +167,8 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             if (treatmentTimestamp == 0L) return null
 
             this.absolute ?: this.percent ?: return null
-            this.duration ?: return null
-            if (this.duration == 0L && this.durationInMilliseconds == null) return null
+            duration ?: return null
+            if (duration == 0L && this.durationInMilliseconds == null) return null
 
             return NSTemporaryBasal(
                 date = treatmentTimestamp,
@@ -186,7 +187,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
-                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration),
+                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(duration),
                 isAbsolute = this.absolute != null,
                 rate = this.absolute ?: (this.percent?.plus(100.0)) ?: 0.0,
                 type = NSTemporaryBasal.Type.fromString(this.type)
@@ -254,7 +255,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 profile = this.profile,
                 originalProfileName = this.originalProfileName,
                 originalDuration = this.originalDuration,
-                duration = this.duration,
+                duration = duration,
                 timeShift = this.timeshift,
                 percentage = this.percentage,
             )
@@ -315,7 +316,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
-                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration ?: 0L),
+                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(duration ?: 0L),
                 glucose = this.glucose,
                 enteredBy = this.enteredBy,
                 glucoseType = NSTherapyEvent.MeterType.fromString(this.glucoseType)
@@ -342,7 +343,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
-                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration ?: 0L),
+                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(duration ?: 0L),
                 reason = NSOfflineEvent.Reason.fromString(this.reason)
             )
         }
@@ -369,7 +370,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 enteredinsulin = this.enteredinsulin,
-                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration ?: 0L),
+                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(duration ?: 0L),
                 isEmulatingTempBasal = this.isEmulatingTempBasal,
                 rate = rate
             )
