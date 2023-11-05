@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">Sinchronizuoja duomenis su Nightscout naudojant V3 API</string>
     <string name="blocked_by_charging">Užblokuota dėl įkrovimo parinkčių</string>
     <string name="blocked_by_connectivity">Užblokuota dėl ryšio parinkčių</string>
+    <string name="no_connectivity">Nėra ryšio</string>
     <string name="unsupported_ns_version">Nepalaikoma Nightscout versija</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">Siunt</string>
@@ -118,6 +119,9 @@
     <!--    DataBroadcast-->
     <string name="data_broadcaster">Data Broadcaster</string>
     <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Susiejimas su Garmin (Fenix, Edge, …)</string>
+    <string name="key_garmin_settings">Garmin nustatymai</string>
     <!--    Wear-->
     <string name="description_wear">Stebėti ir kontroliuoti AndroidAPS naudojant WearOS laikrodį.</string>
     <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>
