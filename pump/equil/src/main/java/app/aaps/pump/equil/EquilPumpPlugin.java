@@ -432,13 +432,23 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         if (mode != RunMode.RUN) {
             return new PumpEnactResult(getInjector()).enacted(false).success(false).comment(rh.gs(R.string.equil_pump_not_run));
         }
-        PumpEnactResult pumpEnactResult = equilManager.setTempBasal(absoluteRate,
-                durationInMinutes, false);
+        PumpEnactResult pumpEnactResult = new PumpEnactResult(getInjector());
+        pumpEnactResult.success(false);
+        pumpEnactResult = equilManager.getTempBasalPump();
         if (pumpEnactResult.getSuccess()) {
-            pumpEnactResult.setTempCancel(false);
-            pumpEnactResult.setDuration(durationInMinutes);
-            pumpEnactResult.setPercent(false);
-            pumpEnactResult.setAbsolute(absoluteRate);
+            if (pumpEnactResult.getEnacted()) {
+                pumpEnactResult = cancelTempBasal(true);
+            }
+            if (pumpEnactResult.getSuccess()) {
+                pumpEnactResult = equilManager.setTempBasal(absoluteRate,
+                        durationInMinutes, false);
+                if (pumpEnactResult.getSuccess()) {
+                    pumpEnactResult.setTempCancel(false);
+                    pumpEnactResult.setDuration(durationInMinutes);
+                    pumpEnactResult.setPercent(false);
+                    pumpEnactResult.setAbsolute(absoluteRate);
+                }
+            }
         }
         return pumpEnactResult;
     }

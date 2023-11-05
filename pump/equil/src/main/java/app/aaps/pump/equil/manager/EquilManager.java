@@ -69,6 +69,7 @@ import app.aaps.pump.equil.manager.command.CmdExtendedBolusSet;
 import app.aaps.pump.equil.manager.command.CmdHistoryGet;
 import app.aaps.pump.equil.manager.command.CmdLargeBasalSet;
 import app.aaps.pump.equil.manager.command.CmdModelGet;
+import app.aaps.pump.equil.manager.command.CmdTempBasalGet;
 import app.aaps.pump.equil.manager.command.CmdTempBasalSet;
 import app.aaps.pump.equil.manager.command.PumpEvent;
 import dagger.android.HasAndroidInjector;
@@ -170,7 +171,28 @@ public class EquilManager {
         }
         return result;
     }
-
+    public PumpEnactResult getTempBasalPump() {
+        PumpEnactResult result = new PumpEnactResult(injector);
+        try {
+            CmdTempBasalGet command = new CmdTempBasalGet();
+            command.setEquilManager(this);
+            equilBLE.writeCmd(command);
+            synchronized (command) {
+                command.wait(command.getTimeOut());
+            }
+            result.setSuccess(command.isCmdStatus());
+            if (command.getTime() != 0) {
+                result.enacted(true);
+            } else {
+                result.enacted(false);
+            }
+            SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            result.success(false).enacted(false).comment(translateException(ex));
+        }
+        return result;
+    }
     public PumpEnactResult setTempBasal(double insulin, int time, boolean cancel) {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
