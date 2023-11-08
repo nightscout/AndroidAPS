@@ -6,6 +6,7 @@ import app.aaps.core.interfaces.aps.DetermineBasalAdapter
 import app.aaps.core.interfaces.bgQualityCheck.BgQualityCheck
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.constraints.Objectives
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -50,7 +51,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     glucoseStatusProvider: GlucoseStatusProvider,
     bgQualityCheck: BgQualityCheck,
     tddCalculator: TddCalculator,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val objectives: Objectives
 ) : OpenAPSSMBPlugin(
     injector,
     aapsLogger,
@@ -79,6 +81,9 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
             .preferencesId(R.xml.pref_openapssmbdynamicisf)
             .setDefault(false)
     }
+
+    override fun specialEnableCondition(): Boolean =
+        objectives.isStarted(Objectives.DYN_ISF_OBJECTIVE)
 
     // If there is no TDD data fallback to SMB as ISF calculation may be really off
     override fun provideDetermineBasalAdapter(): DetermineBasalAdapter =

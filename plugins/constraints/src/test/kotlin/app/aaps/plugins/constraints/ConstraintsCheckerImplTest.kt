@@ -138,6 +138,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
         danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
+        objectivesPlugin.onStart()
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction)
         danaRPlugin = DanaRPlugin(
             injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
@@ -189,7 +190,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
                 glucoseStatusProvider,
                 bgQualityCheck,
                 tddCalculator,
-                uiInteraction
+                uiInteraction,
+                objectivesPlugin
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
