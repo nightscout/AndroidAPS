@@ -92,7 +92,7 @@
     <string name="menu_menu">Meny</string>
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Varighet</string>
-    <string name="action_tempt_confirmation">Midl. mål forespurt</string>
+    <string name="action_tempt_confirmation">Midlertidig mål forespurt</string>
     <string name="action_quick_wizard_confirmation">Hurtigknapp forespurt</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>

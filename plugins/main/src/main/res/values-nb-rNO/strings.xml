@@ -34,8 +34,8 @@
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">For å levere bolus på %1$.2fE, svar med kode %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">For å levere måltidsbolus på %1$.2fE, svar med kode %2$s</string>
-    <string name="smscommunicator_temptarget_with_code">For å sette midl. mål på %1$s, svar med kode %2$s</string>
-    <string name="smscommunicator_temptarget_cancel">For å avbryte midl. mål, svar med kode %1$s</string>
+    <string name="smscommunicator_temptarget_with_code">For å sette midlertidig mål på %1$s, svar med kode %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">For å avbryte midlertidig mål, svar med kode %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">For å deaktivere fjernstyring via SMS-meldinger, svar med kode %1$s.\n\nHusk at du vil kunne reaktivere den igjen kun fra AAPS hovedtelefon.</string>
     <string name="smscommunicator_stopped_sms">Fjernstyring via SMS-meldinger er stanset. For å reaktivere, bruk AAPS på hovedtelefonen.</string>
     <string name="smscommunicator_calibration_reply_with_code">For å sende kalibrering %1$.2f, svar med kode %2$s</string>
@@ -46,8 +46,8 @@
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f E ble levert</string>
     <string name="smscommunicator_meal_bolus_delivered">Måltidsbolus på %1$.2f E er levert</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Mål %1$s i %2$d minutter</string>
-    <string name="smscommunicator_tt_set">Midl. mål på %1$s i %2$d minutter ble lagret</string>
-    <string name="smscommunicator_tt_canceled">Midl. mål ble fjernet</string>
+    <string name="smscommunicator_tt_set">Midlertidig mål på %1$s i %2$d minutter ble lagret</string>
+    <string name="smscommunicator_tt_canceled">Midlertidig mål ble fjernet</string>
     <string name="smscommunicator_remote_commands_allowed">Tillat fjernstyring via SMS-meldinger</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop har blitt deaktivert</string>
     <string name="smscommunicator_loop_has_been_enabled">Loop har blitt aktivert</string>
@@ -241,7 +241,7 @@
     <string name="low_mark">Lav verdi</string>
     <string name="high_mark">Høy verdi</string>
     <string name="short_tabtitles">Korte navn i menyfaner</string>
-    <string name="overview_show_notes_field_in_dialogs_title">Vis merknadsfelt i dialogvindu for boluskalkulator</string>
+    <string name="overview_show_notes_field_in_dialogs_title">Vis merknadsfelt i dialogvindu for behandlinger, sensorbytte, profilbytte og BS-kontroll</string>
     <string name="deliverpartofboluswizard">Boluskalkulator utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB-algoritmen.</string>
     <string name="deliver_part_of_boluswizard_reset_time">Gi full bolus (100 %) dersom blodsukker er eldre enn</string>
     <string name="enable_bolus_advisor">Aktiver bolusveileder</string>
@@ -268,11 +268,11 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">AVVIK</string>
     <string name="activity_shortname">AKT</string>
-    <string name="bgi_shortname">-BGI</string>
+    <string name="bgi_shortname">BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
-    <string name="heartRate_shortname">HR</string>
+    <string name="heartRate_shortname">PULS</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>

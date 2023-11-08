@@ -149,7 +149,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         openAPSSMBDynamicISFPlugin =
             OpenAPSSMBDynamicISFPlugin(
                 injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator,
-                processedTbrEbData, hardLimits, profiler, sp, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs
+                processedTbrEbData, hardLimits, profiler, sp, dateUtil, persistenceLayer, glucoseStatusProvider, bgQualityCheck, tddCalculator, importExportPrefs,
+                uiInteraction, objectivesPlugin
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
@@ -170,7 +171,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         constraintsPluginsList.add(openAPSAMAPlugin)
         constraintsPluginsList.add(openAPSSMBPlugin)
         `when`(activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)).thenReturn(constraintsPluginsList)
-        objectivesPlugin.onStart()
     }
 
     // Combo & Objectives

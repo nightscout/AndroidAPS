@@ -462,6 +462,7 @@
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
+    <string name="wizard_no_insulin_required">Insulino nereikia!</string>
     <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="wizard_no_cob">Nežinomi AAO! Nėra glikemijos duomenų arba programa paleista iš naujo?</string>
