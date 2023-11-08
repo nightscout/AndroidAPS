@@ -282,7 +282,7 @@
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
-    <string name="cannula_usage">naudojimas:</string>
+    <string name="cannula_usage">naud:</string>
     <!--    Iob-->
     <string name="send_logfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
     <!--    PersistentNotification-->

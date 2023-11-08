@@ -225,7 +225,7 @@
     <string name="pump_battery_change">Bytte pumpebatteri</string>
     <string name="temporary_target">Midlertidig mål</string>
     <string name="careportal_temporarytargetvalue">Midlertidig målverdi</string>
-    <string name="careportal_temporarytargetcancel">Avbryt midl. mål</string>
+    <string name="careportal_temporarytargetcancel">Avbryt midlertidig mål</string>
     <string name="boluswizard">Boluskalkulator</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
@@ -275,7 +275,7 @@
     <string name="uel_carbs">KARBO</string>
     <string name="uel_extended_carbs">FORLENGET KARBO</string>
     <string name="uel_temp_basal">MIDL. BASAL</string>
-    <string name="uel_tt">MIDL. MÅL</string>
+    <string name="uel_tt">MIDLERTIDIG MÅL</string>
     <string name="uel_new_profile">NY PROFIL</string>
     <string name="uel_clone_profile">KOPIER PROFIL</string>
     <string name="uel_store_profile">LAGRE PROFIL</string>
@@ -296,7 +296,7 @@
     <string name="uel_cancel_temp_basal">AVBRYT MIDL. BASAL</string>
     <string name="uel_cancel_bolus">AVBRYT BOLUS</string>
     <string name="uel_cancel_extended_bolus">AVBRYT FORLENGET BOLUS</string>
-    <string name="uel_cancel_tt">AVBRYT MIDL. MÅL</string>
+    <string name="uel_cancel_tt">AVBRYT MIDLERTIDIG MÅL</string>
     <string name="uel_careportal">HELSEPORTAL</string>
     <string name="uel_site_change">BYTTE SLANGESETT</string>
     <string name="uel_reservoir_change">BYTTE RESERVOAR</string>
@@ -306,13 +306,13 @@
     <string name="uel_careportal_ns_refresh">HELSEPORTAL NS-OPPDATERING</string>
     <string name="uel_profile_switch_ns_refresh">PROFILBYTTE NS OPPDATERING</string>
     <string name="uel_treatments_ns_refresh">BEHANDLINGER NS OPPDATERING</string>
-    <string name="uel_tt_ns_refresh">OPPDATER MIDL. MÅL NS</string>
+    <string name="uel_tt_ns_refresh">OPPDATER MIDLERTIDIG MÅL NS</string>
     <string name="uel_automation_removed">AUTOMASJON FJERNET</string>
     <string name="uel_bg_removed">BS FJERNET</string>
     <string name="uel_careportal_removed">HELSEPORTAL FJERNET</string>
     <string name="uel_bolus_removed">BOLUS FJERNET</string>
     <string name="uel_carbs_removed">KARBO FJERNET</string>
-    <string name="uel_temp_basal_removed">MIDL. MÅL FJERNET</string>
+    <string name="uel_temp_basal_removed">MIDLERTIDIG MÅL FJERNET</string>
     <string name="uel_extended_bolus_removed">FORLENGET BOLUS FJERNET</string>
     <string name="uel_food">MAT</string>
     <string name="uel_food_removed">MÅLTID FJERNET</string>
@@ -320,7 +320,7 @@
     <string name="uel_profile_switch_removed">PROFILBYTTE FJERNET</string>
     <string name="uel_restart_events_removed">RESTART HENDELSER FJERNET</string>
     <string name="uel_treatment_removed">BEHANDLING FJERNET</string>
-    <string name="uel_tt_removed">MIDL. MÅL FJERNET</string>
+    <string name="uel_tt_removed">MIDLERTIDIG MÅL FJERNET</string>
     <string name="uel_ns_paused">NS PAUSET</string>
     <string name="uel_ns_resume">GJENOPPTA NS</string>
     <string name="uel_ns_queue_cleared">NS KØ SLETTET</string>
@@ -362,9 +362,9 @@
     <!-- HardLimits -->
     <string name="profile_low_target">Profil lavt mål</string>
     <string name="profile_high_target">Profil høyt mål</string>
-    <string name="temp_target_low_target">Nedre grense for midl. mål</string>
-    <string name="temp_target_high_target">Øvre grense for midl. mål</string>
-    <string name="temp_target_value">Midl. målverdi</string>
+    <string name="temp_target_low_target">Nedre grense for midlertidig mål</string>
+    <string name="temp_target_high_target">Øvre grense for midlertidig mål</string>
+    <string name="temp_target_value">Midlertidig målverdi</string>
     <string name="profile_dia">Profil DIA verdi</string>
     <string name="profile_sensitivity_value">Profilens insulinfølsomhet</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
@@ -480,7 +480,7 @@
     <string name="wizard_explain_trend">15\' trend: %1$.2fE</string>
     <string name="wizard_explain_percent">Prosent: %1$.2fE x %2$d%% ≈ %3$.2fE</string>
     <string name="wizard_constraint_bolus_size">Insulinbegrensning nådd!\nKan ikke levere %1$.2fE</string>
-    <string name="wizard_explain_tt">TempT: %1$s</string>
+    <string name="wizard_explain_tt">Midl. mål: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s til %2$s</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
     <string name="quickwizard">Hurtigknapp</string>

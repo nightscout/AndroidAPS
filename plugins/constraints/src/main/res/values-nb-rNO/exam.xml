@@ -52,7 +52,7 @@
     <string name="exerciseprofile_leaveat100">La profilen være på 100%.</string>
     <string name="exerciseprofile_suspendloop">Pause loop.</string>
     <string name="exerciseprofile_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html#activity-temp-target</string>
-    <string name="exercise_label">Trening og midlertidige målverdier (temp targets)</string>
+    <string name="exercise_label">Trening og midlertidige målverdier</string>
     <string name="exercise_whattodo">Hvordan kan du bruke midlertidige målverdier til å hjelpe systemet å håndtere aerobic trening?</string>
     <string name="exercise_settt">Sett et midlertidig mål for blodsukkeret som starter en passende tid før treningen begynner.</string>
     <string name="exercise_setfinished">Angi et midlertidig mål for Aktivitet etter at du har avsluttet treningen.</string>

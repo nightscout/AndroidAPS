@@ -38,7 +38,7 @@
     <string name="accomplished">Utført: %1$s</string>
     <string name="objectives_usage_objective">Lær hvordan du kontrollerer AAPS</string>
     <string name="objectives_usage_gate">Utfør forskjellige handlinger i AAPS</string>
-    <string name="objectives_usage_learned">Du har lært hvordan du skal håndtere grunnleggende AAPS. Hovedkontrollene er på oversiktsskjermen som er tilgjengelig ved klikk eller lang-klikk, og flere kontroller er på Aksjon skjermen. Du bør vite hvordan du legger inn en skjermen til en plugin på menylinjen i toppen eller lar den vises i liste over aktiverte programtillegg øverst til venstre.</string>
+    <string name="objectives_usage_learned">Du har lært hvordan du skal håndtere det grunnleggende ved AAPS. Hovedkontrollene er på oversikt-skjermen som er tilgjengelig ved klikk eller lang-klikk, og flere kontroller er på handlinger-skjermen. Du bør vite hvordan du legger inn skjermen til en plugin på menylinjen i toppen eller lar den vises i liste over aktiverte plugins øverst til venstre ved å trykke på hamburgermeny.</string>
     <string name="objectives_useprofileswitch">Angi profil 90% for 10 min (langt-trykk på profilnavn i Oversikt)</string>
     <string name="objectives_usedisconnectpump">Simuler dusjing. Frakoble pumpen i 1t (langt trykk på Åpen Loop)</string>
     <string name="objectives_usereconnectpump">... og koble til igjen på samme måte</string>
