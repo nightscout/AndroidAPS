@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
-import android.os.Handler
-import android.os.HandlerThread
 import android.os.IBinder
 import android.os.PowerManager
 import app.aaps.core.interfaces.configuration.Config
@@ -63,7 +61,6 @@ class NSClientV3Service : DaggerService() {
 
     private var wakeLock: PowerManager.WakeLock? = null
     private val binder: IBinder = LocalBinder()
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     @SuppressLint("WakelockTimeout")
     override fun onCreate() {
@@ -94,7 +91,7 @@ class NSClientV3Service : DaggerService() {
     private var alarmSocket: Socket? = null
     internal var wsConnected = false
 
-    internal fun shutdownWebsockets() {
+    private fun shutdownWebsockets() {
         storageSocket?.on(Socket.EVENT_CONNECT, onConnectStorage)
         storageSocket?.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
         storageSocket?.on("create", onDataCreateUpdate)
@@ -113,7 +110,8 @@ class NSClientV3Service : DaggerService() {
         alarmSocket = null
     }
 
-    internal fun initializeWebSockets(reason: String) {
+    @Suppress("SameParameterValue")
+    private fun initializeWebSockets(reason: String) {
         if (sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").isEmpty()) return
         val urlStorage = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace(Regex("/$"), "") + "/storage"
         val urlAlarm = sp.getString(app.aaps.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace(Regex("/$"), "") + "/alarm"
@@ -277,7 +275,7 @@ class NSClientV3Service : DaggerService() {
         rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", data.optString("message")))
         aapsLogger.debug(LTag.NSCLIENT, data.toString())
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_announcements, config.NSCLIENT))
-            uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
+            uiInteraction.addNotificationWithAction(NSAlarmObject(data))
     }
     private val onAlarm = Emitter.Listener { args ->
 
@@ -300,7 +298,7 @@ class NSClientV3Service : DaggerService() {
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
+                uiInteraction.addNotificationWithAction(NSAlarmObject(data))
         }
     }
 
@@ -311,7 +309,7 @@ class NSClientV3Service : DaggerService() {
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
-                uiInteraction.addNotificationWithAction(injector, NSAlarmObject(data))
+                uiInteraction.addNotificationWithAction(NSAlarmObject(data))
         }
     }
 

@@ -58,7 +58,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
     private val sp: SP,
-    private val dateUtil: DateUtil,
+    protected val dateUtil: DateUtil,
     private val repository: AppRepository,
     private val glucoseStatusProvider: GlucoseStatusProvider,
     private val bgQualityCheck: BgQualityCheck,

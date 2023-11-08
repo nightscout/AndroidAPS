@@ -188,7 +188,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
                 repository,
                 glucoseStatusProvider,
                 bgQualityCheck,
-                tddCalculator
+                tddCalculator,
+                uiInteraction
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(

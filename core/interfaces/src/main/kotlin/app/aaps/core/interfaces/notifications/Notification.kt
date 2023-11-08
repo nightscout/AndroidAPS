@@ -140,6 +140,7 @@ open class Notification {
         const val BLUETOOTH_NOT_SUPPORTED = 86
         const val PUMP_WARNING = 87
         const val PUMP_SYNC_ERROR = 88
+        const val SMB_FALLBACK = 89
 
         const val USER_MESSAGE = 1000
 
