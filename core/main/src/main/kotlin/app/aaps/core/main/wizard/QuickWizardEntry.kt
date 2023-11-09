@@ -215,6 +215,8 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     fun time(): Int = safeGetInt(storage, "time")
 
     fun duration(): Int = safeGetInt(storage, "duration")
+
     fun carbTime(): Int = safeGetInt(storage, "carbTime")
+
     fun useAlarm(): Int = safeGetInt(storage, "useAlarm", NO)
 }

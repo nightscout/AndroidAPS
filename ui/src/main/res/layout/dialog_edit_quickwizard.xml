@@ -78,7 +78,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical"
-                android:padding="5dp"
+                android:padding="1dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="08:20pm" />
 
@@ -96,7 +96,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:gravity="center_horizontal|center_vertical"
-                android:padding="5dp"
+                android:padding="1dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 tools:text="08:20pm" />
 
@@ -151,8 +151,8 @@
                     android:id="@+id/carbs_input"
                     android:layout_width="130dp"
                     android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="2dp"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="4dp"
                     app:customContentDescription="@string/carbs" />
 
                 <TextView
@@ -170,24 +170,35 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_marginBottom="1dp">
 
-                <TextView
-                    android:id="@+id/carbs_correction_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:labelFor="@id/carbs_input"
-                    android:minWidth="70dp"
-                    android:paddingVertical="10dp"
-                    android:text="@string/treatments_wizard_correction_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/carbs_correction_label"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:labelFor="@id/correction_input"
+                        android:minWidth="70dp"
+                        android:paddingVertical="10dp"
+                        android:text="@string/treatments_wizard_correction_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                </LinearLayout>
 
                 <app.aaps.core.ui.elements.NumberPicker
                     android:id="@+id/correction_input"
-                    android:layout_width="130dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="4dp"
                     app:customContentDescription="@string/a11_correction_units" />
 
                 <TextView
@@ -206,13 +217,14 @@
             <TableRow
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_marginBottom="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
 
                     <TextView
@@ -223,7 +235,7 @@
                         android:autoSizeMinTextSize="6sp"
                         android:autoSizeTextType="uniform"
                         android:gravity="center_vertical"
-                        android:maxLines="2"
+                        android:lines="1"
                         android:paddingEnd="2dp"
                         android:text="@string/carb_time_label"
                         android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -243,9 +255,10 @@
 
                 <app.aaps.core.ui.elements.NumberPicker
                     android:id="@+id/carb_time_input"
-                    android:layout_width="130dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="center"
+                    android:layout_marginVertical="4dp"
                     app:contentDescription="carb time" />
 
                 <TextView
@@ -293,6 +306,7 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
+                    android:lines="1"
                     android:text="@string/bg_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -305,6 +319,7 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
+                    android:lines="1"
                     android:text="@string/tt_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -326,6 +341,7 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
+                    android:lines="1"
                     android:text="@string/iob"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -338,6 +354,7 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
+                    android:lines="1"
                     android:text="@string/overview_edit_quickwizard_use_positive_iob_only"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -359,6 +376,7 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
+                    android:lines="1"
                     android:text="@string/treatments_wizard_cob_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -427,6 +445,7 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
+                    android:lines="1"
                     android:text="@string/overview_edit_quickwizard_superbolus"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -448,6 +467,7 @@
                     android:autoSizeStepGranularity="2sp"
                     android:autoSizeTextType="uniform"
                     android:gravity="start|center_vertical"
+                    android:lines="1"
                     android:text="@string/additional_ecarbs"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -464,7 +484,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="1dp">
+                android:layout_marginBottom="2dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -514,7 +534,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="1dp">
+                android:layout_marginBottom="2dp">
 
                 <TextView
                     android:id="@+id/duration_label"

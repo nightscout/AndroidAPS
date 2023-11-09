@@ -81,6 +81,12 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             binding.deviceWatchCheckbox.visibility = View.GONE
         }
 
+        if (sp.getBoolean(app.aaps.core.utils.R.string.key_usesuperbolus, false)) {
+            binding.useSuperBolus.visibility = View.VISIBLE
+        } else {
+            binding.useSuperBolus.visibility = View.GONE
+        }
+
         binding.okcancel.ok.setOnClickListener {
             try {
                 entry.storage.put("buttonText", binding.buttonEdit.text.toString())

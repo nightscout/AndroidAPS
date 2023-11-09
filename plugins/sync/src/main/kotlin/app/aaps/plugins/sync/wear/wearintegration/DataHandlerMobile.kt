@@ -3,6 +3,7 @@ package app.aaps.plugins.sync.wear.wearintegration
 import android.app.NotificationManager
 import android.content.Context
 import app.aaps.core.interfaces.aps.Loop
+import app.aaps.core.interfaces.automation.Automation
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.Constants
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
@@ -73,6 +74,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.LinkedList
 import java.util.Locale
@@ -116,9 +118,11 @@ class DataHandlerMobile @Inject constructor(
     private val decimalFormatter: DecimalFormatter
 ) {
 
+    @Inject lateinit var automation: Automation
     private val disposable = CompositeDisposable()
 
     private var lastBolusWizard: BolusWizard? = null
+    private var lastQuickWizardEntry: QuickWizardEntry? = null
 
     init {
         // From Wear
@@ -295,9 +299,30 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionWizardConfirmed received $it from ${it.sourceNodeId}")
+
+                           var carbTime: Long? = null
+                           var useAlarm = false
+
+                           lastQuickWizardEntry?.let { lastQuickWizardEntry ->
+                               carbTime = lastQuickWizardEntry.carbTime().toLong()
+                               useAlarm = lastQuickWizardEntry.useAlarm() == QuickWizardEntry.YES
+
+                               if (lastQuickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
+                                   val currentTime = Calendar.getInstance().timeInMillis
+                                   val timeOffset = lastQuickWizardEntry.time()
+                                   val eventTime: Long = currentTime + (timeOffset * 60000)
+                                   doECarbs(lastQuickWizardEntry.carbs2(), eventTime, lastQuickWizardEntry.duration())
+                               }
+                           }
+                           lastQuickWizardEntry = null
+
                            lastBolusWizard?.let { lastBolusWizard ->
                                if (lastBolusWizard.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
-                                   doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, null, 0, lastBolusWizard.createBolusCalculatorResult())
+                                   doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, carbTime, 0, lastBolusWizard.createBolusCalculatorResult())
+
+                                   if (useAlarm && lastBolusWizard.carbs > 0 && carbTime!! > 0) {
+                                       automation.scheduleTimeToEatReminder(T.mins(carbTime!!.toLong()).secs().toInt())
+                                   }
                                }
                            }
                            lastBolusWizard = null
@@ -493,10 +518,26 @@ class DataHandlerMobile @Inject constructor(
             return
         }
 
+        var eCarbsMessagePart = ""
+        if (quickWizardEntry.useEcarbs() == QuickWizardEntry.YES) {
+            val carbs2 = quickWizardEntry.carbs2()
+            val offset = quickWizardEntry.time()
+            val durration = quickWizardEntry.duration()
+
+            eCarbsMessagePart += "\n+" + carbs2.toString() + "g/" + durration.toString() + "h(+" + offset.toString() + "min)"
+        }
+
+        var carbDelayMessagePart = ""
+        if (quickWizardEntry.carbTime() > 0) {
+            carbDelayMessagePart = "(+" + quickWizardEntry.carbTime().toString() + "min)"
+        }
+
         val message = rh.gs(R.string.quick_wizard_message, quickWizardEntry.buttonText(), wizard.calculatedTotalInsulin, quickWizardEntry.carbs()) +
-            "\n_____________\n" + wizard.explainShort()
+            carbDelayMessagePart +
+            eCarbsMessagePart + "\n_____________\n" + wizard.explainShort()
 
         lastBolusWizard = wizard
+        lastQuickWizardEntry = quickWizardEntry
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -1273,9 +1314,9 @@ class DataHandlerMobile @Inject constructor(
         val watchfaceName = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, "")
         val authorVersion = sp.getString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, "")
         if (cwfData.metadata[CwfMetadataKey.CWF_NAME] != watchfaceName || cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] != authorVersion) {
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?:"")
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?:"")
-            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?:"")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_watchface_name, cwfData.metadata[CwfMetadataKey.CWF_NAME] ?: "")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_author_version, cwfData.metadata[CwfMetadataKey.CWF_AUTHOR_VERSION] ?: "")
+            sp.putString(app.aaps.core.utils.R.string.key_wear_cwf_filename, cwfData.metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
         }
 
         if (command.exportFile)
