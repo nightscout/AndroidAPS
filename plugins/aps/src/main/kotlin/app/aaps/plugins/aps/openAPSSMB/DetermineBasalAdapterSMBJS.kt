@@ -10,6 +10,7 @@ import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.iob.MealData
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.ScriptLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
@@ -39,7 +40,7 @@ import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 
-class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
+open class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -48,16 +49,16 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var activePlugin: ActivePlugin
 
-    private var profile = JSONObject()
-    private var mGlucoseStatus = JSONObject()
-    private var iobData: JSONArray? = null
-    private var mealData = JSONObject()
-    private var currentTemp = JSONObject()
-    private var autosensData = JSONObject()
-    private var microBolusAllowed = false
-    private var smbAlwaysAllowed = false
-    private var currentTime: Long = 0
-    private var flatBGsDetected = false
+    protected var profile = JSONObject()
+    protected var mGlucoseStatus = JSONObject()
+    protected var iobData: JSONArray? = null
+    protected var mealData = JSONObject()
+    protected var currentTemp = JSONObject()
+    protected var autosensData = JSONObject()
+    protected var microBolusAllowed = false
+    protected var smbAlwaysAllowed = false
+    protected var currentTime: Long = 0
+    protected var flatBGsDetected = false
 
     override var currentTempParam: String? = null
     override var iobDataParam: String? = null
@@ -65,6 +66,10 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
     override var profileParam: String? = null
     override var mealDataParam: String? = null
     override var scriptDebug = ""
+
+    protected open val jsFolder = "OpenAPSSMB"
+    protected open val useLoopVariants = false
+    protected open val jsAdditionalScript = ""
 
     @Suppress("SpellCheckingInspection")
     override operator fun invoke(): APSResultObject? {
@@ -98,8 +103,11 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
             rhino.evaluateString(scope, "var round_basal = function round_basal(basal, profile) { return basal; };", "JavaScript", 0, null)
             rhino.evaluateString(scope, "require = function() {return round_basal;};", "JavaScript", 0, null)
 
+            if (jsAdditionalScript != "") {
+                rhino.evaluateString(scope, jsAdditionalScript, "JavaScript", 0, null)
+            }
             //generate functions "determine_basal" and "setTempBasal"
-            rhino.evaluateString(scope, readFile("OpenAPSSMB/determine-basal.js"), "JavaScript", 0, null)
+            rhino.evaluateString(scope, readFile("$jsFolder/determine-basal.js"), "JavaScript", 0, null)
             rhino.evaluateString(scope, readFile("OpenAPSSMB/basal-set-temp.js"), "setTempBasal.js", 0, null)
             val determineBasalObj = scope["determine_basal", scope]
             val setTempBasalFunctionsObj = scope["tempBasalFunctions", scope]
@@ -122,7 +130,7 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
                     java.lang.Boolean.valueOf(flatBGsDetected)
                 )
                 val jsResult = determineBasalObj.call(rhino, scope, scope, params) as NativeObject
-                scriptDebug = LoggerCallback.scriptDebug
+                scriptDebug = ScriptLogger.dump()
 
                 // Parse the jsResult object to a JSON-String
                 val result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString()
