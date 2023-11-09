@@ -181,7 +181,7 @@ class PluginStore @Inject constructor(
         get() = activeProfile ?: checkNotNull(activeProfile) { "No profile selected" }
 
     override val activeInsulin: Insulin
-        get() = activeInsulinStore ?: checkNotNull(activeInsulinStore) { "No insulin selected" }
+        get() = activeInsulinStore ?: getDefaultPlugin(PluginType.INSULIN) as Insulin
 
     override val activeAPS: APS
         get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
