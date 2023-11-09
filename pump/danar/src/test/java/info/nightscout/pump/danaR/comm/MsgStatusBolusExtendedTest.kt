@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaR.comm
 
+import app.aaps.core.interfaces.utils.T
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended
-import info.nightscout.shared.utils.T
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

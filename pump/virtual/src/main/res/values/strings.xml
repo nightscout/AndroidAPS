@@ -10,4 +10,7 @@
     <string name="virtual_pump_label">VIRTUAL PUMP</string>
     <string name="virtualpump_settings">Virtual pump settings</string>
 
+    <!--    PumpType-->
+    <string name="def_extended_note">* Only discrete values no ranges are supported as granularity for basal/bolus in virtual pump.</string>
+
 </resources>

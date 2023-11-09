@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ProgramReminder
-import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ProgramBolusCommandTest {
 
-    @Test @Throws(DecoderException::class) fun testProgramBolusCommand() {
+    @Test fun testProgramBolusCommand() {
         val encoded = ProgramBolusCommand.Builder()
             .setNumberOfUnits(5.0)
             .setProgramReminder(ProgramReminder(false, true, 0.toByte()))
@@ -19,9 +18,6 @@ class ProgramBolusCommandTest {
             .build()
             .encoded
 
-        Assertions.assertArrayEquals(
-            Hex.decodeHex("02420001381F1A0E494E532E02010F01064000640064170D4003E800030D4000000000000080F6"),
-            encoded
-        )
+        assertThat(encoded).asList().containsExactlyElementsIn(Hex.decodeHex("02420001381F1A0E494E532E02010F01064000640064170D4003E800030D4000000000000080F6").asList()).inOrder()
     }
 }

@@ -8,6 +8,28 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 
+import app.aaps.core.interfaces.configuration.Constants;
+import app.aaps.core.interfaces.constraints.ConstraintsChecker;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.core.interfaces.profile.ProfileFunction;
+import app.aaps.core.interfaces.pump.BolusProgressData;
+import app.aaps.core.interfaces.pump.PumpEnactResult;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.queue.Command;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged;
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
+import app.aaps.core.interfaces.rx.events.EventProfileSwitchChanged;
+import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged;
+import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.utils.T;
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.danaRKorean.comm.MessageHashTableRKorean;
 import info.nightscout.androidaps.danaRKorean.comm.MsgCheckValue_k;
@@ -33,36 +55,14 @@ import info.nightscout.androidaps.danar.comm.MsgSettingShippingInfo;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.interfaces.Constants;
-import info.nightscout.interfaces.constraints.Constraints;
-import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.profile.Profile;
-import info.nightscout.interfaces.profile.ProfileFunction;
-import info.nightscout.interfaces.pump.BolusProgressData;
-import info.nightscout.interfaces.pump.PumpEnactResult;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.interfaces.queue.Command;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.events.EventDanaRNewStatus;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.EventInitializationChanged;
-import info.nightscout.rx.events.EventOverviewBolusProgress;
-import info.nightscout.rx.events.EventProfileSwitchChanged;
-import info.nightscout.rx.events.EventPumpStatusChanged;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.utils.DateUtil;
-import info.nightscout.shared.utils.T;
 
 public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Inject AAPSLogger aapsLogger;
     @Inject RxBus rxBus;
     @Inject ResourceHelper rh;
-    @Inject Constraints constraintChecker;
+    @Inject ConstraintsChecker constraintChecker;
     @Inject DanaPump danaPump;
     @Inject DanaRPlugin danaRPlugin;
     @Inject DanaRKoreanPlugin danaRKoreanPlugin;
@@ -81,12 +81,6 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     public void onCreate() {
         super.onCreate();
         mBinder = new LocalBinder();
-    }
-
-    public class LocalBinder extends Binder {
-        public DanaRKoreanExecutionService getServiceInstance() {
-            return DanaRKoreanExecutionService.this;
-        }
     }
 
     @SuppressLint("MissingPermission") public void connect() {
@@ -290,7 +284,7 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
             SystemClock.sleep(300);
 
             danaPump.setBolusingTreatment(null);
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.bolus_ok), null);
+            commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.bolus_ok), null);
         }
 
         return !start.getFailed();
@@ -328,6 +322,12 @@ public class DanaRKoreanExecutionService extends AbstractDanaRExecutionService {
     @Override
     public PumpEnactResult setUserOptions() {
         return null;
+    }
+
+    public class LocalBinder extends Binder {
+        public DanaRKoreanExecutionService getServiceInstance() {
+            return DanaRKoreanExecutionService.this;
+        }
     }
 
 }

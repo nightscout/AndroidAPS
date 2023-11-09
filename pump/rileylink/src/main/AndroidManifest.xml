@@ -17,7 +17,7 @@
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.PumpCommon.dialog.RileyLinkBLEConfigActivity" />
+                <action android:name="info.nightscout.androidaps.plugins.pump.common.dialog.RileyLinkBLEConfigActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

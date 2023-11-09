@@ -8,7 +8,7 @@
         android:title="@string/maintenance_settings"
         app:initialExpandedChildrenCount="0">
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="logs@aaps.app"
             android:dialogMessage="@string/maintenance_email"
             android:inputType="textEmailAddress"
@@ -17,7 +17,7 @@
             android:title="@string/maintenance_email"
             validate:testType="email"/>
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="2"
             android:inputType="number"
             android:key="@string/key_maintenance_logs_amount"

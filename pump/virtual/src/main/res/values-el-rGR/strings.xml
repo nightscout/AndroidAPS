@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Τύπος εικονικής αντλίας</string>
+    <string name="virtual_pump_definition">Ορισμός Αντλίας</string>
+    <string name="virtual_pump_pump_def">Bolus: Βήμα=%1$s\nΕκτεταμένο Bolus: [Άμεσο=%2$s, Διάρκεια=%3$smin-%4$sh]\nΒασικός: Βήμα=%5$s\nTBR: %6$s (με %7$s), Διάρκεια=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">ΕΙΚΑΝΤΛΙΑ</string>
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
+    <string name="virtual_pump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
     <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Υποστηρίζονται μόνο διακριτές τιμές και όχι εύρος τιμών για βασικό/bolus στην εικονική αντλία.</string>
 </resources>

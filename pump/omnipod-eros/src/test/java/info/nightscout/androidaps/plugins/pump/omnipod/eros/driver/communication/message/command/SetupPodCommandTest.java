@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 class SetupPodCommandTest {
     @Test
@@ -16,7 +16,7 @@ class SetupPodCommandTest {
                 240439);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.fromHexString("03131f00ee87140404050d16340000a3770003ab37"), // From https://github.com/openaps/openomni/wiki/Command-03-Setup-Pod
+                ByteUtil.INSTANCE.fromHexString("03131f00ee87140404050d16340000a3770003ab37"), // From https://github.com/openaps/openomni/wiki/Command-03-Setup-Pod
                 setupPodCommand.getRawData());
     }
 

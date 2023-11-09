@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">כיוונון הרגישות והסוכר בדם</string>
+    <string name="dynisf_adjust_sensitivity">כיוונון הרגישות והמינון הבזאלי</string>
+    <string name="dynisf_adjust_sensitivity_summary">הרגישות הדינמית תשתמש בסך מינון האינסולין של 24 השעות האחרונות או של השבוע האחרון כדי לכוונן את יחס הרגישות ואת המינון הבזאלי, בדומה לדרך בה Autosens עושה זאת</string>
     <string name="DynISFAdjust_title" formatted="false">כיוונון פקטור הרגישות הדינאמית %</string>
     <string name="DynISFAdjust_summary" formatted="false">כיוונון פקטור הרגישות הדינאמית. הגדירו יותר מ-100% לקבלת תיקונים אגרסיביים יותר ופחות מ-100% לקבלת תיקונים עדינים יותר.</string>
     <string name="high_temptarget_raises_sensitivity_title">ערך מטרה זמני גבוה מעלה את הרגישות</string>
@@ -83,6 +84,7 @@
     <string name="smb_disabled_in_preferences">SMB מושבת בהעדפות</string>
     <string name="uam_disabled_in_preferences">UAM מושבת בהעדפות</string>
     <string name="autosens_disabled_in_preferences">Autosens מושבת בהעדפות</string>
+    <string name="autosens_disabled_in_dyn_isf">אוטוסנס כבוי ברגישות דינאמית</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
@@ -114,4 +116,5 @@
     <string name="loop_smb_set_by_pump_label">SMB מוגדר באמצעות משאבה</string>
     <string name="loop_open_mode_min_change">מינימום לבקשה לשינוי [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
+    <string name="fallback_smb_no_tdd">חוזר ל-SMB, אין מספיק נתוני מינון יומי.</string>
 </resources>

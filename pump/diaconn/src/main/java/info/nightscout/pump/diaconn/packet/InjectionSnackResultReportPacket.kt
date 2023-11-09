@@ -1,16 +1,16 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 /**
  * InjectionSnackResultReportPacket
  */
-class InjectionSnackResultReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector ) {
+class InjectionSnackResultReportPacket(injector: HasAndroidInjector) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var rxBus: RxBus
@@ -31,15 +31,15 @@ class InjectionSnackResultReportPacket(injector: HasAndroidInjector) : DiaconnG8
 
         val bufferData = prefixDecode(data)
         val result = getByteToInt(bufferData)
-        val bolusAmountToBeDelivered = getShortToInt(bufferData)/100.0
-        val deliveredBolusAmount  = getShortToInt(bufferData)/100.0
+        val bolusAmountToBeDelivered = getShortToInt(bufferData) / 100.0
+        val deliveredBolusAmount = getShortToInt(bufferData) / 100.0
 
         diaconnG8Pump.bolusAmountToBeDelivered = bolusAmountToBeDelivered
         diaconnG8Pump.lastBolusAmount = deliveredBolusAmount
         diaconnG8Pump.lastBolusTime = dateUtil.now()
         diaconnG8Pump.bolusingTreatment?.insulin = deliveredBolusAmount
 
-        if(result == 1) {
+        if (result == 1) {
             diaconnG8Pump.bolusStopped = true // 주입 중 취소 처리!
         }
         diaconnG8Pump.bolusDone = true // 주입완료 처리!

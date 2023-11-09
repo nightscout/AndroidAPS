@@ -8,6 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.T
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmProcess
@@ -17,12 +22,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogAlarmBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
-import info.nightscout.core.ui.R
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.utils.T
+import app.aaps.core.ui.R
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 
@@ -52,8 +52,10 @@ class AlarmDialog : DaggerDialogFragment() {
     private var isHolding = false
     private var isMute = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         mAlarmProcess = AlarmProcess(patchManager, rxBus)
 
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
@@ -84,25 +86,25 @@ class AlarmDialog : DaggerDialogFragment() {
             alarmCode?.let { ac ->
                 mAlarmProcess.doAction(requireContext(), ac)
                     .subscribeOn(aapsSchedulers.io)
-                    .subscribe ({ ret ->
-                        aapsLogger.debug("Alarm processing result :${ret}")
-                        if (ret == IAlarmProcess.ALARM_HANDLED || ret == IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP) {
-                            if(ret == IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP){
-                                pm.getAlarms().needToStopBeep.add(ac)
-                            }
-                            alarmCode?.let{
-                                patchManager.preferenceManager.getAlarms().handle(it)
-                                patchManager.preferenceManager.flushAlarms()
-                            }
-                            dismiss()
-                        }else if (ret == IAlarmProcess.ALARM_PAUSE) {
-                            isHolding = true
-                        }else if (ret == IAlarmProcess.ALARM_UNHANDLED) {
-                            if(!isMute){
-                                startAlarm("ALARM_UNHANDLED")
-                            }
-                        }
-                    }, { t -> aapsLogger.error("${t.printStackTrace()}") })
+                    .subscribe({ ret ->
+                                   aapsLogger.debug("Alarm processing result :${ret}")
+                                   if (ret == IAlarmProcess.ALARM_HANDLED || ret == IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP) {
+                                       if (ret == IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP) {
+                                           pm.getAlarms().needToStopBeep.add(ac)
+                                       }
+                                       alarmCode?.let {
+                                           patchManager.preferenceManager.getAlarms().handle(it)
+                                           patchManager.preferenceManager.flushAlarms()
+                                       }
+                                       dismiss()
+                                   } else if (ret == IAlarmProcess.ALARM_PAUSE) {
+                                       isHolding = true
+                                   } else if (ret == IAlarmProcess.ALARM_UNHANDLED) {
+                                       if (!isMute) {
+                                           startAlarm("ALARM_UNHANDLED")
+                                       }
+                                   }
+                               }, { t -> aapsLogger.error("${t.printStackTrace()}") })
             }
             stopAlarm("OK clicked")
         }
@@ -122,7 +124,7 @@ class AlarmDialog : DaggerDialogFragment() {
         disposable = patchManager.observePatchLifeCycle()
             .observeOn(aapsSchedulers.main)
             .subscribe {
-                if(it.isShutdown) {
+                if (it.isShutdown) {
                     activity?.finish()
                 }
             }
@@ -143,7 +145,7 @@ class AlarmDialog : DaggerDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        if(isHolding && !isMute){
+        if (isHolding && !isMute) {
             startAlarm("onResume")
         }
         binding.status.text = status

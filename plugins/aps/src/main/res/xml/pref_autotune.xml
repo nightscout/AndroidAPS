@@ -27,7 +27,7 @@
             android:title="@string/autotune_tune_insulin_curve_title" />
         -->
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="5"
             android:key="@string/key_autotune_default_tune_days"
             android:title="@string/autotune_default_tune_days_title"

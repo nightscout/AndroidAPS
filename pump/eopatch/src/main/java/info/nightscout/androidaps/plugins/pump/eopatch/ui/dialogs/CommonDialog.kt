@@ -3,9 +3,9 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import app.aaps.core.interfaces.logging.AAPSLogger
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.R
-import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 
 class CommonDialog : DaggerDialogFragment() {
@@ -21,19 +21,19 @@ class CommonDialog : DaggerDialogFragment() {
     var negativeListener: DialogInterface.OnClickListener? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        return activity?.let{
-            val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it).apply {
-                if(title != 0) setTitle(title)
-                if(message != 0) setMessage(message)
+        return activity?.let {
+            val builder = app.aaps.core.ui.dialogs.AlertDialogHelper.Builder(it).apply {
+                if (title != 0) setTitle(title)
+                if (message != 0) setMessage(message)
                 setPositiveButton(positiveBtn,
-                positiveListener?:DialogInterface.OnClickListener { _, _ ->
-                    dismiss()
-                })
-                if(negativeBtn != 0) {
+                                  positiveListener ?: DialogInterface.OnClickListener { _, _ ->
+                                      dismiss()
+                                  })
+                if (negativeBtn != 0) {
                     setNegativeButton(negativeBtn,
-                        negativeListener ?: DialogInterface.OnClickListener { _, _ ->
-                            dismiss()
-                        })
+                                      negativeListener ?: DialogInterface.OnClickListener { _, _ ->
+                                          dismiss()
+                                      })
                 }
             }
 

@@ -1,20 +1,21 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
+import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.android.gms.common.internal.Preconditions
 import info.nightscout.androidaps.plugins.pump.eopatch.AppConstant
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.FloatFormatters
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
-import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant.WARRANTY_OPERATING_LIFE_MILLI
-import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
-import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
+import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant.WARRANTY_OPERATING_LIFE_MILLI
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 
 // @Singleton
-class PatchConfig: IPreference<PatchConfig> {
+class PatchConfig : IPreference<PatchConfig> {
+
     @Transient
     private val subject: BehaviorSubject<PatchConfig> = BehaviorSubject.create()
     var securityValue: ByteArray = byteArrayOf(0, 0)
@@ -63,12 +64,13 @@ class PatchConfig: IPreference<PatchConfig> {
     var pumpDurationMediumMilli = 0L // medium
         get(): Long = if (field != 0L) field else AppConstant.PUMP_DURATION_MILLI
     var pumpDurationLargeMilli = 0L // large
-        get(): Long =  if (field != 0L) field else AppConstant.PUMP_DURATION_MILLI
+        get(): Long = if (field != 0L) field else AppConstant.PUMP_DURATION_MILLI
     //var pumpDurationOcclusion = 0L // occul, 사용안함
 
-    var isEnterPrimaryScreen =false
+    var isEnterPrimaryScreen = false
+
     // 기초 프로그램 변경시 BLE로 패치에 보내야 하기 때문에 마크한다.
-    var needSetBasalSchedule =false
+    var needSetBasalSchedule = false
 
     var sharedKey: ByteArray? = null
     var seq15: Int = -1
@@ -76,6 +78,7 @@ class PatchConfig: IPreference<PatchConfig> {
     var rotateKnobNeedleSensingError = false
 
     var remainedInsulin = 0f
+
     //wake-up 시간을 기준으로 3.5일
     val expireTimestamp: Long
         get() = patchWakeupTimestamp + expireDurationMilli
@@ -188,29 +191,29 @@ class PatchConfig: IPreference<PatchConfig> {
 
         this.lifecycleEvent = event
         when (event.lifeCycle) {
-            PatchLifecycle.SHUTDOWN -> {
+            PatchLifecycle.SHUTDOWN               -> {
                 updateDeactivated()
             }
 
-            PatchLifecycle.BONDED -> {
+            PatchLifecycle.BONDED                 -> {
             }
 
-            PatchLifecycle.SAFETY_CHECK -> {
+            PatchLifecycle.SAFETY_CHECK           -> {
             }
 
-            PatchLifecycle.REMOVE_NEEDLE_CAP -> {
+            PatchLifecycle.REMOVE_NEEDLE_CAP      -> {
             }
 
             PatchLifecycle.REMOVE_PROTECTION_TAPE -> {
             }
 
-            PatchLifecycle.ROTATE_KNOB -> {
+            PatchLifecycle.ROTATE_KNOB            -> {
             }
 
-            PatchLifecycle.BASAL_SETTING -> {
+            PatchLifecycle.BASAL_SETTING          -> {
             }
 
-            PatchLifecycle.ACTIVATED -> {
+            PatchLifecycle.ACTIVATED              -> {
                 // updateFirstConnected 이 부분으로 옮김.
                 this.activatedTimestamp = System.currentTimeMillis()
                 //this.expireDurationMilli = WARRANTY_OPERATING_LIFE_MILLI
@@ -251,12 +254,11 @@ class PatchConfig: IPreference<PatchConfig> {
         return CommonUtils.hasText(macAddress)
     }
 
-
-    fun updatetDisconnectedTime(){
+    fun updatetDisconnectedTime() {
         this.lastDisconnectedTimestamp = System.currentTimeMillis()
     }
 
-    fun update(other: PatchConfig){
+    fun update(other: PatchConfig) {
         macAddress = other.macAddress
         lifecycleEvent = other.lifecycleEvent
         bolusNormalStartTimestamp = other.bolusNormalStartTimestamp
@@ -300,13 +302,11 @@ class PatchConfig: IPreference<PatchConfig> {
         return subject.hide()
     }
 
-    override fun flush(sp: SP){
+    override fun flush(sp: SP) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
         sp.putString(SettingKeys.PATCH_CONFIG, jsonStr)
         subject.onNext(this)
     }
-
-
 
     override fun toString(): String {
         return "PatchConfig(securityValue=${securityValue.contentToString()}, macAddress=$macAddress, lifecycleEvent=$lifecycleEvent, bolusNormalStartTimestamp=$bolusNormalStartTimestamp, bolusNormalEndTimestamp=$bolusNormalEndTimestamp, bolusNormalDoseU=$bolusNormalDoseU, bolusExStartTimestamp=$bolusExStartTimestamp, bolusExEndTimestamp=$bolusExEndTimestamp, bolusExDoseU=$bolusExDoseU, injectCount=$injectCount, bgReminderMinute=$bgReminderMinute, lastIndex=$lastIndex, lastDisconnectedTimestamp=$lastDisconnectedTimestamp, standardBolusInjectCount=$standardBolusInjectCount, extendedBolusInjectCount=$extendedBolusInjectCount, basalInjectCount=$basalInjectCount, patchFirmwareVersion=$patchFirmwareVersion, patchSerialNumber='$patchSerialNumber', patchLotNumber=$patchLotNumber, patchModelName=$patchModelName, patchWakeupTimestamp=$patchWakeupTimestamp, activatedTimestamp=$activatedTimestamp, expireDurationMilli=$expireDurationMilli, basalPauseFinishTimestamp=$basalPauseFinishTimestamp, needleInsertionTryCount=$needleInsertionTryCount, LowReservoirAlertAmount=$lowReservoirAlertAmount, patchExpireAlertTime=$patchExpireAlertTime, isEnterPrimaryScreen=$isEnterPrimaryScreen, needSetBasalSchedule=$needSetBasalSchedule, sharedKey=${sharedKey?.contentToString()}, seq15=$seq15, rotateKnobNeedleSensingError=$rotateKnobNeedleSensingError, remainedInsulin=$remainedInsulin)"
@@ -353,9 +353,7 @@ class PatchConfig: IPreference<PatchConfig> {
         } else if (other.sharedKey != null) return false
         if (seq15 != other.seq15) return false
         if (rotateKnobNeedleSensingError != other.rotateKnobNeedleSensingError) return false
-        if (remainedInsulin != other.remainedInsulin) return false
-
-        return true
+        return remainedInsulin == other.remainedInsulin
     }
 
     override fun hashCode(): Int {

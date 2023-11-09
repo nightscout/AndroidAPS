@@ -1,13 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.util
 
+import app.aaps.core.interfaces.profile.Profile
+import com.google.common.truth.Truth.assertThat
+import app.aaps.core.interfaces.profile.Profile.ProfileValue
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.Profile.ProfileValue
-import org.junit.Assert
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import kotlin.test.assertFailsWith
 
 class FunctionsTest {
 
@@ -24,19 +25,19 @@ class FunctionsTest {
 
         val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
         val entries: List<BasalProgram.Segment> = basalProgram.segments
-        Assertions.assertEquals(3, entries.size)
+        assertThat(entries).hasSize(3)
         val entry1: BasalProgram.Segment = entries[0]
-        Assertions.assertEquals(0.toShort(), entry1.startSlotIndex)
-        Assertions.assertEquals(50, entry1.basalRateInHundredthUnitsPerHour)
-        Assertions.assertEquals(10.toShort(), entry1.endSlotIndex)
+        assertThat(entry1.startSlotIndex).isEqualTo(0.toShort())
+        assertThat(entry1.basalRateInHundredthUnitsPerHour).isEqualTo(50)
+        assertThat(entry1.endSlotIndex).isEqualTo(10.toShort())
         val entry2: BasalProgram.Segment = entries[1]
-        Assertions.assertEquals(10.toShort(), entry2.startSlotIndex)
-        Assertions.assertEquals(100, entry2.basalRateInHundredthUnitsPerHour)
-        Assertions.assertEquals(28.toShort(), entry2.endSlotIndex)
+        assertThat(entry2.startSlotIndex).isEqualTo(10.toShort())
+        assertThat(entry2.basalRateInHundredthUnitsPerHour).isEqualTo(100)
+        assertThat(entry2.endSlotIndex).isEqualTo(28.toShort())
         val entry3: BasalProgram.Segment = entries[2]
-        Assertions.assertEquals(28.toShort(), entry3.startSlotIndex)
-        Assertions.assertEquals(305, entry3.basalRateInHundredthUnitsPerHour)
-        Assertions.assertEquals(48.toShort(), entry3.endSlotIndex)
+        assertThat(entry3.startSlotIndex).isEqualTo(28.toShort())
+        assertThat(entry3.basalRateInHundredthUnitsPerHour).isEqualTo(305)
+        assertThat(entry3.endSlotIndex).isEqualTo(48.toShort())
     }
 
     @Test fun invalidProfileZeroEntries() {
@@ -44,12 +45,10 @@ class FunctionsTest {
 
         `when`(profile.getBasalValues()).thenReturn(emptyArray())
 
-        Assert.assertThrows(
-            "Basal values should contain values",
-            java.lang.IllegalArgumentException::class.java
-        ) {
+        val exception = assertFailsWith<IllegalArgumentException> {
             mapProfileToBasalProgram(profile)
         }
+        assertThat(exception.message).isEqualTo("Basal values should contain values")
     }
 
     @Test fun invalidProfileNonZeroOffset() {
@@ -59,12 +58,10 @@ class FunctionsTest {
             arrayOf(ProfileValue(1800, 0.5))
         )
 
-        Assert.assertThrows(
-            "First basal segment start time should be 0",
-            java.lang.IllegalArgumentException::class.java
-        ) {
+        val exception = assertFailsWith<IllegalArgumentException> {
             mapProfileToBasalProgram(profile)
         }
+        assertThat(exception.message).isEqualTo("First basal segment start time should be 0")
     }
 
     @Test fun invalidProfileMoreThan24Hours() {
@@ -77,12 +74,10 @@ class FunctionsTest {
             )
         )
 
-        Assert.assertThrows(
-            "Basal segment start time can not be greater than 86400",
-            java.lang.IllegalArgumentException::class.java
-        ) {
+        val exception = assertFailsWith<IllegalArgumentException> {
             mapProfileToBasalProgram(profile)
         }
+        assertThat(exception.message).isEqualTo("Basal segment start time can not be greater than 86400")
     }
 
     @Test fun invalidProfileNegativeOffset() {
@@ -92,9 +87,10 @@ class FunctionsTest {
             arrayOf(ProfileValue(-1, 0.5))
         )
 
-        Assert.assertThrows("Basal segment start time can not be less than 0", IllegalArgumentException::class.java) {
+        val exception = assertFailsWith<IllegalArgumentException> {
             mapProfileToBasalProgram(profile)
         }
+        assertThat(exception.message).isEqualTo("Basal segment start time can not be less than 0")
     }
 
     @Test fun roundsToSupportedPrecision() {
@@ -108,6 +104,6 @@ class FunctionsTest {
 
         val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
         val basalProgramElement: BasalProgram.Segment = basalProgram.segments[0]
-        Assertions.assertEquals(5, basalProgramElement.basalRateInHundredthUnitsPerHour)
+        assertThat(basalProgramElement.basalRateInHundredthUnitsPerHour).isEqualTo(5)
     }
 }

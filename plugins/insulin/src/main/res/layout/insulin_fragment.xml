@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.insulin.InsulinFragment">
+    tools:context=".InsulinFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             android:layout_margin="10dp"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <info.nightscout.core.graph.ActivityGraph
+        <app.aaps.core.main.graph.ActivityGraph
             android:id="@+id/graph"
             android:layout_width="match_parent"
             android:layout_height="200dip"

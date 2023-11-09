@@ -330,76 +330,9 @@
     <string name="send_logfiles">Send today\'s log files to developers along with this time. Unexpected situation.</string>
     <string name="iob_cob_calculator" translatable="false">IobCobCalculator</string>
 
-    <!--    Wear-->
-    <string name="wear_shortname">WEAR</string>
-    <string name="description_wear">Monitor and control AAPS using your WearOS watch.</string>
-    <string name="no_watch_connected">(No Watch Connected)</string>
-    <string name="pump_status">Pump status</string>
-    <string name="loop_status">Loop status</string>
-    <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
-    <string name="quick_wizard_not_available">Selected quickwizard no longer available, please refresh your tile</string>
-    <string name="quick_wizard_message">QuickWizard: %1$s\nInsulin: %2$.2fU\nCarbs: %3$dg</string>
-    <string name="wear_action_tempt_preset_error">Temptarget unknown preset: %1$s</string>
-    <string name="wear_action_tempt_cancel_message">Cancelling running Temp-Targets?</string>
-    <string name="wear_action_tempt_unit_error">Different units used on watch and phone!</string>
-    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - cancelling running Temp-Targets?</string>
-    <string name="wear_action_tempt_min_bg_error">Min-BG out of range!</string>
-    <string name="wear_action_tempt_max_bg_error">Max-BG out of range!</string>
-    <string name="wear_action_tempt_manual_range_message">Temptarget:\nMin: %1$s\nMax: %2$s\nDuration: %3$s</string>
-    <string name="wear_action_tempt_manual_message">Temptarget:\nTarget: %1$s\nDuration: %2$s</string>
-    <string name="wear_action_tempt_preset_message">Temptarget:\nReason: %1$s\nTarget: %2$s\nDuration: %3$s</string>
-    <string name="no_success">not successful - please check phone</string>
-    <string name="wear_settings">Wear settings</string>
-    <string name="wearcontrol_title">Controls from Watch</string>
-    <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
-    <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
-    <string name="wear_general_settings">General Settings</string>
-    <string name="wear_notifysmb_title">Notify on SMB</string>
-    <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
-    <string name="wear_custom_watchface_settings">Custom Watchface Settings</string>
-    <string name="wear_custom_watchface_authorization_title">Custom Watchface Authorization</string>
-    <string name="wear_custom_watchface_authorization_summary">Authorize loaded custom watchface to change and lock some watch display settings to suit watchface design</string>
-    <string name="wear_custom_watchface">Custom Watchface: %1$s</string>
-    <string name="wear_load_watchface">Load Watchface</string>
-    <string name="wear_infos_watchface">Infos Watchface</string>
-    <string name="wear_export_watchface">Export template</string>
-    <string name="wear_new_custom_watchface_exported">Custom watchface template exported</string>
-    <string name="resend_all_data">Resend All Data</string>
-    <string name="open_settings_on_wear">Open Settings on Wear</string>
-    <string name="cwf_infos_pref_locked">List of prefs locked by the Watchface</string>
-    <string name="cwf_infos_pref_required">List of prefs required for the Watchface</string>
-    <string name="cwf_infos_view_title">List of fields included into the Watchface</string>
-
-
     <!--    PersistentNotification-->
     <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
     <string name="description_persistent_notification">Shows an ongoing notification with a short overview of what your loop is doing</string>
     <string name="old_data">OLD DATA</string>
-    <string name="pump_fetching_data">trying to fetch data from pump.</string>
-    <string name="pump_old_data">TDD: Still old data! Cannot load from pump.</string>
-    <string name="grams_short">g</string>
-    <string name="hour_short">h</string>
-    <string name="no_active_profile">No active profile switch!</string>
-    <string name="profile_message">Profile:\n\nTimeshift: %1$d\nPercentage: %2$d%%\"</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
-    <string name="no_profile">No profile loaded</string>
-    <string name="aps_only">Only apply in APS mode!</string>
-    <string name="last_aps_result_na">Last result not available!</string>
-    <string name="loop_status_closed">CLOSED LOOP</string>
-    <string name="loop_status_open">OPEN LOOP</string>
-    <string name="loop_status_disabled">LOOP DISABLED</string>
-    <string name="aps">APS</string>
-    <string name="last_run">Last run</string>
-    <string name="last_enact">Last Enact</string>
-    <string name="today">Today</string>
-    <string name="weighted">weighted</string>
-    <string name="target_only_aps_mode">Targets only apply in APS mode!</string>
-    <string name="no_history">No history data!</string>    
-    <string name="units_short">U</string>
-    <string name="temp_target">Temp Target</string>
-    <string name="until">until</string>
-    <string name="default_range">DEFAULT RANGE</string>
-    <string name="target">target</string>
-    <string name="rate_duration">Rate: %1$.2fU/h (%2$.2f%%) \nDuration %3$d min</string>
 
 </resources>

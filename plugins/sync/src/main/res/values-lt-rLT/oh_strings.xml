@@ -15,13 +15,13 @@
     <string name="uploading_to_open_humans">AAPS įkelia duomenis į Open Humans. Tai gali šiek tiek užtrukti.</string>
     <string name="you_have_been_signed_out_of_open_humans">Jūs buvote atjungtas iš Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Spustelėkite čia, kad prisijungtumėte dar kartą, jei tai atsitiko netyčia.</string>
-    <string name="next">Kitas</string>
+    <string name="next">Toliau</string>
     <string name="welcome_to_open_humans">Sveiki atvykę į Open Humans</string>
-    <string name="setup_data_upload">Norėdami nustatyti duomenų perdavimą, spauskite \'Kitas\'.</string>
+    <string name="setup_data_upload">Norėdami nustatyti duomenų perdavimą, spauskite \'Toliau\'.</string>
     <string name="consent">Sutikimas</string>
     <string name="terms_of_use">Naudojimosi sąlygos</string>
     <string name="please_read__information">Norėdami tęsti, atidžiai perskaitykite toliau pateiktą informaciją ir sutikite su naudojimo sąlygomis.</string>
-    <string name="info_openhumans">Tai yra atviro kodo įrankis, kuris nukopijuoja Jūsų duomenis į Open Humans. Mes neturime teisės perduoti Jūsų duomenų trečiosioms šalims be aiškaus jūsų sutikimo. Duomenys, kuriuos gauna projektas ir programa, identifikuojami pagal atsitiktinį naudotojo ID ir tik tada saugiai perkeliami į Open Humans paskyrą, jei gautas Jūsų sutikimas. Galite bet kada sustabdyti įkėlimą ir ištrinti savo įkeltus duomenis apsilankę www.openhumans.org.</string>
+    <string name="info_openhumans">Tai yra atviro kodo įrankis, kuris nukopijuoja Jūsų duomenis į Open Humans. Mes neturime teisės perduoti Jūsų duomenų trečiosioms šalims be Jūsų sutikimo. Duomenys, kuriuos gauna projektas ir programa, identifikuojami pagal atsitiktinį naudotojo ID ir tik tada saugiai perkeliami į Open Humans paskyrą, jei gautas Jūsų sutikimas. Galite bet kada sustabdyti įkėlimą ir ištrinti savo įkeltus duomenis apsilankę www.openhumans.org.</string>
     <string name="data_uploaded">Duomenys įkelti</string>
     <string name="glucose_values">Glikemijos duomenys</string>
     <string name="boluses">Bolusai</string>
@@ -51,6 +51,6 @@
     <string name="finishing">Baigiama...</string>
     <string name="this_may_take_a_few_seconds">Gali užtrukti kelias sekundes.</string>
     <string name="we_re_done">Užbaigta!</string>
-    <string name="silently_upload_date_note">Nuo šiol telefonas kartkartėmis tyliai fone įkels duomenis.</string>
+    <string name="silently_upload_date_note">Nuo šiol telefonas kartkartėmis fone įkels duomenis.</string>
     <string name="close">Uždaryti</string>
 </resources>

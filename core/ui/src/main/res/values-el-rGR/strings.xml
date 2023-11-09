@@ -326,6 +326,7 @@
     <string name="uel_error_dialog_mute">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΣΙΓΑΣΗ </string>
     <string name="uel_error_dialog_mute_5min">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΣΙΓΑΣΗ 5ΛΕΠΤΑ</string>
     <string name="uel_objective_started">ΕΝΑΡΞΗ ΣΤΟΧΟΥ</string>
+    <string name="uel_objective_unstarted">Ο ΣΤΟΧΟΣ ΔΕΝ ΕΧΕΙ ΞΕΚΙΝΗΣΕΙ</string>
     <string name="uel_objectives_skipped">ΠΑΡΑΛΗΨΗ ΣΤΟΧΟΥ</string>
     <string name="uel_stat_reset">ΕΠΑΝΑΦΟΡΑ ΣΤΑΤΙΣΤΙΚΩΝ</string>
     <string name="uel_delete_logs">ΔΙΑΓΡΑΦΗ ΚΑΤΑΓΡΑΦΩΝ</string>
@@ -579,4 +580,23 @@
     <string name="cleanup_db_confirm">Θέλετε να καθαρίσετε τη βάση δεδομένων;\nΑυτή η ενέργεια θα αφαιρέσει την παρακολούθηση των αλλαγών και ιστορικά δεδομένα παλαιότερα από 3 μήνες.</string>
     <string name="cleanup_db_confirm_sync">Θέλετε να εκκαθαρίσετε τη βάση δεδομένων;\nΑυτή η ενέργεια θα αφαιρέσει την παρακολούθηση των αλλαγών και ιστορικά δεδομένα παλαιότερα από 3 μήνες.\nΚάνοντας αυτό θα επιταχυνθεί δραματικά ο πλήρης συγχρονισμός.</string>
     <string name="cleared_entries">Έγινε εκκαθάριση των καταχωρήσεων</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Κυρ</string>
+    <string name="weekday_saturday_short">Σαβ</string>
+    <string name="weekday_friday_short">Παρ</string>
+    <string name="weekday_thursday_short">Πεμ</string>
+    <string name="weekday_wednesday_short">Τετ</string>
+    <string name="weekday_tuesday_short">Τρ</string>
+    <string name="weekday_monday_short">Δευτ</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">Δ</string>
+    <string name="tuesday_short">Τρ</string>
+    <string name="wednesday_short">Τε</string>
+    <string name="thursday_short">Πε</string>
+    <string name="friday_short">Πα</string>
+    <string name="saturday_short">Σ</string>
+    <string name="sunday_short">Κ</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

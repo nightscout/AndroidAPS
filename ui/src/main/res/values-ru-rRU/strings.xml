@@ -2,7 +2,7 @@
 <resources>
     <string name="bolus_constraint_applied">применено ограничение болюса</string>
     <string name="carbs_constraint_applied">применено ограничение углеводов</string>
-    <string name="temp_target_short">TT</string>
+    <string name="temp_target_short">ВЦ</string>
     <string name="dialog_canceled">Диалог отменен</string>
     <string name="start_activity_tt">Включить временную цель TT Нагрузка</string>
     <string name="start_eating_soon_tt">Включить временную цель TT Ожидаемый прием пищи</string>

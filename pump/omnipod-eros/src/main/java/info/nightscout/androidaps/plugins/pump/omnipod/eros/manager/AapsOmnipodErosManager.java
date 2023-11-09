@@ -13,6 +13,24 @@ import java.util.function.Supplier;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.notifications.Notification;
+import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
+import app.aaps.core.interfaces.pump.PumpEnactResult;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.Event;
+import app.aaps.core.interfaces.rx.events.EventDismissNotification;
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
+import app.aaps.core.interfaces.rx.events.EventRefreshOverview;
+import app.aaps.core.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.interfaces.utils.T;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
@@ -62,26 +80,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.Ero
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.interfaces.notifications.Notification;
-import info.nightscout.interfaces.profile.Profile;
-import info.nightscout.interfaces.pump.DetailedBolusInfo;
-import info.nightscout.interfaces.pump.PumpEnactResult;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.pump.common.defs.TempBasalPair;
-import info.nightscout.pump.core.utils.ByteUtil;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.Event;
-import info.nightscout.rx.events.EventDismissNotification;
-import info.nightscout.rx.events.EventOverviewBolusProgress;
-import info.nightscout.rx.events.EventRefreshOverview;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
-import info.nightscout.shared.utils.T;
+import info.nightscout.pump.common.utils.ByteUtil;
 import io.reactivex.rxjava3.subjects.SingleSubject;
 
 @Singleton
@@ -148,6 +148,23 @@ public class AapsOmnipodErosManager {
         delegate = new OmnipodManager(aapsLogger, aapsSchedulers, communicationService, podStateManager);
 
         reloadSettings();
+    }
+
+    public static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
+        if (profile == null) {
+            throw new IllegalArgumentException("Profile can not be null");
+        }
+        Profile.ProfileValue[] basalValues = profile.getBasalValues();
+        if (basalValues == null) {
+            throw new IllegalArgumentException("Basal values can not be null");
+        }
+        List<BasalScheduleEntry> entries = new ArrayList<>();
+        for (Profile.ProfileValue basalValue : basalValues) {
+            entries.add(new BasalScheduleEntry(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(basalValue.getValue()),
+                    Duration.standardSeconds(basalValue.getTimeAsSeconds())));
+        }
+
+        return new BasalSchedule(entries);
     }
 
     public void reloadSettings() {
@@ -251,7 +268,6 @@ public class AapsOmnipodErosManager {
         return new PumpEnactResult(injector).success(true).enacted(false);
     }
 
-
     public PumpEnactResult getPodStatus() {
         StatusResponse statusResponse;
 
@@ -289,7 +305,7 @@ public class AapsOmnipodErosManager {
         if (profile == null) {
             String note = getStringResource(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_set_profile_empty_profile);
             if (showNotifications) {
-                showNotification(Notification.FAILED_UPDATE_PROFILE, note, Notification.URGENT, info.nightscout.core.ui.R.raw.boluserror);
+                showNotification(Notification.FAILED_UPDATE_PROFILE, note, Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             return new PumpEnactResult(injector).success(false).enacted(false).comment(note);
         }
@@ -311,14 +327,14 @@ public class AapsOmnipodErosManager {
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             createSuspendedFakeTbrIfNotExists();
             if (showNotifications) {
-                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_basal_failed_delivery_suspended), Notification.URGENT, info.nightscout.core.ui.R.raw.boluserror);
+                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_basal_failed_delivery_suspended), Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(historyEntryType, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (PrecedingCommandFailedUncertainlyException ex) {
             if (showNotifications) {
-                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_basal_failed_delivery_might_be_suspended), Notification.URGENT, info.nightscout.core.ui.R.raw.boluserror);
+                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_basal_failed_delivery_might_be_suspended), Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(historyEntryType, errorMessage);
@@ -331,7 +347,7 @@ public class AapsOmnipodErosManager {
                 } else {
                     note = getStringResource(R.string.omnipod_eros_error_set_basal_might_have_failed_delivery_might_be_suspended);
                 }
-                showNotification(Notification.FAILED_UPDATE_PROFILE, note, Notification.URGENT, info.nightscout.core.ui.R.raw.boluserror);
+                showNotification(Notification.FAILED_UPDATE_PROFILE, note, Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(historyEntryType, errorMessage);
@@ -346,7 +362,7 @@ public class AapsOmnipodErosManager {
         addSuccessToHistory(historyEntryType, profile.getBasalValues());
 
         if (showNotifications) {
-            showNotification(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, null);
+            showNotification(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, null);
         }
 
         dismissNotification(Notification.FAILED_UPDATE_PROFILE);
@@ -375,7 +391,7 @@ public class AapsOmnipodErosManager {
 
         boolean beepsEnabled = detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? isSmbBeepsEnabled() : isBolusBeepsEnabled();
 
-        EventOverviewBolusProgress.INSTANCE.setT(new EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0,detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId()));
+        EventOverviewBolusProgress.INSTANCE.setT(new EventOverviewBolusProgress.Treatment(detailedBolusInfo.insulin, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId()));
 
         Date bolusStarted;
         try {
@@ -397,9 +413,9 @@ public class AapsOmnipodErosManager {
         if (OmnipodManager.CommandDeliveryStatus.UNCERTAIN_FAILURE.equals(bolusCommandResult.getCommandDeliveryStatus())) {
             // For safety reasons, we treat this as a bolus that has successfully been delivered, in order to prevent insulin overdose
             if (detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB) {
-                showNotification(Notification.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, isNotificationUncertainSmbSoundEnabled() ? info.nightscout.core.ui.R.raw.boluserror : null);
+                showNotification(Notification.OMNIPOD_UNCERTAIN_SMB, getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain_smb, detailedBolusInfo.insulin), Notification.URGENT, isNotificationUncertainSmbSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
             } else {
-                showErrorDialog(getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? info.nightscout.core.ui.R.raw.boluserror : 0);
+                showErrorDialog(getStringResource(R.string.omnipod_eros_error_bolus_failed_uncertain), isNotificationUncertainBolusSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : 0);
             }
         }
 
@@ -500,7 +516,7 @@ public class AapsOmnipodErosManager {
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
-            showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? info.nightscout.core.ui.R.raw.boluserror : null);
+            showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_set_temp_basal_failed_old_tbr_might_be_cancelled), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
 
             splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
 
@@ -510,7 +526,7 @@ public class AapsOmnipodErosManager {
             long pumpId = addFailureToHistory(PodHistoryEntryType.SET_TEMPORARY_BASAL, errorMessage);
 
             if (!OmnipodManager.isCertainFailure(ex)) {
-                showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? info.nightscout.core.ui.R.raw.boluserror : null);
+                showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_set_temp_basal_failed_old_tbr_cancelled_new_might_have_failed), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
 
                 // Assume that setting the temp basal succeeded here, because in case it didn't succeed,
                 // The next StatusResponse that we receive will allow us to recover from the wrong state
@@ -542,7 +558,7 @@ public class AapsOmnipodErosManager {
             executeCommand(() -> delegate.cancelTemporaryBasal(isTbrBeepsEnabled()));
         } catch (Exception ex) {
             if (OmnipodManager.isCertainFailure(ex)) {
-                showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_cancel_temp_basal_failed_uncertain), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? info.nightscout.core.ui.R.raw.boluserror : null);
+                showNotification(Notification.OMNIPOD_TBR_ALERTS, getStringResource(R.string.omnipod_eros_error_cancel_temp_basal_failed_uncertain), Notification.URGENT, isNotificationUncertainTbrSoundEnabled() ? app.aaps.core.ui.R.raw.boluserror : null);
             } else {
                 splitActiveTbr(); // Split any active TBR so when we recover from the uncertain TBR status,we only cancel the part after the cancellation
             }
@@ -603,21 +619,21 @@ public class AapsOmnipodErosManager {
         } catch (CommandFailedAfterChangingDeliveryStatusException ex) {
             createSuspendedFakeTbrIfNotExists();
             if (showNotifications) {
-                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_suspended), Notification.URGENT, info.nightscout.core.ui.R.raw.boluserror);
+                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_suspended), Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (PrecedingCommandFailedUncertainlyException ex) {
             if (showNotifications) {
-                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, info.nightscout.core.ui.R.raw.boluserror);
+                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex.getCause());
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
             return new PumpEnactResult(injector).success(false).enacted(false).comment(errorMessage);
         } catch (Exception ex) {
             if (showNotifications) {
-                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, info.nightscout.core.ui.R.raw.boluserror);
+                showNotification(Notification.FAILED_UPDATE_PROFILE, getStringResource(R.string.omnipod_eros_error_set_time_failed_delivery_might_be_suspended), Notification.URGENT, app.aaps.core.ui.R.raw.boluserror);
             }
             String errorMessage = translateException(ex);
             addFailureToHistory(PodHistoryEntryType.SET_TIME, errorMessage);
@@ -960,7 +976,7 @@ public class AapsOmnipodErosManager {
 
     private String createPodFaultErrorMessage(FaultEventCode faultEventCode) {
         return getStringResource(R.string.omnipod_eros_error_pod_fault,
-                ByteUtil.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
+                ByteUtil.INSTANCE.convertUnsignedByteToInt(faultEventCode.getValue()), faultEventCode.name());
     }
 
     private void sendEvent(Event event) {
@@ -968,11 +984,11 @@ public class AapsOmnipodErosManager {
     }
 
     private void showErrorDialog(String message, Integer sound) {
-        uiInteraction.runAlarm(message, rh.gs(info.nightscout.core.ui.R.string.error), sound);
+        uiInteraction.runAlarm(message, rh.gs(app.aaps.core.ui.R.string.error), sound);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode) {
-        showPodFaultNotification(faultEventCode, info.nightscout.core.ui.R.raw.boluserror);
+        showPodFaultNotification(faultEventCode, app.aaps.core.ui.R.raw.boluserror);
     }
 
     private void showPodFaultNotification(FaultEventCode faultEventCode, Integer sound) {
@@ -989,23 +1005,6 @@ public class AapsOmnipodErosManager {
 
     private String getStringResource(int id, Object... args) {
         return rh.gs(id, args);
-    }
-
-    public static BasalSchedule mapProfileToBasalSchedule(Profile profile) {
-        if (profile == null) {
-            throw new IllegalArgumentException("Profile can not be null");
-        }
-        Profile.ProfileValue[] basalValues = profile.getBasalValues();
-        if (basalValues == null) {
-            throw new IllegalArgumentException("Basal values can not be null");
-        }
-        List<BasalScheduleEntry> entries = new ArrayList<>();
-        for (Profile.ProfileValue basalValue : basalValues) {
-            entries.add(new BasalScheduleEntry(PumpType.OMNIPOD_EROS.determineCorrectBasalSize(basalValue.getValue()),
-                    Duration.standardSeconds(basalValue.getTimeAsSeconds())));
-        }
-
-        return new BasalSchedule(entries);
     }
 
     private void uploadCareportalEvent(long date, DetailedBolusInfo.EventType event) {

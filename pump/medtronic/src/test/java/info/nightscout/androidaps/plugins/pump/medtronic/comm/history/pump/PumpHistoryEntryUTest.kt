@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
-import org.junit.jupiter.api.Assertions
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Test
 
 /**
@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test
  */
 class PumpHistoryEntryUTest : MedtronicTestBase() {
 
-    @Test 
+    @Test
     fun checkIsAfter() {
         val dateObject = 20191010000000L
         val queryObject = 20191009000000L
         val phe = PumpHistoryEntry()
         phe.atechDateTime = dateObject
-        Assertions.assertTrue(phe.isAfter(queryObject))
+        assertThat(phe.isAfter(queryObject)).isTrue()
     }
 }

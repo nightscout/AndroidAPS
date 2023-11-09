@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <!--    PumpType-->
     <!-- PumpPluginBase -->
-    <!--    DecimalFormatter-->
+    <!--    DateUtil-->
+    <!-- Rx -->
+    <!-- Custom Watchface -->
+    <string name="pref_show_iob">Prikaži aktivni insulin</string>
+    <string name="pref_show_detailed_iob">Prikaži detaljan aktivni insulin</string>
+    <string name="pref_show_cob">Prikaži aktivne ugljene hidrate</string>
+    <string name="pref_show_delta">Prikaži Delta</string>
+    <string name="pref_show_detailed_delta">Prikaži detaljni Delta</string>
+    <string name="pref_show_avgdelta">Prikaži AvgDelta</string>
+    <string name="pref_show_phone_battery">Prikaži bateriju telefona</string>
+    <string name="pref_show_rig_battery">Prikaži bateriju Rig-a</string>
+    <string name="pref_show_basal_rate">Prikaži bazalnu dozu</string>
+    <string name="pref_show_loop_status">Prikaži status petlje</string>
+    <string name="pref_show_bg">Prikaži glukozu u krvi</string>
+    <string name="pref_show_bgi">Prikaži indeks glukoze u krvi</string>
+    <string name="pref_show_direction_arrow">Prikaži strelicu za pravac</string>
+    <string name="pref_show_ago">Prikaži pre</string>
 </resources>

@@ -1,5 +1,5 @@
 package info.nightscout.pump.combo.events
 
-import info.nightscout.rx.events.EventUpdateGui
+import app.aaps.core.interfaces.rx.events.EventUpdateGui
 
 class EventComboPumpUpdateGUI : EventUpdateGui()

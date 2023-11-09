@@ -11,11 +11,11 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalSchedule;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.BasalScheduleEntry;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.RateEntry;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 class BasalScheduleExtraCommandTest {
     @Test
-     void testEncodingFromRateEntries() {
+    void testEncodingFromRateEntries() {
         List<RateEntry> rateEntries = RateEntry.createEntries(3.0, Duration.standardHours(24));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand( //
                 false, //
@@ -27,12 +27,12 @@ class BasalScheduleExtraCommandTest {
                 rateEntries);
 
         Assertions.assertArrayEquals( //
-                ByteUtil.createByteArrayFromHexString("130e40001aea01312d003840005b8d80"), // From https://github.com/openaps/openomni/wiki/Bolus
+                ByteUtil.INSTANCE.createByteArrayFromHexString("130e40001aea01312d003840005b8d80"), // From https://github.com/openaps/openomni/wiki/Bolus
                 basalScheduleExtraCommand.getRawData());
     }
 
     @Test
-     void testParametersCorrectFromBasalSchedule() {
+    void testParametersCorrectFromBasalSchedule() {
         BasalSchedule basalSchedule = new BasalSchedule(Collections.singletonList(new BasalScheduleEntry(0.05, Duration.ZERO)));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand( //
                 basalSchedule, //
@@ -59,7 +59,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testEncodingFromBasalScheduleWithThreeEntries() {
+    void testEncodingFromBasalScheduleWithThreeEntries() {
         BasalSchedule schedule = new BasalSchedule(Arrays.asList( //
                 new BasalScheduleEntry(1.05, Duration.ZERO), //
                 new BasalScheduleEntry(0.9, Duration.standardHours(10).plus(Duration.standardMinutes(30))), //
@@ -68,13 +68,13 @@ class BasalScheduleExtraCommandTest {
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(schedule, Duration.standardMinutes((0x2e + 1) * 30).minus(Duration.standardSeconds(0x1be8 / 8)),
                 false, true, Duration.ZERO);
 
-        Assertions.assertArrayEquals(ByteUtil.fromHexString("131a4002009600a7d8c0089d0105944905a001312d00044c0112a880"),
+        Assertions.assertArrayEquals(ByteUtil.INSTANCE.fromHexString("131a4002009600a7d8c0089d0105944905a001312d00044c0112a880"),
                 basalScheduleExtraCommand.getRawData());
     }
 
     @Test
-     void testEncodingFromBasalScheduleWithSingleEntry() {
-        BasalSchedule basalSchedule = new BasalSchedule(Arrays.asList(new BasalScheduleEntry(1.05, Duration.ZERO)));
+    void testEncodingFromBasalScheduleWithSingleEntry() {
+        BasalSchedule basalSchedule = new BasalSchedule(List.of(new BasalScheduleEntry(1.05, Duration.ZERO)));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(basalSchedule,
                 Duration.standardMinutes((0x20 + 1) * 30).minus(Duration.standardSeconds(0x33c0 / 8)),
                 false, true, Duration.ZERO);
@@ -83,7 +83,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testSegmentMerging() {
+    void testSegmentMerging() {
         List<BasalScheduleEntry> entries = Arrays.asList(
                 new BasalScheduleEntry(0.8, Duration.ZERO),
                 new BasalScheduleEntry(0.9, Duration.standardMinutes(180)), //
@@ -109,7 +109,7 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testEncodingFromBasalScheduleWithThirteenEntries() {
+    void testEncodingFromBasalScheduleWithThirteenEntries() {
         List<BasalScheduleEntry> entries = Arrays.asList(
                 new BasalScheduleEntry(1.30, Duration.ZERO), //
                 new BasalScheduleEntry(0.05, Duration.standardMinutes(30)), //
@@ -136,8 +136,8 @@ class BasalScheduleExtraCommandTest {
     }
 
     @Test
-     void testBasalScheduleExtraCommandRoundsToNearestSecond() {
-        BasalSchedule basalSchedule = new BasalSchedule(Arrays.asList(new BasalScheduleEntry(1.00, Duration.ZERO)));
+    void testBasalScheduleExtraCommandRoundsToNearestSecond() {
+        BasalSchedule basalSchedule = new BasalSchedule(List.of(new BasalScheduleEntry(1.00, Duration.ZERO)));
 
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(basalSchedule,
                 Duration.standardMinutes((0x2b + 1) * 30).minus(Duration.standardSeconds(0x1b38 / 8).plus(Duration.millis(456))),
@@ -152,7 +152,7 @@ class BasalScheduleExtraCommandTest {
         // recreating the offset, we can have small errors in reproducing the the encoded output, which we really
         // don't care about.
 
-        byte[] expected = ByteUtil.fromHexString(expectedHexString);
+        byte[] expected = ByteUtil.INSTANCE.fromHexString(expectedHexString);
 
         Assertions.assertEquals(extractDelayUntilNextPulseInSeconds(expected), extractDelayUntilNextPulseInSeconds(actual), 0.0001);
 
@@ -164,6 +164,6 @@ class BasalScheduleExtraCommandTest {
     }
 
     private double extractDelayUntilNextPulseInSeconds(byte[] message) {
-        return ByteUtil.toInt((int) message[6], (int) message[7], (int) message[8], (int) message[9], ByteUtil.BitConversion.BIG_ENDIAN) / 1_000_000.0;
+        return ByteUtil.INSTANCE.toInt(message[6], (int) message[7], (int) message[8], (int) message[9], ByteUtil.BitConversion.BIG_ENDIAN) / 1_000_000.0;
     }
 }

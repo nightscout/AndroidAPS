@@ -5,6 +5,11 @@ import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction
@@ -45,11 +50,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewM
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchLifecycleEvent
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
@@ -70,9 +70,12 @@ class EopatchViewModel @Inject constructor(
     private val rxAction: RxAction,
     private val sp: SP
 ) : EoBaseViewModel<EoBaseNavigator>() {
+
     companion object {
+
         private const val MAX_ELAPSED_MILLIS_AFTER_EXPIRATION = -12L * 60 * 60 * 1000
     }
+
     var forceDiscard = false
     var isInAlarmHandling = false
     var connectionTryCnt = 0
@@ -83,7 +86,7 @@ class EopatchViewModel @Inject constructor(
     private val _isActivated = MutableLiveData(patchConfig.isActivated)
 
     private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
-    val eventHandler : LiveData<UIEvent<EventType>>
+    val eventHandler: LiveData<UIEvent<EventType>>
         get() = _eventHandler
 
     val patchStep = MutableLiveData<PatchStep>()
@@ -97,8 +100,8 @@ class EopatchViewModel @Inject constructor(
             it.takeOne(patchManager.patchState.remainedInsulin.let { insulin ->
                 when {
                     insulin > 50f -> 51
-                    insulin < 1f -> 0
-                    else -> insulin.roundToInt()
+                    insulin < 1f  -> 0
+                    else          -> insulin.roundToInt()
                 }
             }, 0)
         }
@@ -132,17 +135,20 @@ class EopatchViewModel @Inject constructor(
 
     val commCheckCancelLabel: LiveData<String>
         get() = patchStep.map {
-            rh.gs(when (it) {
-                PatchStep.CONNECT_NEW -> {
-                    isBonded.takeOne(R.string.cancel, R.string.patch_cancel_pairing)
+            rh.gs(
+                when (it) {
+                    PatchStep.CONNECT_NEW       -> {
+                        isBonded.takeOne(R.string.cancel, R.string.patch_cancel_pairing)
+                    }
+
+                    PatchStep.SAFE_DEACTIVATION -> R.string.patch_forced_discard
+                    else                        -> R.string.cancel
                 }
-                PatchStep.SAFE_DEACTIVATION -> R.string.patch_forced_discard
-                else -> R.string.cancel
-            })
+            )
         }
 
     val programEnabledMessage: String
-        get() = rh.gs(R.string.patch_basal_schedule_desc_1,"기초1")
+        get() = rh.gs(R.string.patch_basal_schedule_desc_1, "기초1")
 
     private val _isDiscardedWithNotConn = MutableLiveData(false)
     val isDiscardedWithNotConn: LiveData<Boolean>
@@ -200,13 +206,18 @@ class EopatchViewModel @Inject constructor(
 
         return abs((this - current).let { (it > maxElapsed).takeOne(it, maxElapsed) }).let { millis ->
             val hours = TimeUnit.MILLISECONDS.toHours(millis)
-            val minutes = TimeUnit.MILLISECONDS.toMinutes(millis
-                    - TimeUnit.HOURS.toMillis(hours))
-            val seconds = TimeUnit.MILLISECONDS.toSeconds(millis
-                    - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes))
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(
+                millis
+                    - TimeUnit.HOURS.toMillis(hours)
+            )
+            val seconds = TimeUnit.MILLISECONDS.toSeconds(
+                millis
+                    - TimeUnit.HOURS.toMillis(hours) - TimeUnit.MINUTES.toMillis(minutes)
+            )
 
-            (this < current).takeOne("- ", "") +String.format(
-                    "%02d:%02d:%02d", hours % 24, minutes, seconds)
+            (this < current).takeOne("- ", "") + String.format(
+                "%02d:%02d:%02d", hours % 24, minutes, seconds
+            )
         }
     }
 
@@ -214,16 +225,18 @@ class EopatchViewModel @Inject constructor(
         CommonUtils.dispose(mUpdateDisposable)
 
         mUpdateDisposable = Observable.interval(0, 1, TimeUnit.SECONDS)
-                .observeOn(aapsSchedulers.main)
-                .takeUntil { !patchConfig.isActivated }
-                .subscribeDefault(aapsLogger) {
-                    _patchExpirationTimestamp.value = patchManager.patchExpiredTime
-                }
+            .observeOn(aapsSchedulers.main)
+            .takeUntil { !patchConfig.isActivated }
+            .subscribeDefault(aapsLogger) {
+                _patchExpirationTimestamp.value = patchManager.patchExpiredTime
+            }
     }
 
     @Synchronized
-    fun checkCommunication(onSuccessListener: () -> Unit, onCancelListener: (() -> Unit)? = null,
-                           onDiscardListener: (() -> Unit)? = null, doPreCheck: Boolean = false) {
+    fun checkCommunication(
+        onSuccessListener: () -> Unit, onCancelListener: (() -> Unit)? = null,
+        onDiscardListener: (() -> Unit)? = null, doPreCheck: Boolean = false
+    ) {
         if (doPreCheck && patchManager.patchConnectionState.isConnected) {
             onSuccessListener.invoke()
             return
@@ -243,35 +256,37 @@ class EopatchViewModel @Inject constructor(
     private fun checkCommunicationInternal(timeout: Long = 8000) {
         CommonUtils.dispose(mCommCheckDisposable)
 
-        if(forceDiscard)
+        if (forceDiscard)
             connectionTryCnt++
 
         mCommCheckDisposable = if (isBonded) {
             patchManager.observePatchConnectionState()
-                    .timeout(timeout, TimeUnit.MILLISECONDS,
-                            Observable.just(BleConnectionState.DISCONNECTED))
-                    .takeUntil { it == BleConnectionState.CONNECTED }
-                    .last(BleConnectionState.DISCONNECTED)
-                    .map { it == BleConnectionState.CONNECTED }
+                .timeout(
+                    timeout, TimeUnit.MILLISECONDS,
+                    Observable.just(BleConnectionState.DISCONNECTED)
+                )
+                .takeUntil { it == BleConnectionState.CONNECTED }
+                .last(BleConnectionState.DISCONNECTED)
+                .map { it == BleConnectionState.CONNECTED }
         } else {
             patchManager.scan(timeout)
-                    .flatMap {
-                        if (it.nearestDevice == null)
-                            Single.error(Resources.NotFoundException())
-                        else
-                            Single.just(true)
-                    }
-                    .retry(1)
-        }
-                .subscribeOn(aapsSchedulers.io)
-                .observeOn(aapsSchedulers.main)
-                .onErrorReturnItem(false)
-                .doOnSubscribe { showPatchCommCheckDialog() }
-                .doFinally { dismissPatchCommCheckDialog() }
-                .doOnError { aapsLogger.error(LTag.PUMP, it.message?:"Error") }
-                .subscribeDefault(aapsLogger) {
-                    _isCommCheckFailed.value = !it
+                .flatMap {
+                    if (it.nearestDevice == null)
+                        Single.error(Resources.NotFoundException())
+                    else
+                        Single.just(true)
                 }
+                .retry(1)
+        }
+            .subscribeOn(aapsSchedulers.io)
+            .observeOn(aapsSchedulers.main)
+            .onErrorReturnItem(false)
+            .doOnSubscribe { showPatchCommCheckDialog() }
+            .doFinally { dismissPatchCommCheckDialog() }
+            .doOnError { aapsLogger.error(LTag.PUMP, it.message ?: "Error") }
+            .subscribeDefault(aapsLogger) {
+                _isCommCheckFailed.value = !it
+            }
     }
 
     private fun showPatchCommCheckDialog(defaultFailedCondition: Boolean = false, @StringRes title: Int = R.string.string_connecting) {
@@ -350,7 +365,7 @@ class EopatchViewModel @Inject constructor(
         checkCommunication({ discardPatchInternal() }, doPreCheck = true)
     }
 
-    fun deactivatePatch(){
+    fun deactivatePatch() {
         if (patchManager.patchConnectionState.isConnected) {
             deactivate(false) {
                 try {
@@ -367,10 +382,11 @@ class EopatchViewModel @Inject constructor(
             }
             showPatchCommCheckDialog(true)
             Single.timer(10, TimeUnit.SECONDS)
-                .doFinally{dismissPatchCommCheckDialog()}
+                .doFinally { dismissPatchCommCheckDialog() }
                 .subscribe()
         }
     }
+
     fun discardPatch() {
         updateIncompletePatchActivationReminder()
         discardPatchInternal()
@@ -393,9 +409,10 @@ class EopatchViewModel @Inject constructor(
 
     fun onConfirm() {
         when (patchStep.value) {
-            PatchStep.DISCARDED_FOR_CHANGE -> PatchStep.WAKE_UP
-            PatchStep.DISCARDED_FROM_ALARM -> PatchStep.FINISH
-            PatchStep.DISCARDED -> {
+            PatchStep.DISCARDED_FOR_CHANGE       -> PatchStep.WAKE_UP
+            PatchStep.DISCARDED_FROM_ALARM       -> PatchStep.FINISH
+
+            PatchStep.DISCARDED                  -> {
                 if (initPatchStepIsCheckConnection) {
                     mOnCommCheckDiscardListener?.invoke() /*?: navigator?.finish()*/
                     mOnCommCheckDiscardListener = null
@@ -404,10 +421,12 @@ class EopatchViewModel @Inject constructor(
                     PatchStep.BACK_TO_HOME
                 }
             }
+
             PatchStep.MANUALLY_TURNING_OFF_ALARM -> {
                 initPatchStepIsSafeDeactivation.takeOne(PatchStep.DISCARDED_FOR_CHANGE, PatchStep.DISCARDED)
             }
-            PatchStep.BASAL_SCHEDULE -> {
+
+            PatchStep.BASAL_SCHEDULE             -> {
                 if (!patchManager.patchConnectionState.isConnected) {
                     checkCommunication({ moveStep(PatchStep.COMPLETE) }, { moveStep(PatchStep.BASAL_SCHEDULE) })
                     null
@@ -415,7 +434,8 @@ class EopatchViewModel @Inject constructor(
                     PatchStep.COMPLETE
                 }
             }
-            else -> null
+
+            else                                 -> null
         }?.let {
             moveStep(it)
         }
@@ -423,17 +443,20 @@ class EopatchViewModel @Inject constructor(
 
     fun initPatchStep() {
         when (patchStep.value) {
-            PatchStep.WAKE_UP -> {
+            PatchStep.WAKE_UP                            -> {
                 setupStep.value = WAKE_UP_READY
             }
-            PatchStep.SAFETY_CHECK -> {
+
+            PatchStep.SAFETY_CHECK                       -> {
                 setupStep.value = SAFETY_CHECK_READY
             }
+
             PatchStep.ROTATE_KNOB,
             PatchStep.ROTATE_KNOB_NEEDLE_INSERTION_ERROR -> {
                 setupStep.value = NEEDLE_SENSING_READY
             }
-            else -> Unit
+
+            else                                         -> Unit
         }
     }
 
@@ -442,24 +465,27 @@ class EopatchViewModel @Inject constructor(
 
         if (oldPatchStep != newPatchStep) {
             when (newPatchStep) {
-                PatchStep.REMOVE_NEEDLE_CAP -> PatchLifecycleEvent.createRemoveNeedleCap()
+                PatchStep.REMOVE_NEEDLE_CAP      -> PatchLifecycleEvent.createRemoveNeedleCap()
                 PatchStep.REMOVE_PROTECTION_TAPE -> PatchLifecycleEvent.createRemoveProtectionTape()
-                PatchStep.SAFETY_CHECK -> PatchLifecycleEvent.createSafetyCheck()
-                PatchStep.ROTATE_KNOB -> PatchLifecycleEvent.createRotateKnob()
-                PatchStep.WAKE_UP -> {
+                PatchStep.SAFETY_CHECK           -> PatchLifecycleEvent.createSafetyCheck()
+                PatchStep.ROTATE_KNOB            -> PatchLifecycleEvent.createRotateKnob()
+
+                PatchStep.WAKE_UP                -> {
                     patchConfig.apply {
                         rotateKnobNeedleSensingError = false
                     }
                     PatchLifecycleEvent.createShutdown()
                 }
-                PatchStep.CANCEL -> {
+
+                PatchStep.CANCEL                 -> {
                     if (!patchConfig.isActivated) {
                         PatchLifecycleEvent.createShutdown()
                     } else {
                         null
                     }
                 }
-                else -> null
+
+                else                             -> null
             }?.let {
                 patchManager.updatePatchLifeCycle(it)
             }
@@ -479,10 +505,11 @@ class EopatchViewModel @Inject constructor(
     private fun prepareStep(step: PatchStep?, withAlarmHandle: Boolean = true): PatchStep {
         (step ?: convertToPatchStep(patchConfig.lifecycleEvent.lifeCycle)).let { newStep ->
             when (newStep) {
-                PatchStep.SAFE_DEACTIVATION -> R.string.string_discard_patch
+                PatchStep.SAFE_DEACTIVATION          -> R.string.string_discard_patch
                 PatchStep.DISCARDED,
                 PatchStep.DISCARDED_FROM_ALARM,
-                PatchStep.DISCARDED_FOR_CHANGE -> R.string.patch_discard_complete_title
+                PatchStep.DISCARDED_FOR_CHANGE       -> R.string.patch_discard_complete_title
+
                 PatchStep.MANUALLY_TURNING_OFF_ALARM -> R.string.patch_manually_turning_off_alarm_title
                 PatchStep.WAKE_UP,
                 PatchStep.CONNECT_NEW,
@@ -491,9 +518,10 @@ class EopatchViewModel @Inject constructor(
                 PatchStep.SAFETY_CHECK,
                 PatchStep.ROTATE_KNOB,
                 PatchStep.ROTATE_KNOB_NEEDLE_INSERTION_ERROR,
-                PatchStep.BASAL_SCHEDULE -> R.string.string_activate_patch
-                PatchStep.SETTING_REMINDER_TIME -> R.string.patch_expiration_reminder_setting_title
-                else -> _title.value
+                PatchStep.BASAL_SCHEDULE             -> R.string.string_activate_patch
+
+                PatchStep.SETTING_REMINDER_TIME      -> R.string.patch_expiration_reminder_setting_title
+                else                                 -> _title.value
             }.let {
                 if (_title.value != it) {
                     _title.postValue(it)
@@ -509,7 +537,8 @@ class EopatchViewModel @Inject constructor(
                     PatchStep.REMOVE_PROTECTION_TAPE, PatchStep.SAFETY_CHECK, PatchStep.ROTATE_KNOB -> {
                         updateIncompletePatchActivationReminder(true)
                     }
-                    PatchStep.COMPLETE, PatchStep.BASAL_SCHEDULE -> {
+
+                    PatchStep.COMPLETE, PatchStep.BASAL_SCHEDULE                                    -> {
                         val now = System.currentTimeMillis()
                         val expireTimeStamp = patchConfig.expireTimestamp
                         val millisBeforeExpiration = TimeUnit.HOURS.toMillis(sp.getInt(EXPIRATION_REMINDERS, 0).toLong())
@@ -524,7 +553,7 @@ class EopatchViewModel @Inject constructor(
                             .subscribe()
                     }
 
-                    PatchStep.ROTATE_KNOB_NEEDLE_INSERTION_ERROR -> {
+                    PatchStep.ROTATE_KNOB_NEEDLE_INSERTION_ERROR                                    -> {
                         patchConfig.apply {
                             rotateKnobNeedleSensingError = true
                         }
@@ -533,11 +562,11 @@ class EopatchViewModel @Inject constructor(
 
                     }
 
-                    PatchStep.CANCEL -> {
+                    PatchStep.CANCEL                                                                -> {
                         alarmRegistry.remove(AlarmCode.B012).subscribe()
                     }
 
-                    else -> {
+                    else                                                                            -> {
                     }
                 }
             }
@@ -547,15 +576,17 @@ class EopatchViewModel @Inject constructor(
     }
 
     private fun convertToPatchStep(lifecycle: PatchLifecycle) = when (lifecycle) {
-        PatchLifecycle.SHUTDOWN -> patchConfig.isDeactivated.takeOne(
-                PatchStep.WAKE_UP, PatchStep.SAFE_DEACTIVATION)
-        PatchLifecycle.BONDED -> PatchStep.CONNECT_NEW
-        PatchLifecycle.REMOVE_NEEDLE_CAP -> PatchStep.REMOVE_NEEDLE_CAP
+        PatchLifecycle.SHUTDOWN               -> patchConfig.isDeactivated.takeOne(
+            PatchStep.WAKE_UP, PatchStep.SAFE_DEACTIVATION
+        )
+
+        PatchLifecycle.BONDED                 -> PatchStep.CONNECT_NEW
+        PatchLifecycle.REMOVE_NEEDLE_CAP      -> PatchStep.REMOVE_NEEDLE_CAP
         PatchLifecycle.REMOVE_PROTECTION_TAPE -> PatchStep.REMOVE_PROTECTION_TAPE
-        PatchLifecycle.SAFETY_CHECK -> PatchStep.SAFETY_CHECK
-        PatchLifecycle.ROTATE_KNOB -> PatchStep.ROTATE_KNOB
-        PatchLifecycle.BASAL_SETTING -> PatchStep.ROTATE_KNOB
-        PatchLifecycle.ACTIVATED -> PatchStep.SAFE_DEACTIVATION
+        PatchLifecycle.SAFETY_CHECK           -> PatchStep.SAFETY_CHECK
+        PatchLifecycle.ROTATE_KNOB            -> PatchStep.ROTATE_KNOB
+        PatchLifecycle.BASAL_SETTING          -> PatchStep.ROTATE_KNOB
+        PatchLifecycle.ACTIVATED              -> PatchStep.SAFE_DEACTIVATION
     }
 
     private fun onClear() {
@@ -603,23 +634,23 @@ class EopatchViewModel @Inject constructor(
     @Synchronized
     fun deactivate(force: Boolean, onSuccessListener: () -> Unit) {
         patchManager.deactivate(6000, force)
-                .doOnSubscribe {
-                    showProgressDialog(force.takeOne(R.string.string_in_progress, R.string.string_changing))
+            .doOnSubscribe {
+                showProgressDialog(force.takeOne(R.string.string_in_progress, R.string.string_changing))
+            }
+            .doFinally {
+                dismissProgressDialog()
+            }
+            .subscribeDefault(aapsLogger) { status ->
+                if (status.isDeactivated) {
+                    onSuccessListener.invoke()
+                } else {
+                    rxAction.runOnMainThread({
+                                                 checkCommunication({ deactivate(false, onSuccessListener) },
+                                                                    { _eventHandler.postValue(UIEvent(EventType.FINISH_ACTIVITY)) })
+                                             }, 100)
                 }
-                .doFinally {
-                    dismissProgressDialog()
-                }
-                .subscribeDefault(aapsLogger) { status ->
-                    if (status.isDeactivated) {
-                        onSuccessListener.invoke()
-                    } else {
-                        rxAction.runOnMainThread({
-                            checkCommunication({ deactivate(false, onSuccessListener) },
-                                { _eventHandler.postValue(UIEvent(EventType.FINISH_ACTIVITY)) })
-                        }, 100)
-                    }
-                }
-                .addTo()
+            }
+            .addTo()
     }
 
     @Synchronized
@@ -644,21 +675,21 @@ class EopatchViewModel @Inject constructor(
 
     private fun startScanInternal() {
         patchManager.scan(5000)
-                .flatMap {
-                    if (it.nearestDevice == null)
-                        Single.error(Resources.NotFoundException())
-                    else
-                        Single.just(it.nearestDevice)
+            .flatMap {
+                if (it.nearestDevice == null)
+                    Single.error(Resources.NotFoundException())
+                else
+                    Single.just(it.nearestDevice)
+            }
+            .onErrorReturnItem("")
+            .doOnSubscribe { updateSetupStep(SCAN_STARTED) }
+            .subscribeDefault(aapsLogger) {
+                if (it.isNotEmpty()) {
+                    startBond(it)
+                } else {
+                    updateSetupStep(SCAN_FAILED)
                 }
-                .onErrorReturnItem("")
-                .doOnSubscribe { updateSetupStep(SCAN_STARTED) }
-                .subscribeDefault(aapsLogger) {
-                    if (it.isNotEmpty()) {
-                        startBond(it)
-                    } else {
-                        updateSetupStep(SCAN_FAILED)
-                    }
-                }.addTo()
+            }.addTo()
     }
 
     @Synchronized
@@ -703,18 +734,18 @@ class EopatchViewModel @Inject constructor(
     @Synchronized
     fun selfTest(timeout: Long = 20000, delayMs: Long = 0) {
         rxAction.runOnMainThread({
-            patchManager.selfTest(timeout)
-                .doOnSubscribe { updateSetupStep(SELF_TEST_STARTED) }
-                .map { it == TEST_SUCCESS }
-                .onErrorReturnItem(false)
-                .subscribeDefault(aapsLogger) {
-                    if (it) {
-                        moveStep(PatchStep.REMOVE_NEEDLE_CAP)
-                    } else if (!patchManager.patchConnectionState.isConnected) {
-                        updateSetupStep(SELF_TEST_FAILED)
-                    }
-                }.addTo()
-        }, delayMs)
+                                     patchManager.selfTest(timeout)
+                                         .doOnSubscribe { updateSetupStep(SELF_TEST_STARTED) }
+                                         .map { it == TEST_SUCCESS }
+                                         .onErrorReturnItem(false)
+                                         .subscribeDefault(aapsLogger) {
+                                             if (it) {
+                                                 moveStep(PatchStep.REMOVE_NEEDLE_CAP)
+                                             } else if (!patchManager.patchConnectionState.isConnected) {
+                                                 updateSetupStep(SELF_TEST_FAILED)
+                                             }
+                                         }.addTo()
+                                 }, delayMs)
     }
 
     @Synchronized
@@ -735,15 +766,15 @@ class EopatchViewModel @Inject constructor(
 
     private fun startSafetyCheckInternal() {
         patchManager.startPriming(10000, 100)
-                .doOnSubscribe {
-                    _safetyCheckProgress.postValue(0)
-                    updateSetupStep(SAFETY_CHECK_STARTED)
-                }
-                .doOnNext { _safetyCheckProgress.postValue(it.toInt()) }
-                .doOnError { updateSetupStep(SAFETY_CHECK_FAILED) }
-                .doOnComplete { moveStep(PatchStep.ROTATE_KNOB) }
-                .subscribeEmpty()
-                .addTo()
+            .doOnSubscribe {
+                _safetyCheckProgress.postValue(0)
+                updateSetupStep(SAFETY_CHECK_STARTED)
+            }
+            .doOnNext { _safetyCheckProgress.postValue(it.toInt()) }
+            .doOnError { updateSetupStep(SAFETY_CHECK_FAILED) }
+            .doOnComplete { moveStep(PatchStep.ROTATE_KNOB) }
+            .subscribeEmpty()
+            .addTo()
     }
 
     @Synchronized
@@ -771,19 +802,19 @@ class EopatchViewModel @Inject constructor(
     @Synchronized
     fun startActivation() {
         patchManager.patchActivation(20000)
-                .doOnSubscribe {
-                    showProgressDialog(R.string.string_connecting)
-                    updateSetupStep(ACTIVATION_STARTED)
+            .doOnSubscribe {
+                showProgressDialog(R.string.string_connecting)
+                updateSetupStep(ACTIVATION_STARTED)
+            }
+            .doFinally { dismissProgressDialog() }
+            .onErrorReturnItem(false)
+            .subscribeDefault(aapsLogger) {
+                if (it) {
+                    moveStep(PatchStep.COMPLETE)
+                } else {
+                    updateSetupStep(ACTIVATION_FAILED)
                 }
-                .doFinally { dismissProgressDialog() }
-                .onErrorReturnItem(false)
-                .subscribeDefault(aapsLogger) {
-                    if (it) {
-                        moveStep(PatchStep.COMPLETE)
-                    } else {
-                        updateSetupStep(ACTIVATION_FAILED)
-                    }
-                }.addTo()
+            }.addTo()
     }
 
     fun updateIncompletePatchActivationReminder(forced: Boolean = false) {

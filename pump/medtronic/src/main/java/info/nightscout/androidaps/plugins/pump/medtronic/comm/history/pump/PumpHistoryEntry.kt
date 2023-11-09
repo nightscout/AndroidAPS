@@ -4,8 +4,8 @@ import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BolusDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.pump.core.utils.StringUtil
+import info.nightscout.pump.common.utils.ByteUtil
+import info.nightscout.pump.common.utils.StringUtil
 import java.util.Objects
 
 /**
@@ -90,9 +90,9 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
         //     Log.e("", "DT is null. RawData=" + ByteUtil.getHex(rawData))
         // }
         sb.append("PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType.name, 20))
-        sb.append(" " + if (dt == null) "null" else StringUtil.getStringInLength(dt, 19))
+        sb.append(" " + (dt?.let { StringUtil.getStringInLength(it, 19) } ?: "null"))
 
-        val hasData = (decodedData.size > 0)
+        val hasData = (decodedData.isNotEmpty())
         if (hasData) {
             if (hasDecodedDataEntry("Object")) {
                 val oo = getDecodedDataEntry("Object")
@@ -105,11 +105,11 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
                 sb.append(", head=")
                 sb.append(ByteUtil.shortHexString(head))
             }
-            if (datetime.size != 0) {
+            if (datetime.isNotEmpty()) {
                 sb.append(", datetime=")
                 sb.append(ByteUtil.shortHexString(datetime))
             }
-            if (body.size != 0) {
+            if (body.isNotEmpty()) {
                 sb.append(", body=")
                 sb.append(ByteUtil.shortHexString(body))
             }

@@ -1,9 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.CancelDeliveryCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command.GetStatusCommand;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.DeliveryType;
@@ -14,9 +18,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Po
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.MessageDecodingException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.NotEnoughDataException;
-import info.nightscout.pump.core.utils.ByteUtil;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class OmnipodMessage {
 
@@ -41,20 +43,20 @@ public class OmnipodMessage {
             throw new NotEnoughDataException(data);
         }
 
-        int address = ByteUtil.toInt((int) data[0], (int) data[1], (int) data[2],
+        int address = ByteUtil.INSTANCE.toInt((int) data[0], (int) data[1], (int) data[2],
                 (int) data[3], ByteUtil.BitConversion.BIG_ENDIAN);
         byte b9 = data[4];
-        int bodyLength = ByteUtil.convertUnsignedByteToInt(data[5]);
+        int bodyLength = ByteUtil.INSTANCE.convertUnsignedByteToInt(data[5]);
         if (data.length - 8 < bodyLength) {
             throw new NotEnoughDataException(data);
         }
         int sequenceNumber = (((int) b9 >> 2) & 0b11111);
-        int crc = ByteUtil.toInt(data[data.length - 2], data[data.length - 1]);
-        int calculatedCrc = OmnipodCrc.crc16(ByteUtil.substring(data, 0, data.length - 2));
+        int crc = ByteUtil.INSTANCE.toInt(data[data.length - 2], data[data.length - 1]);
+        int calculatedCrc = OmnipodCrc.crc16(ByteUtil.INSTANCE.substring(data, 0, data.length - 2));
         if (crc != calculatedCrc) {
             throw new CrcMismatchException(calculatedCrc, crc);
         }
-        List<MessageBlock> blocks = decodeBlocks(ByteUtil.substring(data, 6, data.length - 6 - 2));
+        List<MessageBlock> blocks = decodeBlocks(ByteUtil.INSTANCE.substring(data, 6, data.length - 6 - 2));
         if (blocks.size() == 0) {
             throw new MessageDecodingException("No blocks decoded");
         }
@@ -68,7 +70,7 @@ public class OmnipodMessage {
         while (index < data.length) {
             try {
                 MessageBlockType blockType = MessageBlockType.fromByte(data[index]);
-                MessageBlock block = blockType.decode(ByteUtil.substring(data, index));
+                MessageBlock block = blockType.decode(ByteUtil.INSTANCE.substring(data, index));
                 blocks.add(block);
                 int blockLength = block.getRawData().length;
                 index += blockLength;
@@ -83,17 +85,17 @@ public class OmnipodMessage {
     public byte[] getEncoded() {
         byte[] encodedData = new byte[0];
         for (MessageBlock messageBlock : messageBlocks) {
-            encodedData = ByteUtil.concat(encodedData, messageBlock.getRawData());
+            encodedData = ByteUtil.INSTANCE.concat(encodedData, messageBlock.getRawData());
         }
 
         byte[] header = new byte[0];
         //right before the message blocks we have 6 bits of seqNum and 10 bits of length
-        header = ByteUtil.concat(header, ByteUtil.getBytesFromInt(address));
-        header = ByteUtil.concat(header, (byte) (((sequenceNumber & 0x1F) << 2) + ((encodedData.length >> 8) & 0x03)));
-        header = ByteUtil.concat(header, (byte) (encodedData.length & 0xFF));
-        encodedData = ByteUtil.concat(header, encodedData);
+        header = ByteUtil.INSTANCE.concat(header, ByteUtil.INSTANCE.getBytesFromInt(address));
+        header = ByteUtil.INSTANCE.concat(header, (byte) (((sequenceNumber & 0x1F) << 2) + ((encodedData.length >> 8) & 0x03)));
+        header = ByteUtil.INSTANCE.concat(header, (byte) (encodedData.length & 0xFF));
+        encodedData = ByteUtil.INSTANCE.concat(header, encodedData);
         int crc = OmnipodCrc.crc16(encodedData);
-        encodedData = ByteUtil.concat(encodedData, ByteUtil.substring(ByteUtil.getBytesFromInt(crc), 2, 2));
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.substring(ByteUtil.INSTANCE.getBytesFromInt(crc), 2, 2));
         return encodedData;
     }
 
@@ -160,12 +162,12 @@ public class OmnipodMessage {
         return messageBlocks.size() >= 1 && messageBlocks.get(0).getType() == MessageBlockType.CANCEL_DELIVERY;
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "OmnipodMessage{" +
                 "address=" + address +
                 ", messageBlocks=" + messageBlocks +
-                ", encoded=" + ByteUtil.shortHexStringWithoutSpaces(getEncoded()) +
+                ", encoded=" + ByteUtil.INSTANCE.shortHexStringWithoutSpaces(getEncoded()) +
                 ", sequenceNumber=" + sequenceNumber +
                 '}';
     }

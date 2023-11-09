@@ -3,4 +3,6 @@
     <!-- VirtualPump -->
     <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
     <string name="virtualpump_settings">虚拟泵设置</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">*在虚拟泵中，基础率/大剂量仅支持离散值，不支持范围值。</string>
 </resources>

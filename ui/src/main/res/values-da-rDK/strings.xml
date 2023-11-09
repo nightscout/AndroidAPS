@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktivitetsovervågning</string>
     <string name="do_you_want_reset_stats">Ønsker du at nulstille aktivitetsstatistik?</string>
+    <string name="do_you_want_reset_tdd_stats">Ønsker du at nulstille TDD-statistik?</string>
     <string name="statistics">Statistikker</string>
     <string name="calculation_in_progress">Beregning i gang</string>
     <string name="invalid_age">Ugyldig angivelse af alder</string>
@@ -127,4 +128,29 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP TRYKKET</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">kun på ur</string>
+    <string name="a11y_only_on_phone">kun på telefon</string>
+    <string name="quickwizard_settings">QuickWizard Indstillinger</string>
+    <string name="overview_edit_quickwizard_button_text">Knap tekst:</string>
+    <string name="overview_edit_quickwizard_carbs">Kulhydrater:</string>
+    <string name="overview_edit_quickwizard_valid">Gyldig:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Tilføj</string>
+    <string name="overview_quickwizard_item_edit_button">Redigér</string>
+    <string name="overview_edit_quickwizard_show_on_device">Vis indtastning på enhed:</string>
+    <string name="overview_edit_quickwizard_use_bg">BS-beregning</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB-beregning</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB-beregning</string>
+    <string name="overview_edit_quickwizard_use_trend">Tendensberegning</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolusberegning</string>
+    <string name="overview_edit_quickwizard_percentage">Procent</string>
+    <string name="device_all">Alle</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Ur</string>
+    <string name="positive_only">Kun positive</string>
+    <string name="negative_only">Kun negative</string>
+    <string name="overview_editquickwizard_usecob">COB-beregning</string>
+    <string name="overview_editquickwizard_usetemptarget">Midlertidigt mål beregning</string>
+    <string name="overview_editquickwizard_usepercentage">Beregning i procent</string>
+    <string name="app_default">Program standard</string>
+    <string name="a11y_drag_and_drop_handle">træk og slip-håndtag</string>
 </resources>

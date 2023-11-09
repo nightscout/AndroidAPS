@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType;
@@ -41,9 +42,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.Ril
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.RileyLinkUnexpectedException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.RileyLinkUnreachableException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosPodStateManager;
-import info.nightscout.pump.core.defs.PumpDeviceState;
-import info.nightscout.pump.core.utils.ByteUtil;
-import info.nightscout.rx.logging.LTag;
+import info.nightscout.pump.common.defs.PumpDeviceState;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by andy on 6/29/18.
@@ -230,7 +230,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
             byte[] encodedMessageInPacket = packet.getEncodedMessage();
 
             // getting the data remaining to be sent
-            encodedMessage = ByteUtil.substring(encodedMessage, encodedMessageInPacket.length, encodedMessage.length - encodedMessageInPacket.length);
+            encodedMessage = ByteUtil.INSTANCE.substring(encodedMessage, encodedMessageInPacket.length, encodedMessage.length - encodedMessageInPacket.length);
             firstPacket = false;
 
             try {
@@ -257,7 +257,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         byte[] receivedMessageData = response.getEncodedMessage();
         while (receivedMessage == null) {
             try {
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Attempting to decode message: {}", ByteUtil.shortHexStringWithoutSpaces(receivedMessageData));
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Attempting to decode message: {}", ByteUtil.INSTANCE.shortHexStringWithoutSpaces(receivedMessageData));
                 receivedMessage = OmnipodMessage.decodeMessage(receivedMessageData);
                 if (receivedMessage.getAddress() != message.getAddress()) {
                     throw new IllegalMessageAddressException(message.getAddress(), receivedMessage.getAddress());
@@ -276,7 +276,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
                 if (conPacket.getPacketType() != PacketType.CON) {
                     throw new IllegalPacketTypeException(PacketType.CON, conPacket.getPacketType());
                 }
-                receivedMessageData = ByteUtil.concat(receivedMessageData, conPacket.getEncodedMessage());
+                receivedMessageData = ByteUtil.INSTANCE.concat(receivedMessageData, conPacket.getEncodedMessage());
             }
         }
 
@@ -305,7 +305,7 @@ public class OmnipodRileyLinkCommunicationManager extends RileyLinkCommunication
         if (messageAddress == null) {
             messageAddress = podStateManager.getAddress();
         }
-        return new OmnipodPacket(packetAddress, PacketType.ACK, podStateManager.getPacketNumber(), ByteUtil.getBytesFromInt(messageAddress));
+        return new OmnipodPacket(packetAddress, PacketType.ACK, podStateManager.getPacketNumber(), ByteUtil.INSTANCE.getBytesFromInt(messageAddress));
     }
 
     private void ackUntilQuiet(ErosPodStateManager podStateManager, Integer packetAddress, Integer messageAddress) {

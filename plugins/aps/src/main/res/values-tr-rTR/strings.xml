@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Duyarlılığı ve KŞ\'ni ayarlayın</string>
+    <string name="dynisf_adjust_sensitivity">Duyarlılığı ve bazalı ayarlayın</string>
+    <string name="dynisf_adjust_sensitivity_summary">Etkinleştirilmişse DinİDF, standart Otoduyarlılığın yaptığı gibi hesaplanan İDF\'yi ayarlamak ve ayrıca bazal oranı artırmak ve azaltmak için temel olarak son 24 saatlik TGD/7G TGD\'yi kullanır.</string>
     <string name="DynISFAdjust_title" formatted="false">DinamikİDF Ayar Faktörü %</string>
     <string name="DynISFAdjust_summary" formatted="false">DinamikİDF için ayarlama faktörü. Daha agresif düzeltme dozları için %100\'den fazla ve daha az agresif düzeltmeler için %100\'den az ayarlayın.</string>
     <string name="high_temptarget_raises_sensitivity_title">Yüksek geçici hedefler duyarlılığı artırır</string>
@@ -17,7 +18,7 @@
     <string name="openapsma_disabled">Eklenti devre dışı</string>
     <string name="openapsma_no_glucose_data">Glikoz verisi yok</string>
     <string name="openaps_no_as_data">Otoduyarlılık verileri mevcut değil</string>
-    <string name="dynisf_shortname">DYNISF</string>
+    <string name="dynisf_shortname">DİNİDF</string>
     <string name="executing">Yürütülüyor</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">%1$d öğelerin dizisi.\nGerçek değer:</string>
@@ -84,6 +85,7 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="smb_disabled_in_preferences">SMB tercihlerde devre dışı bırakıldı</string>
     <string name="uam_disabled_in_preferences">UAM tercihlerde devre dışı bırakıldı</string>
     <string name="autosens_disabled_in_preferences">Otoduyarlılık tercihlerde devre dışı bırakıldı</string>
+    <string name="autosens_disabled_in_dyn_isf">DinİDF\'de otoduyarlılık devre dışı bırakıldı</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">%2$s\'den dolayı AİNS %1$.1f Ü ile sınırlandırılıyor</string>
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
@@ -115,4 +117,5 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="loop_smb_set_by_pump_label">Pompa tarafından ayarlanan SMB</string>
     <string name="loop_open_mode_min_change">Minimum istek değişikliği [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Açık Döngü, yalnızca değişiklik % cinsinden bu değerden büyükse yeni değişiklik isteğini açar. Varsayılan değer %20\'dir</string>
+    <string name="fallback_smb_no_tdd">SMB\'ye dönülüyor. Yeterli günlük doz verisi yok.</string>
 </resources>

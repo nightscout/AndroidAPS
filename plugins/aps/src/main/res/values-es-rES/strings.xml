@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dynisf_adjust_sensitivity">Ajustar sensibilidad y glucosa</string>
-    <string name="DynISFAdjust_title" formatted="false">Factor de ajuste de Isf Dinámico %</string>
-    <string name="DynISFAdjust_summary" formatted="false">Factor de ajuste para el DynamicISF. Establezca más de 100% para una corrección más agresiva, y menos de 100% para correcciones más susves.</string>
+    <string name="dynisf_adjust_sensitivity_summary">Si se activa, ISF Dinámico, utiliza las últimas 24h TDD/7D TDD como base para ajustar el ISF calculado y también para aumentar y disminuir la tasa basal, de la misma manera que lo hace el Autosens estándar</string>
+    <string name="DynISFAdjust_title" formatted="false">Factor de ajuste de ISF Dinámico %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Factor de ajuste para ISF Dinámico. Establezca más de 100% para una corrección más agresiva, y menos de 100% para correcciones más susves.</string>
     <string name="high_temptarget_raises_sensitivity_title">Objetivo temporal alto aumenta la sensibilidad</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar la sensibilidad para objetivos temporales >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Objetivo temporal bajo reduce la sensibilidad</string>
@@ -83,6 +84,7 @@
     <string name="smb_disabled_in_preferences">SMB deshabilitado en preferencias</string>
     <string name="uam_disabled_in_preferences">UAM deshabilitado en las preferencias</string>
     <string name="autosens_disabled_in_preferences">Autosens deshabilitado en preferencias</string>
+    <string name="autosens_disabled_in_dyn_isf">Autosens desactivado en ISF Dinámico</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
     <string name="maxvalueinpreferences">valor máximo en preferencias</string>
@@ -93,8 +95,8 @@
     <string name="run_now">Ejecutar ahora</string>
     <string name="smb_frequency_exceeded">Un bolo ha sido entregado en los últimos 3 minutos, omitiendo SMB</string>
     <string name="pump_not_initialized">¡Bomba no iniciada!</string>
-    <string name="loop_shortname">BUCLE</string>
-    <string name="description_loop">Activar o desactivar la posibilidad para activar el bucle.</string>
+    <string name="loop_shortname">LAZO</string>
+    <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
     <string name="no_aps_selected">NO APS Seleccionado o resultado entregado</string>
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>
@@ -113,5 +115,6 @@
     <string name="loop_smb_execution_time_label">Tiempo de ejecución de SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB administrado por la bomba</string>
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El bucle abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
+    <string name="fallback_smb_no_tdd">Regreso a SMB. No hay suficientes datos de TDD.</string>
 </resources>

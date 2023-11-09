@@ -27,6 +27,10 @@ enum class MedtrumPumpState(val state: Byte) {
     NO_CALIBRATION(103),
     STOPPED(128.toByte());
 
+    fun isSuspendedByPump(): Boolean {
+        return this in LOW_BG_SUSPENDED..SUSPENDED
+    }
+
     companion object {
 
         fun fromByte(state: Byte) = values().find { it.state == state }

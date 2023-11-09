@@ -31,16 +31,17 @@ public class InsightPairingInformationActivity extends DaggerAppCompatActivity {
 
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
+        @SuppressWarnings({"deprecation"})
         public void onServiceConnected(ComponentName name, IBinder binder) {
             connectionService = ((InsightConnectionService.LocalBinder) binder).getService();
             if (!connectionService.isPaired()) {
                 overridePendingTransition(0, 0);
                 finish();
-                startActivity(new Intent(InsightPairingInformationActivity.this, InsightPairingActivity.class));
+                startActivity(new Intent(InsightPairingInformationActivity.this, InsightPairingActivity.class).setAction("app.apps.InsightPairingInformationActivity"));
             } else {
                 serialNumber.setText(connectionService.getPumpSystemIdentification().getSerialNumber());
                 manufacturingDate.setText(connectionService.getPumpSystemIdentification().getManufacturingDate());
-                systemIdAppendix.setText(connectionService.getPumpSystemIdentification().getSystemIdAppendix() + "");
+                systemIdAppendix.setText(String.valueOf(connectionService.getPumpSystemIdentification().getSystemIdAppendix()));
                 releaseSWVersion.setText(connectionService.getPumpFirmwareVersions().getReleaseSWVersion());
                 uiProcSWVersion.setText(connectionService.getPumpFirmwareVersions().getUiProcSWVersion());
                 pcProcSWVersion.setText(connectionService.getPumpFirmwareVersions().getPcProcSWVersion());

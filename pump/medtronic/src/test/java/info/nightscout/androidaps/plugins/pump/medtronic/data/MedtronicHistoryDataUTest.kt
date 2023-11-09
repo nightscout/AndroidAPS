@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data
 
+import app.aaps.core.interfaces.ui.UiInteraction
 import com.google.gson.Gson
 import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
@@ -9,7 +10,6 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpH
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.interfaces.ui.UiInteraction
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -24,7 +24,7 @@ class MedtronicHistoryDataUTest : MedtronicTestBase() {
     @BeforeEach
     fun setUp() {
         medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
-        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, byteUtil)
+        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
     }
 
     @Test

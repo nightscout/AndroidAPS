@@ -1,9 +1,15 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
-import info.nightscout.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair.PairResult
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.*
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ActivationProgress
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlarmType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BasalProgram
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.DeliveryStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.SoftwareVersion
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.AlarmStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
@@ -13,7 +19,7 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import java.io.Serializable
 import java.time.ZonedDateTime
-import java.util.*
+import java.util.EnumSet
 
 sealed class CommandConfirmationFromState
 object CommandSendingFailure : CommandConfirmationFromState()
@@ -99,6 +105,7 @@ interface OmnipodDashPodStateManager {
         tempBasal: TempBasal? = null,
         requestedBolus: Double? = null
     ): Single<ActiveCommand>
+
     fun updateActiveCommand(): Maybe<CommandConfirmed>
     fun observeNoActiveCommand(): Completable
     fun getCommandConfirmationFromState(): CommandConfirmationFromState
@@ -106,6 +113,7 @@ interface OmnipodDashPodStateManager {
     fun createLastBolus(requestedUnits: Double, historyId: Long, bolusType: DetailedBolusInfo.BolusType)
     fun markLastBolusComplete(): LastBolus?
     fun onStart()
+
     /*
     This is called only:. It overwrites activationStatus
        - when activation was interrupted(application crash, killed, etc)
@@ -120,12 +128,14 @@ interface OmnipodDashPodStateManager {
         lowReservoirAlertEnabled: Boolean,
         lowReservoirAlertUnits: Int
     ): Boolean
+
     fun updateExpirationAlertSettings(
         expirationReminderEnabled: Boolean,
         expirationReminderHours: Int,
         expirationAlarmEnabled: Boolean,
         expirationAlarmHours: Int
     ): Completable
+
     fun updateLowReservoirAlertSettings(lowReservoirAlertEnabled: Boolean, lowReservoirAlertUnits: Int): Completable
 
     data class ActiveCommand(

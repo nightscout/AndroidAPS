@@ -1,14 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
-import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class StopDeliveryCommandTest {
 
-    @Test @Throws(DecoderException::class) fun testStopTempBasal() {
+    @Test fun testStopTempBasal() {
         val encoded = StopDeliveryCommand.Builder()
             .setUniqueId(37879811)
             .setSequenceNumber(0.toShort())
@@ -18,10 +17,10 @@ class StopDeliveryCommandTest {
             .build()
             .encoded
 
-        Assertions.assertArrayEquals(Hex.decodeHex("0242000300071F05494E532E6201B1"), encoded)
+        assertThat(encoded).asList().containsExactlyElementsIn(Hex.decodeHex("0242000300071F05494E532E6201B1").asList()).inOrder()
     }
 
-    @Test @Throws(DecoderException::class) fun testSuspendDelivery() {
+    @Test fun testSuspendDelivery() {
         val encoded = StopDeliveryCommand.Builder()
             .setUniqueId(37879811)
             .setSequenceNumber(2.toShort())
@@ -31,7 +30,7 @@ class StopDeliveryCommandTest {
             .build()
             .encoded
 
-        Assertions.assertArrayEquals(Hex.decodeHex("0242000308071F05494E532E078287"), encoded)
+        assertThat(encoded).asList().containsExactlyElementsIn(Hex.decodeHex("0242000308071F05494E532E078287").asList()).inOrder()
     }
 
     // TODO test cancel bolus

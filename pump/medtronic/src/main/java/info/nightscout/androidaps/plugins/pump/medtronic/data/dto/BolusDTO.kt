@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
 import com.google.gson.annotations.Expose
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType
-import info.nightscout.pump.core.utils.StringUtil
+import info.nightscout.pump.common.utils.StringUtil
 
 /**
  * Application: GGC - GNU Gluco Control
@@ -30,10 +30,11 @@ import info.nightscout.pump.core.utils.StringUtil
  *
  * Author: Andy {andy@atech-software.com}
  */
-class BolusDTO constructor(atechDateTime: Long,
-                           @Expose var requestedAmount: Double,
-                           @Expose var deliveredAmount: Double,
-                           @Expose var duration: Int = 0
+class BolusDTO constructor(
+    atechDateTime: Long,
+    @Expose var requestedAmount: Double,
+    @Expose var deliveredAmount: Double,
+    @Expose var duration: Int = 0
 ) : PumpTimeStampedRecord(atechDateTime) {
 
     @Expose
@@ -56,11 +57,15 @@ class BolusDTO constructor(atechDateTime: Long,
         get() = if (bolusType === PumpBolusType.Normal || bolusType === PumpBolusType.Audio) {
             getFormattedDecimal(deliveredAmount)
         } else if (bolusType === PumpBolusType.Extended) {
-            String.format("AMOUNT_SQUARE=%s;DURATION=%s", getFormattedDecimal(deliveredAmount),
-                durationString)
+            String.format(
+                "AMOUNT_SQUARE=%s;DURATION=%s", getFormattedDecimal(deliveredAmount),
+                durationString
+            )
         } else {
-            String.format("AMOUNT=%s;AMOUNT_SQUARE=%s;DURATION=%s", getFormattedDecimal(immediateAmount!!),
-                getFormattedDecimal(deliveredAmount), durationString)
+            String.format(
+                "AMOUNT=%s;AMOUNT_SQUARE=%s;DURATION=%s", getFormattedDecimal(immediateAmount!!),
+                getFormattedDecimal(deliveredAmount), durationString
+            )
         }
 
     val displayableValue: String

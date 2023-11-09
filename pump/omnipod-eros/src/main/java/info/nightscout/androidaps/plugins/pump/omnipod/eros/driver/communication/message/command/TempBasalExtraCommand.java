@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.RateEntry;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class TempBasalExtraCommand extends MessageBlock {
     private final boolean acknowledgementBeep;
@@ -55,15 +55,15 @@ public class TempBasalExtraCommand extends MessageBlock {
                 (byte) 0x00
         };
 
-        encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt16((int) Math.round(remainingPulses * 10)));
+        encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt16((int) Math.round(remainingPulses * 10)));
         if (remainingPulses == 0) {
-            encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt((int) (delayUntilNextPulse * 1000 * 100) * 10));
+            encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt((int) (delayUntilNextPulse * 1000 * 100) * 10));
         } else {
-            encodedData = ByteUtil.concat(encodedData, ByteUtil.getBytesFromInt((int) (delayUntilNextPulse * 1000 * 100)));
+            encodedData = ByteUtil.INSTANCE.concat(encodedData, ByteUtil.INSTANCE.getBytesFromInt((int) (delayUntilNextPulse * 1000 * 100)));
         }
 
         for (RateEntry entry : rateEntries) {
-            encodedData = ByteUtil.concat(encodedData, entry.getRawData());
+            encodedData = ByteUtil.INSTANCE.concat(encodedData, entry.getRawData());
         }
     }
 

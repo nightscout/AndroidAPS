@@ -1,21 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">文件格式</string>
-    <string name="metadata_label_created_at">创建于</string>
-    <string name="metadata_label_aaps_version">AAPS 版本</string>
-    <string name="metadata_label_aaps_flavour">构建变体</string>
-    <string name="metadata_label_device_name">导出设备的患者姓名</string>
-    <string name="metadata_label_device_model">导出设备型号</string>
-    <string name="metadata_label_encryption">文件加密密钥。</string>
-    <string name="metadata_format_new">新的加密格式</string>
-    <string name="metadata_format_debug">新调试格式 (未加密)</string>
-    <string name="metadata_format_other">未知的导出格式</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">*在虚拟泵中，基础率/大剂量仅支持离散值，不支持范围值。</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">泵驱动程序已变更</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d 分钟前</string>
+    <string name="minago_long">%1$d 分钟前</string>
+    <string name="hoursago">%1$.1f 小时前</string>
+    <string name="days_ago">%1$.1f 天前</string>
+    <string name="days_ago_round">%1$.0f 天前</string>
+    <string name="in_days">在 %1$.0f 天内</string>
+    <string name="in_days_round">在 %1$.0f 天内</string>
+    <string name="shorthour">h</string>
+    <string name="days">天</string>
+    <string name="hours">小时</string>
+    <string name="unit_second">秒</string>
+    <string name="unit_minute">分钟</string>
+    <string name="unit_hour">小时</string>
+    <string name="unit_day">天</string>
+    <string name="unit_week">周</string>
+    <string name="unit_seconds">秒</string>
+    <string name="unit_minutes">分钟</string>
+    <string name="unit_hours">小时</string>
+    <string name="unit_days">天</string>
+    <string name="unit_weeks">周</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">d</string>
+    <string name="later_today">今天稍后</string>
+    <string name="tomorrow">明天</string>
+    <string name="today">今天</string>
+    <string name="yesterday">昨天</string>
+    <!-- Rx -->
+    <string name="connecting_for">正在连接 %1$d s</string>
+    <string name="handshaking">握手</string>
+    <string name="connected">已连接</string>
+    <string name="disconnecting">正在断开连接</string>
+    <string name="waiting_for_disconnection">正在等待连接</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">创建于：%1$s</string>
+    <string name="metadata_label_watchface_author">作者: %1$s</string>
+    <string name="metadata_label_watchface_name">姓名: %1$s</string>
+    <string name="metadata_wear_import_filename">文件名: %1$s</string>
+    <string name="metadata_label_plugin_version">插件版本: %1$s</string>
+    <string name="metadata_label_watchface_name_version">姓名: %1$s (%2$s)</string>
+    <string name="pref_show_iob">显示 IOB</string>
+    <string name="pref_show_detailed_iob">显示IOB详细信息</string>
+    <string name="pref_show_cob">显示COB</string>
+    <string name="pref_show_delta">显示差异</string>
+    <string name="pref_show_detailed_delta">显示详细信息</string>
+    <string name="pref_show_avgdelta">显示平均增量</string>
+    <string name="pref_show_phone_battery">显示手机电量</string>
+    <string name="pref_show_rig_battery">显示设备电量</string>
+    <string name="pref_show_basal_rate">显示基础率</string>
+    <string name="pref_show_loop_status">显示闭环状态</string>
+    <string name="pref_show_bg">显示血糖</string>
+    <string name="pref_show_direction_arrow">显示方向箭头</string>
+    <string name="pref_show_ago">显示Ago信息</string>
+    <string name="cwf_comment_background">背景图片</string>
+    <string name="cwf_comment_chart">图表(血糖, 基础率, 预测线...)</string>
+    <string name="cwf_comment_delta">短期血糖增量</string>
+    <string name="cwf_comment_avg_delta">平均BG 增量(15分钟)</string>
+    <string name="cwf_comment_uploader_battery">手机电量(%)</string>
+    <string name="cwf_comment_basalRate">基础率</string>
+    <string name="cwf_comment_time">时间 (HH:MM 或 HH:MM:SS)</string>
+    <string name="cwf_comment_hour">小时 (HH)</string>
+    <string name="cwf_comment_minute">分钟(MM)</string>
+    <string name="cwf_comment_second">秒 (SS)</string>
+    <string name="cwf_comment_timePeriod">上午/下午</string>
+    <string name="cwf_comment_day_name">星期</string>
+    <string name="cwf_comment_day">日 (DD)</string>
+    <string name="cwf_comment_month">月(短)</string>
+    <string name="cwf_comment_direction">方向箭头</string>
+    <string name="cwf_comment_sgv">血糖值</string>
 </resources>

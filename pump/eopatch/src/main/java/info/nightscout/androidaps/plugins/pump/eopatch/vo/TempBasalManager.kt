@@ -1,15 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
+import app.aaps.core.interfaces.sharedPreferences.SP
 import com.google.common.base.Preconditions
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.code.UnitOrPercent
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 
-class TempBasalManager : IPreference<TempBasalManager>{
+class TempBasalManager : IPreference<TempBasalManager> {
+
     @Transient
     private val subject: BehaviorSubject<TempBasalManager> = BehaviorSubject.create()
 
@@ -21,7 +22,7 @@ class TempBasalManager : IPreference<TempBasalManager>{
 
     var unit = UnitOrPercent.P
 
-    fun clear(){
+    fun clear() {
         startedBasal = null
         startTimestamp = 0L
         endTimestamp = 0L
@@ -40,7 +41,7 @@ class TempBasalManager : IPreference<TempBasalManager>{
         this.startedBasal?.startTimestamp = 0
     }
 
-    fun update(other: TempBasalManager){
+    fun update(other: TempBasalManager) {
         this.startedBasal = other.startedBasal
         startTimestamp = other.startTimestamp
         endTimestamp = other.endTimestamp
@@ -51,7 +52,7 @@ class TempBasalManager : IPreference<TempBasalManager>{
         return subject.hide()
     }
 
-    override fun flush(sp: SP){
+    override fun flush(sp: SP) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
         sp.putString(SettingKeys.TEMP_BASAL, jsonStr)
         subject.onNext(this)

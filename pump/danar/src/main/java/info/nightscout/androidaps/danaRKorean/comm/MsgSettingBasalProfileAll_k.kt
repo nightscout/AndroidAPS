@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.rx.logging.LTag
 import java.util.Locale
 
 /**
@@ -56,8 +56,9 @@ class MsgSettingBasalProfileAll_k(
                 for (index in 0..47) {
                     aapsLogger.debug(
                         LTag.PUMPCOMM, "Basal profile " + profile + ": " + String.format(Locale.ENGLISH, "%02d", index / 2) +
-                        ":" + String.format(Locale.ENGLISH, "%02d", index % 2 * 30) + " : " +
-                        danaPump.pumpProfiles!![profile][index])
+                            ":" + String.format(Locale.ENGLISH, "%02d", index % 2 * 30) + " : " +
+                            danaPump.pumpProfiles!![profile][index]
+                    )
                 }
             }
         }

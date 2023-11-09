@@ -64,7 +64,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:textStyle="bold" />
 
-            <info.nightscout.core.ui.elements.NumberPicker
+            <app.aaps.core.ui.elements.NumberPicker
                 android:id="@+id/bg"
                 android:layout_width="130dp"
                 android:layout_height="40dp"

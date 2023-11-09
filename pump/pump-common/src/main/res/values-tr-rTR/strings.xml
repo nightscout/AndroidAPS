@@ -64,6 +64,15 @@
     <string name="pump_settings_error_wrong_max_basal_set">Pompada Yanlış Maksimum Bazal ayarlanmış (%1$.2f olmalıdır).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Hiçbir bağlantı yok</string>
+    <string name="pump_status_sleeping">Uyku Moduna Giriliyor</string>
+    <string name="pump_status_waking_up">Uyanıyor</string>
+    <string name="pump_status_active">Aktif</string>
+    <string name="pump_status_error_comm">İletişim hatası</string>
+    <string name="pump_status_timeout_comm">İletişimde zaman aşımı</string>
+    <string name="pump_status_pump_unreachable">Pompa\'ya ulaşılamıyor</string>
+    <string name="pump_status_invalid_config">Geçersiz yapılandırma</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

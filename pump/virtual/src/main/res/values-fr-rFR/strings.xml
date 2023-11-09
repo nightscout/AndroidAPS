@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="virtual_pump_label">POMPE VIRTUELLE</string>
     <string name="virtualpump_settings">Paramètres pompe virtuelle</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Uniquement les valeurs unitaires sont acceptées. Les plages pour les basal/bolus ne sont pas supportées par les pompes virtuelles.</string>
 </resources>

@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaR.comm
 
+import app.aaps.shared.tests.TestBase
 import info.nightscout.androidaps.danar.comm.MessageOriginalNames
-import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

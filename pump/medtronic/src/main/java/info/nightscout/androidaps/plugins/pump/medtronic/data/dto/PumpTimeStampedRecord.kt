@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.pump.core.utils.StringUtil
+import info.nightscout.pump.common.utils.StringUtil
 
 /**
  * Created by andy on 6/2/18.

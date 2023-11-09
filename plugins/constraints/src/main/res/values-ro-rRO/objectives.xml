@@ -7,20 +7,38 @@
     <string name="objectivenotfinished">Obiectivul %1$d nu a fost atins</string>
     <string name="objectives_0_objective">Se stabilesc vizualizările și monitorizarea și se analizează bazalele și valorile ratelor</string>
     <string name="objectives_0_gate">Verificați că vedeți glicemia în Nightscout și că datele despre insulină date de pompă sunt înregistrate în site</string>
+    <string name="objectives_0_learned">Configurarea de bază a ecosistemului AAPS este finalizată. Nightscout nu este necesar ca AAPS să ruleze, dar este foarte util pentru raportarea sau monitorizarea pacientului. Nu este necesar să fii conectat la NS tot timpul dacă folosești NS doar pentru tine. Poți să încarci informațiile și numai pe wifi acasă, și să economisești baterie.</string>
     <string name="objectives_openloop_objective">Pornire cu buclă deschisă</string>
     <string name="objectives_openloop_gate">Funcționare în modul Buclă Deschisă pentru câteva zile și introducere manuală a multiplelor sugestii de bazale temporare. Se stabilesc și se folosesc ținte temporare și ținte implicite (e.g. pentru activități sau pentru carbohidrați de corecție)</string>
+    <string name="objectives_openloop_learned">Bucla deschisă poate fi folosită pentru recomandări dacă nu ai o pompă compatibilă sau dacă nu ești gata să închizi bucla.</string>
     <string name="objectives_maxbasal_objective">Se va înțelege modul de lucru în buclă deschisă, inclusiv recomandările de bazale temporare</string>
     <string name="objectives_maxbasal_gate">Pe baza experienței, se va decide care va fi bazala maximă, și se va implementa aceasta în pompă și în preferințe</string>
+    <string name="objectives_maxbasal_learned">Ai grijă la caracteristicile de siguranţă şi ajustează parametrii de siguranţă, atunci când este necesar.</string>
     <string name="objectives_maxiobzero_objective">Se va începe modul buclă închisă cu funcția Suspendare la Glicemie Mică</string>
     <string name="objectives_maxiobzero_gate">Rulează în mod buclă închisă cu max IOB = 0 pentru câteva zile, fără prea multe evenimente LGS (Suspendare la Glicemii Mici)</string>
+    <string name="objectives_maxiobzero_learned">Setarea MaxIOB la zero previne hipoglicemia şi nu va adăuga mai multă insulină peste rata bazală (cu excepţia situaţiilor cu IOB negativ)</string>
     <string name="objectives_maxiob_objective">Îmbunătățirea buclei închise, mărirea valorii max IOB peste 0 și scăderea graduală a țintelor de glicemie</string>
     <string name="objectives_maxiob_gate">Se rulează pentru câteva zile și cel puțin o noapte fără a avea alarme de glicemie mică înainte de scăderea țintei</string>
+    <string name="objectives_maxiob_learned">Actualizează MaxIOB pe măsură ce copilul crește. Nu permite sistemului să dea mai multă insulină decât poate fi acoperită prin alimente = valoarea foarte mare este o idee rea.</string>
     <string name="objectives_autosens_objective">Ajustarea bazalelor și a factorilor dacă este necesar și apoi activarea auto-sens</string>
     <string name="objectives_autosens_gate">O săptămână de buclă închisă încheiată cu succes în condițiile introducerii regulate a carbohidraților</string>
+    <string name="objectives_autosens_learned">Dacă rezultatul autosens nu oscilează în jurul valorii de 100%, profilul tău probabil că este greșit.</string>
     <string name="objectives_smb_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
+    <string name="objectives_smb_gate">Trebuie sa citiți wiki și să măriți maxIOB pentru o funcționare corectă a SMB! Un start bun este maxIOB = (media bolusurilor prandiale) + (3x valoarea maximă a ratei bazale din zi)</string>
+    <string name="objectives_smb_learned">Scopul tău este să folosești SMB. Algoritmul Oref1 a fost creat pentru a te ajuta și cu bolusurile. Nu ar trebui să administrezi un bolus complet pentru mâncare, ci doar o parte a acestuia, și să permiți AAPS să administreze restul, dacă este necesar. În acest fel ai mai mult loc de manevră pentru carbohidrați calculați greșit. Știai că poți seta un procent din rezultatul calculatorului de bolus pentru a reduce dimensiunea bolusului?</string>
+    <string name="objectives_dyn_isf_objective">Activarea unor caracteristici suplimentare pentru utilizare în timpul zilei, cum ar fi plugin-ul de sensibilitate dinamică</string>
+    <string name="objectives_dyn_isf_gate">Asigură-te că SMB funcționează corect. Activează plugin-ul DynamicISF pentru a determina calibrarea adecvată pentru unicitatea propriului organism. Pentru siguranță, este recomandat să începi cu o valoare mai mică decât 100%.</string>
+    <string name="objectives_dyn_isf_learned">Plugin-ul Sensibilitate Dinamică se bazează pe ideea că necesarul total de insulină şi nivelul actual al glicemiei afectează sensibilitatea reală. Plugin-ul DynamicISF poate ajusta factorul de sensibilitate la insulină (ISF) folosit de algoritm în cazul tău.</string>
     <string name="objectives_auto_objective">Activarea automatizării</string>
+    <string name="objectives_auto_gate">Citește documentația despre cum funcționează automatizările. Configurează primele reguli simple. În loc de acțiune, permite AAPS să afișeze doar notificări. Când te-ai asigurat că automatizarea se declanșează la momentul potrivit, înlocuiește notificarea cu acțiune reală. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Automatizarea poate fi un servitor bun, dar un stăpân rău. Nu o utiliza în exces. Nu încerca să înlocuiești algoritmul de bază. Mai întâi testează fiecare regulă cu un mesaj, înainte de activare. Regulile depind de prioritizări.</string>
+    <string name="objectives_bgavailableinns">Glicemie disponibilă în NS sau Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Starea pompei este disponibilă în NS sau Tidepool</string>
     <string name="objectives_manualenacts">Acțiuni manuale</string>
     <string name="accomplished">Îndeplinit: %1$s</string>
+    <string name="objectives_usage_objective">Învață cum să controlezi AAPS</string>
+    <string name="objectives_usage_gate">Efectuează diferite acțiuni în AAPS</string>
+    <string name="objectives_usage_learned">Ai învăţat cum să folosești de elementele de bază ale AAPS. Butoanele principale sunt pe ecranul de Ansamblu, accesibile la o apăsare simplă sau prelungă. Alte butoane de control sunt pe ecranul de Acțiune. Ar trebui să știi cum să pui un ecran al vreunui plugin în meniul orizontal de sus, sau să îl afișezi în partea stângă sus a plugin-urilor active.</string>
     <string name="objectives_useprofileswitch">Stabiliți profilul 90% pentru 10 min (apăsare prelungă a numelui profilului în Vedere de ansamblu)</string>
     <string name="objectives_usedisconnectpump">Simularea unui duș. Deconectarea pompei pentru 1 oră (Apăsare prelungă pe Buclă deschisă)</string>
     <string name="objectives_usereconnectpump">... și reconectare în același mod</string>
@@ -30,12 +48,41 @@
     <string name="objectives_usescale">Folosiți funcția scală prin apăsarea prelungă a graficului glicemiei</string>
     <string name="objectives_exam_objective">Dovediți-vă cunoștințele</string>
     <string name="objectives_exam_gate">Studiați întrebările. Vi se dau patru răspunsuri posibile pentru fiecare întrebare. Poate exista mai mult de un răspuns corect. Vă rugăm să bifați toate cele care sunt corecte și selectați VERIFICA.</string>
+    <string name="objectives_exam_learned_prerequisites">Nu trebuie să fii un programator, dar ai nevoie de Nightscout pentru a trece de obiective, de pompă compatibilă și de un calculator pe care să construiești AAPS pentru prima dată sau să îl actualizezi după.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS poate rula offline.</string>
+    <string name="objectives_exam_learned_basaltest">Profilul ar trebui revizuit și actualizat. Un profil mai bun = rezultate mai bune.</string>
+    <string name="objectives_exam_learned_dia">DIA în buclă are semnificaţie diferită (timpul până când toată insulina este absorbită) faţă de tratamentul clasic cu pompă (timpul până când cea mai mare parte a insulinei este absorbită).</string>
+    <string name="objectives_exam_learned_isf">Ai învăţat semnificaţia valorii ISF şi cum afectează cantitatea de insulină utilizată pentru corectarea glicemiei.</string>
+    <string name="objectives_exam_learned_ic">Ai învățat semnificația valorii IC și cum afectează cantitatea de insulină necesară pentru a acoperi carbohidrații.</string>
+    <string name="objectives_exam_learned_hypott">Ținta temporară de hipo este utilizată numai pentru a preveni supra-corectarea după hipoglicemie, atunci când există de obicei și IOB negativ cumulat. Ar trebui luate în considerare viitoare acțiuni suplimentare pentru a preveni o situație similară în viitor.</string>
+    <string name="objectives_exam_learned_profileswitch">Folosirea procentului nu afectează ţinta glicemică. Dar bazala, ISF şi IC sunt ajustate pentru a administra mai multă insulină (peste 100%%) sau mai puţină insulină (sub 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Folosind temporizarea în schimbarea profilului poți adapta profilul circadian la neregularități cum ar fi trezirea târzie.</string>
+    <string name="objectives_exam_learned_profileswitch4">Editarea profilului în sine nu este suficientă pentru a face o schimbare. Încă trebuie să efectuezi o comutare de profil pentru a activa modificările.</string>
+    <string name="objectives_exam_learned_exercise">Ar trebui să reduci cantitatea de insulină din organism cu cel puţin 1 oră înainte de a începe activitatea fizică, selectând profilul sub 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Setarea unei ţinte temporare mai mari cu cel puţin 1 oră înainte de exerciţiul fizic ajută, de asemenea, la reducerea cantităţii de insulină din organism.</string>
+    <string name="objectives_exam_learned_noisycgm">Când nu poți avea încredere în valorile CGM, nu trebuie să folosești o buclă nesupravegheată.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS trebuie să ştie că pompa nu este conectată pentru a calcula corect IOB.</string>
+    <string name="objectives_exam_learned_insulin">Este necesar să se cunoască tipul de insulină din pompă pentru că asta afectează calculul IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Detectarea sensibilităţii face parte din algoritm, ceea ce permite adaptarea dozelor de insulină la diferite situaţii.</string>
+    <string name="objectives_exam_learned_objectives">Progresul dvs. în Obiective este stocat împreună cu alte setări și ar trebui să fie salvat într-un backup.</string>
+    <string name="objectives_exam_learned_objectives2">Păstrați întotdeauna setările exportate și APK-urile generate și pe un suport în afara telefonului. Telefonul poate fi pierdut, deteriorat etc. Un suport bun poate fi orice cloud accesibil de pe telefon. În acest caz puteţi restaura AAPS pe un alt dispozitiv în câteva minute. O bună practică este să stocați într-un loc sigur și parola principală utilizată. Fără acesta, copia de rezervă este inutilă. Același lucru este valabil și pentru semnarea cheilor (fișierul .jks) și parolele utilizate pentru a construi AAPS. Restul nu este important - poate fi descărcat din nou oricând de pe internet.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Dacă ai introdus greşit date în AAPS sau acestea nu se potrivesc cu realitatea, corectează cât mai repede. Altfel, greșelile pot duce la supradozare. AAPS trebuie informat întotdeauna cât mai corect despre carbohidraţi, insulină etc.</string>
+    <string name="objectives_exam_learned_iob">Analizezi dacă AAPS funcționează bine? Atunci vizionarea graficului IOB poate oferi foarte multe informații utile.</string>
+    <string name="objectives_exam_learned_cob">Calcularea COB depinde de relația dintre ISF și IC. Creșterea ISF sau scăderea IC va duce la timpi de absorbție mai mari. Însă schimbarea profilului cu procentaj modifică simultan ambele valori, iar timpul de absorbție nu este afectat.</string>
+    <string name="objectives_exam_learned_breadgrams">Sunt permise numai grame pentru introducerea carbohidraților.</string>
+    <string name="objectives_exam_learned_ecarbs">În lumea pompelor, E-carb reprezintă un înlocuitor pentru bolusul extins.</string>
+    <string name="objectives_exam_learned_nsclient">Monitorizarea și controlul de la distanță sunt posibile, dar nu toate funcțiile trebuie să fie disponibile de la distanță.</string>
     <string name="answerdisabledto">Posibilitatea de a răspunde este dezactivată până la: %1$s</string>
     <string name="wronganswer">Răspuns greșit!</string>
     <string name="unfinshed_button">Următoarea nefinalizată</string>
     <string name="requestcode">Solicită codul: %1$s</string>
     <string name="objectives_hint">(bifați toate răspunsurile corecte)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Nu există conexiune la internet</string>
     <string name="failedretrievetime">Nu s-a reușit preluarea timpului</string>
     <string name="requirementnotmet">Nu au fost îndeplinite cerințele obiectivului</string>
+    <string name="what_i_ve_learned">Ce am învăţat:</string>
 </resources>

@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks
 
+import app.aaps.core.interfaces.plugin.ActivePlugin
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkPumpDevice
-import info.nightscout.interfaces.plugin.ActivePlugin
 import javax.inject.Inject
 
 @Suppress("LeakingThis")
-open class ServiceTask constructor(val injector: HasAndroidInjector) : Runnable {
+open class ServiceTask(val injector: HasAndroidInjector) : Runnable {
 
     @Inject lateinit var activePlugin: ActivePlugin
 

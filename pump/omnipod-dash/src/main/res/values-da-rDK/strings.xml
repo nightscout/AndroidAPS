@@ -6,6 +6,7 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod Historik</string>
     <string name="omnipod_dash_history_item_description">Beskrivelse</string>
+    <string name="omnipod_dash_history_item_amount">Mængde</string>
     <string name="omnipod_dash_history_item_source">Kilde</string>
     <string name="omnipod_dash_history_item_date">Dato</string>
     <string name="omnipod_dash_history_type">Type:</string>
@@ -31,11 +32,26 @@
     <string name="omnipod_dash_command_not_sent">Kommando ikke sendt</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Kommando ikke modtaget af poden</string>
     <string name="omnipod_dash_unknown">Ukendt tilstand for kommandoen</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f IE/t, %2$d minutter</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f IE</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulintilførslen suspenderet</string>
+    <string name="omnipod_common_history_total_delivered">Levering i alt: %1$.2f IE</string>
     <string name="omnipod_dash_connection_lost">Mistede forbindelse til pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">En anden bolus er ved at blive afgivet</string>
     <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin tilbage i pod.</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Ubekræftet kommando</string>
     <string name="requested_by_user" comment="26 characters max for translation">Anmodet af bruger</string>
+    <string name="profile_set_ok">Profil sat OK</string>
+    <string name="suspend_delivery_is_unconfirmed">Pausér insulintilførsel er ubekræftet! Genstart venligst manuelt Pod-statussen fra Omnipod-fanen og start tilførsel igen hvis nødvendigt.</string>
+    <string name="insulin_delivery_suspended">Insulintilførsel pauseret</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Tidszone på pod er forskellig fra tidszone på telefon. Basalrate er forkert. Skift profil for at rette</string>
+    <string name="failed_to_set_the_new_basal_profile">Kunne ikke indstille den nye basalprofil. Levering pauseret</string>
+    <string name="setting_basal_profile_might_have_failed">Indstilling af basalprofil mislykkedes måske. Insulintilførsel kan være pauseret! Opdatér venligst Pod-status manuelt fra Omnipod-fanen og genoptag tilførslen hvis nødvendigt.</string>
+    <string name="bolus_delivery_status_uncertain">Bolustilførselsstatus usikker. Opdatér pod-status for at bekræfte eller afvise.</string>
+    <string name="temp_basal_out_of_sync">Midlertidig basal-status ikke som forventet! Hvis en midlertidig basal kørte tidligere, er den blevet aflyst. Tjek venligst tilført insulin og pod-historie</string>
+    <string name="checking_delivery_status">Kontrollerer leveringsstatus</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Indstilling af midlertidig basal mislykkedes måske. Hvis en midlertidig basal tidligere var kørt, er den blevet annulleret. Opdatér venligst Pod-status manuelt fra Omnipod-fanen.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Annullér midlertidig basal-resultat er usikkert</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ikke-bekræftet genoptagtilførselskommando. Opdatér pod-status</string>
+    <string name="cancelling_temp_basal_might_have_failed">Aflysning af midlertidig basal mislykkedes. Hvis en midlertidig basal tidligere var kørt, kan den være blevet annulleret. Opdater venligst Pod-status manuelt fra Omnipod-fanen.</string>
 </resources>

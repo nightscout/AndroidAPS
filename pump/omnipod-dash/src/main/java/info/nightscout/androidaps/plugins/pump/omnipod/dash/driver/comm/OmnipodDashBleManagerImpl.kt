@@ -3,6 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.BusyException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotSendCommandException
@@ -28,10 +32,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEven
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import info.nightscout.core.utils.toHex
-import info.nightscout.interfaces.Config
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.core.Observable
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.atomic.AtomicBoolean
@@ -61,22 +61,23 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                 val session = assertSessionEstablished()
 
                 emitter.onNext(PodEvent.CommandSending(cmd))
-            /*
-                if (Random.nextBoolean()) {
-                    // XXX use this to test "failed to confirm" commands
-                    emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
-                    emitter.tryOnError(MessageIOException("XXX random failure to test unconfirmed commands"))
-                    return@create
-                }
-*/
+                /*
+                    if (Random.nextBoolean()) {
+                        // XXX use this to test "failed to confirm" commands
+                        emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
+                        emitter.tryOnError(MessageIOException("XXX random failure to test unconfirmed commands"))
+                        return@create
+                    }
+    */
                 when (session.sendCommand(cmd)) {
-                    is CommandSendErrorSending -> {
+                    is CommandSendErrorSending    -> {
                         emitter.tryOnError(CouldNotSendCommandException())
                         return@create
                     }
 
-                    is CommandSendSuccess ->
+                    is CommandSendSuccess         ->
                         emitter.onNext(PodEvent.CommandSent(cmd))
+
                     is CommandSendErrorConfirming ->
                         emitter.onNext(PodEvent.CommandSendNotConfirmed(cmd))
                 }
@@ -90,10 +91,10 @@ class OmnipodDashBleManagerImpl @Inject constructor(
                     is CommandReceiveSuccess ->
                         emitter.onNext(PodEvent.ResponseReceived(cmd, readResult.result))
 
-                    is CommandAckError ->
+                    is CommandAckError       ->
                         emitter.onNext(PodEvent.ResponseReceived(cmd, readResult.result))
 
-                    is CommandReceiveError -> {
+                    is CommandReceiveError   -> {
                         emitter.tryOnError(MessageIOException("Could not read response: $readResult"))
                         return@create
                     }
@@ -117,6 +118,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
         return connection?.connectionState()
             ?: NotConnected
     }
+
     // used for sync connections
     override fun connect(timeoutMs: Long): Observable<PodEvent> {
         return connect(ConnectionWaitCondition(timeoutMs = timeoutMs))
@@ -128,8 +130,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     private fun connect(connectionWaitCond: ConnectionWaitCondition): Observable<PodEvent> = Observable
-        .create {
-            emitter ->
+        .create { emitter ->
             if (!busy.compareAndSet(false, true)) {
                 throw BusyException()
             }
@@ -259,6 +260,7 @@ class OmnipodDashBleManagerImpl @Inject constructor(
     }
 
     companion object {
+
         const val CONTROLLER_ID = 4242 // TODO read from preferences or somewhere else.
     }
 }

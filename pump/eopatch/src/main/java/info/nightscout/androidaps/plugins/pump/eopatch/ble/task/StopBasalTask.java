@@ -7,17 +7,17 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.interfaces.logging.UserEntryLogger;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.UserEntryLogger;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.queue.Callback;
+import app.aaps.core.interfaces.queue.Command;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.userEntry.UserEntryMapper;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BasalStopResponse;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.queue.Callback;
-import info.nightscout.interfaces.queue.Command;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.userEntry.UserEntryMapper;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -44,15 +44,15 @@ public class StopBasalTask extends TaskBase {
         BASAL_STOP = new BasalStop();
     }
 
-    private Observable<Boolean> getBolusSebject(){
+    private Observable<Boolean> getBolusSebject() {
         return bolusCheckSubject.hide();
     }
 
-    private Observable<Boolean> getExbolusSebject(){
+    private Observable<Boolean> getExbolusSebject() {
         return exbolusCheckSubject.hide();
     }
 
-    private Observable<Boolean> getBasalSebject(){
+    private Observable<Boolean> getBasalSebject() {
         return basalCheckSubject.hide();
     }
 
@@ -73,7 +73,7 @@ public class StopBasalTask extends TaskBase {
                     exbolusCheckSubject.onNext(true);
                 }
             });
-        }else{
+        } else {
             exbolusCheckSubject.onNext(true);
         }
 
@@ -85,15 +85,15 @@ public class StopBasalTask extends TaskBase {
                     basalCheckSubject.onNext(true);
                 }
             });
-        }else{
+        } else {
             basalCheckSubject.onNext(true);
         }
 
         return Observable.zip(getBolusSebject(), getExbolusSebject(), getBasalSebject(), (bolusReady, exbolusReady, basalReady)
-                    -> (bolusReady && exbolusReady && basalReady))
+                        -> (bolusReady && exbolusReady && basalReady))
                 .filter(ready -> ready)
                 .flatMap(v -> isReady())
-				.concatMapSingle(v -> BASAL_STOP.stop())
+                .concatMapSingle(v -> BASAL_STOP.stop())
                 .doOnNext(this::checkResponse)
                 .doOnNext(v -> updateConnectionTask.enqueue())
                 .firstOrError()
@@ -105,12 +105,12 @@ public class StopBasalTask extends TaskBase {
 
         if (ready) {
             disposable = stop()
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe(v -> {
-                    bolusCheckSubject.onNext(false);
-                    exbolusCheckSubject.onNext(false);
-                    basalCheckSubject.onNext(false);
-                });
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe(v -> {
+                        bolusCheckSubject.onNext(false);
+                        exbolusCheckSubject.onNext(false);
+                        basalCheckSubject.onNext(false);
+                    });
         }
     }
 

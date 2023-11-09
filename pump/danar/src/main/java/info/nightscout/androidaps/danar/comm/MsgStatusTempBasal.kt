@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.danar.comm
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.utils.T
 import dagger.android.HasAndroidInjector
-import info.nightscout.shared.utils.T
-import info.nightscout.rx.logging.LTag
 import kotlin.math.abs
 import kotlin.math.floor
 

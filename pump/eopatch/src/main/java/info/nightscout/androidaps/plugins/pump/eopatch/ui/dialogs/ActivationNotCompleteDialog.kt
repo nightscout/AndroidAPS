@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.bindingadapters.setOnSafeClickListener
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogCommonBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.DialogHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchActivity
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
 import javax.inject.Inject
 
 class ActivationNotCompleteDialog : DaggerDialogFragment() {
@@ -29,8 +29,10 @@ class ActivationNotCompleteDialog : DaggerDialogFragment() {
     private var _binding: DialogCommonBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = false

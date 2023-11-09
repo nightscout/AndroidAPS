@@ -15,7 +15,7 @@
             <intent android:action="info.nightscout.pump.danars.activities.BLEScanActivity" />
         </Preference>
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:inputType="numberPassword"
             android:digits="0123456789ABCDEF"
             android:key="@string/key_danars_password"

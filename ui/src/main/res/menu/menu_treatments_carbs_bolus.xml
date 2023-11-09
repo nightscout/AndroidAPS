@@ -23,10 +23,4 @@
         android:id="@+id/nav_delete_future"
         android:title="@string/delete_future_treatments"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/nav_refresh_ns"
-        android:title="@string/refresh_from_nightscout"
-        app:showAsAction="never" />
-
 </menu>

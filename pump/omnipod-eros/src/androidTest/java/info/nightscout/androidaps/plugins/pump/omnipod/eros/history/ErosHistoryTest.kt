@@ -3,21 +3,25 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.history
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity
-import org.junit.Assert.assertNotNull
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.BeforeEach
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
 class ErosHistoryTest {
 
     private lateinit var dao: ErosHistoryRecordDao
     private lateinit var database: ErosHistoryDatabase
     private lateinit var erosHistory: ErosHistory
 
-    @BeforeEach
+    @Before
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         database = Room.inMemoryDatabaseBuilder(
@@ -31,7 +35,7 @@ class ErosHistoryTest {
     @Test
     fun testInsertionAndRetrieval() {
         var history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L)
-        assert(history.isEmpty())
+        assertThat(history).isEmpty()
 
         val type = PodHistoryEntryType.SET_BOLUS.code.toLong()
         val entity = ErosHistoryRecordEntity(1000L, type)
@@ -39,15 +43,15 @@ class ErosHistoryTest {
         erosHistory.create(ErosHistoryRecordEntity(3000L, PodHistoryEntryType.CANCEL_BOLUS.code.toLong()))
 
         history = erosHistory.getAllErosHistoryRecordsFromTimestamp(0L)
-        assert(history.size == 2)
-        assert(type == history.first().podEntryTypeCode)
+        assertThat(history.size).isEqualTo(2)
+        assertThat(type).isEqualTo(history.first().podEntryTypeCode)
 
         val returnedEntity = erosHistory.findErosHistoryRecordByPumpId(entity.pumpId)
-        assertNotNull(returnedEntity)
-        assert(type == returnedEntity?.podEntryTypeCode)
+        assertThat(returnedEntity).isNotNull()
+        assertThat(type).isEqualTo(returnedEntity?.podEntryTypeCode)
     }
 
-    @AfterEach
+    @After
     fun tearDown() {
         database.close()
     }

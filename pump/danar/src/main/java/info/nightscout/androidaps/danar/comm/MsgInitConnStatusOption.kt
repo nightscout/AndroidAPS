@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.danar.comm
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.logging.LTag
 
 class MsgInitConnStatusOption(
     injector: HasAndroidInjector

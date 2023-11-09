@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.danar.comm
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import dagger.android.HasAndroidInjector
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.logging.LTag
 
 class MsgError(
     injector: HasAndroidInjector

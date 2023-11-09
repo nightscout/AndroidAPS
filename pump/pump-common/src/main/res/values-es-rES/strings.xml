@@ -64,6 +64,15 @@
     <string name="pump_settings_error_wrong_max_basal_set">La basal máxima establecida en la bomba es incorrecta (debe ser %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipo:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nunca conectado</string>
+    <string name="pump_status_sleeping">En reposo</string>
+    <string name="pump_status_waking_up">Iniciando</string>
+    <string name="pump_status_active">Activo</string>
+    <string name="pump_status_error_comm">Error en la comunicación</string>
+    <string name="pump_status_timeout_comm">Tiempo de espera agotado en la comunicación</string>
+    <string name="pump_status_pump_unreachable">Bomba inaccesible</string>
+    <string name="pump_status_invalid_config">Configuración inválida</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

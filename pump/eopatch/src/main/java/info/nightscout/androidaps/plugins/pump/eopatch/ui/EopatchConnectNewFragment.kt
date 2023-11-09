@@ -12,7 +12,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewM
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.GET_PATCH_INFO_FAILED
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.SCAN_FAILED
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewModel.SetupStep.SELF_TEST_FAILED
-import info.nightscout.core.ui.toast.ToastUtils
+import app.aaps.core.ui.toast.ToastUtils
 
 class EopatchConnectNewFragment : EoBaseFragment<FragmentEopatchConnectNewBinding>() {
 

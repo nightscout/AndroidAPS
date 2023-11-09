@@ -1,9 +1,8 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 /**
@@ -14,7 +13,7 @@ class TempBasalSettingPacket(
     private var status: Int, // (1:tempbasal running, 2:tempbasal dismissed)
     private var time: Int,  //hour group (1=00~05, 2=06~11, 3=12~17, 4=18~23)
     private var injectRateRatio: Int
-) : DiaconnG8Packet(injector ) {
+) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
 
@@ -23,8 +22,8 @@ class TempBasalSettingPacket(
         aapsLogger.debug(LTag.PUMPCOMM, "TempBasalSettingPacket Init")
     }
 
-    override fun encode(msgSeq:Int): ByteArray {
-        val buffer =  prefixEncode(msgType, msgSeq, MSG_CON_END)
+    override fun encode(msgSeq: Int): ByteArray {
+        val buffer = prefixEncode(msgType, msgSeq, MSG_CON_END)
         val apsSecond = 946652400L //fixed value 2000-01-01 00:00:00 (second)
         buffer.put(status.toByte()) // status
         buffer.put(time.toByte())

@@ -4,12 +4,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 class VersionResponseTest {
     @Test
     void testRawDataAssignAddressVersionResponse() {
-        byte[] encodedData = ByteUtil.fromHexString("011502070002070002020000a64000097c279c1f08ced2");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("011502070002070002020000a64000097c279c1f08ced2");
 
         VersionResponse versionResponse = new VersionResponse(encodedData);
         Assertions.assertArrayEquals(encodedData, versionResponse.getRawData());
@@ -17,8 +17,8 @@ class VersionResponseTest {
 
     @Test
     void testRawDataAssignAddressVersionResponseWithLongerMessage() {
-        byte[] encodedData = ByteUtil.fromHexString("011502070002070002020000a64000097c279c1f08ced201");
-        byte[] expected = ByteUtil.fromHexString("011502070002070002020000a64000097c279c1f08ced2");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("011502070002070002020000a64000097c279c1f08ced201");
+        byte[] expected = ByteUtil.INSTANCE.fromHexString("011502070002070002020000a64000097c279c1f08ced2");
 
         VersionResponse versionResponse = new VersionResponse(encodedData);
         Assertions.assertArrayEquals(expected, versionResponse.getRawData());
@@ -26,7 +26,7 @@ class VersionResponseTest {
 
     @Test
     void testRawDataSetupPodVersionResponse() {
-        byte[] encodedData = ByteUtil.fromHexString("011b13881008340a5002070002070002030000a3770003ab371f00ee87");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("011b13881008340a5002070002070002030000a3770003ab371f00ee87");
 
         VersionResponse versionResponse = new VersionResponse(encodedData);
 
@@ -35,8 +35,8 @@ class VersionResponseTest {
 
     @Test
     void testRawDataSetupPodVersionResponseWithLongerMessage() {
-        byte[] encodedData = ByteUtil.fromHexString("011b13881008340a5002070002070002030000a3770003ab371f00ee8701");
-        byte[] expected = ByteUtil.fromHexString("011b13881008340a5002070002070002030000a3770003ab371f00ee87");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("011b13881008340a5002070002070002030000a3770003ab371f00ee8701");
+        byte[] expected = ByteUtil.INSTANCE.fromHexString("011b13881008340a5002070002070002030000a3770003ab371f00ee87");
 
         VersionResponse versionResponse = new VersionResponse(encodedData);
         Assertions.assertArrayEquals(expected, versionResponse.getRawData());
@@ -44,7 +44,7 @@ class VersionResponseTest {
 
     @Test
     void testAssignAddressVersionResponse() {
-        VersionResponse versionResponse = new VersionResponse(ByteUtil.fromHexString("011502070002070002020000a64000097c279c1f08ced2"));
+        VersionResponse versionResponse = new VersionResponse(ByteUtil.INSTANCE.fromHexString("011502070002070002020000a64000097c279c1f08ced2"));
 
         Assertions.assertTrue(versionResponse.isAssignAddressVersionResponse());
         Assertions.assertFalse(versionResponse.isSetupPodVersionResponse());
@@ -59,7 +59,7 @@ class VersionResponseTest {
 
     @Test
     void testSetupPodVersionResponse() {
-        VersionResponse versionResponse = new VersionResponse(ByteUtil.fromHexString("011b13881008340a5002070002070002030000a3770003ab371f00ee87"));
+        VersionResponse versionResponse = new VersionResponse(ByteUtil.INSTANCE.fromHexString("011b13881008340a5002070002070002030000a3770003ab371f00ee87"));
 
         Assertions.assertFalse(versionResponse.isAssignAddressVersionResponse());
         Assertions.assertTrue(versionResponse.isSetupPodVersionResponse());

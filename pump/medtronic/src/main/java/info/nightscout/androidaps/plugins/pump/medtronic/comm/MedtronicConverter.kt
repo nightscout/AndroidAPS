@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
-import info.nightscout.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BasalProfile
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.BatteryStatusDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.PumpSettingDTO
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpConfigurationGroup
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.pump.core.utils.StringUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import info.nightscout.pump.common.utils.ByteUtil
+import info.nightscout.pump.common.utils.StringUtil
 import org.joda.time.IllegalFieldValueException
 import org.joda.time.LocalDateTime
 import java.util.Locale
@@ -82,7 +82,7 @@ class MedtronicConverter @Inject constructor(
         if (strokes == 40) {
             startIdx = 2
         }
-        if (rawData.size==2 && strokes == 40) {
+        if (rawData.size == 2 && strokes == 40) {
             aapsLogger.error(LTag.PUMPCOMM, "It seems configuration is not correct, detected model $pumpModel should have length bigger than 2, but it doesn't (data: $rawData)")
             startIdx = 0
         }
@@ -112,8 +112,11 @@ class MedtronicConverter @Inject constructor(
             LocalDateTime(year, month, day, hours, minutes, seconds)
         } catch (e: IllegalFieldValueException) {
             aapsLogger.error(
-                LTag.PUMPCOMM, String.format(Locale.ENGLISH, "decodeTime: Failed to parse pump time value: year=%d, month=%d, hours=%d, minutes=%d, seconds=%d",
-                                             year, month, day, hours, minutes, seconds))
+                LTag.PUMPCOMM, String.format(
+                    Locale.ENGLISH, "decodeTime: Failed to parse pump time value: year=%d, month=%d, hours=%d, minutes=%d, seconds=%d",
+                    year, month, day, hours, minutes, seconds
+                )
+            )
             null
         }
     }
@@ -123,11 +126,17 @@ class MedtronicConverter @Inject constructor(
         addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map)
         addSettingToMap(
             "PCFG_MAX_BASAL", ""
-            + decodeBasalInsulin(
-                ByteUtil.makeUnsignedShort(rd[settingIndexMaxBasal].toInt(),
-                                                                                              rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
-        addSettingToMap("CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
-            PumpConfigurationGroup.General, map)
+                + decodeBasalInsulin(
+                ByteUtil.makeUnsignedShort(
+                    rd[settingIndexMaxBasal].toInt(),
+                    rd[settingIndexMaxBasal + 1].toInt()
+                )
+            ), PumpConfigurationGroup.Basal, map
+        )
+        addSettingToMap(
+            "CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
+            PumpConfigurationGroup.General, map
+        )
         addSettingToMap("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10].toInt()), PumpConfigurationGroup.Basal, map)
         if (rd[10].toInt() == 1) {
             val patt: String
@@ -156,25 +165,37 @@ class MedtronicConverter @Inject constructor(
         }
         addSettingToMap("PCFG_AUDIO_BOLUS_ENABLED", parseResultEnable(rd[2].toInt()), PumpConfigurationGroup.Bolus, map)
         if (rd[2].toInt() == 1) {
-            addSettingToMap("PCFG_AUDIO_BOLUS_STEP_SIZE", "" + decodeBolusInsulin(ByteUtil.asUINT8(rd[3])),
-                            PumpConfigurationGroup.Bolus, map)
+            addSettingToMap(
+                "PCFG_AUDIO_BOLUS_STEP_SIZE", "" + decodeBolusInsulin(ByteUtil.asUINT8(rd[3])),
+                PumpConfigurationGroup.Bolus, map
+            )
         }
         addSettingToMap("PCFG_VARIABLE_BOLUS_ENABLED", parseResultEnable(rd[4].toInt()), PumpConfigurationGroup.Bolus, map)
         addSettingToMap("PCFG_MAX_BOLUS", "" + decodeMaxBolus(rd), PumpConfigurationGroup.Bolus, map)
         addSettingToMap(
             "PCFG_MAX_BASAL", ""
-            + decodeBasalInsulin(
-                ByteUtil.makeUnsignedShort(rd[settingIndexMaxBasal].toInt(),
-                                                                                              rd[settingIndexMaxBasal + 1].toInt())), PumpConfigurationGroup.Basal, map)
-        addSettingToMap("CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
-            PumpConfigurationGroup.General, map)
+                + decodeBasalInsulin(
+                ByteUtil.makeUnsignedShort(
+                    rd[settingIndexMaxBasal].toInt(),
+                    rd[settingIndexMaxBasal + 1].toInt()
+                )
+            ), PumpConfigurationGroup.Basal, map
+        )
+        addSettingToMap(
+            "CFG_BASE_CLOCK_MODE", if (rd[settingIndexTimeDisplayFormat].toInt() == 0) "12h" else "24h",
+            PumpConfigurationGroup.General, map
+        )
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
-            addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + if (rd[9].toInt() == 0) 50 else 100, PumpConfigurationGroup.Insulin,
-                map)
+            addSettingToMap(
+                "PCFG_INSULIN_CONCENTRATION", "" + if (rd[9].toInt() == 0) 50 else 100, PumpConfigurationGroup.Insulin,
+                map
+            )
             //            LOG.debug("Insulin concentration: " + rd[9]);
         } else {
-            addSettingToMap("PCFG_INSULIN_CONCENTRATION", "" + if (rd[9].toInt() != 0) 50 else 100, PumpConfigurationGroup.Insulin,
-                map)
+            addSettingToMap(
+                "PCFG_INSULIN_CONCENTRATION", "" + if (rd[9].toInt() != 0) 50 else 100, PumpConfigurationGroup.Insulin,
+                map
+            )
             //            LOG.debug("Insulin concentration: " + rd[9]);
         }
         addSettingToMap("PCFG_BASAL_PROFILES_ENABLED", parseResultEnable(rd[10].toInt()), PumpConfigurationGroup.Basal, map)
@@ -205,16 +226,25 @@ class MedtronicConverter @Inject constructor(
 
     fun decodeSettings(rd: ByteArray): Map<String, PumpSettingDTO> {
         val map = decodeSettings512(rd)
-        addSettingToMap("PCFG_MM_RESERVOIR_WARNING_TYPE_TIME", if (rd[18].toInt() != 0) "PCFG_MM_RESERVOIR_WARNING_TYPE_TIME" else "PCFG_MM_RESERVOIR_WARNING_TYPE_UNITS", PumpConfigurationGroup.Other, map)
-        addSettingToMap("PCFG_MM_SRESERVOIR_WARNING_POINT", "" + ByteUtil.asUINT8(rd[19]),
-                        PumpConfigurationGroup.Other, map)
+        addSettingToMap(
+            "PCFG_MM_RESERVOIR_WARNING_TYPE_TIME",
+            if (rd[18].toInt() != 0) "PCFG_MM_RESERVOIR_WARNING_TYPE_TIME" else "PCFG_MM_RESERVOIR_WARNING_TYPE_UNITS",
+            PumpConfigurationGroup.Other,
+            map
+        )
+        addSettingToMap(
+            "PCFG_MM_SRESERVOIR_WARNING_POINT", "" + ByteUtil.asUINT8(rd[19]),
+            PumpConfigurationGroup.Other, map
+        )
         addSettingToMap("CFG_MM_KEYPAD_LOCKED", parseResultEnable(rd[20].toInt()), PumpConfigurationGroup.Other, map)
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
             addSettingToMap("PCFG_BOLUS_SCROLL_STEP_SIZE", "" + rd[21], PumpConfigurationGroup.Bolus, map)
             addSettingToMap("PCFG_CAPTURE_EVENT_ENABLE", parseResultEnable(rd[22].toInt()), PumpConfigurationGroup.Other, map)
             addSettingToMap("PCFG_OTHER_DEVICE_ENABLE", parseResultEnable(rd[23].toInt()), PumpConfigurationGroup.Other, map)
-            addSettingToMap("PCFG_OTHER_DEVICE_PAIRED_STATE", parseResultEnable(rd[24].toInt()), PumpConfigurationGroup.Other,
-                map)
+            addSettingToMap(
+                "PCFG_OTHER_DEVICE_PAIRED_STATE", parseResultEnable(rd[24].toInt()), PumpConfigurationGroup.Other,
+                map
+            )
         }
         return map
     }
@@ -234,8 +264,10 @@ class MedtronicConverter @Inject constructor(
     // 512
     private fun decodeInsulinActionSetting(ai: ByteArray, map: MutableMap<String, PumpSettingDTO>) {
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_512_712)) {
-            addSettingToMap("PCFG_INSULIN_ACTION_TYPE", if (ai[17].toInt() != 0) "Regular" else "Fast",
-                PumpConfigurationGroup.Insulin, map)
+            addSettingToMap(
+                "PCFG_INSULIN_ACTION_TYPE", if (ai[17].toInt() != 0) "Regular" else "Fast",
+                PumpConfigurationGroup.Insulin, map
+            )
         } else {
             val i = ai[17].toInt()
             val s: String

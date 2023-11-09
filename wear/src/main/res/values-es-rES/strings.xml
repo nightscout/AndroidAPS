@@ -2,14 +2,10 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS (Grande)</string>
     <string name="label_watchface_big_chart">AAPS (Aumentado)</string>
     <string name="label_watchface_no_chart">AAPS (SinGráfico)</string>
     <string name="label_watchface_circle">AAPS (Círculo)</string>
-    <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
     <string name="label_watchface_custom">AAPS(personalizado)</string>
     <string name="label_actions_tile">AAPS(Acciones)</string>
@@ -39,11 +35,14 @@
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
     <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
-    <string name="pref_show_loop_status">Mostrar estado de bucle</string>
+    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
     <string name="pref_show_ago">Mostrar histórico</string>
+    <string name="pref_show_temp_basal">Mostrar TBR</string>
+    <string name="pref_show_bolus">Mostrar Bolos &amp; SMB</string>
+    <string name="pref_show_grid">Mostrar cuadrícula</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tema oscuro</string>
     <string name="pref_highlight_basals">Resaltar las basales</string>
     <string name="pref_prediction_lines">Mostrar predicciones</string>
@@ -59,7 +58,6 @@
     <string name="pref_quick_righty">Rápido a la derecha</string>
     <string name="pref_quick_lefty">Rápido a la izquierda</string>
     <string name="pref_modern_sparse">Disperso moderno</string>
-    <string name="pref_delta_granularity">Granularidad delta (Steampunk)</string>
     <string name="pref_low">Bajo</string>
     <string name="pref_medium">Medio</string>
     <string name="pref_high">Alto</string>
@@ -122,7 +120,7 @@
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>
     <string name="status_pump">Infusora</string>
-    <string name="status_loop">Bucle</string>
+    <string name="status_loop">Lazo</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">COB</string>
@@ -182,8 +180,6 @@
     <string name="wear_control_no_data">No hay datos disponibles</string>
     <string name="increment">incremento</string>
     <string name="decrement">decremento</string>
-    <string name="first_char_high">A</string>
-    <string name="first_char_low">B</string>
     <string name="abbreviation_average">media</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
@@ -192,7 +188,7 @@
     <string name="no_status">S: --</string>
     <string name="time_stamp_na_min_ago">-- Hace min.</string>
     <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Sin estado del bucle</string>
+    <string name="no_loop_status">Sin estado del lazo</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>

@@ -5,12 +5,12 @@ import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothProfile
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.CharacteristicType.Companion.byValue
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session.DisconnectHandler
-import info.nightscout.core.utils.toHex
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import java.util.UUID
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.CountDownLatch
@@ -81,7 +81,7 @@ class BleCommCallbacks(
     fun confirmWrite(expectedPayload: ByteArray, expectedUUID: String, timeoutMs: Long): WriteConfirmation {
         try {
             return when (val received = writeQueue.poll(timeoutMs, TimeUnit.MILLISECONDS)) {
-                null -> WriteConfirmationError("Timeout waiting for writeConfirmation")
+                null                        -> WriteConfirmationError("Timeout waiting for writeConfirmation")
                 is WriteConfirmationSuccess ->
                     if (expectedPayload.contentEquals(received.payload) &&
                         expectedUUID == received.uuid
@@ -95,7 +95,8 @@ class BleCommCallbacks(
                         )
                         WriteConfirmationError("Received incorrect writeConfirmation")
                     }
-                is WriteConfirmationError ->
+
+                is WriteConfirmationError   ->
                     received
             }
         } catch (e: InterruptedException) {
@@ -176,7 +177,7 @@ class BleCommCallbacks(
 
     private fun onWrite(status: Int, uuid: UUID?, value: ByteArray?) {
         val writeConfirmation = when {
-            uuid == null || value == null ->
+            uuid == null || value == null        ->
                 WriteConfirmationError("onWrite received Null: UUID=$uuid, value=${value?.toHex()} status=$status")
 
             status == BluetoothGatt.GATT_SUCCESS -> {
@@ -184,7 +185,7 @@ class BleCommCallbacks(
                 WriteConfirmationSuccess(uuid.toString(), value)
             }
 
-            else -> WriteConfirmationError("onDescriptorWrite status is not success: $status")
+            else                                 -> WriteConfirmationError("onDescriptorWrite status is not success: $status")
         }
 
         try {

@@ -13,7 +13,7 @@
             android:key="@string/key_enable_missed_bg_readings_alert"
             android:title="@string/enable_missed_bg_readings_alert" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="30"
             android:dependency="@string/key_enable_missed_bg_readings_alert"
             android:inputType="number"
@@ -28,7 +28,7 @@
             android:key="@string/key_enable_pump_unreachable_alert"
             android:title="@string/enable_pump_unreachable_alert" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="30"
             android:dependency="@string/key_enable_pump_unreachable_alert"
             android:inputType="number"

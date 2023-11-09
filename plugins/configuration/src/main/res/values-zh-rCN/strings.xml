@@ -135,4 +135,14 @@
     <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法!</string>
     <!-- Custom Watchface -->
     <!-- Permissions -->
+    <!-- Maintenance -->
+    <string name="metadata_label_format">文件格式</string>
+    <string name="metadata_label_created_at">创建于</string>
+    <string name="metadata_label_aaps_flavour">构建变体</string>
+    <string name="metadata_label_device_name">导出设备的患者姓名</string>
+    <string name="metadata_label_device_model">导出设备型号</string>
+    <string name="metadata_label_encryption">文件加密密钥。</string>
+    <string name="metadata_format_new">新的加密格式</string>
+    <string name="metadata_format_debug">新调试格式 (未加密)</string>
+    <string name="metadata_format_other">未知的导出格式</string>
 </resources>

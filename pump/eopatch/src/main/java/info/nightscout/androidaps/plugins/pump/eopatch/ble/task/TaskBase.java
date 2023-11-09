@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.Patch;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.NoActivatedPatchException;
@@ -12,7 +13,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.exception.PatchDisco
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.BleConnectionState;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.scan.IBleDevice;
-import info.nightscout.rx.logging.AAPSLogger;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 
@@ -53,7 +53,7 @@ public class TaskBase {
 
     protected void checkResponse(BaseResponse response) throws Exception {
         if (!response.isSuccess()) {
-            throw new Exception("Response failed! - "+response.resultCode.name());
+            throw new Exception("Response failed! - " + response.resultCode.name());
         }
     }
 

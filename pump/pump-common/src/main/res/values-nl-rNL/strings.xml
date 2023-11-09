@@ -64,6 +64,15 @@
     <string name="pump_settings_error_wrong_max_basal_set">Verkeerde Max Basaal instelling op pomp (moet %1$.2f zijn).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nooit verbonden</string>
+    <string name="pump_status_sleeping">Slapend</string>
+    <string name="pump_status_waking_up">Actief worden</string>
+    <string name="pump_status_active">Actief</string>
+    <string name="pump_status_error_comm">Communicatiefout</string>
+    <string name="pump_status_timeout_comm">Time-out bij communicatie</string>
+    <string name="pump_status_pump_unreachable">Pomp niet bereikbaar</string>
+    <string name="pump_status_invalid_config">Ongeldige configuratie</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

@@ -105,9 +105,7 @@
     <string name="alarm_setting_summary">Изберете предпочитани настройки за аларми на помпата.</string>
     <string name="patch_expiration_title">Срок на пач помпата</string>
     <string name="patch_expiration_summary">След активация, пач помпата има срок от 3 дни с допълнителен период от 8 часа след това.</string>
-    <string name="hourly_max_insulin_title">Максимално количество инсулин за час</string>
     <string name="hourly_max_insulin_summary">Посочете максималните единици инсулин за час. Ако бъдат превишени, помпата ще бъде изключена.</string>
-    <string name="daily_max_insulin_title">Максимално количество инсулин за ден</string>
     <string name="daily_max_insulin_summary">Посочете максималните единици инсулин за ден. Ако бъдат превишени, помпата ще бъде изключена.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Получава статус на помпата</string>

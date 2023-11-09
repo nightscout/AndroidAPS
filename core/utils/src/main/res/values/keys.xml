@@ -116,6 +116,9 @@
     <string name="key_wearwizard_cob" translatable="false">wearwizard_cob</string>
     <string name="key_wearwizard_iob" translatable="false">wearwizard_iob</string>
     <string name="key_wear_custom_watchface_autorization" translatable="false">wear_custom_watchface_autorization</string>
+    <string name="key_wear_cwf_watchface_name" translatable="false">wear_cwf_watchface_name</string>
+    <string name="key_wear_cwf_author_version" translatable="false">wear_cwf_author_version</string>
+    <string name="key_wear_cwf_filename" translatable="false">wear_cwf_filename</string>
     <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
     <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
     <string name="key_statuslights_cage_warning" translatable="false">statuslights_cage_warning</string>
@@ -150,6 +153,9 @@
     <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
     <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>
     <string name="key_virtual_pump_upload_status" translatable="false">virtualpump_uploadstatus</string>
+    <string name="key_use_autosens" translatable="false">openapsama_useautosens</string>
+    <string name="key_used_autosens_on_main_phone" translatable="false">used_autosens_on_main_phone</string>
+    <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
     <string name="key_dynamic_isf_enable" translatable="false">DynISF_enable</string>
     <string name="key_dynamic_isf_use_tdd" translatable="false">DynISFUseTDD</string>
     <string name="key_dynamic_isf_adjust" translatable="false">DynISFAdjust</string>

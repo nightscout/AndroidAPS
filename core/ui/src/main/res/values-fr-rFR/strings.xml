@@ -51,6 +51,7 @@
     <string name="extended_bolus">Bolus étendu</string>
     <string name="paused">En pause</string>
     <string name="tdd_total">DTQ Total</string>
+    <string name="tdd_old_data">Données anciennes</string>
     <string name="goingtodeliver">%1$.2f U vont être injectées</string>
     <string name="waitingforpump">Attente connection pompe</string>
     <string name="androidaps_start">AAPS démarré</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Télécharger l\'état de la pompe sur NS ou Tidepool</string>
     <string name="suspendloop_label">Boucle désactivée/suspendue</string>
     <string name="iob_label">Insuline Active (IA)</string>
+    <string name="loopstatus_targets">CIBLES:</string>
+    <string name="loopstatus_OAPS_result">RÉSULTATS OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
     <string name="wrongpin">Code PIN incorrect</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>
     <string name="no_action_selected">Aucune action sélectionnée, rien ne se passera</string>
+    <string name="carb_equal_zero_no_action">Glucides = 0. Aucune action !</string>
+    <string name="wizard_no_insulin_required">Aucune insuline requise !</string>
     <string name="wizard_no_actual_bg">Pas de glycémie récente pour calculer !</string>
     <string name="wizard_no_active_profile">Aucun profil activé !</string>
     <string name="wizard_no_cob">GA inconnu! glycémie manquante ou démarrage récent de l\'application ?</string>
@@ -580,4 +585,23 @@
     <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
     <string name="cleanup_db_confirm_sync">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.\nCela accélérera la synchronisation complète de manière spectaculaire.</string>
     <string name="cleared_entries">Entrées effacées</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Dim</string>
+    <string name="weekday_saturday_short">Sam</string>
+    <string name="weekday_friday_short">Ven</string>
+    <string name="weekday_thursday_short">Jeu</string>
+    <string name="weekday_wednesday_short">Mer</string>
+    <string name="weekday_tuesday_short">Mar</string>
+    <string name="weekday_monday_short">Lun</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">L</string>
+    <string name="tuesday_short">M</string>
+    <string name="wednesday_short">M</string>
+    <string name="thursday_short">J</string>
+    <string name="friday_short">V</string>
+    <string name="saturday_short">S</string>
+    <string name="sunday_short">D</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

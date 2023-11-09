@@ -34,7 +34,7 @@ class DeactivatePodFragment : ActionFragmentBase() {
         buttonDiscardPod = view.findViewById(R.id.omnipod_wizard_button_discard_pod)
         buttonDiscardPod.setOnClickListener {
             context?.let {
-                AlertDialog.Builder(it, info.nightscout.core.ui.R.style.DialogTheme)
+                AlertDialog.Builder(it, app.aaps.core.ui.R.style.DialogTheme)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(getString(R.string.omnipod_common_pod_deactivation_wizard_discard_pod))
                     .setMessage(getString(R.string.omnipod_common_pod_deactivation_wizard_discard_pod_confirmation))

@@ -1,16 +1,17 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
 import info.nightscout.androidaps.plugins.pump.eopatch.code.BasalStatus
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 
 class NormalBasalManager : IPreference<NormalBasalManager> {
+
     @Transient
     private val subject: BehaviorSubject<NormalBasalManager> = BehaviorSubject.create()
 
@@ -19,31 +20,32 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
     val isStarted: Boolean
         get() = normalBasal.status.isStarted
 
-
     init {
         initObject()
     }
 
-
     fun initObject() {
     }
 
-    fun isEqual(profile: Profile?): Boolean{
-        return profile?.let{
-            if(it.getBasalValues().size != normalBasal.list.size)
+    fun isEqual(profile: Profile?): Boolean {
+        return profile?.let {
+            if (it.getBasalValues().size != normalBasal.list.size)
                 return false
 
-            for(i in it.getBasalValues().indices){
-                if(TimeUnit.SECONDS.toMinutes(it.getBasalValues()[i].timeAsSeconds.toLong()) != normalBasal.list.get(i).start){
+            for (i in it.getBasalValues().indices) {
+                if (TimeUnit.SECONDS.toMinutes(it.getBasalValues()[i].timeAsSeconds.toLong()) != normalBasal.list.get(i).start) {
                     return false
                 }
-                if(!CommonUtils.nearlyEqual(it.getBasalValues()[i].value.toFloat(), normalBasal
-                        .list.get(i).doseUnitPerHour, 0.0000001f)){
+                if (!CommonUtils.nearlyEqual(
+                        it.getBasalValues()[i].value.toFloat(), normalBasal
+                            .list.get(i).doseUnitPerHour, 0.0000001f
+                    )
+                ) {
                     return false
                 }
             }
             return true
-        }?:false
+        } ?: false
     }
 
     fun convertProfileToNormalBasal(profile: Profile): NormalBasal {
@@ -51,10 +53,10 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
         tmpNormalBasal.list.clear()
 
         val size = profile.getBasalValues().size
-        for(idx in profile.getBasalValues().indices){
-            val nextIdx = if(idx == (size - 1)) 0 else idx + 1
+        for (idx in profile.getBasalValues().indices) {
+            val nextIdx = if (idx == (size - 1)) 0 else idx + 1
             val startTimeMinutes = TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[idx].timeAsSeconds.toLong())
-            val endTimeMinutes = if(nextIdx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[nextIdx].timeAsSeconds.toLong())
+            val endTimeMinutes = if (nextIdx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[nextIdx].timeAsSeconds.toLong())
 
             tmpNormalBasal.list.add(BasalSegment(startTimeMinutes, endTimeMinutes, profile.getBasalValues()[idx].value.toFloat()))
         }
@@ -66,10 +68,10 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
         normalBasal.list.clear()
 
         val size = profile.getBasalValues().size
-        for(idx in profile.getBasalValues().indices){
-            val nextIdx = if(idx == (size - 1)) 0 else idx + 1
+        for (idx in profile.getBasalValues().indices) {
+            val nextIdx = if (idx == (size - 1)) 0 else idx + 1
             val startTimeMinutes = TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[idx].timeAsSeconds.toLong())
-            val endTimeMinutes = if(nextIdx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[nextIdx].timeAsSeconds.toLong())
+            val endTimeMinutes = if (nextIdx == 0) 1440 else TimeUnit.SECONDS.toMinutes(profile.getBasalValues()[nextIdx].timeAsSeconds.toLong())
 
             normalBasal.list.add(BasalSegment(startTimeMinutes, endTimeMinutes, profile.getBasalValues()[idx].value.toFloat()))
         }
@@ -105,7 +107,7 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
         updateBasalSelected()
     }
 
-    fun update(other: NormalBasalManager){
+    fun update(other: NormalBasalManager) {
         normalBasal = other.normalBasal
     }
 
@@ -113,12 +115,11 @@ class NormalBasalManager : IPreference<NormalBasalManager> {
         return subject.hide()
     }
 
-    override fun flush(sp: SP){
+    override fun flush(sp: SP) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
         sp.putString(SettingKeys.NORMAL_BASAL, jsonStr)
         subject.onNext(this)
     }
-
 
     override fun toString(): String {
         return "NormalBasalManager(normalBasal=$normalBasal)"

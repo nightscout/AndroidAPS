@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.utils.CRC
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import info.nightscout.pump.common.utils.ByteUtil
 import java.util.Arrays
 import java.util.Locale
 
@@ -36,8 +36,11 @@ class RawHistoryPage(private val aapsLogger: AAPSLogger) {
             val crcStored = ByteUtil.toInt(data[1022].toInt(), data[1023].toInt())
             if (crcCalculated != crcStored) {
                 aapsLogger.error(
-                    LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Stored CRC (%d) is different than calculated (%d), but ignored for now.", crcStored,
-                                                   crcCalculated))
+                    LTag.PUMPBTCOMM, String.format(
+                        Locale.ENGLISH, "Stored CRC (%d) is different than calculated (%d), but ignored for now.", crcStored,
+                        crcCalculated
+                    )
+                )
             } else {
                 if (MedtronicUtil.isLowLevelDebug) aapsLogger.debug(LTag.PUMPBTCOMM, "CRC ok.")
             }

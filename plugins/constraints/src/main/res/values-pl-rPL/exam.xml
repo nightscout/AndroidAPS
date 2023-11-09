@@ -148,6 +148,7 @@
     <string name="cob3_longer">Ustawianie profilu na 150% wydłuży obliczony czas wchłaniania węglowodanów</string>
     <string name="cob3_shorter">Ustawianie profilu na 150% skróci obliczony czas wchłaniania węglowodanów</string>
     <string name="cob3_no_effect">Ustawienie profilu na 150% nie wpłynie na obliczony czas wchłaniania węglowodanów</string>
+    <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">Na wartość IOB mają wpływ wykonane tymczasowe dawki bazowe.</string>
     <string name="iob_hightemp">Wysoka tymczasowa dawka bazowa nie zostanie podana, gdy twóje poziom cukru we krwi jest poniżej poziomu docelowego.</string>
     <string name="iob_negiob">Negatywne IOB utrzymujące się przez znaczny okres czasu bez wysiłku fizycznego sugeruje, że Twój profil jest zbyt silny i mniej insuliny jest wymagane w Twoich ustawieniach.</string>

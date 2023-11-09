@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.StartBonding;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -32,7 +31,7 @@ public class StartBondTask extends TaskBase {
                 .doOnNext(this::checkResponse)
                 .concatMap(response -> patch.observeBondState())
                 .doOnNext(state -> {
-                    if(state == BluetoothDevice.BOND_NONE) throw new Exception();
+                    if (state == BluetoothDevice.BOND_NONE) throw new Exception();
                 })
                 .filter(result -> result == BluetoothDevice.BOND_BONDED)
                 .map(result -> true)

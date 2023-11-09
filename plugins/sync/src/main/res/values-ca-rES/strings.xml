@@ -79,5 +79,20 @@
     <string name="tidepool_upload_bg">Enviar tests glucèmia</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="disabled_loop">Llaç desactivat</string>
+    <string name="xdrip_not_installed">xDrip+ no instal·lat</string>
+    <string name="calibration_sent">Calibració enviada a xDrip+</string>
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="no_success">no funciona - si us plau comproveu al mòbil</string>
+    <string name="wear_settings">Configuració de Wear</string>
+    <string name="wearcontrol_title">Control des de rellotge</string>
+    <string name="wearcontrol_summary">Marcar objectius temporals i introduir tractaments des del rellotge.</string>
+    <string name="wear_wizard_settings_summary">Càlculs inclosos al resultat de l\'assistent:</string>
+    <string name="wear_general_settings">Configuració general</string>
+    <string name="wear_notifysmb_title">Avís d\'SMB</string>
+    <string name="wear_notifysmb_summary">Mostrar SMB al rellotge com un bolus estàndard.</string>
+    <string name="resend_all_data">Reenviar totes les dades</string>
+    <string name="open_settings_on_wear">Obrir Configuració a Wear</string>
 </resources>

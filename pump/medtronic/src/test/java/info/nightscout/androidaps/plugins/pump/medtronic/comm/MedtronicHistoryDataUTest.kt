@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.util.Log
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.database.impl.serialisation.SealedClassHelper
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicTestBase
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
@@ -11,11 +13,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalProce
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.database.impl.serialisation.SealedClassHelper
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.rx.TestAapsSchedulers
-import info.nightscout.rx.bus.RxBus
+import info.nightscout.pump.common.utils.ByteUtil
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -37,11 +35,9 @@ import org.mockito.Mock
 
     @BeforeEach
     fun setup() {
-        rxBus = RxBus(TestAapsSchedulers(), aapsLogger)
-
         medtronicPumpStatus = MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
         medtronicUtil = MedtronicUtil(aapsLogger, rxBus, rileyLinkUtil, medtronicPumpStatus, uiInteraction)
-        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil, byteUtil)
+        decoder = MedtronicPumpHistoryDecoder(aapsLogger, medtronicUtil)
         medtronicHistoryData = MedtronicHistoryData(
             packetInjector, aapsLogger, sp, rh, rxBus, activePlugin,
             medtronicUtil, decoder, medtronicPumpStatus, pumpSync, pumpSyncStorage, uiInteraction

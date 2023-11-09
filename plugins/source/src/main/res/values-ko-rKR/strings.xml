@@ -1,16 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
+    <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">\'자신만의 덱스콤 앱 만들기(BYODA)\'에서 BG 값을 수신합니다.</string>
     <string name="eversense">Eversense 앱(패치버전)</string>
     <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
+    <string name="glimp">보기</string>
     <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Glunovo에서 값 받기</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Intelligo 앱에서 값 받기</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">GlucoRx Aidex CGMS에서 BG 값 받기</string>
+    <string name="random_bg">무작위 BG</string>
+    <string name="description_source_random_bg">무작위로 BG 데이터를 생성합니다 (데모 버전 전용)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="do_xdrip_upload_title">xDrip+에 BG 데이터 전송하기</string>
+    <string name="do_xdrip_upload_summary">xDrip+에서 640g/Eversense 데이터 자원 선택하기</string>
     <string name="bgsource_upload">혈당 업로드 설정</string>
+    <string name="dexcom_log_ns_sensor_change_title">NS에 센서서 교체 기록하기</string>
+    <string name="dexcom_log_ns_sensor_change_summary">센서 교체시 NS에 자동으로 \"센서 교체\" 이벤트를 생성합니다</string>
+    <string name="direction">방향</string>
 </resources>

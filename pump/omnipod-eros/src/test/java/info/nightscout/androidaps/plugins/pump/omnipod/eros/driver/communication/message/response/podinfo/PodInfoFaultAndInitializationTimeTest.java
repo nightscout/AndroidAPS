@@ -2,16 +2,17 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import static com.google.common.truth.Truth.assertThat;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
-import info.nightscout.pump.core.utils.ByteUtil;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.junit.jupiter.api.Test;
 
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
+import info.nightscout.pump.common.utils.ByteUtil;
+
 class PodInfoFaultAndInitializationTimeTest {
     @Test
     void testDecoding() {
-        PodInfoFaultAndInitializationTime podInfoFaultAndInitializationTime = new PodInfoFaultAndInitializationTime(ByteUtil.fromHexString("059200010000000000000000091912170e")); // From https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/PodInfoTests.swift
+        PodInfoFaultAndInitializationTime podInfoFaultAndInitializationTime = new PodInfoFaultAndInitializationTime(ByteUtil.INSTANCE.fromHexString("059200010000000000000000091912170e")); // From https://github.com/ps2/rileylink_ios/blob/omnipod-testing/OmniKitTests/PodInfoTests.swift
 
         assertThat(podInfoFaultAndInitializationTime.getFaultEventCode()).isEqualTo(FaultEventCode.BAD_PUMP_REQ_2_STATE);
         assertThat(podInfoFaultAndInitializationTime.getTimeFaultEvent()).isEqualTo(Duration.standardMinutes(1));

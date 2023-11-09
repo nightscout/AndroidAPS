@@ -438,7 +438,7 @@
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical">
 
-                <info.nightscout.core.ui.elements.SingleClickButton
+                <app.aaps.core.ui.elements.SingleClickButton
                     android:id="@+id/combov2_refresh_button"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="match_parent"

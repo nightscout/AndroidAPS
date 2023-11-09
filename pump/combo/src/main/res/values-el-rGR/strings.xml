@@ -49,6 +49,11 @@
     <string name="combo_tbr_count">Αριθμός TBR</string>
     <string name="bolusstopped">Το bolus σταμάτησε</string>
     <string name="bolusstopping">Το bolus σταματάει</string>
+    <string name="pump_commerror_label">Αριθμός Σφαλμάτων Εντολών</string>
+    <string name="show_comm_error_count_title">Εμφάνιση αριθμού σφαλμάτων εντολών</string>
+    <string name="show_comm_error_count_summary">Εμφανίζει τον αριθμό των σφαλμάτων, όταν επικοινωνείτε με το Ruffy. Στις περισσότερες περιπτώσεις αριθμός μεγαλύτερος από 0 δηλώνει προβλήματα επικοινωνίας Ruffy (ίσως χρειαστεί επανεκκίνηση).</string>
     <string name="combo_error_display_never">Ποτέ</string>
+    <string name="combo_error_display_error">Όταν Υπάρχει Σφάλμα</string>
+    <string name="combo_error_display_always">Πάντα</string>
     <string name="unsafeusage">μη ασφαλής χρήση</string>
 </resources>

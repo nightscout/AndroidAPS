@@ -5,12 +5,12 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BolusStop;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.PatchBleResultCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.define.IPatchConstant;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BolusStopResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.ComboBolusStopResponse;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -34,9 +34,9 @@ public class StopComboBolusTask extends BolusTask {
 
     public Single<ComboBolusStopResponse> stopJob() {
         return Single.zip(
-                    BOLUS_STOP.stop(IPatchConstant.EXT_BOLUS_ID),
-                    BOLUS_STOP.stop(IPatchConstant.NOW_BOLUS_ID),
-                    (ext, now) -> createStopComboBolusResponse(now, ext));
+                BOLUS_STOP.stop(IPatchConstant.EXT_BOLUS_ID),
+                BOLUS_STOP.stop(IPatchConstant.NOW_BOLUS_ID),
+                (ext, now) -> createStopComboBolusResponse(now, ext));
     }
 
     private ComboBolusStopResponse createStopComboBolusResponse(BolusStopResponse now, BolusStopResponse ext) {
@@ -71,8 +71,8 @@ public class StopComboBolusTask extends BolusTask {
 
         if (ready) {
             disposable = stop()
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe();
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe();
         }
     }
 

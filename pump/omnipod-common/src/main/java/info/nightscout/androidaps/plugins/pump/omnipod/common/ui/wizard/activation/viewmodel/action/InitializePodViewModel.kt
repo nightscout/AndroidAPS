@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import dagger.android.HasAndroidInjector
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLogger
 
 abstract class InitializePodViewModel(
     injector: HasAndroidInjector,

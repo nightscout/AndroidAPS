@@ -1,9 +1,8 @@
 package info.nightscout.androidaps.danaRv2.comm
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.rx.logging.LTag
-
 
 class MsgStatusAPS_v2(
     injector: HasAndroidInjector

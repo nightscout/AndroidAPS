@@ -1,9 +1,8 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
-import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 
 /**
@@ -11,7 +10,7 @@ import javax.inject.Inject
  */
 class BatteryWarningReportPacket(
     injector: HasAndroidInjector
-) : DiaconnG8Packet(injector ) {
+) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
 
@@ -31,7 +30,7 @@ class BatteryWarningReportPacket(
         val bufferData = prefixDecode(data)
         diaconnG8Pump.batteryWaningGrade = getByteToInt(bufferData)
         diaconnG8Pump.batteryWaningProcess = getByteToInt(bufferData)
-        diaconnG8Pump.batteryWaningRemain =  getByteToInt(bufferData)
+        diaconnG8Pump.batteryWaningRemain = getByteToInt(bufferData)
 
         aapsLogger.debug(LTag.PUMPCOMM, "batteryWaningGrade --> ${diaconnG8Pump.batteryWaningGrade} (1:info, 2: warning , 3: major , 4: critical)")
         aapsLogger.debug(LTag.PUMPCOMM, "batteryWaningProcess --> ${diaconnG8Pump.batteryWaningProcess} (1:skip, 2: stop , 3: ignore ) ")

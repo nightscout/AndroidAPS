@@ -6,6 +6,11 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.content.Context
 import android.os.SystemClock
+import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.configuration.Constants
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.ServiceDiscoverer
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.callbacks.BleCommCallbacks
@@ -18,11 +23,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataB
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.IncomingPackets
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageIO
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import info.nightscout.core.utils.toHex
-import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import java.util.concurrent.CountDownLatch
 
 sealed class ConnectionState
@@ -136,8 +136,8 @@ class Connection(
             bleCommCallbacks.resetConnection()
             gattConnection = null
             session = null
-            msgIO = null            
-            podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED            
+            msgIO = null
+            podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
         }
     }
 
@@ -187,7 +187,7 @@ class Connection(
                 keys.synchronizedEapSqn
             }
 
-            is SessionKeys -> {
+            is SessionKeys                         -> {
                 if (config.DEBUG) {
                     aapsLogger.info(LTag.PUMPCOMM, "CK: ${keys.ck.toHex()}")
                     aapsLogger.info(LTag.PUMPCOMM, "msgSequenceNumber: ${keys.msgSequenceNumber}")
@@ -218,6 +218,7 @@ class Connection(
     }
 
     companion object {
+
         const val BASE_CONNECT_TIMEOUT_MS = 10000L
         const val MIN_DISCOVERY_TIMEOUT_MS = 10000L
         const val STOP_CONNECTING_CHECK_INTERVAL_MS = 500L

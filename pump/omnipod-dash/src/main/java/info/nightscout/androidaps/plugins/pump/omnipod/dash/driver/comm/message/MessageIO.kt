@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommand
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandAbort
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.command.BleCommandCTS
@@ -19,9 +22,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.io.DataB
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.BlePacket
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadJoiner
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
-import info.nightscout.core.utils.toHex
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 
 sealed class MessageSendResult
 object MessageSendSuccess : MessageSendResult()
@@ -88,16 +88,19 @@ class MessageIO(
         }
 
         return when (val expectSuccess = cmdBleIO.expectCommandType(BleCommandSuccess)) {
-            is BleConfirmSuccess ->
+            is BleConfirmSuccess       ->
                 MessageSendSuccess
-            is BleConfirmError ->
+
+            is BleConfirmError         ->
                 MessageSendErrorConfirming("Error reading message confirmation: $expectSuccess")
+
             is BleConfirmIncorrectData ->
                 when (val received = (BleCommand.parse((expectSuccess.payload)))) {
                     is BleCommandFail ->
                         // this can happen if CRC does not match
                         MessageSendErrorSending("Received FAIL after sending message")
-                    else ->
+
+                    else              ->
                         MessageSendErrorConfirming("Received confirmation message: $received")
                 }
         }
@@ -165,11 +168,13 @@ class MessageIO(
 
     private fun handleSendResult(sendResult: BleSendResult, index: Int, packets: List<BlePacket>): MessageSendResult {
         return when {
-            sendResult is BleSendSuccess ->
+            sendResult is BleSendSuccess                                      ->
                 MessageSendSuccess
+
             index == packets.size - 1 && sendResult is BleSendErrorConfirming ->
                 MessageSendErrorConfirming("Error confirming last DATA packet $sendResult")
-            else ->
+
+            else                                                              ->
                 MessageSendErrorSending("Error sending DATA: $sendResult")
         }
     }
@@ -197,7 +202,7 @@ class MessageIO(
                     MessageSendErrorSending("Received SUCCESS before sending all the data. $index")
             }
 
-            else ->
+            else              ->
                 MessageSendErrorSending("Received unexpected command: ${peekCmd.toHex()}")
         }
     }

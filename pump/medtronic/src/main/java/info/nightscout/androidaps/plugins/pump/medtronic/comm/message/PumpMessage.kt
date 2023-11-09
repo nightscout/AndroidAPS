@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.message
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RLMessage
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import info.nightscout.pump.common.utils.ByteUtil
 import kotlin.math.min
 
 /**
@@ -61,8 +61,10 @@ class PumpMessage : RLMessage {
             }
         }
         if (rxData.size > 5) {
-            messageBody = MedtronicCommandType.constructMessageBody(commandType,
-                                                                    ByteUtil.substring(rxData, 5, rxData.size - 5))
+            messageBody = MedtronicCommandType.constructMessageBody(
+                commandType,
+                ByteUtil.substring(rxData, 5, rxData.size - 5)
+            )
         }
     }
 

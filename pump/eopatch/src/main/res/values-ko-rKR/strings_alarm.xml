@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">인슐린 없음\nPatch는 비활성화되었으며 인슐린 주입이 중지되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a003">Patch 만료됨\nPatch는 비활성화되었으며 인슐린 주입이 중지되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a004">주입구 막힘\nPatch는 비활성화되었으며 인슐린 주입이 중지되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a005">부팅 후 자가 진단 실패\nPatch는 비활성화되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a007">부적합한 온도\n인슐린 주입 또는 \'patch 활성화\' 과정이 중단되었습니다. 바로 극한 온도에서 벗어나세요.</string>
+    <string name="string_a016">바늘 삽입 오류\n손잡이 위치를 확인하고 \'재시도\'를 누르세요.</string>
+    <string name="string_a018">Patch 배터리 오류\nPatch는 비활성화되었고 \n인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a019">Patch 배터리 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a020">Patch 활성화 오류\n\'Patch 활성화\' 과정이 만료되었습니다. 현재 patch를 비활성화하려면 \'확인\'을 누르세요. 지금 patch를 교체하세요.</string>
+    <string name="string_a022">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a023">Patch 오류\nPatch는 비활성화되었고 \n인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a034">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a041">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a042">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a043">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a044">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a106">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a107">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a108">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a116">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a117">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_a118">Patch 오류\nPatch는 비활성화되었고 인슐린 주입은 중단되었습니다. 지금 patch를 교체하세요.</string>
+    <string name="string_b000">Patch 작동 수명이 %s에 만료됩니다. Patch 교체를 준비하세요.</string>
+    <string name="string_b001">인슐린 중단 종료됨\n인슐린 주입을 다시 시작하기 위해 \'재시작\'을 누르세요.</string>
+    <string name="string_b003">인슐린 양 부족\nPatch를 곧 교체하세요.</string>
+    <string name="string_b005">Patch 작동 수명 만료됨\n지금 patch 교체하세요.</string>
+    <string name="string_b006">Patch가 곧 만료됨\n지금 patch를 교체하세요.</string>
+    <string name="string_b012">불완전한 patch 활성화\n\'Patch 활성화\' 과정을 완료하세요.</string>
+    <string name="string_b018">Patch 배터리 낮음\nPatch 교체를 준비하세요.</string>
+</resources>

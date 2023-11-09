@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Om
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PacketType;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.CrcMismatchException;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.exception.IllegalPacketTypeException;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * Created by andy on 6/1/18.
@@ -21,7 +21,7 @@ public class OmnipodPacket implements RLMessage {
         if (encoded.length < 7) {
             return;
         }
-        this.packetAddress = ByteUtil.toInt((int) encoded[0], (int) encoded[1],
+        this.packetAddress = ByteUtil.INSTANCE.toInt(encoded[0], (int) encoded[1],
                 (int) encoded[2], (int) encoded[3], ByteUtil.BitConversion.BIG_ENDIAN);
         try {
             this.packetType = PacketType.fromByte((byte) (((int) encoded[4] & 0xFF) >> 5));
@@ -29,11 +29,11 @@ public class OmnipodPacket implements RLMessage {
             throw new IllegalPacketTypeException(null, null);
         }
         this.sequenceNumber = (encoded[4] & 0b11111);
-        byte crc = OmnipodCrc.crc8(ByteUtil.substring(encoded, 0, encoded.length - 1));
+        byte crc = OmnipodCrc.crc8(ByteUtil.INSTANCE.substring(encoded, 0, encoded.length - 1));
         if (crc != encoded[encoded.length - 1]) {
             throw new CrcMismatchException(crc, encoded[encoded.length - 1]);
         }
-        this.encodedMessage = ByteUtil.substring(encoded, 5, encoded.length - 1 - 5);
+        this.encodedMessage = ByteUtil.INSTANCE.substring(encoded, 5, encoded.length - 1 - 5);
         valid = true;
     }
 
@@ -43,7 +43,7 @@ public class OmnipodPacket implements RLMessage {
         this.sequenceNumber = packetNumber;
         this.encodedMessage = encodedMessage;
         if (encodedMessage.length > packetType.getMaxBodyLength()) {
-            this.encodedMessage = ByteUtil.substring(encodedMessage, 0, packetType.getMaxBodyLength());
+            this.encodedMessage = ByteUtil.INSTANCE.substring(encodedMessage, 0, packetType.getMaxBodyLength());
         }
         this.valid = true;
     }
@@ -67,10 +67,10 @@ public class OmnipodPacket implements RLMessage {
     @Override
     public byte[] getTxData() {
         byte[] output = new byte[0];
-        output = ByteUtil.concat(output, ByteUtil.getBytesFromInt(this.packetAddress));
-        output = ByteUtil.concat(output, (byte) ((this.packetType.getValue() << 5) + (sequenceNumber & 0b11111)));
-        output = ByteUtil.concat(output, encodedMessage);
-        output = ByteUtil.concat(output, OmnipodCrc.crc8(output));
+        output = ByteUtil.INSTANCE.concat(output, ByteUtil.INSTANCE.getBytesFromInt(this.packetAddress));
+        output = ByteUtil.INSTANCE.concat(output, (byte) ((this.packetType.getValue() << 5) + (sequenceNumber & 0b11111)));
+        output = ByteUtil.INSTANCE.concat(output, encodedMessage);
+        output = ByteUtil.INSTANCE.concat(output, OmnipodCrc.crc8(output));
         return output;
     }
 
@@ -85,7 +85,7 @@ public class OmnipodPacket implements RLMessage {
                 "packetAddress=" + packetAddress +
                 ", packetType=" + packetType +
                 ", sequenceNumber=" + sequenceNumber +
-                ", encodedMessage=" + ByteUtil.shortHexStringWithoutSpaces(encodedMessage) +
+                ", encodedMessage=" + ByteUtil.INSTANCE.shortHexStringWithoutSpaces(encodedMessage) +
                 ", valid=" + valid +
                 '}';
     }

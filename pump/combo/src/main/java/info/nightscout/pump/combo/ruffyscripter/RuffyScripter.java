@@ -28,6 +28,8 @@ import java.util.Objects;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.pump.combo.data.ComboErrorUtil;
 import info.nightscout.pump.combo.ruffyscripter.commands.BolusCommand;
 import info.nightscout.pump.combo.ruffyscripter.commands.CancelTbrCommand;
@@ -41,8 +43,6 @@ import info.nightscout.pump.combo.ruffyscripter.commands.ReadQuickInfoCommand;
 import info.nightscout.pump.combo.ruffyscripter.commands.SetBasalProfileCommand;
 import info.nightscout.pump.combo.ruffyscripter.commands.SetTbrCommand;
 import info.nightscout.pump.combo.ruffyscripter.history.PumpHistoryRequest;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 
 /**
  * Provides scripting 'runtime' and operations. consider moving operations into a separate

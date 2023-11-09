@@ -4,6 +4,11 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.plugin.ActivePlugin;
+import app.aaps.core.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.utils.Round;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RFSpy;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException;
@@ -19,13 +24,8 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLin
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTaskExecutor;
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask;
-import info.nightscout.interfaces.plugin.ActivePlugin;
-import info.nightscout.interfaces.utils.Round;
-import info.nightscout.pump.core.defs.PumpDeviceState;
-import info.nightscout.pump.core.utils.ByteUtil;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.sharedPreferences.SP;
+import info.nightscout.pump.common.defs.PumpDeviceState;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 /**
  * This is abstract class for RileyLink Communication, this one needs to be extended by specific "Pump" class.
@@ -33,6 +33,8 @@ import info.nightscout.shared.sharedPreferences.SP;
  * Created by andy on 5/10/18.
  */
 public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
+    private final int SCAN_TIMEOUT = 1500;
+    private final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
     @Inject protected AAPSLogger aapsLogger;
     @Inject protected SP sp;
     @Inject protected RileyLinkServiceData rileyLinkServiceData;
@@ -40,10 +42,6 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
     @Inject protected RFSpy rfspy;
     @Inject protected HasAndroidInjector injector;
     @Inject protected ActivePlugin activePlugin;
-
-    private final int SCAN_TIMEOUT = 1500;
-    private final int ALLOWED_PUMP_UNREACHABLE = 10 * 60 * 1000; // 10 minutes
-
     protected int receiverDeviceAwakeForMinutes = 1; // override this in constructor of specific implementation
     protected String receiverDeviceID; // String representation of receiver device (ex. Pump (xxxxxx) or Pod (yyyyyy))
     protected long lastGoodReceiverCommunicationTime = 0;
@@ -74,7 +72,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         // internal flag
         boolean showPumpMessages = true;
         if (showPumpMessages) {
-            aapsLogger.info(LTag.PUMPBTCOMM, "Sent:" + ByteUtil.shortHexString(msg.getTxData()));
+            aapsLogger.info(LTag.PUMPBTCOMM, "Sent:" + ByteUtil.INSTANCE.shortHexString(msg.getTxData()));
         }
 
         RFSpyResponse rfSpyResponse = rfspy.transmitThenReceive(new RadioPacket(injector, msg.getTxData()),
@@ -112,7 +110,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         }
 
         if (showPumpMessages) {
-            aapsLogger.info(LTag.PUMPBTCOMM, "Received:" + ByteUtil.shortHexString(rfSpyResponse.getRadioResponse(injector).getPayload()));
+            aapsLogger.info(LTag.PUMPBTCOMM, "Received:" + ByteUtil.INSTANCE.shortHexString(rfSpyResponse.getRadioResponse(injector).getPayload()));
         }
 
         return response;
@@ -153,7 +151,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
             byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.ReadSimpleData); // simple
             RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(injector, pumpMsgContent), (byte) 0, (byte) 200,
                     (byte) 0, (byte) 0, 25000, (byte) 0);
-            aapsLogger.info(LTag.PUMPBTCOMM, "wakeup: raw response is " + ByteUtil.shortHexString(resp.getRaw()));
+            aapsLogger.info(LTag.PUMPBTCOMM, "wakeup: raw response is " + ByteUtil.INSTANCE.shortHexString(resp.getRaw()));
 
             // FIXME wakeUp successful !!!!!!!!!!!!!!!!!!
 
@@ -170,7 +168,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         // byte[] pumpMsgContent = createPumpMessageContent(RLMessageType.PowerOn);
         // RFSpyResponse resp = rfspy.transmitThenReceive(new RadioPacket(pumpMsgContent), (byte) 0, (byte) 200, (byte)
         // 0, (byte) 0, 15000, (byte) 0);
-        // LOG.info("wakeup: raw response is " + ByteUtil.shortHexString(resp.getRaw()));
+        // LOG.info("wakeup: raw response is " + ByteUtil.INSTANCE.shortHexString(resp.getRaw()));
         // } else {
         // LOG.trace("Last pump communication was recent, not waking pump.");
         // }
@@ -247,17 +245,17 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
                             trial.rssiList.add(rssi);
                             trial.successes++;
                         } else {
-                            aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to parse radio response: " + ByteUtil.shortHexString(resp.getRaw()));
+                            aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to parse radio response: " + ByteUtil.INSTANCE.shortHexString(resp.getRaw()));
                             trial.rssiList.add(-99);
                         }
 
                     } catch (RileyLinkCommunicationException rle) {
-                        aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to decode radio response: " + ByteUtil.shortHexString(resp.getRaw()));
+                        aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to decode radio response: " + ByteUtil.INSTANCE.shortHexString(resp.getRaw()));
                         trial.rssiList.add(-99);
                     }
 
                 } else {
-                    aapsLogger.error(LTag.PUMPBTCOMM, "scanForPump: raw response is " + ByteUtil.shortHexString(resp.getRaw()));
+                    aapsLogger.error(LTag.PUMPBTCOMM, "scanForPump: raw response is " + ByteUtil.INSTANCE.shortHexString(resp.getRaw()));
                     trial.rssiList.add(-99);
                 }
                 trial.tries++;
@@ -277,8 +275,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
         for (int k = 0; k < results.trials.size(); k++) {
             FrequencyTrial one = results.trials.get(k);
 
-            stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", "" + k, ""
-                    + one.frequencyMHz, "" + one.averageRSSI + ", RSSIs =" + one.rssiList));
+            stringBuilder.append(String.format("Scan Result[%s]: Freq=%s, avg RSSI = %s\n", k, one.frequencyMHz, one.averageRSSI + ", RSSIs =" + one.rssiList));
         }
 
         aapsLogger.info(LTag.PUMPBTCOMM, stringBuilder.toString());
@@ -332,11 +329,11 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
                     return calculateRssi(radioResponse.rssi);
                 } else {
                     aapsLogger.warn(LTag.PUMPBTCOMM, "tune_tryFrequency: invalid radio response:"
-                            + ByteUtil.shortHexString(radioResponse.getPayload()));
+                            + ByteUtil.INSTANCE.shortHexString(radioResponse.getPayload()));
                 }
 
             } catch (RileyLinkCommunicationException e) {
-                aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to decode radio response: " + ByteUtil.shortHexString(resp.getRaw()));
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Failed to decode radio response: " + ByteUtil.INSTANCE.shortHexString(resp.getRaw()));
             }
         }
 

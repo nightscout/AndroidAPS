@@ -6,9 +6,9 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.TempBasalFinishTimeGet;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TempBasalFinishTimeResponse;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -38,8 +38,8 @@ public class ReadTempBasalFinishTimeTask extends TaskBase {
 
         if (ready) {
             disposable = read()
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe();
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe();
         }
     }
 }

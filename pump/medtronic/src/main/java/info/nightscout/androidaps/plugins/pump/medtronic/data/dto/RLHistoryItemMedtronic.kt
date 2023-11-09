@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandType
-import info.nightscout.shared.interfaces.ResourceHelper
 import org.joda.time.LocalDateTime
 
 class RLHistoryItemMedtronic(private val medtronicCommandType: MedtronicCommandType) :

@@ -7,13 +7,14 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.medtrum.di.MedtrumPluginQualifier
-import info.nightscout.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
 abstract class MedtrumBaseActivity<B : ViewDataBinding> : TranslatedDaggerAppCompatActivity(), MedtrumBaseNavigator {
+
     @Inject
     @MedtrumPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -38,7 +39,7 @@ abstract class MedtrumBaseActivity<B : ViewDataBinding> : TranslatedDaggerAppCom
     }
 
     override fun back() {
-        if(supportFragmentManager.backStackEntryCount == 0) {
+        if (supportFragmentManager.backStackEntryCount == 0) {
             finish()
         } else {
             supportFragmentManager.popBackStack()
@@ -46,7 +47,7 @@ abstract class MedtrumBaseActivity<B : ViewDataBinding> : TranslatedDaggerAppCom
     }
 
     override fun finish(finishAffinity: Boolean) {
-        if(finishAffinity) {
+        if (finishAffinity) {
             finishAffinity()
         } else {
             finish()

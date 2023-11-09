@@ -6,11 +6,11 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetGlobalTime;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.SetGlobalTime;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.GlobalTimeResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -62,8 +62,10 @@ public class SetGlobalTimeTask extends TaskBase {
 
         if (ready) {
             disposable = set()
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe(v -> {}, e -> {}); // Exception 을 사용하기에...
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe(v -> {
+                    }, e -> {
+                    }); // Exception 을 사용하기에...
         }
     }
 

@@ -1,11 +1,10 @@
 package info.nightscout.pump.diaconn.packet
 
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
-import info.nightscout.rx.logging.LTag
-
-import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 
 /**
@@ -13,10 +12,11 @@ import javax.inject.Inject
  */
 class BolusSpeedSettingReportPacket(
     injector: HasAndroidInjector
-) : DiaconnG8Packet(injector ) {
+) : DiaconnG8Packet(injector) {
 
     @Inject lateinit var diaconnG8Pump: DiaconnG8Pump
     @Inject lateinit var sp: SP
+
     init {
         msgType = 0xC5.toByte()
         aapsLogger.debug(LTag.PUMPCOMM, "BolusSpeedSettingReportPacket init ")
@@ -31,7 +31,7 @@ class BolusSpeedSettingReportPacket(
         } else failed = false
 
         val bufferData = prefixDecode(data)
-        diaconnG8Pump.speed   = getByteToInt(bufferData) // speed result
+        diaconnG8Pump.speed = getByteToInt(bufferData) // speed result
         sp.putBoolean(R.string.key_diaconn_g8_is_bolus_speed_sync, true)
         aapsLogger.debug(LTag.PUMPCOMM, "bolusSpeed   --> ${diaconnG8Pump.speed}")
     }

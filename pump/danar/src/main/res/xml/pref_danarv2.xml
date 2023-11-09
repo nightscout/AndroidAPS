@@ -8,12 +8,12 @@
         android:title="@string/danar_pump_settings"
         app:initialExpandedChildrenCount="0">
 
-        <info.nightscout.core.ui.elements.BluetoothDevicePreference
+        <app.aaps.core.ui.elements.BluetoothDevicePreference
             android:dialogTitle="@string/danar_bt_name_title"
             android:key="@string/key_danar_bt_name"
             android:title="@string/danar_bt_name_title" />
 
-        <info.nightscout.core.validators.ValidatingEditTextPreference
+        <app.aaps.core.validators.ValidatingEditTextPreference
             android:inputType="numberPassword"
             android:key="@string/key_danar_password"
             android:title="@string/danar_password_title"

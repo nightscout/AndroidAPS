@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType.Companion.getByCode
@@ -11,10 +14,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.data.dto.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.PumpBolusType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.core.utils.DateTimeUtil
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
+import info.nightscout.pump.common.utils.ByteUtil
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -30,9 +30,8 @@ import kotlin.experimental.and
 @Singleton
 class MedtronicPumpHistoryDecoder @Inject constructor(
     aapsLogger: AAPSLogger,
-    medtronicUtil: MedtronicUtil,
-    bitUtils: ByteUtil
-) : MedtronicHistoryDecoder<PumpHistoryEntry>(aapsLogger, medtronicUtil, bitUtils) {
+    medtronicUtil: MedtronicUtil
+) : MedtronicHistoryDecoder<PumpHistoryEntry>(aapsLogger, medtronicUtil) {
 
     //private var tbrPreviousRecord: PumpHistoryEntry? = null
     private var changeTimeRecord: PumpHistoryEntry? = null
@@ -78,7 +77,8 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             val listRawData: MutableList<Byte> = ArrayList()
             listRawData.add(opCode.toByte())
             if (entryType === PumpHistoryEntryType.UnabsorbedInsulin
-                || entryType === PumpHistoryEntryType.UnabsorbedInsulin512) {
+                || entryType === PumpHistoryEntryType.UnabsorbedInsulin512
+            ) {
                 val elements: Int = dataClearInput[counter].toInt()
                 listRawData.add(elements.toByte())
                 counter++
@@ -98,7 +98,8 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
                     } catch (ex: Exception) {
                         aapsLogger.error(
                             LTag.PUMPBTCOMM, "OpCode: " + ByteUtil.shortHexString(opCode.toByte()) + ", Invalid package: "
-                            + ByteUtil.getHex(listRawData))
+                                + ByteUtil.getHex(listRawData)
+                        )
                         // throw ex;
                         incompletePacket = true
                         break
@@ -204,12 +205,15 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
 
             PumpHistoryEntryType.UnabsorbedInsulin,
             PumpHistoryEntryType.UnabsorbedInsulin512                         -> RecordDecodeStatus.Ignored
+
             PumpHistoryEntryType.DailyTotals522,
             PumpHistoryEntryType.DailyTotals523,
             PumpHistoryEntryType.DailyTotals515,
             PumpHistoryEntryType.EndResultTotals                              -> decodeDailyTotals(entry)
+
             PumpHistoryEntryType.ChangeBasalProfile_OldProfile,
             PumpHistoryEntryType.ChangeBasalProfile_NewProfile                -> decodeBasalProfile(entry)
+
             PumpHistoryEntryType.BasalProfileStart                            -> decodeBasalProfileStart(entry)
 
             PumpHistoryEntryType.ChangeTime                                   -> {
@@ -253,6 +257,7 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             PumpHistoryEntryType.ChangeMaxBasal,
             PumpHistoryEntryType.ClearSettings,
             PumpHistoryEntryType.SaveSettings                                 -> RecordDecodeStatus.OK
+
             PumpHistoryEntryType.BolusWizard                                  -> decodeBolusWizard(entry)
             PumpHistoryEntryType.BolusWizard512                               -> decodeBolusWizard512(entry)
 
@@ -425,16 +430,20 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
         val bolus: BolusDTO?
         val data = entry.head
         if (MedtronicDeviceType.isSameDevice(medtronicUtil.medtronicPumpModel, MedtronicDeviceType.Medtronic_523andHigher)) {
-            bolus = BolusDTO(atechDateTime = entry.atechDateTime,
-                             requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0,
-                             deliveredAmount = ByteUtil.toInt(data.get(2), data.get(3)) / 40.0,
-                             duration = data.get(6) * 30)
+            bolus = BolusDTO(
+                atechDateTime = entry.atechDateTime,
+                requestedAmount = ByteUtil.toInt(data.get(0), data.get(1)) / 40.0,
+                deliveredAmount = ByteUtil.toInt(data.get(2), data.get(3)) / 40.0,
+                duration = data.get(6) * 30
+            )
             bolus.insulinOnBoard = ByteUtil.toInt(data.get(4), data.get(5)) / 40.0
         } else {
-            bolus = BolusDTO(atechDateTime = entry.atechDateTime,
-                             requestedAmount = ByteUtil.asUINT8(data.get(0)) / 10.0,
-                             deliveredAmount = ByteUtil.asUINT8(data.get(1)) / 10.0,
-                             duration = ByteUtil.asUINT8(data.get(2)) * 30)
+            bolus = BolusDTO(
+                atechDateTime = entry.atechDateTime,
+                requestedAmount = ByteUtil.asUINT8(data.get(0)) / 10.0,
+                deliveredAmount = ByteUtil.asUINT8(data.get(1)) / 10.0,
+                duration = ByteUtil.asUINT8(data.get(2)) * 30
+            )
         }
         bolus.bolusType = if (bolus.duration > 0) PumpBolusType.Extended else PumpBolusType.Normal
         entry.addDecodedData("Object", bolus)
@@ -459,7 +468,8 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             tbrRate.head.get(0),
             tbrRate.body.get(0),
             tbrDuration!!.head.get(0).toInt(),
-            ByteUtil.asUINT8(tbrRate.datetime.get(4)) shr 3 == 0)
+            ByteUtil.asUINT8(tbrRate.datetime.get(4)) shr 3 == 0
+        )
 
         entry.addDecodedData("Object", tbr)
         entry.displayableValue = tbr.description
@@ -495,8 +505,11 @@ class MedtronicPumpHistoryDecoder @Inject constructor(
             //LOG.debug("DT: {} {} {}", year, month, dayOfMonth);
             if (dayOfMonth == 32) {
                 aapsLogger.warn(
-                    LTag.PUMPBTCOMM, String.format(Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.entryType.name,
-                                                   ByteUtil.getHex(entry.rawData), entry))
+                    LTag.PUMPBTCOMM, String.format(
+                        Locale.ENGLISH, "Entry: Day 32 %s = [%s] %s", entry.entryType.name,
+                        ByteUtil.getHex(entry.rawData), entry
+                    )
+                )
             }
             if (isEndResults(entry.entryType)) {
                 hour = 23

@@ -33,6 +33,11 @@ import javax.crypto.KeyAgreement;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.sharedPreferences.SP;
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.ActivateTask;
@@ -89,11 +94,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.NormalBasal;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
-import info.nightscout.interfaces.pump.DetailedBolusInfo;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.sharedPreferences.SP;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
 import io.reactivex.rxjava3.core.Single;
@@ -250,7 +250,7 @@ public class PatchManagerImpl {
                                 return Single.just(true);
                             })
                             .flatMap(ret -> {
-                                if(!pm.getAlarms().getNeedToStopBeep().isEmpty()) {
+                                if (!pm.getAlarms().getNeedToStopBeep().isEmpty()) {
                                     return Observable.fromStream(pm.getAlarms().getNeedToStopBeep().stream())
                                             .flatMapSingle(alarmCode -> stopAeBeep(alarmCode.getAeCode()).doOnSuccess(patchBooleanResponse -> {
                                                 pm.getAlarms().getNeedToStopBeep().remove(alarmCode);

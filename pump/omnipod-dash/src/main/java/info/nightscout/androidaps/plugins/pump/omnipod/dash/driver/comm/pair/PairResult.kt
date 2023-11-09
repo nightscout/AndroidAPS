@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.pair
 
-import info.nightscout.core.utils.toHex
+import app.aaps.core.utils.toHex
 
 data class PairResult(val ltk: ByteArray, val msgSeq: Byte) {
     init {

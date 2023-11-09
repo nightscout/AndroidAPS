@@ -6,6 +6,9 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
@@ -14,14 +17,12 @@ import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.FragmentEopatchOverviewBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchOverviewViewModel
-import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
+import app.aaps.core.ui.toast.ToastUtils
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() {
+class EopatchOverviewFragment : EoBaseFragment<FragmentEopatchOverviewBinding>() {
+
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -49,30 +50,31 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
                         EventType.ACTIVATION_CLICKED   -> requireContext().apply { startActivity(EopatchActivity.createIntentFromMenu(this, PatchStep.WAKE_UP)) }
                         EventType.DEACTIVATION_CLICKED -> requireContext().apply { startActivity(EopatchActivity.createIntentForChangePatch(this)) }
                         EventType.SUSPEND_CLICKED      -> suspend()
-                        EventType.RESUME_CLICKED      -> resume()
-                        EventType.INVALID_BASAL_RATE     -> ToastUtils.infoToast(requireContext(), R.string.invalid_basal_rate)
-                        EventType.PROFILE_NOT_SET        -> ToastUtils.infoToast(requireContext(), R.string.no_profile_selected)
+                        EventType.RESUME_CLICKED       -> resume()
+                        EventType.INVALID_BASAL_RATE   -> ToastUtils.infoToast(requireContext(), R.string.invalid_basal_rate)
+                        EventType.PROFILE_NOT_SET      -> ToastUtils.infoToast(requireContext(), R.string.no_profile_selected)
                         EventType.PAUSE_BASAL_SUCCESS  -> ToastUtils.infoToast(requireContext(), R.string.string_suspended_insulin_delivery_message)
-                        EventType.PAUSE_BASAL_FAILED  -> ToastUtils.errorToast(requireContext(), R.string.string_pause_failed)
+                        EventType.PAUSE_BASAL_FAILED   -> ToastUtils.errorToast(requireContext(), R.string.string_pause_failed)
                         EventType.RESUME_BASAL_SUCCESS -> ToastUtils.infoToast(requireContext(), R.string.string_resumed_insulin_delivery_message)
-                        EventType.RESUME_BASAL_FAILED -> ToastUtils.errorToast(requireContext(), R.string.string_resume_failed)
-                        else                          -> Unit
+                        EventType.RESUME_BASAL_FAILED  -> ToastUtils.errorToast(requireContext(), R.string.string_resume_failed)
+                        else                           -> Unit
                     }
                 }
 
-                resultLauncherForResume = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                resultLauncherForResume = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                     when (it.resultCode) {
                         DaggerAppCompatActivity.RESULT_OK       -> resumeBasal()
                         DaggerAppCompatActivity.RESULT_CANCELED -> ToastUtils.errorToast(requireContext(), R.string.string_resume_failed)
                     }
                 }
 
-                resultLauncherForPause = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
+                resultLauncherForPause = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                     when (it.resultCode) {
                         DaggerAppCompatActivity.RESULT_OK       -> {
                             pauseBasal(pauseDuration)
                             pauseDuration = 0.5f
                         }
+
                         DaggerAppCompatActivity.RESULT_CANCELED -> ToastUtils.errorToast(requireContext(), R.string.string_pause_failed)
                     }
                 }
@@ -93,7 +95,7 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
     private fun suspend() {
         binding.viewmodel?.apply {
             activity?.let {
-                val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it)
+                val builder = app.aaps.core.ui.dialogs.AlertDialogHelper.Builder(it)
                 val msg = getSuspendDialogText()
 
                 val dialog = builder.setTitle(R.string.string_suspend)
@@ -112,7 +114,7 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
     private fun resume() {
         binding.viewmodel?.apply {
             activity?.let {
-                val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it)
+                val builder = app.aaps.core.ui.dialogs.AlertDialogHelper.Builder(it)
                 val dialog = builder.setTitle(R.string.string_resume_insulin_delivery_title)
                     .setMessage(R.string.string_resume_insulin_delivery_message)
                     .setPositiveButton(R.string.confirm) { _, _ ->
@@ -132,8 +134,8 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
 
     private fun openPauseTimePicker() {
         binding.viewmodel?.apply {
-            activity?.let{
-                val builder = info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(it)
+            activity?.let {
+                val builder = app.aaps.core.ui.dialogs.AlertDialogHelper.Builder(it)
                 val listArr = requireContext().resources.getStringArray(R.array.suspend_duration_array)
                 var select = 0
                 val dialog = builder.setTitle(R.string.string_suspend_time_insulin_delivery_title)
@@ -156,7 +158,7 @@ class EopatchOverviewFragment: EoBaseFragment<FragmentEopatchOverviewBinding>() 
         }
     }
 
-    private fun getSuspendDialogText(): String{
+    private fun getSuspendDialogText(): String {
         binding.viewmodel?.apply {
             val isBolusActive = patchManager.patchState.isBolusActive
             val isTempBasalActive = patchManager.patchState.isTempBasalActive

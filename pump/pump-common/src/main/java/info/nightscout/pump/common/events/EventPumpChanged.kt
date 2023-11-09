@@ -1,7 +1,9 @@
 package info.nightscout.pump.common.events
 
-import info.nightscout.rx.events.Event
+import app.aaps.core.interfaces.rx.events.Event
 
-class EventPumpChanged(var serialNumber: String,
-                       var connectionAddress: String,
-                       var parameters: MutableMap<String, Any>? = null) : Event()
+class EventPumpChanged(
+    var serialNumber: String,
+    var connectionAddress: String,
+    var parameters: MutableMap<String, Any>? = null
+) : Event()

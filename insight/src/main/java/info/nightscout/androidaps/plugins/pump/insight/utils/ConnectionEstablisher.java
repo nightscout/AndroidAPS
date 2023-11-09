@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-import info.nightscout.core.utils.extensions.BluetoothAdapterExtensionKt;
+import app.aaps.core.utils.extensions.BluetoothAdapterExtensionKt;
 
 public class ConnectionEstablisher extends Thread {
 

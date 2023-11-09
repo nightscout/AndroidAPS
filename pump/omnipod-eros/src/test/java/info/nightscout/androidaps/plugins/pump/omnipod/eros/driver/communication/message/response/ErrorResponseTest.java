@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Test;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodProgressStatus;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 class ErrorResponseTest {
     @Test
     void testGetRawData() {
-        byte[] encodedData = ByteUtil.fromHexString("060314fa92");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("060314fa92");
         ErrorResponse errorResponse = new ErrorResponse(encodedData);
 
         Assertions.assertArrayEquals(encodedData, errorResponse.getRawData());
@@ -18,8 +18,8 @@ class ErrorResponseTest {
 
     @Test
     void testGetRawDataWithLongerMessage() {
-        byte[] encodedData = ByteUtil.fromHexString("060314fa9201");
-        byte[] expected = ByteUtil.fromHexString("060314fa92");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("060314fa9201");
+        byte[] expected = ByteUtil.INSTANCE.fromHexString("060314fa92");
 
         ErrorResponse errorResponse = new ErrorResponse(encodedData);
 
@@ -28,7 +28,7 @@ class ErrorResponseTest {
 
     @Test
     void testBadNonce() {
-        byte[] encodedData = ByteUtil.fromHexString("060314fa92");
+        byte[] encodedData = ByteUtil.INSTANCE.fromHexString("060314fa92");
 
         ErrorResponse errorResponse = new ErrorResponse(encodedData);
         Assertions.assertEquals(ErrorResponse.ERROR_RESPONSE_CODE_BAD_NONCE, errorResponse.getErrorResponseCode());
@@ -39,7 +39,7 @@ class ErrorResponseTest {
 
     @Test
     void testOtherError() {
-        ErrorResponse errorResponse = new ErrorResponse(ByteUtil.fromHexString("0603101308"));
+        ErrorResponse errorResponse = new ErrorResponse(ByteUtil.INSTANCE.fromHexString("0603101308"));
         Assertions.assertEquals(0x10, errorResponse.getErrorResponseCode());
         Assertions.assertEquals(FaultEventCode.MESSAGE_LENGTH_TOO_LONG, errorResponse.getFaultEventCode());
         Assertions.assertEquals(PodProgressStatus.ABOVE_FIFTY_UNITS, errorResponse.getPodProgressStatus());

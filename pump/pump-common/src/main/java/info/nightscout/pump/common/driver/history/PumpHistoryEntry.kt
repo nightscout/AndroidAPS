@@ -1,7 +1,7 @@
 package info.nightscout.pump.common.driver.history
 
+import app.aaps.core.interfaces.resources.ResourceHelper
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
-import info.nightscout.shared.interfaces.ResourceHelper
 
 interface PumpHistoryEntry {
 

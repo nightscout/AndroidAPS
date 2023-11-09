@@ -2,14 +2,10 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
-    <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS(Groot)</string>
     <string name="label_watchface_big_chart">AAPS(GroteGrafiek)</string>
     <string name="label_watchface_no_chart">AAPS(GeenGrafiek)</string>
     <string name="label_watchface_circle">AAPS(Cirkel)</string>
-    <string name="label_watchface_v2">AAPS(v2)</string>
-    <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
-    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitaleStijl)</string>
     <string name="label_watchface_custom">AAPS(Custom)</string>
     <string name="label_actions_tile">AAPS(Acties)</string>
@@ -44,6 +40,9 @@
     <string name="pref_show_bgi">Toon BGI</string>
     <string name="pref_show_direction_arrow">Toon richtingspijl</string>
     <string name="pref_show_ago">Toon tijd geleden</string>
+    <string name="pref_show_temp_basal">Toon TBR</string>
+    <string name="pref_show_bolus">Toon Bolus &amp; SMB</string>
+    <string name="pref_show_grid">Raster weergeven</string>
     <string name="pref_dark" comment="Enables dark visual theme">Donker</string>
     <string name="pref_highlight_basals">Markeer basaalstanden</string>
     <string name="pref_prediction_lines">Voorspellingen tonen</string>
@@ -59,7 +58,6 @@
     <string name="pref_quick_righty">Snel rechts</string>
     <string name="pref_quick_lefty">Snel links</string>
     <string name="pref_modern_sparse">Modern spaarzaam</string>
-    <string name="pref_delta_granularity">Delta schaalverdeling (Steampunk)</string>
     <string name="pref_low">Laag</string>
     <string name="pref_medium">Middel</string>
     <string name="pref_high">Hoog</string>
@@ -182,8 +180,6 @@
     <string name="wear_control_no_data">Geen data beschikbaar</string>
     <string name="increment">verhoog</string>
     <string name="decrement">verlaag</string>
-    <string name="first_char_high">H</string>
-    <string name="first_char_low">L</string>
     <string name="abbreviation_average">gem</string>
     <string name="no_iob_u">--E</string>
     <string name="no_cob_g">--g</string>

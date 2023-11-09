@@ -82,5 +82,52 @@
     <!-- Xdrip StatusLine -->
     <string name="xdrip_status_show_bgi_title">Mostrar IG</string>
     <string name="xdrip_status_show_bgi_summary">Adicionar IG à linha de estado</string>
+    <string name="disabled_loop">Loop Desactivado</string>
+    <string name="xdrip_not_installed">xDrip+ não está instalado</string>
+    <string name="calibration_sent">Calibração enviada para xDrip+</string>
     <!--    DataBroadcast-->
+    <!-- GarminPlugin -->
+    <!--    Wear-->
+    <string name="description_wear">Monitorizar e controlar a AndroidAPS utilizando o seu relógio WearOS.</string>
+    <string name="no_watch_connected">(Nenhum relógio Conectado)</string>
+    <string name="pump_status">Estado da Bomba</string>
+    <string name="loop_status">Estado do loop</string>
+    <string name="wizard_result">Calc. Assistente:\nInsulina: %1$.2fU\nHidratos: %2$dg</string>
+    <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize o ecrã</string>
+    <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulina: %2$.2fU\nHidratos: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Predefinição de alvo temporário desconhecido: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Cancelando Alvos Temporários em execução?</string>
+    <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
+    <string name="wear_action_tempt_zero_message">Alvo-temporário-Zero - cancelar Alvos -Temporários em progresso?</string>
+    <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
+    <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
+    <string name="wear_action_tempt_manual_range_message">AlvoTemporário:\nMin: %1$s\nMax: %2$s\nDuração: %3$s</string>
+    <string name="wear_action_tempt_manual_message">AlvoTemporário:\nAlvo: %1$s\nDuração: %2$s</string>
+    <string name="wear_action_tempt_preset_message">AlvoTemporário:\nMotivo %1$s\nAlvo: %2$s\nDuração: %3$s</string>
+    <string name="no_success">sem efeito - por favor verifique no telemóvel</string>
+    <string name="wear_settings">Definições do Relógio</string>
+    <string name="wearcontrol_title">Controles do Relógio</string>
+    <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
+    <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
+    <string name="wear_general_settings">Definições Gerais</string>
+    <string name="wear_notifysmb_title">Notificar no SMB</string>
+    <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
+    <string name="wear_custom_watchface_settings">Definições da watchface predefinida</string>
+    <string name="wear_custom_watchface_authorization_title">Autorização da watchface predefinida</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorizar watchface por definição para alterar e bloquear algumas configurações de exibição do relógio para se adequarem ao design do watchface</string>
+    <string name="wear_custom_watchface">Watchface Predefinida: %1$s</string>
+    <string name="wear_load_watchface">Carregar Watchface</string>
+    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_export_watchface">Exportar modelo</string>
+    <string name="wear_new_custom_watchface_exported">Modelo de Watchface Predefinida exportado</string>
+    <string name="resend_all_data">Reenviar Todos os Dados</string>
+    <string name="open_settings_on_wear">Abrir Definições no Relógio</string>
+    <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
+    <string name="cwf_infos_pref_required">Lista de preferências necessárias para a Watchface</string>
+    <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
+    <string name="pump_old_data">TID: Ainda dados antigos! Não é possível carregar a partir da bomba.</string>
+    <string name="units_short">U</string>
+    <string name="hour_short">h</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="today">Hoje</string>
 </resources>

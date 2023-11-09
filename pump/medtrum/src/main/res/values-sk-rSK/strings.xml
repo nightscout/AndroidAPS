@@ -6,11 +6,13 @@
     <string name="medtrum_pump_description">Integrácia pumpy Medtrum Nano a Medtrum 300U</string>
     <string name="medtrum_pump_setting">Nastavenie pumpy Medtrum</string>
     <string name="pump_error">Chyba pumpy: %1$s!! </string>
+    <string name="pump_warning">Výstraha pumpy: %1$s </string>
     <string name="pump_is_suspended">Pumpa je pozastavená</string>
     <string name="pump_is_suspended_hour_max">Pumpa je pozastavená kvôli prekročeniu maximálneho množstva inzulínu za hodinu</string>
     <string name="pump_is_suspended_day_max">Pumpa je pozastavená kvôli prekročeniu maximálneho množstva inzulínu za deň</string>
     <string name="patch_not_active">Patch nie je aktivovaný</string>
     <string name="pump_setting_failed">Načítanie uživateľského nastavenia do pumpy zlyhalo!</string>
+    <string name="pump_sync_error">Chyba pri synchronizácii histórie z pumpy, záznam bol preskočený. Skontrolujte zoznam ošetrení, či je bolus správne synchronizovaný. Potvrďte a pokiaľ sa znovu ukáže chyba, vymeňte patch, alebo základňu pumpy.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Stav BLE</string>
     <string name="last_connection_label">Naposledy pripojené</string>
@@ -52,6 +54,7 @@
     <string name="alarm_battery_out">Vybitá batéria</string>
     <string name="alarm_no_calibration">Žiadna kalibrácia</string>
     <string name="pump_time_update_failed">Nepodarilo sa aktualizovať časové pásmo pumpy, odložiť správu a aktualizovať ručne.</string>
+    <string name="bolus_error">Chyba bolusu</string>
     <!-- wizard-->
     <string name="retry">Opakovať</string>
     <string name="next">Ďalšia</string>
@@ -70,6 +73,7 @@
     <string name="step_retry_activation">Aktivácia prebieha</string>
     <string name="unexpected_state">Neočakávaný stav: %1$s</string>
     <string name="no_profile_selected">Žiadny vybraný profil. Prosím vyberte si profil a skúste to znovu.</string>
+    <string name="no_sn_in_settings">Nie je zadané žiadne sériové číslo. Zadajte sériové číslo pumpy v nastaveniach a skúste to znova.</string>
     <string name="base_serial">Sériové číslo základne pumpy: %1$X</string>
     <string name="patch_begin_activation">Žiadny aktívny Patch. Stlačte <b>Ďalšia</b> pre zahájenie aktivačného procesu.</string>
     <string name="patch_not_active_note">Základňa by nemala byť pripojená ku kanyle až do dalšieho kroku!</string>
@@ -99,12 +103,18 @@
     <string name="press_retry_or_discard">Stlačte <b>Ďalšia</b> pre obnovenie aktivácie alebo <b>Zahodiť</b> pre resetovanie stavu aktivácie.</string>
     <string name="reading_activation_status">Počkajte prosím, načítanie stavu aktivácie z Patch.</string>
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Výstraha pri nedostupnej pumpe bola vynutená, pretože patch pumpa Medtrum môže zlyhať a byť nedostupná.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Doporučujeme nastaviť na 30 minút, protože patch pumpa Medtrum môže zlyhať a byť nedostupná.</string>
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_summary">Zadajte sériové číslo základne Patch.</string>
     <string name="sn_input_invalid">Neplatné sériové číslo!</string>
     <string name="pump_unsupported">Nevyskúšaná pumpa: %1$d! Kontaktujte nás na Discorde alebo Githube, kde získate podporu.</string>
     <string name="alarm_setting_title">Nastavenie výstrah</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavenie výstrah.</string>
+    <string name="pump_warning_notification_title">Oznámenie o výstrahe pumpy</string>
+    <string name="pump_warning_notification_summary">Zobraziť upozornenie na nie kritické varovanie pumpy: vybitá batéria, takmer prázdny zásobník (20 jednotiek) a čoskoro dojde inzulín. Doporučené ponechať zapnuté, keď sú výstrahy pumpy nastavené na ticho.</string>
+    <string name="pump_warning_expiry_hour_title">Výstraha expirácie pumpy (hodiny)</string>
+    <string name="pump_warning_expiry_hour_summary">Zobraziť notifikáciu v určenej hodine po aktivácii.</string>
     <string name="patch_expiration_title">Expirácia Patch</string>
     <string name="patch_expiration_summary">Pokiaľ je povolené, Patch expiruje po 3 dňoch s maximálnou dobou odkladu 8 hodín.</string>
     <string name="hourly_max_insulin_title">Hodinové maximum inzulínu</string>

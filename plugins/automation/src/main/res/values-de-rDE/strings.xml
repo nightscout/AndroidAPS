@@ -63,13 +63,6 @@
     <string name="time_range">Zeitraum</string>
     <string name="timerange_value">Für die Zeit zwischen %1$s und %2$s</string>
     <string name="between">Zwischen </string>
-    <string name="weekday_sunday_short">So</string>
-    <string name="weekday_saturday_short">Sa</string>
-    <string name="weekday_friday_short">Fr</string>
-    <string name="weekday_thursday_short">Do</string>
-    <string name="weekday_wednesday_short">Mi</string>
-    <string name="weekday_tuesday_short">Di</string>
-    <string name="weekday_monday_short">Mo</string>
     <string name="delete_short">ENTF</string>
     <string name="add_short">HINZUFÜGEN</string>
     <string name="copy_short">KOPIEREN</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Automatisierungen ausführen</string>
     <string name="add_automation">Regel hinzufügen</string>
     <string name="stop_processing">Verarbeitung beenden</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Mo</string>
-    <string name="tuesday_short">Di</string>
-    <string name="wednesday_short">Mi</string>
-    <string name="thursday_short">Do</string>
-    <string name="friday_short">Fr</string>
-    <string name="saturday_short">Sa</string>
-    <string name="sunday_short">So</string>
     <!--    Reminders-->
     <string name="time_to_eat">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>

@@ -1,28 +1,29 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.vo
 
+import app.aaps.core.interfaces.sharedPreferences.SP
 import info.nightscout.androidaps.plugins.pump.eopatch.AppConstant
 import info.nightscout.androidaps.plugins.pump.eopatch.GsonHelper
+import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.BolusType
 import info.nightscout.androidaps.plugins.pump.eopatch.core.util.FloatAdjusters
-import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
-import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.io.Serializable
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
 import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 import java.util.stream.IntStream
 
-class PatchState: IPreference<PatchState> {
+class PatchState : IPreference<PatchState> {
+
     @Transient
     private val subject: BehaviorSubject<PatchState> = BehaviorSubject.create()
 
     private val stateBytes: ByteArray
     var updatedTimestamp: Long = 0
 
-    constructor(): this(ByteArray(SIZE), 0)
+    constructor() : this(ByteArray(SIZE), 0)
 
     constructor(stateBytes: ByteArray, updatedTimestamp: Long) {
         this.stateBytes = stateBytes
@@ -42,7 +43,7 @@ class PatchState: IPreference<PatchState> {
         subject.onNext(this)
     }
 
-    fun clear(){
+    fun clear() {
         update(ByteArray(SIZE), 0)
     }
 
@@ -172,7 +173,8 @@ class PatchState: IPreference<PatchState> {
             val remainedPumpCycle = remainedPumpCycle()
             return if (remainedPumpCycle > 0) {
                 FloatAdjusters.FLOOR2_INSULIN.apply(
-                    remainedPumpCycle * AppConstant.INSULIN_UNIT_P)
+                    remainedPumpCycle * AppConstant.INSULIN_UNIT_P
+                )
             } else {
                 remainedInsulin().toFloat()
             }
@@ -212,8 +214,8 @@ class PatchState: IPreference<PatchState> {
 
     fun isBolusActive(type: BolusType?): Boolean {
         return when (type) {
-            BolusType.NOW -> isNowBolusRegAct
-            BolusType.EXT -> isExtBolusRegAct
+            BolusType.NOW   -> isNowBolusRegAct
+            BolusType.EXT   -> isExtBolusRegAct
             BolusType.COMBO -> isNowBolusRegAct && isExtBolusRegAct
             else            -> isNowBolusRegAct && isExtBolusRegAct
         }
@@ -221,8 +223,8 @@ class PatchState: IPreference<PatchState> {
 
     fun isBolusDone(type: BolusType?): Boolean {
         return when (type) {
-            BolusType.NOW -> isNowBolusDone
-            BolusType.EXT -> isExtBolusDone
+            BolusType.NOW   -> isNowBolusDone
+            BolusType.EXT   -> isExtBolusDone
             BolusType.COMBO -> isNowBolusDone || isExtBolusDone
             else            -> isNowBolusDone || isExtBolusDone
         }
@@ -270,8 +272,10 @@ class PatchState: IPreference<PatchState> {
             listOf(indent, "[TempBasal] Reg:", b(isTempBasalReg), "  Act:", b(isTempBasalAct), "  Done:", b(isTempBasalDone))
                 .forEach(Consumer { str: String? -> sb.append(str) })
         }
-        listOf(indent, "[NormalBasal] Reg:", b(isNormalBasalReg), "  Act:", b(isNormalBasalAct), "  Paused:", b(isNormalBasalPaused),
-            indent, "remainedInsulin:", remainedInsulin(), "  remainedPumpCycle:", remainedPumpCycle(), "(", remainedInsulin, ")", "  battery:", battery())
+        listOf(
+            indent, "[NormalBasal] Reg:", b(isNormalBasalReg), "  Act:", b(isNormalBasalAct), "  Paused:", b(isNormalBasalPaused),
+            indent, "remainedInsulin:", remainedInsulin(), "  remainedPumpCycle:", remainedPumpCycle(), "(", remainedInsulin, ")", "  battery:", battery()
+        )
             .forEach(Consumer<Serializable> { obj: Serializable? -> sb.append(obj) })
         return sb.toString()
     }
@@ -303,7 +307,7 @@ class PatchState: IPreference<PatchState> {
         return subject.hide()
     }
 
-    override fun flush(sp: SP){
+    override fun flush(sp: SP) {
         val jsonStr = GsonHelper.sharedGson().toJson(this)
         sp.putString(SettingKeys.PATCH_STATE, jsonStr)
         subject.onNext(this)
@@ -314,6 +318,7 @@ class PatchState: IPreference<PatchState> {
     }
 
     companion object {
+
         const val SIZE = 20
         @JvmStatic fun create(bytes: ByteArray?, updatedTimestamp: Long): PatchState {
             var stateBytes = bytes

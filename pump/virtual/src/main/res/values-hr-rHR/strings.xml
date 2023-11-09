@@ -6,4 +6,5 @@
     <string name="virtual_pump_shortname">VPUMP</string>
     <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju upravljački program (otvorena petlja)</string>
     <string name="virtualpump_settings">Postavke virtualne pumpe</string>
+    <!--    PumpType-->
 </resources>

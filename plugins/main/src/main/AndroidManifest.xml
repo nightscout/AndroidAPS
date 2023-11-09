@@ -17,25 +17,25 @@
             android:exported="false"
             android:theme="@style/AppTheme">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
+                <action android:name="app.aaps.plugins.main.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".general.wear.activities.CwfInfosActivity"
+            android:name="app.aaps.plugins.sync.wear.activities.CwfInfosActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
 
-        <service android:name="info.nightscout.plugins.general.persistentNotification.DummyService" />
+        <service android:name=".general.persistentNotification.DummyService" />
 
         <service
-            android:name="info.nightscout.plugins.general.overview.notifications.DismissNotificationService"
+            android:name=".general.overview.notifications.DismissNotificationService"
             android:exported="false" />
 
         <service
-            android:name=".general.wear.wearintegration.DataLayerListenerServiceMobile"
+            android:name="app.aaps.plugins.sync.wear.wearintegration.DataLayerListenerServiceMobile"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.CHANNEL_EVENT" />

@@ -7,16 +7,16 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.interfaces.logging.UserEntryLogger;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.logging.UserEntryLogger;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.queue.Callback;
+import app.aaps.core.interfaces.queue.Command;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.userEntry.UserEntryMapper;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetInternalSuspendTime;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchInternalSuspendTimeResponse;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.queue.Callback;
-import info.nightscout.interfaces.queue.Command;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.userEntry.UserEntryMapper;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.subjects.BehaviorSubject;
@@ -27,7 +27,7 @@ public class InternalSuspendedTask extends BolusTask {
     @Inject AAPSLogger aapsLogger;
     @Inject PumpSync pumpSync;
     @Inject UserEntryLogger uel;
-	
+
     private final GetInternalSuspendTime INTERNAL_SUSPEND_TIME_GET;
     private final BehaviorSubject<Boolean> bolusCheckSubject = BehaviorSubject.create();
     private final BehaviorSubject<Boolean> extendedBolusCheckSubject = BehaviorSubject.create();
@@ -40,15 +40,15 @@ public class InternalSuspendedTask extends BolusTask {
         INTERNAL_SUSPEND_TIME_GET = new GetInternalSuspendTime();
     }
 
-    private Observable<Boolean> getBolusSubject(){
+    private Observable<Boolean> getBolusSubject() {
         return bolusCheckSubject.hide();
     }
 
-    private Observable<Boolean> getExtendedBolusSubject(){
+    private Observable<Boolean> getExtendedBolusSubject() {
         return extendedBolusCheckSubject.hide();
     }
 
-    private Observable<Boolean> getBasalSubject(){
+    private Observable<Boolean> getBasalSubject() {
         return basalCheckSubject.hide();
     }
 
@@ -76,7 +76,7 @@ public class InternalSuspendedTask extends BolusTask {
                     extendedBolusCheckSubject.onNext(true);
                 }
             });
-        }else{
+        } else {
             extendedBolusCheckSubject.onNext(true);
         }
 
@@ -88,12 +88,12 @@ public class InternalSuspendedTask extends BolusTask {
                     basalCheckSubject.onNext(true);
                 }
             });
-        }else{
+        } else {
             basalCheckSubject.onNext(true);
         }
 
         return Observable.zip(getBolusSubject(), getExtendedBolusSubject(), getBasalSubject(),
-                    (bolusReady, extendedBolusReady, basalReady) -> (bolusReady && extendedBolusReady && basalReady))
+                        (bolusReady, extendedBolusReady, basalReady) -> (bolusReady && extendedBolusReady && basalReady))
                 .filter(ready -> ready)
                 .flatMap(v -> isReady())
                 .concatMapSingle(v -> getInternalSuspendTime())
@@ -112,12 +112,12 @@ public class InternalSuspendedTask extends BolusTask {
 
         if (ready) {
             disposable = start(isNowBolusActive, isExtBolusActive, isTempBasalActive)
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe(v -> {
-                    bolusCheckSubject.onNext(false);
-                    extendedBolusCheckSubject.onNext(false);
-                    basalCheckSubject.onNext(false);
-                });
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe(v -> {
+                        bolusCheckSubject.onNext(false);
+                        extendedBolusCheckSubject.onNext(false);
+                        basalCheckSubject.onNext(false);
+                    });
         }
     }
 }

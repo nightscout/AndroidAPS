@@ -8,7 +8,7 @@ import java.util.List;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.OmnipodConstants;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class PodInfoActiveAlerts extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 11;
@@ -23,13 +23,13 @@ public class PodInfoActiveAlerts extends PodInfo {
             throw new IllegalArgumentException("Not enough data");
         }
 
-        word278 = ByteUtil.substring(encodedData, 1, 2);
+        word278 = ByteUtil.INSTANCE.substring(encodedData, 1, 2);
 
         alertActivations = new ArrayList<>();
 
         for (AlertSlot alertSlot : AlertSlot.values()) {
-            int valueHighBits = ByteUtil.convertUnsignedByteToInt(encodedData[3 + alertSlot.getValue() * 2]);
-            int valueLowBits = ByteUtil.convertUnsignedByteToInt(encodedData[4 + alertSlot.getValue() * 2]);
+            int valueHighBits = ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[3 + alertSlot.getValue() * 2]);
+            int valueLowBits = ByteUtil.INSTANCE.convertUnsignedByteToInt(encodedData[4 + alertSlot.getValue() * 2]);
             int value = (valueHighBits << 8) | valueLowBits;
             if (value != 0) {
                 alertActivations.add(new AlertActivation(alertSlot, value));
@@ -53,7 +53,7 @@ public class PodInfoActiveAlerts extends PodInfo {
     @Override
     public String toString() {
         return "PodInfoActiveAlerts{" +
-                "word278=" + ByteUtil.shortHexString(word278) +
+                "word278=" + ByteUtil.INSTANCE.shortHexString(word278) +
                 ", alertActivations=" + alertActivations +
                 '}';
     }

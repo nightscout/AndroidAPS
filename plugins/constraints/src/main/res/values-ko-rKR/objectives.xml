@@ -7,20 +7,38 @@
     <string name="objectivenotfinished">목표 %1$d이 완료되지 않았습니다</string>
     <string name="objectives_0_objective">시각화 및 모니터링 설정하고, Basal과 비율을 분석합니다.</string>
     <string name="objectives_0_gate">Nightscout에서 혈당 데이터가 잘 들어오는지, 펌프, 인슐린 데이터가 업로드 되는지 확인합니다</string>
+    <string name="objectives_0_learned">AAPS 에코시스템의 기본 설정을 했습니다. Nightscout은 AAPS가 실행될 필요는 없지만, 다른 환자의 보고 또는 모니터링에 매우 유용합니다. NS를 자신만을 위해 사용하는 경우 항상 NS에 연결될 필요는 없습니다. 예를 들어, 가정용 와이파이에만 업로드하고 배터리를 절약하도록 설정할 수 있습니다.</string>
     <string name="objectives_openloop_objective">Open Loop를 시작합니다</string>
     <string name="objectives_openloop_gate">며칠 동안 Open Loop 모드를 사용하고 수동으로 임시Basal을 실행하여 봅니다. 사용자 정의 임시 목표와 (\'활동\', \'저혈당\' 같은) 기본 임시목표를 사용해봅니다</string>
+    <string name="objectives_openloop_learned">호환되는 펌프가 없거나 루프를 닫을 준비가 되지 않을 경우에는 Open loop를 권장 사항으로 사용할 수 있습니다.</string>
     <string name="objectives_maxbasal_objective">임시Basal 추천기능과 Open Loop에 대해 이해합니다</string>
     <string name="objectives_maxbasal_gate">이 경험을 토대로, 최대 Basal을 결정하고 이를 펌프와 설정에 입력합니다</string>
+    <string name="objectives_maxbasal_learned">안전 기능에 주의하고, 필요한 경우 안전 매개 변수를 조정할 수 있습니다.</string>
     <string name="objectives_maxiobzero_objective">Closed Loop를 시작하고 저혈당인슐린 중지 기능(LGS)을 사용해 봅니다</string>
     <string name="objectives_maxiobzero_gate">최대 IOB = 0 인 상태로 Closed Loop를 몇일동안 실행하되 저혈당 인슐린일시중지(LGS)가 많이 발생하지 않도록 합니다</string>
+    <string name="objectives_maxiobzero_learned">MaxIOB를 0으로 설정하면 저혈압이 방지되며, basal양 이상으로 인슐린을 더 추가하지 않습니다 (음성 IOB가 있는 경우 제외)</string>
     <string name="objectives_maxiob_objective">Closed Loop를 조정하여 최대 IOB를 0 이상으로 올려서 서서히 혈당 목표치를 낮추어 봅니다</string>
     <string name="objectives_maxiob_gate">혈당을 낮추기 전에 몇일간 사용해보되 최소한 하루는 저혈당 알람이 발생하지 않도록 해봅니다</string>
+    <string name="objectives_maxiob_learned">어린이가 성장함에 따라 MaxIOB를 업데이트합니다. 시스템이 음식으로 충당할 수 있는 것보다 더 많은 인슐린을 제공하도록 허옹하지 마십시오. =정말 높은 값은 좋지 않은 생각입니다.</string>
     <string name="objectives_autosens_objective">필요하면 Basal과 비율을 조절하고, auto-sens를 활성화합니다</string>
     <string name="objectives_autosens_gate">섭취한 탄수화물양을 입력하고 1주일동안 낮시간대에 loop를 성공적으로 사용하여 봅니다</string>
+    <string name="objectives_autosens_learned">만약 autosens 결과가 100%로 진동하지 않으면 프로파일이 잘못되었을 수 있습니다.</string>
     <string name="objectives_smb_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해봅니다</string>
+    <string name="objectives_smb_gate">SMB이 잘 작동하기 위해서는 위키를 읽고, maxIOB를 올려야합니다! 좋은 시작은 maxIOB=평균 식사bolus + 3 x 최대 하루 basal 입니다</string>
+    <string name="objectives_smb_learned">SMB를 사용하는 것이 여러분의 목표입니다! Oref1 알고리즘은 여러분의 bolus 주입에 도움이 되도록 고안되었습니다. 여러분은 음식에 대해 모든 bolus를 주입하는 것이 아니라, 그것의 일부만 주입하고, 필요할 경우 AAPS가 나머지를 주입하도록 합니다. 이렇게 하면 잘못 계산된 탄수화물을 위한 더 많은 공간을 확보할 수 있습니다. bolus 계산기 결과의 백분율을 설정하여 bolus 양을 줄일 수 있다는 것을 알고 계셨습니까?</string>
+    <string name="objectives_dyn_isf_objective">Dynamic sensitivity 플러그인과 같은 주간용 추가 기능 사용이 가능합니다</string>
+    <string name="objectives_dyn_isf_gate">SMA가 제대로 작동하는지 확인하십시오. 역동 ISF 플러그인을 사용하고 신체 고유성에 적합한 보정을 식별하십시오. 안전을 위해 100% 미만의 값으로 시작하는 것이 좋습니다.</string>
+    <string name="objectives_dyn_isf_learned">Dynamic Sensitivity 플러그인은 총 인슐린 섭취량과 현재 혈당 수치가 실제 민감도에 영향을 미친다는 아이디어를 기반으로 구성되어 있습니다. 역동 ISF 플러그인은 알고리즘에서 사용하는 인슐린 감도 요소 (ISF)를 조정할 수 있습니다.</string>
     <string name="objectives_auto_objective">자동화 사용</string>
+    <string name="objectives_auto_gate">자동화 기능이 어떻게 작동하는지에 대한 문서를 읽어보십시오. 첫 번째 간단한 규칙을 설정하십시오. 작업 실행 대신 AAPS가 알림만 표시하도록 합니다. 자동화 기능이 잘 작동하는 것을 확인하면 알림을 실제 실행으로 변경하십시오. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">자동 실행 기능은 좋은 도움을 주는 비서가 될 수 있는 기능이지만, 나쁜 주인이 될 수도 있습니다. 과도하게 사용하지 마십시오. 기본 알고리즘을 바꾸려고 하지 마십시오. 사용하기 전에만 메시지로 규칙을 테스트하십시오. 순서에 따라 다른 결과를 초래합니다.</string>
+    <string name="objectives_bgavailableinns">BG는 NS 또는 Tidepool에서 이용 가능합니다</string>
+    <string name="objectives_pumpstatusavailableinns">펌프 상태는 NS 또는 Tidepool에서 이용 가능합니다</string>
     <string name="objectives_manualenacts">수동 주입</string>
     <string name="accomplished">완료: %1$s</string>
+    <string name="objectives_usage_objective">AAPS를 사용하는 방법 배우기</string>
+    <string name="objectives_usage_gate">AAPS에서 다양한 작업 수행하기</string>
+    <string name="objectives_usage_learned">AAPS의 기본을 다루는 방법을 배웠습니다. 주요 컨트롤은 개요 화면에서 클릭 또는 긴 클릭으로 접근할 수 있으며, 더 많은 컨트롤은 작업 화면에 있습니다. 플러그인 화면을 상단 스크롤 가능한 메뉴에 삽입하거나, 왼쪽 상단의 활성화된 플러그인 목록에 표시하는 방법을 알아야 합니다.</string>
     <string name="objectives_useprofileswitch">10분동안 프로파일 90%를 설정해보세요(홈에서 프로파일명을 길게 눌러보세요)</string>
     <string name="objectives_usedisconnectpump">샤워한다고 가정하고 펌프를 1시간 동안 펌프를 일시중지하세요 (홈에서 Open Loop를 길게 눌러보세요)</string>
     <string name="objectives_usereconnectpump">... 그리고 같은 방법으로 펌프를 재연결하세요</string>
@@ -30,12 +48,41 @@
     <string name="objectives_usescale">홈의 혈당 차트를 길게 눌러 차트 시간을 변경하세요</string>
     <string name="objectives_exam_objective">당신의 지식을 확인해봅니다</string>
     <string name="objectives_exam_gate">문제들에 대한 공부. 각각의 질문에 네 개의 답변이 주어집니다. 한 개 이상의 정답이 있을 수 있습니다. 올바른 것을 모두 체크하고, 확인을 선택하십시오.</string>
+    <string name="objectives_exam_learned_prerequisites">개발자가 될 필요는 없지만 목표, 호환 가능한 펌프 및 컴퓨터를 통과하여 AAPS를 시작부터 구축하고 모든 업데이트를 수행하려면 NS가 필요합니다.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS는 오프라인에서 실행 가능합니다.</string>
+    <string name="objectives_exam_learned_basaltest">프로파일을 검토하고 업데이트해야 합니다. 프로파일이 더 좋아지면 = 결과가 더 좋아집니다.</string>
+    <string name="objectives_exam_learned_dia">루프에서 DIA는 고전적인 펌프 요법 (모든인슐린이 흡수될 떄까지의 시간)과는 다른 의미를 가지고 있습니다 (대부분의 인슐린이 흡수될 떄까지의 시간).</string>
+    <string name="objectives_exam_learned_isf">ISF 값의 의미와 인슐린 양이 어떻게 BG 보정에 영향을 미치는지 배웠습니다.</string>
+    <string name="objectives_exam_learned_ic">IC 값의 의미와 이것이 탄수화물을 커버하는 데 필요한 인슐린의 양에 어떻게 영향을 미치는지 배웠습니다.</string>
+    <string name="objectives_exam_learned_hypott">일반적으로 음성 IOB가 쌓여 있는 경우, 피하 주사 후 피하 주사 보정을 방지하기 위해 피하 주사 임시 대상이 사용됩니다. 향후 이러한 상황을 다시 방지하기 위해 추가 조치를 평가해야 합니다.</string>
+    <string name="objectives_exam_learned_profileswitch">백분율을 사용하는 것은 표적 BG에 영향을 미치지 않지만 basal, ISF 그리고 IC는 더 많은 인슐린 (100%% 이상) 또는 더 적은 인슐린 (100%% 미만)을 제공하도록 조정됩니다.</string>
+    <string name="objectives_exam_learned_profileswitchtime">프로파일 스위치의 시간 이동을 사용하여 일일 프로파일을 늦은 기상과 같은 불규칙성에 적응시킬 수 있습니다.</string>
+    <string name="objectives_exam_learned_profileswitch4">프로파일 편집 자체만으로는 변경할 수 없습니다. 변경한 내용을 활성화하려면 프로파일 전환을 진행해야 합니다.</string>
+    <string name="objectives_exam_learned_exercise">프로파일을 100% 이하로 선택하여 운동을 시작하기 최소 1시간 전에 체내 인슐린 양을 줄여야합니다.</string>
+    <string name="objectives_exam_learned_exercise2">운동하기 최소 1시간 전에 더 높은 임시 목표를 설정하는 것은 체내 인슐린의 양을 줄이는 것에 도움이 됩니다.</string>
+    <string name="objectives_exam_learned_noisycgm">CGM 값을 신뢰할 수 없는 경우 loop를 방치하여 사용하면 안 됩니다.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS는 펌프가 카운트 IOB에 올바르게 연결되어 있지 않음을 알아야 합니다.</string>
+    <string name="objectives_exam_learned_insulin">펌프에 어떤 인슐린이 있는지 알려주는 것은 IOB 계산에 영향을 미치기 때문에 필요합니다.</string>
+    <string name="objectives_exam_learned_sensitivity">민감도 감지는 인슐린 용량을 다양한 상황에 적응시킬 수 있는 알고리즘의 일부 기능입니다.</string>
+    <string name="objectives_exam_learned_objectives">목표한 진행률이 다른 설정과 함께 저장되므로 백업을 진행해야 합니다.</string>
+    <string name="objectives_exam_learned_objectives2">항상 내보낸 설정과 생성된 APK를 외부 핸드폰에도 보관해야 합니다. 핸드폰이 유실되거나 손상될 수 있습니다. 핸드폰에서 접근할 수 잇는 모든 클라우드가 저장하기 좋은 장소가 될 수 있습니다. 이 경우 몇 분 안에 다른 장치에 APS를 복원할 수 있습니다. 마스터 암호를 안전한 장소에 저장하는 것이 좋습니다. 백업이 필요하지 않습니다. 서명 키 (.jks file)와 암호를 만드는 데 사용한 암호도 마찬가지입니다. 나머지는 중요하지 않습니다. 인터넷에 연결되어 있는 경우 언제든지 다시 다운로드할 수 있습니다.</string>
+    <string name="objectives_exam_learned_wrongcarbs">만약 AAPS에 잘못된 정보를 입력했거나, 일치한 정보가 아닐 경우, 가능한 한 빨리 수정해야 합니다. 이것은 과다복용으로 이어질 수 있습니다. AAPS는 항상 탄수화물, 인슐린 등에 대한 최선의 방법을 알려주어야 합니다.</string>
+    <string name="objectives_exam_learned_iob">IOB 그래프를 확인하면서 AAPS가 잘 작동하는지 분석하면 많은 유용한 정보를 얻을 수 있습니다.</string>
+    <string name="objectives_exam_learned_cob">COB 계산은 ISF a IC 간의 관계에 따라 달라집니다. ISF를 늘리거나, IC를 줄이면 흡수 시간이 길어집니다. 하지만 백분율이 있는 프로파일 스위치는 두 값을 동시에 변경할 수 있고, 흡수 시간에는 영향을 주지 않습니다.</string>
+    <string name="objectives_exam_learned_breadgrams">그램은 탄수화물만 사용할 수 있습니다.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carb는 펌프 세계에서 확장bolus를 대체합니다.</string>
+    <string name="objectives_exam_learned_nsclient">원격 모니터링 및 제어가 가능하지만 모든 기능을 원격으로 사용할 수 있는 것은 아닙니다.</string>
     <string name="answerdisabledto">다음 시간까지 답변 불가능: %1$s</string>
     <string name="wronganswer">잘못된 답변!</string>
     <string name="unfinshed_button">다음 미답변</string>
     <string name="requestcode">요청 코드: %1$s</string>
     <string name="objectives_hint">(올바른 답변을 모두 체크하세요)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">인터넷에 연결되지 않음</string>
     <string name="failedretrievetime">시간을 가져오지 못했습니다</string>
     <string name="requirementnotmet">목표 요구 사항이 충족되지 않음</string>
+    <string name="what_i_ve_learned">내가 배운 것들:</string>
 </resources>

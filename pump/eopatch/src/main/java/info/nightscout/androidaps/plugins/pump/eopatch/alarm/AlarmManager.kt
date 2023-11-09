@@ -2,6 +2,19 @@ package info.nightscout.androidaps.plugins.pump.eopatch.alarm
 
 import android.content.Context
 import android.content.Intent
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.A005
@@ -17,19 +30,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
 import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -42,12 +42,14 @@ import javax.inject.Singleton
 import kotlin.math.max
 
 interface IAlarmManager {
+
     fun init()
     fun restartAll()
 }
 
 @Singleton
 class AlarmManager @Inject constructor() : IAlarmManager {
+
     @Inject lateinit var patchManager: IPatchManager
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -75,17 +77,17 @@ class AlarmManager @Inject constructor() : IAlarmManager {
         mAlarmProcess = AlarmProcess(patchManager, rxBus)
     }
 
-    override fun init(){
+    override fun init() {
         alarmDisposable = EoPatchRxBus.listen(EventEoPatchAlarm::class.java)
             .map { it.alarmCodes }
-            .doOnNext { aapsLogger.info(LTag.PUMP,"EventEoPatchAlarm Received") }
+            .doOnNext { aapsLogger.info(LTag.PUMP, "EventEoPatchAlarm Received") }
             .concatMap {
                 Observable.fromArray(it)
                     .observeOn(aapsSchedulers.io)
                     .subscribeOn(aapsSchedulers.main)
                     .doOnNext { alarmCodes ->
                         alarmCodes.forEach { alarmCode ->
-                            aapsLogger.info(LTag.PUMP,"alarmCode: ${alarmCode.name}")
+                            aapsLogger.info(LTag.PUMP, "alarmCode: ${alarmCode.name}")
                             val valid = isValid(alarmCode)
                             if (valid) {
                                 if (alarmCode.alarmCategory == AlarmCategory.ALARM || alarmCode == B012) {
@@ -95,7 +97,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                                 }
 
                                 updateState(alarmCode, AlarmState.FIRED)
-                            }else{
+                            } else {
                                 updateState(alarmCode, AlarmState.HANDLE)
                             }
                         }
@@ -107,16 +109,18 @@ class AlarmManager @Inject constructor() : IAlarmManager {
 
     override fun restartAll() {
         val now = System.currentTimeMillis()
+
         @Suppress("UNCHECKED_CAST")
-        val occurredAlarm= pm.getAlarms().occurred.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
+        val occurredAlarm = pm.getAlarms().occurred.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
+
         @Suppress("UNCHECKED_CAST")
         val registeredAlarm = pm.getAlarms().registered.clone() as HashMap<AlarmCode, Alarms.AlarmItem>
         compositeDisposable.clear()
-        if(occurredAlarm.isNotEmpty()){
+        if (occurredAlarm.isNotEmpty()) {
             EoPatchRxBus.publish(EventEoPatchAlarm(occurredAlarm.keys))
         }
 
-        if(registeredAlarm.isNotEmpty()){
+        if (registeredAlarm.isNotEmpty()) {
             registeredAlarm.forEach { raEntry ->
                 compositeDisposable.add(
                     mAlarmRegistry.add(raEntry.key, max(OS_REGISTER_GAP, raEntry.value.triggerTimeMilli - now))
@@ -126,22 +130,23 @@ class AlarmManager @Inject constructor() : IAlarmManager {
         }
     }
 
-    private fun isValid(code: AlarmCode): Boolean{
-        return when(code){
+    private fun isValid(code: AlarmCode): Boolean {
+        return when (code) {
             A005, A016, A020, B012 -> {
-                aapsLogger.info(LTag.PUMP,"Is $code valid? ${pm.getPatchConfig().hasMacAddress() && pm.getPatchConfig().lifecycleEvent.isSubStepRunning}")
+                aapsLogger.info(LTag.PUMP, "Is $code valid? ${pm.getPatchConfig().hasMacAddress() && pm.getPatchConfig().lifecycleEvent.isSubStepRunning}")
                 pm.getPatchConfig().hasMacAddress() && pm.getPatchConfig().lifecycleEvent.isSubStepRunning
             }
-            else -> {
-                aapsLogger.info(LTag.PUMP,"Is $code valid? ${pm.getPatchConfig().isActivated}")
+
+            else                   -> {
+                aapsLogger.info(LTag.PUMP, "Is $code valid? ${pm.getPatchConfig().isActivated}")
                 pm.getPatchConfig().isActivated
             }
         }
     }
 
-    private fun showAlarmDialog(alarmCode: AlarmCode){
+    private fun showAlarmDialog(alarmCode: AlarmCode) {
         val i = Intent(context, AlarmHelperActivity::class.java)
-        i.putExtra("soundid", info.nightscout.core.ui.R.raw.error)
+        i.putExtra("soundid", app.aaps.core.ui.R.raw.error)
         i.putExtra("code", alarmCode.name)
         i.putExtra("status", resourceHelper.gs(alarmCode.resId))
         i.putExtra("title", resourceHelper.gs(R.string.string_alarm))
@@ -171,7 +176,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                         }
                         .subscribe { ret ->
                             when (ret) {
-                                IAlarmProcess.ALARM_HANDLED                    -> {
+                                IAlarmProcess.ALARM_HANDLED -> {
                                     if (alarmCode == B001) {
                                         pumpSync.syncStopTemporaryBasalWithPumpId(
                                             timestamp = dateUtil.now(),
@@ -188,19 +193,19 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                                     updateState(alarmCode, AlarmState.HANDLE)
                                 }
 
-                                else                                           -> showNotification(alarmCode)
+                                else -> showNotification(alarmCode)
                             }
                         }
                 )
             },
-            soundId = info.nightscout.core.ui.R.raw.error,
+            soundId = app.aaps.core.ui.R.raw.error,
             date = pm.getAlarms().getOccuredAlarmTimestamp(alarmCode)
         )
 
     }
 
-    private fun updateState(alarmCode: AlarmCode, state: AlarmState){
-        when(state){
+    private fun updateState(alarmCode: AlarmCode, state: AlarmState) {
+        when (state) {
             AlarmState.REGISTER -> pm.getAlarms().register(alarmCode, 0)
             AlarmState.FIRED    -> pm.getAlarms().occurred(alarmCode)
             AlarmState.HANDLE   -> pm.getAlarms().handle(alarmCode)

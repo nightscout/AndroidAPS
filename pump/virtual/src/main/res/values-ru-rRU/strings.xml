@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Интеграция с помпами, еще не имеющими драйвера (незамкнутый цикл)</string>
     <string name="virtual_pump_label">ВИРТУАЛЬНАЯ ПОМПА</string>
     <string name="virtualpump_settings">настройки вирт помпы</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
 </resources>

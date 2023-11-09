@@ -5,7 +5,7 @@
     <string name="dia_profile">Debes establecer el valor de DAI en tu perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
-    <string name="dia_meaningisequaltodiapump">Si usted está satisfecho de que el valor para DIA que utilizó en su bomba antes de que AAPS funcionara bien, no hay necesidad de cambiar esto cuando comience a hacer bucle.</string>
+    <string name="dia_meaningisequaltodiapump">Si usted está satisfecho de que el valor para DIA que utilizó en su bomba antes de que AAPS funcionara bien, no hay necesidad de cambiar esto cuando comience usar el bucle cerrado.</string>
     <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
     <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
@@ -148,6 +148,7 @@
     <string name="cob3_longer">Ajustar el perfil al 150% hará que el tiempo de absorción de carbohidratos calculado sea mayor</string>
     <string name="cob3_shorter">Si se ajusta el perfil al 150%, el tiempo de absorción de carbohidratos calculado será menor</string>
     <string name="cob3_no_effect">Establecer el perfil a 150% no afectará la absorción calculada de carbohidratos</string>
+    <string name="cob_hint1">https://wiki.aaps.app/en/latest/Usage/COB-calculation.html#how-does-aaps-calculate-the-cob-value</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>
     <string name="iob_hightemp">No se dará alta tasa basal temporal cuando su nivel de azúcar en sangre esté por debajo del objetivo.</string>
     <string name="iob_negiob">El IOB negativo durante un período sustancial en ausencia de ejercicio sugiere que tu perfil es demasiado fuerte y que se necesita menos insulina en tus ajustes.</string>

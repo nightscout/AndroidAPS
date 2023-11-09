@@ -1,12 +1,12 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.AUTH_REQ
 import info.nightscout.pump.medtrum.encryption.Crypt
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
-import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
 class AuthorizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {

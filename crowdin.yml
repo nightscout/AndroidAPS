@@ -3,10 +3,6 @@ files:
     translation: /app/src/main/res/values-%android_code%/strings.xml
   - source: /wear/src/main/res/values/strings.xml
     translation: /wear/src/main/res/values-%android_code%/strings.xml
-  - source: /app-wear-shared/shared/src/main/res/values/strings.xml
-    translation: /app-wear-shared/shared/src/main/res/values-%android_code%/strings.xml
-  - source: /app-wear-shared/shared-impl/src/main/res/values/strings.xml
-    translation: /app-wear-shared/shared-impl/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/aps/src/main/res/values/strings.xml
     translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/main/src/main/res/values/strings.xml
@@ -37,12 +33,10 @@ files:
     translation: /plugins/sync/src/main/res/values-%android_code%/oh_strings.xml
   - source: /plugins/constraints/src/main/res/values/strings.xml
     translation: /plugins/constraints/src/main/res/values-%android_code%/strings.xml
-  - source: /core/graph/src/main/res/values/strings.xml
-    translation: /core/graph/src/main/res/values-%android_code%/strings.xml
+  - source: /core/main/src/main/res/values/strings.xml
+    translation: /core/main/src/main/res/values-%android_code%/strings.xml
   - source: /core/interfaces/src/main/res/values/strings.xml
     translation: /core/interfaces/src/main/res/values-%android_code%/strings.xml
-  - source: /core/utils/src/main/res/values/strings.xml
-    translation: /core/utils/src/main/res/values-%android_code%/strings.xml
   - source: /core/ui/src/main/res/values/protection.xml
     translation: /core/ui/src/main/res/values-%android_code%/protection.xml
   - source: /core/validators/src/main/res/values/validator.xml

@@ -1,35 +1,35 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodStatus
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class VersionResponseTest {
 
-    @Test @Throws(DecoderException::class) fun testValidResponse() {
+    @Test fun testValidResponse() {
         val encoded = Hex.decodeHex("0115040A00010300040208146CC1000954D400FFFFFFFF")
         val response = VersionResponse(encoded)
 
-        Assertions.assertArrayEquals(encoded, response.encoded)
-        Assertions.assertNotSame(encoded, response.encoded)
-        Assertions.assertEquals(ResponseType.ACTIVATION_RESPONSE, response.responseType)
-        Assertions.assertEquals(ResponseType.ActivationResponseType.GET_VERSION_RESPONSE, response.activationResponseType)
-        Assertions.assertEquals(ResponseType.ACTIVATION_RESPONSE.value, response.messageType)
-        Assertions.assertEquals(21.toShort(), response.messageLength)
-        Assertions.assertEquals(4.toShort(), response.firmwareVersionMajor)
-        Assertions.assertEquals(10.toShort(), response.firmwareVersionMinor)
-        Assertions.assertEquals(0.toShort(), response.firmwareVersionInterim)
-        Assertions.assertEquals(1.toShort(), response.bleVersionMajor)
-        Assertions.assertEquals(3.toShort(), response.bleVersionMinor)
-        Assertions.assertEquals(0.toShort(), response.bleVersionInterim)
-        Assertions.assertEquals(4.toShort(), response.productId)
-        Assertions.assertEquals(PodStatus.FILLED, response.podStatus)
-        Assertions.assertEquals(135556289L, response.lotNumber)
-        Assertions.assertEquals(611540L, response.podSequenceNumber)
-        Assertions.assertEquals(0.toByte(), response.rssi)
-        Assertions.assertEquals(0.toByte(), response.receiverLowerGain)
-        Assertions.assertEquals(4294967295L, response.uniqueIdReceivedInCommand)
+        assertThat(response.encoded).asList().containsExactlyElementsIn(encoded.asList()).inOrder()
+        assertThat(response.encoded).isNotSameInstanceAs(encoded)
+        assertThat(response.responseType).isEqualTo(ResponseType.ACTIVATION_RESPONSE)
+        assertThat(response.activationResponseType).isEqualTo(ResponseType.ActivationResponseType.GET_VERSION_RESPONSE)
+        assertThat(response.messageType).isEqualTo(ResponseType.ACTIVATION_RESPONSE.value)
+        assertThat(response.messageLength).isEqualTo(21.toShort())
+        assertThat(response.firmwareVersionMajor).isEqualTo(4.toShort())
+        assertThat(response.firmwareVersionMinor).isEqualTo(10.toShort())
+        assertThat(response.firmwareVersionInterim).isEqualTo(0.toShort())
+        assertThat(response.bleVersionMajor).isEqualTo(1.toShort())
+        assertThat(response.bleVersionMinor).isEqualTo(3.toShort())
+        assertThat(response.bleVersionInterim).isEqualTo(0.toShort())
+        assertThat(response.productId).isEqualTo(4.toShort())
+        assertThat(response.podStatus).isEqualTo(PodStatus.FILLED)
+        assertThat(response.lotNumber).isEqualTo(135556289L)
+        assertThat(response.podSequenceNumber).isEqualTo(611540L)
+        assertThat(response.rssi).isEqualTo(0.toByte())
+        assertThat(response.receiverLowerGain).isEqualTo(0.toByte())
+        assertThat(response.uniqueIdReceivedInCommand).isEqualTo(4294967295L)
     }
 }

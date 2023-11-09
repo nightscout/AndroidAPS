@@ -1,16 +1,16 @@
 package info.nightscout.pump.medtrum
 
-import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.rx.events.EventOverviewBolusProgress
+import app.aaps.core.main.extensions.pureProfileFromJson
+import app.aaps.core.main.profile.ProfileSealed
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.utils.T
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
-import info.nightscout.shared.utils.T
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
@@ -43,7 +43,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
 
         // Expected values
         val expectedByteArray = byteArrayOf(7, 0, -96, 2, -16, 96, 2, 104, 33, 2, -32, -31, 1, -64, 3, 2, -20, 36, 2, 100, -123, 2)
-        Assertions.assertEquals(expectedByteArray.contentToString(), result?.contentToString())
+        assertThat(result!!.contentToString()).isEqualTo(expectedByteArray.contentToString())
     }
 
     @Test fun buildMedtrumProfileArrayGiveProfileWhenValuesTooHighThenReturnNull() {
@@ -60,7 +60,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val result = medtrumPump.buildMedtrumProfileArray(profile)
 
         // Expected values
-        Assertions.assertNull(result)
+        assertThat(result).isNull()
     }
 
     @Test fun getCurrentHourlyBasalFromMedtrumProfileArrayGivenProfileWhenValuesSetThenReturnCorrectValue() {
@@ -88,28 +88,28 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val zonedDateTime0399 = localDate.atTime(localTime0399).atZone(ZoneId.systemDefault())
         val time0399 = zonedDateTime0399.toInstant().toEpochMilli()
         val result = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray!!, time0399)
-        Assertions.assertEquals(2.1, result, 0.01)
+        assertThat(result).isWithin(0.01).of(2.1)
 
         // For 22:30
         val localTime2230 = LocalTime.of(22, 30)
         val zonedDateTime2230 = localDate.atTime(localTime2230).atZone(ZoneId.systemDefault())
         val time2230 = zonedDateTime2230.toInstant().toEpochMilli()
         val result1 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray, time2230)
-        Assertions.assertEquals(1.7, result1, 0.01)
+        assertThat(result1).isWithin(0.01).of(1.7)
 
         // For 23:59
         val localTime2359 = LocalTime.of(23, 59)
         val zonedDateTime2359 = localDate.atTime(localTime2359).atZone(ZoneId.systemDefault())
         val time2359 = zonedDateTime2359.toInstant().toEpochMilli()
         val result2 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray, time2359)
-        Assertions.assertEquals(2.0, result2, 0.01)
+        assertThat(result2).isWithin(0.01).of(2.0)
 
         // For 00:00
         val localTime0000 = LocalTime.of(0, 0)
         val zonedDateTime0000 = localDate.atTime(localTime0000).atZone(ZoneId.systemDefault())
         val time0000 = zonedDateTime0000.toInstant().toEpochMilli()
         val result3 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray, time0000)
-        Assertions.assertEquals(2.1, result3, 0.01)
+        assertThat(result3).isWithin(0.01).of(2.1)
     }
 
     @Test fun handleBolusStatusUpdateWhenCalledExpectNewData() {
@@ -118,15 +118,15 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val bolusCompleted = false
         val amount = 1.4
 
-        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0);
+        medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
 
         // Call
         medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, amount)
 
         // Expected values
-        Assertions.assertEquals(bolusCompleted, medtrumPump.bolusDone)
-        Assertions.assertEquals(amount, medtrumPump.bolusAmountDeliveredFlow.value, 0.01)
-        Assertions.assertEquals(amount, medtrumPump.bolusingTreatment!!.insulin, 0.01)
+        assertThat(medtrumPump.bolusDone).isEqualTo(bolusCompleted)
+        assertThat(medtrumPump.bolusAmountDeliveredFlow.value).isWithin(0.01).of(amount)
+        assertThat(medtrumPump.bolusingTreatment!!.insulin).isWithin(0.01).of(amount)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndTemporaryBasalInfoThenExpectNewData() {
@@ -174,12 +174,12 @@ class MedtrumPumpTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndSameExpectedTemporaryBasalInfoThenExpectNoPumpSync() {
@@ -223,12 +223,12 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
 
         // Check that other fields in medtrumPump are updated
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsAbsoluteTempAndNoTemporaryBasalInfoThenExpectNewData() {
@@ -274,12 +274,12 @@ class MedtrumPumpTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsRelativeTempAndTemporaryBasalInfoThenExpectNewData() {
@@ -329,15 +329,15 @@ class MedtrumPumpTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
-    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedAndThenExpectNewData() {
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedThenExpectNewData() {
         // Inputs
         val basalType = BasalType.SUSPEND_MORE_THAN_MAX_PER_DAY
         val basalRate = 0.0
@@ -378,12 +378,12 @@ class MedtrumPumpTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsATypeIsSuspendedAndSameExpectedTemporaryBasalInfoThenExpectNoPumpSync() {
@@ -424,12 +424,63 @@ class MedtrumPumpTest : MedtrumTestBase() {
             anyOrNull()
         )
 
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
+    }
+
+    @Test fun handleBasalStatusUpdateWhenBasalTypeIsSuspendedAndNewerFakeTBRThenExpectInvalidateAndNewData() {
+        // Inputs
+        val basalType = BasalType.SUSPEND_MORE_THAN_MAX_PER_DAY
+        val basalRate = 0.0
+        val basalSequence = 123
+        val basalPatchId = 1L
+        val basalStartTime = 1000L
+        val receivedTime = 1500L
+
+        medtrumPump.deviceType = MedtrumSnUtil.MD_8301
+
+        // Mocks
+        val expectedTemporaryBasal: PumpSync.PumpState.TemporaryBasal = mock(PumpSync.PumpState.TemporaryBasal::class.java)
+        Mockito.`when`(expectedTemporaryBasal.pumpId).thenReturn(basalStartTime + T.mins(10).msecs()) // Ensure it's different
+        Mockito.`when`(expectedTemporaryBasal.timestamp).thenReturn(basalStartTime + T.mins(10).msecs())  // Newer Fake TBR
+        Mockito.`when`(expectedTemporaryBasal.duration).thenReturn(T.mins(4800L).msecs()) // Fake TBR duration
+
+        Mockito.`when`(pumpSync.expectedPumpState()).thenReturn(
+            PumpSync.PumpState(
+                temporaryBasal = expectedTemporaryBasal,
+                extendedBolus = null,
+                bolus = null,
+                profile = null,
+                serialNumber = "someSerialNumber"
+            )
+        )
+        Mockito.`when`(temporaryBasalStorage.findTemporaryBasal(basalStartTime, basalRate)).thenReturn(null)
+
+        // Call
+        medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime, receivedTime)
+
+        // Expected values
+        Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
+            timestamp = basalStartTime,
+            rate = basalRate,
+            duration = T.mins(4800L).msecs(),
+            isAbsolute = true,
+            type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+            pumpId = basalStartTime,
+            pumpType = PumpType.MEDTRUM_300U,
+            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+        )
+
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsNoneAndThenExpectFakeTBR() {
@@ -469,12 +520,12 @@ class MedtrumPumpTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsStandardAndTempBasalExpectedThenExpectSyncStop() {
@@ -513,12 +564,12 @@ class MedtrumPumpTest : MedtrumTestBase() {
             pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
         )
 
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
     @Test fun handleBasalStatusUpdateWhenBasalTypeIsStandardAndNoTempBasalExpectedThenExpectNoSyncStop() {
@@ -554,12 +605,12 @@ class MedtrumPumpTest : MedtrumTestBase() {
             anyOrNull()
         )
 
-        Assertions.assertEquals(basalType, medtrumPump.lastBasalType)
-        Assertions.assertEquals(basalRate, medtrumPump.lastBasalRate, 0.01)
-        Assertions.assertEquals(basalSequence, medtrumPump.lastBasalSequence)
-        Assertions.assertEquals(basalSequence, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(basalPatchId, medtrumPump.lastBasalPatchId)
-        Assertions.assertEquals(basalStartTime, medtrumPump.lastBasalStartTime)
+        assertThat(medtrumPump.lastBasalType).isEqualTo(basalType)
+        assertThat(medtrumPump.lastBasalRate).isWithin(0.01).of(basalRate)
+        assertThat(medtrumPump.lastBasalSequence).isEqualTo(basalSequence)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(basalSequence)
+        assertThat(medtrumPump.lastBasalPatchId).isEqualTo(basalPatchId)
+        assertThat(medtrumPump.lastBasalStartTime).isEqualTo(basalStartTime)
     }
 
     @Test fun handleNewPatchCalledWhenCalledExpectNewDataPresent() {
@@ -575,10 +626,10 @@ class MedtrumPumpTest : MedtrumTestBase() {
         medtrumPump.handleNewPatch(newPatchId, newSequenceNumber, newStartTime)
 
         // Expected values
-        Assertions.assertEquals(newPatchId, medtrumPump.patchId)
-        Assertions.assertEquals(newSequenceNumber, medtrumPump.currentSequenceNumber)
-        Assertions.assertEquals(newStartTime, medtrumPump.patchStartTime)
-        Assertions.assertEquals(1, medtrumPump.syncedSequenceNumber)
+        assertThat(medtrumPump.patchId).isEqualTo(newPatchId)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(newSequenceNumber)
+        assertThat(medtrumPump.patchStartTime).isEqualTo(newStartTime)
+        assertThat(medtrumPump.syncedSequenceNumber).isEqualTo(1)
     }
 
     @Test fun handleStopStatusUpdateWhenSequenceThenExpectUpdate() {
@@ -593,11 +644,11 @@ class MedtrumPumpTest : MedtrumTestBase() {
         medtrumPump.handleStopStatusUpdate(sequence, patchId)
 
         // Expected values
-        Assertions.assertEquals(patchId, medtrumPump.lastStopPatchId)
-        Assertions.assertEquals(sequence, medtrumPump.currentSequenceNumber)
+        assertThat(medtrumPump.lastStopPatchId).isEqualTo(patchId)
+        assertThat(medtrumPump.currentSequenceNumber).isEqualTo(sequence)
     }
 
-    @Test fun setFakeTBRIfNeededWhenNoFakeTBRAlreadyRunningExpectPumpSync() {
+    @Test fun setFakeTBRIfNotSetWhenNoFakeTBRAlreadyRunningExpectPumpSync() {
         // Inputs
         medtrumPump.deviceType = MedtrumSnUtil.MD_8301
 
@@ -616,7 +667,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
 
         // Call
-        medtrumPump.setFakeTBRIfNeeded()
+        medtrumPump.setFakeTBRIfNotSet()
 
         // Expected values
         Mockito.verify(pumpSync).syncTemporaryBasalWithPumpId(
@@ -631,7 +682,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
     }
 
-    @Test fun setFakeTBRIfNeededWhenFakeTBRAlreadyRunningExpectNoPumpSync() {
+    @Test fun setFakeTBRIfNotSetWhenFakeTBRAlreadyRunningExpectNoPumpSync() {
         // Inputs
         medtrumPump.deviceType = MedtrumSnUtil.MD_8301
 
@@ -650,7 +701,7 @@ class MedtrumPumpTest : MedtrumTestBase() {
         )
 
         // Call
-        medtrumPump.setFakeTBRIfNeeded()
+        medtrumPump.setFakeTBRIfNotSet()
 
         // Expected values
         Mockito.verify(pumpSync, Mockito.never()).syncTemporaryBasalWithPumpId(

@@ -5,11 +5,11 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.PatchStateManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.UpdateConnection;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.UpdateConnectionResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
-import info.nightscout.rx.logging.LTag;
 import io.reactivex.rxjava3.core.Single;
 
 @Singleton
@@ -47,8 +47,8 @@ public class UpdateConnectionTask extends TaskBase {
 
         if (ready) {
             disposable = update()
-                .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
-                .subscribe();
+                    .timeout(TASK_ENQUEUE_TIME_OUT, TimeUnit.SECONDS)
+                    .subscribe();
         }
     }
 }

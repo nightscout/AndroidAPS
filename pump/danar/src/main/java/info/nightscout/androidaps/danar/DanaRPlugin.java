@@ -11,34 +11,34 @@ import androidx.annotation.NonNull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import app.aaps.annotations.OpenForTesting;
+import app.aaps.core.interfaces.constraints.ConstraintsChecker;
+import app.aaps.core.interfaces.logging.AAPSLogger;
+import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.core.interfaces.plugin.ActivePlugin;
+import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.core.interfaces.pump.DetailedBolusInfo;
+import app.aaps.core.interfaces.pump.PumpEnactResult;
+import app.aaps.core.interfaces.pump.PumpSync;
+import app.aaps.core.interfaces.pump.defs.PumpType;
+import app.aaps.core.interfaces.queue.CommandQueue;
+import app.aaps.core.interfaces.resources.ResourceHelper;
+import app.aaps.core.interfaces.rx.AapsSchedulers;
+import app.aaps.core.interfaces.rx.bus.RxBus;
+import app.aaps.core.interfaces.rx.events.EventAppExit;
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress;
+import app.aaps.core.interfaces.rx.events.EventPreferenceChange;
+import app.aaps.core.interfaces.sharedPreferences.SP;
+import app.aaps.core.interfaces.ui.UiInteraction;
+import app.aaps.core.interfaces.utils.DateUtil;
+import app.aaps.core.interfaces.utils.DecimalFormatter;
+import app.aaps.core.interfaces.utils.Round;
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
+import app.aaps.core.main.constraints.ConstraintObject;
 import dagger.android.HasAndroidInjector;
 import info.nightscout.androidaps.danar.services.DanaRExecutionService;
-import info.nightscout.annotations.OpenForTesting;
-import info.nightscout.core.utils.fabric.FabricPrivacy;
-import info.nightscout.interfaces.constraints.Constraint;
-import info.nightscout.interfaces.constraints.Constraints;
-import info.nightscout.interfaces.plugin.ActivePlugin;
-import info.nightscout.interfaces.profile.Profile;
-import info.nightscout.interfaces.pump.DetailedBolusInfo;
-import info.nightscout.interfaces.pump.PumpEnactResult;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.interfaces.queue.CommandQueue;
-import info.nightscout.interfaces.ui.UiInteraction;
-import info.nightscout.interfaces.utils.DecimalFormatter;
-import info.nightscout.interfaces.utils.Round;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.database.DanaHistoryDatabase;
-import info.nightscout.rx.AapsSchedulers;
-import info.nightscout.rx.bus.RxBus;
-import info.nightscout.rx.events.EventAppExit;
-import info.nightscout.rx.events.EventOverviewBolusProgress;
-import info.nightscout.rx.events.EventPreferenceChange;
-import info.nightscout.rx.logging.AAPSLogger;
-import info.nightscout.rx.logging.LTag;
-import info.nightscout.shared.interfaces.ResourceHelper;
-import info.nightscout.shared.sharedPreferences.SP;
-import info.nightscout.shared.utils.DateUtil;
 
 @Singleton
 @OpenForTesting
@@ -46,8 +46,20 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     private final AAPSLogger aapsLogger;
     private final Context context;
     private final ResourceHelper rh;
-    private final Constraints constraints;
     private final FabricPrivacy fabricPrivacy;
+    private final ServiceConnection mConnection = new ServiceConnection() {
+
+        public void onServiceDisconnected(ComponentName name) {
+            aapsLogger.debug(LTag.PUMP, "Service is disconnected");
+            sExecutionService = null;
+        }
+
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            aapsLogger.debug(LTag.PUMP, "Service is connected");
+            DanaRExecutionService.LocalBinder mLocalBinder = (DanaRExecutionService.LocalBinder) service;
+            sExecutionService = mLocalBinder.getServiceInstance();
+        }
+    };
 
     @Inject
     public DanaRPlugin(
@@ -57,7 +69,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             RxBus rxBus,
             Context context,
             ResourceHelper rh,
-            Constraints constraints,
+            ConstraintsChecker constraintsChecker,
             ActivePlugin activePlugin,
             SP sp,
             CommandQueue commandQueue,
@@ -69,14 +81,13 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             DanaHistoryDatabase danaHistoryDatabase,
             DecimalFormatter decimalFormatter
     ) {
-        super(injector, danaPump, rh, constraints, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter);
+        super(injector, danaPump, rh, constraintsChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.rh = rh;
-        this.constraints = constraints;
         this.fabricPrivacy = fabricPrivacy;
 
-        useExtendedBoluses = sp.getBoolean(info.nightscout.core.utils.R.string.key_danar_useextended, false);
+        useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false);
         pumpDescription.fillFor(PumpType.DANA_R);
     }
 
@@ -90,7 +101,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 .subscribe(event -> {
                     if (isEnabled()) {
                         boolean previousValue = useExtendedBoluses;
-                        useExtendedBoluses = sp.getBoolean(info.nightscout.core.utils.R.string.key_danar_useextended, false);
+                        useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false);
 
                         if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().getExtendedBolus() != null) {
                             sExecutionService.extendedBolusStop();
@@ -113,20 +124,6 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         disposable.clear();
         super.onStop();
     }
-
-    private final ServiceConnection mConnection = new ServiceConnection() {
-
-        public void onServiceDisconnected(ComponentName name) {
-            aapsLogger.debug(LTag.PUMP, "Service is disconnected");
-            sExecutionService = null;
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            aapsLogger.debug(LTag.PUMP, "Service is connected");
-            DanaRExecutionService.LocalBinder mLocalBinder = (DanaRExecutionService.LocalBinder) service;
-            sExecutionService = mLocalBinder.getServiceInstance();
-        }
-    };
 
     // Plugin base interface
     @NonNull
@@ -163,44 +160,40 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = constraints.applyBolusConstraints(new Constraint<>(detailedBolusInfo.insulin)).value();
-        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
-            boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
-            PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
-                    .bolusDelivered(t.getInsulin());
-            if (!result.getSuccess())
-                result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(), danaPump.getBolusStartErrorCode()));
-            else
-                result.comment(info.nightscout.core.ui.R.string.ok);
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
-            detailedBolusInfo.insulin = t.getInsulin();
-            detailedBolusInfo.timestamp = System.currentTimeMillis();
-            if (detailedBolusInfo.insulin > 0)
-                pumpSync.syncBolusWithPumpId(
-                        detailedBolusInfo.timestamp,
-                        detailedBolusInfo.insulin,
-                        detailedBolusInfo.getBolusType(),
-                        dateUtil.now(),
-                        PumpType.DANA_R,
-                        serialNumber());
-            if (detailedBolusInfo.carbs > 0)
-                pumpSync.syncCarbsWithTimestamp(
-                        detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp,
-                        detailedBolusInfo.carbs,
-                        null,
-                        PumpType.DANA_R,
-                        serialNumber());
-            return result;
-        } else {
-            PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(false).bolusDelivered(0d).comment(info.nightscout.core.ui.R.string.invalid_input);
-            aapsLogger.error("deliverTreatment: Invalid input");
-            return result;
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
+        EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
+        boolean connectionOK = false;
+        if (detailedBolusInfo.insulin > 0)
+            connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
+        PumpEnactResult result = new PumpEnactResult(getInjector());
+        result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
+                .bolusDelivered(t.getInsulin());
+        if (!result.getSuccess())
+            result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(), danaPump.getBolusStartErrorCode()));
+        else
+            result.comment(app.aaps.core.ui.R.string.ok);
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
+        detailedBolusInfo.insulin = t.getInsulin();
+        detailedBolusInfo.timestamp = System.currentTimeMillis();
+        if (detailedBolusInfo.insulin > 0)
+            pumpSync.syncBolusWithPumpId(
+                    detailedBolusInfo.timestamp,
+                    detailedBolusInfo.insulin,
+                    detailedBolusInfo.getBolusType(),
+                    dateUtil.now(),
+                    PumpType.DANA_R,
+                    serialNumber());
+        if (detailedBolusInfo.carbs > 0)
+            pumpSync.syncCarbsWithTimestamp(
+                    detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp,
+                    detailedBolusInfo.carbs,
+                    null,
+                    PumpType.DANA_R,
+                    serialNumber());
+        return result;
     }
 
     // This is called from APS
@@ -210,7 +203,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         //This should not be needed while using queue because connection should be done before calling this
         PumpEnactResult result = new PumpEnactResult(getInjector());
 
-        absoluteRate = constraints.applyBasalConstraints(new Constraint<>(absoluteRate), profile).value();
+        absoluteRate = constraintChecker.applyBasalConstraints(new ConstraintObject<>(absoluteRate, getAapsLogger()), profile).value();
 
         boolean doTempOff = getBaseBasalRate() - absoluteRate == 0d && absoluteRate >= 0.10d;
         final boolean doLowTemp = absoluteRate < getBaseBasalRate() || absoluteRate < 0.10d;
@@ -289,7 +282,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
             // We keep current basal running so need to sub current basal
             double extendedRateToSet = absoluteRate - getBaseBasalRate();
-            extendedRateToSet = constraints.applyBasalConstraints(new Constraint<>(extendedRateToSet), profile).value();
+            extendedRateToSet = constraintChecker.applyBasalConstraints(new ConstraintObject<>(extendedRateToSet, getAapsLogger()), profile).value();
             // needs to be rounded to 0.1
             extendedRateToSet = Round.INSTANCE.roundTo(extendedRateToSet, pumpDescription.getExtendedBolusStep() * 2); // *2 because of half hours
 
@@ -331,7 +324,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             return cancelExtendedBolus();
         }
         PumpEnactResult result = new PumpEnactResult(getInjector());
-        result.success(true).enacted(false).comment(info.nightscout.core.ui.R.string.ok).isTempCancel(true);
+        result.success(true).enacted(false).comment(app.aaps.core.ui.R.string.ok).isTempCancel(true);
         return result;
     }
 
@@ -351,11 +344,11 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                         getPumpDescription().getPumpType(),
                         serialNumber()
                 );
-                result.success(true).enacted(true).isTempCancel(true).comment(info.nightscout.core.ui.R.string.ok);
+                result.success(true).enacted(true).isTempCancel(true).comment(app.aaps.core.ui.R.string.ok);
             } else
-                result.success(false).enacted(false).isTempCancel(true).comment(info.nightscout.core.ui.R.string.canceling_eb_failed);
+                result.success(false).enacted(false).isTempCancel(true).comment(app.aaps.core.ui.R.string.canceling_eb_failed);
         } else {
-            result.success(true).isTempCancel(true).comment(info.nightscout.core.ui.R.string.ok);
+            result.success(true).isTempCancel(true).comment(app.aaps.core.ui.R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");
         }
         return result;

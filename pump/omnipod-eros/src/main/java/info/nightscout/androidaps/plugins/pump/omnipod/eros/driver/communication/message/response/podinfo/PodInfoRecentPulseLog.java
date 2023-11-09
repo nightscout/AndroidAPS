@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
-import info.nightscout.pump.core.utils.ByteUtil;
+import info.nightscout.pump.common.utils.ByteUtil;
 
 public class PodInfoRecentPulseLog extends PodInfo {
     private static final int MINIMUM_MESSAGE_LENGTH = 3;
@@ -23,13 +23,13 @@ public class PodInfoRecentPulseLog extends PodInfo {
             throw new IllegalArgumentException("Not enough data");
         }
 
-        lastEntryIndex = ByteUtil.toInt(encodedData[1], encodedData[2]);
+        lastEntryIndex = ByteUtil.INSTANCE.toInt(encodedData[1], encodedData[2]);
         dwords = new ArrayList<>();
 
         int numberOfDwords = (bodyLength - 3) / 4;
 
         for (int i = 0; numberOfDwords > i; i++) {
-            byte[] dword = ByteUtil.substring(encodedData, 3 + (4 * i), 4);
+            byte[] dword = ByteUtil.INSTANCE.substring(encodedData, 3 + (4 * i), 4);
             dwords.add(dword);
         }
     }
@@ -55,7 +55,7 @@ public class PodInfoRecentPulseLog extends PodInfo {
 
         List<String> hexDwords = new ArrayList<>();
         for (byte[] dword : dwords) {
-            hexDwords.add(ByteUtil.shortHexStringWithoutSpaces(dword));
+            hexDwords.add(ByteUtil.INSTANCE.shortHexStringWithoutSpaces(dword));
         }
         out += TextUtils.join(", ", hexDwords);
         out += "]}";

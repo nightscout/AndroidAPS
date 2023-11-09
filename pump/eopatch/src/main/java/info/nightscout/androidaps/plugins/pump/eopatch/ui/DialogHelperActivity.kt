@@ -2,8 +2,8 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.os.Bundle
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ActivationNotCompleteDialog
-import info.nightscout.core.ui.R
-import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.ui.R
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 
 class DialogHelperActivity : TranslatedDaggerAppCompatActivity() {
     @Override

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="count_selected">%1$d selected</string>
-    <string name="remove_items">Remove Items</string>
-    <string name="sort_items">Sort Items</string>
-    <string name="remove_selected_items">Remove Selected Items</string>
-    <string name="sort_label">Sort</string>
-
-</resources>

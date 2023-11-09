@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="virtual_pump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
 </resources>

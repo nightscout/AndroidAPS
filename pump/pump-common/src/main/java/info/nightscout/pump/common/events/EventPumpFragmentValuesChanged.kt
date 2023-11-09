@@ -1,7 +1,7 @@
 package info.nightscout.pump.common.events
 
+import app.aaps.core.interfaces.rx.events.Event
 import info.nightscout.pump.common.defs.PumpUpdateFragmentType
-import info.nightscout.rx.events.Event
 
 class EventPumpFragmentValuesChanged : Event {
 

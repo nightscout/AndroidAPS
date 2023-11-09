@@ -7,50 +7,52 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.Preference
+import app.aaps.core.interfaces.constraints.Constraint
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.constraints.PluginConstraints
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.OwnDatabasePlugin
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.Dana
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.DetailedBolusInfoStorage
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppExit
+import app.aaps.core.interfaces.rx.events.EventConfigBuilderChange
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.ui.toast.ToastUtils
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.OwnDatabasePlugin
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.Dana
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpPluginBase
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.TemporaryBasalStorage
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.Round
 import info.nightscout.pump.dana.DanaFragment
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.comm.RecordTypes
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.events.EventDanaRSDeviceChange
 import info.nightscout.pump.danars.services.DanaRSService
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventAppExit
-import info.nightscout.rx.events.EventConfigBuilderChange
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONException
@@ -68,7 +70,7 @@ class DanaRSPlugin @Inject constructor(
     private val rxBus: RxBus,
     private val context: Context,
     rh: ResourceHelper,
-    private val constraintChecker: Constraints,
+    private val constraintChecker: ConstraintsChecker,
     private val profileFunction: ProfileFunction,
     private val sp: SP,
     commandQueue: CommandQueue,
@@ -85,14 +87,14 @@ class DanaRSPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DanaFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_danai_128)
-        .pluginIcon2(info.nightscout.core.ui.R.drawable.ic_danars_128)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_danai_128)
+        .pluginIcon2(app.aaps.core.ui.R.drawable.ic_danars_128)
         .pluginName(info.nightscout.pump.dana.R.string.danarspump)
         .shortName(info.nightscout.pump.dana.R.string.danarspump_shortname)
         .preferencesId(R.xml.pref_danars)
         .description(info.nightscout.pump.dana.R.string.description_pump_dana_rs),
     injector, aapsLogger, rh, commandQueue
-), Pump, Dana, Constraints, OwnDatabasePlugin {
+), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
     private val disposable = CompositeDisposable()
     private var danaRSService: DanaRSService? = null
@@ -107,7 +109,7 @@ class DanaRSPlugin @Inject constructor(
         if (pref.key == rh.gs(info.nightscout.pump.dana.R.string.key_danars_name)) {
             val value = sp.getStringOrNull(info.nightscout.pump.dana.R.string.key_danars_name, null)
             pref.summary = value
-                ?: rh.gs(info.nightscout.core.ui.R.string.not_set_short)
+                ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
         }
     }
 
@@ -157,14 +159,14 @@ class DanaRSPlugin @Inject constructor(
         mDeviceName = sp.getString(info.nightscout.pump.dana.R.string.key_danars_name, "")
         danaPump.serialNumber = sp.getString(info.nightscout.pump.dana.R.string.key_danars_name, "")
         danaPump.reset()
-        commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), null)
+        commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
     }
 
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = danaRSService?.connect(reason, mDeviceAddress) ?: false
-            if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)
+            if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported_or_not_paired)
         }
     }
 
@@ -202,18 +204,22 @@ class DanaRSPlugin @Inject constructor(
 
     // Constraints interface
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        absoluteRate.setIfSmaller(aapsLogger, danaPump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, danaPump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        absoluteRate.setIfSmaller(danaPump.maxBasal, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, danaPump.maxBasal, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
         return absoluteRate
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        percentRate.setIfGreater(0, rh.gs(app.aaps.core.ui.R.string.limitingpercentrate, 0, rh.gs(app.aaps.core.ui.R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(
+            pumpDescription.maxTempPercent,
+            rh.gs(app.aaps.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(app.aaps.core.ui.R.string.pumplimit)),
+            this
+        )
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfSmaller(aapsLogger, danaPump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, danaPump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
+        insulin.setIfSmaller(danaPump.maxBolus, rh.gs(app.aaps.core.ui.R.string.limitingbolus, danaPump.maxBolus, rh.gs(app.aaps.core.ui.R.string.pumplimit)), this)
         return insulin
     }
 
@@ -235,20 +241,20 @@ class DanaRSPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
-            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set)
+            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.pump_not_initialized_profile_not_set)
             return result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         }
         return if (danaRSService?.updateBasalsInPump(profile) != true) {
-            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile)
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile)
             result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
             result.success = true
             result.enacted = true
             result.comment = "OK"
@@ -282,52 +288,47 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
-        return if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            val preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0)
-            var speed = 12
-            when (preferencesSpeed) {
-                0 -> speed = 12
-                1 -> speed = 30
-                2 -> speed = 60
-            }
-            // RS stores end time for bolus, we need to adjust time
-            // default delivery speed is 12 sec/U
-            detailedBolusInfo.timestamp = dateUtil.now() + (speed * detailedBolusInfo.insulin * 1000).toLong()
-            // clean carbs to prevent counting them as twice because they will picked up as another record
-            // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
-            val carbs = detailedBolusInfo.carbs
-            detailedBolusInfo.carbs = 0.0
-            var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
-            if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
-            detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
-            var connectionOK = false
-            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
-                ?: false
-            val result = PumpEnactResult(injector)
-            result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
-            result.bolusDelivered = t.insulin
-            if (!result.success) {
-                var error = "" + danaPump.bolusStartErrorCode
-                when (danaPump.bolusStartErrorCode) {
-                    0x10 -> error = rh.gs(info.nightscout.pump.dana.R.string.maxbolusviolation)
-                    0x20 -> error = rh.gs(info.nightscout.pump.dana.R.string.commanderror)
-                    0x40 -> error = rh.gs(info.nightscout.pump.dana.R.string.speederror)
-                    0x80 -> error = rh.gs(info.nightscout.pump.dana.R.string.insulinlimitviolation)
-                }
-                result.comment = rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
-            } else result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-            result
-        } else {
-            val result = PumpEnactResult(injector)
-            result.success = false
-            result.bolusDelivered = 0.0
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
-            aapsLogger.error("deliverTreatment: Invalid input")
-            result
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
+
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
+        val preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0)
+        var speed = 12
+        when (preferencesSpeed) {
+            0 -> speed = 12
+            1 -> speed = 30
+            2 -> speed = 60
         }
+        // RS stores end time for bolus, we need to adjust time
+        // default delivery speed is 12 sec/U
+        detailedBolusInfo.timestamp = dateUtil.now() + (speed * detailedBolusInfo.insulin * 1000).toLong()
+        // clean carbs to prevent counting them as twice because they will picked up as another record
+        // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
+        val carbs = detailedBolusInfo.carbs
+        detailedBolusInfo.carbs = 0.0
+        var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
+        if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
+        detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
+        val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+        var connectionOK = false
+        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
+            ?: false
+        val result = PumpEnactResult(injector)
+        result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
+        result.bolusDelivered = t.insulin
+        if (!result.success) {
+            var error = "" + danaPump.bolusStartErrorCode
+            when (danaPump.bolusStartErrorCode) {
+                0x10 -> error = rh.gs(info.nightscout.pump.dana.R.string.maxbolusviolation)
+                0x20 -> error = rh.gs(info.nightscout.pump.dana.R.string.commanderror)
+                0x40 -> error = rh.gs(info.nightscout.pump.dana.R.string.speederror)
+                0x80 -> error = rh.gs(info.nightscout.pump.dana.R.string.insulinlimitviolation)
+            }
+            result.comment = rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
+        } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
+        return result
     }
 
     override fun stopBolusDelivering() {
@@ -337,7 +338,7 @@ class DanaRSPlugin @Inject constructor(
     // This is called from APS
     @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
+        val absoluteAfterConstrain = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         var doTempOff = baseBasalRate - absoluteAfterConstrain == 0.0
         val doLowTemp = absoluteAfterConstrain < baseBasalRate
         val doHighTemp = absoluteAfterConstrain > baseBasalRate
@@ -413,12 +414,12 @@ class DanaRSPlugin @Inject constructor(
     @Synchronized
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         val result = PumpEnactResult(injector)
-        var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(Constraint(percent), profile).value()
+        var percentAfterConstraint = constraintChecker.applyBasalPercentConstraints(ConstraintObject(percent, aapsLogger), profile).value()
         if (percentAfterConstraint < 0) {
             result.isTempCancel = false
             result.enacted = false
             result.success = false
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.invalid_input)
             aapsLogger.error("setTempBasalPercent: Invalid input")
             return result
         }
@@ -427,7 +428,7 @@ class DanaRSPlugin @Inject constructor(
             result.enacted = false
             result.success = true
             result.isTempCancel = false
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
             result.isPercent = true
@@ -445,7 +446,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percentAfterConstraint) {
             result.enacted = true
             result.success = true
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
@@ -455,7 +456,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error)
+        result.comment = rh.gs(app.aaps.core.ui.R.string.temp_basal_delivery_error)
         aapsLogger.error("setTempBasalPercent: Failed to set temp basal. connectionOK: $connectionOK isTempBasalInProgress: ${danaPump.isTempBasalInProgress} tempBasalPercent: ${danaPump.tempBasalPercent}")
         return result
     }
@@ -466,7 +467,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percent) {
             result.enacted = true
             result.success = true
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
@@ -483,7 +484,7 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
-        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
+        var insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(ConstraintObject(insulin, aapsLogger)).value()
         // needs to be rounded
         val durationInHalfHours = max(durationInMinutes / 30, 1)
         insulinAfterConstraint = Round.roundTo(insulinAfterConstraint, pumpDescription.extendedBolusStep)
@@ -491,7 +492,7 @@ class DanaRSPlugin @Inject constructor(
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
             result.success = true
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             result.duration = danaPump.extendedBolusRemainingMinutes
             result.absolute = danaPump.extendedBolusAbsoluteRate
             result.isPercent = false
@@ -504,7 +505,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = true
             result.success = true
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
+            result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.extendedBolusRemainingMinutes
             result.absolute = danaPump.extendedBolusAbsoluteRate
@@ -529,14 +530,14 @@ class DanaRSPlugin @Inject constructor(
                 .success(!danaPump.isTempBasalInProgress)
                 .enacted(true)
                 .isTempCancel(true)
-                .comment(info.nightscout.core.ui.R.string.canceling_tbr_failed)
+                .comment(app.aaps.core.ui.R.string.canceling_tbr_failed)
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
             return PumpEnactResult(injector)
                 .success(true)
                 .enacted(false)
                 .isTempCancel(true)
-                .comment(info.nightscout.core.ui.R.string.ok)
+                .comment(app.aaps.core.ui.R.string.ok)
         }
     }
 
@@ -547,14 +548,14 @@ class DanaRSPlugin @Inject constructor(
             return PumpEnactResult(injector)
                 .success(!danaPump.isExtendedInProgress)
                 .enacted(true)
-                .comment(info.nightscout.core.ui.R.string.canceling_eb_failed)
+                .comment(app.aaps.core.ui.R.string.canceling_eb_failed)
         } else {
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
             return PumpEnactResult(injector)
                 .success(true)
                 .enacted(false)
                 .isTempCancel(true)
-                .comment(info.nightscout.core.ui.R.string.ok)
+                .comment(app.aaps.core.ui.R.string.ok)
         }
     }
 

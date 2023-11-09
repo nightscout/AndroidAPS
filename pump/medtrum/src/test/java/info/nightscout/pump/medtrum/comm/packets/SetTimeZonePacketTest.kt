@@ -1,11 +1,11 @@
 package info.nightscout.pump.medtrum.comm.packets
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SetTimeZonePacketTest : MedtrumTestBase() {
@@ -35,23 +35,21 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        val expectedByteArray = byteArrayOf(opCode.toByte()) + offsetMinutes.toByteArray(2) + time.toByteArray(4)
-        Assertions.assertEquals(7, result.size)
-        Assertions.assertEquals(expectedByteArray.contentToString(), result.contentToString())
+        val expected = byteArrayOf(opCode.toByte()) + offsetMinutes.toByteArray(2) + time.toByteArray(4)
+        assertThat(result).asList().containsExactlyElementsIn(expected.toList()).inOrder()
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
         // Inputs
         val response = byteArrayOf(7, 12, 4, 0, 0, 0, -78)
+        val offsetMinutes = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
 
         // Call
         val packet = SetTimeZonePacket(packetInjector)
         val result = packet.handleResponse(response)
 
         // Expected values
-        val expectedOffsetMinutes = 0
-
-        Assertions.assertTrue(result)
-        Assertions.assertEquals(expectedOffsetMinutes, medtrumPump.pumpTimeZoneOffset)
+        assertThat(result).isTrue()
+        assertThat(medtrumPump.pumpTimeZoneOffset).isEqualTo(offsetMinutes)
     }
 }

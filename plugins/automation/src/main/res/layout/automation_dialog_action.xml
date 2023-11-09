@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
-    tools:context="info.nightscout.automation.dialogs.EditActionDialog">
+    tools:context=".dialogs.EditActionDialog">
 
     <LinearLayout
         android:layout_width="match_parent"

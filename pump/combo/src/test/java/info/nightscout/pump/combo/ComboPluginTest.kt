@@ -1,23 +1,22 @@
 package info.nightscout.pump.combo
 
 import android.content.Context
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.shared.tests.TestBase
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.pump.combo.ruffyscripter.history.Bolus
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.sharedtests.TestBase
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -47,19 +46,18 @@ class ComboPluginTest : TestBase() {
 
     @BeforeEach
     fun prepareMocks() {
-        `when`(rh.gs(info.nightscout.core.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
+        `when`(rh.gs(app.aaps.core.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
         `when`(context.getString(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
-        comboPlugin = ComboPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction)
+        comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction)
     }
 
     @Test
     fun invalidBasalRateOnComboPumpShouldLimitLoopInvocation() {
         comboPlugin.setPluginEnabled(PluginType.PUMP, true)
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false)
-        var c = Constraint(true)
-        c = comboPlugin.isLoopInvocationAllowed(c)
-        Assertions.assertEquals("Combo: No valid basal rate read from pump", c.getReasons(aapsLogger))
-        Assertions.assertEquals(false, c.value())
+        val c = comboPlugin.isLoopInvocationAllowed(ConstraintObject(true, aapsLogger))
+        assertThat(c.getReasons()).isEqualTo("Combo: No valid basal rate read from pump")
+        assertThat(c.value()).isFalse()
         comboPlugin.setPluginEnabled(PluginType.PUMP, false)
     }
 
@@ -68,18 +66,16 @@ class ComboPluginTest : TestBase() {
         val now = System.currentTimeMillis()
         val pumpTimestamp = now - now % 1000
         // same timestamp, different bolus leads to different fake timestamp
-        Assertions.assertNotEquals(
-            comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.1, true)),
+        assertThat(
             comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.3, true))
-        )
+        ).isNotEqualTo(comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.1, true)))
         // different timestamp, same bolus leads to different fake timestamp
-        Assertions.assertNotEquals(
-            comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.3, true)),
+        assertThat(
             comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp + 60 * 1000, 0.3, true))
-        )
+        ).isNotEqualTo(comboPlugin.generatePumpBolusId(Bolus(pumpTimestamp, 0.3, true)))
         // generated timestamp has second-precision
         val bolus = Bolus(pumpTimestamp, 0.2, true)
         val calculatedTimestamp = comboPlugin.generatePumpBolusId(bolus)
-        Assertions.assertEquals(calculatedTimestamp, calculatedTimestamp - calculatedTimestamp % 1000)
+        assertThat(calculatedTimestamp - calculatedTimestamp % 1000).isEqualTo(calculatedTimestamp)
     }
 }

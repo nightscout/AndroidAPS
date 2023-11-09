@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">가상 펌프 종류</string>
+    <string name="virtual_pump_definition">펌프 정의</string>
+    <string name="virtual_pump_pump_def">Bolus: 단계=%1$s\n확장 Bolus: [단계=%2$s, 기간=%3$s분-%4$sh]\nBasal: 단계=%5$s\nTBR: %6$s (by %7$s), 기간=%8$s분-%9$s시\n%10$s</string>
+    <string name="virtual_pump_shortname">VPUMP</string>
     <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
+    <string name="virtual_pump_label">가상 펌프</string>
     <string name="virtualpump_settings">가상펌프 설정</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* 가상 펌프에서는 Basal/Bolus에 대해 범위로 지정이 될 수 없고, 이산값(discrete values)만 지원 됩니다.</string>
 </resources>

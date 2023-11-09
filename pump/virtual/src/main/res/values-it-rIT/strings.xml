@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
     <string name="virtual_pump_label">MICRO VIRTUALE</string>
     <string name="virtualpump_settings">Impostazioni micro virtuale</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Sono supportati solo valori discreti, non intervalli di valori, come incrementi per basale/bolo nel micro virtuale.</string>
 </resources>

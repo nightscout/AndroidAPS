@@ -11,49 +11,51 @@ import android.text.format.DateFormat
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreference
+import app.aaps.core.interfaces.constraints.ConstraintsChecker
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.notifications.Notification
+import app.aaps.core.interfaces.plugin.PluginDescription
+import app.aaps.core.interfaces.plugin.PluginType
+import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.pump.DetailedBolusInfo
+import app.aaps.core.interfaces.pump.Medtrum
+import app.aaps.core.interfaces.pump.Pump
+import app.aaps.core.interfaces.pump.PumpEnactResult
+import app.aaps.core.interfaces.pump.PumpPluginBase
+import app.aaps.core.interfaces.pump.PumpSync
+import app.aaps.core.interfaces.pump.TemporaryBasalStorage
+import app.aaps.core.interfaces.pump.actions.CustomAction
+import app.aaps.core.interfaces.pump.actions.CustomActionType
+import app.aaps.core.interfaces.pump.defs.ManufacturerType
+import app.aaps.core.interfaces.pump.defs.PumpDescription
+import app.aaps.core.interfaces.pump.defs.PumpType
+import app.aaps.core.interfaces.queue.Callback
+import app.aaps.core.interfaces.queue.CommandQueue
+import app.aaps.core.interfaces.queue.CustomCommand
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventAppExit
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.interfaces.utils.T
+import app.aaps.core.interfaces.utils.TimeChangeType
+import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.main.constraints.ConstraintObject
+import app.aaps.core.ui.dialogs.OKDialog
+import app.aaps.core.ui.toast.ToastUtils
+import app.aaps.core.validators.ValidatingEditTextPreference
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.validators.ValidatingEditTextPreference
-import info.nightscout.interfaces.constraints.Constraint
-import info.nightscout.interfaces.constraints.Constraints
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.plugin.PluginDescription
-import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.Medtrum
-import info.nightscout.interfaces.pump.Pump
-import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.PumpPluginBase
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.pump.TemporaryBasalStorage
-import info.nightscout.interfaces.pump.actions.CustomAction
-import info.nightscout.interfaces.pump.actions.CustomActionType
-import info.nightscout.interfaces.pump.defs.ManufacturerType
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.queue.CustomCommand
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventAppExit
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONException
@@ -67,7 +69,8 @@ import kotlin.math.abs
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
-    private val constraintChecker: Constraints,
+    private val sp: SP,
+    private val constraintChecker: ConstraintsChecker,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
@@ -82,7 +85,7 @@ import kotlin.math.abs
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(MedtrumOverviewFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_medtrum_128)
+        .pluginIcon(app.aaps.core.ui.R.drawable.ic_medtrum_128)
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(R.xml.pref_medtrum_pump)
@@ -95,12 +98,16 @@ import kotlin.math.abs
     override fun onStart() {
         super.onStart()
         aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStart()")
+        medtrumPump.loadVarsFromSP()
         val intent = Intent(context, MedtrumService::class.java)
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+
+        // Force enable pump unreachable alert due to some failure modes of Medtrum pump
+        sp.putBoolean(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert, true)
     }
 
     override fun onStop() {
@@ -133,6 +140,8 @@ import kotlin.math.abs
         preprocessSerialSettings(preferenceFragment)
         preprocessAlarmSettings(preferenceFragment)
         preprocessMaxInsulinSettings(preferenceFragment)
+        preprocessConnectionAlertSettings(preferenceFragment)
+        preprocessPumpWarningSettings(preferenceFragment)
     }
 
     private fun preprocessSerialSettings(preferenceFragment: PreferenceFragmentCompat) {
@@ -240,6 +249,29 @@ import kotlin.math.abs
         }
     }
 
+    private fun preprocessConnectionAlertSettings(preferenceFragment: PreferenceFragmentCompat) {
+        val unreachableAlertSetting = preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.utils.R.string.key_enable_pump_unreachable_alert))
+        val unreachableThresholdSetting = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(app.aaps.core.utils.R.string.key_pump_unreachable_threshold_minutes))
+
+        unreachableAlertSetting?.apply {
+            isSelectable = false
+            summary = rh.gs(R.string.enable_pump_unreachable_alert_summary)
+        }
+
+        unreachableThresholdSetting?.apply {
+            val currentValue = text
+            summary = "${rh.gs(R.string.pump_unreachable_threshold_minutes_summary)}\n${currentValue}"
+        }
+    }
+
+    private fun preprocessPumpWarningSettings(preferenceFragment: PreferenceFragmentCompat) {
+        val patchExpirationPref = preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_patch_expiration))
+        val pumpWarningNotificationPref = preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_pump_warning_notification))
+        val pumpWarningExpiryHourPref = preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(R.string.key_pump_warning_expiry_hour))
+
+        pumpWarningExpiryHourPref?.isEnabled = patchExpirationPref?.isChecked == true && pumpWarningNotificationPref?.isChecked == true
+    }
+
     override fun isInitialized(): Boolean {
         return medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED
     }
@@ -254,7 +286,11 @@ import kotlin.math.abs
 
     override fun isConnected(): Boolean {
         // This is a workaround to prevent AAPS to trigger connects when we have no patch activated
-        return if (!isInitialized()) true else medtrumService?.isConnected ?: false
+        return if (!isInitialized()) {
+            true
+        } else {
+            medtrumService?.isConnected ?: false
+        }
     }
 
     override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
@@ -270,7 +306,7 @@ import kotlin.math.abs
             if (medtrumService != null) {
                 aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
                 val success = medtrumService?.connect(reason) ?: false
-                if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)
+                if (!success) ToastUtils.errorToast(context, app.aaps.core.ui.R.string.ble_not_supported_or_not_paired)
             }
         }
     }
@@ -305,10 +341,10 @@ import kotlin.math.abs
 
         return if (medtrumService?.updateBasalsInPump(profile) == true) {
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(app.aaps.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
             PumpEnactResult(injector).success(true).enacted(true)
         } else {
-            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
             PumpEnactResult(injector)
         }
     }
@@ -341,33 +377,27 @@ import kotlin.math.abs
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
+
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: " + detailedBolusInfo.insulin + "U")
         if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
-        return if (detailedBolusInfo.insulin > 0 && detailedBolusInfo.carbs == 0.0) {
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
-            val connectionOK = medtrumService?.setBolus(detailedBolusInfo, t) ?: false
-            val result = PumpEnactResult(injector)
-            result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
-            result.bolusDelivered = t.insulin
-            if (!result.success) {
-                // Note: There are no error codes
-                result.comment = "failed"
-            } else {
-                result.comment = "ok"
-            }
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Success: ${result.success} Asked: ${detailedBolusInfo.insulin} Delivered: ${result.bolusDelivered}")
-            result
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
+        val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+        val connectionOK = medtrumService?.setBolus(detailedBolusInfo, t) ?: false
+        val result = PumpEnactResult(injector)
+        result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
+        result.bolusDelivered = t.insulin
+        if (!result.success) {
+            // Note: There are no error codes
+            result.comment = "failed"
         } else {
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: Invalid input")
-            val result = PumpEnactResult(injector)
-            result.success = false
-            result.bolusDelivered = 0.0
-            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
-            aapsLogger.error("deliverTreatment: Invalid input")
-            result
+            result.comment = "ok"
         }
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Success: ${result.success} Asked: ${detailedBolusInfo.insulin} Delivered: ${result.bolusDelivered}")
+        return result
     }
 
     override fun stopBolusDelivering() {
@@ -383,7 +413,7 @@ import kotlin.math.abs
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
         // round rate to pump rate
-        val pumpRate = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
+        val pumpRate = constraintChecker.applyBasalConstraints(ConstraintObject(absoluteRate, aapsLogger), profile).value()
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
         val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
         return if (connectionOK
@@ -543,31 +573,19 @@ import kotlin.math.abs
 
     // Medtrum interface
     override fun loadEvents(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.loadEvents() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.setUserSettings() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 
     override fun clearAlarms(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.clearAlarms() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
@@ -578,11 +596,7 @@ import kotlin.math.abs
     }
 
     override fun updateTime(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.updateTimeIfNeeded() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }

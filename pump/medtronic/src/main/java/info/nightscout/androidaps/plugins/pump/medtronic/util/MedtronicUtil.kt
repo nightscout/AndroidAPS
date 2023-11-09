@@ -1,5 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.util
 
+import app.aaps.core.interfaces.logging.AAPSLogger
+import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.bus.RxBus
+import app.aaps.core.interfaces.rx.events.EventDismissNotification
+import app.aaps.core.interfaces.ui.UiInteraction
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
@@ -12,15 +18,10 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicCommandTy
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicNotificationType
 import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.pump.common.utils.ByteUtil
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import java.security.InvalidParameterException
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -45,8 +46,10 @@ class MedtronicUtil @Inject constructor(
     //private MedtronicDeviceType medtronicPumpModel;
     private var currentCommand: MedtronicCommandType? = null
     var settings: Map<String, PumpSettingDTO>? = null
+
     @Suppress("PrivatePropertyName")
     private val BIG_FRAME_LENGTH = 65
+
     //private val doneBit = 1 shl 7
     var pumpTime: ClockDTO? = null
     var gsonInstance: Gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
@@ -89,7 +92,7 @@ class MedtronicUtil @Inject constructor(
             scrollRate = 1
         }
         val strokes = (amount * (strokesPerUnit * 1.0 / (scrollRate * 1.0))).toInt() * scrollRate
-        return ByteUtil.fromHexString(String.format("%02x%0" + 2 * length + "x", length, strokes))
+        return ByteUtil.fromHexString(String.format("%02x%0" + 2 * length + "x", length, strokes)) ?: throw InvalidParameterException()
     }
 
     // fun createCommandBody(input: ByteArray): ByteArray {
@@ -169,7 +172,7 @@ class MedtronicUtil @Inject constructor(
 
             // System.out.println("Subarray: " + ByteUtil.getCompactString(substring));
             // System.out.println("Subarray Lenths: " + substring.length);
-            val frameData = ByteUtil.getListFromByteArray(substring)
+            val frameData = ByteUtil.getListFromByteArray(substring).toMutableList()
             if (isEmptyFrame(frameData)) {
                 var b = frame.toByte()
                 // b |= 0x80;

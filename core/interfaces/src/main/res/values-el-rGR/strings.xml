@@ -1,21 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Maintenance -->
-    <string name="metadata_label_format">Μορφή αρχείου</string>
-    <string name="metadata_label_created_at">Δημιουργήθηκε στις</string>
-    <string name="metadata_label_aaps_version">Έκδοση AAPS</string>
-    <string name="metadata_label_aaps_flavour">Δημιουργία Παραλλαγής</string>
-    <string name="metadata_label_device_name">Εξαγωγή ονόματος συσκευής ασθενούς </string>
-    <string name="metadata_label_device_model">Εξαγωγή μοντέλου συσκευής</string>
-    <string name="metadata_label_encryption">Κρυπτογράφηση αρχείων</string>
-    <string name="metadata_format_new">Νέα κρυπτογραφημένη μορφή</string>
-    <string name="metadata_format_debug">Νέα μορφή εντοπισμού σφαλμάτων (μη κρυπτογραφημένη)</string>
-    <string name="metadata_format_other">Άγνωστη μορφή εξαγωγής</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Υποστηρίζονται μόνο διακριτές τιμές και όχι εύρος τιμών για βασικό/bolus στην εικονική αντλία.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Ο οδηγός της αντλίας άλλαξε.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
+    <!--    DateUtil-->
+    <string name="minago">%1$d λ πριν</string>
+    <string name="minago_long">%1$d λεπτά πριν</string>
+    <string name="hoursago">%1$.1f ω πριν</string>
+    <string name="days_ago">%1$.1f ημέρες πριν</string>
+    <string name="days_ago_round">%1$.0f ημέρες πριν</string>
+    <string name="in_days">σε %1$.0f ημέρες</string>
+    <string name="in_days_round">σε %1$.0f ημέρες</string>
+    <string name="shorthour">h</string>
+    <string name="days">ημέρες</string>
+    <string name="hours">ώρες</string>
+    <string name="unit_second">δευτερόλεπτο</string>
+    <string name="unit_minute">λεπτό</string>
+    <string name="unit_hour">ώρα</string>
+    <string name="unit_day">ημέρα</string>
+    <string name="unit_week">εβδομάδα</string>
+    <string name="unit_seconds">δευτερόλεπτα</string>
+    <string name="unit_minutes">λεπτά</string>
+    <string name="unit_hours">ώρες</string>
+    <string name="unit_days">ημέρες</string>
+    <string name="unit_weeks">εβδομάδες</string>
+    <string name="shortminute">m</string>
+    <string name="shortday">ημ</string>
+    <string name="later_today">Αργότερα σήμερα</string>
+    <string name="tomorrow">Αύριο</string>
+    <string name="today">Σήμερα</string>
+    <string name="yesterday">Χθες</string>
+    <!-- Rx -->
+    <string name="connecting_for">Σύνδεση για %1$d δευτερόλεπτα</string>
+    <string name="handshaking">Δημιουργία σύνδεσης</string>
+    <string name="connected">Συνδέθηκε</string>
+    <string name="disconnecting">Αποσυνδέεται</string>
+    <string name="waiting_for_disconnection">Αναμονή για αποσύνδεση</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Δημιουργήθηκε: %1$s</string>
+    <string name="metadata_label_watchface_author">Συντάκτης: %1$s</string>
+    <string name="metadata_label_watchface_name">Όνομα: %1$s</string>
+    <string name="metadata_wear_import_filename">Όνομα αρχείου: %1$s</string>
+    <string name="metadata_label_plugin_version">Έκδοση πρόσθετου: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Όνομα: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Πληροφορίες: %1$s</string>
+    <string name="pref_show_iob">Εμφάνιση IOB</string>
+    <string name="pref_show_detailed_iob">Εμφάνιση λεπτομερούς IOB</string>
+    <string name="pref_show_cob">Εμφάνιση COB</string>
+    <string name="pref_show_delta">Εμφάνιση Διαφοράς</string>
+    <string name="pref_show_detailed_delta">Εμφάνιση λεπτομερούς Διαφοράς</string>
+    <string name="pref_show_avgdelta">Εμφάνιση Μέσης Διαφοράς</string>
+    <string name="pref_show_phone_battery">Εμφάνιση Μπαταρίας Τηλεφώνου</string>
+    <string name="pref_show_rig_battery">Εμφάνιση Μπαταρίας Rig</string>
+    <string name="pref_show_basal_rate">Εμφάνιση Βασικού Ρυθμού</string>
+    <string name="pref_show_loop_status">Εμφάνιση Κατάστασης Κυκλώματος</string>
+    <string name="pref_show_bg">Εμφάνιση γλυκόζης αίματος</string>
+    <string name="pref_show_bgi">Εμφάνιση BGI</string>
+    <string name="pref_show_direction_arrow">Εμφάνιση Βέλους Κατεύθυνσης</string>
+    <string name="pref_show_ago">Εμφάνιση Πριν</string>
+    <string name="pref_show_week_number">Εμφάνιση αριθμού Εβδομάδας</string>
+    <string name="default_custom_watchface_comment">Προεπιλεγμένη πρόσοψη ρολογιού, μπορείτε να κάνετε κλικ στο κουμπί ΕΞΑΓΩΓΗ ΠΡΟΣΟΨΗΣ για να δημιουργήσετε ένα πρότυπο</string>
+    <string name="wear_default_watchface">Προεπιλεγμένη πρόσοψη ρολογιού</string>
+    <string name="cwf_comment_background">Εικόνα φόντου</string>
+    <string name="cwf_comment_chart">Γραφήματα (BG, βασικός, γραμμές πρόβλεψης...)</string>
+    <string name="cwf_comment_cover_chart">Εικόνα μπροστά από το γράφημα και πίσω από τα πεδία κειμένου</string>
+    <string name="cwf_comment_freetext1">Ελεύθερο κείμενο 1</string>
+    <string name="cwf_comment_freetext2">Ελεύθερο κείμενο 2</string>
+    <string name="cwf_comment_freetext3">Ελεύθερο κείμενο 3</string>
+    <string name="cwf_comment_freetext4">Ελεύθερο κείμενο 4</string>
+    <string name="cwf_comment_iob1">Ετικέτα IOB ή Άθροισμα IOB εάν είναι λεπτομερές</string>
+    <string name="cwf_comment_iob2">Άθροισμα IOB ή (Bolus_IOB|Basal_IOB) εάν είναι λεπτομερές</string>
+    <string name="cwf_comment_cob1">Ετικέτα COB</string>
+    <string name="cwf_comment_cob2">Τιμή COB</string>
+    <string name="cwf_comment_delta">Βραχυπρόθεσμη διαφορά BG</string>
+    <string name="cwf_comment_avg_delta">Μέση διαφορά BG (15λεπτά)</string>
+    <string name="cwf_comment_uploader_battery">Μπαταρία τηλεφώνου (%)</string>
+    <string name="cwf_comment_rig_battery">Μπαταρία συνολικού κυκλώματος (%)</string>
+    <string name="cwf_comment_basalRate">Βασικός Ρυθμός</string>
+    <string name="cwf_comment_bgi">Τιμή BGI</string>
+    <string name="cwf_comment_time">Ώρα (ΩΩ:ΛΛ ή ΩΩ:ΜΜ:ΣΣ)</string>
+    <string name="cwf_comment_hour">Ώρα (HH)</string>
+    <string name="cwf_comment_minute">Λεπτό (MM)</string>
+    <string name="cwf_comment_second">Δευτερόλεπτο (SS)</string>
+    <string name="cwf_comment_timePeriod">ΠΜ ή ΜΜ</string>
+    <string name="cwf_comment_day_name">Όνομα της ημέρας της εβδομάδας</string>
+    <string name="cwf_comment_day">Ημέρα (DD)</string>
+    <string name="cwf_comment_week_number">Αριθμός Εβδομάδας (ww)</string>
+    <string name="cwf_comment_month">Όνομα μήνα (σύντομο)</string>
+    <string name="cwf_comment_loop">Κατάσταση κυκλώματος και πριν</string>
+    <string name="cwf_comment_direction">Βέλος κατεύθυνσης</string>
+    <string name="cwf_comment_timestamp">Λεπτά πριν από την τελευταία λήψη BG</string>
+    <string name="cwf_comment_sgv">Τιμή γλυκόζης αίματος</string>
+    <string name="cwf_comment_cover_plate">Εικόνα εξωφύλλου μπροστά από το κείμενο (κλήσεις...)</string>
+    <string name="cwf_comment_hour_hand">Εικόνα ώρας χεριού (Αναλογικό ρολόι)</string>
+    <string name="cwf_comment_minute_hand">Εικόνα λεπτού χεριού (Αναλογικό ρολόι)</string>
+    <string name="cwf_comment_second_hand">Εικόνα δευτερολέπτου χεριού (Αναλογικό ρολόι)</string>
 </resources>

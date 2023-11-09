@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="format_carbs">%1$d g</string>
+    <string name="count_selected">Επιλέχθηκαν %1$d</string>
+    <string name="remove_items">Αφαίρεση Στοιχείων</string>
+    <string name="sort_items">Ταξινόμηση Στοιχείων</string>
+    <string name="remove_selected_items">Αφαίρεση Επιλεγμένων Στοιχείων</string>
+    <string name="sort_label">Ταξινόμηση</string>
+</resources>
