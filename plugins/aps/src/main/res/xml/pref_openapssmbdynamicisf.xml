@@ -8,6 +8,71 @@
         android:title="@string/openapssmb"
         app:initialExpandedChildrenCount="0">
 
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_oref1_dynamic_isf"
+            android:title="@string/dynamic_isf">
+
+            <app.aaps.core.validators.ValidatingEditTextPreference
+                android:defaultValue="100"
+                android:inputType="numberDecimal"
+                android:key="@string/key_dynamic_isf_velocity"
+                android:title="@string/dynamic_isf_velocity_title"
+                android:summary="@string/dynamic_isf_velocity_summary"
+                android:dialogMessage="@string/dynamic_isf_velocity_dialogMessage"
+                validate:floatmaxNumber="200"
+                validate:floatminNumber="0"
+                validate:testType="floatNumericRange"/>
+
+            <app.aaps.core.validators.ValidatingEditTextPreference
+                android:defaultValue="500"
+                android:inputType="numberDecimal"
+                android:key="@string/key_dynamic_isf_bg_cap"
+                android:title="@string/dynamic_isf_bg_cap_title"
+                android:summary="@string/dynamic_isf_bg_cap_summary"
+                android:dialogMessage="@string/dynamic_isf_bg_cap_dialogMessage"
+                validate:floatmaxNumber="500"
+                validate:floatminNumber="99"
+                validate:testType="bgRange"/>
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_dynamic_isf_use_tdd"
+                android:title="@string/dynamic_isf_use_tdd" />
+
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="@string/key_dynamic_isf_tdd_quick"
+                android:title="@string/dynamic_isf_tdd_quick"
+                android:summary="@string/dynamic_isf_tdd_quick_summary"/>
+
+            <app.aaps.core.validators.ValidatingEditTextPreference
+                android:dependency="@string/key_dynamic_isf_use_tdd"
+                android:defaultValue="100"
+                android:enabled="true"
+                android:dialogMessage="@string/dynamic_isf_tdd_adjust_summary"
+                android:inputType="numberDecimal"
+                android:key="@string/key_dynamic_isf_tdd_adjust"
+                android:title="@string/dynamic_isf_tdd_adjust_title"
+                validate:floatmaxNumber="300"
+                validate:floatminNumber="1"
+                validate:testType="floatNumericRange" />
+
+            <SwitchPreference
+                android:dependency="@string/key_dynamic_isf_use_tdd"
+                android:defaultValue="false"
+                android:key="@string/key_dynamic_isf_obey_profile"
+                android:title="@string/dynamic_isf_obey_profile_title"
+                android:summary="@string/dynamic_isf_obey_profile_summary" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_dynamic_isf_adjust_sensitivity"
+                android:title="@string/dynamic_isf_adjust_sensitivity"
+                android:summary="@string/dynamic_isf_adjust_sensitivity_summary"/>
+
+        </androidx.preference.PreferenceScreen>
+
         <app.aaps.core.validators.ValidatingEditTextPreference
             android:defaultValue="1"
             android:dialogMessage="@string/openapsma_max_basal_summary"

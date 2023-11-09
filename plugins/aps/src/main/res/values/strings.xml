@@ -143,6 +143,22 @@
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="fallback_smb_no_tdd">Fallback to SMB. Not enough TDD data.</string>
 
+    <!--    Dynamic ISF -->
 
+    <string name="dynamic_isf_use_tdd" translatable="false">Use TDD-based ISF</string>
+    <string name="dynamic_isf_tdd_adjust_title" formatted="false">TDD-based ISF adjustment factor %</string>
+    <string name="dynamic_isf_tdd_quick" translatable="false">Use quicker-reacting TDD8h routine</string>
+    <string name="dynamic_isf_tdd_quick_summary" translatable="false">If TDDlast8h is lower than 0.75/tdd7d - use it to additionally adjust ISF for quicker reaction. Affects mostly morning routine.</string>
+    <string name="dynamic_isf_tdd_adjust_summary" formatted="false">Adjustment factor for TDD-based ISF. Controls the portion of TDD used for calculation. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
+    <string name="dynamic_isf_velocity_title" formatted="false">BG-based Scaling velocity %</string>
+    <string name="dynamic_isf_velocity_summary" formatted="false">This controls how hard ISF will be changed with BG level change</string>
+    <string name="dynamic_isf_velocity_dialogMessage" formatted="false">This controls how hard ISF will be changed with BG level change: 0% means no scaling at all, constant ISF value for every BG level; 100% - regular DynamicISF scaling</string>
+    <string name="dynamic_isf_bg_cap_title" formatted="false">BG cap</string>
+    <string name="dynamic_isf_bg_cap_summary" formatted="false">BG value where DynISF scaling slows down to ⅓ of regular</string>
+    <string name="dynamic_isf_bg_cap_dialogMessage" formatted="false">This controls the BG level, after that the Dynamic ISF scaling starts to suffer from diminishing returns. Every BG point over this value will count as ⅓ in Dynamic ISF scaling formulae. Must help preventing overreacting on highs.</string>
+    <string name="dynamic_isf_obey_profile_title" formatted="false">Obey profile</string>
+    <string name="dynamic_isf_obey_profile_summary" formatted="false">Apply profile % changes to TDD-based Dynamic ISF</string>
+    <string name="dynamic_isf_adjust_sensitivity">Adjust sensitivity and basal</string>
+    <string name="dynamic_isf_adjust_sensitivity_summary">If activated DynISF uses the last 24h TDD/7D TDD as the basis for adjusting calculated ISF and also for increasing and decreasing basal rate, in the same way that standard Autosens does</string>
 
 </resources>

@@ -27,7 +27,6 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(scriptReader: Sc
     @Inject lateinit var isfCalculator: IsfCalculator
 
     override val jsFolder = "OpenAPSSMBDynamicISF"
-    override val useLoopVariants = false
     override val jsAdditionalScript = """
 var getIsfByProfile = function (bg, profile) {
     var cap = profile.dynISFBgCap;

@@ -156,11 +156,12 @@
     <string name="key_use_autosens" translatable="false">openapsama_useautosens</string>
     <string name="key_used_autosens_on_main_phone" translatable="false">used_autosens_on_main_phone</string>
     <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
-    <string name="key_dynamic_isf_enable" translatable="false">DynISF_enable</string>
+    <string name="key_dynamic_isf_normalTarget" translatable="false">DynISF_normalTarget</string>
     <string name="key_dynamic_isf_use_tdd" translatable="false">DynISFUseTDD</string>
-    <string name="key_dynamic_isf_adjust" translatable="false">DynISFAdjust</string>
+    <string name="key_dynamic_isf_tdd_quick" translatable="false">DynISFUseTDDquick</string>
+    <string name="key_dynamic_isf_tdd_adjust" translatable="false">DynISFTDDAdjust</string>
     <string name="key_dynamic_isf_velocity" translatable="false">DynISFVelocity</string>
     <string name="key_dynamic_isf_bg_cap" translatable="false">DynISF_bg_cap</string>
     <string name="key_dynamic_isf_obey_profile" translatable="false">DynISF_obey_profile</string>
-    <string name="key_dynamic_isf_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
+    <string name="key_dynamic_isf_adjust_sensitivity" translatable="false">dynamic_isf_adjust_sensitivity</string>
 </resources>

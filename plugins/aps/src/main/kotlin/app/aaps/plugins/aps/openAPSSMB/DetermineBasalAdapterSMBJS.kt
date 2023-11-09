@@ -68,7 +68,6 @@ open class DetermineBasalAdapterSMBJS internal constructor(private val scriptRea
     override var scriptDebug = ""
 
     protected open val jsFolder = "OpenAPSSMB"
-    protected open val useLoopVariants = false
     protected open val jsAdditionalScript = ""
 
     @Suppress("SpellCheckingInspection")
