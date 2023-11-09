@@ -298,9 +298,9 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         if (!binding.useIob.isChecked) {
             binding.useCob.isChecked = false
             binding.usePositiveIobOnly.isChecked = false
-            binding.usePositiveIobOnly.isEnabled = false
+            binding.usePositiveIobOnly.visibility = View.GONE
         } else {
-            binding.usePositiveIobOnly.isEnabled = true
+            binding.usePositiveIobOnly.visibility = View.VISIBLE
         }
     }
 
