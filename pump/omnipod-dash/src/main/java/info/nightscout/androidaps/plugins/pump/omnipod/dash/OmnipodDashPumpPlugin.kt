@@ -183,7 +183,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             if (!podStateManager.isPodRunning) {
                 uiInteraction.addNotification(
                     Notification.OMNIPOD_POD_NOT_ATTACHED,
-                    "Pod not activated",
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod),
                     Notification.NORMAL
                 )
             } else {
