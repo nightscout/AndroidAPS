@@ -46,7 +46,7 @@
     <string name="setupwizard_pump_riley_link_status">RileyLink status:</string>
     <string name="readstatus">Lesestatus</string>
     <string name="data_choices">Datavalg</string>
-    <string name="fabric_upload">Innlesing av fabrikkinnstillinger</string>
+    <string name="fabric_upload">Send krasjrapporter automatisk</string>
     <string name="allow_automated_crash_reporting">Tillat automatisk rapportering av appkrasj og bruksdata til utviklerne via fabrioc.io-tjenesten.</string>
     <string name="summary_email_for_crash_report">Denne e-postadressen vedlegges krasjrapporter slik at vi kan kontakte deg i akutte tilfeller. Det er valgfritt.</string>
     <string name="identification">Identifikasjon (e-post, Facebook eller Discord-nick osv.)</string>

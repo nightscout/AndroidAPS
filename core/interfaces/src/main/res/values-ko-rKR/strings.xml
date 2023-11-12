@@ -42,6 +42,7 @@
     <string name="metadata_wear_import_filename">파일 이름: %1$s</string>
     <string name="metadata_label_plugin_version">플러그인 버전: %1$s</string>
     <string name="metadata_label_watchface_name_version">이름: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">정보: %1$s</string>
     <string name="pref_show_iob">IOB 표시</string>
     <string name="pref_show_detailed_iob">IOB 자세히 표시하기</string>
     <string name="pref_show_cob">COB 표시</string>
@@ -56,6 +57,8 @@
     <string name="pref_show_bgi">BGI 표시하기</string>
     <string name="pref_show_direction_arrow">화살표 표시하기</string>
     <string name="pref_show_ago">이전 표시하기</string>
+    <string name="pref_show_week_number">몇 번째 주인지 표시</string>
+    <string name="pref_show_date">날짜 표시</string>
     <string name="default_custom_watchface_comment">기본 시계, 워치페이스 내보내기 버튼을 클릭하여 템플릿을 생성할 수 있습니다.</string>
     <string name="wear_default_watchface">기본 워치페이스</string>
     <string name="cwf_comment_background">배경화면 이미지</string>
@@ -82,6 +85,7 @@
     <string name="cwf_comment_timePeriod">오전 또는 오후</string>
     <string name="cwf_comment_day_name">요일</string>
     <string name="cwf_comment_day">일 (DD)</string>
+    <string name="cwf_comment_week_number">주 번호 (ww)</string>
     <string name="cwf_comment_month">월명 (짧게)</string>
     <string name="cwf_comment_loop">루프 상태 및 이전</string>
     <string name="cwf_comment_direction">방향 화살표</string>
