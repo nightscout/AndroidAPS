@@ -9,7 +9,7 @@ class SWButton(injector: HasAndroidInjector) : SWItem(injector, Type.BUTTON) {
 
     private var buttonRunnable: Runnable? = null
     private var buttonText = 0
-    private var buttonValidator: (() -> Boolean)? = { false }
+    private var buttonValidator: (() -> Boolean)? = null
     private var button: Button? = null
 
     fun text(buttonText: Int): SWButton {

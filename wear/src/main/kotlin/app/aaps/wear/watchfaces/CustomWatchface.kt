@@ -819,9 +819,9 @@ class CustomWatchface : BaseWatchFace() {
             getColorSteps(dynColor, COLOR.key, INVALIDCOLOR.key)
             getColorSteps(dynFontColor, FONTCOLOR.key, INVALIDFONTCOLOR.key)
             getIntSteps(dynTextSize, TEXTSIZE.key, INVALIDTEXTSIZE.key)
-            getIntSteps(dynLeftOffset, LEFTOFFSET.key, INVALIDTEXTSIZE.key)
-            getIntSteps(dynTopOffset, TOPOFFSET.key, INVALIDTEXTSIZE.key)
-            getIntSteps(dynRotationOffset, ROTATIONOFFSET.key, INVALIDTEXTSIZE.key)
+            getIntSteps(dynLeftOffset, LEFTOFFSET.key, INVALIDLEFTOFFSET.key)
+            getIntSteps(dynTopOffset, TOPOFFSET.key, INVALIDTOPOFFSET.key)
+            getIntSteps(dynRotationOffset, ROTATIONOFFSET.key, INVALIDROTATIONOFFSET.key)
         }
 
         private fun getDrawableSteps(dynMap: MutableMap<Int, Drawable?>, key: String, invalidKey: String) {

@@ -51,6 +51,7 @@
     <string name="extended_bolus">확장 Bolus</string>
     <string name="paused">일시중지</string>
     <string name="tdd_total">TDD Total</string>
+    <string name="tdd_old_data">오래된 데이터</string>
     <string name="goingtodeliver">%1$.2f U을 주입합니다.</string>
     <string name="waitingforpump">펌프를 기다리는 중</string>
     <string name="androidaps_start">AAPS 시작</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">NS에 펌프상태 업로드하기</string>
     <string name="suspendloop_label">중지 또는 일시중지된 loop</string>
     <string name="iob_label">활성 인슐린 (IOB)</string>
+    <string name="loopstatus_targets">목표:</string>
+    <string name="loopstatus_OAPS_result">OAPS 결과:</string>
     <!--    Protection-->
     <string name="wrongpassword">잘못된 비밀번호</string>
     <string name="wrongpin">잘못된 PIN</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Bolus는 이 경우(펌프를 통해 공급되지 않음) 에만 기록됩니다</string>
     <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
     <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
+    <string name="carb_equal_zero_no_action">탄수화물= 0. 아무런 조치도 취하지 않았습니다!</string>
+    <string name="wizard_no_insulin_required">인슐린이 필요하지 않습니다!</string>
     <string name="wizard_no_actual_bg">기저 계산에는 최근 BG가 없습니다!</string>
     <string name="wizard_no_active_profile">활성화된 프로파일 설정이 없습니다!</string>
     <string name="wizard_no_cob">알 수 없는 COB입니다! BG 판독이 누락되었거나, 최근 앱을 다시 시작하였습니까?</string>
@@ -578,6 +583,7 @@
     <string name="cleanup_db_confirm_sync">데이터베이스를 정리하시겠습니까?\n3개월 이상 경과한 추적된 변경 내용 및 기록 데이터가 제거됩니다.\n이 작업을 수행하면 전체 동기화 속도가 크게 향상됩니다.</string>
     <string name="cleared_entries">입력된 내용 제거됨</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">일</string>
     <string name="weekday_saturday_short">토</string>
     <string name="weekday_friday_short">금</string>
     <string name="weekday_thursday_short">목</string>
@@ -593,4 +599,6 @@
     <string name="saturday_short">토</string>
     <string name="sunday_short">일</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

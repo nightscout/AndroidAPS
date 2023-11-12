@@ -44,7 +44,7 @@
     <string name="patch_comm_error_during_discard_desc_2">Per la disattivazione unilaterale, tocca \'Scarta\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Disattivazione manuale allarme patch</string>
     <string name="patch_manually_turning_off_alarm_desc_1">Se disattivato unilateralmente durante un errore di comunicazione, il BIP di allarme dalla patch potrebbe non arrestarsi.</string>
-    <string name="patch_manually_turning_off_alarm_desc_2">In questo caso, puoi fermarlo completamente colpendo la porta di rilascio manuale dell\'allarme sulla patch come di seguito:</string>
+    <string name="patch_manually_turning_off_alarm_desc_2">In questo caso, puoi fermarlo completamente tramite lo switch manuale dell\'allarme sulla patch come di seguito:</string>
     <string name="patch_manually_turning_off_alarm_step_1">1. Rimuovi la patch dal corpo e stacca il nastro adesivo.</string>
     <string name="patch_manually_turning_off_alarm_step_2">2. Usa una clip, colpisci con forza il foro accanto alla porta di riempimento dell\'insulina.</string>
     <string name="patch_wake_up">Riempimento insulina</string>
@@ -87,7 +87,7 @@
     <string name="patch_communication_check_helper_1">Avvicinare il dispositivo alla patch.</string>
     <string name="patch_communication_check_helper_2">Spostati in un altro posto e riprova.</string>
     <string name="patch_communication_failed">Errore comunicazione</string>
-    <string name="patch_communication_succeed">Riuscita comunicazione</string>
+    <string name="patch_communication_succeed">Comunicazione riuscita</string>
     <string name="patch_communication_succeed_message">Connesso con la patch</string>
     <string name="patch_cancel_pairing">Annulla associazione</string>
     <string name="symbol_days">giorni</string>
@@ -113,8 +113,8 @@
     <string name="string_in_progress">Elaborazione</string>
     <string name="retry">Riprova</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] NON rimuovere la protezione dell\'ago e il supporto adesivo sino a ulteriori istruzioni.</string>
-    <string name="string_are_you_sure_to_discard_current_patch">Sei sicuro di scartare la patch corrent?</string>
-    <string name="string_unconfirmed_bolus_info_discard_confirm_message">A causa di informazioni non confermate riguardo il bolo, il calcolo del bolo non può essere usato fino a %s.\n\nSei sicuro di voler scartare la patch corrente?</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Sei sicuro di voler scartare la patch corrente?</string>
+    <string name="string_unconfirmed_bolus_info_discard_confirm_message">A causa di informazioni non confermate riguardo il bolo, il calcolatore del bolo non può essere usato fino a %s.\n\nSei sicuro di voler scartare la patch corrente?</string>
     <string name="needle_insertion_error_1">Errore inserimento ago.</string>
     <string name="needle_insertion_error_2">Controlla che la direzione del foro rimanente dopo aver girato la leva sia dritta, quindi tocca \'Riprova\'.</string>
     <string name="needle_insertion_error_3">Tocca \'Scarta\' per disattivare la patch.</string>

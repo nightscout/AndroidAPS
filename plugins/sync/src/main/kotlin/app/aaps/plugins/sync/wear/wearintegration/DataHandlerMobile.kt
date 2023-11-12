@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.wear.wearintegration
 
 import android.app.NotificationManager
 import android.content.Context
+import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.Constants
@@ -741,7 +742,7 @@ class DataHandlerMobile @Inject constructor(
     fun resendData(from: String) {
         aapsLogger.debug(LTag.WEAR, "Sending data to wear from $from")
         // SingleBg
-        iobCobCalculator.ads.lastBg()?.let { rxBus.send(EventMobileToWear(getSingleBG(it))) }
+        iobCobCalculator.ads.lastBg()?.let { rxBus.send(EventMobileToWear(getSingleBG(it, iobCobCalculator.ads))) }
         // Preferences
         rxBus.send(
             EventMobileToWear(
@@ -769,7 +770,7 @@ class DataHandlerMobile @Inject constructor(
         )
         // GraphData
         iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
-            rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it) }))))
+            rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it, null) }))))
         }
         // Treatments
         sendTreatments()
@@ -969,7 +970,7 @@ class DataHandlerMobile @Inject constructor(
         return deltaStringDetailed
     }
 
-    private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
+    private fun getSingleBG(glucoseValue: InMemoryGlucoseValue, autosensDataStore: AutosensDataStore?): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
         val lowLine = profileUtil.convertToMgdl(defaultValueHelper.determineLowLine(), units)
@@ -977,9 +978,9 @@ class DataHandlerMobile @Inject constructor(
 
         return EventData.SingleBg(
             timeStamp = glucoseValue.timestamp,
-            sgvString = profileUtil.stringInCurrentUnitsDetect(glucoseValue.value),
+            sgvString = profileUtil.stringInCurrentUnitsDetect(glucoseValue.recalculated),
             glucoseUnits = units.asText,
-            slopeArrow = trendCalculator.getTrendArrow(glucoseValue).symbol,
+            slopeArrow = (autosensDataStore?.let { ads -> trendCalculator.getTrendArrow(ads) } ?: GlucoseValue.TrendArrow.NONE).symbol,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             deltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",

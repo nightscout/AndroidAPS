@@ -22,9 +22,9 @@
     <string name="key_lgs_threshold" translatable="false">lgsThreshold</string>
     <string name="key_DynISFAdjust" translatable="false">DynISFAdjust</string>
     <string name="key_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
-    <string name="key_openapsma_max_basal" translatable="false">openapsma_max_basal</string>
 
-    <string name="dynisf_adjust_sensitivity">Adjust sensitivity and BG</string>
+    <string name="dynisf_adjust_sensitivity">Enable TDD based sensitivity ratio for basal and glucose target modification</string>
+    <string name="dynisf_adjust_sensitivity_summary">Uses the last 24h TDD/7D TDD to calculate sensitivity ratio used for increasing or decreasing basal rate, and also adjust glucose target if these options are enabled, in the same way Autosens does. It is recommended to start with this option turned off</string>
     <string name="DynISFAdjust_title" formatted="false">DynamicISF Adjustment Factor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Adjustment factor for DynamicISF. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
     <string name="high_temptarget_raises_sensitivity_title">High temptarget raises sensitivity</string>
@@ -149,6 +149,7 @@
     <string name="loop_open_mode_min_change">Minimal request change [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
     <string name="fallback_smb_no_tdd">Fallback to SMB. Not enough TDD data.</string>
+
 
 
 </resources>

@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Pompă suspendată din cauza depăşirii valorii maxime zilnice a insulinei</string>
     <string name="patch_not_active">Patch neactivat</string>
     <string name="pump_setting_failed">Setarea setărilor utilizatorului pe pompă a eșuat!</string>
+    <string name="pump_sync_error">Eroare la sincronizarea istoricului de la pompă, o înregistrare a fost omisă. Verifică fila de tratament pentru a vedea dacă bolusul este sincronizat corect. Amână alarma și, dacă eroarea reapare, schimbă patch-ul sau baza pompei.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Stare BLE</string>
     <string name="last_connection_label">Ultima conexiune</string>
@@ -112,6 +113,8 @@
     <string name="alarm_setting_summary">Selectează setările preferate pentru alarma pompei.</string>
     <string name="pump_warning_notification_title">Notificare la avertizarea pompei</string>
     <string name="pump_warning_notification_summary">Arată notificare cu privire la avertismentele non-critice ale pompei: baterie scăzută, rezervor redus (20 de unități) și expiră în curând. Se recomandă să lăsaţi activat când alarmele pompei sunt setate la silențios.</string>
+    <string name="pump_warning_expiry_hour_title">Atenționare expirare pompă [hours]</string>
+    <string name="pump_warning_expiry_hour_summary">Arată notificarea la ora specificată după activare.</string>
     <string name="patch_expiration_title">Patch Expirare</string>
     <string name="patch_expiration_summary">Când este activat, patchul va expira după 3 zile, cu o perioadă de graţie de 8 ore după expirare.</string>
     <string name="hourly_max_insulin_title">Insulină maximă pe oră</string>

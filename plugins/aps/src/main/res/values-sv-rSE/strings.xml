@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Justera känslighet och BG</string>
     <string name="DynISFAdjust_title" formatted="false">DynamicISF justeringsfaktor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor för DynamicISF. Ställ in mer än 100% för mer aggressiva korrigeringsdoser, och mindre än 100% för mindre aggressiva korrigeringar.</string>
     <string name="high_temptarget_raises_sensitivity_title">Högt målvärde höjer känsligheten</string>

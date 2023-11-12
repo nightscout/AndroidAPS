@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="units">Vienetai</string>
-    <string name="setupwizard_units_prompt">Pasirinkite vienetus, kurių vertes norite parodyti</string>
-    <string name="next_button">Kitas</string>
-    <string name="previous_button">Ankstesnis</string>
+    <string name="setupwizard_units_prompt">Pasirinkite glikemijos matavimo vienetus</string>
+    <string name="next_button">Toliau</string>
+    <string name="previous_button">Atgal</string>
     <string name="nav_setupwizard">Sąrankos vedlys</string>
     <string name="setupwizard_finish">UŽBAIGTI</string>
     <string name="welcome">Sveiki</string>
@@ -17,22 +17,22 @@
     <string name="low_mark_comment">Mažiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="high_mark_comment">Didžiausia tikslinės srities vertė (tik rodymui)</string>
     <string name="permission">Leidimas</string>
-    <string name="need_system_window_permission">Norint gauti pranešimus, programai reikalingas sisteminio lango leidimas</string>
+    <string name="need_system_window_permission">Programai reikalingas leidimas rodyti virš kitų programų</string>
     <string name="need_location_permission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
-    <string name="need_storage_permission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
+    <string name="need_storage_permission">Programai reikia leidimo prieigai prie saugyklos, kad būtų išsaugomi žurnalo įrašai ir nustatymų eksportai</string>
     <string name="askforpermission">Prašyti leidimo</string>
-    <string name="need_whitelisting">%1$s įtraukite į baterijos neoptimizavimo sąrašą tinkamam veikimui užtikrinti</string>
+    <string name="need_whitelisting">Įtraukite %1$s į baterijos optimizavimo išimčių sąrašą tinkamam veikimui užtikrinti</string>
     <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
-    <string name="master_password_summary">Pagrindinis slaptažodis naudojamas atsarginiam šifravimui ir programos saugumo ignoravimui. Atsiminkite jį arba laikykite užsirašę saugioje vietoje.</string>
+    <string name="master_password_summary">Pagrindinis slaptažodis naudojamas atsarginės nustatymų kopijos šifravimui ir programos saugumui užtikrinti. Atsiminkite jį arba užsirašykite saugioje vietoje.</string>
     <string name="current_master_password">Dabartinis pagrindinis slaptažodis</string>
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
     <string name="syncinfotext">Sinchronizuokite duomenis debesyje. Jūs galite kol kas praleisti šį veiksmą, bet negalėsite baigti mokymosi programos, kol nenustatysite duomenų perdavimo į Nightscout arba Tidepool.</string>
     <string name="status">Statusas:</string>
     <string name="patient_name">Paciento vardas</string>
-    <string name="patient_name_summary">Pateikite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
+    <string name="patient_name_summary">Įrašykite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
     <string name="privacy_settings">Privatumo nuostatos</string>
-    <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos strigimus. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
-    <string name="diawarning">Atminkite: DKS profiliams reikia IVT bent 5 val. IVT = 5 - 6 val DKS profilyje atitinka IVT = 3 val sename (pompos terapijos) insulino profilyje.</string>
+    <string name="privacy_summary">Nurodykite el. pašto adresą (neprivaloma), jei norite gauti informaciją apie programos klaidas. Tai nėra automatizuota paslauga. Kūrėjai susisieks esant pavojingoms situacijoms.</string>
+    <string name="diawarning">Svarbu: DKS profiliuose IVT turi būti bent 5 val. Tai atitinka 3 val. IVT įprastoje pompos terapijoje.</string>
     <string name="profile">Profilis</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
@@ -48,7 +48,7 @@
     <string name="data_choices">Duomenų pasirinkimas</string>
     <string name="fabric_upload">Duomenų perdavimas kūrėjams</string>
     <string name="allow_automated_crash_reporting">Leisti automatinį pranešimų apie programos trikdžius ir funkcijų naudojimo duomenų siuntimą kūrėjams, naudojant fabric.io servisą.</string>
-    <string name="summary_email_for_crash_report">Šis identifikatorius bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su jumis susisiekti. Jis neprivalomas.</string>
+    <string name="summary_email_for_crash_report">Šis identifikatorius bus pridėtas prie gedimų ataskaitų, kad skubiais atvejais galėtume su Jumis susisiekti. Jis neprivalomas.</string>
     <string name="identification">Identifikacija (el. paštas, FB, Discord slapyvardis ar kt.)</string>
     <string name="request">Užklausa</string>
     <string name="apsmode_title">DKS režimas</string>
@@ -155,7 +155,7 @@
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Pasirinkite laikrodžio ekraną</string>
     <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Prašome perkrauti telefoną arba sistemos nustatymuose iš naujo paleisti AAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti, ar algoritmai veikia tinkamai)!</string>
+    <string name="alert_dialog_storage_permission_text">Iš naujo paleiskite telefoną arba sistemos nustatymuose iš naujo paleiskite AAPS \nkitaip AAPS negalės registruoti žurnalo įrašų (jie svarbūs stebint ir tikrinant, ar algoritmai veikia tinkamai)!</string>
     <!-- Maintenance -->
     <string name="metadata_label_format">Failo formatas</string>
     <string name="metadata_label_created_at">Sukurta</string>

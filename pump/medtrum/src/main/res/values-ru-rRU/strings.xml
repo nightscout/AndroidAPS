@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Помпа приостановлена в связи с превышением максимального допустимого количества инсулина в сутки</string>
     <string name="patch_not_active">Патч не активирован</string>
     <string name="pump_setting_failed">Сбой передачи пользовательских настроек на помпу!</string>
+    <string name="pump_sync_error">Ошибка при синхронизации журнала с помпы, запись пропущена. Проверьте вкладку терапии, правильно ли синхронизированы болюсы. Уберите предупреждение, а если ошибка повторится, замените патч или базу помпы.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Статус BT</string>
     <string name="last_connection_label">Последнее подключение</string>
@@ -112,6 +113,8 @@
     <string name="alarm_setting_summary">Выберите предпочитаемые параметры оповещений помпы.</string>
     <string name="pump_warning_notification_title">Уведомление об оповещениях помпы</string>
     <string name="pump_warning_notification_summary">Показывать уведомления о некритических оповещениях помпы: низком заряде батареи, низком запасе инсулина (20 единиц) и приближающемся истечении срока работы. Рекомендуется оставить включенным, когда звук оповещений выключен.</string>
+    <string name="pump_warning_expiry_hour_title">Предупреждение об окончании срока годности помпы [hours]</string>
+    <string name="pump_warning_expiry_hour_summary">Показывать уведомление в указанный час после активации.</string>
     <string name="patch_expiration_title">Окончание срока действия патча</string>
     <string name="patch_expiration_summary">Если включено, то патч закончит свое действие через 3 дня, с дополнительными 8 часами после этого.</string>
     <string name="hourly_max_insulin_title">Максимальное количество инсулина в час</string>

@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Günlük maksimum insülinin aşılması nedeniyle pompa askıya alındı</string>
     <string name="patch_not_active">Patch etkinleştirilemedi</string>
     <string name="pump_setting_failed">Kullanıcı ayarlarının pompada ayarlanması başarısız oldu!</string>
+    <string name="pump_sync_error">Geçmiş senkronize edilirken hata oluştu; bir kayıt atlandı. Bolusun doğru şekilde senkronize edilip edilmediğini kontrol etmek için tedavi sekmesini kontrol edin. Erteleyin ve hata tekrarlanmaya devam ederse patch veya pompa tabanını değiştirin.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">BLE Durumu</string>
     <string name="last_connection_label">Son bağlantı</string>
@@ -112,6 +113,8 @@
     <string name="alarm_setting_summary">Tercih ettiğiniz pompa alarm ayarlarını seçin.</string>
     <string name="pump_warning_notification_title">Pompa uyarısı hakkında bildirim</string>
     <string name="pump_warning_notification_summary">Kritik olmayan pompa uyarılarıyla ilgili bildirimi göster: düşük pil, düşük rezervuar (20 birim) ve yakında süresi doluyor. Pompa alarmları sessize ayarlandığında etkin bırakılması önerilir.</string>
+    <string name="pump_warning_expiry_hour_title">Pompa sona erme süresi uyarısı [hours]</string>
+    <string name="pump_warning_expiry_hour_summary">Etkinleştirmeden sonra belirtilen saatte bildirimi göster.</string>
     <string name="patch_expiration_title">Patch süre sonu</string>
     <string name="patch_expiration_summary">Etkinleştirildiğinde, patch 3 gün sonra sona erecek ve bunun ardından 8 saatlik bir ek süre tanınacaktır.</string>
     <string name="hourly_max_insulin_title">Saatlik Maksimum insülin</string>

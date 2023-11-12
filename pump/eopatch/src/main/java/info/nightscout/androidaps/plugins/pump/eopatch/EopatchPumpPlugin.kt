@@ -270,61 +270,58 @@ class EopatchPumpPlugin @Inject constructor(
         }
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
         val askedInsulin = detailedBolusInfo.insulin
-        if (detailedBolusInfo.insulin > 0.0) {
-            var isSuccess = true
-            val result = BehaviorSubject.createDefault(true)
-            val disposable = result.hide()
-                .subscribe {
-                    isSuccess = it
-                }
-
-            mDisposables.add(patchManager.startCalculatorBolus(detailedBolusInfo)
-                                 .doOnSuccess {
-                                     mLastDataTime = System.currentTimeMillis()
-                                 }.subscribe({
-                                                 result.onNext(it.isSuccess)
-                                             }, {
-                                                 result.onNext(false)
-                                             })
-            )
-
-            val tr = detailedBolusInfo.let {
-                EventOverviewBolusProgress.Treatment(it.insulin, it.carbs.toInt(), it.bolusType === DetailedBolusInfo.BolusType.SMB, it.id)
+        var isSuccess = true
+        val result = BehaviorSubject.createDefault(true)
+        val disposable = result.hide()
+            .subscribe {
+                isSuccess = it
             }
 
-            do {
-                SystemClock.sleep(100)
-                if (patchManager.patchConnectionState.isConnected) {
-                    val delivering = patchManager.bolusCurrent.nowBolus.injected
-                    rxBus.send(EventOverviewBolusProgress.apply {
-                        status = rh.gs(app.aaps.core.ui.R.string.bolus_delivering, delivering)
-                        percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
-                        t = tr
-                    })
-                }
-            } while (!patchManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
+        mDisposables.add(patchManager.startCalculatorBolus(detailedBolusInfo)
+                             .doOnSuccess {
+                                 mLastDataTime = System.currentTimeMillis()
+                             }.subscribe({
+                                             result.onNext(it.isSuccess)
+                                         }, {
+                                             result.onNext(false)
+                                         })
+        )
 
-            rxBus.send(EventOverviewBolusProgress.apply {
-                status = rh.gs(app.aaps.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin)
-                percent = 100
-            })
-
-            detailedBolusInfo.insulin = patchManager.bolusCurrent.nowBolus.injected.toDouble()
-            patchManager.addBolusToHistory(detailedBolusInfo)
-
-            disposable.dispose()
-
-            return if (isSuccess && abs(askedInsulin - detailedBolusInfo.insulin) < pumpDescription.bolusStep)
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(askedInsulin)
-            else
-                PumpEnactResult(injector).success(false)/*.enacted(false)*/.bolusDelivered(Round.roundTo(detailedBolusInfo.insulin, 0.01))
-
-        } else {
-            // no bolus required
-            return PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).comment(rh.gs(app.aaps.core.ui.R.string.error))
+        val tr = detailedBolusInfo.let {
+            EventOverviewBolusProgress.Treatment(it.insulin, it.carbs.toInt(), it.bolusType === DetailedBolusInfo.BolusType.SMB, it.id)
         }
+
+        do {
+            SystemClock.sleep(100)
+            if (patchManager.patchConnectionState.isConnected) {
+                val delivering = patchManager.bolusCurrent.nowBolus.injected
+                rxBus.send(EventOverviewBolusProgress.apply {
+                    status = rh.gs(app.aaps.core.ui.R.string.bolus_delivering, delivering)
+                    percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
+                    t = tr
+                })
+            }
+        } while (!patchManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
+
+        rxBus.send(EventOverviewBolusProgress.apply {
+            status = rh.gs(app.aaps.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin)
+            percent = 100
+        })
+
+        detailedBolusInfo.insulin = patchManager.bolusCurrent.nowBolus.injected.toDouble()
+        patchManager.addBolusToHistory(detailedBolusInfo)
+
+        disposable.dispose()
+
+        return if (isSuccess && abs(askedInsulin - detailedBolusInfo.insulin) < pumpDescription.bolusStep)
+            PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(askedInsulin)
+        else
+            PumpEnactResult(injector).success(false)/*.enacted(false)*/.bolusDelivered(Round.roundTo(detailedBolusInfo.insulin, 0.01))
     }
 
     override fun stopBolusDelivering() {

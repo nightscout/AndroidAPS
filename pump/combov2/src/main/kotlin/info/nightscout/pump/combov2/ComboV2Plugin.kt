@@ -1012,6 +1012,10 @@ class ComboV2Plugin @Inject constructor(
     }
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
+
         val oldInsulinAmount = detailedBolusInfo.insulin
         detailedBolusInfo.insulin = constraintChecker
             .applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger))
@@ -1020,14 +1024,6 @@ class ComboV2Plugin @Inject constructor(
             LTag.PUMP,
             "Applied bolus constraints:  old insulin amount: $oldInsulinAmount  new: ${detailedBolusInfo.insulin}"
         )
-
-        // Carbs are not allowed because the Combo does not record carbs.
-        // This is defined in the ACCU_CHEK_COMBO PumpType enum's
-        // pumpCapability field, so AndroidAPS is informed about this
-        // lack of carb storage capability. We therefore do not expect
-        // nonzero carbs here.
-        // (Also, a zero insulin value makes no sense when bolusing.)
-        require((detailedBolusInfo.insulin > 0) && (detailedBolusInfo.carbs <= 0.0)) { detailedBolusInfo.toString() }
 
         val acquiredPump = getAcquiredPump()
 

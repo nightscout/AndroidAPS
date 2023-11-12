@@ -12,6 +12,7 @@
     <string name="pump_is_suspended_day_max">Pompa jest wstrzymana z powodu przekroczenia maksymalnej dziennej dawki insuliny</string>
     <string name="patch_not_active">Patch nie został aktywowany</string>
     <string name="pump_setting_failed">Wpisanie ustawień użytkownika do pompy nie powiodło się!</string>
+    <string name="pump_sync_error">Wystąpił błąd podczas synchronizacji historii z pompy, rekord został pominięty. Zajżyj to dialogu Terapia, aby sprawdzić, czy bolus został poprawnie zsynchronizowany. Wycisz to powiadomienie, a jeśli błąd nadal występuje zmień patch lub bazę pompy.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Status Bluetooth Low Energy</string>
     <string name="last_connection_label">Ostatnie połączenie</string>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Настроить чувствительность относительно ГК</string>
+    <string name="dynisf_adjust_sensitivity">Включить коэффициент чувствительности на основе суточной дозировки инсулина TDD для изменения базальной скорости и целевых значений гликемии</string>
+    <string name="dynisf_adjust_sensitivity_summary">Если эти опции включены, AAPS использует последние 24 часа TDD/7D TDD для расчета коэффициента чувствительности, на основе которого производится увеличение или снижение скорости базала, а также коррекция целевой гликемии, как и при работе Autosens. Рекомендуется начинать при выключенной опции</string>
     <string name="DynISFAdjust_title" formatted="false">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
     <string name="DynISFAdjust_summary" formatted="false">Коэффициент корректировки динамического диапазона чувствительности ISF. Установите более 100% для агрессивных доз коррекции и менее 100% для менее агрессивной коррекции.</string>
     <string name="high_temptarget_raises_sensitivity_title">Высокая ВЦ повышает чувствительность</string>

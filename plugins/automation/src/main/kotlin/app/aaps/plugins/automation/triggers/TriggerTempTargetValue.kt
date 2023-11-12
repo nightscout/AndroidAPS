@@ -14,6 +14,7 @@ import app.aaps.plugins.automation.elements.StaticLabel
 import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 import java.util.Optional
+import kotlin.math.roundToInt
 
 class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
 
@@ -51,7 +52,7 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-        if (tt is ValueWrapper.Existing && comparator.value.check(tt.value.lowTarget, profileUtil.convertToMgdl(ttValue.value, ttValue.units))) {
+        if (tt is ValueWrapper.Existing && comparator.value.check(tt.value.lowTarget.roundToInt(), profileUtil.convertToMgdl(ttValue.value, ttValue.units).roundToInt())) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
