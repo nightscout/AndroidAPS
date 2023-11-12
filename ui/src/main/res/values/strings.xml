@@ -157,7 +157,7 @@
     <string name="overview_edit_quickwizard_valid">Valid:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Add</string>
     <string name="overview_quickwizard_item_edit_button">Edit</string>
-    <string name="overview_edit_quickwizard_use_positive_iob_only">Positive only</string>
+    <string name="overview_edit_quickwizard_use_positive_iob_only">Positive IOB only</string>
     <string name="overview_edit_quickwizard_superbolus">Superbolus</string>
     <string name="overview_edit_quickwizard_percentage_to_high">Percentage to high!</string>
     <string name="overview_editquickwizard_percentage">Percentage</string>
