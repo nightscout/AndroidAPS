@@ -51,6 +51,7 @@
     <string name="extended_bolus">Bolo esteso</string>
     <string name="paused">In pausa</string>
     <string name="tdd_total">TDD totale</string>
+    <string name="tdd_old_data">Dati vecchi</string>
     <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
     <string name="waitingforpump">In attesa del micro</string>
     <string name="androidaps_start">AAPS avviato</string>
@@ -120,7 +121,7 @@
     <string name="notconfigured">Non configurato</string>
     <string name="loopsuspended">Loop sospeso</string>
     <string name="trend_arrow">Freccia trend</string>
-    <string name="a11y_autosens_label">Asuto sens</string>
+    <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">ric</string>
     <string name="a11y_arrow_double_down">discesa rapida</string>
     <string name="a11y_arrow_single_down">discesa</string>
@@ -155,7 +156,7 @@
     <string name="login">Login</string>
     <string name="prime_fill">Carica/Riempi</string>
     <string name="overview_insulin_label">Insulina</string>
-    <string name="stoptemptarget">Stoppa temp-target</string>
+    <string name="stoptemptarget">Stoppa target temporaneo</string>
     <string name="closedloop">Loop chiuso</string>
     <string name="openloop">Loop aperto</string>
     <string name="lowglucosesuspend">Sospensione a glicemia bassa (LGS)</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Carica stato micro su NS o Tidepool</string>
     <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
+    <string name="loopstatus_targets">TARGET:</string>
+    <string name="loopstatus_OAPS_result">RISULTATO OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
     <string name="wrongpin">PIN errato</string>
@@ -222,7 +225,7 @@
     <string name="pump_battery_change">Cambio batteria micro</string>
     <string name="temporary_target">Target temporaneo</string>
     <string name="careportal_temporarytargetvalue">Valore target temporaneo</string>
-    <string name="careportal_temporarytargetcancel">Cancellazione temp-target</string>
+    <string name="careportal_temporarytargetcancel">Cancellazione target temporaneo</string>
     <string name="boluswizard">Calcolatore</string>
     <string name="glucosetype_finger">Dito</string>
     <string name="glucosetype_sensor">Sensore</string>
@@ -404,9 +407,9 @@
     <string name="autotune_shortname">AT</string>
     <string name="autotune_settings">Impostazioni Autotune</string>
     <string name="autotune_auto_title">Automazione cambio profilo</string>
-    <string name="autotune_auto_summary">Se abilitato, Autotune si aggiornerà automaticamente e passerà al profilo di input dopo il calcolo da una regola di automazione.</string>
+    <string name="autotune_auto_summary">Se abilitato, dopo il calcolo di una regola di automazione Autotune verrà eseguito e il profilo generato verrà automaticamente attivato.</string>
     <string name="autotune_categorize_uam_as_basal_title">Classifica UAM come basale</string>
-    <string name="autotune_categorize_uam_as_basal_summary">Abilita solo se hai inserito in modo affidabile tutti i carboidrati assunti, con questa opzione aumenti improvvisi individuati da Autotune verranno usati per consigliare modifiche alla velocità basale.</string>
+    <string name="autotune_categorize_uam_as_basal_summary">Abilita solo se hai inserito in modo affidabile tutti i carboidrati assunti, con questa opzione gli aumenti improvvisi individuati da Autotune verranno usati per consigliare modifiche alla velocità basale.</string>
     <string name="autotune_tune_insulin_curve_title">Regola la curva dell\'insulina</string>
     <string name="autotune_tune_insulin_curve_summary">Abilita solo se usi free-peak. Questa opzione regolerà la durata di picco e DIA</string>
     <string name="autotune_default_tune_days_title">Numero di giorni di dati</string>
@@ -453,15 +456,17 @@
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Consiglio bolo</string>
-    <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed essere ricordato quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
+    <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed ricevere un promemoria quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. I COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
     <string name="partialboluswizard_reset_time">Soglia tempo glicemia \"vecchia\" [min]</string>
     <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
+    <string name="carb_equal_zero_no_action">CHO = 0. Nessuna azione intrapresa!</string>
+    <string name="wizard_no_insulin_required">Insulina non necessaria!</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
     <string name="wizard_no_active_profile">Nessun profilo attivo!</string>
     <string name="wizard_no_cob">Valore COB sconosciuto! Lettura BG mancante o recente riavvio dell\'app?</string>
@@ -555,7 +560,7 @@
     <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
     <string name="ble_not_enabled">Bluetooth non abilitato.</string>
     <string name="location_not_found_title">La localizzazione non è abilitata</string>
-    <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
+    <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Preferenze plugin</string>
     <!-- SmsCommunicator -->
@@ -581,6 +586,7 @@
     <string name="cleanup_db_confirm_sync">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.\nFarlo velocizzerà considerevolmente la sincronizzazione completa.</string>
     <string name="cleared_entries">Elementi cancellati</string>
     <!--    Weekday-->
+    <string name="weekday_sunday_short">Dom</string>
     <string name="weekday_saturday_short">Sab</string>
     <string name="weekday_friday_short">Ven</string>
     <string name="weekday_thursday_short">Gio</string>
@@ -589,11 +595,13 @@
     <string name="weekday_monday_short">Lun</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">L</string>
-    <string name="tuesday_short">M</string>
-    <string name="wednesday_short">M</string>
+    <string name="tuesday_short">Ma</string>
+    <string name="wednesday_short">Me</string>
     <string name="thursday_short">G</string>
     <string name="friday_short">V</string>
     <string name="saturday_short">S</string>
     <string name="sunday_short">D</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

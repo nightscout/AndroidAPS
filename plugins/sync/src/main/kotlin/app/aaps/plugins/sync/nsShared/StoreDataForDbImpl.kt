@@ -130,8 +130,10 @@ class StoreDataForDbImpl @Inject constructor(
     private val pause = 1000L // to slow down db operations
 
     fun <T> HashMap<T, Long>.inc(key: T) =
-        if (containsKey(key)) merge(key, 1, Long::plus)
-        else put(key, 1)
+        synchronized(this) {
+            if (containsKey(key)) merge(key, 1, Long::plus)
+            else put(key, 1)
+        }
 
     override fun storeGlucoseValuesToDb() {
         if (glucoseValues.isNotEmpty())

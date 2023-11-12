@@ -524,7 +524,11 @@ class NSClientService : DaggerService() {
                                 }
                             }
 
-                            val devicestatuses = gson.fromJson(data.getString("devicestatus"), Array<NSDeviceStatus>::class.java)
+                            val devicestatuses = try {
+                                gson.fromJson(data.getString("devicestatus"), Array<NSDeviceStatus>::class.java)
+                            } catch (unused: Exception) {
+                                emptyArray<NSDeviceStatus>()
+                            }
                             if (devicestatuses.isNotEmpty()) {
                                 rxBus.send(EventNSClientNewLog("◄ DATA", "received " + devicestatuses.size + " device statuses"))
                                 nsDeviceStatusHandler.handleNewData(devicestatuses)
@@ -638,7 +642,7 @@ class NSClientService : DaggerService() {
         val defaultVal = config.NSCLIENT
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_ns_announcements, defaultVal)) {
             val nsAlarm = NSAlarmObject(announcement)
-            uiInteraction.addNotificationWithAction(injector, nsAlarm)
+            uiInteraction.addNotificationWithAction(nsAlarm)
             rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", safeGetString(announcement, "message", "received")))
             aapsLogger.debug(LTag.NSCLIENT, announcement.toString())
         }
@@ -650,7 +654,7 @@ class NSClientService : DaggerService() {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
-                uiInteraction.addNotificationWithAction(injector, nsAlarm)
+                uiInteraction.addNotificationWithAction(nsAlarm)
             }
             rxBus.send(EventNSClientNewLog("◄ ALARM", safeGetString(alarm, "message", "received")))
             aapsLogger.debug(LTag.NSCLIENT, alarm.toString())
@@ -663,7 +667,7 @@ class NSClientService : DaggerService() {
             val snoozedTo = sp.getLong(rh.gs(app.aaps.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarmObject(alarm)
-                uiInteraction.addNotificationWithAction(injector, nsAlarm)
+                uiInteraction.addNotificationWithAction(nsAlarm)
             }
             rxBus.send(EventNSClientNewLog("◄ URGENTALARM", safeGetString(alarm, "message", "received")))
             aapsLogger.debug(LTag.NSCLIENT, alarm.toString())

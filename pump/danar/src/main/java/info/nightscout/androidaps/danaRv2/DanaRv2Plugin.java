@@ -159,54 +159,50 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     // Pump interface
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
-        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            // v2 stores end time for bolus, we need to adjust time
-            // default delivery speed is 12 sec/U
-            int preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0);
-            int speed = 12;
-            switch (preferencesSpeed) {
-                case 0:
-                    speed = 12;
-                    break;
-                case 1:
-                    speed = 30;
-                    break;
-                case 2:
-                    speed = 60;
-                    break;
-            }
-            detailedBolusInfo.timestamp = dateUtil.now() + (long) (speed * detailedBolusInfo.insulin * 1000);
-            // clean carbs to prevent counting them as twice because they will picked up as another record
-            // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
-            double carbs = detailedBolusInfo.carbs;
-            detailedBolusInfo.carbs = 0;
-            long carbTimeStamp = detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp;
-            if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.Companion.mins(1).msecs(); // better set 1 min back to prevents clash with insulin
-
-            detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
-
-            EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
-            boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, carbTimeStamp, t);
-            PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
-                    .bolusDelivered(t.getInsulin());
-            if (!result.getSuccess())
-                result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(),
-                        danaPump.getBolusStartErrorCode()));
-            else
-                result.comment(app.aaps.core.ui.R.string.ok);
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
-            // remove carbs because it's get from history separately
-            return result;
-        } else {
-            PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(false).bolusDelivered(0d).comment(app.aaps.core.ui.R.string.invalid_input);
-            aapsLogger.error("deliverTreatment: Invalid input");
-            return result;
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
+        // v2 stores end time for bolus, we need to adjust time
+        // default delivery speed is 12 sec/U
+        int preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0);
+        int speed = 12;
+        switch (preferencesSpeed) {
+            case 0:
+                speed = 12;
+                break;
+            case 1:
+                speed = 30;
+                break;
+            case 2:
+                speed = 60;
+                break;
+        }
+        detailedBolusInfo.timestamp = dateUtil.now() + (long) (speed * detailedBolusInfo.insulin * 1000);
+        // clean carbs to prevent counting them as twice because they will picked up as another record
+        // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
+        double carbs = detailedBolusInfo.carbs;
+        detailedBolusInfo.carbs = 0;
+        long carbTimeStamp = detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp;
+        if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.Companion.mins(1).msecs(); // better set 1 min back to prevents clash with insulin
+
+        detailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
+
+        EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
+        boolean connectionOK = false;
+        if (detailedBolusInfo.insulin > 0 || carbs > 0)
+            connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) carbs, carbTimeStamp, t);
+        PumpEnactResult result = new PumpEnactResult(getInjector());
+        result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
+                .bolusDelivered(t.getInsulin());
+        if (!result.getSuccess())
+            result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(),
+                    danaPump.getBolusStartErrorCode()));
+        else
+            result.comment(app.aaps.core.ui.R.string.ok);
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());
+        // remove carbs because it's get from history separately
+        return result;
     }
 
     @Override

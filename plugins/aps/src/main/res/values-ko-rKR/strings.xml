@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">감도 및 BG 조정</string>
+    <string name="dynisf_adjust_sensitivity">Basal 및 혈당 목표 수정을 위한 TDD 기반 민감도 비율 활성화</string>
+    <string name="dynisf_adjust_sensitivity_summary">지난 24시간 TDD/7일 TDD를 사용하여 Basal 증가 또는 감소에 사용되는 민감도 비율을 계산하고, 이 옵션이 활성화된 경우 Autosens와 동일한 방식으로 혈당 목표도 조정합니다. 이 옵션을 끈 상태에서 시작하는 것이 좋습니다.</string>
     <string name="DynISFAdjust_title" formatted="false">동적ISF 조정 계수 %</string>
     <string name="DynISFAdjust_summary" formatted="false">동적ISF 에 대한 조정 계수. 더 호전적인 보정 양인 경우 100% 이상으로 설정하고, 덜 호전적인 보정의 경우 100% 미만으로 설정합니다.</string>
     <string name="high_temptarget_raises_sensitivity_title">높은 임시목표는 민감도를 올립니다.</string>
@@ -83,6 +84,7 @@
     <string name="smb_disabled_in_preferences">설정에서 SMB가 비활성화 되었습니다.</string>
     <string name="uam_disabled_in_preferences">설정에서 UAM이 비활성화 되었습니다.</string>
     <string name="autosens_disabled_in_preferences">설정에서 Autosens가 비활성화 되었습니다.</string>
+    <string name="autosens_disabled_in_dyn_isf">DynISF에서 Autosens 비활성화</string>
     <!--    Verify if needed in safety-->
     <string name="limiting_iob">%2$s로 인해 IOB가 %1$.1f U으로 제한됩니다.</string>
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
@@ -114,4 +116,5 @@
     <string name="loop_smb_set_by_pump_label">펌프에 의한 SMB 설정</string>
     <string name="loop_open_mode_min_change">최소 요청 변경 [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">변경 사항이 %의 값보다 큰 경우에만 열린 루프의 새 변경 요청을 팝업합니다. 기본값은 20%입니다.</string>
+    <string name="fallback_smb_no_tdd">SMB로 폴백. TDD 데이터가 충분하지 않습니다.</string>
 </resources>

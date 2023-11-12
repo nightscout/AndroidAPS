@@ -56,6 +56,7 @@ import app.aaps.core.interfaces.rx.events.EventAcceptOpenLoopChange
 import app.aaps.core.interfaces.rx.events.EventBucketedDataCreated
 import app.aaps.core.interfaces.rx.events.EventEffectiveProfileSwitchChanged
 import app.aaps.core.interfaces.rx.events.EventExtendedBolusChange
+import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.rx.events.EventMobileToWear
 import app.aaps.core.interfaces.rx.events.EventNewOpenLoopNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
@@ -231,7 +232,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.buttonsLayout.quickWizardButton.setOnLongClickListener(this)
         binding.infoLayout.apsMode.setOnClickListener(this)
         binding.infoLayout.apsMode.setOnLongClickListener(this)
-        binding.activeProfile.setOnLongClickListener(this)
     }
 
     @Synchronized
@@ -308,6 +308,10 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                            overviewData.pumpStatus = it.getStatus(requireContext())
                            updatePumpStatus()
                        }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventInitializationChanged::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ processButtonsVisibility() }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventEffectiveProfileSwitchChanged::class.java)
             .observeOn(aapsSchedulers.io)
@@ -788,7 +792,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val lastBgDescription = overviewData.lastBgDescription(iobCobCalculator.ads)
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.value)
+            binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.recalculated)
             binding.infoLayout.bg.setTextColor(lastBgColor)
             trendArrow?.let { binding.infoLayout.arrow.setImageResource(it.directionToIcon()) }
             binding.infoLayout.arrow.visibility = (trendArrow != null).toVisibilityKeepSpace()
@@ -958,9 +962,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
                 )
             } else {
-                // If the target is not the same as set in the profile then oref has overridden it
                 profileFunction.getProfile()?.let { profile ->
-                    val targetUsed = loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                    // If the target is not the same as set in the profile then oref has overridden it
+                    val targetUsed =
+                        if (config.APS) loop.lastRun?.constraintsProcessed?.targetBG ?: 0.0
+                        else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "targetBG")
+                        else 0.0
 
                     if (targetUsed != 0.0 && abs(profile.getTargetMgdl() - targetUsed) > 0.01) {
                         aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
@@ -1106,7 +1113,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val isfMgdl = profile?.getIsfMgdl()
         val variableSens =
             if (config.APS && request is VariableSensitivityResult) request.variableSens ?: 0.0
-            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult(injector).json, "variable_sens")
+            else if (config.NSCLIENT) JsonHelper.safeGetDouble(processedDeviceStatusData.getAPSResult().json, "variable_sens")
             else 0.0
 
         if (variableSens != isfMgdl && variableSens != 0.0 && isfMgdl != null) {

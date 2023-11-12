@@ -9,7 +9,6 @@ import app.aaps.core.interfaces.stats.DexcomTIR
 import app.aaps.core.interfaces.stats.DexcomTirCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.interfaces.utils.T
 import app.aaps.database.impl.AppRepository
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +23,7 @@ class DexcomTirCalculatorImpl @Inject constructor(
     val days = 14L
 
     override fun calculate(): DexcomTIR {
-        val startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
+        val startTime = MidnightTime.calcDaysBack(days)
         val endTime = MidnightTime.calc(dateUtil.now())
 
         val bgReadings = repository.compatGetBgReadingsDataFromTime(startTime, endTime, true).blockingGet()

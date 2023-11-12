@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">Синхронизирует данные с Nightscout при помощи API v3</string>
     <string name="blocked_by_charging">Заблокировано опциями зарядки</string>
     <string name="blocked_by_connectivity">Заблокировано настройками подключения</string>
+    <string name="no_connectivity">Нет подключения</string>
     <string name="unsupported_ns_version">Неподдерживаемая версия Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">ЗАГРУЗ</string>
@@ -116,7 +117,12 @@
     <string name="xdrip_local_broadcasts_summary">Отправлять данные о глюкозе и терапии на xDrip+. Источником данных должен быть выбран \"xDrip+ Sync Follower\" а в настройках между приложениями надо включить - Принимать глюкозу/терапию</string>
     <string name="xdrip_local_broadcasts_title">Включить трансляции для xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="data_broadcaster_short">DBRO</string>
+    <string name="data_broadcaster_description">Передавать данные приложению Garmin\'s G-Watch Wear</string>
     <!-- GarminPlugin -->
+    <string name="garmin">Garmin</string>
+    <string name="garmin_description">Подключение к устройству Garmin (Fenix, Edge, …)</string>
+    <string name="key_garmin_settings">Настройки Garmin</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Мониторить и контролировать AAPS при помощи часов WearOS.</string>

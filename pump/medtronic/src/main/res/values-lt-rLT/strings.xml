@@ -52,7 +52,7 @@
     <!--    <string name="medtronic_history_group_all">All</string>-->
     <string name="medtronic_pump_history">Medtronic pompos istorija</string>
     <!-- <string name="medtronic_cmd_profile_not_set">Remote Basal profile setting is not supported. Please modify Basal profile on your pump manually.</string> -->
-    <string name="medtronic_cmd_cancel_bolus_not_supported">Atšaukėte bolusą, kuris jau buvo nustatytas pompoje. Medronic pompa nepalaiko šio atšaukimo, todėl turite jį atšaukti rankiniu būdu. Sustabdykite pompą ir vėl ją paleiskite (jei vis dar norite atšaukti bolusą). Aplikacija perims pokyčius su kitu atnaujinimu (per mažiau nei 5 minutes).</string>
+    <string name="medtronic_cmd_cancel_bolus_not_supported">Atšaukėte bolusą, kuris jau buvo nustatytas pompoje. Medronic pompa nepalaiko šio atšaukimo, todėl turite jį atšaukti rankiniu būdu. Sustabdykite pompą ir vėl ją paleiskite (jei vis dar norite atšaukti bolusą). Programa perims pokyčius su kitu atnaujinimu (per mažiau nei 5 minutes).</string>
     <string name="medtronic_cmd_cant_read_tbr">Negalima sužinoti dabartinės laikinos bazės.</string>
     <string name="medtronic_cmd_cant_cancel_tbr_stop_op">Negalima atšaukti dabartinės laikinos bazės. Operacija stabdoma.</string>
     <string name="medtronic_cmd_set_profile_pattern_overflow">Profilio nustatymas nepavyko dėl per didelės nustatytos bazės: %1$s</string>
@@ -62,12 +62,12 @@
     <string name="medtronic_cmd_cant_cancel_tbr">Negalima atšaukti dabartinės laikinos bazės.</string>
     <string name="medtronic_cmd_basal_profile_could_not_be_set">Bazės profilis nenustatytas.</string>
     <string name="medtronic_cmd_basal_profile_not_set_is_same">Bazės profilis toks pat, todėl nenustatomas pakartotinai.</string>
-    <string name="medtronic_cmd_desc_get_history">Gauti istoriją - Lapas %1$d (%2$d/16)</string>
-    <string name="medtronic_cmd_desc_get_history_request">Gauti istoriją - Lapas %1$d</string>
+    <string name="medtronic_cmd_desc_get_history">Gauti istoriją - lapas %1$d (%2$d/16)</string>
+    <string name="medtronic_cmd_desc_get_history_request">Gauti istoriją - lapas %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Gauti pompos laiką</string>
     <string name="medtronic_cmd_desc_set_time">Nustatyti pompos laiką</string>
     <string name="medtronic_cmd_desc_get_battery_status">Parodyti baterijos statusą</string>
-    <string name="medtronic_cmd_desc_get_settings">Gauti parametrus</string>
+    <string name="medtronic_cmd_desc_get_settings">Gauti nustatymus</string>
     <string name="medtronic_cmd_desc_get_model">Gauti pompos modelį</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Gauti bazės profilį</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Nustatyti bazės profilį</string>
@@ -90,7 +90,7 @@
     <string name="set_neutral_temps_title">Nustatyti neutralią laikiną bazę</string>
     <string name="set_neutral_temps_summary">Jei įjungta, laikina valandinė bazė bus anuliuota iki kiekvienos valandos pabaigos. Šis metodas gali padėti išvengti kai kurių pompų pypsėjimo ar vibravimo.</string>
     <string name="mdt_tbr_remaining">%1$.1f vv/h (liko %2$d min)</string>
-    <string name="invalid_history_data">Aptikti neteisingi pompos istorijos duomenys. Sukurkite naują problemos įrašą ir pateikite žurnalus.</string>
+    <string name="invalid_history_data">Aptikti neteisingi pompos istorijos duomenys. Sukurkite naują problemos įrašą ir pateikite logus.</string>
     <string name="riley_statistics">RL statistika</string>
     <string name="medtronic_history_type">Tipas:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Paspausta atnaujinti</string>

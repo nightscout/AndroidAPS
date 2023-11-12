@@ -50,7 +50,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         val data = JSONObject()
             .put("time", time.value)
         for (i in days.weekdays.indices) {
-            data.put(WeekDay.DayOfWeek.values()[i].name, days.weekdays[i])
+            data.put(WeekDay.DayOfWeek.entries[i].name, days.weekdays[i])
         }
         return data
     }
@@ -58,7 +58,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
     override fun fromJSON(data: String): Trigger {
         val o = JSONObject(data)
         for (i in days.weekdays.indices)
-            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.values()[i].name)
+            days.weekdays[i] = JsonHelper.safeGetBoolean(o, WeekDay.DayOfWeek.entries[i].name)
         if (o.has("hour")) {
             // do conversion from 2.5.1 format
             val hour = JsonHelper.safeGetInt(o, "hour")
@@ -90,7 +90,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun duplicate(): Trigger = TriggerRecurringTime(injector, this)
 
-    private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcPlusMinutes(minutesSinceMidnight)
+    private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcMidnightPlusMinutes(minutesSinceMidnight)
 
     private fun getMinSinceMidnight(time: Long): Int = MidnightUtils.secondsFromMidnight(time) / 60
 

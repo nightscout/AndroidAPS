@@ -56,7 +56,7 @@ internal interface NightscoutRemoteService {
     @DELETE("v3/entries/{identifier}")
     suspend fun deleteEntry(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
 
-    @GET("v3/treatments?sort=date")
+    @GET("v3/treatments?sort=created_at")
     suspend fun getTreatmentsNewerThan(@Query(value = "created_at\$gt", encoded = true) createdAt: String, @Query("limit") limit: Int): Response<NSResponse<List<RemoteTreatment>>>
 
     @GET("v3/treatments/history/{from}")

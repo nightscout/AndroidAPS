@@ -11,17 +11,17 @@
     <string name="smscommunicator_code_verify_label">Kodas patikrinimui:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Patvirtinimo kodą sudaro 6 skaitmenys, kuriuos rodo Authenticator programa (dar vadinama OTP), po 3 ar daugiau privalomo PIN skaitmenų.</string>
-    <string name="smscommunicator_otp_reset_btn">Atstatyti tapatybės nustatymą</string>
+    <string name="smscommunicator_otp_reset_btn">Atstatyti autentikatorius</string>
     <string name="smscommunicator_otp_reset_title">Atstatyti autentifikatoriaus kodą</string>
     <string name="smscommunicator_otp_reset_prompt">Ar tikrai norite iš naujo nustatyti autentifikatoriaus raktą? Dėl to visi šiuo metu konfigūruojami autentifikatoriai negalios, ir jums reikės juos nustatyti dar kartą.</string>
     <string name="smscommunicator_otp_reset_successful">Sukurtas naujas autentifikavimo raktas! Autentifikatoriams pateikti naudokite atnaujintą QR kodą.</string>
     <string name="smscommunicator_otp_export_title">Eksportuojamas OTP kodas</string>
-    <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei Jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
+    <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei Jūsų programai kyla problemų nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
     <string name="smscommunicator_otp_export_successful">OTP kodas (Base32 formatas) eksportuotas ir nukopijuotas į mainų sritį. Įklijuokite jį į autentifikatorių arba OTP programą!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Skanuokite kodą AndroidAPS OTP kodų nustatymui</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
-    <string name="smscommunicator_otp_reset_header">Atstatyti tapatybės nustatymą</string>
+    <string name="smscommunicator_otp_reset_header">Atstatyti autentikatorius</string>
     <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Turėsite juos vėl nustatyti!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
@@ -40,7 +40,7 @@
     <string name="smscommunicator_stopped_sms">SMS nuotolinio valdymo funkcija sustojo. Norėdami ją atnaujinti, naudokite AAPS pagrindinį išmanųjį telefoną.</string>
     <string name="smscommunicator_calibration_reply_with_code">Norėdami nusiųsti kalibraciją %1$.2f, atsakykite kodu %2$s</string>
     <string name="smscommunicator_bolus_failed">Bolusas nesuleistas</string>
-    <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno boluso, suleisto nuotoliniu būdu iki kito</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Minimalus minučių skaičius, kuris turi praeiti nuo vieno nuotolinio boluso iki kito</string>
     <string name="smscommunicator_remote_bolus_min_distance">Kiek mažiausiai minučių turi praeiti tarp vieno ir kito boluso</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Jūsų saugumui, norėdami redaguoti šį pasirinkimą, jums reikia pridėti ne mažiau kaip 2 telefono numerius.</string>
     <string name="smscommunicator_bolus_delivered">%1$.2f vv bolusas sėkmingai suleistas</string>
@@ -97,7 +97,7 @@
     <string name="smscommunicator_current_loop_mode">Dabartinis ciklo režimas: %1$s</string>
     <string name="wrong_format">Neteisingas formatas</string>
     <string name="sms_actual_bg">BG:</string>
-    <string name="sms_last_bg">Paskutinė KG:</string>
+    <string name="sms_last_bg">Pask. glikemija:</string>
     <string name="sms_delta">Pokytis:</string>
     <string name="sms_iob">AIO:</string>
     <string name="sms_bolus">Bolusas:</string>
@@ -211,7 +211,7 @@
     <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
     <string name="openaps">AtviraDKS</string>
     <string name="uploader">Siuntėjas</string>
-    <string name="data_status">KG duomenų statusas</string>
+    <string name="data_status">Glikemijos statusas</string>
     <string name="quickwizard_settings">Greitojo patarėjo nustatymai</string>
     <string name="keep_screen_on_title">Laikyti ekraną įjungtą</string>
     <string name="keep_screen_on_summary">Neleidžia Android sistemai išjungti ekrano. Naudojama daug energijos, jei telefonas neprijungtas prie maitinimo šaltinio.</string>
@@ -237,7 +237,7 @@
     <string name="button2">Mygtukas 2</string>
     <string name="button3">Mygtukas 3</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
-    <string name="prefs_range_summary">Aukštoji ir žemoji riba Pradžios lango grafikuose bei išmaniuosiuose laikrodžiuose</string>
+    <string name="prefs_range_summary">Aukštoji ir žemoji riba Pradžios ekrano grafike bei išmaniuosiuose laikrodžiuose</string>
     <string name="low_mark">Žemoji riba</string>
     <string name="high_mark">Aukštoji riba</string>
     <string name="short_tabtitles">Naudoti sutrumpintus skirtukų pavadinimus</string>
@@ -245,7 +245,7 @@
     <string name="deliverpartofboluswizard">Boluso skaičiuoklė atlieka skaičiavimus, tačiau tik dalis apskaičiuoto insulino yra suleidžiama. Naudinga kartu su SMB algoritmu.</string>
     <string name="deliver_part_of_boluswizard_reset_time">Suleisti 100% bolusą, jei glikemijos duomenys senesni nei</string>
     <string name="enable_bolus_advisor">Įgalinti boluso patarėją</string>
-    <string name="enable_bolus_advisor_summary">Galimybė priminti jums valgyti vėliau (pvz., esant aukštai glikemijai) boliuso vedlyje („po susileidimo palaukti ir valgyti vėliau“)</string>
+    <string name="enable_bolus_advisor_summary">Naudokite valgio priminimą, o ne patarėjo rezultatą, jei glikemija aukšta (\"prebolusas\")</string>
     <string name="enablesuperbolus">Įgalinti superbolusus skaičiuoklėje</string>
     <string name="enablesuperbolus_summary">Įgalina superbolusų naudojimą insulino skaičiuoklėje. Nenaudokite, kol nesuprantate, ką superbolus funkcija atlieka. NAUDODAMI AKLAI GALITE PERDOZUOTI INSULINO!</string>
     <string name="enablebolusreminder">Įgalinti priminimą apie bolusą</string>
@@ -257,7 +257,7 @@
     <string name="overview_show_heartRate">Pulsas</string>
     <string name="overview_show_deviation_slope">Nuokrypiai</string>
     <string name="overview_show_activity">Aktyvumas</string>
-    <string name="overview_show_bgi">KG įtaka</string>
+    <string name="overview_show_bgi">Glikemijos įtaka</string>
     <string name="overview_show_sensitivity">Jautrumas insulinui</string>
     <string name="overview_show_deviations">Nuokrypiai</string>
     <string name="overview_show_cob">Aktyvūs angliavandeniai</string>
@@ -268,7 +268,7 @@
     <string name="basal_shortname">VB</string>
     <string name="deviation_shortname">DEV</string>
     <string name="activity_shortname">VEIKS</string>
-    <string name="bgi_shortname">-KGS</string>
+    <string name="bgi_shortname">-BGI</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
@@ -282,7 +282,7 @@
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
-    <string name="cannula_usage">naudojimas:</string>
+    <string name="cannula_usage">naud:</string>
     <!--    Iob-->
     <string name="send_logfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
     <!--    PersistentNotification-->

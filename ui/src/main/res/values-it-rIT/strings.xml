@@ -27,7 +27,7 @@
     <string name="age">Età</string>
     <string name="weight_label">Peso</string>
     <string name="most_common_profile">Profilo più comune:</string>
-    <string name="survey_comment">Nota: solo i dati visibili su questa schermata verranno caricati (in modo anonimo). Un ID è assegnato a questa installazione di AAPS. Puoi inviare nuovamente i dati se il tuo profilo principale viene modificato, ma lascialo in esecuzione almeno per una settimana per rendere il risultato visibile nel time in range (TIR). Il tuo aiuto è apprezzato.</string>
+    <string name="survey_comment">Nota: solo i dati visibili su questa schermata verranno caricati in modo anonimo. A questa installazione di AAPS verrà assegnato un ID. Puoi inviare nuovamente i dati se il tuo profilo principale viene modificato, ma lascialo in esecuzione almeno per una settimana per rendere il risultato visibile nel time in range (TIR). Il tuo aiuto è apprezzato.</string>
     <string name="glucose_type">Tipo glicemia</string>
     <string name="bg_other">Altro</string>
     <string name="bg_meter">Glucometro</string>

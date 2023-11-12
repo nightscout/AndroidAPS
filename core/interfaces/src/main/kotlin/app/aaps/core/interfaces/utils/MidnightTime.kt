@@ -1,64 +1,86 @@
 package app.aaps.core.interfaces.utils
 
 import android.util.LongSparseArray
-import java.util.Calendar
+import androidx.annotation.VisibleForTesting
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneId
 
 object MidnightTime {
 
+    @VisibleForTesting
     val times = LongSparseArray<Long>()
 
-    private var hits: Long = 0
-    private var misses: Long = 0
     private const val THRESHOLD = 100000
 
-    fun calc(): Long {
-        val c = Calendar.getInstance()
-        c[Calendar.HOUR_OF_DAY] = 0
-        c[Calendar.MINUTE] = 0
-        c[Calendar.SECOND] = 0
-        c[Calendar.MILLISECOND] = 0
-        return c.timeInMillis
-    }
+    /**
+     * Epoch time of last midnight
+     *
+     * @return epoch millis
+     */
+    fun calc(): Long =
+        LocalDateTime.now().atZone(ZoneId.systemDefault())
+            .with(LocalTime.of(0, 0, 0, 0))
+            .toInstant().toEpochMilli()
 
-    fun calcPlusMinutes(minutes: Int): Long {
-        val h = minutes / 60
+    /**
+     * Today's time with 'minutes' from midnight
+     *
+     * @param minutes minutes to add
+     * @return epoch millis of today with hh:mm:00
+     */
+    fun calcMidnightPlusMinutes(minutes: Int): Long {
+        val h = (minutes / 60) % 24
         val m = minutes % 60
-        val c = Calendar.getInstance()
-        c[Calendar.HOUR_OF_DAY] = h
-        c[Calendar.MINUTE] = m
-        c[Calendar.SECOND] = 0
-        c[Calendar.MILLISECOND] = 0
-        return c.timeInMillis
+        return LocalDateTime.now().atZone(ZoneId.systemDefault())
+            .with(LocalTime.of(h, m, 0, 0))
+            .toInstant().toEpochMilli()
     }
 
+    /**
+     * Epoch time of last midnight before 'time'
+     *
+     * @param time time of the day
+     * @return epoch millis
+     */
     fun calc(time: Long): Long {
-        var m: Long?
         synchronized(times) {
-            m = times[time]
-            if (m != null) {
-                ++hits
-                return m!!
-            }
-            val c = Calendar.getInstance()
-            c.timeInMillis = time
-            c[Calendar.HOUR_OF_DAY] = 0
-            c[Calendar.MINUTE] = 0
-            c[Calendar.SECOND] = 0
-            c[Calendar.MILLISECOND] = 0
-            m = c.timeInMillis
-            times.append(time, m)
-            ++misses
+            val m = times[time] ?: Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault())
+                .with(LocalTime.of(0, 0, 0, 0))
+                .toInstant().toEpochMilli()
             if (times.size() > THRESHOLD) resetCache()
+            return m
         }
-        return m!!
     }
 
+    /**
+     * Epoch time of last midnight 'days' back
+     *
+     * @param daysBack how many days back
+     * @return epoch millis of midnight
+     */
+    fun calcDaysBack(daysBack: Long): Long =
+        LocalDateTime.now().atZone(ZoneId.systemDefault())
+            .with(LocalTime.of(0, 0, 0, 0))
+            .minusDays(daysBack)
+            .toInstant().toEpochMilli()
+
+    /**
+     * Epoch time of last midnight 'days' back from time
+     *
+     * @param time start time
+     * @param daysBack how many days back
+     * @return epoch millis of midnight
+     */
+    fun calcDaysBack(time: Long, daysBack: Long): Long =
+        Instant.ofEpochMilli(time).atZone(ZoneId.systemDefault())
+            .with(LocalTime.of(0, 0, 0, 0))
+            .minusDays(daysBack)
+            .toInstant().toEpochMilli()
+
+    @VisibleForTesting
     fun resetCache() {
-        hits = 0
-        misses = 0
         times.clear()
     }
-
-    fun log(): String =
-        "Hits: " + hits + " misses: " + misses + " stored: " + times.size()
 }

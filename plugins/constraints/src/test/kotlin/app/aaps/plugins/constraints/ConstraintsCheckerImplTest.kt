@@ -188,7 +188,9 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
                 repository,
                 glucoseStatusProvider,
                 bgQualityCheck,
-                tddCalculator
+                tddCalculator,
+                uiInteraction,
+                objectivesPlugin
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
@@ -224,7 +226,6 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         constraintsPluginsList.add(openAPSAMAPlugin)
         constraintsPluginsList.add(openAPSSMBPlugin)
         `when`(activePlugin.getSpecificPluginsListByInterface(PluginConstraints::class.java)).thenReturn(constraintsPluginsList)
-        objectivesPlugin.onStart()
     }
 
     // Combo & Objectives
@@ -316,7 +317,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 //        insightPlugin.setStatusResult(result);
 
         // No limit by default
-        `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
         `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
@@ -343,7 +344,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 //        insightPlugin.setStatusResult(result);
 
         // No limit by default
-        `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
+        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
         `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")

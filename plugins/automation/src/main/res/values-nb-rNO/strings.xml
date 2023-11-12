@@ -27,7 +27,7 @@
     <string name="sendsmsactionlabel">Send SMS: %1$s</string>
     <string name="sendsmsactiondescription">Send SMS til alle numre</string>
     <string name="sendsmsactiontext">Send SMS med tekst</string>
-    <string name="starttemptarget">Start midl. mål</string>
+    <string name="starttemptarget">Start midlertidig mål</string>
     <string name="islesser">er mindre enn</string>
     <string name="isequalorlesser">er lik eller mindre enn</string>
     <string name="isequal">er lik som</string>
@@ -37,9 +37,9 @@
     <string name="glucoseisnotavailable">BS-data er ikke tilgjengelig</string>
     <string name="glucosecomparedmgdl">BS %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">BS %1$s %2$.1f %3$s</string>
-    <string name="notemptarget">Midl. mål finnes ikke</string>
-    <string name="temptargetcomparedmgdl">Midl. mål %1$s %2$.0f %3$s</string>
-    <string name="temptargetcomparedmmol">Midl. mål %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Midlertidig mål finnes ikke</string>
+    <string name="temptargetcomparedmgdl">Midlertidig mål %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Midlertidig mål %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profilprosent %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
     <string name="or">Eller</string>
@@ -66,7 +66,7 @@
     <string name="delete_short">SLETT</string>
     <string name="add_short">LEGG TIL</string>
     <string name="copy_short">KOPIER</string>
-    <string name="temptargetcompared">Midl. mål %1$s</string>
+    <string name="temptargetcompared">Midlertidig mål %1$s</string>
     <string name="btdevicecompared">Bluetoothtilkobling til enheten %1$s %2$s</string>
     <string name="btdevice">Tilkobling til Bluetoothenhet </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>

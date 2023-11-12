@@ -6,6 +6,7 @@
     <string name="medtrum_pump_description">Medtrum Nano ir Medtrum 300U integracija</string>
     <string name="medtrum_pump_setting">Medtrum pompos nustatymai</string>
     <string name="pump_error">Pompos klaida: %1$s !! </string>
+    <string name="pump_warning">Pompos įspėjimas: %1$s </string>
     <string name="pump_is_suspended">Pompa sustabdyta</string>
     <string name="pump_is_suspended_hour_max">Pompa sustabdyta dėl viršyto valandos insulino limito</string>
     <string name="pump_is_suspended_day_max">Pompa sustabdyta dėl viršyto paros insulino limito</string>
@@ -52,6 +53,7 @@
     <string name="alarm_battery_out">Tuščia baterija</string>
     <string name="alarm_no_calibration">Nėra kalibracijos</string>
     <string name="pump_time_update_failed">Laiko juosta pompoje neatnaujinta, nutildykite ir atnaujinkite rankiniu būdu.</string>
+    <string name="bolus_error">Boluso klaida</string>
     <!-- wizard-->
     <string name="retry">Kartoti</string>
     <string name="next">Kitas</string>

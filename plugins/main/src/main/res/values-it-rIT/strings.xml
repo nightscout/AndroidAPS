@@ -14,7 +14,7 @@
     <string name="smscommunicator_otp_reset_btn">Resetta autenticatori</string>
     <string name="smscommunicator_otp_reset_title">Resetta chiave autenticatore</string>
     <string name="smscommunicator_otp_reset_prompt">Sei sicuro di resettare la chiave autenticatore? Renderà non validi tutti gli autenticatori attualmente configurati e sarà necessario configurarli nuovamente.</string>
-    <string name="smscommunicator_otp_reset_successful">La nuova chiave autenticatore è stata generata! Usa il QRCode aggiornato per fornire gli autenticatori.</string>
+    <string name="smscommunicator_otp_reset_successful">La nuova chiave autenticatore è stata generata! Fornisci il QRCode aggiornato agli autenticatori.</string>
     <string name="smscommunicator_otp_export_title">Esportazione OTP secret</string>
     <string name="smscommunicator_otp_export_prompt">Sei sicuro di voler copiare l\'OTP secret negli appunti?\n\nPotresti averne bisogno solo se la tua app autenticatore ha problemi con la scansione del QRCode, vuoi inserirlo manualmente o vuoi configurare un token OTP hardware usando un\'app dedicata.</string>
     <string name="smscommunicator_otp_export_successful">OTP secret (in formato Base32) esportato e copiato negli appunti. Incollalo nell\'autenticatore o nel configuratore hardware di OTP!</string>
@@ -225,7 +225,7 @@
     <string name="secondcarbsincrement">Secondo incremento di CHO</string>
     <string name="thirdcarbsincrement">Terzo incremento di CHO</string>
     <string name="cgm">CGM</string>
-    <string name="default_temptargets">Temp-Target predefiniti</string>
+    <string name="default_temptargets">Target temporanei predefiniti</string>
     <string name="eatingsoon_duration">target \"pasto a breve\" - durata</string>
     <string name="eatingsoon_target">target \"pasto a breve\"</string>
     <string name="activity_duration">target \"attività fisica\" - durata</string>

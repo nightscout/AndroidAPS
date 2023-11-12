@@ -17,7 +17,7 @@
     <!-- Signature verifier -->
     <!-- BG Quality -->
     <string name="recalculated_data_used">Naudojami perskaičiuoti duomenys</string>
-    <string name="bg_too_close">KG dubliuojasi:\n%1$s\n%2$s</string>
+    <string name="bg_too_close">Glikemija dubliuojasi:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">perskaičiuota</string>
     <string name="a11y_bg_quality_doubles">reikšmės dubliuojasi</string>
     <string name="a11y_bg_quality_flat">Duomenys nekinta. Jie galimai klaidingi</string>
@@ -38,7 +38,7 @@
     <string name="not_completed_yet">Dar nebaigta</string>
     <string name="time_elapsed">Praėjo laiko</string>
     <string name="maxiobset">Maksimalus AIO nustatytas tinkamai</string>
-    <string name="hasbgdata">KG šaltinis pasirinktas teisingai</string>
+    <string name="hasbgdata">Glikemijos šaltinis pasirinktas teisingai</string>
     <string name="synchaswritepermission">Sinchronizacijos servisas turi įrašymo leidimą</string>
     <string name="loopenabled">Ciklas aktyvuotas</string>
     <string name="apsselected">DKS pasirinkta</string>
@@ -46,8 +46,8 @@
     <string name="objectives_shortname">TIKSL</string>
     <string name="description_objectives">Mokymosi programa</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
-    <string name="objectives_next_button">Kitas</string>
-    <string name="objectives_previous_button">Ankstesnis</string>
+    <string name="objectives_next_button">Toliau</string>
+    <string name="objectives_previous_button">Atgal</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
 </resources>

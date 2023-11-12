@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">Sincronizează datele cu Nightscout folosind v3 API</string>
     <string name="blocked_by_charging">Blocat de opțiunile de încărcare</string>
     <string name="blocked_by_connectivity">Blocat de opțiunile de conectivitate</string>
+    <string name="no_connectivity">Fără conexiune</string>
     <string name="unsupported_ns_version">Versiune incompatibilă de Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>

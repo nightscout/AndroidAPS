@@ -34,7 +34,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         val bundle = intent.extras ?: return
-        aapsLogger.debug(LTag.DATABASE, "onReceive ${intent.action} ${BundleLogger.log(bundle)}")
+        aapsLogger.debug(LTag.CORE, "onReceive ${intent.action} ${BundleLogger.log(bundle)}")
 
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE            ->

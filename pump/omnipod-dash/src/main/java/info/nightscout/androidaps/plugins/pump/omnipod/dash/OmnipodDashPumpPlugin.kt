@@ -554,19 +554,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
         get() = 0
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
+
         try {
             bolusDeliveryInProgress = true
             aapsLogger.info(LTag.PUMP, "Delivering treatment: $detailedBolusInfo $bolusCanceled")
-            if (detailedBolusInfo.carbs > 0 ||
-                detailedBolusInfo.insulin == 0.0
-            ) {
-                // Accept only valid insulin requests
-                return PumpEnactResult(injector)
-                    .success(false)
-                    .enacted(false)
-                    .bolusDelivered(0.0)
-                    .comment("Invalid input")
-            }
             val requestedBolusAmount = detailedBolusInfo.insulin
             if (requestedBolusAmount > reservoirLevel) {
                 return PumpEnactResult(injector)

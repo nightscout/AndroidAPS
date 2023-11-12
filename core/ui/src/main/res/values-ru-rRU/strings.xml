@@ -51,6 +51,7 @@
     <string name="extended_bolus">Пролонгированный болюс</string>
     <string name="paused">На паузе</string>
     <string name="tdd_total">Суммарный суточный инсулин TDD</string>
+    <string name="tdd_old_data">Старые данные</string>
     <string name="goingtodeliver">Будет подано %1$.2f ед инс</string>
     <string name="waitingforpump">Ожидание помпы</string>
     <string name="androidaps_start">AAPS запущен</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Передавать статус помпы в NS или Tidepool</string>
     <string name="suspendloop_label">Отключенный/приостановленный цикл</string>
     <string name="iob_label">Активный инсулин (IOB)</string>
+    <string name="loopstatus_targets">ЦЕЛИ:</string>
+    <string name="loopstatus_OAPS_result">РЕЗУЛЬТАТ: OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
     <string name="wrongpin">Неверный PIN-код</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Болюс будет только записан (без подачи помпой)</string>
     <string name="advisoralarm">Напомнить о еде</string>
     <string name="no_action_selected">Действие не выбрано, ничего не произойдет</string>
+    <string name="carb_equal_zero_no_action">Carbs = 0. Никаких мер не принято!</string>
+    <string name="wizard_no_insulin_required">Инсулин не требуется!</string>
     <string name="wizard_no_actual_bg">Нет данных ГК для основы расчета!</string>
     <string name="wizard_no_active_profile">Активный профиль не установлен!</string>
     <string name="wizard_no_cob">Неизвестный COB! Отсутствуют данные ГК или приложения недавно перезапущено?</string>

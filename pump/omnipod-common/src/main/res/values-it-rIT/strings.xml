@@ -40,7 +40,7 @@
     <string name="omnipod_common_confirmation_time_on_pod_updated">L\'ora nel pod è stata aggiornata.</string>
     <string name="omnipod_common_confirmation_suspended_delivery">Tutta l\'erogazione di insulina è stata sospesa.</string>
     <string name="omnipod_common_confirmation_silenced_alerts">Gli avvisi attivi sono stati silenziati.</string>
-    <string name="omnipod_common_confirmation_delivery_resumed">L\'erogazione di insulina è ripresa.</string>
+    <string name="omnipod_common_confirmation_delivery_resumed">L\'erogazione di insulina è stata ripristinata.</string>
     <!-- Omnipod - Overview -->
     <string name="omnipod_common_overview_button_set_time">Imposta ora</string>
     <string name="omnipod_common_overview_button_suspend_delivery">Sospensione</string>
@@ -80,16 +80,16 @@
     <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Inizializza pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Collega pod</string>
     <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Prepara il sito di infusione. Rimuovi la protezione dell\'ago del pod e il supporto adesivo e collega il pod al sito di infusione.\n\nSe la cannula fuoriesce premi <b>Annulla</b> e scarta il pod.\n\nPremi <b>Avanti</b> per inserire la cannula e iniziare l\'erogazione della basale.</string>
-    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Quando premi <b>OK</b>, la cannula verrà inserita. Assicurati di aver collegato il pod al sito di infusione.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Quando premi <b>OK</b> la cannula verrà inserita. Assicurati di aver collegato il pod al sito di infusione.</string>
     <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Inserisci cannula</string>
-    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Tentativo di impostare il piano basale iniziale e inserire la cannula.\n\nQuando la cannula è stata inserita con successo, puoi premere <b>Avanti</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Tentativo di impostare il piano basale iniziale e inserire la cannula.\n\nQuando la cannula è stata inserita con successo puoi premere <b>Avanti</b>.</string>
     <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod attivato</string>
-    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Il nuovo pod è ora attivo.\n\nIl tuo piano basale è stato programmato e la cannula è stata inserita.\n\nVerifica che la cannula sia stata inserita correttamente e sostituisci il tuo pod se avverti il contrario.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Il nuovo pod è ora attivo.\n\nIl tuo piano basale è stato programmato e la cannula è stata inserita.\n\nVerifica che la cannula sia stata inserita correttamente e sostituisci il tuo pod qualora non lo fosse.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Disattiva pod</string>
     <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Premi <b>Avanti</b> per disattivare il pod.\n\n<b>Nota:</b> Questo sospenderà tutta l\'erogazione di insulina e disattiverà il pod.</string>
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Disattivazione pod</string>
-    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Disattivazione del pod.\n\nQuando la disattivazione è correttamente completata, puoi premere <b>Avanti</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Disattivazione del pod.\n\nQuando la disattivazione sarà correttamente completata, puoi premere <b>Avanti</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod disattivato</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Il tuo pod è stato disattivato.\n\nRimuovi il pod dal tuo corpo e gettalo.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod scartato</string>
@@ -104,6 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostra tasto \"sospendi erogazione\" nella scheda Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Rilevamento ora legale/fuso orario abilitato</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Promemoria scadenza abilitato</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Se abilitato il pod emetterà 1 bip quando il tempo impostato sarà raggiunto</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Promemoria orario prima della scadenza (72 ore)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Allarme scadenza abilitato</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Se abilitato il pod emetterà 1 bip quando il tempo specificato sarà raggiunto e un\'ora prima dello spegnimento</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Allarme orario prima dello spegnimento (80 ore)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Avviso livello serbatoio basso abilitato</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Numero di unità</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenzia automaticamente avvisi pod</string>
@@ -153,7 +158,7 @@
     <string name="omnipod_common_alert_finish_pairing_reminder">Fine promemoria associazione</string>
     <string name="omnipod_common_alert_finish_setup_reminder_reminder">Fine promemoria configurazione</string>
     <string name="omnipod_common_alert_expiration">Il pod scadrà presto</string>
-    <string name="omnipod_common_alert_expiration_advisory">Il pod scadrà presto</string>
+    <string name="omnipod_common_alert_expiration_advisory">Il pod scadrà a breve</string>
     <string name="omnipod_common_alert_shutdown_imminent">L\'arresto è imminente</string>
     <string name="omnipod_common_alert_low_reservoir">Livello serbatoio basso</string>
     <string name="omnipod_common_alert_unknown_alert">Avviso sconosciuto</string>

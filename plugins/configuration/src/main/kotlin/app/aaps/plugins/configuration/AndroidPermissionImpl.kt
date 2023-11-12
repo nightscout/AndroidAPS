@@ -17,6 +17,7 @@ import app.aaps.core.interfaces.androidPermissions.AndroidPermission
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.pump.VirtualPump
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.ui.dialogs.OKDialog
@@ -105,20 +106,21 @@ class AndroidPermissionImpl @Inject constructor(
     @SuppressLint("MissingPermission")
     @Synchronized
     override fun notifyForBtConnectPermission(activity: FragmentActivity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            //  Manifest.permission.BLUETOOTH_CONNECT
-            if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN))
-                activePlugin.activeOverview.addNotification(
-                    id = Notification.PERMISSION_BT,
-                    text = rh.gs(app.aaps.core.ui.R.string.need_connect_permission),
-                    level = Notification.URGENT,
-                    actionButtonId = R.string.request
-                ) { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }
-            else {
-                activity.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
-                activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_BT)
+        if (activePlugin.activePump !is VirtualPump)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                //  Manifest.permission.BLUETOOTH_CONNECT
+                if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN))
+                    activePlugin.activeOverview.addNotification(
+                        id = Notification.PERMISSION_BT,
+                        text = rh.gs(app.aaps.core.ui.R.string.need_connect_permission),
+                        level = Notification.URGENT,
+                        actionButtonId = R.string.request
+                    ) { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }
+                else {
+                    activity.startActivity(Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE))
+                    activePlugin.activeOverview.dismissNotification(Notification.PERMISSION_BT)
+                }
             }
-        }
     }
 
     @Synchronized

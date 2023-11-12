@@ -143,7 +143,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
                 }
 
                 rxDataPath -> {
-                    aapsLogger.debug(LTag.WEAR, "onMessageReceived rxDataPath: ${String(messageEvent.data)}")
+                    aapsLogger.debug(LTag.WEAR, "onMessageReceived rxDataPath: ${messageEvent.data.size}")
                     val command = EventData.deserializeByte(messageEvent.data)
                     rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
                 }
@@ -213,13 +213,13 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     }
 
     private fun sendMessage(path: String, data: ByteArray) {
-        aapsLogger.debug(LTag.WEAR, "sendMessage: $path")
+        aapsLogger.debug(LTag.WEAR, "sendMessage: $path ${data.size}")
         transcriptionNodeId?.also { nodeId ->
             messageClient
                 .sendMessage(nodeId, path, data).apply {
                     addOnSuccessListener { }
                     addOnFailureListener {
-                        aapsLogger.debug(LTag.WEAR, "sendMessage:  $path failure")
+                        aapsLogger.debug(LTag.WEAR, "sendMessage:  $path failure ${data.size}")
                     }
                 }
         }

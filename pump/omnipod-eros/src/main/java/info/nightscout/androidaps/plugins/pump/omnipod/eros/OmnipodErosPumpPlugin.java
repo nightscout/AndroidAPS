@@ -22,7 +22,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -661,29 +660,10 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
 
     @NonNull @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
-            // neither carbs nor bolus requested
-            aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
-            return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d)
-                    .comment(app.aaps.core.ui.R.string.invalid_input);
-        } else if (detailedBolusInfo.insulin > 0) {
-            // bolus needed, ask pump to deliver it
-            return deliverBolus(detailedBolusInfo);
-        } else {
-            // no bolus required, carb only treatment
-            boolean result = pumpSync.syncCarbsWithTimestamp(
-                    detailedBolusInfo.timestamp,
-                    detailedBolusInfo.carbs,
-                    null,
-                    model(),
-                    serialNumber());
-
-            aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "syncCarbsWithTimestamp " +
-                            "[date=%d, carbs=%.2f, pumpSerial=%s] - Result: %b",
-                    detailedBolusInfo.timestamp, detailedBolusInfo.carbs, serialNumber(), result));
-
-            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d);
+        if (detailedBolusInfo.insulin == 0 || detailedBolusInfo.carbs > 0) {
+            throw new IllegalArgumentException(detailedBolusInfo.toString(), new Exception());
         }
+        return deliverBolus(detailedBolusInfo);
     }
 
     @Override

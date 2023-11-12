@@ -2,7 +2,6 @@ package app.aaps.core.interfaces.nsclient
 
 import android.text.Spanned
 import app.aaps.core.interfaces.aps.APSResult
-import dagger.android.HasAndroidInjector
 import org.json.JSONObject
 
 interface ProcessedDeviceStatusData {
@@ -61,7 +60,7 @@ interface ProcessedDeviceStatusData {
     val extendedOpenApsStatus: Spanned
     val openApsStatus: Spanned
     val openApsTimestamp: Long
-    fun getAPSResult(injector: HasAndroidInjector): APSResult
+    fun getAPSResult(): APSResult
     val uploaderStatus: String
     val uploaderStatusSpanned: Spanned
     val extendedUploaderStatus: Spanned

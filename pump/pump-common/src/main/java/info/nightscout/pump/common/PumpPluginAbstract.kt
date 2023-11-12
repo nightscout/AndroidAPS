@@ -25,7 +25,6 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventCustomActionsChanged
-import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
@@ -35,7 +34,6 @@ import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.common.data.PumpStatus
 import info.nightscout.pump.common.defs.PumpDriverState
-import info.nightscout.pump.common.sync.PumpDbEntryCarbs
 import info.nightscout.pump.common.sync.PumpSyncEntriesCreator
 import info.nightscout.pump.common.sync.PumpSyncStorage
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -303,27 +301,12 @@ abstract class PumpPluginAbstract protected constructor(
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
+
         return try {
-            if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
-                // neither carbs nor bolus requested
-                aapsLogger.error("deliverTreatment: Invalid input")
-                PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).comment(app.aaps.core.ui.R.string.invalid_input)
-            } else if (detailedBolusInfo.insulin > 0) {
-                // bolus needed, ask pump to deliver it
-                deliverBolus(detailedBolusInfo)
-            } else {
-                detailedBolusInfo.timestamp = System.currentTimeMillis()
-
-                // no bolus required, carb only treatment
-                pumpSyncStorage.addCarbs(PumpDbEntryCarbs(detailedBolusInfo, this))
-
-                val bolusingEvent = EventOverviewBolusProgress
-                bolusingEvent.t = EventOverviewBolusProgress.Treatment(0.0, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
-                bolusingEvent.percent = 100
-                rxBus.send(bolusingEvent)
-                aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(0.0).comment(R.string.common_resultok)
-            }
+            deliverBolus(detailedBolusInfo)
         } finally {
             triggerUIChange()
         }
