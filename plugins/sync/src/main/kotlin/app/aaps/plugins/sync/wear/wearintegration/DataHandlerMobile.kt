@@ -528,12 +528,16 @@ class DataHandlerMobile @Inject constructor(
             val offset = quickWizardEntry.time()
             val durration = quickWizardEntry.duration()
 
-            eCarbsMessagePart += "\n+" + carbs2.toString() + "g/" + durration.toString() + "h(+" + offset.toString() + "min)"
+            eCarbsMessagePart += "\n+" + carbs2.toString() + rh.gs(R.string.grams_short) + "/" + durration.toString() + rh.gs(R.string.hour_short) + "(+" + offset.toString() +
+                rh.gs(app.aaps.core.interfaces.R.string.shortminute) + ")"
         }
 
         var carbDelayMessagePart = ""
         if (quickWizardEntry.carbTime() > 0) {
-            carbDelayMessagePart = "(+" + quickWizardEntry.carbTime().toString() + "min)"
+            carbDelayMessagePart = "(+" + quickWizardEntry.carbTime().toString() + rh.gs(app.aaps.core.interfaces.R.string.shortminute) + ")"
+            if (quickWizardEntry.useAlarm() == QuickWizardEntry.YES) {
+                carbDelayMessagePart += "!"
+            }
         }
 
         val message = rh.gs(R.string.quick_wizard_message, quickWizardEntry.buttonText(), wizard.calculatedTotalInsulin, quickWizardEntry.carbs()) +
@@ -1254,7 +1258,7 @@ class DataHandlerMobile @Inject constructor(
             })
             bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
 
-            if (lastQuickWizardEntry!!.useSuperBolus()==QuickWizardEntry.YES) {
+            if (lastQuickWizardEntry!!.useSuperBolus() == QuickWizardEntry.YES) {
                 val profile = profileFunction.getProfile() ?: return
                 val pump = activePlugin.activePump
 
