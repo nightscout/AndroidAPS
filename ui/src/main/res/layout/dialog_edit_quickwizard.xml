@@ -78,7 +78,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <View
-                android:layout_width="15dp"
+                android:layout_width="2dp"
                 android:layout_height="30dp" />
 
             <TextView
@@ -110,7 +110,7 @@
                 tools:text="08:20pm" />
 
             <View
-                android:layout_width="15dp"
+                android:layout_width="2dp"
                 android:layout_height="30dp" />
 
             <CheckBox
@@ -264,11 +264,12 @@
                         android:id="@+id/alarm"
                         android:layout_width="53dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
                         android:layout_gravity="center_vertical"
                         android:checked="false"
                         android:contentDescription="@string/a11y_set_carb_timer"
                         android:drawableEnd="@drawable/ic_access_alarm_24dp"
-                        android:layoutDirection="rtl" />
+                        android:layoutDirection="ltr" />
 
                 </LinearLayout>
 
