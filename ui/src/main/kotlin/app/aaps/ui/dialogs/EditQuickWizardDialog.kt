@@ -76,9 +76,13 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false)) {
             binding.devicePhoneCheckbox.visibility = View.VISIBLE
             binding.deviceWatchCheckbox.visibility = View.VISIBLE
+            binding.devicePhoneImage.visibility = View.VISIBLE
+            binding.deviceWatchImage.visibility = View.VISIBLE
         } else {
             binding.devicePhoneCheckbox.visibility = View.GONE
             binding.deviceWatchCheckbox.visibility = View.GONE
+            binding.devicePhoneImage.visibility = View.GONE
+            binding.deviceWatchImage.visibility = View.GONE
         }
 
         if (sp.getBoolean(app.aaps.core.utils.R.string.key_usesuperbolus, false)) {
@@ -88,39 +92,47 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         }
 
         binding.okcancel.ok.setOnClickListener {
-            try {
-                entry.storage.put("buttonText", binding.buttonEdit.text.toString())
-                entry.storage.put("carbs", SafeParse.stringToInt(binding.carbsInput.text))
-                entry.storage.put("carbTime", SafeParse.stringToInt(binding.carbTimeInput.text))
-                entry.storage.put("useAlarm", checkBoxToRadioNumbers(binding.alarm.isChecked))
-                entry.storage.put("validFrom", fromSeconds)
-                entry.storage.put("validTo", toSeconds)
-                entry.storage.put("useBG", checkBoxToRadioNumbers(binding.useBg.isChecked))
-                entry.storage.put("useCOB", checkBoxToRadioNumbers(binding.useCob.isChecked))
-                entry.storage.put("useIOB", checkBoxToRadioNumbers(binding.useIob.isChecked))
-                entry.storage.put("usePositiveIOBOnly", checkBoxToRadioNumbers(binding.usePositiveIobOnly.isChecked))
-                entry.storage.put("useTrend", useTrendToInt())
-                entry.storage.put("useSuperBolus", checkBoxToRadioNumbers(binding.useSuperBolus.isChecked))
-                entry.storage.put("useTempTarget", checkBoxToRadioNumbers(binding.useTempTarget.isChecked))
-                entry.storage.put("percentage", binding.correctionInput.value)
-                if (binding.devicePhoneCheckbox.isChecked && binding.deviceWatchCheckbox.isChecked){
-                    entry.storage.put("device", QuickWizardEntry.DEVICE_ALL)
-                } else if (binding.devicePhoneCheckbox.isChecked){
-                    entry.storage.put("device", QuickWizardEntry.DEVICE_PHONE)
-                } else if (binding.deviceWatchCheckbox.isChecked){
-                    entry.storage.put("device", QuickWizardEntry.DEVICE_WATCH)
-                }
-                entry.storage.put("useEcarbs", checkBoxToRadioNumbers(binding.useEcarbs.isChecked))
-                entry.storage.put("time", binding.time.value.toInt())
-                entry.storage.put("duration", SafeParse.stringToInt(binding.duration.text))
-                entry.storage.put("carbs2", SafeParse.stringToInt(binding.carbs2.text))
-            } catch (e: JSONException) {
-                aapsLogger.error("Unhandled exception", e)
-            }
+            val carbs = SafeParse.stringToInt(binding.carbsInput.text)
+            val carbs2 = SafeParse.stringToInt(binding.carbs2.text)
+            val useECarbs = binding.useEcarbs.isChecked
 
-            quickWizard.addOrUpdate(entry)
-            rxBus.send(EventQuickWizardChange())
-            dismiss()
+            if (carbs > 0 || (useECarbs && carbs2  > 0)) {
+                try {
+                    entry.storage.put("buttonText", binding.buttonEdit.text.toString())
+                    entry.storage.put("carbs", carbs)
+                    entry.storage.put("carbTime", SafeParse.stringToInt(binding.carbTimeInput.text))
+                    entry.storage.put("useAlarm", checkBoxToRadioNumbers(binding.alarm.isChecked))
+                    entry.storage.put("validFrom", fromSeconds)
+                    entry.storage.put("validTo", toSeconds)
+                    entry.storage.put("useBG", checkBoxToRadioNumbers(binding.useBg.isChecked))
+                    entry.storage.put("useCOB", checkBoxToRadioNumbers(binding.useCob.isChecked))
+                    entry.storage.put("useIOB", checkBoxToRadioNumbers(binding.useIob.isChecked))
+                    entry.storage.put("usePositiveIOBOnly", checkBoxToRadioNumbers(binding.usePositiveIobOnly.isChecked))
+                    entry.storage.put("useTrend", useTrendToInt())
+                    entry.storage.put("useSuperBolus", checkBoxToRadioNumbers(binding.useSuperBolus.isChecked))
+                    entry.storage.put("useTempTarget", checkBoxToRadioNumbers(binding.useTempTarget.isChecked))
+                    entry.storage.put("percentage", binding.correctionInput.value)
+                    if (binding.devicePhoneCheckbox.isChecked && binding.deviceWatchCheckbox.isChecked) {
+                        entry.storage.put("device", QuickWizardEntry.DEVICE_ALL)
+                    } else if (binding.devicePhoneCheckbox.isChecked) {
+                        entry.storage.put("device", QuickWizardEntry.DEVICE_PHONE)
+                    } else if (binding.deviceWatchCheckbox.isChecked) {
+                        entry.storage.put("device", QuickWizardEntry.DEVICE_WATCH)
+                    }
+                    entry.storage.put("useEcarbs", checkBoxToRadioNumbers(useECarbs))
+                    entry.storage.put("time", binding.time.value.toInt())
+                    entry.storage.put("duration", SafeParse.stringToInt(binding.duration.text))
+                    entry.storage.put("carbs2", carbs2)
+                } catch (e: JSONException) {
+                    aapsLogger.error("Unhandled exception", e)
+                }
+
+                quickWizard.addOrUpdate(entry)
+                rxBus.send(EventQuickWizardChange())
+                dismiss()
+            }else{
+                ToastUtils.warnToast(context, R.string.change_your_input)
+            }
         }
         binding.okcancel.cancel.setOnClickListener { dismiss() }
 
@@ -225,15 +237,17 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         binding.to.text = dateUtil.timeString(dateUtil.secondsOfTheDayToMilliseconds(toSeconds))
 
         binding.buttonEdit.setText(entry.buttonText())
-        when(entry.device()){
-            QuickWizardEntry.DEVICE_ALL -> {
+        when (entry.device()) {
+            QuickWizardEntry.DEVICE_ALL   -> {
                 binding.devicePhoneCheckbox.isChecked = true
                 binding.deviceWatchCheckbox.isChecked = true
             }
+
             QuickWizardEntry.DEVICE_PHONE -> {
                 binding.devicePhoneCheckbox.isChecked = true
                 binding.deviceWatchCheckbox.isChecked = false
             }
+
             QuickWizardEntry.DEVICE_WATCH -> {
                 binding.devicePhoneCheckbox.isChecked = false
                 binding.deviceWatchCheckbox.isChecked = true

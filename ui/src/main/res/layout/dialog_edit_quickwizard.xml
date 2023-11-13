@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="10dp"
+                android:layout_marginHorizontal="48dp"
                 android:text="@string/quickwizard_settings"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -60,12 +60,21 @@
             android:orientation="horizontal"
             android:padding="7dp">
 
+            <ImageView
+                android:id="@+id/device_phone_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:adjustViewBounds="false"
+                android:contentDescription="@string/a11y_only_on_phone"
+                android:cropToPadding="false"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/ic_smartphone" />
+
             <CheckBox
                 android:id="@+id/device_phone_checkbox"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/ic_smartphone"
-                android:gravity="start|center_vertical"
+                android:padding="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <View
@@ -108,9 +117,18 @@
                 android:id="@+id/device_watch_checkbox"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@drawable/ic_watch"
-                android:gravity="start|center_vertical"
+                android:padding="10dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <ImageView
+                android:id="@+id/device_watch_image"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:adjustViewBounds="false"
+                android:contentDescription="@string/a11y_only_on_phone"
+                android:cropToPadding="false"
+                android:scaleType="fitStart"
+                app:srcCompat="@drawable/ic_watch" />
 
 
         </LinearLayout>
@@ -287,11 +305,10 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="220dp"
-            android:layout_marginHorizontal="10dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginHorizontal="10dp"
+            android:minWidth="220dp"
             android:orientation="vertical">
-
 
 
             <LinearLayout
@@ -304,8 +321,8 @@
                     android:id="@+id/use_bg"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
                     android:layout_marginEnd="5dp"
+                    android:gravity="start|center_vertical"
                     android:text="@string/bg_label"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
@@ -319,6 +336,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -329,81 +347,81 @@
                     android:id="@+id/use_iob"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
                     android:layout_marginEnd="5dp"
+                    android:gravity="start|center_vertical"
                     android:lines="1"
                     android:text="@string/iob"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+                <CheckBox
+                    android:id="@+id/use_positive_iob_only"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center_vertical"
+                    android:lines="1"
+                    android:text="@string/overview_edit_quickwizard_use_positive_iob_only"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            </LinearLayout>
+
             <CheckBox
-                android:id="@+id/use_positive_iob_only"
+                android:id="@+id/use_cob"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="start|center_vertical"
                 android:lines="1"
-                android:text="@string/overview_edit_quickwizard_use_positive_iob_only"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:text="@string/treatments_wizard_cob_label"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+
+            <CheckBox
+                android:id="@+id/use_trend_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:text="@string/bg_trend_label"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:orientation="vertical">
+
+
+                <Spinner
+                    android:id="@+id/use_trend"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/yes_no_positiveonly_negativeonly"
+                    android:gravity="start" />
+
+                <View
+                    android:id="@+id/use_trend_subline"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginStart="6dp"
+                    android:background="@android:color/darker_gray"
+                    android:paddingStart="2dp" />
             </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/use_cob"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
-                    android:lines="1"
-                    android:text="@string/treatments_wizard_cob_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
+            <CheckBox
+                android:id="@+id/use_super_bolus"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:lines="1"
+                android:text="@string/overview_edit_quickwizard_superbolus"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <CheckBox
-                    android:id="@+id/use_trend_checkbox"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
-                    android:text="@string/bg_trend_label"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="30dp"
-                    android:orientation="vertical">
-
-
-                    <Spinner
-                        android:id="@+id/use_trend"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/yes_no_positiveonly_negativeonly"
-                        android:gravity="start" />
-
-                    <View
-                        android:id="@+id/use_trend_subline"
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginStart="6dp"
-                        android:background="@android:color/darker_gray"
-                        android:paddingStart="2dp" />
-                </LinearLayout>
-
-
-                <CheckBox
-                    android:id="@+id/use_super_bolus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
-                    android:lines="1"
-                    android:text="@string/overview_edit_quickwizard_superbolus"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                <CheckBox
-                    android:id="@+id/use_ecarbs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center_vertical"
-                    android:lines="1"
-                    android:text="@string/additional_ecarbs"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            <CheckBox
+                android:id="@+id/use_ecarbs"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="start|center_vertical"
+                android:lines="1"
+                android:text="@string/additional_ecarbs"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         </LinearLayout>
 
@@ -432,8 +450,8 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:minWidth="100dp"
                         android:gravity="center_vertical"
+                        android:minWidth="100dp"
                         android:paddingStart="10dp"
                         android:paddingEnd="20dp"
                         android:text="@string/time_offset"
