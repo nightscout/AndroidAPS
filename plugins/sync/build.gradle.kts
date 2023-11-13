@@ -9,6 +9,9 @@ plugins {
 
 android {
     namespace = "app.aaps.plugins.sync"
+    buildFeatures {
+        aidl = true
+    }
 }
 
 dependencies {
