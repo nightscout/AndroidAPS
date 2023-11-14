@@ -144,10 +144,10 @@
     <string name="cob2_longer">IC가 증가하면 계산된 탄소 흡수 시간이 길어집니다</string>
     <string name="cob2_shorter">IC가 증가하면 계산된 탄소 흡수 시간이 짧아집니다</string>
     <string name="cob2_no_effect">IC의 증가가 계산된 탄수화물 흡수에 영향을 주지 않습니다</string>
-    <string name="cob3_question">프로파일 백분율 변경이 COB 계싼에 어떤 영향을 미칩니까?</string>
-    <string name="cob3_longer">프로파일을 150%로 설정하면 계산된 탄소 흡수 시간이 길어집니다</string>
-    <string name="cob3_shorter">프로파일을 150%로 설정하면 계산된 탄소 흡수 시간이 짧아집니다</string>
-    <string name="cob3_no_effect">프로파일을 150%로 설정하면 계산된 탄소 흡수 시간이 길어집니다</string>
+    <string name="cob3_question">프로파일 백분율 변경이 COB 계산에 어떤 영향을 미칩니까?</string>
+    <string name="cob3_longer">프로파일을 150%로 설정하면 계산된 탄수화물 흡수 시간이 길어집니다</string>
+    <string name="cob3_shorter">프로파일을 150%로 설정하면 계산된 탄수화물 흡수 시간이 짧아집니다</string>
+    <string name="cob3_no_effect">프로파일을 150%로 설정해도 탄수화물 흡수시간에 영향을 주지 않습니다.</string>
     <string name="iob_value">IOB 값은 실행된 임시 basal의 영향을 받습니다.</string>
     <string name="iob_hightemp">혈당이 목표보다 낮을 경우 높은 임시 basal은 실행되지 않습니다.</string>
     <string name="iob_negiob">운동 없이도 음수의 IOB (마이너스 IOB) 구간이 많을 경우, 프로파일이 너무 강한 것이며 인슐린 양을 적게 설정해야 합니다.</string>
