@@ -4,6 +4,7 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
@@ -34,16 +35,16 @@ private fun TemporaryBasal.netExtendedRate(profile: Profile) = rate - profile.ge
 val TemporaryBasal.durationInMinutes
     get() = T.msecs(duration).mins()
 
-fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String {
+fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFormatter: DecimalFormatter, rh: ResourceHelper): String {
     return when {
         type == TemporaryBasal.Type.FAKE_EXTENDED -> {
-            decimalFormatter.to2Decimal(rate) + "U/h (" + decimalFormatter.to2Decimal(netExtendedRate(profile)) + "E) @" +
+            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate) + "(" + decimalFormatter.to2Decimal(netExtendedRate(profile)) + "E) @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
         isAbsolute                                -> {
-            decimalFormatter.to2Decimal(rate) + "U/h @" +
+            rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate) + " @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
@@ -56,9 +57,9 @@ fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFor
     }
 }
 
-fun TemporaryBasal.toStringShort(decimalFormatter: DecimalFormatter): String =
-    if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) decimalFormatter.to2Decimal(rate) + "U/h"
-    else "${decimalFormatter.to0Decimal(rate)}%"
+fun TemporaryBasal.toStringShort(rh: ResourceHelper): String =
+    if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate)
+    else rh.gs(app.aaps.core.ui.R.string.formatPercent, rate)
 
 fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     if (!isValid) return IobTotal(time)

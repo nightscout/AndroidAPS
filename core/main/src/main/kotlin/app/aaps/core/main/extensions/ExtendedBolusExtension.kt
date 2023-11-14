@@ -4,8 +4,8 @@ import app.aaps.core.interfaces.aps.AutosensResult
 import app.aaps.core.interfaces.insulin.Insulin
 import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.profile.Profile
+import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.T
 import app.aaps.database.entities.Bolus
 import app.aaps.database.entities.ExtendedBolus
@@ -23,12 +23,12 @@ fun ExtendedBolus.isInProgress(dateUtil: DateUtil): Boolean =
 val ExtendedBolus.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
-fun ExtendedBolus.toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
-    "E " + decimalFormatter.to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
+fun ExtendedBolus.toStringFull(dateUtil: DateUtil, rh: ResourceHelper): String =
+    "E " + rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate) + " @" + dateUtil.timeString(timestamp) +
         " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
 
-fun ExtendedBolus.toStringMedium(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
-    decimalFormatter.to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
+fun ExtendedBolus.toStringMedium(dateUtil: DateUtil, rh: ResourceHelper): String =
+    rh.gs(app.aaps.core.ui.R.string.pump_base_basal_rate, rate) + " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
 
 fun ExtendedBolus.getPassedDurationToTimeInMinutes(time: Long): Int =
     ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()

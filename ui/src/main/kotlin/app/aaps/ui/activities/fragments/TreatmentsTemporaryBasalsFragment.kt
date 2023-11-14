@@ -274,7 +274,8 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
                     tempBasal.toStringFull(
                         profile,
                         dateUtil,
-                        decimalFormatter
+                        decimalFormatter,
+                        rh
                     )
                 }\n" +
                     "${rh.gs(app.aaps.core.ui.R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"
