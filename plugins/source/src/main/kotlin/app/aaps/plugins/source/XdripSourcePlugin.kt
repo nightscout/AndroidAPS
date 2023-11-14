@@ -23,6 +23,7 @@ import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.round
 
 @Singleton
 class XdripSourcePlugin @Inject constructor(
@@ -77,8 +78,8 @@ class XdripSourcePlugin @Inject constructor(
             val glucoseValues = mutableListOf<GV>()
             glucoseValues += GV(
                 timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP, 0),
-                value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0),
-                raw = bundle.getDouble(Intents.EXTRA_RAW, 0.0),
+                value = round(bundle.getDouble(Intents.EXTRA_BG_ESTIMATE, 0.0)),
+                raw = round(bundle.getDouble(Intents.EXTRA_RAW, 0.0)),
                 noise = null,
                 trendArrow = TrendArrow.fromString(bundle.getString(Intents.EXTRA_BG_SLOPE_NAME)),
                 sourceSensor = SourceSensor.fromString(bundle.getString(Intents.XDRIP_DATA_SOURCE_DESCRIPTION) ?: "")
