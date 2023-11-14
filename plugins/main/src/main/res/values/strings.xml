@@ -193,12 +193,8 @@
     <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
     <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
     <string name="key_show_carbs_button" translatable="false">show_carbs_button</string>
-    <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
-    <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
-    <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
-    <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
 
     <string name="key_show_statuslights" translatable="false">show_statuslights</string>

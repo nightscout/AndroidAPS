@@ -24,9 +24,14 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.rx.events.EventUpdateOverviewCalcProgress
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.putDouble
 import app.aaps.core.objects.extensions.putInt
 import app.aaps.core.objects.extensions.putString
+import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.storeBoolean
 import app.aaps.core.objects.extensions.storeDouble
 import app.aaps.core.objects.extensions.storeInt
@@ -52,6 +57,7 @@ class OverviewPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val rxBus: RxBus,
     private val sp: SP,
+    private val preferences: Preferences,
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     rh: ResourceHelper,
@@ -167,12 +173,12 @@ class OverviewPlugin @Inject constructor(
         JSONObject()
             .putString(app.aaps.core.utils.R.string.key_units, sp, rh)
             .putString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
-            .putInt(app.aaps.core.utils.R.string.key_eatingsoon_duration, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_eatingsoon_target, sp, rh)
-            .putInt(app.aaps.core.utils.R.string.key_activity_duration, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_activity_target, sp, rh)
-            .putInt(app.aaps.core.utils.R.string.key_hypo_duration, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_hypo_target, sp, rh)
+            .put(IntKeys.OverviewEatingSoonDuration, preferences, rh)
+            .put(DoubleKeys.OverviewEatingSoonTarget, preferences, rh)
+            .put(IntKeys.OverviewActivityDuration, preferences, rh)
+            .put(DoubleKeys.OverviewActivityTarget, preferences, rh)
+            .put(IntKeys.OverviewHypoDuration, preferences, rh)
+            .put(DoubleKeys.OverviewHypoTarget, preferences, rh)
             .putDouble(app.aaps.core.utils.R.string.key_low_mark, sp, rh)
             .putDouble(app.aaps.core.utils.R.string.key_high_mark, sp, rh)
             .putDouble(app.aaps.core.utils.R.string.key_statuslights_cage_warning, sp, rh)
@@ -197,12 +203,12 @@ class OverviewPlugin @Inject constructor(
         configuration
             .storeString(app.aaps.core.utils.R.string.key_units, sp, rh)
             .storeString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
-            .storeInt(app.aaps.core.utils.R.string.key_eatingsoon_duration, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_eatingsoon_target, sp, rh)
-            .storeInt(app.aaps.core.utils.R.string.key_activity_duration, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_activity_target, sp, rh)
-            .storeInt(app.aaps.core.utils.R.string.key_hypo_duration, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_hypo_target, sp, rh)
+            .store(IntKeys.OverviewEatingSoonDuration, preferences, rh)
+            .store(DoubleKeys.OverviewEatingSoonTarget, preferences, rh)
+            .store(IntKeys.OverviewActivityDuration, preferences, rh)
+            .store(DoubleKeys.OverviewActivityTarget, preferences, rh)
+            .store(IntKeys.OverviewHypoDuration, preferences, rh)
+            .store(DoubleKeys.OverviewHypoTarget, preferences, rh)
             .storeDouble(app.aaps.core.utils.R.string.key_low_mark, sp, rh)
             .storeDouble(app.aaps.core.utils.R.string.key_high_mark, sp, rh)
             .storeDouble(app.aaps.core.utils.R.string.key_statuslights_cage_warning, sp, rh)

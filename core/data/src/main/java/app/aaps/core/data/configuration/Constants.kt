@@ -24,15 +24,6 @@ object Constants {
     const val dailyLimitWarning = 0.95
 
     // Temp targets
-    const val defaultActivityTTDuration = 90 // min
-    const val defaultActivityTTmgdl = 140.0
-    const val defaultActivityTTmmol = 8.0
-    const val defaultEatingSoonTTDuration = 45 // min
-    const val defaultEatingSoonTTmgdl = 90.0
-    const val defaultEatingSoonTTmmol = 5.0
-    const val defaultHypoTTDuration = 60 // min
-    const val defaultHypoTTmgdl = 160.0
-    const val defaultHypoTTmmol = 8.0
     const val MIN_TT_MGDL = 72.0
     const val MAX_TT_MGDL = 180.0
     const val MIN_TT_MMOL = 4.0
@@ -93,15 +84,4 @@ object Constants {
      * so we add leeway to still accept given amount of older tokens
      */
     const val OTP_ACCEPT_OLD_TOKENS_COUNT = 1
-
-    /**
-     * Button increments
-     */
-    const val INSULIN_PLUS1_DEFAULT = 0.5
-    const val INSULIN_PLUS2_DEFAULT = 1.0
-    const val INSULIN_PLUS3_DEFAULT = 2.0
-    const val CARBS_FAV1_DEFAULT = 5
-    const val CARBS_FAV2_DEFAULT = 10
-    const val CARBS_FAV3_DEFAULT = 20
-
 }

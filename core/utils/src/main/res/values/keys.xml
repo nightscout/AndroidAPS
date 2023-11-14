@@ -7,12 +7,6 @@
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
-    <string name="key_eatingsoon_duration" translatable="false">eatingsoon_duration</string>
-    <string name="key_eatingsoon_target" translatable="false">eatingsoon_target</string>
-    <string name="key_activity_duration" translatable="false">activity_duration</string>
-    <string name="key_activity_target" translatable="false">activity_target</string>
-    <string name="key_hypo_duration" translatable="false">hypo_duration</string>
-    <string name="key_hypo_target" translatable="false">hypo_target</string>
     <string name="key_low_mark" translatable="false">low_mark</string>
     <string name="key_high_mark" translatable="false">high_mark</string>
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
@@ -72,9 +66,6 @@
     <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
     <string name="key_xdrip_local_broadcasts" translatable="false">xdrip_local_broadcasts</string>
     <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
-    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
-    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
-    <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
     <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>

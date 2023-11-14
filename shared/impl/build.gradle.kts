@@ -17,6 +17,7 @@ android {
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
 
     //Logger
     api(Libs.Logging.slf4jApi)

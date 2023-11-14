@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:visibility="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
@@ -15,12 +16,18 @@
             android:key="@string/key_units"
             android:title="@string/unitsnosemicolon" />
 
-        <ListPreference
+        <app.aaps.core.keys.AdaptiveListPreference
             android:defaultValue="default"
             android:entries="@array/languagesArray"
             android:entryValues="@array/languagesValues"
             android:key="@string/key_language"
-            android:title="@string/language" />
+            android:title="@string/language"
+            visibility:simpleMode="false" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_simple_mode"
+            android:title="@string/simple_mode" />
 
         <EditTextPreference
             android:inputType="textPersonName"
@@ -83,6 +90,9 @@
                 android:title="@string/bolus_pin" />
 
             <app.aaps.core.validators.ValidatingEditTextPreference
+                validate:maxNumber="180"
+                validate:minNumber="1"
+                validate:testType="numericRange"
                 android:defaultValue="1"
                 android:digits="0123456789"
                 android:inputType="number"
@@ -90,10 +100,7 @@
                 android:maxLines="1"
                 android:singleLine="true"
                 android:summary="@string/protection_timeout_summary"
-                android:title="@string/protection_timeout_title"
-                validate:maxNumber="180"
-                validate:minNumber="1"
-                validate:testType="numericRange" />
+                android:title="@string/protection_timeout_title" />
 
         </PreferenceCategory>
 

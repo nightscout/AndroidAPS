@@ -55,6 +55,9 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.generateCOBString
@@ -89,6 +92,7 @@ class DataHandlerMobile @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,
     private val processedTbrEbData: ProcessedTbrEbData,
@@ -554,9 +558,9 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleFillPresetPreCheck(command: EventData.ActionFillPresetPreCheck) {
         val amount: Double = when (command.button) {
-            1    -> sp.getDouble("fill_button1", 0.3)
-            2    -> sp.getDouble("fill_button2", 0.0)
-            3    -> sp.getDouble("fill_button3", 0.0)
+            1    -> preferences.get(DoubleKeys.ActionsFillButton1)
+            2    -> preferences.get(DoubleKeys.ActionsFillButton2)
+            3    -> preferences.get(DoubleKeys.ActionsFillButton3)
             else -> return
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
@@ -627,8 +631,8 @@ class DataHandlerMobile @Inject constructor(
         val presetIsMGDL = profileFunction.getUnits() == GlucoseUnit.MGDL
         when (action.command) {
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_ACTIVITY -> {
-                val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
-                val activityTT = defaultValueHelper.determineActivityTT()
+                val activityTTDuration = preferences.get(IntKeys.OverviewActivityDuration)
+                val activityTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewActivityTarget))
                 val reason = rh.gs(app.aaps.core.ui.R.string.activity)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
                 rxBus.send(
@@ -642,8 +646,8 @@ class DataHandlerMobile @Inject constructor(
             }
 
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO     -> {
-                val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
-                val hypoTT = defaultValueHelper.determineHypoTT()
+                val hypoTTDuration = preferences.get(IntKeys.OverviewHypoDuration)
+                val hypoTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewHypoTarget))
                 val reason = rh.gs(app.aaps.core.ui.R.string.hypo)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
                 rxBus.send(
@@ -657,8 +661,8 @@ class DataHandlerMobile @Inject constructor(
             }
 
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_EATING   -> {
-                val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
-                val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
+                val eatingSoonTTDuration = preferences.get(IntKeys.OverviewEatingSoonDuration)
+                val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewEatingSoonTarget))
                 val reason = rh.gs(app.aaps.core.ui.R.string.eatingsoon)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
                 rxBus.send(
@@ -751,10 +755,10 @@ class DataHandlerMobile @Inject constructor(
                     bolusPercentage = sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100),
                     maxCarbs = sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48),
                     maxBolus = sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0),
-                    insulinButtonIncrement1 = sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1, Constants.INSULIN_PLUS1_DEFAULT),
-                    insulinButtonIncrement2 = sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2, Constants.INSULIN_PLUS2_DEFAULT),
-                    carbsButtonIncrement1 = sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, Constants.CARBS_FAV1_DEFAULT),
-                    carbsButtonIncrement2 = sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, Constants.CARBS_FAV2_DEFAULT)
+                    insulinButtonIncrement1 = preferences.get(DoubleKeys.OverviewInsulinButtonIncrement1),
+                    insulinButtonIncrement2 = preferences.get(DoubleKeys.OverviewInsulinButtonIncrement2),
+                    carbsButtonIncrement1 = preferences.get(IntKeys.OverviewCarbsButtonIncrement1),
+                    carbsButtonIncrement2 = preferences.get(IntKeys.OverviewCarbsButtonIncrement2)
                 )
             )
         )

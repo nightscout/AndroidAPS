@@ -90,5 +90,6 @@
     <string name="count_selected">%1$d selected</string>
     <string name="sort_label">Sort</string>
     <string name="search">Search</string>
+    <string name="simple_mode">Simple mode</string>
 
 </resources>

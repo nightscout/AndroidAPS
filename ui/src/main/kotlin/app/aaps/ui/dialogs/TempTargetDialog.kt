@@ -21,6 +21,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.IntKeys
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
@@ -135,20 +137,20 @@ class TempTargetDialog : DialogFragmentWithDate() {
     private fun longClick(v: View) {
         when (v.id) {
             R.id.eating_soon -> {
-                binding.temptarget.value = defaultValueHelper.determineEatingSoonTT()
-                binding.duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
+                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewEatingSoonTarget))
+                binding.duration.value = preferences.get(IntKeys.OverviewEatingSoonDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.eatingsoon), false)
             }
 
             R.id.activity    -> {
-                binding.temptarget.value = defaultValueHelper.determineActivityTT()
-                binding.duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
+                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewActivityTarget))
+                binding.duration.value = preferences.get(IntKeys.OverviewActivityDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.activity), false)
             }
 
             R.id.hypo        -> {
-                binding.temptarget.value = defaultValueHelper.determineHypoTT()
-                binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
+                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewHypoTarget))
+                binding.duration.value = preferences.get(IntKeys.OverviewHypoDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.hypo), false)
             }
         }

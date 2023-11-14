@@ -46,6 +46,8 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
+import app.aaps.core.keys.BooleanKeys
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.dialogs.TwoMessagesAlertDialog
@@ -81,6 +83,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private var log: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config,
     private val rxBus: RxBus,
     private val passwordCheck: PasswordCheck,
@@ -387,7 +390,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
     private fun restartAppAfterImport(context: Context) {
         rxBus.send(EventDiaconnG8PumpLogReset())
-        sp.putBoolean(R.string.key_setupwizard_processed, true)
+        preferences.put(BooleanKeys.GeneralSetupWizardProcessed, true)
         OKDialog.show(context, rh.gs(R.string.setting_imported), rh.gs(R.string.restartingapp)) {
             uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
             log.debug(LTag.CORE, "Exiting")

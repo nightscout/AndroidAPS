@@ -53,6 +53,9 @@ import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.ui.IconsProvider
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.BooleanKeys
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKeys
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
@@ -87,6 +90,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var androidPermission: AndroidPermission
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
     @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var loop: Loop
@@ -125,7 +129,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         }
 
         // initialize screen wake lock
-        processPreferenceChange(EventPreferenceChange(rh.gs(app.aaps.plugins.main.R.string.key_keep_screen_on)))
+        processPreferenceChange(EventPreferenceChange(BooleanKeys.OverviewKeepScreenOn.key, rh))
         binding.mainPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -307,7 +311,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun startWizard(): Boolean =
-        !sp.getBoolean(app.aaps.plugins.configuration.R.string.key_setupwizard_processed, false)
+        !preferences.get(BooleanKeys.GeneralSetupWizardProcessed)
 
     override fun onPostCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
         super.onPostCreate(savedInstanceState, persistentState)
@@ -332,12 +336,12 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
     }
 
     private fun setWakeLock() {
-        val keepScreenOn = sp.getBoolean(app.aaps.plugins.main.R.string.key_keep_screen_on, false)
+        val keepScreenOn = preferences.get(BooleanKeys.OverviewKeepScreenOn)
         if (keepScreenOn) window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON) else window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
-        if (ev.isChanged(rh.gs(app.aaps.plugins.main.R.string.key_keep_screen_on))) setWakeLock()
+        if (ev.isChanged(BooleanKeys.OverviewKeepScreenOn.key, rh)) setWakeLock()
         if (ev.isChanged(rh.gs(app.aaps.plugins.main.R.string.key_skin))) recreate()
     }
 
@@ -456,7 +460,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .replace(".org/", ":")
             .replace(".net/", ":")
         fabricPrivacy.setUserProperty("Mode", config.APPLICATION_ID + "-" + closedLoopEnabled)
-        fabricPrivacy.setUserProperty("Language", sp.getString(app.aaps.core.ui.R.string.key_language, Locale.getDefault().language))
+        fabricPrivacy.setUserProperty("Language", preferences.getIfExists(StringKeys.GeneralLanguage) ?: Locale.getDefault().language)
         fabricPrivacy.setUserProperty("Version", config.VERSION_NAME)
         fabricPrivacy.setUserProperty("HEAD", BuildConfig.HEAD)
         fabricPrivacy.setUserProperty("Remote", remote)

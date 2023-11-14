@@ -31,6 +31,9 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
+import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
 import app.aaps.database.persistence.CompatDBHelper
@@ -72,6 +75,7 @@ class MainApp : DaggerApplication() {
     @Inject lateinit var activityMonitor: ActivityMonitor
     @Inject lateinit var versionCheckersUtils: VersionCheckerUtils
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var config: Config
     @Inject lateinit var configBuilder: ConfigBuilder
     @Inject lateinit var plugins: List<@JvmSuppressWildcards PluginBase>
@@ -198,7 +202,6 @@ class MainApp : DaggerApplication() {
         // set values for different builds
         if (!sp.contains(R.string.key_ns_alarms)) sp.putBoolean(R.string.key_ns_alarms, config.NSCLIENT)
         if (!sp.contains(R.string.key_ns_announcements)) sp.putBoolean(R.string.key_ns_announcements, config.NSCLIENT)
-        if (!sp.contains(app.aaps.core.ui.R.string.key_language)) sp.putString(app.aaps.core.ui.R.string.key_language, "default")
         // 3.1.0
         if (sp.contains("ns_wifionly")) {
             if (sp.getBoolean("ns_wifionly", false)) {
@@ -228,7 +231,13 @@ class MainApp : DaggerApplication() {
         sp.putString(app.aaps.plugins.main.R.string.value_dark_theme, "dark")
         sp.putString(app.aaps.plugins.main.R.string.value_light_theme, "light")
         sp.putString(app.aaps.plugins.main.R.string.value_system_theme, "system")
-
+        // 3.3
+        if (preferences.get(IntKeys.OverviewEatingSoonDuration) == 0) preferences.remove(IntKeys.OverviewEatingSoonDuration)
+        if (preferences.get(DoubleKeys.OverviewEatingSoonTarget) == 0.0) preferences.remove(DoubleKeys.OverviewEatingSoonTarget)
+        if (preferences.get(IntKeys.OverviewActivityDuration) == 0) preferences.remove(IntKeys.OverviewActivityDuration)
+        if (preferences.get(DoubleKeys.OverviewActivityTarget) == 0.0) preferences.remove(DoubleKeys.OverviewActivityTarget)
+        if (preferences.get(IntKeys.OverviewHypoDuration) == 0) preferences.remove(IntKeys.OverviewHypoDuration)
+        if (preferences.get(DoubleKeys.OverviewHypoTarget) == 0.0) preferences.remove(DoubleKeys.OverviewHypoTarget)
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

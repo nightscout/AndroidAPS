@@ -39,7 +39,6 @@
     <string name="doprofileswitch">Do Profile Switch</string>
     <string name="exitwizard">Skip setup wizard</string>
     <string name="setupwizard_loop_description">Press the button below to enable AAPS to suggest/make basal changes</string>
-    <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>

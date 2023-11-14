@@ -7,9 +7,6 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.data.configuration.Constants.CARBS_FAV1_DEFAULT
-import app.aaps.core.data.configuration.Constants.CARBS_FAV2_DEFAULT
-import app.aaps.core.data.configuration.Constants.CARBS_FAV3_DEFAULT
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.model.TT
@@ -34,6 +31,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.IntKeys
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
@@ -151,37 +150,28 @@ class CarbsDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("carbs")
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
-        val plus1text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT))
+        val plus1text = toSignedString(preferences.get(IntKeys.OverviewCarbsButtonIncrement1))
         binding.plus1.text = plus1text
         binding.plus1.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus1text
         binding.plus1.setOnClickListener {
-            binding.carbs.value = max(
-                0.0, binding.carbs.value
-                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT)
-            )
+            binding.carbs.value = max(0.0, binding.carbs.value + preferences.get(IntKeys.OverviewCarbsButtonIncrement1))
             validateInputs()
             binding.carbs.announceValue()
         }
 
-        val plus2text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT))
+        val plus2text = toSignedString(preferences.get(IntKeys.OverviewCarbsButtonIncrement2))
         binding.plus2.text = plus2text
         binding.plus2.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus2text
         binding.plus2.setOnClickListener {
-            binding.carbs.value = max(
-                0.0, binding.carbs.value
-                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT)
-            )
+            binding.carbs.value = max(0.0, binding.carbs.value + preferences.get(IntKeys.OverviewCarbsButtonIncrement2))
             validateInputs()
             binding.carbs.announceValue()
         }
-        val plus3text = toSignedString(sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT))
+        val plus3text = toSignedString(preferences.get(IntKeys.OverviewCarbsButtonIncrement3))
         binding.plus3.text = plus3text
         binding.plus2.contentDescription = rh.gs(app.aaps.core.ui.R.string.carbs) + " " + plus3text
         binding.plus3.setOnClickListener {
-            binding.carbs.value = max(
-                0.0, binding.carbs.value
-                    + sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT)
-            )
+            binding.carbs.value = max(0.0, binding.carbs.value + preferences.get(IntKeys.OverviewCarbsButtonIncrement3))
             validateInputs()
             binding.carbs.announceValue()
         }
@@ -229,12 +219,12 @@ class CarbsDialog : DialogFragmentWithDate() {
         val carbs = binding.carbs.value.toInt()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
         val units = profileUtil.units
-        val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
-        val activityTT = defaultValueHelper.determineActivityTT()
-        val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
-        val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
-        val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
-        val hypoTT = defaultValueHelper.determineHypoTT()
+        val activityTTDuration = preferences.get(IntKeys.OverviewActivityDuration)
+        val activityTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewActivityTarget))
+        val eatingSoonTTDuration = preferences.get(IntKeys.OverviewEatingSoonDuration)
+        val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewEatingSoonTarget))
+        val hypoTTDuration = preferences.get(IntKeys.OverviewHypoDuration)
+        val hypoTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewHypoTarget))
         val actions: LinkedList<String?> = LinkedList()
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val useAlarm = binding.alarmCheckBox.isChecked

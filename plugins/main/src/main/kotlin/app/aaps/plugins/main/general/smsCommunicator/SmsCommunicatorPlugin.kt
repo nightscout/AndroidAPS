@@ -53,6 +53,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
@@ -85,6 +88,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     private val smsManager: SmsManager?,
     private val aapsSchedulers: AapsSchedulers,
     private val sp: SP,
+    private val preferences: Preferences,
     private val constraintChecker: ConstraintsChecker,
     private val rxBus: RxBus,
     private val profileFunction: ProfileFunction,
@@ -943,21 +947,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         lastRemoteBolusTime = dateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
-                                                var eatingSoonTTDuration = sp.getInt(app.aaps.core.utils.R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
-                                                eatingSoonTTDuration =
-                                                    if (eatingSoonTTDuration > 0) eatingSoonTTDuration
-                                                    else Constants.defaultEatingSoonTTDuration
-                                                var eatingSoonTT =
-                                                    sp.getDouble(
-                                                        app.aaps.core.utils.R.string.key_eatingsoon_target,
-                                                        if (currentProfile.units == GlucoseUnit.MMOL) Constants.defaultEatingSoonTTmmol else Constants.defaultEatingSoonTTmgdl
-                                                    )
-                                                eatingSoonTT =
-                                                    when {
-                                                        eatingSoonTT > 0                         -> eatingSoonTT
-                                                        currentProfile.units == GlucoseUnit.MMOL -> Constants.defaultEatingSoonTTmmol
-                                                        else                                     -> Constants.defaultEatingSoonTTmgdl
-                                                    }
+                                                val eatingSoonTTDuration = preferences.get(IntKeys.OverviewEatingSoonDuration)
+                                                val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewEatingSoonTarget))
                                                 disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                                                     temporaryTarget = TT(
                                                         timestamp = dateUtil.now(),
@@ -1079,45 +1070,28 @@ class SmsCommunicatorPlugin @Inject constructor(
             messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                 override fun run() {
                     val units = profileUtil.units
-                    var keyDuration = 0
-                    var defaultTargetDuration = 0
-                    var keyTarget = 0
-                    var defaultTargetMMOL = 0.0
-                    var defaultTargetMGDL = 0.0
                     var reason = TT.Reason.EATING_SOON
+                    var ttDuration = 0
+                    var tt = 0.0
                     when {
                         isMeal     -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_eatingsoon_duration
-                            defaultTargetDuration = Constants.defaultEatingSoonTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_eatingsoon_target
-                            defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
-                            defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
+                            ttDuration = preferences.get(IntKeys.OverviewEatingSoonDuration)
+                            tt = preferences.get(DoubleKeys.OverviewEatingSoonTarget)
                             reason = TT.Reason.EATING_SOON
                         }
 
                         isActivity -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_activity_duration
-                            defaultTargetDuration = Constants.defaultActivityTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_activity_target
-                            defaultTargetMMOL = Constants.defaultActivityTTmmol
-                            defaultTargetMGDL = Constants.defaultActivityTTmgdl
+                            ttDuration = preferences.get(IntKeys.OverviewActivityDuration)
+                            tt = preferences.get(DoubleKeys.OverviewActivityTarget)
                             reason = TT.Reason.ACTIVITY
                         }
 
                         isHypo     -> {
-                            keyDuration = app.aaps.core.utils.R.string.key_hypo_duration
-                            defaultTargetDuration = Constants.defaultHypoTTDuration
-                            keyTarget = app.aaps.core.utils.R.string.key_hypo_target
-                            defaultTargetMMOL = Constants.defaultHypoTTmmol
-                            defaultTargetMGDL = Constants.defaultHypoTTmgdl
+                            ttDuration = preferences.get(IntKeys.OverviewHypoDuration)
+                            tt = preferences.get(DoubleKeys.OverviewHypoTarget)
                             reason = TT.Reason.HYPOGLYCEMIA
                         }
                     }
-                    var ttDuration = sp.getInt(keyDuration, defaultTargetDuration)
-                    ttDuration = if (ttDuration > 0) ttDuration else defaultTargetDuration
-                    var tt = sp.getDouble(keyTarget, if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL)
-                    tt = profileUtil.valueInCurrentUnitsDetect(tt)
-                    tt = if (tt > 0) tt else if (units == GlucoseUnit.MMOL) defaultTargetMMOL else defaultTargetMGDL
                     disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                         temporaryTarget = TT(
                             timestamp = dateUtil.now(),

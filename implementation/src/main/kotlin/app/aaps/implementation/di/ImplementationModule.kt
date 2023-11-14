@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
 import app.aaps.implementation.db.ProcessedTbrEbDataImpl
@@ -59,6 +60,7 @@ import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.ReceiverStatusStoreImpl
 import app.aaps.implementation.resources.IconsProviderImplementation
 import app.aaps.implementation.resources.ResourceHelperImpl
+import app.aaps.implementation.sharedPreferences.PreferencesImpl
 import app.aaps.implementation.stats.DexcomTirCalculatorImpl
 import app.aaps.implementation.stats.TddCalculatorImpl
 import app.aaps.implementation.stats.TirCalculatorImpl
@@ -90,6 +92,7 @@ abstract class ImplementationModule {
     @Module
     interface Bindings {
 
+        @Binds fun bindPreferences(preferencesImpl: PreferencesImpl): Preferences
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--    Keys-->
+    <string name="key_simple_mode" translatable="false">simple_mode</string>
+    <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
+
+    <!--    Overview-->
+    <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>
+    <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
+    <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
+    <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
+    <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
+    <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
+    <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>
+    <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
+    <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
+    <string name="key_carbs_button_increment_3" translatable="false">carbs_button_increment_3</string>
+    <string name="key_eating_soon_duration" translatable="false">eatingsoon_duration</string>
+    <string name="key_eating_soon_target" translatable="false">eatingsoon_target</string>
+    <string name="key_activity_duration" translatable="false">activity_duration</string>
+    <string name="key_activity_target" translatable="false">activity_target</string>
+    <string name="key_hypo_duration" translatable="false">hypo_duration</string>
+    <string name="key_hypo_target" translatable="false">hypo_target</string>
+
+    <!--    Actions-->
+    <string name="key_fill_button_1" translatable="false">fill_button1</string>
+    <string name="key_fill_button_2" translatable="false">fill_button2</string>
+    <string name="key_fill_button_3" translatable="false">fill_button3</string>
+
+
+    <!-- Locale -->
+    <string name="key_language" translatable="false">language</string>
+
+</resources>

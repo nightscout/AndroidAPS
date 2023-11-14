@@ -14,19 +14,19 @@ import org.mockito.quality.Strictness
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class SPImplementationTest {
+class SPImplTest {
 
     private val sharedPreferences: SharedPreferencesMock = SharedPreferencesMock()
     @Mock lateinit var context: Context
 
-    private lateinit var sut: SPImplementation
+    private lateinit var sut: SPImpl
 
     private val someResource = 1
     private val someResource2 = 2
 
     @BeforeEach
     fun setUp() {
-        sut = SPImplementation(sharedPreferences, context)
+        sut = SPImpl(sharedPreferences, context)
         Mockito.`when`(context.getString(someResource)).thenReturn("some_resource")
         Mockito.`when`(context.getString(someResource2)).thenReturn("some_resource_2")
     }

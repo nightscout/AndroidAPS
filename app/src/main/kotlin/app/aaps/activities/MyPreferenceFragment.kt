@@ -31,6 +31,9 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.BooleanKeys
+import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.StringKeys
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.autotune.AutotunePlugin
@@ -72,6 +75,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
@@ -238,7 +242,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         key ?: return
         rxBus.send(EventPreferenceChange(key))
-        if (key == rh.gs(app.aaps.core.ui.R.string.key_language)) {
+        if (key == rh.gs(StringKeys.GeneralLanguage.key)) {
             rxBus.send(EventRebuildTabs(true))
             //recreate() does not update language so better close settings
             activity?.finish()
@@ -246,7 +250,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (key == rh.gs(app.aaps.plugins.main.R.string.key_short_tabtitles)) {
             rxBus.send(EventRebuildTabs())
         }
-        if (key == rh.gs(app.aaps.core.utils.R.string.key_units)) {
+        if (key == rh.gs(app.aaps.core.utils.R.string.key_units) || key == rh.gs(BooleanKeys.GeneralSimpleMode.key)) {
             activity?.recreate()
             return
         }
@@ -312,9 +316,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             if (key != null) {
                 root = xmlRoot.findPreference(key)
                 if (root == null) return
-                require(root is PreferenceScreen) {
-                    ("Preference object with key $key is not a PreferenceScreen")
-                }
+                require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
                 preferenceScreen = root
             } else {
                 addPreferencesFromResource(preferencesResId)
@@ -323,15 +325,15 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     private fun adjustUnitDependentPrefs(pref: Preference) { // convert preferences values to current units
-        val unitDependent = arrayOf(
-            rh.gs(app.aaps.core.utils.R.string.key_hypo_target),
-            rh.gs(app.aaps.core.utils.R.string.key_activity_target),
-            rh.gs(app.aaps.core.utils.R.string.key_eatingsoon_target),
+        val unitDependent = listOf(
+            rh.gs(DoubleKeys.OverviewHypoTarget.key),
+            rh.gs(DoubleKeys.OverviewActivityTarget.key),
+            rh.gs(DoubleKeys.OverviewEatingSoonTarget.key),
             rh.gs(app.aaps.core.utils.R.string.key_high_mark),
             rh.gs(app.aaps.core.utils.R.string.key_low_mark)
         )
-        if (unitDependent.toList().contains(pref.key) && pref is EditTextPreference) {
-            val converted = profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(pref.text))
+        if (unitDependent.contains(pref.key) && pref is EditTextPreference) {
+            val converted = BigDecimal(profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(pref.text)))
             pref.summary = converted.toString()
         }
     }
