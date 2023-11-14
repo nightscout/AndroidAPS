@@ -89,8 +89,13 @@ class GarminDeviceClient(
                 bindLock.notifyAll()
             }
             if (notifyReceiver) receiver.onConnect(this@GarminDeviceClient)
-            ciq.connectedDevices?.forEach { d ->
-                receiver.onConnectDevice(this@GarminDeviceClient, d.deviceIdentifier, d.friendlyName) }
+            try {
+                ciq.connectedDevices?.forEach { d ->
+                    receiver.onConnectDevice(this@GarminDeviceClient, d.deviceIdentifier, d.friendlyName)
+                }
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.GARMIN, "getting devices failed", e)
+            }
         }
         override fun onServiceDisconnected(name: ComponentName?) {
             synchronized(bindLock) {

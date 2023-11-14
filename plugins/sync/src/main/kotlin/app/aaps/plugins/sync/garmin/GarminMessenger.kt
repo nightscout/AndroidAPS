@@ -26,7 +26,7 @@ class GarminMessenger(
         appIdNames.putAll(applicationIdNames)
         if (enableConnectIq) startDeviceClient()
         if (enableSimulator) {
-            appIdNames["SimAp"] = "SimulatorApp"
+            appIdNames["SimApp"] = "SimulatorApp"
             GarminSimulatorClient(aapsLogger, this)
         }
     }

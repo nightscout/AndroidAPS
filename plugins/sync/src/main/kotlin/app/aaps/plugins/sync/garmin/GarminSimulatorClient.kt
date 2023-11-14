@@ -83,7 +83,8 @@ class GarminSimulatorClient(
                         }
                     }
                 } catch (e: SocketException) {
-                  aapsLogger.warn(LTag.GARMIN, "socket read failed ${e.message}")
+                    aapsLogger.warn(LTag.GARMIN, "socket read failed ${e.message}")
+                    break
                 }
             }
             aapsLogger.info(LTag.GARMIN, "disconnect ${device.name}" )
@@ -162,7 +163,7 @@ class GarminSimulatorClient(
     override fun isDisposed() = serverSocket.isClosed
 
     override fun retrieveApplicationInfo(device: GarminDevice, appId: String, appName: String) {
-        receiver.onApplicationInfo(device, appId, true)
+        receiver.onApplicationInfo(device, appId, appId == iqApp.applicationID)
     }
 
     private fun getConnection(device: GarminDevice): Connection? {

@@ -86,12 +86,13 @@ class GarminPlugin @Inject constructor(
     private val garminAapsKey get() = sp.getString("garmin_aaps_key", "")
 
     private fun onPreferenceChange(event: EventPreferenceChange) {
-        aapsLogger.info(LTag.GARMIN, "preferences change ${event.changedKey}")
         when (event.changedKey) {
             "communication_debug_mode" -> setupGarminMessenger()
             "communication_http", "communication_http_port" -> setupHttpServer()
             "garmin_aaps_key" -> sendPhoneAppMessage()
+            else -> return
         }
+        aapsLogger.info(LTag.GARMIN, "preferences change ${event.changedKey}")
     }
 
     private fun setupGarminMessenger() {
@@ -120,7 +121,7 @@ class GarminPlugin @Inject constructor(
                 .subscribe(::onNewBloodGlucose)
         )
         setupHttpServer()
-        setupGarminMessenger()
+        // setupGarminMessenger()
     }
 
     fun setupHttpServer() {
@@ -167,8 +168,10 @@ class GarminPlugin @Inject constructor(
 
     @VisibleForTesting
     fun onConnectDevice(device: GarminDevice) {
-        aapsLogger.info(LTag.GARMIN, "onConnectDevice $device sending glucose")
-        if (garminAapsKey.isNotEmpty()) sendPhoneAppMessage(device)
+        if (garminAapsKey.isNotEmpty()) {
+            aapsLogger.info(LTag.GARMIN, "onConnectDevice $device sending glucose")
+            sendPhoneAppMessage(device)
+        }
     }
 
     private fun sendPhoneAppMessage(device: GarminDevice) {

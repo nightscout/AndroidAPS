@@ -62,7 +62,7 @@ class GarminSimulatorClientTest: TestBase() {
             verify(receiver).onConnect(client)
             verify(receiver, timeout(1_000)).onConnectDevice(eq(client), any(), any())
         }
-        verify(receiver).onReceiveMessage(
+        verify(receiver, timeout(1_000)).onReceiveMessage(
             eq(client), eq(device!!.id), eq("SimApp"),
             argThat { p -> payload.contentEquals(p) })
     }
