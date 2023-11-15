@@ -19,14 +19,13 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.utils.HardLimits
-import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
@@ -53,7 +52,6 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
     @Inject lateinit var config: Config
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var ctx: Context
     @Inject lateinit var protectionCheck: ProtectionCheck
 
@@ -188,7 +186,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(app.aaps.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         val isTT = binding.duration.value > 0 && binding.percentage.value < 100 && binding.tt.isChecked
-        val target = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewActivityTarget))
+        val target = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewActivityTarget))
         val units = profileFunction.getUnits()
         if (isTT)
             actions.add(rh.gs(app.aaps.core.ui.R.string.temporary_target) + ": " + rh.gs(app.aaps.core.ui.R.string.activity))

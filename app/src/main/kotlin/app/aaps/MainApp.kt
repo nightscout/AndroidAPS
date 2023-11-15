@@ -31,8 +31,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
-import app.aaps.core.keys.DoubleKeys
-import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
@@ -232,12 +232,14 @@ class MainApp : DaggerApplication() {
         sp.putString(app.aaps.plugins.main.R.string.value_light_theme, "light")
         sp.putString(app.aaps.plugins.main.R.string.value_system_theme, "system")
         // 3.3
-        if (preferences.get(IntKeys.OverviewEatingSoonDuration) == 0) preferences.remove(IntKeys.OverviewEatingSoonDuration)
-        if (preferences.get(DoubleKeys.OverviewEatingSoonTarget) == 0.0) preferences.remove(DoubleKeys.OverviewEatingSoonTarget)
-        if (preferences.get(IntKeys.OverviewActivityDuration) == 0) preferences.remove(IntKeys.OverviewActivityDuration)
-        if (preferences.get(DoubleKeys.OverviewActivityTarget) == 0.0) preferences.remove(DoubleKeys.OverviewActivityTarget)
-        if (preferences.get(IntKeys.OverviewHypoDuration) == 0) preferences.remove(IntKeys.OverviewHypoDuration)
-        if (preferences.get(DoubleKeys.OverviewHypoTarget) == 0.0) preferences.remove(DoubleKeys.OverviewHypoTarget)
+        if (preferences.get(IntKey.OverviewEatingSoonDuration) == 0) preferences.remove(IntKey.OverviewEatingSoonDuration)
+        if (preferences.get(DoubleKey.OverviewEatingSoonTarget) == 0.0) preferences.remove(DoubleKey.OverviewEatingSoonTarget)
+        if (preferences.get(IntKey.OverviewActivityDuration) == 0) preferences.remove(IntKey.OverviewActivityDuration)
+        if (preferences.get(DoubleKey.OverviewActivityTarget) == 0.0) preferences.remove(DoubleKey.OverviewActivityTarget)
+        if (preferences.get(IntKey.OverviewHypoDuration) == 0) preferences.remove(IntKey.OverviewHypoDuration)
+        if (preferences.get(DoubleKey.OverviewHypoTarget) == 0.0) preferences.remove(DoubleKey.OverviewHypoTarget)
+        if (preferences.get(DoubleKey.OverviewLowMark) == 0.0) preferences.remove(DoubleKey.OverviewLowMark)
+        if (preferences.get(DoubleKey.OverviewHighMark) == 0.0) preferences.remove(DoubleKey.OverviewHighMark)
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

@@ -23,7 +23,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.DoubleKeys
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
@@ -82,7 +82,7 @@ class FillDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("fill_insulin_amount")
                 ?: 0.0, 0.0, maxInsulin, bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep), true, binding.okcancel.ok
         )
-        val amount1 = preferences.get(DoubleKeys.ActionsFillButton1)
+        val amount1 = preferences.get(DoubleKey.ActionsFillButton1)
         if (amount1 > 0) {
             binding.fillPresetButton1.visibility = View.VISIBLE
             binding.fillPresetButton1.text = decimalFormatter.toPumpSupportedBolus(amount1, activePlugin.activePump.pumpDescription.bolusStep) // + "U");
@@ -90,7 +90,7 @@ class FillDialog : DialogFragmentWithDate() {
         } else {
             binding.fillPresetButton1.visibility = View.GONE
         }
-        val amount2 = preferences.get(DoubleKeys.ActionsFillButton2)
+        val amount2 = preferences.get(DoubleKey.ActionsFillButton2)
         if (amount2 > 0) {
             binding.fillPresetButton2.visibility = View.VISIBLE
             binding.fillPresetButton2.text = decimalFormatter.toPumpSupportedBolus(amount2, activePlugin.activePump.pumpDescription.bolusStep) // + "U");
@@ -98,7 +98,7 @@ class FillDialog : DialogFragmentWithDate() {
         } else {
             binding.fillPresetButton2.visibility = View.GONE
         }
-        val amount3 = preferences.get(DoubleKeys.ActionsFillButton3)
+        val amount3 = preferences.get(DoubleKey.ActionsFillButton3)
         if (amount3 > 0) {
             binding.fillPresetButton3.visibility = View.VISIBLE
             binding.fillPresetButton3.text = decimalFormatter.toPumpSupportedBolus(amount3, activePlugin.activePump.pumpDescription.bolusStep) // + "U");

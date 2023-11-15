@@ -46,7 +46,7 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.userEntry.UserEntryPresentationHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.MidnightTime
-import app.aaps.core.keys.BooleanKeys
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.ui.dialogs.OKDialog
@@ -390,7 +390,7 @@ class ImportExportPrefsImpl @Inject constructor(
 
     private fun restartAppAfterImport(context: Context) {
         rxBus.send(EventDiaconnG8PumpLogReset())
-        preferences.put(BooleanKeys.GeneralSetupWizardProcessed, true)
+        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
         OKDialog.show(context, rh.gs(R.string.setting_imported), rh.gs(R.string.restartingapp)) {
             uel.log(Action.IMPORT_SETTINGS, Sources.Maintenance)
             log.debug(LTag.CORE, "Exiting")

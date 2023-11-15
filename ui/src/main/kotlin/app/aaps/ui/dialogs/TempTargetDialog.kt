@@ -16,13 +16,12 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.DoubleKeys
-import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.toast.ToastUtils
@@ -44,7 +43,6 @@ class TempTargetDialog : DialogFragmentWithDate() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var ctx: Context
@@ -137,20 +135,20 @@ class TempTargetDialog : DialogFragmentWithDate() {
     private fun longClick(v: View) {
         when (v.id) {
             R.id.eating_soon -> {
-                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewEatingSoonTarget))
-                binding.duration.value = preferences.get(IntKeys.OverviewEatingSoonDuration).toDouble()
+                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewEatingSoonTarget))
+                binding.duration.value = preferences.get(IntKey.OverviewEatingSoonDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.eatingsoon), false)
             }
 
             R.id.activity    -> {
-                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewActivityTarget))
-                binding.duration.value = preferences.get(IntKeys.OverviewActivityDuration).toDouble()
+                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewActivityTarget))
+                binding.duration.value = preferences.get(IntKey.OverviewActivityDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.activity), false)
             }
 
             R.id.hypo        -> {
-                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewHypoTarget))
-                binding.duration.value = preferences.get(IntKeys.OverviewHypoDuration).toDouble()
+                binding.temptarget.value = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHypoTarget))
+                binding.duration.value = preferences.get(IntKey.OverviewHypoDuration).toDouble()
                 binding.reasonList.setText(rh.gs(app.aaps.core.ui.R.string.hypo), false)
             }
         }

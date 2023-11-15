@@ -266,22 +266,25 @@
             android:title="@string/prefs_range_title">
 
             <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="0"
+                android:defaultValue="72"
                 android:inputType="numberDecimal"
                 android:key="@string/key_low_mark"
                 android:title="@string/low_mark"
                 validate:floatmaxNumber="160"
                 validate:floatminNumber="3"
-                validate:testType="floatNumericRange" />
+                validate:testType="bgRange"
+                visibility:hideParentScreenIfHidden="true"
+                visibility:nsclientMode="false" />
 
             <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="0"
+                android:defaultValue="180"
                 android:inputType="numberDecimal"
                 android:key="@string/key_high_mark"
                 android:title="@string/high_mark"
                 validate:floatmaxNumber="250"
                 validate:floatminNumber="5"
-                validate:testType="floatNumericRange" />
+                validate:testType="bgRange"
+                visibility:nsclientMode="false" />
 
         </androidx.preference.PreferenceScreen>
 

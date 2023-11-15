@@ -27,109 +27,115 @@ interface Preferences {
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [BooleanKeys] enum
+     * @param key [BooleanKey] enum
      * @return value
      */
-    fun get(key: BooleanKeys): Boolean
+    fun get(key: BooleanKey): Boolean
 
     /**
      * Get [Boolean] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [BooleanKeys] enum
+     * @param key [BooleanKey] enum
      * @return value or null
      */
-    fun getIfExists(key: BooleanKeys): Boolean?
+    fun getIfExists(key: BooleanKey): Boolean?
 
     /**
      * Update [Boolean] value in [android.content.SharedPreferences]
      *
-     * @param key [BooleanKeys] enum
+     * @param key [BooleanKey] enum
      * @param value value
      */
-    fun put(key: BooleanKeys, value: Boolean)
+    fun put(key: BooleanKey, value: Boolean)
 
     /**
      * Get [String] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [StringKeys] enum
+     * @param key [StringKey] enum
      * @return value
      */
-    fun get(key: StringKeys): String
+    fun get(key: StringKey): String
 
     /**
      * Get [String] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [StringKeys] enum
+     * @param key [StringKey] enum
      * @return value or null
      */
-    fun getIfExists(key: StringKeys): String?
+    fun getIfExists(key: StringKey): String?
 
     /**
      * Update [String] value in [android.content.SharedPreferences]
      *
-     * @param key [StringKeys] enum
+     * @param key [StringKey] enum
      * @param value value
      */
-    fun put(key: StringKeys, value: String)
+    fun put(key: StringKey, value: String)
 
     /**
      * Get [Double] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [DoubleKeys] enum
+     * @param key [DoubleKey] enum
      * @return value
      */
-    fun get(key: DoubleKeys): Double
+    fun get(key: DoubleKey): Double
 
     /**
      * Get [Double] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [DoubleKeys] enum
+     * @param key [DoubleKey] enum
      * @return value or null
      */
-    fun getIfExists(key: DoubleKeys): Double?
+    fun getIfExists(key: DoubleKey): Double?
 
     /**
      * Update [Double] value in [android.content.SharedPreferences]
      *
-     * @param key [DoubleKeys] enum
+     * @param key [DoubleKey] enum
      * @param value value
      */
-    fun put(key: DoubleKeys, value: Double)
+    fun put(key: DoubleKey, value: Double)
 
     /**
      * Get [Int] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
      *
-     * @param key [IntKeys] enum
+     * @param key [IntKey] enum
      * @return value
      */
-    fun get(key: IntKeys): Int
+    fun get(key: IntKey): Int
 
     /**
      * Get [Int] value from [android.content.SharedPreferences] or null if doesn't exist
      *
-     * @param key [IntKeys] enum
+     * @param key [IntKey] enum
      * @return value or null
      */
-    fun getIfExists(key: IntKeys): Int?
+    fun getIfExists(key: IntKey): Int?
 
     /**
      * Update [Int] value in [android.content.SharedPreferences]
      *
-     * @param key [IntKeys] enum
+     * @param key [IntKey] enum
      * @param value value
      */
-    fun put(key: IntKeys, value: Int)
+    fun put(key: IntKey, value: Int)
 
     /**
      * Remove value from [android.content.SharedPreferences]
      *
-     * @param key [Keys] enum
+     * @param key [PreferenceKey] enum
      */
-    fun remove(key: Keys)
+    fun remove(key: PreferenceKey)
+
+    /**
+     * @param key string representation of key
+     * @return true if key is unit dependent
+     */
+    fun isUnitDependent(key: String): Boolean
 }

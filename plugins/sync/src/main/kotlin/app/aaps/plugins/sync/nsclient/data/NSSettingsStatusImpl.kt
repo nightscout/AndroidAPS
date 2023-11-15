@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
@@ -120,7 +119,6 @@ class NSSettingsStatusImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val rxBus: RxBus,
-    private val defaultValueHelper: DefaultValueHelper,
     private val sp: SP,
     private val config: Config,
     private val uel: UserEntryLogger,
@@ -157,10 +155,6 @@ class NSSettingsStatusImpl @Inject constructor(
         }
         data = status
         aapsLogger.debug(LTag.NSCLIENT, "Received status: $status")
-        val targetHigh = getSettingsThreshold("bgTargetTop")
-        val targetlow = getSettingsThreshold("bgTargetBottom")
-        if (targetHigh != null) defaultValueHelper.bgTargetHigh = targetHigh
-        if (targetlow != null) defaultValueHelper.bgTargetLow = targetlow
         if (config.NSCLIENT) copyStatusLightsNsSettings(null)
     }
 
@@ -186,15 +180,6 @@ class NSSettingsStatusImpl @Inject constructor(
         } catch (e: Exception) {
             null
         }
-    }
-
-    // "bgHigh": 252,
-    // "bgTargetTop": 180,
-    // "bgTargetBottom": 72,
-    // "bgLow": 71
-    private fun getSettingsThreshold(what: String): Double? {
-        val threshold = JsonHelper.safeGetJSONObject(getSettings(), "thresholds", null)
-        return JsonHelper.safeGetDoubleAllowNull(threshold, what)
     }
 
     /*

@@ -18,7 +18,7 @@ import app.aaps.core.interfaces.rx.events.EventSWSyncStatus
 import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.BooleanKeys
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.locale.LocaleHelper.update
@@ -86,7 +86,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
                 when (menuItem.itemId) {
                     android.R.id.home -> {
-                        preferences.put(BooleanKeys.GeneralSetupWizardProcessed, true)
+                        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
                         OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() }
                         true
                     }
@@ -183,7 +183,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     // Go back to overview
     @Suppress("UNUSED_PARAMETER")
     fun finishSetupWizard(view: View?) {
-        preferences.put(BooleanKeys.GeneralSetupWizardProcessed, true)
+        preferences.put(BooleanKey.GeneralSetupWizardProcessed, true)
         val intent = Intent(this, uiInteraction.mainActivity).setAction("app.aaps.plugins.configuration.setupwizard.SetupWizardActivity")
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)

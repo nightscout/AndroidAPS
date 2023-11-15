@@ -19,10 +19,11 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
+import app.aaps.core.objects.aps.APSResultObject
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.core.objects.aps.APSResultObject
 import app.aaps.implementation.instantiator.InstantiatorImpl
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
@@ -51,6 +52,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var config: Config
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var constraintsChecker: ConstraintsChecker
 
     lateinit var dateUtil: DateUtil

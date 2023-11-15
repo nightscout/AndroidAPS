@@ -16,6 +16,7 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import androidx.preference.size
 import app.aaps.R
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -31,9 +32,9 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.BooleanKeys
-import app.aaps.core.keys.DoubleKeys
-import app.aaps.core.keys.StringKeys
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.autotune.AutotunePlugin
@@ -76,6 +77,7 @@ import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
@@ -86,6 +88,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var config: Config
@@ -242,7 +245,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         key ?: return
         rxBus.send(EventPreferenceChange(key))
-        if (key == rh.gs(StringKeys.GeneralLanguage.key)) {
+        if (key == rh.gs(StringKey.GeneralLanguage.key)) {
             rxBus.send(EventRebuildTabs(true))
             //recreate() does not update language so better close settings
             activity?.finish()
@@ -250,7 +253,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (key == rh.gs(app.aaps.plugins.main.R.string.key_short_tabtitles)) {
             rxBus.send(EventRebuildTabs())
         }
-        if (key == rh.gs(app.aaps.core.utils.R.string.key_units) || key == rh.gs(BooleanKeys.GeneralSimpleMode.key)) {
+        if (key == rh.gs(app.aaps.core.utils.R.string.key_units) || key == rh.gs(BooleanKey.GeneralSimpleMode.key)) {
             activity?.recreate()
             return
         }
@@ -321,20 +324,6 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             } else {
                 addPreferencesFromResource(preferencesResId)
             }
-        }
-    }
-
-    private fun adjustUnitDependentPrefs(pref: Preference) { // convert preferences values to current units
-        val unitDependent = listOf(
-            rh.gs(DoubleKeys.OverviewHypoTarget.key),
-            rh.gs(DoubleKeys.OverviewActivityTarget.key),
-            rh.gs(DoubleKeys.OverviewEatingSoonTarget.key),
-            rh.gs(app.aaps.core.utils.R.string.key_high_mark),
-            rh.gs(app.aaps.core.utils.R.string.key_low_mark)
-        )
-        if (unitDependent.contains(pref.key) && pref is EditTextPreference) {
-            val converted = BigDecimal(profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(pref.text)))
-            pref.summary = converted.toString()
         }
     }
 
@@ -422,6 +411,15 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
         }
         pref?.let { adjustUnitDependentPrefs(it) }
+    }
+
+    private fun adjustUnitDependentPrefs(pref: Preference) { // convert preferences values to current units
+        if (pref.key != null && preferences.isUnitDependent(pref.key) && pref is EditTextPreference) {
+            val value = profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(pref.text)).toString()
+            val precision = if (profileUtil.units == GlucoseUnit.MGDL) 0 else 1
+            val converted = BigDecimal(value).setScale(precision, RoundingMode.HALF_UP)
+            pref.summary = converted.toPlainString()
+        }
     }
 
     private fun initSummary(p: Preference, isSinglePreference: Boolean) {

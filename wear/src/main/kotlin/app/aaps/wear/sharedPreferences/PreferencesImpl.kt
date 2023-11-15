@@ -1,12 +1,12 @@
 package app.aaps.wear.sharedPreferences
 
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.keys.BooleanKeys
-import app.aaps.core.keys.DoubleKeys
-import app.aaps.core.keys.IntKeys
-import app.aaps.core.keys.Keys
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.StringKeys
+import app.aaps.core.keys.StringKey
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -20,43 +20,43 @@ class PreferencesImpl @Inject constructor(
     override val nsclientMode: Boolean = false
     override val pumpControlMode: Boolean = false
 
-    override fun get(key: BooleanKeys): Boolean = sp.getBoolean(key.key, key.defaultValue)
+    override fun get(key: BooleanKey): Boolean = sp.getBoolean(key.key, key.defaultValue)
 
-    override fun getIfExists(key: BooleanKeys): Boolean? =
+    override fun getIfExists(key: BooleanKey): Boolean? =
         if (sp.contains(key.key)) sp.getBoolean(key.key, key.defaultValue) else null
 
-    override fun put(key: BooleanKeys, value: Boolean) {
+    override fun put(key: BooleanKey, value: Boolean) {
         sp.putBoolean(key.key, value)
     }
 
-    override fun get(key: StringKeys): String = sp.getString(key.key, key.defaultValue)
+    override fun get(key: StringKey): String = sp.getString(key.key, key.defaultValue)
 
-    override fun getIfExists(key: StringKeys): String? =
+    override fun getIfExists(key: StringKey): String? =
         if (sp.contains(key.key)) sp.getString(key.key, key.defaultValue) else null
 
-    override fun put(key: StringKeys, value: String) {
+    override fun put(key: StringKey, value: String) {
         sp.putString(key.key, value)
     }
 
-    override fun get(key: DoubleKeys): Double = sp.getDouble(key.key, key.defaultValue)
+    override fun get(key: DoubleKey): Double = sp.getDouble(key.key, key.defaultValue)
 
-    override fun getIfExists(key: DoubleKeys): Double? =
+    override fun getIfExists(key: DoubleKey): Double? =
         if (sp.contains(key.key)) sp.getDouble(key.key, key.defaultValue) else null
 
-    override fun put(key: DoubleKeys, value: Double) {
+    override fun put(key: DoubleKey, value: Double) {
         sp.putDouble(key.key, value)
     }
 
-    override fun get(key: IntKeys): Int = sp.getInt(key.key, key.defaultValue)
+    override fun get(key: IntKey): Int = sp.getInt(key.key, key.defaultValue)
 
-    override fun getIfExists(key: IntKeys): Int? =
+    override fun getIfExists(key: IntKey): Int? =
         if (sp.contains(key.key)) sp.getInt(key.key, key.defaultValue) else null
 
-    override fun put(key: IntKeys, value: Int) {
+    override fun put(key: IntKey, value: Int) {
         sp.putInt(key.key, value)
     }
 
-    override fun remove(key: Keys) {
+    override fun remove(key: PreferenceKey) {
         sp.remove(key.key)
     }
 }

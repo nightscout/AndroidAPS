@@ -21,7 +21,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -33,8 +32,8 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.DoubleKeys
-import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
@@ -59,7 +58,6 @@ class InsulinDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var commandQueue: CommandQueue
@@ -138,27 +136,27 @@ class InsulinDialog : DialogFragmentWithDate() {
             false, binding.okcancel.ok, textWatcher
         )
 
-        val plus05Text = preferences.get(DoubleKeys.OverviewInsulinButtonIncrement1).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus05Text = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus05.text = plus05Text
         binding.plus05.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
-            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKeys.OverviewInsulinButtonIncrement1))
+            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKey.OverviewInsulinButtonIncrement1))
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus10Text = preferences.get(DoubleKeys.OverviewInsulinButtonIncrement2).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus10Text = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus10.text = plus10Text
         binding.plus10.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
-            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKeys.OverviewInsulinButtonIncrement2))
+            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKey.OverviewInsulinButtonIncrement2))
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus20Text = preferences.get(DoubleKeys.OverviewInsulinButtonIncrement3).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus20Text = preferences.get(DoubleKey.OverviewInsulinButtonIncrement3).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus20.text = plus20Text
         binding.plus20.contentDescription = rh.gs(app.aaps.core.ui.R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
-            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKeys.OverviewInsulinButtonIncrement3))
+            binding.amount.value = max(0.0, binding.amount.value + preferences.get(DoubleKey.OverviewInsulinButtonIncrement3))
             validateInputs()
             binding.amount.announceValue()
         }
@@ -200,8 +198,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                     rh.gs(app.aaps.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, app.aaps.core.ui.R.attr.warningColor)
                 )
         }
-        val eatingSoonTTDuration = preferences.get(IntKeys.OverviewEatingSoonDuration)
-        val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewEatingSoonTarget))
+        val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+        val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewEatingSoonTarget))
         if (eatingSoonChecked)
             actions.add(
                 rh.gs(R.string.temp_target_short) + ": " + (decimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(

@@ -50,10 +50,6 @@ object Constants {
     //Storage [MB]
     const val MINIMUM_FREE_SPACE: Long = 200
 
-    // Overview
-    const val LOW_MARK = 76.0
-    const val HIGH_MARK = 180.0
-
     // STATISTICS
     const val STATS_TARGET_LOW_MMOL = 3.9
     const val STATS_TARGET_HIGH_MMOL = 7.8

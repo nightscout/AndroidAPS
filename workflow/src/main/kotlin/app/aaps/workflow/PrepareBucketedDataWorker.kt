@@ -8,9 +8,10 @@ import app.aaps.core.graph.data.InMemoryGlucoseValueDataPoint
 import app.aaps.core.graph.data.PointsWithLabelGraphSeries
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.OverviewData
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +24,9 @@ class PrepareBucketedDataWorker(
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
+    @Inject lateinit var preferences: Preferences
 
     class PrepareBucketedData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
@@ -46,7 +48,7 @@ class PrepareBucketedDataWorker(
         val bucketedListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (inMemoryGlucoseValue in bucketedData) {
             if (inMemoryGlucoseValue.timestamp < fromTime || inMemoryGlucoseValue.timestamp > toTime) continue
-            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, defaultValueHelper, profileFunction, rh))
+            bucketedListArray.add(InMemoryGlucoseValueDataPoint(inMemoryGlucoseValue, preferences, profileFunction, profileUtil, rh))
         }
         bucketedListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         data.overviewData.bucketedGraphSeries = PointsWithLabelGraphSeries(Array(bucketedListArray.size) { i -> bucketedListArray[i] })

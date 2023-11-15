@@ -7,8 +7,6 @@
     <string name="key_openapsama_min_5m_carbimpact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
-    <string name="key_low_mark" translatable="false">low_mark</string>
-    <string name="key_high_mark" translatable="false">high_mark</string>
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
     <string name="key_btwatchdog_lastbark" translatable="false">bt_watchdog_last</string>

@@ -22,8 +22,8 @@ import app.aaps.core.interfaces.rx.events.EventWearDataToMobile
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.keys.DoubleKeys
-import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.wear.R
 import app.aaps.wear.interaction.WatchfaceConfigurationActivity
@@ -165,10 +165,10 @@ class DataHandlerWear @Inject constructor(
                 sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
                 sp.putInt(R.string.key_treatments_safety_max_carbs, it.maxCarbs)
                 sp.putDouble(R.string.key_treatments_safety_max_bolus, it.maxBolus)
-                preferences.put(DoubleKeys.OverviewInsulinButtonIncrement1, it.insulinButtonIncrement1)
-                preferences.put(DoubleKeys.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
-                preferences.put(IntKeys.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
-                preferences.put(IntKeys.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
+                preferences.put(DoubleKey.OverviewInsulinButtonIncrement1, it.insulinButtonIncrement1)
+                preferences.put(DoubleKey.OverviewInsulinButtonIncrement2, it.insulinButtonIncrement2)
+                preferences.put(IntKey.OverviewCarbsButtonIncrement1, it.carbsButtonIncrement1)
+                preferences.put(IntKey.OverviewCarbsButtonIncrement2, it.carbsButtonIncrement2)
             }
         disposable += rxBus
             .toObservable(EventData.QuickWizard::class.java)

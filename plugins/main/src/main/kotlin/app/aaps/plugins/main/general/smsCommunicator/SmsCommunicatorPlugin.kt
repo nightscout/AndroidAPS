@@ -53,8 +53,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.DoubleKeys
-import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
@@ -947,8 +947,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         lastRemoteBolusTime = dateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
-                                                val eatingSoonTTDuration = preferences.get(IntKeys.OverviewEatingSoonDuration)
-                                                val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKeys.OverviewEatingSoonTarget))
+                                                val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+                                                val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewEatingSoonTarget))
                                                 disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                                                     temporaryTarget = TT(
                                                         timestamp = dateUtil.now(),
@@ -1075,20 +1075,20 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var tt = 0.0
                     when {
                         isMeal     -> {
-                            ttDuration = preferences.get(IntKeys.OverviewEatingSoonDuration)
-                            tt = preferences.get(DoubleKeys.OverviewEatingSoonTarget)
+                            ttDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+                            tt = preferences.get(DoubleKey.OverviewEatingSoonTarget)
                             reason = TT.Reason.EATING_SOON
                         }
 
                         isActivity -> {
-                            ttDuration = preferences.get(IntKeys.OverviewActivityDuration)
-                            tt = preferences.get(DoubleKeys.OverviewActivityTarget)
+                            ttDuration = preferences.get(IntKey.OverviewActivityDuration)
+                            tt = preferences.get(DoubleKey.OverviewActivityTarget)
                             reason = TT.Reason.ACTIVITY
                         }
 
                         isHypo     -> {
-                            ttDuration = preferences.get(IntKeys.OverviewHypoDuration)
-                            tt = preferences.get(DoubleKeys.OverviewHypoTarget)
+                            ttDuration = preferences.get(IntKey.OverviewHypoDuration)
+                            tt = preferences.get(DoubleKey.OverviewHypoTarget)
                             reason = TT.Reason.HYPOGLYCEMIA
                         }
                     }

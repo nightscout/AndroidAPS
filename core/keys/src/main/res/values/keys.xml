@@ -21,6 +21,8 @@
     <string name="key_activity_target" translatable="false">activity_target</string>
     <string name="key_hypo_duration" translatable="false">hypo_duration</string>
     <string name="key_hypo_target" translatable="false">hypo_target</string>
+    <string name="key_low_mark" translatable="false">low_mark</string>
+    <string name="key_high_mark" translatable="false">high_mark</string>
 
     <!--    Actions-->
     <string name="key_fill_button_1" translatable="false">fill_button1</string>

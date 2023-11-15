@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.utils.isRunningTest
@@ -123,16 +124,16 @@ class SWDefinition @Inject constructor(
         get() = SWScreen(injector, R.string.display_settings)
             .skippable(false)
             .add(
-                SWEditNumberWithUnits(injector, Constants.LOW_MARK * Constants.MGDL_TO_MMOLL, 3.0, 8.0)
-                    .preferenceId(app.aaps.core.utils.R.string.key_low_mark)
+                SWEditNumberWithUnits(injector, DoubleKey.OverviewLowMark.defaultValue * Constants.MGDL_TO_MMOLL, 3.0, 8.0)
+                    .preferenceId(DoubleKey.OverviewLowMark)
                     .updateDelay(5)
                     .label(R.string.low_mark)
                     .comment(R.string.low_mark_comment)
             )
             .add(SWBreak(injector))
             .add(
-                SWEditNumberWithUnits(injector, Constants.HIGH_MARK * Constants.MGDL_TO_MMOLL, 5.0, 20.0)
-                    .preferenceId(app.aaps.core.utils.R.string.key_high_mark)
+                SWEditNumberWithUnits(injector, DoubleKey.OverviewHighMark.defaultValue * Constants.MGDL_TO_MMOLL, 5.0, 20.0)
+                    .preferenceId(DoubleKey.OverviewHighMark)
                     .updateDelay(5)
                     .label(R.string.high_mark)
                     .comment(R.string.high_mark_comment)

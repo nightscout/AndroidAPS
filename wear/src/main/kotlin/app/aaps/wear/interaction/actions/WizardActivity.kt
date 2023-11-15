@@ -10,7 +10,7 @@ import android.widget.ImageView
 import app.aaps.core.interfaces.rx.events.EventWearToMobile
 import app.aaps.core.interfaces.rx.weardata.EventData.ActionWizardPreCheck
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.IntKeys
+import app.aaps.core.keys.IntKey
 import app.aaps.wear.R
 import app.aaps.wear.interaction.utils.EditPlusMinusViewAdapter
 import app.aaps.wear.interaction.utils.PlusMinusEditText
@@ -37,8 +37,8 @@ class WizardActivity : ViewSelectorActivity() {
 
         override fun getColumnCount(arg0: Int): Int = if (hasPercentage) 3 else 2
         override fun getRowCount(): Int = 1
-        private val increment1 = preferences.get(IntKeys.OverviewCarbsButtonIncrement1).toDouble()
-        private val increment2 = preferences.get(IntKeys.OverviewCarbsButtonIncrement2).toDouble()
+        private val increment1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1).toDouble()
+        private val increment2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2).toDouble()
         val stepValues = listOf(1.0, increment1, increment2)
 
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when {

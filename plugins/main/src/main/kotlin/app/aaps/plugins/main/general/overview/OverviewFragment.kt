@@ -48,7 +48,6 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -82,7 +81,8 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.BooleanKeys
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.directionToIcon
@@ -125,7 +125,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var constraintChecker: ConstraintsChecker
@@ -583,11 +582,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 (/*(!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) &&*/ profile != null
                     && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
             binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && preferences.get(BooleanKeys.OverviewShowTreatmentButton)).toVisibility()
+                && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
             binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && preferences.get(BooleanKeys.OverviewShowWizardButton)).toVisibility()
+                && preferences.get(BooleanKey.OverviewShowWizardButton)).toVisibility()
             binding.buttonsLayout.insulinButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
-                && preferences.get(BooleanKeys.OverviewShowInsulinButton)).toVisibility()
+                && preferences.get(BooleanKey.OverviewShowInsulinButton)).toVisibility()
 
             // **** Calibration & CGM buttons ****
             val xDripIsBgSource = xDripSource.isEnabled()
@@ -1022,7 +1021,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val graphData = GraphData(injector, binding.graphsLayout.bgGraph, overviewData)
         val menuChartSettings = overviewMenus.setting
         if (menuChartSettings.isEmpty()) return
-        graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
+        graphData.addInRangeArea(
+            overviewData.fromTime, overviewData.endTime,
+            profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark)),
+            profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark))
+        )
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         graphData.addBucketedData()
         graphData.addTreatments(context)

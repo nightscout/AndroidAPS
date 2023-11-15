@@ -8,7 +8,7 @@ import app.aaps.core.data.model.TrendArrow
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.db.PersistenceLayer
-import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.keys.DoubleKey
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -18,7 +18,6 @@ import org.mockito.Mockito
 
 class LastBgDataImplTest : TestBaseWithProfile() {
 
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var autosensDataStore: AutosensDataStore
 
@@ -31,9 +30,9 @@ class LastBgDataImplTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        sut = LastBgDataImpl(rh, dateUtil, persistenceLayer, profileFunction, defaultValueHelper, iobCobCalculator)
-        Mockito.`when`(defaultValueHelper.determineLowLine()).thenReturn(80.0)
-        Mockito.`when`(defaultValueHelper.determineHighLine()).thenReturn(180.0)
+        sut = LastBgDataImpl(rh, dateUtil, persistenceLayer, profileFunction, profileUtil, preferences, iobCobCalculator)
+        Mockito.`when`(preferences.get(DoubleKey.OverviewLowMark)).thenReturn(80.0)
+        Mockito.`when`(preferences.get(DoubleKey.OverviewHighMark)).thenReturn(180.0)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
     }
 
