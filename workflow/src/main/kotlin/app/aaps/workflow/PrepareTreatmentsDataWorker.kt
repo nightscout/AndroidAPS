@@ -102,7 +102,7 @@ class PrepareTreatmentsDataWorker(
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
             repository.getExtendedBolusDataFromTimeToTime(fromTime, endTime, true).blockingGet()
-                .map { ExtendedBolusDataPoint(it, rh, decimalFormatter) }
+                .map { ExtendedBolusDataPoint(it, rh) }
                 .filter { it.duration != 0L }
                 .forEach {
                     it.y = getNearestBg(data.overviewData, it.x.toLong())

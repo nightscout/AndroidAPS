@@ -67,6 +67,5 @@
     <string name="cancel_temp_basal_result_is_uncertain">Cancel temp basal result is uncertain</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Unconfirmed resumeDelivery command. Please refresh pod status</string>
     <string name="cancelling_temp_basal_might_have_failed">Cancelling temp basal might have failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
-    <string name="omnipod_common_pod_status_normal">normal</string>
 
 </resources>
