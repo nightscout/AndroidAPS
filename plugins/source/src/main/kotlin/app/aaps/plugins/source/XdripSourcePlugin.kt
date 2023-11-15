@@ -5,6 +5,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.plugin.PluginType
@@ -12,9 +13,14 @@ import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.XDripSource
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.T
 import app.aaps.core.main.utils.worker.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import app.aaps.database.entities.GlucoseValue
+import app.aaps.database.entities.UserEntry.Action
+import app.aaps.database.entities.UserEntry.Sources
+import app.aaps.database.entities.ValueWithUnit
 import app.aaps.database.impl.AppRepository
 import app.aaps.database.impl.transactions.CgmSourceTransaction
 import app.aaps.database.transactions.TransactionGlucoseValue
@@ -22,6 +28,7 @@ import dagger.android.HasAndroidInjector
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 import kotlin.math.round
 
 @Singleton
@@ -63,8 +70,10 @@ class XdripSourcePlugin @Inject constructor(
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var xdripSourcePlugin: XdripSourcePlugin
+        @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+        @Inject lateinit var uel: UserEntryLogger
 
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
@@ -86,16 +95,31 @@ class XdripSourcePlugin @Inject constructor(
                         ?: ""
                 )
             )
-            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
+            val now = dateUtil.now()
+            var sensorStartTime: Long? = bundle.getLong(Intents.EXTRA_SENSOR_STARTED_AT, 0)
+            // check start time validity
+            sensorStartTime?.let {
+                if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null
+            }
+            repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), sensorStartTime))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving values from Xdrip", it)
                     ret = Result.failure(workDataOf("Error" to it.toString()))
                 }
                 .blockingGet()
-                .also { savedValues ->
-                    savedValues.all().forEach {
+                .also { result ->
+                    result.all().forEach {
                         xdripSourcePlugin.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
+                    }
+                    result.sensorInsertionsInserted.forEach {
+                        uel.log(
+                            Action.CAREPORTAL,
+                            Sources.Xdrip,
+                            ValueWithUnit.Timestamp(it.timestamp),
+                            ValueWithUnit.TherapyEventType(it.type)
+                        )
+                        aapsLogger.debug(LTag.DATABASE, "Inserted sensor insertion $it")
                     }
                 }
             xdripSourcePlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
