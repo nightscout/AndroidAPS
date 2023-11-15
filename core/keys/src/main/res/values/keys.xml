@@ -9,6 +9,9 @@
     <string name="key_show_treatment_button" translatable="false">show_treatment_button</string>
     <string name="key_show_wizard_button" translatable="false">show_wizard_button</string>
     <string name="key_show_insulin_button" translatable="false">show_insulin_button</string>
+    <string name="key_show_carbs_button" translatable="false">show_carbs_button</string>
+    <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
+    <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
     <string name="key_insulin_button_increment_1" translatable="false">insulin_button_increment_1</string>
     <string name="key_insulin_button_increment_2" translatable="false">insulin_button_increment_2</string>
     <string name="key_insulin_button_increment_3" translatable="false">insulin_button_increment_3</string>

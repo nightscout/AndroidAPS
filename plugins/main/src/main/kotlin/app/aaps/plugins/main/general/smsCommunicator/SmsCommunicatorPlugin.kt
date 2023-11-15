@@ -53,9 +53,9 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
 import app.aaps.core.objects.extensions.round
@@ -948,7 +948,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
                                                 val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-                                                val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewEatingSoonTarget))
+                                                val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
                                                 disposable += persistenceLayer.insertAndCancelCurrentTemporaryTarget(
                                                     temporaryTarget = TT(
                                                         timestamp = dateUtil.now(),
@@ -1076,19 +1076,19 @@ class SmsCommunicatorPlugin @Inject constructor(
                     when {
                         isMeal     -> {
                             ttDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-                            tt = preferences.get(DoubleKey.OverviewEatingSoonTarget)
+                            tt = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
                             reason = TT.Reason.EATING_SOON
                         }
 
                         isActivity -> {
                             ttDuration = preferences.get(IntKey.OverviewActivityDuration)
-                            tt = preferences.get(DoubleKey.OverviewActivityTarget)
+                            tt = preferences.get(UnitDoubleKey.OverviewActivityTarget)
                             reason = TT.Reason.ACTIVITY
                         }
 
                         isHypo     -> {
                             ttDuration = preferences.get(IntKey.OverviewHypoDuration)
-                            tt = preferences.get(DoubleKey.OverviewHypoTarget)
+                            tt = preferences.get(UnitDoubleKey.OverviewHypoTarget)
                             reason = TT.Reason.HYPOGLYCEMIA
                         }
                     }

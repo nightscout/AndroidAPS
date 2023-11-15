@@ -30,8 +30,8 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
@@ -218,11 +218,11 @@ class CarbsDialog : DialogFragmentWithDate() {
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
         val units = profileUtil.units
         val activityTTDuration = preferences.get(IntKey.OverviewActivityDuration)
-        val activityTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewActivityTarget))
+        val activityTT = preferences.get(UnitDoubleKey.OverviewActivityTarget)
         val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-        val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewEatingSoonTarget))
+        val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
         val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
-        val hypoTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHypoTarget))
+        val hypoTT = preferences.get(UnitDoubleKey.OverviewHypoTarget)
         val actions: LinkedList<String?> = LinkedList()
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(app.aaps.core.ui.R.string.mmol) else rh.gs(app.aaps.core.ui.R.string.mgdl)
         val useAlarm = binding.alarmCheckBox.isChecked

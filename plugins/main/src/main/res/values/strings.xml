@@ -190,9 +190,6 @@
     <string name="patch_pump">Patch pump</string>
 
     <!-- Overview -->
-    <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
-    <string name="key_show_cgm_button" translatable="false">show_cgm_button</string>
-    <string name="key_show_carbs_button" translatable="false">show_carbs_button</string>
     <string name="key_statuslights_copy_ns" translatable="false">statuslights_copy_ns</string>
     <string name="key_statuslights_overview_advanced" translatable="false">statuslights_overview_advanced</string>
     <string name="key_short_tabtitles" translatable="false">short_tabtitles</string>
@@ -267,7 +264,7 @@
     <string name="button1">Button 1</string>
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
-    <string name="prefs_range_title">Range for Visualization</string>
+    <string name="prefs_range_title">Range for visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
     <string name="low_mark">LOW mark</string>
     <string name="high_mark">HIGH mark</string>

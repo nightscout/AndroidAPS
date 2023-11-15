@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:visibility="http://schemas.android.com/apk/res-auto"
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
@@ -17,15 +16,12 @@
             android:title="@string/unitsnosemicolon" />
 
         <app.aaps.core.keys.AdaptiveListPreference
-            android:defaultValue="default"
             android:entries="@array/languagesArray"
             android:entryValues="@array/languagesValues"
             android:key="@string/key_language"
-            android:title="@string/language"
-            visibility:simpleMode="false" />
+            android:title="@string/language" />
 
-        <SwitchPreference
-            android:defaultValue="true"
+        <app.aaps.core.keys.AdaptiveSwitchPreference
             android:key="@string/key_simple_mode"
             android:title="@string/simple_mode" />
 

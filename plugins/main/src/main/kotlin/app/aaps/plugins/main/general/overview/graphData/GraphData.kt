@@ -23,8 +23,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.toast.ToastUtils
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
@@ -98,8 +98,8 @@ import kotlin.math.max
         addSeries(overviewData.tempBasalGraphSeries as LineGraphSeries<ScaledDataPoint>)
         addSeries(overviewData.basalLineGraphSeries as LineGraphSeries<ScaledDataPoint>)
         addSeries(overviewData.absoluteBasalGraphSeries as LineGraphSeries<ScaledDataPoint>)
-        maxY = max(maxY, profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark)))
-        val scale = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark)) / maxY / 1.2
+        maxY = max(maxY, preferences.get(UnitDoubleKey.OverviewHighMark))
+        val scale = preferences.get(UnitDoubleKey.OverviewLowMark) / maxY / 1.2
         overviewData.basalScale.multiplier = maxY * scale / maxBasalValue
     }
 

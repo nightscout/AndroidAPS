@@ -13,8 +13,8 @@ import app.aaps.core.interfaces.overview.OverviewData
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import kotlinx.coroutines.Dispatchers
@@ -54,8 +54,8 @@ class PrepareBgDataWorker(
         bgListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         data.overviewData.bgReadingGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })
         data.overviewData.maxBgValue = profileUtil.fromMgdlToUnits(data.overviewData.maxBgValue)
-        if (profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark)) > data.overviewData.maxBgValue)
-            data.overviewData.maxBgValue = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark))
+        if (preferences.get(UnitDoubleKey.OverviewHighMark) > data.overviewData.maxBgValue)
+            data.overviewData.maxBgValue = preferences.get(UnitDoubleKey.OverviewHighMark)
         data.overviewData.maxBgValue = addUpperChartMargin(data.overviewData.maxBgValue)
         return Result.success()
     }

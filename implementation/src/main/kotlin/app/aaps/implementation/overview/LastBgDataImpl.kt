@@ -11,8 +11,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.valueToUnits
 import dagger.Reusable
@@ -35,12 +35,12 @@ class LastBgDataImpl @Inject constructor(
 
     override fun isLow(): Boolean =
         lastBg()?.let { lastBg ->
-            lastBg.valueToUnits(profileFunction.getUnits()) < profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark))
+            lastBg.valueToUnits(profileFunction.getUnits()) < preferences.get(UnitDoubleKey.OverviewLowMark)
         } ?: false
 
     override fun isHigh(): Boolean =
         lastBg()?.let { lastBg ->
-            lastBg.valueToUnits(profileFunction.getUnits()) > profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark))
+            lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewHighMark)
         } ?: false
 
     @ColorInt

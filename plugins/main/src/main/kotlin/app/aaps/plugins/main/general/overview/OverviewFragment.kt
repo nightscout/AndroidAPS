@@ -82,8 +82,8 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.directionToIcon
 import app.aaps.core.objects.extensions.displayText
@@ -579,8 +579,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             // **** Various treatment buttons ****
             binding.buttonsLayout.carbsButton.visibility =
-                (/*(!activePlugin.activePump.pumpDescription.storesCarbInfo || pump.isInitialized() && !pump.isSuspended()) &&*/ profile != null
-                    && sp.getBoolean(R.string.key_show_carbs_button, true)).toVisibility()
+                (profile != null && preferences.get(BooleanKey.OverviewShowCarbsButton)).toVisibility()
             binding.buttonsLayout.treatmentButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
                 && preferences.get(BooleanKey.OverviewShowTreatmentButton)).toVisibility()
             binding.buttonsLayout.wizardButton.visibility = (!loop.isDisconnected && pump.isInitialized() && !pump.isSuspended() && profile != null
@@ -591,7 +590,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             // **** Calibration & CGM buttons ****
             val xDripIsBgSource = xDripSource.isEnabled()
             val dexcomIsSource = dexcomBoyda.isEnabled()
-            binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && sp.getBoolean(R.string.key_show_calibration_button, true)).toVisibility()
+            binding.buttonsLayout.calibrationButton.visibility = (xDripIsBgSource && actualBG != null && preferences.get(BooleanKey.OverviewShowCalibrationButton)).toVisibility()
             if (dexcomIsSource) {
                 binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
                 for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
@@ -607,7 +606,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 }
                 binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, app.aaps.core.ui.R.attr.cgmXdripColor))
             }
-            binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
+            binding.buttonsLayout.cgmButton.visibility = (preferences.get(BooleanKey.OverviewShowCgmButton) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
 
             // Automation buttons
             binding.buttonsLayout.userButtonsLayout.removeAllViews()
@@ -1023,8 +1022,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (menuChartSettings.isEmpty()) return
         graphData.addInRangeArea(
             overviewData.fromTime, overviewData.endTime,
-            profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark)),
-            profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark))
+            preferences.get(UnitDoubleKey.OverviewLowMark),
+            preferences.get(UnitDoubleKey.OverviewHighMark)
         )
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         graphData.addBucketedData()

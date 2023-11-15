@@ -1,5 +1,6 @@
 package app.aaps.wear.sharedPreferences
 
+import android.content.Context
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
@@ -7,12 +8,14 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PreferencesImpl @Inject constructor(
     private val sp: SP,
+    private val context: Context
 ) : Preferences {
 
     override val simpleMode: Boolean = false
@@ -47,6 +50,17 @@ class PreferencesImpl @Inject constructor(
         sp.putDouble(key.key, value)
     }
 
+    override fun get(key: UnitDoubleKey): Double =
+        error("Not implemented")
+    //profileUtil.valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue))
+
+    override fun getIfExists(key: UnitDoubleKey): Double? =
+        if (sp.contains(key.key)) sp.getDouble(key.key, key.defaultValue) else null
+
+    override fun put(key: UnitDoubleKey, value: Double) {
+        sp.putDouble(key.key, value)
+    }
+
     override fun get(key: IntKey): Int = sp.getInt(key.key, key.defaultValue)
 
     override fun getIfExists(key: IntKey): Int? =
@@ -59,4 +73,16 @@ class PreferencesImpl @Inject constructor(
     override fun remove(key: PreferenceKey) {
         sp.remove(key.key)
     }
+
+    override fun isUnitDependent(key: String): Boolean =
+        UnitDoubleKey.entries.any { context.getString(it.key) == key }
+
+    override fun get(key: String): PreferenceKey =
+        BooleanKey.entries.find { context.getString(it.key) == key }
+            ?: StringKey.entries.find { context.getString(it.key) == key }
+            ?: IntKey.entries.find { context.getString(it.key) == key }
+            ?: DoubleKey.entries.find { context.getString(it.key) == key }
+            ?: UnitDoubleKey.entries.find { context.getString(it.key) == key }
+            ?: error("Key $key not found")
+
 }

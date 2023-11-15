@@ -101,6 +101,32 @@ interface Preferences {
     fun put(key: DoubleKey, value: Double)
 
     /**
+     * Get [Double] value from [android.content.SharedPreferences] converted to current units
+     * In SimpleMode return default value
+     * In FullMode return value from [android.content.SharedPreferences]
+     *
+     * @param key [UnitDoubleKey] enum
+     * @return value
+     */
+    fun get(key: UnitDoubleKey): Double
+
+    /**
+     * Get [Double] value from [android.content.SharedPreferences] or null if doesn't exist
+     *
+     * @param key [UnitDoubleKey] enum
+     * @return value or null
+     */
+    fun getIfExists(key: UnitDoubleKey): Double?
+
+    /**
+     * Update [Double] value in [android.content.SharedPreferences]
+     *
+     * @param key [UnitDoubleKey] enum
+     * @param value value
+     */
+    fun put(key: UnitDoubleKey, value: Double)
+
+    /**
      * Get [Int] value from [android.content.SharedPreferences]
      * In SimpleMode return default value
      * In FullMode return value from [android.content.SharedPreferences]
@@ -138,4 +164,11 @@ interface Preferences {
      * @return true if key is unit dependent
      */
     fun isUnitDependent(key: String): Boolean
+
+    /**
+     * Find [PreferenceKey] definition
+     * @param key string representation of key
+     * @return [PreferenceKey]
+     */
+    fun get(key: String): PreferenceKey
 }

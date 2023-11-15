@@ -6,8 +6,8 @@ import app.aaps.core.data.model.BS
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DecimalFormatter
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 
 class BolusDataPoint(
     val data: BS,
@@ -21,7 +21,7 @@ class BolusDataPoint(
     private var yValue = 0.0
 
     override fun getX(): Double = data.timestamp.toDouble()
-    override fun getY(): Double = if (data.type == BS.Type.SMB) profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark)) else yValue
+    override fun getY(): Double = if (data.type == BS.Type.SMB) preferences.get(UnitDoubleKey.OverviewLowMark) else yValue
     override val label
         get() = decimalFormatter.toPumpSupportedBolus(data.amount, bolusStep)
     override val duration = 0L

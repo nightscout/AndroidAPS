@@ -1,35 +1,35 @@
 package app.aaps.core.keys
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.util.AttributeSet
 import androidx.preference.ListPreference
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveListPreference(context: Context, attrs: AttributeSet?) : AdaptivePreference, ListPreference(context, attrs) {
+class AdaptiveListPreference(context: Context, attrs: AttributeSet?) : ListPreference(context, attrs) {
 
     @Inject lateinit var preferences: Preferences
 
-    private val attributes: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.SimpleFullModeSelector)
-    override val simpleMode: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_simpleMode, true)
-    override val apsMode: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_apsMode, true)
-    override val nsclientMode: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_nsclientMode, true)
-    override val pumpControlMode: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_pumpControlMode, true)
-
-    // PreferenceScreen is final so we cannot extend and modify behavior
-    private val hideParentScreenIfHidden: Boolean = attributes.getBoolean(R.styleable.SimpleFullModeSelector_hideParentScreenIfHidden, false)
-
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        if (preferences.simpleMode && !simpleMode) isVisible = false
-        if (preferences.apsMode && !apsMode) isVisible = false
-        if (preferences.nsclientMode && !nsclientMode) isVisible = false
-        if (preferences.pumpControlMode && !pumpControlMode) isVisible = false
+        val preferenceKey = preferences.get(key) as StringKey
+        if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
+        if (preferences.apsMode && !preferenceKey.showInApsMode) {
+            isVisible = false; isEnabled = false
+        }
+        if (preferences.nsclientMode && !preferenceKey.showInNsClientMode) {
+            isVisible = false; isEnabled = false
+        }
+        if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
+            isVisible = false; isEnabled = false
+        }
+        setDefaultValue(preferenceKey.defaultValue)
     }
 
     override fun onAttached() {
         super.onAttached()
-        if (hideParentScreenIfHidden) parent?.isVisible = isVisible
+        // PreferenceScreen is final so we cannot extend and modify behavior
+        val preferenceKey = preferences.get(key) as StringKey
+        if (preferenceKey.hideParentScreenIfHidden) parent?.isVisible = isVisible
     }
 }

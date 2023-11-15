@@ -10,8 +10,8 @@ import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 
 class InMemoryGlucoseValueDataPoint(
     val data: InMemoryGlucoseValue,
@@ -36,8 +36,8 @@ class InMemoryGlucoseValueDataPoint(
     @ColorInt
     override fun color(context: Context?): Int {
         val units = profileFunction.getUnits()
-        val lowLine = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark))
-        val highLine = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark))
+        val lowLine = preferences.get(UnitDoubleKey.OverviewLowMark)
+        val highLine = preferences.get(UnitDoubleKey.OverviewHighMark)
         val color = when {
             valueToUnits(units) < lowLine  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
             valueToUnits(units) > highLine -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)

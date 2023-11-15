@@ -57,6 +57,7 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.generateCOBString
@@ -630,7 +631,7 @@ class DataHandlerMobile @Inject constructor(
         when (action.command) {
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_ACTIVITY -> {
                 val activityTTDuration = preferences.get(IntKey.OverviewActivityDuration)
-                val activityTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewActivityTarget))
+                val activityTT = preferences.get(UnitDoubleKey.OverviewActivityTarget)
                 val reason = rh.gs(app.aaps.core.ui.R.string.activity)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
                 rxBus.send(
@@ -645,7 +646,7 @@ class DataHandlerMobile @Inject constructor(
 
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO     -> {
                 val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
-                val hypoTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHypoTarget))
+                val hypoTT = preferences.get(UnitDoubleKey.OverviewHypoTarget)
                 val reason = rh.gs(app.aaps.core.ui.R.string.hypo)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
                 rxBus.send(
@@ -660,7 +661,7 @@ class DataHandlerMobile @Inject constructor(
 
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_EATING   -> {
                 val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-                val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewEatingSoonTarget))
+                val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
                 val reason = rh.gs(app.aaps.core.ui.R.string.eatingsoon)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
                 rxBus.send(
@@ -971,8 +972,8 @@ class DataHandlerMobile @Inject constructor(
     private fun getSingleBG(glucoseValue: InMemoryGlucoseValue, autosensDataStore: AutosensDataStore?): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
-        val lowLine = profileUtil.convertToMgdl(profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark)), units)
-        val highLine = profileUtil.convertToMgdl(profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark)), units)
+        val lowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewLowMark), units)
+        val highLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHighMark), units)
 
         return EventData.SingleBg(
             timeStamp = glucoseValue.timestamp,

@@ -7,12 +7,11 @@ import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.utils.SafeParse
-import app.aaps.core.keys.AdaptivePreference
 import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet?) : AdaptivePreference, EditTextPreference(ctx, attrs) {
+class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet?) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters = obtainValidatorParameters(attrs)
     private var validator: DefaultEditTextValidator? = null
@@ -21,10 +20,10 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet?) : Adaptiv
     @Inject lateinit var preferences: Preferences
 
     private val attributes: TypedArray = context.obtainStyledAttributes(attrs, app.aaps.core.keys.R.styleable.SimpleFullModeSelector)
-    override val simpleMode: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_simpleMode, true)
-    override val apsMode: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_apsMode, true)
-    override val nsclientMode: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_nsclientMode, true)
-    override val pumpControlMode: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_pumpControlMode, true)
+    private val simpleMode: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_simpleMode, true)
+    private val apsMode: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_apsMode, true)
+    private val nsclientMode: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_nsclientMode, true)
+    private val pumpControlMode: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_pumpControlMode, true)
 
     // PreferenceScreen is final so we cannot extend and modify behavior
     private val hideParentScreenIfHidden: Boolean = attributes.getBoolean(app.aaps.core.keys.R.styleable.SimpleFullModeSelector_hideParentScreenIfHidden, false)

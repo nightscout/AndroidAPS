@@ -34,6 +34,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
 import app.aaps.core.ui.dialogs.OKDialog
@@ -199,7 +200,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                 )
         }
         val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
-        val eatingSoonTT = profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewEatingSoonTarget))
+        val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
         if (eatingSoonChecked)
             actions.add(
                 rh.gs(R.string.temp_target_short) + ": " + (decimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(

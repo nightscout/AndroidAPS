@@ -16,5 +16,5 @@ interface PreferenceKey {
      * If yes: in simpleMode default value is always used and shared preference value is ignored.
      * If not: value from shared preferences is used.
      */
-    val affectedBySM: Boolean
+    val defaultedBySM: Boolean
 }

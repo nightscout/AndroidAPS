@@ -27,8 +27,8 @@ import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
@@ -302,8 +302,8 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         val menuChartSettings = overviewMenus.setting
         graphData.addInRangeArea(
             historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime,
-            profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark)),
-            profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark))
+            preferences.get(UnitDoubleKey.OverviewLowMark),
+            preferences.get(UnitDoubleKey.OverviewHighMark)
         )
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         graphData.addBucketedData()

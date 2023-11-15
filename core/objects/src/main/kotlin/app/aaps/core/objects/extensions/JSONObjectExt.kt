@@ -8,6 +8,7 @@ import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import org.json.JSONObject
 
 fun JSONObject.putInt(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject =
@@ -23,6 +24,9 @@ fun JSONObject.putDouble(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONO
     if (sp.contains(key)) put(rh.gs(key), sp.getDouble(key, 0.0)) else this
 
 fun JSONObject.put(key: DoubleKey, preferences: Preferences, rh: ResourceHelper): JSONObject =
+    this.also { it.put(rh.gs(key.key), preferences.get(key)) }
+
+fun JSONObject.put(key: UnitDoubleKey, preferences: Preferences, rh: ResourceHelper): JSONObject =
     this.also { it.put(rh.gs(key.key), preferences.get(key)) }
 
 fun JSONObject.putString(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSONObject =
@@ -58,6 +62,11 @@ fun JSONObject.storeDouble(@StringRes key: Int, sp: SP, rh: ResourceHelper): JSO
 }
 
 fun JSONObject.store(key: DoubleKey, preferences: Preferences, rh: ResourceHelper): JSONObject {
+    if (has(rh.gs(key.key))) preferences.put(key, getDouble(rh.gs(key.key)))
+    return this
+}
+
+fun JSONObject.store(key: UnitDoubleKey, preferences: Preferences, rh: ResourceHelper): JSONObject {
     if (has(rh.gs(key.key))) preferences.put(key, getDouble(rh.gs(key.key)))
     return this
 }

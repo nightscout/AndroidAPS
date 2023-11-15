@@ -30,8 +30,8 @@ import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.extensions.durationInMinutes
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.toStringFull
@@ -129,8 +129,8 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putString("slopeArrow", lastBG.trendArrow.text) // direction arrow as string
         bundle.putDouble("deltaMgdl", glucoseStatus.delta) // bg delta in mgdl
         bundle.putDouble("avgDeltaMgdl", glucoseStatus.shortAvgDelta) // average bg delta
-        bundle.putDouble("high", profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewHighMark))) // predefined top value of in range (green area)
-        bundle.putDouble("low", profileUtil.valueInCurrentUnitsDetect(preferences.get(DoubleKey.OverviewLowMark))) // predefined bottom  value of in range
+        bundle.putDouble("high", preferences.get(UnitDoubleKey.OverviewHighMark)) // predefined top value of in range (green area)
+        bundle.putDouble("low", preferences.get(UnitDoubleKey.OverviewLowMark)) // predefined bottom  value of in range
     }
 
     private fun iobCob(bundle: Bundle) {
