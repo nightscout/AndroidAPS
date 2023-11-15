@@ -347,6 +347,18 @@ class MedtronicHistoryData @Inject constructor(
             }
         }
 
+        // BatteryChange
+        val batteryChangeRecords: MutableList<PumpHistoryEntry> = getFilteredItems(PumpHistoryEntryType.BatteryChange)
+        aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "ProcessHistoryData: BatteryChange [count=%d, items=%s]", batteryChangeRecords.size, gson.toJson(batteryChangeRecords)))
+        if (isCollectionNotEmpty(batteryChangeRecords)) {
+            try {
+                processBatteryChange(batteryChangeRecords)
+            } catch (ex: Exception) {
+                aapsLogger.error(LTag.PUMP, "ProcessHistoryData: Error processing BatteryChange entries: " + ex.message, ex)
+                throw ex
+            }
+        }
+
         // TDD
         val tdds: MutableList<PumpHistoryEntry> = getFilteredItems(setOf(PumpHistoryEntryType.EndResultTotals, getTDDType()))
         aapsLogger.debug(LTag.PUMP, String.format(Locale.ENGLISH, "ProcessHistoryData: TDD [count=%d, items=%s]", tdds.size, gson.toJson(tdds)))
@@ -452,6 +464,35 @@ class MedtronicHistoryData @Inject constructor(
                 lastRewindRecord,
                 MedtronicConst.Statistics.LastRewind,
                 DetailedBolusInfo.EventType.INSULIN_CHANGE
+            )
+        }
+    }
+
+    private fun processBatteryChange(batteryChangeRecords: List<PumpHistoryEntry>) {
+        val maxAllowedTimeInPast = DateTimeUtil.getATDWithAddedMinutes(GregorianCalendar(), -120)
+        var lastBatteryChangeRecordTime = 0L
+        var lastBatteryChangeRecord: PumpHistoryEntry? = null
+        for (batteryChangeRecord in batteryChangeRecords) {
+            val isRemoved = batteryChangeRecord.getDecodedDataEntry("isRemoved")
+
+            if (isRemoved != null && isRemoved as Boolean)
+            {
+                // we're interested in battery replacements, not battery removals
+                continue
+            }
+
+            if (batteryChangeRecord.atechDateTime > maxAllowedTimeInPast) {
+                if (lastBatteryChangeRecordTime < batteryChangeRecord.atechDateTime) {
+                    lastBatteryChangeRecordTime = batteryChangeRecord.atechDateTime
+                    lastBatteryChangeRecord = batteryChangeRecord
+                }
+            }
+        }
+        if (lastBatteryChangeRecord != null) {
+            uploadCareportalEventIfFoundInHistory(
+                lastBatteryChangeRecord,
+                MedtronicConst.Statistics.LastBatteryChange,
+                DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE
             )
         }
     }
