@@ -2785,8 +2785,8 @@ class Pump(
                         ) {
                             logger(LogLevel.DEBUG) {
                                 "Unknown/unexpected TBR detected; expected TBR with percentage $expectedCurrentTbrPercentage " +
-                                    "and remaining duration expectedRemainingDurationInMinutes; actual TBR has percentage " +
-                                    "$actualRemainingDurationInMinutes and remaining duration $actualRemainingDurationInMinutes"
+                                    "and remaining duration $expectedRemainingDurationInMinutes; actual TBR has percentage " +
+                                    "$actualCurrentTbrPercentage and remaining duration $actualRemainingDurationInMinutes"
                             }
 
                             pumpIO.switchMode(PumpIO.Mode.REMOTE_TERMINAL)
