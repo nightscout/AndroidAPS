@@ -211,7 +211,7 @@
     <string name="change_your_input">Endre dine inndata!</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Opplaster-batteri</string>
-    <string name="data_status">BS data status</string>
+    <string name="data_status">Status BS-data</string>
     <string name="quickwizard_settings">Innstillinger for hurtigknapp</string>
     <string name="keep_screen_on_title">Hold skjermen påslått</string>
     <string name="keep_screen_on_summary">Forhindre Android fra å slå av skjermen. Mobilen vil bruke mye batteri hvis den ikke kobles til strømledning.</string>
