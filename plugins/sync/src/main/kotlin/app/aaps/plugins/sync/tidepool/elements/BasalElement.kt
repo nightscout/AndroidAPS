@@ -29,6 +29,9 @@ class BasalElement(tbr: TemporaryBasal, profile: Profile, dateUtil: DateUtil) : 
     @Expose
     internal var conversionOffset: Long = 0
 
+    @Expose
+    internal var inprogress: Boolean = false
+    
     init {
         type = "basal"
         timestamp = tbr.timestamp
