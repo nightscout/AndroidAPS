@@ -132,7 +132,7 @@ class UploadChunk @Inject constructor(
     private fun fromTemporaryBasals(tbrList: List<TemporaryBasal>, start: Long, end: Long): List<BasalElement> {
         val results = LinkedList<BasalElement>()
         for (tbr in tbrList) {
-            if (tbr.timestamp in start..end)
+            if (tbr.timestamp in start..end && && !tbr.isInProgress)
                 profileFunction.getProfile(tbr.timestamp)?.let {
                     results.add(BasalElement(tbr, it, dateUtil))
                 }
