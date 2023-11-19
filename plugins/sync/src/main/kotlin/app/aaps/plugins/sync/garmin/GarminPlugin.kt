@@ -64,12 +64,12 @@ class GarminPlugin @Inject constructor(
 
     /** Garmin ConnectIQ application id for native communication. Phone pushes values. */
     private val glucoseAppIds = mapOf(
-       "c9e90ee7e6924829a8b45e7dafff5cb4" to "GlucoseWatch_Dev",
-       "1107ca6c2d5644b998d4bcb3793f2b7c" to "GlucoseDataField_Dev",
-       "928fe19a4d3a4259b50cb6f9ddaf0f4a" to "GlucoseWidget_Dev",
-       "662dfcf7f5a147de8bd37f09574adb11" to "GlucoseWatch",
-       "815c7328c21248c493ad9ac4682fe6b3" to "GlucoseDataField",
-       "4bddcc1740084a1fab83a3b2e2fcf55b" to "GlucoseWidget",
+       "C9E90EE7E6924829A8B45E7DAFFF5CB4" to "GlucoseWatch_Dev",
+       "1107CA6C2D5644B998D4BCB3793F2B7C" to "GlucoseDataField_Dev",
+       "928FE19A4D3A4259B50CB6F9DDAF0F4A" to "GlucoseWidget_Dev",
+       "662DFCF7F5A147DE8BD37F09574ADB11" to "GlucoseWatch",
+       "815C7328C21248C493AD9AC4682FE6B3" to "GlucoseDataField",
+       "4BDDCC1740084A1FAB83A3B2E2FCF55B" to "GlucoseWidget",
     )
 
     @VisibleForTesting
@@ -90,9 +90,7 @@ class GarminPlugin @Inject constructor(
             "communication_debug_mode" -> setupGarminMessenger()
             "communication_http", "communication_http_port" -> setupHttpServer()
             "garmin_aaps_key" -> sendPhoneAppMessage()
-            else -> return
         }
-        aapsLogger.info(LTag.GARMIN, "preferences change ${event.changedKey}")
     }
 
     private fun setupGarminMessenger() {
@@ -121,7 +119,8 @@ class GarminPlugin @Inject constructor(
                 .subscribe(::onNewBloodGlucose)
         )
         setupHttpServer()
-        // setupGarminMessenger()
+        if (garminAapsKey.isNotEmpty())
+            setupGarminMessenger()
     }
 
     fun setupHttpServer() {
@@ -332,7 +331,7 @@ class GarminPlugin @Inject constructor(
         if (test) return
         if (avg > 10 && samplingStart > Instant.ofEpochMilli(0L) && samplingEnd > samplingStart) {
             loopHub.storeHeartRate(samplingStart, samplingEnd, avg, device)
-        } else {
+        } else if (avg > 0) {
             aapsLogger.warn(LTag.GARMIN, "Skip saving invalid HR $avg $samplingStart..$samplingEnd")
         }
     }

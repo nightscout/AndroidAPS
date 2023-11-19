@@ -6,22 +6,24 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.os.Build
 import android.os.IBinder
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.utils.waitMillis
 import com.garmin.android.apps.connectmobile.connectiq.IConnectIQService
+import com.garmin.android.connectiq.ConnectIQ.IQMessageStatus
 import com.garmin.android.connectiq.IQApp
 import com.garmin.android.connectiq.IQDevice
 import com.garmin.android.connectiq.IQMessage
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.jetbrains.annotations.VisibleForTesting
-import java.time.Duration
+import java.lang.Thread.UncaughtExceptionHandler
 import java.time.Instant
 import java.util.LinkedList
-import java.util.Locale
 import java.util.Queue
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 
@@ -33,26 +35,31 @@ class GarminDeviceClient(
     private val retryWaitFactor: Long = 5L): Disposable, GarminClient {
 
     override val name = "Device"
+    private var executor = Executors.newSingleThreadExecutor { r ->
+        Thread(r).apply {
+            name = "Garmin callback"
+            isDaemon = true
+            uncaughtExceptionHandler = UncaughtExceptionHandler { _, e ->
+                aapsLogger.error(LTag.GARMIN, "ConnectIQ callback failed", e) }
+        }
+    }
     private var bindLock = Object()
     private var ciqService: IConnectIQService? = null
         get() {
-            val waitUntil = Instant.now().plusSeconds(2)
             synchronized (bindLock) {
-                while(field?.asBinder()?.isBinderAlive != true) {
+                if (field?.asBinder()?.isBinderAlive != true) {
                     field = null
                     if (state !in arrayOf(State.BINDING, State.RECONNECTING)) {
                         aapsLogger.info(LTag.GARMIN, "reconnecting to ConnectIQ service")
                         state = State.RECONNECTING
-                        context.bindService(serviceIntent, ciqServiceConnection, Context.BIND_AUTO_CREATE)
+                        bindService()
                     }
-                    // Wait for the connection, that is the call to onServiceConnected.
-                    val wait = Duration.between(Instant.now(), waitUntil)
-                    if (wait > Duration.ZERO) bindLock.waitMillis(wait.toMillis())
-                    if (field == null) {
+                    bindLock.waitMillis(2_000L)
+                    if (field?.asBinder()?.isBinderAlive != true) {
+                        field = null
                         // The [serviceConnection] didn't have a chance to reassign ciqService,
                         // i.e. the wait timed out. Give up.
                         aapsLogger.warn(LTag.GARMIN, "no ciqservice $this")
-                        return null
                     }
                 }
                 return field
@@ -80,7 +87,7 @@ class GarminDeviceClient(
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             var notifyReceiver: Boolean
             val ciq: IConnectIQService
-            synchronized (bindLock) {
+            synchronized(bindLock) {
                 aapsLogger.info(LTag.GARMIN, "ConnectIQ App connected")
                 ciq = IConnectIQService.Stub.asInterface(service)
                 notifyReceiver = state != State.RECONNECTING
@@ -89,14 +96,8 @@ class GarminDeviceClient(
                 bindLock.notifyAll()
             }
             if (notifyReceiver) receiver.onConnect(this@GarminDeviceClient)
-            try {
-                ciq.connectedDevices?.forEach { d ->
-                    receiver.onConnectDevice(this@GarminDeviceClient, d.deviceIdentifier, d.friendlyName)
-                }
-            } catch (e: Exception) {
-                aapsLogger.error(LTag.GARMIN, "getting devices failed", e)
-            }
         }
+
         override fun onServiceDisconnected(name: ComponentName?) {
             synchronized(bindLock) {
                 aapsLogger.info(LTag.GARMIN, "ConnectIQ App disconnected")
@@ -114,8 +115,20 @@ class GarminDeviceClient(
         aapsLogger.info(LTag.GARMIN, "binding to ConnectIQ service")
         registerReceiver(sendMessageAction, ::onSendMessage)
         state = State.BINDING
-        context.bindService(serviceIntent, ciqServiceConnection, Context.BIND_AUTO_CREATE)
+        bindService()
     }
+
+    private fun bindService() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            context.bindService(serviceIntent, Context.BIND_AUTO_CREATE, executor, ciqServiceConnection)
+        } else {
+            context.bindService(serviceIntent, ciqServiceConnection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    override val connectedDevices: List<GarminDevice>
+        get() = ciqService?.connectedDevices?.map { iqDevice -> GarminDevice(this, iqDevice) }
+            ?: emptyList()
 
     override fun isDisposed() = state == State.DISPOSED
     override fun dispose() {
@@ -143,35 +156,14 @@ class GarminDeviceClient(
         context.registerReceiver(recv, IntentFilter(action))
     }
 
-    override fun retrieveApplicationInfo(device: GarminDevice, appId: String, appName: String) {
-        val action = createAction("APPLICATION_INFO_${device.id}_$appId")
+    override fun registerForMessages(app: GarminApplication) {
+        aapsLogger.info(LTag.GARMIN, "registerForMessage $name $app")
+        val action = createAction("ON_MESSAGE_${app.device.id}_${app.id}")
+        val iqApp = IQApp(app.id)
         synchronized (registeredActions) {
             if (!registeredActions.contains(action)) {
-                registerReceiver(action) { intent -> onApplicationInfo(appId, device, intent) }
-            }
-            registeredActions.add(action)
-        }
-        ciqService?.getApplicationInfo(context.packageName, action, device.toIQDevice(), appId)
-    }
-
-    /** Receives application info callbacks from ConnectIQ app.*/
-    private fun onApplicationInfo(appId: String, device: GarminDevice, intent: Intent) {
-        val receivedAppId = intent.getStringExtra(EXTRA_APPLICATION_ID)?.lowercase(Locale.getDefault())
-        val version = intent.getIntExtra(EXTRA_APPLICATION_VERSION, -1)
-        val isInstalled = receivedAppId != null && version >= 0 && version != 65535
-
-        if (isInstalled) registerForMessages(device.id, appId)
-        receiver.onApplicationInfo(device, appId, isInstalled)
-    }
-
-    private fun registerForMessages(deviceId: Long, appId: String) {
-        aapsLogger.info(LTag.GARMIN, "registerForMessage $name $appId")
-        val action = createAction("ON_MESSAGE_${deviceId}_$appId")
-        val app = IQApp().apply { applicationID = appId; displayName = "" }
-        synchronized (registeredActions) {
-            if (!registeredActions.contains(action)) {
-                registerReceiver(action) { intent: Intent -> onReceiveMessage(app, intent) }
-                ciqService?.registerApp(app, action, context.packageName)
+                registerReceiver(action) { intent: Intent -> onReceiveMessage(iqApp, intent) }
+                ciqService?.registerApp(iqApp, action, context.packageName)
                 registeredActions.add(action)
             } else {
                 aapsLogger.info(LTag.GARMIN, "registerForMessage $action already registered")
@@ -184,14 +176,15 @@ class GarminDeviceClient(
         val iqDevice = intent.getParcelableExtra(EXTRA_REMOTE_DEVICE) as IQDevice?
         val data = intent.getByteArrayExtra(EXTRA_PAYLOAD)
         if (iqDevice != null && data != null)
-            receiver.onReceiveMessage(this, iqDevice.deviceIdentifier, iqApp.applicationID, data)
+            receiver.onReceiveMessage(this, iqDevice.deviceIdentifier, iqApp.applicationId, data)
     }
 
     /** Receives callback from ConnectIQ about message transfers. */
     private fun onSendMessage(intent: Intent) {
-        val status = intent.getIntExtra(EXTRA_STATUS, 0)
+        val statusOrd = intent.getIntExtra(EXTRA_STATUS, IQMessageStatus.FAILURE_UNKNOWN.ordinal)
+        val status = IQMessageStatus.values().firstOrNull { s -> s.ordinal == statusOrd } ?: IQMessageStatus.FAILURE_UNKNOWN
         val deviceId = getDevice(intent)
-        val appId = intent.getStringExtra(EXTRA_APPLICATION_ID)?.lowercase()
+        val appId = intent.getStringExtra(EXTRA_APPLICATION_ID)?.uppercase()
         if (deviceId == null || appId == null) {
             aapsLogger.warn(LTag.GARMIN, "onSendMessage device='$deviceId' app='$appId'")
         } else {
@@ -203,21 +196,22 @@ class GarminDeviceClient(
                     return
                 }
 
+                var errorMessage: String? = null
                 when (status) {
-                    IQMessage.FAILURE_DEVICE_NOT_CONNECTED,
-                    IQMessage.FAILURE_DURING_TRANSFER -> {
+                    IQMessageStatus.SUCCESS -> {}
+                    IQMessageStatus.FAILURE_DEVICE_NOT_CONNECTED,
+                    IQMessageStatus.FAILURE_DURING_TRANSFER -> {
                         if (msg.attempt < MAX_RETRIES) {
                             val  delaySec = retryWaitFactor * msg.attempt
                             Schedulers.io().scheduleDirect({ retryMessage(deviceId, appId) }, delaySec, TimeUnit.SECONDS)
                             return
                         }
                     }
-
-                    else -> {}
+                    else -> {
+                        errorMessage = "error $status"
+                    }
                 }
-                queue.remove(msg)
-                val errorMessage = status
-                    .takeUnless { it == IQMessage.SUCCESS }?.let { s -> "error $s" }
+                queue.poll()
                 receiver.onSendMessage(this, msg.app.device.id, msg.app.id, errorMessage)
                 if (queue.isNotEmpty()) {
                     Schedulers.io().scheduleDirect { retryMessage(deviceId, appId) }
@@ -237,8 +231,9 @@ class GarminDeviceClient(
         val app: GarminApplication,
         val data: ByteArray) {
         var attempt: Int = 0
+        val creation = Instant.now()
         var lastAttempt: Instant? = null
-        val iqApp get() = IQApp().apply { applicationID = app.id; displayName = app.name }
+        val iqApp get() = IQApp(app.id, app.name, 0)
         val iqDevice get() = app.device.toIQDevice()
     }
 
@@ -247,7 +242,17 @@ class GarminDeviceClient(
     override fun sendMessage(app: GarminApplication, data: ByteArray) {
         val msg = synchronized (messageQueues) {
             val msg = Message(app, data)
+            val oldMessageCutOff = Instant.now().minusSeconds(30)
             val queue = messageQueues.getOrPut(app.device.id to app.id) { LinkedList() }
+            while (true) {
+                val oldMsg = queue.peek() ?: break
+                if ((oldMsg.lastAttempt ?: oldMsg.creation).isBefore(oldMessageCutOff)) {
+                    aapsLogger.warn(LTag.GARMIN, "remove old msg ${msg.app}")
+                    queue.poll()
+                } else {
+                    break
+                }
+            }
             queue.add(msg)
             // Make sure we have only one outstanding message per app, so we ensure
             // that always the first message in the queue is currently send.
@@ -266,10 +271,7 @@ class GarminDeviceClient(
     private fun sendMessage(msg: Message) {
         msg.attempt++
         msg.lastAttempt = Instant.now()
-        val iqMsg = IQMessage().apply {
-            messageData = msg.data
-            notificationPackage = context.packageName
-            notificationAction = sendMessageAction }
+        val iqMsg = IQMessage(msg.data, context.packageName, sendMessageAction)
         ciqService?.sendMessage(iqMsg, msg.iqDevice, msg.iqApp)
     }
 
@@ -278,7 +280,6 @@ class GarminDeviceClient(
     companion object {
         const val CONNECTIQ_SERVICE_ACTION = "com.garmin.android.apps.connectmobile.CONNECTIQ_SERVICE_ACTION"
         const val EXTRA_APPLICATION_ID = "com.garmin.android.connectiq.EXTRA_APPLICATION_ID"
-        const val EXTRA_APPLICATION_VERSION = "com.garmin.android.connectiq.EXTRA_APPLICATION_VERSION"
         const val EXTRA_REMOTE_DEVICE = "com.garmin.android.connectiq.EXTRA_REMOTE_DEVICE"
         const val EXTRA_PAYLOAD = "com.garmin.android.connectiq.EXTRA_PAYLOAD"
         const val EXTRA_STATUS = "com.garmin.android.connectiq.EXTRA_STATUS"

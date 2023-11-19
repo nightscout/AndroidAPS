@@ -6,8 +6,10 @@ interface GarminClient: Disposable {
     /** Name of the client. */
     val name: String
 
-    /** Asynchronously retrieves status information for the given application. */
-    fun retrieveApplicationInfo(device: GarminDevice, appId: String, appName: String)
+    val connectedDevices: List<GarminDevice>
+
+    /** Register to receive messages from the given up. */
+    fun registerForMessages(app: GarminApplication)
 
     /** Asynchronously sends a message to an application. */
     fun sendMessage(app: GarminApplication, data: ByteArray)

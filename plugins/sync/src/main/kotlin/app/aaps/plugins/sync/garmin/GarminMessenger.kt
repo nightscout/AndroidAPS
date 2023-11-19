@@ -4,7 +4,6 @@ import android.content.Context
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import io.reactivex.rxjava3.disposables.Disposable
-import org.jetbrains.annotations.VisibleForTesting
 
 class GarminMessenger(
     private val aapsLogger: AAPSLogger,
@@ -17,8 +16,6 @@ class GarminMessenger(
     private var disposed: Boolean = false
     /** All devices that where connected since this instance was created. */
     private val devices = mutableMapOf<Long, GarminDevice>()
-    @VisibleForTesting
-    val liveApplications = mutableSetOf<GarminApplication>()
     private val clients = mutableListOf<GarminClient>()
     private val appIdNames = mutableMapOf<String, String>()
     init {
@@ -33,20 +30,14 @@ class GarminMessenger(
 
     private fun getDevice(client: GarminClient, deviceId: Long): GarminDevice {
         synchronized (devices) {
-            return devices.getOrPut(deviceId) { GarminDevice(client, deviceId, "unknown") }
+            return devices.getOrPut(deviceId) {
+                client.connectedDevices.firstOrNull { d -> d.id == deviceId } ?:
+                GarminDevice(client, deviceId, "unknown") }
         }
     }
 
     private fun getApplication(client: GarminClient, deviceId: Long, appId: String): GarminApplication {
-        synchronized (liveApplications) {
-            var app = liveApplications.firstOrNull { app ->
-                app.client == client && app.device.id == deviceId && app.id == appId }
-            if (app == null) {
-                app = GarminApplication(client, getDevice(client, deviceId), appId, appIdNames[appId])
-                liveApplications.add(app)
-            }
-            return app
-        }
+        return GarminApplication(getDevice(client, deviceId), appId, appIdNames[appId])
     }
 
     private fun startDeviceClient() {
@@ -61,42 +52,15 @@ class GarminMessenger(
     override fun onDisconnect(client: GarminClient) {
         aapsLogger.info(LTag.GARMIN, "onDisconnect ${client.name}")
         clients.remove(client)
-        synchronized (liveApplications) {
-            liveApplications.removeIf { app -> app.client == client }
+        synchronized (devices) {
+            val deviceIds = devices.filter { (_, d) -> d.client == client }.map { (id, _) -> id }
+            deviceIds.forEach { id -> devices.remove(id) }
         }
         client.dispose()
-        when (client.name) {
-            "Device" -> startDeviceClient()
-            "Sim"-> GarminSimulatorClient(aapsLogger, this)
+        when (client) {
+            is GarminDeviceClient -> startDeviceClient()
+            is GarminSimulatorClient -> GarminSimulatorClient(aapsLogger, this)
             else -> aapsLogger.warn(LTag.GARMIN, "onDisconnect unknown client $client")
-        }
-    }
-
-    /** Receives notifications that a device has connected.
-     *
-     * It will retrieve status information for all applications we care about (in [appIdNames]). */
-    override fun onConnectDevice(client: GarminClient, deviceId: Long, deviceName: String) {
-        val device = getDevice(client, deviceId).apply { name = deviceName }
-        aapsLogger.info(LTag.GARMIN, "onConnectDevice $device")
-        appIdNames.forEach { (id, name) -> client.retrieveApplicationInfo(device, id, name) }
-    }
-
-    /** Receives notifications about disconnection of a device. */
-    override fun onDisconnectDevice(client: GarminClient, deviceId: Long) {
-        val device = getDevice(client, deviceId)
-        aapsLogger.info(LTag.GARMIN,"onDisconnectDevice $device")
-        synchronized (liveApplications) {
-            liveApplications.removeIf { app -> app.device == device }
-        }
-    }
-
-    /** Receives notification about applications that are installed/uninstalled
-     * on a device from the client. */
-    override fun onApplicationInfo(device: GarminDevice, appId: String, isInstalled: Boolean) {
-        val app = getApplication(device.client, device.id, appId)
-        aapsLogger.info(LTag.GARMIN, "onApplicationInfo add $app ${if (isInstalled) "" else "un"}installed")
-        if (!isInstalled) {
-            synchronized (liveApplications) { liveApplications.remove(app) }
         }
     }
 
@@ -118,14 +82,14 @@ class GarminMessenger(
     }
 
     fun sendMessage(device: GarminDevice, msg: Any) {
-        liveApplications
-            .filter { a -> a.device.id == device.id }
-            .forEach { a -> sendMessage(a, msg) }
+        appIdNames.forEach { (appId, _) ->
+            sendMessage(getApplication(device.client, device.id, appId), msg)
+        }
     }
 
     /** Sends a message to all applications on all devices. */
     fun sendMessage(msg: Any) {
-        liveApplications.forEach { app -> sendMessage(app, msg) }
+        clients.forEach { cl -> cl.connectedDevices.forEach { d -> sendMessage(d, msg) }}
     }
 
     private fun sendMessage(app: GarminApplication, msg: Any) {
@@ -139,7 +103,7 @@ class GarminMessenger(
                 msg.toString()
         }
         val data = GarminSerializer.serialize(msg)
-        aapsLogger.info(LTag.GARMIN, "sendMessage $app $app ${data.size} bytes $s")
+        aapsLogger.info(LTag.GARMIN, "sendMessage $app ${data.size} bytes $s")
         try {
             app.client.sendMessage(app, data)
         } catch (e: IllegalStateException) {

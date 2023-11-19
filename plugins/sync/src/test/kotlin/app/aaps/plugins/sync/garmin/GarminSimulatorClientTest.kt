@@ -1,13 +1,10 @@
 package app.aaps.plugins.sync.garmin
 
 import app.aaps.shared.tests.TestBase
-import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.kotlin.any
-import org.mockito.kotlin.argThat
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.isNull
 import org.mockito.kotlin.mock
@@ -19,34 +16,12 @@ import java.time.Duration
 
 class GarminSimulatorClientTest: TestBase() {
 
-    private var device: GarminDevice? = null
-    private var app: GarminApplication? = null
     private lateinit var client: GarminSimulatorClient
-    private val receiver: GarminReceiver = mock() {
-        on { onConnectDevice(any(), any(), any()) }.doAnswer { i ->
-            device = GarminDevice(client, i.getArgument(1), i.getArgument(2))
-            app = GarminApplication(
-                client, device!!, client.iqApp.applicationID, client.iqApp.displayName)
-        }
-    }
+    private val receiver: GarminReceiver = mock()
 
     @BeforeEach
     fun setup() {
         client = GarminSimulatorClient(aapsLogger, receiver, 0)
-    }
-
-    @Test
-    fun retrieveApplicationInfo() {
-        assertTrue(client.awaitReady(Duration.ofSeconds(10)))
-        val port = client.port
-        val ip = Inet4Address.getByAddress(byteArrayOf(127, 0, 0, 1))
-        Socket(ip, port).use { socket ->
-            assertTrue(socket.isConnected)
-            verify(receiver).onConnect(client)
-            verify(receiver, timeout(1_000)).onConnectDevice(eq(client), any(), any())
-            client.retrieveApplicationInfo(app!!.device, app!!.id, app!!.name!!)
-        }
-        verify(receiver).onApplicationInfo(app!!.device, app!!.id, true)
     }
 
     @Test
@@ -60,11 +35,11 @@ class GarminSimulatorClientTest: TestBase() {
             socket.getOutputStream().write(payload)
             socket.getOutputStream().flush()
             verify(receiver).onConnect(client)
-            verify(receiver, timeout(1_000)).onConnectDevice(eq(client), any(), any())
         }
-        verify(receiver, timeout(1_000)).onReceiveMessage(
-            eq(client), eq(device!!.id), eq("SimApp"),
-            argThat { p -> payload.contentEquals(p) })
+        assertEquals(1, client.connectedDevices.size)
+        val device: GarminDevice = client.connectedDevices.first()
+        verify(receiver, timeout(1_000))
+            .onReceiveMessage(eq(client), eq(device.id), eq("SIMAPP"), eq(payload))
     }
 
     @Test
@@ -73,14 +48,16 @@ class GarminSimulatorClientTest: TestBase() {
         assertTrue(client.awaitReady(Duration.ofSeconds(10)))
         val port = client.port
         val ip = Inet4Address.getByAddress(byteArrayOf(127, 0, 0, 1))
+        val device: GarminDevice
+        val app: GarminApplication
         Socket(ip, port).use { socket ->
             assertTrue(socket.isConnected)
             verify(receiver).onConnect(client)
-            verify(receiver, timeout(1_000)).onConnectDevice(eq(client), any(), any())
-            assertNotNull(device)
-            assertNotNull(app)
-            client.sendMessage(app!!, payload)
+            assertEquals(1, client.connectedDevices.size)
+            device = client.connectedDevices.first()
+            app = GarminApplication(device, "SIMAPP", "T")
+            client.sendMessage(app, payload)
         }
-        verify(receiver).onSendMessage(eq(client), any(), eq(app!!.id), isNull())
+        verify(receiver, timeout(1_000)).onSendMessage(eq(client), eq(device.id), eq(app.id), isNull())
     }
 }

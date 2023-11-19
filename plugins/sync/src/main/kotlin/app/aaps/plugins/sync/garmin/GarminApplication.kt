@@ -1,20 +1,11 @@
 package app.aaps.plugins.sync.garmin
 
 data class GarminApplication(
-    val client: GarminClient,
     val device: GarminDevice,
     val id: String,
     val name: String?) {
 
-    enum class Status {
-        @Suppress("UNUSED")
-        UNKNOWN,
-        INSTALLED,
-        @Suppress("UNUSED")
-        NOT_INSTALLED,
-        @Suppress("UNUSED")
-        NOT_SUPPORTED;
-    }
+    val client get() = device.client
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -35,5 +26,7 @@ data class GarminApplication(
         result = 31 * result + id.hashCode()
         return result
     }
+
+    override fun toString() = "A[$device:$id:$name]"
 }
 
