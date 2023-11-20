@@ -376,7 +376,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         checkPluginPreferences(binding.mainPager)
 
         // Tabs
-        if (sp.getBoolean(app.aaps.plugins.main.R.string.key_short_tabtitles, false)) {
+        if (preferences.get(BooleanKey.OverviewShortTabTitles)) {
             binding.tabsNormal.visibility = View.GONE
             binding.tabsCompact.visibility = View.VISIBLE
             binding.toolbar.layoutParams = LinearLayout.LayoutParams(Toolbar.LayoutParams.MATCH_PARENT, resources.getDimension(app.aaps.core.ui.R.dimen.compact_height).toInt())

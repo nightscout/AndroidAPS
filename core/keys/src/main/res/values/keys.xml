@@ -26,6 +26,23 @@
     <string name="key_hypo_target" translatable="false">hypo_target</string>
     <string name="key_low_mark" translatable="false">low_mark</string>
     <string name="key_high_mark" translatable="false">high_mark</string>
+    <string name="key_short_tab_titles" translatable="false">short_tabtitles</string>
+    <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
+    <string name="key_show_statuslights" translatable="false">show_statuslights</string>
+    <string name="key_statuslights_cage_warning" translatable="false">statuslights_cage_warning</string>
+    <string name="key_statuslights_cage_critical" translatable="false">statuslights_cage_critical</string>
+    <string name="key_statuslights_iage_warning" translatable="false">statuslights_iage_warning</string>
+    <string name="key_statuslights_iage_critical" translatable="false">statuslights_iage_critical</string>
+    <string name="key_statuslights_sage_warning" translatable="false">statuslights_sage_warning</string>
+    <string name="key_statuslights_sage_critical" translatable="false">statuslights_sage_critical</string>
+    <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
+    <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
+    <string name="key_statuslights_sbat_warning" translatable="false">statuslights_sbat_warning</string>
+    <string name="key_statuslights_sbat_critical" translatable="false">statuslights_sbat_critical</string>
+    <string name="key_statuslights_res_warning" translatable="false">statuslights_res_warning</string>
+    <string name="key_statuslights_res_critical" translatable="false">statuslights_res_critical</string>
+    <string name="key_statuslights_bat_warning" translatable="false">statuslights_bat_warning</string>
+    <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
 
     <!--    Actions-->
     <string name="key_fill_button_1" translatable="false">fill_button1</string>

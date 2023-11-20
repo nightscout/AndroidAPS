@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.HandlerThread
 import android.widget.TextView
-import androidx.annotation.StringRes
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.pump.defs.PumpType
 import app.aaps.core.interfaces.configuration.Config
@@ -12,12 +11,12 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.extensions.runOnUiThread
-import app.aaps.plugins.main.R
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -25,7 +24,7 @@ import javax.inject.Singleton
 @Singleton
 class StatusLightHandler @Inject constructor(
     private val rh: ResourceHelper,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val dateUtil: DateUtil,
     private val activePlugin: ActivePlugin,
     private val warnColors: WarnColors,
@@ -52,60 +51,29 @@ class StatusLightHandler @Inject constructor(
     ) {
         val pump = activePlugin.activePump
         val bgSource = activePlugin.activeBgSource
-        handleAge(
-            cannulaAge,
-            TE.Type.CANNULA_CHANGE,
-            app.aaps.core.utils.R.string.key_statuslights_cage_warning,
-            48.0,
-            app.aaps.core.utils.R.string.key_statuslights_cage_critical,
-            72.0
-        )
-        handleAge(
-            insulinAge,
-            TE.Type.INSULIN_CHANGE,
-            app.aaps.core.utils.R.string.key_statuslights_iage_warning,
-            72.0,
-            app.aaps.core.utils.R.string.key_statuslights_iage_critical,
-            144.0
-        )
-        handleAge(
-            sensorAge,
-            TE.Type.SENSOR_CHANGE,
-            app.aaps.core.utils.R.string.key_statuslights_sage_warning,
-            216.0,
-            app.aaps.core.utils.R.string.key_statuslights_sage_critical,
-            240.0
-        )
+        handleAge(cannulaAge, TE.Type.CANNULA_CHANGE, IntKey.OverviewCageWarning, IntKey.OverviewCageCritical)
+        handleAge(insulinAge, TE.Type.INSULIN_CHANGE, IntKey.OverviewIageWarning, IntKey.OverviewIageCritical)
+        handleAge(sensorAge, TE.Type.SENSOR_CHANGE, IntKey.OverviewCageWarning, IntKey.OverviewCageCritical)
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
-            handleAge(
-                batteryAge,
-                TE.Type.PUMP_BATTERY_CHANGE,
-                app.aaps.core.utils.R.string.key_statuslights_bage_warning,
-                216.0,
-                app.aaps.core.utils.R.string.key_statuslights_bage_critical,
-                240.0
-            )
+            handleAge(batteryAge, TE.Type.PUMP_BATTERY_CHANGE, IntKey.OverviewBageWarning, IntKey.OverviewBageCritical)
         }
 
         val insulinUnit = rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname)
         if (pump.pumpDescription.isPatchPump) {
             handlePatchReservoirLevel(
                 reservoirLevel,
-                R.string.key_statuslights_res_critical,
-                10.0,
-                R.string.key_statuslights_res_warning,
-                80.0,
+                IntKey.OverviewResCritical, IntKey.OverviewResWarning,
                 pump.reservoirLevel,
                 insulinUnit,
                 pump.pumpDescription.maxResorvoirReading.toDouble()
             )
         } else {
             if (cannulaUsage != null) handleUsage(cannulaUsage, insulinUnit)
-            handleLevel(reservoirLevel, R.string.key_statuslights_res_critical, 10.0, R.string.key_statuslights_res_warning, 80.0, pump.reservoirLevel, insulinUnit)
+            handleLevel(reservoirLevel, IntKey.OverviewResCritical, IntKey.OverviewResWarning, pump.reservoirLevel, insulinUnit)
         }
         if (!config.NSCLIENT) {
             if (bgSource.sensorBatteryLevel != -1)
-                handleLevel(sensorBatteryLevel, R.string.key_statuslights_sbat_critical, 5.0, R.string.key_statuslights_sbat_warning, 20.0, bgSource.sensorBatteryLevel.toDouble(), "%")
+                handleLevel(sensorBatteryLevel, IntKey.OverviewSbatCritical, IntKey.OverviewSbatWarning, bgSource.sensorBatteryLevel.toDouble(), "%")
             else
                 sensorBatteryLevel?.text = ""
         }
@@ -117,7 +85,7 @@ class StatusLightHandler @Inject constructor(
             val erosBatteryLinkAvailable = pump.model() == PumpType.OMNIPOD_EROS && pump.isUseRileyLinkBatteryLevel()
 
             if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
-                handleLevel(batteryLevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
+                handleLevel(batteryLevel, IntKey.OverviewBattCritical, IntKey.OverviewSbatWarning, pump.batteryLevel.toDouble(), "%")
             } else {
                 batteryLevel?.text = rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
                 batteryLevel?.setTextColor(rh.gac(batteryLevel.context, app.aaps.core.ui.R.attr.defaultTextColor))
@@ -125,9 +93,9 @@ class StatusLightHandler @Inject constructor(
         }
     }
 
-    private fun handleAge(view: TextView?, type: TE.Type, @StringRes warnSettings: Int, defaultWarnThreshold: Double, @StringRes urgentSettings: Int, defaultUrgentThreshold: Double) {
-        val warn = sp.getDouble(warnSettings, defaultWarnThreshold)
-        val urgent = sp.getDouble(urgentSettings, defaultUrgentThreshold)
+    private fun handleAge(view: TextView?, type: TE.Type, warnSettings: IntKey, urgentSettings: IntKey) {
+        val warn = preferences.get(warnSettings)
+        val urgent = preferences.get(urgentSettings)
         val therapyEvent = persistenceLayer.getLastTherapyRecordUpToNow(type)
         if (therapyEvent != null) {
             warnColors.setColorByAge(view, therapyEvent, warn, urgent)
@@ -138,9 +106,9 @@ class StatusLightHandler @Inject constructor(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun handleLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
-        val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
-        val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
+    private fun handleLevel(view: TextView?, criticalSetting: IntKey, warnSetting: IntKey, level: Double, units: String) {
+        val resUrgent = preferences.get(criticalSetting)
+        val resWarn = preferences.get(warnSetting)
         if (level > 0) view?.text = " " + decimalFormatter.to0Decimal(level, units)
         else view?.text = ""
         warnColors.setColorInverse(view, level, resWarn, resUrgent)
@@ -149,14 +117,13 @@ class StatusLightHandler @Inject constructor(
     // Omnipod only reports reservoir level when it's 50 units or less, so we display "50+U" for any value > 50
     @Suppress("SameParameterValue")
     private fun handlePatchReservoirLevel(
-        view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int,
-        warnDefaultValue: Double, level: Double, units: String, maxReading: Double
+        view: TextView?, criticalSetting: IntKey, warnSetting: IntKey, level: Double, units: String, maxReading: Double
     ) {
         if (level >= maxReading) {
             view?.text = decimalFormatter.to0Decimal(maxReading, units)
             view?.setTextColor(rh.gac(view.context, app.aaps.core.ui.R.attr.defaultTextColor))
         } else {
-            handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
+            handleLevel(view, criticalSetting, warnSetting, level, units)
         }
     }
 

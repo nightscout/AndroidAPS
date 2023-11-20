@@ -250,7 +250,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             //recreate() does not update language so better close settings
             activity?.finish()
         }
-        if (key == rh.gs(app.aaps.plugins.main.R.string.key_short_tabtitles)) {
+        if (key == rh.gs(BooleanKey.OverviewShortTabTitles.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key)) {
             rxBus.send(EventRebuildTabs())
         }
         if (key == rh.gs(app.aaps.core.utils.R.string.key_units) || key == rh.gs(BooleanKey.GeneralSimpleMode.key)) {

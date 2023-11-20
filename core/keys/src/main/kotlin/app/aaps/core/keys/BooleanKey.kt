@@ -19,4 +19,7 @@ enum class BooleanKey(
     OverviewShowCarbsButton(R.string.key_show_carbs_button, true, defaultedBySM = true),
     OverviewShowCgmButton(R.string.key_show_cgm_button, false, defaultedBySM = true, showInNsClientMode = false),
     OverviewShowCalibrationButton(R.string.key_show_calibration_button, false, defaultedBySM = true, showInNsClientMode = false),
+    OverviewShortTabTitles(R.string.key_short_tab_titles, false, defaultedBySM = true),
+    OverviewShowNotesInDialogs(R.string.key_show_notes_entry_dialogs, false, defaultedBySM = true),
+    OverviewShowStatusLights(R.string.key_show_statuslights, true, defaultedBySM = true, hideParentScreenIfHidden = true),
 }

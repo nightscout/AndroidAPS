@@ -17,7 +17,6 @@
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
-    <string name="key_show_notes_entry_dialogs" translatable="false">show_notes_entry_dialogs</string>
     <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
@@ -110,14 +109,6 @@
     <string name="key_wear_cwf_filename" translatable="false">wear_cwf_filename</string>
     <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
     <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
-    <string name="key_statuslights_cage_warning" translatable="false">statuslights_cage_warning</string>
-    <string name="key_statuslights_cage_critical" translatable="false">statuslights_cage_critical</string>
-    <string name="key_statuslights_iage_warning" translatable="false">statuslights_iage_warning</string>
-    <string name="key_statuslights_iage_critical" translatable="false">statuslights_iage_critical</string>
-    <string name="key_statuslights_sage_warning" translatable="false">statuslights_sage_warning</string>
-    <string name="key_statuslights_sage_critical" translatable="false">statuslights_sage_critical</string>
-    <string name="key_statuslights_bage_warning" translatable="false">statuslights_bage_warning</string>
-    <string name="key_statuslights_bage_critical" translatable="false">statuslights_bage_critical</string>
     <string name="key_ns_announcements" translatable="false">ns_announcements</string>
     <string name="key_ns_alarms" translatable="false">ns_alarms</string>
     <string name="key_ns_alarm_stale_data_value" translatable="false">ns_alarm_stale_data_value</string>

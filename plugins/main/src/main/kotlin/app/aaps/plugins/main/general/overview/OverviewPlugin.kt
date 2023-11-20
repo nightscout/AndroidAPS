@@ -27,12 +27,10 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.putDouble
 import app.aaps.core.objects.extensions.putInt
 import app.aaps.core.objects.extensions.putString
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.storeBoolean
-import app.aaps.core.objects.extensions.storeDouble
 import app.aaps.core.objects.extensions.storeInt
 import app.aaps.core.objects.extensions.storeString
 import app.aaps.core.ui.dialogs.OKDialog
@@ -170,20 +168,20 @@ class OverviewPlugin @Inject constructor(
             .put(UnitDoubleKey.OverviewHypoTarget, preferences, rh)
             .put(UnitDoubleKey.OverviewLowMark, preferences, rh)
             .put(UnitDoubleKey.OverviewHighMark, preferences, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_statuslights_cage_warning, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_statuslights_cage_critical, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_statuslights_iage_warning, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_statuslights_iage_critical, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_statuslights_sage_warning, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_statuslights_sage_critical, sp, rh)
-            .putDouble(R.string.key_statuslights_sbat_warning, sp, rh)
-            .putDouble(R.string.key_statuslights_sbat_critical, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_statuslights_bage_warning, sp, rh)
-            .putDouble(app.aaps.core.utils.R.string.key_statuslights_bage_critical, sp, rh)
-            .putDouble(R.string.key_statuslights_res_warning, sp, rh)
-            .putDouble(R.string.key_statuslights_res_critical, sp, rh)
-            .putDouble(R.string.key_statuslights_bat_warning, sp, rh)
-            .putDouble(R.string.key_statuslights_bat_critical, sp, rh)
+            .put(IntKey.OverviewCageWarning, preferences, rh)
+            .put(IntKey.OverviewCageCritical, preferences, rh)
+            .put(IntKey.OverviewIageWarning, preferences, rh)
+            .put(IntKey.OverviewIageCritical, preferences, rh)
+            .put(IntKey.OverviewSageWarning, preferences, rh)
+            .put(IntKey.OverviewSageCritical, preferences, rh)
+            .put(IntKey.OverviewSbatWarning, preferences, rh)
+            .put(IntKey.OverviewSbatCritical, preferences, rh)
+            .put(IntKey.OverviewBageWarning, preferences, rh)
+            .put(IntKey.OverviewBageCritical, preferences, rh)
+            .put(IntKey.OverviewResWarning, preferences, rh)
+            .put(IntKey.OverviewResCritical, preferences, rh)
+            .put(IntKey.OverviewBattWarning, preferences, rh)
+            .put(IntKey.OverviewBattCritical, preferences, rh)
             .putInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, sp, rh)
             .put(rh.gs(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone), constraintsChecker.isAutosensModeEnabled().value()) // can be disabled by activated DynISF
 
@@ -200,20 +198,20 @@ class OverviewPlugin @Inject constructor(
             .store(UnitDoubleKey.OverviewHypoTarget, preferences, rh)
             .store(UnitDoubleKey.OverviewLowMark, preferences, rh)
             .store(UnitDoubleKey.OverviewHighMark, preferences, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_statuslights_cage_warning, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_statuslights_cage_critical, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_statuslights_iage_warning, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_statuslights_iage_critical, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_statuslights_sage_warning, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_statuslights_sage_critical, sp, rh)
-            .storeDouble(R.string.key_statuslights_sbat_warning, sp, rh)
-            .storeDouble(R.string.key_statuslights_sbat_critical, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_statuslights_bage_warning, sp, rh)
-            .storeDouble(app.aaps.core.utils.R.string.key_statuslights_bage_critical, sp, rh)
-            .storeDouble(R.string.key_statuslights_res_warning, sp, rh)
-            .storeDouble(R.string.key_statuslights_res_critical, sp, rh)
-            .storeDouble(R.string.key_statuslights_bat_warning, sp, rh)
-            .storeDouble(R.string.key_statuslights_bat_critical, sp, rh)
+            .store(IntKey.OverviewCageWarning, preferences, rh)
+            .store(IntKey.OverviewCageCritical, preferences, rh)
+            .store(IntKey.OverviewIageWarning, preferences, rh)
+            .store(IntKey.OverviewIageCritical, preferences, rh)
+            .store(IntKey.OverviewSageWarning, preferences, rh)
+            .store(IntKey.OverviewSageCritical, preferences, rh)
+            .store(IntKey.OverviewSbatWarning, preferences, rh)
+            .store(IntKey.OverviewSbatCritical, preferences, rh)
+            .store(IntKey.OverviewBageWarning, preferences, rh)
+            .store(IntKey.OverviewBageCritical, preferences, rh)
+            .store(IntKey.OverviewResWarning, preferences, rh)
+            .store(IntKey.OverviewResCritical, preferences, rh)
+            .store(IntKey.OverviewBattWarning, preferences, rh)
+            .store(IntKey.OverviewBattCritical, preferences, rh)
             .storeInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, sp, rh)
             .storeBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, sp, rh)
 

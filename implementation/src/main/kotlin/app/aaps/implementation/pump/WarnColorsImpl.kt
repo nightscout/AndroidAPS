@@ -25,7 +25,7 @@ class WarnColorsImpl @Inject constructor(
         )
     }
 
-    override fun setColorInverse(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double) {
+    override fun setColorInverse(view: TextView?, value: Double, warnLevel: Int, urgentLevel: Int) {
         view?.setTextColor(
             rh.gac(
                 view.context, when {
@@ -37,7 +37,7 @@ class WarnColorsImpl @Inject constructor(
         )
     }
 
-    override fun setColorByAge(view: TextView?, therapyEvent: TE, warnThreshold: Double, urgentThreshold: Double) {
+    override fun setColorByAge(view: TextView?, therapyEvent: TE, warnThreshold: Int, urgentThreshold: Int) {
         view?.setTextColor(
             rh.gac(
                 view.context, when {

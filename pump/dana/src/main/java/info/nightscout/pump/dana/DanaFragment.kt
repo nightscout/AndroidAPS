@@ -231,9 +231,9 @@ class DanaFragment : DaggerFragment() {
         binding.tempbasal.text = danaPump.temporaryBasalToString()
         binding.extendedbolus.text = danaPump.extendedBolusToString()
         binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, pump.reservoirRemainingUnits, 300)
-        warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
+        warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50, 20)
         binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
-        warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)
+        warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51, 26)
         binding.firmware.text = rh.gs(R.string.dana_model, pump.modelFriendlyName(), pump.hwModel, pump.protocol, pump.productCode)
         binding.basalBolusStep.text = pump.basalStep.toString() + "/" + pump.bolusStep.toString()
         binding.serialNumber.text = pump.serialNumber
