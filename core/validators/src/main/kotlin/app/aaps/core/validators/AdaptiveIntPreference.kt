@@ -6,24 +6,23 @@ import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.keys.UnitDoubleKey
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveUnitPreference(ctx: Context, attrs: AttributeSet?) : EditTextPreference(ctx, attrs) {
+class AdaptiveIntPreference(ctx: Context, attrs: AttributeSet?) : EditTextPreference(ctx, attrs) {
 
     private val validatorParameters: DefaultEditTextValidator.Parameters
     private var validator: DefaultEditTextValidator? = null
-    private val preferenceKey: UnitDoubleKey
+    private val preferenceKey: IntKey
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        preferenceKey = preferences.get(key) as UnitDoubleKey
+        preferenceKey = preferences.get(key) as IntKey
         if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
@@ -37,7 +36,12 @@ class AdaptiveUnitPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefe
         validatorParameters = obtainValidatorParameters(attrs)
         setOnBindEditTextListener { editText ->
             validator = DefaultEditTextValidator(editText, validatorParameters, context)
-            editText.inputType = InputType.TYPE_NUMBER_FLAG_DECIMAL
+            if (preferenceKey.min < 0)
+                editText.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_FLAG_SIGNED
+            else
+                editText.inputType = InputType.TYPE_CLASS_NUMBER
+            editText.setSelectAllOnFocus(true)
+            editText.setSingleLine()
         }
         setOnPreferenceChangeListener { _, _ -> validator?.testValidity(false) ?: true }
         setDefaultValue(preferenceKey.defaultValue)
@@ -54,27 +58,35 @@ class AdaptiveUnitPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefe
         holder.isDividerAllowedBelow = false
     }
 
+    fun setMinNumber(min: Int) {
+        this.validatorParameters.minNumber = min
+    }
+
+    fun setMaxNumber(max: Int) {
+        this.validatorParameters.maxNumber = max
+    }
+
     private fun obtainValidatorParameters(attrs: AttributeSet?): DefaultEditTextValidator.Parameters {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FormEditText, 0, 0)
         return DefaultEditTextValidator.Parameters(
             emptyAllowed = typedArray.getBoolean(R.styleable.FormEditText_emptyAllowed, false),
-            testType = EditTextValidator.TEST_BG_RANGE,
+            testType = EditTextValidator.TEST_NUMERIC_RANGE,
             testErrorString = typedArray.getString(R.styleable.FormEditText_testErrorString),
             classType = typedArray.getString(R.styleable.FormEditText_classType),
             customRegexp = typedArray.getString(R.styleable.FormEditText_customRegexp),
             emptyErrorStringDef = typedArray.getString(R.styleable.FormEditText_emptyErrorString),
             customFormat = typedArray.getString(R.styleable.FormEditText_customFormat)
         ).also { params ->
-            params.minMgdl = preferenceKey.minMgdl
-            params.maxMgdl = preferenceKey.maxMgdl
+            params.minNumber = preferenceKey.min
+            params.maxNumber = preferenceKey.max
             typedArray.recycle()
         }
     }
 
     override fun onSetInitialValue(defaultValue: Any?) {
-        text = profileUtil.fromMgdlToUnits(SafeParse.stringToDouble(getPersistedString(defaultValue as String?)), profileUtil.units).toString()
+        text = getPersistedString(defaultValue as String?)
     }
 
     override fun persistString(value: String?): Boolean =
-        super.persistString(profileUtil.convertToMgdl(SafeParse.stringToDouble(value, preferenceKey.defaultValue), profileUtil.units).toString())
+        super.persistString(value)
 }

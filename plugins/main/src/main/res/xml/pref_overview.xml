@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:validate="http://schemas.android.com/apk/res-auto"
-    xmlns:visibility="http://schemas.android.com/apk/res-auto">
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
         android:key="@string/key_overview_settings"
@@ -30,99 +29,45 @@
                 android:key="@string/key_show_insulin_button"
                 android:title="@string/configbuilder_insulin" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="0.5"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
-                android:inputType="numberDecimal|numberDecimal|numberSigned"
                 android:key="@string/key_insulin_button_increment_1"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/firstinsulinincrement"
-                validate:floatmaxNumber="5.0"
-                validate:floatminNumber="-5.0"
-                validate:testType="floatNumericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/firstinsulinincrement" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="1.0"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
-                android:inputType="numberDecimal|numberSigned"
                 android:key="@string/key_insulin_button_increment_2"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/secondinsulinincrement"
-                validate:floatmaxNumber="5.0"
-                validate:floatminNumber="-5.0"
-                validate:testType="floatNumericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/secondinsulinincrement" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="2.0"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:dependency="@string/key_show_insulin_button"
                 android:dialogMessage="@string/insulin_increment_button_message"
-                android:inputType="numberDecimal|numberSigned"
                 android:key="@string/key_insulin_button_increment_3"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/thirdinsulinincrement"
-                validate:floatmaxNumber="5.0"
-                validate:floatminNumber="-5.0"
-                validate:testType="floatNumericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/thirdinsulinincrement" />
 
             <app.aaps.core.keys.AdaptiveSwitchPreference
                 android:key="@string/key_show_carbs_button"
                 android:title="@string/carbs" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="5"
+            <app.aaps.core.validators.AdaptiveIntPreference
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
-                android:inputType="numberSigned"
                 android:key="@string/key_carbs_button_increment_1"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/firstcarbsincrement"
-                validate:maxNumber="50"
-                validate:minNumber="-50"
-                validate:testType="numericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/firstcarbsincrement" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="10"
+            <app.aaps.core.validators.AdaptiveIntPreference
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
-                android:inputType="numberSigned"
                 android:key="@string/key_carbs_button_increment_2"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/secondcarbsincrement"
-                validate:maxNumber="50"
-                validate:minNumber="-50"
-                validate:testType="numericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/secondcarbsincrement" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="20"
+            <app.aaps.core.validators.AdaptiveIntPreference
                 android:dependency="@string/key_show_carbs_button"
                 android:dialogMessage="@string/carb_increment_button_message"
-                android:inputType="numberSigned"
                 android:key="@string/key_carbs_button_increment_3"
-                android:maxLines="20"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/thirdcarbsincrement"
-                validate:maxNumber="50"
-                validate:minNumber="-50"
-                validate:testType="numericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/thirdcarbsincrement" />
 
             <app.aaps.core.keys.AdaptiveSwitchPreference
                 android:key="@string/key_show_cgm_button"
@@ -146,50 +91,27 @@
             android:key="@string/default_temptargets"
             android:title="@string/default_temptargets">
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="45"
-                android:inputType="number"
+            <app.aaps.core.validators.AdaptiveIntPreference
                 android:key="@string/key_eating_soon_duration"
-                android:title="@string/eatingsoon_duration"
-                validate:maxNumber="120"
-                validate:minNumber="15"
-                validate:testType="numericRange"
-                visibility:hideParentScreenIfHidden="true"
-                visibility:simpleMode="false" />
+                android:title="@string/eatingsoon_duration" />
 
             <app.aaps.core.validators.AdaptiveUnitPreference
-                android:inputType="numberDecimal"
                 android:key="@string/key_eating_soon_target"
                 android:title="@string/eatingsoon_target" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="90"
-                android:inputType="number"
+            <app.aaps.core.validators.AdaptiveIntPreference
                 android:key="@string/key_activity_duration"
-                android:title="@string/activity_duration"
-                validate:maxNumber="600"
-                validate:minNumber="15"
-                validate:testType="numericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/activity_duration" />
 
             <app.aaps.core.validators.AdaptiveUnitPreference
-                android:inputType="numberDecimal"
                 android:key="@string/key_activity_target"
-                android:title="@string/activity_target"
-                validate:floatmaxNumber="180.0" />
+                android:title="@string/activity_target" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="60"
-                android:inputType="number"
+            <app.aaps.core.validators.AdaptiveIntPreference
                 android:key="@string/key_hypo_duration"
-                android:title="@string/hypo_duration"
-                validate:maxNumber="180"
-                validate:minNumber="15"
-                validate:testType="numericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/hypo_duration" />
 
             <app.aaps.core.validators.AdaptiveUnitPreference
-                android:inputType="numberDecimal"
                 android:key="@string/key_hypo_target"
                 android:title="@string/hypo_target" />
 
@@ -199,36 +121,17 @@
             android:key="@string/fill_bolus_title"
             android:title="@string/fill_bolus_title">
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="0.3"
-                android:inputType="numberDecimal"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:key="@string/key_fill_button_1"
-                android:title="@string/button1"
-                validate:floatmaxNumber="20.0"
-                validate:floatminNumber="0.05"
-                validate:testType="floatNumericRange"
-                visibility:hideParentScreenIfHidden="true"
-                visibility:simpleMode="false" />
+                android:title="@string/button1" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="0"
-                android:inputType="numberDecimal"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:key="@string/key_fill_button_2"
-                android:title="@string/button2"
-                validate:floatmaxNumber="20.0"
-                validate:floatminNumber="0.05"
-                validate:testType="floatNumericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/button2" />
 
-            <app.aaps.core.validators.ValidatingEditTextPreference
-                android:defaultValue="0"
-                android:inputType="numberDecimal"
+            <app.aaps.core.validators.AdaptiveDoublePreference
                 android:key="@string/key_fill_button_3"
-                android:title="@string/button3"
-                validate:floatmaxNumber="20.0"
-                validate:floatminNumber="0.05"
-                validate:testType="floatNumericRange"
-                visibility:simpleMode="false" />
+                android:title="@string/button3" />
 
         </androidx.preference.PreferenceScreen>
 
@@ -238,12 +141,10 @@
             android:title="@string/prefs_range_title">
 
             <app.aaps.core.validators.AdaptiveUnitPreference
-                android:inputType="numberDecimal"
                 android:key="@string/key_low_mark"
                 android:title="@string/low_mark" />
 
             <app.aaps.core.validators.AdaptiveUnitPreference
-                android:inputType="numberDecimal"
                 android:key="@string/key_high_mark"
                 android:title="@string/high_mark" />
 

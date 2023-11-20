@@ -1,5 +1,7 @@
 package app.aaps.core.validators.di
 
+import app.aaps.core.validators.AdaptiveDoublePreference
+import app.aaps.core.validators.AdaptiveIntPreference
 import app.aaps.core.validators.AdaptiveUnitPreference
 import app.aaps.core.validators.DefaultEditTextValidator
 import app.aaps.core.validators.EditTextValidator
@@ -15,4 +17,6 @@ abstract class ValidatorsModule {
     @ContributesAndroidInjector abstract fun editTextValidatorInjector(): EditTextValidator
     @ContributesAndroidInjector abstract fun validatingEditTextPreferenceInjector(): ValidatingEditTextPreference
     @ContributesAndroidInjector abstract fun adaptiveUnitPreferenceInjector(): AdaptiveUnitPreference
+    @ContributesAndroidInjector abstract fun adaptiveIntPreferenceInjector(): AdaptiveIntPreference
+    @ContributesAndroidInjector abstract fun adaptiveDoublePreferenceInjector(): AdaptiveDoublePreference
 }
