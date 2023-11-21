@@ -30,6 +30,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
@@ -127,7 +128,7 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (sp.getBoolean(app.aaps.core.utils.R.string.key_usebolusreminder, false)) {
+        if (preferences.get(BooleanKey.OverviewUseBolusReminder)) {
             glucoseStatusProvider.glucoseStatusData?.let { glucoseStatus ->
                 if (glucoseStatus.glucose + 3 * glucoseStatus.delta < 70.0)
                     binding.bolusReminder.visibility = View.VISIBLE
@@ -334,7 +335,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 automation.removeAutomationEventEatReminder()
                                 if (!result.success) {
                                     uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.treatmentdeliveryerror), app.aaps.core.ui.R.raw.boluserror)
-                                } else if (sp.getBoolean(app.aaps.core.utils.R.string.key_usebolusreminder, false) && remindBolus)
+                                } else if (preferences.get(BooleanKey.OverviewUseBolusReminder) && remindBolus)
                                     automation.scheduleAutomationEventBolusReminder()
                             }
                         })

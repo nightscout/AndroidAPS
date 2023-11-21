@@ -43,6 +43,11 @@
     <string name="key_statuslights_res_critical" translatable="false">statuslights_res_critical</string>
     <string name="key_statuslights_bat_warning" translatable="false">statuslights_bat_warning</string>
     <string name="key_statuslights_bat_critical" translatable="false">statuslights_bat_critical</string>
+    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="key_reset_boluswizard_percentage_time" translatable="false">key_reset_boluswizard_percentage_time</string>
+    <string name="key_use_bolus_advisor" translatable="false">use_bolus_advisor</string>
+    <string name="key_use_bolus_reminder" translatable="false">use_bolus_reminder</string>
+    <string name="key_use_superbolus" translatable="false">key_usersuperbolus</string>
 
     <!--    Actions-->
     <string name="key_fill_button_1" translatable="false">fill_button1</string>

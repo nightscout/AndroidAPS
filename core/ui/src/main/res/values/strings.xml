@@ -483,7 +483,6 @@
     <string name="info">INFO</string>
 
     <!-- BolusWizard -->
-    <string name="key_usebolusadvisor" translatable="false">use_bolus_advisor</string>
     <string name="bolus_advisor">Bolus advisor</string>
     <string name="bolus_advisor_message">You have high glycemia. Instead of eating now it\'s recommended to wait for better glycemia. Do you want to do a correction bolus now and remind you when it\'s time to eat? In this case no carbs will be recorded and you must use wizard again when we remind you.</string>
 

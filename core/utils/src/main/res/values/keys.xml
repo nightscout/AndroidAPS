@@ -62,7 +62,6 @@
     <string name="key_autotune_plugin" translatable="false">key_autotune_plugin</string>
     <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
     <string name="key_xdrip_local_broadcasts" translatable="false">xdrip_local_broadcasts</string>
-    <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
     <string name="key_enable_pump_unreachable_alert" translatable="false">enable_pump_unreachable_alert</string>
     <string name="key_enable_missed_bg_readings_alert" translatable="false">enable_missed_bg_readings</string>
     <string name="key_enable_carbs_required_alert_local" translatable="false">enable_carbs_required_alert_local</string>
@@ -84,9 +83,6 @@
     <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
     <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
-    <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
-    <string name="key_reset_boluswizard_percentage_time" translatable="false">key_reset_boluswizard_percentage_time</string>
-    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="key_patient_name" translatable="false">patient_name</string>
     <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>

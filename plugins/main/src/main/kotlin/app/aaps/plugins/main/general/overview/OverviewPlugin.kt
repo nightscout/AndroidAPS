@@ -2,7 +2,6 @@ package app.aaps.plugins.main.general.overview
 
 import android.content.Context
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceFragmentCompat
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
@@ -27,14 +26,11 @@ import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.extensions.put
-import app.aaps.core.objects.extensions.putInt
 import app.aaps.core.objects.extensions.putString
 import app.aaps.core.objects.extensions.store
 import app.aaps.core.objects.extensions.storeBoolean
-import app.aaps.core.objects.extensions.storeInt
 import app.aaps.core.objects.extensions.storeString
 import app.aaps.core.ui.dialogs.OKDialog
-import app.aaps.core.validators.ValidatingEditTextPreference
 import app.aaps.plugins.main.R
 import app.aaps.plugins.main.general.overview.notifications.NotificationStore
 import app.aaps.plugins.main.general.overview.notifications.NotificationWithAction
@@ -147,15 +143,6 @@ class OverviewPlugin @Inject constructor(
         super.onStop()
     }
 
-    override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
-        super.preprocessPreferences(preferenceFragment)
-        if (!config.isEngineeringMode())
-            (preferenceFragment.findPreference(rh.gs(app.aaps.core.utils.R.string.key_reset_boluswizard_percentage_time)) as ValidatingEditTextPreference?)?.let {
-                it.isVisible = false
-                it.isEnabled = false
-            }
-    }
-
     override fun configuration(): JSONObject =
         JSONObject()
             .putString(app.aaps.core.utils.R.string.key_units, sp, rh)
@@ -182,7 +169,7 @@ class OverviewPlugin @Inject constructor(
             .put(IntKey.OverviewResCritical, preferences, rh)
             .put(IntKey.OverviewBattWarning, preferences, rh)
             .put(IntKey.OverviewBattCritical, preferences, rh)
-            .putInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, sp, rh)
+            .put(IntKey.OverviewBolusPercentage, preferences, rh)
             .put(rh.gs(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone), constraintsChecker.isAutosensModeEnabled().value()) // can be disabled by activated DynISF
 
     override fun applyConfiguration(configuration: JSONObject) {
@@ -212,7 +199,7 @@ class OverviewPlugin @Inject constructor(
             .store(IntKey.OverviewResCritical, preferences, rh)
             .store(IntKey.OverviewBattWarning, preferences, rh)
             .store(IntKey.OverviewBattCritical, preferences, rh)
-            .storeInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, sp, rh)
+            .store(IntKey.OverviewBolusPercentage, preferences, rh)
             .storeBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, sp, rh)
 
         val newUnits = sp.getString(app.aaps.core.utils.R.string.key_units, "new")

@@ -5,6 +5,7 @@ import android.text.InputType
 import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
+import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
@@ -19,6 +20,7 @@ class AdaptiveIntPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefer
 
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var preferences: Preferences
+    @Inject lateinit var config: Config
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -31,6 +33,9 @@ class AdaptiveIntPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefer
             isVisible = false; isEnabled = false
         }
         if (preferences.pumpControlMode && !preferenceKey.showInPumpControlMode) {
+            isVisible = false; isEnabled = false
+        }
+        if (!config.isEngineeringMode() && preferenceKey.engineeringModeOnly) {
             isVisible = false; isEnabled = false
         }
         validatorParameters = obtainValidatorParameters(attrs)

@@ -19,7 +19,7 @@ class PreferencesImpl @Inject constructor(
     private val sp: SP,
     private val rh: ResourceHelper,
     private val profileUtil: ProfileUtil,
-    config: Config
+    private val config: Config
 ) : Preferences {
 
     override val simpleMode: Boolean get() = sp.getBoolean(BooleanKey.GeneralSimpleMode.key, BooleanKey.GeneralSimpleMode.defaultValue)
@@ -73,6 +73,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun get(key: IntKey): Int =
         if (simpleMode && key.defaultedBySM) key.defaultValue
+        else if (key.engineeringModeOnly && !config.isEngineeringMode()) key.defaultValue
         else sp.getInt(key.key, key.defaultValue)
 
     override fun getIfExists(key: IntKey): Int? =

@@ -11,6 +11,9 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.round
 import app.aaps.core.objects.extensions.valueToUnits
 import app.aaps.core.utils.JsonHelper.safeGetInt
@@ -26,6 +29,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loop: Loop
     @Inject lateinit var iobCobCalculator: IobCobCalculator
@@ -135,7 +139,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         }
         // SuperBolus
         var superBolus = false
-        if (useSuperBolus() == YES && sp.getBoolean(app.aaps.core.utils.R.string.key_usesuperbolus, false)) {
+        if (useSuperBolus() == YES && preferences.get(BooleanKey.OverviewUseSuperBolus)) {
             superBolus = true
         }
         if (loop.isEnabled() && loop.isSuperBolus) superBolus = false
@@ -149,7 +153,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         } else if (useTrend() == NEGATIVE_ONLY && glucoseStatus != null && glucoseStatus.shortAvgDelta < 0) {
             trend = true
         }
-        val percentage = if (usePercentage() == DEFAULT) sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100) else percentage()
+        val percentage = if (usePercentage() == DEFAULT) preferences.get(IntKey.OverviewBolusPercentage) else percentage()
         return BolusWizard(injector).doCalc(
             profile,
             profileName,

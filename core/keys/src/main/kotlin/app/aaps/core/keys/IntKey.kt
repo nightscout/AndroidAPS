@@ -9,7 +9,8 @@ enum class IntKey(
     val showInApsMode: Boolean = true,
     val showInNsClientMode: Boolean = true,
     val showInPumpControlMode: Boolean = true,
-    val hideParentScreenIfHidden: Boolean = false // PreferenceScreen is final so we cannot extend and modify behavior
+    val hideParentScreenIfHidden: Boolean = false, // PreferenceScreen is final so we cannot extend and modify behavior
+    val engineeringModeOnly: Boolean = false
 ) : PreferenceKey {
 
     OverviewCarbsButtonIncrement1(R.string.key_carbs_button_increment_1, 5, -50, 50, defaultedBySM = true),
@@ -32,4 +33,6 @@ enum class IntKey(
     OverviewResCritical(R.string.key_statuslights_res_critical, 10, 0, 300, defaultedBySM = true),
     OverviewBattWarning(R.string.key_statuslights_bat_warning, 51, 0, 100, defaultedBySM = true),
     OverviewBattCritical(R.string.key_statuslights_bat_critical, 26, 0, 100, defaultedBySM = true),
+    OverviewBolusPercentage(R.string.key_boluswizard_percentage, 100, 10, 100),
+    OverviewResetBolusPercentageTime(R.string.key_reset_boluswizard_percentage_time, 16, 6, 120, engineeringModeOnly = true),
 }

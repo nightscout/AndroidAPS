@@ -751,7 +751,7 @@ class DataHandlerMobile @Inject constructor(
                     timeStamp = System.currentTimeMillis(),
                     wearControl = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false),
                     unitsMgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
-                    bolusPercentage = sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100),
+                    bolusPercentage = preferences.get(IntKey.OverviewBolusPercentage),
                     maxCarbs = sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48),
                     maxBolus = sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0),
                     insulinButtonIncrement1 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),

@@ -22,4 +22,7 @@ enum class BooleanKey(
     OverviewShortTabTitles(R.string.key_short_tab_titles, false, defaultedBySM = true),
     OverviewShowNotesInDialogs(R.string.key_show_notes_entry_dialogs, false, defaultedBySM = true),
     OverviewShowStatusLights(R.string.key_show_statuslights, true, defaultedBySM = true, hideParentScreenIfHidden = true),
+    OverviewUseBolusAdvisor(R.string.key_use_bolus_advisor, true, defaultedBySM = true),
+    OverviewUseBolusReminder(R.string.key_use_bolus_reminder, true, defaultedBySM = true),
+    OverviewUseSuperBolus(R.string.key_use_superbolus, false, defaultedBySM = true, hideParentScreenIfHidden = true),
 }

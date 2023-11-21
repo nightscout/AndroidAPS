@@ -40,6 +40,7 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.formatColor
@@ -152,7 +153,7 @@ class WizardDialog : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         loadCheckedStates()
         processCobCheckBox()
-        val useSuperBolus = sp.getBoolean(app.aaps.core.utils.R.string.key_usesuperbolus, false)
+        val useSuperBolus = preferences.get(BooleanKey.OverviewUseSuperBolus)
         binding.sbCheckbox.visibility = useSuperBolus.toVisibility()
         binding.superBolusRow.visibility = useSuperBolus.toVisibility()
         binding.notesLayout.root.visibility = preferences.get(BooleanKey.OverviewShowNotesInDialogs).toVisibility()
@@ -179,8 +180,8 @@ class WizardDialog : DaggerDialogFragment() {
 
         // If there is no BG using % lower that 100% leads to high BGs
         // because loop doesn't add missing insulin
-        var percentage = sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
-        val time = sp.getLong(app.aaps.core.utils.R.string.key_reset_boluswizard_percentage_time, 16)
+        var percentage = preferences.get(IntKey.OverviewBolusPercentage).toDouble()
+        val time = preferences.get(IntKey.OverviewResetBolusPercentageTime).toLong()
         persistenceLayer.getLastGlucoseValue().let {
             // if last value is older or there is no bg
             if (it != null) {
@@ -213,9 +214,9 @@ class WizardDialog : DaggerDialogFragment() {
                 ?: 0.0, -60.0, 60.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, timeTextWatcher
         )
         handler.post { initDialog() }
-        calculatedPercentage = sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
-        binding.percentUsed.text = rh.gs(app.aaps.core.ui.R.string.format_percent, sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100))
-        binding.percentUsed.visibility = (sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100) != 100 || usePercentage).toVisibility()
+        calculatedPercentage = preferences.get(IntKey.OverviewBolusPercentage).toDouble()
+        binding.percentUsed.text = rh.gs(app.aaps.core.ui.R.string.format_percent, calculatedPercentage)
+        binding.percentUsed.visibility = (calculatedPercentage != 100.0 || usePercentage).toVisibility()
         // ok button
         binding.okcancel.ok.setOnClickListener {
             if (okClicked) {
@@ -445,7 +446,7 @@ class WizardDialog : DaggerDialogFragment() {
             else
                 SafeParse.stringToDouble(binding.correctionInput.text)
         } else
-            sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
+            preferences.get(IntKey.OverviewBolusPercentage).toDouble()
         val carbsAfterConstraint = constraintChecker.applyCarbsConstraints(ConstraintObject(carbs, aapsLogger)).value()
         if (abs(carbs - carbsAfterConstraint) > 0.01) {
             binding.carbsInput.value = 0.0
@@ -466,7 +467,7 @@ class WizardDialog : DaggerDialogFragment() {
         val carbTime = SafeParse.stringToInt(binding.carbTimeInput.text)
 
         wizard = BolusWizard(injector).doCalc(
-            specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction, sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100),
+            specificProfile, profileName, tempTarget, carbsAfterConstraint, cob, bg, correction, preferences.get(IntKey.OverviewBolusPercentage),
             binding.bgCheckbox.isChecked,
             binding.cobCheckbox.isChecked,
             binding.iobCheckbox.isChecked,
