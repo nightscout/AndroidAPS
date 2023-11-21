@@ -119,7 +119,6 @@ class CommandQueueImplementation @Inject constructor(
                                return@subscribe
                            }
                            aapsLogger.debug(LTag.PROFILE, "onEventProfileSwitchChanged")
-                           val effective = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
                            profileFunction.getRequestedProfile()?.let {
                                setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
                                    override fun run() {
