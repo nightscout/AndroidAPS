@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.copy
@@ -118,7 +119,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
                            if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period)) ||
-                               event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_age)) ||
+                               event.isChanged(rh.gs(StringKey.SafetyAge.key)) ||
                                event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime)) ||
                                event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact)) ||
                                event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_absorption_cutoff)) ||
@@ -493,7 +494,7 @@ class IobCobCalculatorPlugin @Inject constructor(
      *  Time range to the past for IOB calculation
      *  @return milliseconds
      */
-    fun range(): Long = ((/*overviewData.rangeToDisplay + */(profileFunction.getProfile()?.dia
+    private fun range(): Long = ((/*overviewData.rangeToDisplay + */(profileFunction.getProfile()?.dia
         ?: Constants.defaultDIA)) * 60 * 60 * 1000).toLong()
 
     override fun calculateIobFromBolus(): IobTotal = calculateIobFromBolusToTime(dateUtil.now())
@@ -626,7 +627,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         return total
     }
 
-    fun getCalculationToTimeTempBasals(toTime: Long, lastAutosensResult: AutosensResult, exerciseMode: Boolean, halfBasalExerciseTarget: Int, isTempTarget: Boolean): IobTotal {
+    private fun getCalculationToTimeTempBasals(toTime: Long, lastAutosensResult: AutosensResult, exerciseMode: Boolean, halfBasalExerciseTarget: Int, isTempTarget: Boolean): IobTotal {
         val total = IobTotal(toTime)
         val pumpInterface = activePlugin.activePump
         val now = dateUtil.now()

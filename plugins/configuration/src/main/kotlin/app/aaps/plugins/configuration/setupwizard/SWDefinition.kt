@@ -30,6 +30,10 @@ import app.aaps.core.interfaces.rx.events.EventSWUpdate
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.crypto.CryptoUtil
 import app.aaps.core.objects.profile.ProfileSealed
@@ -59,6 +63,7 @@ class SWDefinition @Inject constructor(
     private val context: Context,
     private val rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
@@ -232,29 +237,29 @@ class SWDefinition @Inject constructor(
             .add(
                 SWRadioButton(injector)
                     .option(app.aaps.core.ui.R.array.ageArray, app.aaps.core.utils.R.array.ageValues)
-                    .preferenceId(app.aaps.core.utils.R.string.key_age)
+                    .preferenceId(StringKey.SafetyAge.key)
                     .label(app.aaps.core.ui.R.string.patient_type)
                     .comment(app.aaps.core.ui.R.string.patient_age_summary)
             )
             .add(SWBreak(injector))
             .add(
                 SWEditNumber(injector, 3.0, 0.1, 25.0)
-                    .preferenceId(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus)
+                    .preferenceId(DoubleKey.SafetyMaxBolus.key)
                     .updateDelay(5)
                     .label(app.aaps.core.ui.R.string.max_bolus_title)
                     .comment(R.string.common_values)
             )
             .add(
                 SWEditIntNumber(injector, 48, 1, 100)
-                    .preferenceId(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs)
+                    .preferenceId(IntKey.SafetyMaxCarbs.key)
                     .updateDelay(5)
                     .label(app.aaps.core.ui.R.string.max_carbs_title)
                     .comment(R.string.common_values)
             )
             .validator {
-                sp.contains(app.aaps.core.utils.R.string.key_age)
-                    && sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 0.0) > 0
-                    && sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 0) > 0
+                preferences.getIfExists(StringKey.SafetyAge) != null
+                    && preferences.get(DoubleKey.SafetyMaxBolus) > 0
+                    && preferences.get(IntKey.SafetyMaxCarbs) > 0
             }
 
     private val screenInsulin

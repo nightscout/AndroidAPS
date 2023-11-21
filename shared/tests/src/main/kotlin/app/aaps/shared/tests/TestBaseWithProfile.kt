@@ -107,7 +107,7 @@ open class TestBaseWithProfile : TestBase() {
         Mockito.`when`(dateUtil.now()).thenReturn(now)
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         Mockito.`when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MGDL.asText)
-        hardLimits = HardLimitsMock(sp, rh)
+        hardLimits = HardLimitsMock(sp, preferences, rh)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),

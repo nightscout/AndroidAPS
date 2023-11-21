@@ -8,10 +8,11 @@ import app.aaps.core.data.ue.ValueWithUnit
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.extensions.asAnnouncement
 import dagger.Reusable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -24,7 +25,7 @@ import kotlin.math.min
 class HardLimitsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val uiInteraction: UiInteraction,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val rh: ResourceHelper,
     private val context: Context,
     private val persistenceLayer: PersistenceLayer,
@@ -68,7 +69,7 @@ class HardLimitsImpl @Inject constructor(
 
     }
 
-    private fun loadAge(): Int = when (sp.getString(app.aaps.core.utils.R.string.key_age, "")) {
+    private fun loadAge(): Int = when (preferences.get(StringKey.SafetyAge)) {
         rh.gs(app.aaps.core.utils.R.string.key_child)          -> CHILD
         rh.gs(app.aaps.core.utils.R.string.key_teenage)        -> TEENAGE
         rh.gs(app.aaps.core.utils.R.string.key_adult)          -> ADULT

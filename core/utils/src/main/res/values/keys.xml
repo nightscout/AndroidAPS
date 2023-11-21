@@ -19,7 +19,6 @@
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
     <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
-    <string name="key_treatmentssafety_maxcarbs" translatable="false">treatmentssafety_maxcarbs</string>
     <string name="key_bgsource_upload_settings" translatable="false">bgsource_upload_settings</string>
     <string name="key_localalert_settings" translatable="false">localalert_settings</string>
     <string name="key_wear_settings" translatable="false">wear_settings</string>
@@ -44,7 +43,6 @@
     <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
     <string name="key_active_pump_type" translatable="false">active_pump_type</string>
     <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
-    <string name="key_age" translatable="false">age</string>
     <string name="key_child" translatable="false">child</string>
     <string name="key_teenage" translatable="false">teenage</string>
     <string name="key_adult" translatable="false">adult</string>
@@ -82,7 +80,6 @@
     <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
     <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
-    <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="key_patient_name" translatable="false">patient_name</string>
     <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
     <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>

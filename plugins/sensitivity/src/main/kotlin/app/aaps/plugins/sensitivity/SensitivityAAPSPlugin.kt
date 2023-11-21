@@ -14,6 +14,8 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.utils.MidnightUtils
 import app.aaps.core.utils.Percentile
 import app.aaps.plugins.sensitivity.extensions.isPSEvent5minBack
@@ -30,6 +32,7 @@ class SensitivityAAPSPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     sp: SP,
+    private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer
@@ -45,7 +48,7 @@ class SensitivityAAPSPlugin @Inject constructor(
 ) {
 
     override fun detectSensitivity(ads: AutosensDataStore, fromTime: Long, toTime: Long): AutosensResult {
-        val age = sp.getString(app.aaps.core.utils.R.string.key_age, "")
+        val age = preferences.get(StringKey.SafetyAge)
         var defaultHours = 24
         if (age == rh.gs(app.aaps.core.utils.R.string.key_adult)) defaultHours = 24
         if (age == rh.gs(app.aaps.core.utils.R.string.key_teenage)) defaultHours = 4

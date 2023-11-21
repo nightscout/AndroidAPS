@@ -46,6 +46,7 @@ import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
+import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
@@ -93,6 +94,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var config: Config
 
+    @Inject lateinit var overviewPlugin: OverviewPlugin
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
@@ -194,7 +196,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         } else {
             addPreferencesFromResource(R.xml.pref_general, rootKey)
             addPreferencesFromResource(R.xml.pref_protection, rootKey)
-            addPreferencesFromResource(app.aaps.plugins.main.R.xml.pref_overview, rootKey)
+            addPreferencesFromResourceIfEnabled(overviewPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(safetyPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(eversensePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(dexcomPlugin, rootKey)

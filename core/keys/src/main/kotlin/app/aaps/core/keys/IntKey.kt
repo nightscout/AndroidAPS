@@ -36,4 +36,5 @@ enum class IntKey(
     OverviewBolusPercentage(R.string.key_boluswizard_percentage, 100, 10, 100),
     OverviewResetBolusPercentageTime(R.string.key_reset_boluswizard_percentage_time, 16, 6, 120, defaultedBySM = true, engineeringModeOnly = true),
     GeneralProtectionTimeout(R.string.key_protection_timeout, 1, 1, 180, defaultedBySM = true),
+    SafetyMaxCarbs(R.string.key_safety_max_carbs, 48, 1, 200),
 }

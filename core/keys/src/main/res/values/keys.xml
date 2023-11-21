@@ -62,4 +62,9 @@
     <!-- Locale -->
     <string name="key_language" translatable="false">language</string>
 
+    <!--    Safety-->
+    <string name="key_age" translatable="false">age</string>
+    <string name="key_safety_max_bolus" translatable="false">treatmentssafety_maxbolus</string>
+    <string name="key_safety_max_carbs" translatable="false">treatmentssafety_maxcarbs</string>
+
 </resources>

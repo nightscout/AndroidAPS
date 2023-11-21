@@ -17,6 +17,9 @@ import app.aaps.core.interfaces.pump.TemporaryBasalStorage
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringKey
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -159,7 +162,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
             )
         safetyPlugin =
             SafetyPlugin(
-                aapsLogger, rh, sp, constraintChecker, activePlugin, hardLimits,
+                aapsLogger, rh, sp, preferences, constraintChecker, activePlugin, hardLimits,
                 config, persistenceLayer, dateUtil, uiInteraction, decimalFormatter
             )
         val constraintsPluginsList = ArrayList<PluginBase>()
@@ -262,7 +265,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(preferences.get(StringKey.SafetyAge)).thenReturn("child")
 
         // Apply all limits
         val d = constraintChecker.getMaxBasalAllowed(validProfile)
@@ -289,7 +292,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(preferences.get(StringKey.SafetyAge)).thenReturn("child")
 
         // Apply all limits
         val i = constraintChecker.getMaxBasalPercentAllowed(validProfile)
@@ -315,8 +318,8 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
 //        insightPlugin.setStatusResult(result);
 
         // No limit by default
-        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("child")
+        `when`(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(3.0)
+        `when`(preferences.get(StringKey.SafetyAge)).thenReturn("child")
 
         // Apply all limits
         val d = constraintChecker.getMaxBolusAllowed()
@@ -329,7 +332,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
     @Test
     fun carbsAmountShouldBeLimited() {
         // No limit by default
-        `when`(sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
+        `when`(preferences.get(IntKey.SafetyMaxCarbs)).thenReturn(48)
 
         // Apply all limits
         val i = constraintChecker.getMaxCarbsAllowed()
@@ -344,7 +347,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         // No limit by default
         `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("teenage")
+        `when`(preferences.get(StringKey.SafetyAge)).thenReturn("teenage")
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, true)
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, false)
 
@@ -360,7 +363,7 @@ class ConstraintsCheckerImplTest : TestBaseWithProfile() {
         // No limit by default
         `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_age, "")).thenReturn("teenage")
+        `when`(preferences.get(StringKey.SafetyAge)).thenReturn("teenage")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, false)
 
