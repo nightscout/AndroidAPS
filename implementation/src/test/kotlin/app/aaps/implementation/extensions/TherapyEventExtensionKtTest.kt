@@ -33,8 +33,8 @@ class TherapyEventExtensionKtTest : TestBaseWithProfile() {
             )
         )
         Mockito.`when`(dateUtil.now()).thenReturn(now + T.mins(30).msecs())
-        assertThat(therapyEvent.isOlderThan(1.0, dateUtil)).isFalse()
+        assertThat(therapyEvent.isOlderThan(1, dateUtil)).isFalse()
         Mockito.`when`(dateUtil.now()).thenReturn(now + T.hours(2).msecs())
-        assertThat(therapyEvent.isOlderThan(1.0, dateUtil)).isTrue()
+        assertThat(therapyEvent.isOlderThan(1, dateUtil)).isTrue()
     }
 }

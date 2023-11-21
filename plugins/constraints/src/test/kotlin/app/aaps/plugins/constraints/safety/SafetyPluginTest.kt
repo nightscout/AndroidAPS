@@ -13,6 +13,8 @@ import app.aaps.core.interfaces.profiling.Profiler
 import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -223,7 +225,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
 
     @Test
     fun bolusAmountShouldBeLimited() {
-        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
+        `when`(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(3.0)
         `when`(preferences.get(StringKey.SafetyAge)).thenReturn("child")
         val d = safetyPlugin.applyBolusConstraints(ConstraintObject(Double.MAX_VALUE, aapsLogger))
         assertThat(d.value()).isWithin(0.01).of(3.0)
@@ -238,7 +240,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
 
     @Test
     fun doNotAllowNegativeBolusAmount() {
-        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
+        `when`(preferences.get(DoubleKey.SafetyMaxBolus)).thenReturn(3.0)
         `when`(preferences.get(StringKey.SafetyAge)).thenReturn("child")
         val d = safetyPlugin.applyBolusConstraints(ConstraintObject(-22.0, aapsLogger))
         assertThat(d.value()).isWithin(0.01).of(0.0)
@@ -249,7 +251,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
     @Test
     fun carbsAmountShouldBeLimited() {
         // No limit by default
-        `when`(sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
+        `when`(preferences.get(IntKey.SafetyMaxCarbs)).thenReturn(48)
 
         // Negative carbs not allowed
         var i: Constraint<Int> = ConstraintObject(-22, aapsLogger)
