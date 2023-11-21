@@ -18,6 +18,7 @@ data class RT(
     var predBGs: Predictions?= null,
     var COB: Double? = null,
     var IOB: Double? = null,
+    var variable_sens: Double? = null,
 
     var consoleLog: MutableList<String>? = null,
     var consoleError: MutableList<String>? = null
