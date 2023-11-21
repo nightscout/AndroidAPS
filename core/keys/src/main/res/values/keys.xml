@@ -67,4 +67,8 @@
     <string name="key_safety_max_bolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="key_safety_max_carbs" translatable="false">treatmentssafety_maxcarbs</string>
 
+    <!--    BG source-->
+    <string name="key_do_bg_ns_upload" translatable="false">dexcomg5_nsupload</string>
+    <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
+
 </resources>

@@ -108,7 +108,6 @@
     <string name="key_snoozed_to" translatable="false">snoozedTo</string>
     <string name="key_ns_receive_cgm" translatable="false">ns_receive_cgm</string>
     <string name="key_ns_create_announcements_from_carbs_req" translatable="false">ns_create_announcements_from_carbs_req</string>
-    <string name="key_do_ns_upload" translatable="false">dexcomg5_nsupload</string>
     <string name="key_master_password" translatable="false">master_password</string>
     <string name="key_settings_password" translatable="false">settings_password</string>
     <string name="key_settings_pin" translatable="false">settings_pin</string>

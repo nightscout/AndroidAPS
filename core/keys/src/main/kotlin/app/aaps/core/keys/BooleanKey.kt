@@ -25,4 +25,6 @@ enum class BooleanKey(
     OverviewUseBolusAdvisor(R.string.key_use_bolus_advisor, true, defaultedBySM = true),
     OverviewUseBolusReminder(R.string.key_use_bolus_reminder, true, defaultedBySM = true),
     OverviewUseSuperBolus(R.string.key_use_superbolus, false, defaultedBySM = true, hideParentScreenIfHidden = true),
+    BgSourceUploadToNs(R.string.key_do_bg_ns_upload, true, defaultedBySM = true, hideParentScreenIfHidden = true),
+    DexcomCreateSensorChange(R.string.key_dexcom_log_ns_sensor_change, true, defaultedBySM = true),
 }
