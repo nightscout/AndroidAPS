@@ -51,7 +51,6 @@
     <string name="key_resistantadult" translatable="false">resistantadult</string>
     <string name="key_pregnant" translatable="false">pregnant</string>
     <string name="key_app_expiration" translatable="false">app_expiration</string>
-    <string name="key_use_dark_mode" translatable="false">use_dark_mode</string>
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
     <string name="key_autotune_auto" translatable="false">autotune_auto</string>
     <string name="key_autotune_categorize_uam_as_basal" translatable="false">categorize_uam_as_basal</string>
@@ -123,7 +122,6 @@
     <string name="key_settings_protection" translatable="false">settings_protection</string>
     <string name="key_application_protection" translatable="false">application_protection</string>
     <string name="key_bolus_protection" translatable="false">bolus_protection</string>
-    <string name="key_protection_timeout" translatable="false">protection_timeout</string>
     <string name="key_objectiveuseloop" translatable="false">ObjectivesLoopUsed</string>
     <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
     <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>

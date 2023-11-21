@@ -6,7 +6,7 @@ import androidx.preference.ListPreference
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class AdaptiveListPreference(context: Context, attrs: AttributeSet?) : ListPreference(context, attrs) {
+open class AdaptiveListPreference(context: Context, attrs: AttributeSet?) : ListPreference(context, attrs) {
 
     @Inject lateinit var preferences: Preferences
 

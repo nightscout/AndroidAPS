@@ -40,12 +40,14 @@ import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.events.EventAppExit
 import app.aaps.core.interfaces.rx.events.EventAppInitialized
+import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -304,6 +306,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             androidPermission.notifyForBtConnectPermission(this)
         }
         passwordResetCheck(this)
+        if (sp.getString(app.aaps.core.utils.R.string.key_master_password, "") == "")
+            rxBus.send(EventNewNotification(Notification(Notification.MASTER_PASSWORD_NOT_SET, rh.gs(R.string.master_password_not_set), Notification.NORMAL)))
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
@@ -342,7 +346,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     private fun processPreferenceChange(ev: EventPreferenceChange) {
         if (ev.isChanged(BooleanKey.OverviewKeepScreenOn.key, rh)) setWakeLock()
-        if (ev.isChanged(rh.gs(app.aaps.plugins.main.R.string.key_skin))) recreate()
+        if (ev.isChanged(rh.gs(StringKey.GeneralSkin.key))) recreate()
     }
 
     private fun setupViews() {

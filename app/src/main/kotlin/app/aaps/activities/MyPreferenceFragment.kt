@@ -193,6 +193,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResource(pluginId, rootKey)
         } else {
             addPreferencesFromResource(R.xml.pref_general, rootKey)
+            addPreferencesFromResource(R.xml.pref_protection, rootKey)
             addPreferencesFromResource(app.aaps.plugins.main.R.xml.pref_overview, rootKey)
             addPreferencesFromResourceIfEnabled(safetyPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(eversensePlugin, rootKey)

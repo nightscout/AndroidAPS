@@ -34,5 +34,6 @@ enum class IntKey(
     OverviewBattWarning(R.string.key_statuslights_bat_warning, 51, 0, 100, defaultedBySM = true),
     OverviewBattCritical(R.string.key_statuslights_bat_critical, 26, 0, 100, defaultedBySM = true),
     OverviewBolusPercentage(R.string.key_boluswizard_percentage, 100, 10, 100),
-    OverviewResetBolusPercentageTime(R.string.key_reset_boluswizard_percentage_time, 16, 6, 120, engineeringModeOnly = true),
+    OverviewResetBolusPercentageTime(R.string.key_reset_boluswizard_percentage_time, 16, 6, 120, defaultedBySM = true, engineeringModeOnly = true),
+    GeneralProtectionTimeout(R.string.key_protection_timeout, 1, 1, 180, defaultedBySM = true),
 }

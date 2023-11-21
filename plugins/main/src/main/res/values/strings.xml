@@ -301,8 +301,6 @@
     <string name="graph_menu_divider_header">Graph</string>
 
     <!-- Skins -->
-    <string name="key_skin" translatable="false">skin</string>
-
     <string name="classic_description">Original skin</string>
     <string name="lowres_description">Low Resolution skin</string>
     <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
