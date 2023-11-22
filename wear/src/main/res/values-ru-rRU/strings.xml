@@ -116,7 +116,7 @@
     <string name="action_confirm">ПОДТВЕРДИТЬ</string>
     <string name="action_timeshift">сдвиг по времени</string>
     <string name="action_bolus">Болюс</string>
-    <string name="bolus_progress">Подается болюс</string>
+    <string name="bolus_progress">Вводится болюс</string>
     <string name="press_to_cancel">нажмите для отмены</string>
     <string name="cancel_bolus">ОТМЕНИТЬ БОЛЮС</string>
     <string name="status_pump">Помпа</string>
@@ -161,10 +161,10 @@
     <string name="digitalstyle_pref_your_color">Ваш цвет:</string>
     <string name="digitalstyle_pref_your_color_saturation">Ваша цветовая насыщенность:</string>
     <string name="digitalstyle_pref_your_color_opacity">Непрозрачность вашего цвета:</string>
-    <string name="bolus_progress_channel_name">Подается болюс</string>
-    <string name="bolus_progress_silent_channel_name">Беззвучная подача болюса</string>
-    <string name="bolus_progress_channel_description">Подача и отмена болюса</string>
-    <string name="bolus_progress_silent_channel_description">Подача и отмена болюса с меньшими вибрациями</string>
+    <string name="bolus_progress_channel_name">Вводится болюс</string>
+    <string name="bolus_progress_silent_channel_name">Беззвучный ввод болюса</string>
+    <string name="bolus_progress_channel_description">Ввод и отмена болюса</string>
+    <string name="bolus_progress_silent_channel_description">Введение и отмена болюса с меньшими вибрациями</string>
     <string name="simple_ui_off">Выкл</string>
     <string name="simple_ui_charging">Во время зарядки</string>
     <string name="simple_ui_always_on">Режим: всегда вкл</string>
