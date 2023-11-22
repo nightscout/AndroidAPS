@@ -2,8 +2,6 @@
 <resources>
     <!--    Keys-->
     <string name="key_units" translatable="false">units</string>
-    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
-    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>
@@ -15,8 +13,6 @@
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
-    <string name="key_openapsama_autosens_max" translatable="false">autosens_max</string>
-    <string name="key_openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="key_bgsource_upload_settings" translatable="false">bgsource_upload_settings</string>
     <string name="key_localalert_settings" translatable="false">localalert_settings</string>
     <string name="key_wear_settings" translatable="false">wear_settings</string>
@@ -77,10 +73,8 @@
     <string name="key_objectiveusetemptarget" translatable="false">ObjectivesTempTargetUsed</string>
     <string name="key_objectiveusedisconnect" translatable="false">ObjectivesDisconnectUsed</string>
     <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
-    <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="key_patient_name" translatable="false">patient_name</string>
     <string name="key_email_for_crash_report" translatable="false">email_for_crash_report</string>
-    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
     <string name="key_enable_fabric" translatable="false">enable_fabric2</string>
     <string name="key_high_temptarget_raises_sensitivity" translatable="false">high_temptarget_raises_sensitivity</string>
     <string name="key_low_temptarget_lowers_sensitivity" translatable="false">low_temptarget_lowers_sensitivity</string>

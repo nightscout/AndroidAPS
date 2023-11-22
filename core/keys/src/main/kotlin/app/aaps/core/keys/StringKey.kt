@@ -14,4 +14,5 @@ enum class StringKey(
     GeneralSkin(R.string.key_skin, ""),
     GeneralDarkMode(R.string.key_use_dark_mode, "dark", defaultedBySM = true),
     SafetyAge(R.string.key_safety_age, "adult"),
+    LoopApsMode(R.string.key_aps_mode, "open"),
 }

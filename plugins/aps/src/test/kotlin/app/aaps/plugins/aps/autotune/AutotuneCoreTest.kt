@@ -33,7 +33,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun initData() {
-        autotuneCore = AutotuneCore(sp, preferences, autotuneFS)
+        autotuneCore = AutotuneCore(preferences, autotuneFS)
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))
     }
 
@@ -45,8 +45,8 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
 
-        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
-        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
+        `when`(preferences.get(DoubleKey.AutosensMax)).thenReturn(autotuneMax)
+        `when`(preferences.get(DoubleKey.AutosensMin)).thenReturn(autotuneMin)
         `when`(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test1/aapsorefprofile.json").readText()
         val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!
@@ -67,8 +67,8 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val pumpProfileJson = File("src/test/res/autotune/test4/profile.pump.json").readText()
         val pumpProfile = atProfileFromOapsJson(JSONObject(pumpProfileJson), dateUtil)!!
         val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
-        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
-        `when`(sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
+        `when`(preferences.get(DoubleKey.AutosensMax)).thenReturn(autotuneMax)
+        `when`(preferences.get(DoubleKey.AutosensMin)).thenReturn(autotuneMin)
         `when`(preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test4/newprofile.2022-05-30.json").readText()
         val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)!!

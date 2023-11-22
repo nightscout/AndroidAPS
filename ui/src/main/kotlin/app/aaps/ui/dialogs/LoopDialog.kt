@@ -40,6 +40,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.runOnUiThread
@@ -58,6 +60,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var ctx: Context
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rh: ResourceHelper
@@ -161,7 +164,7 @@ class LoopDialog : DaggerDialogFragment() {
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
         val lgsEnabled = constraintChecker.isLgsAllowed(ConstraintObject(true, aapsLogger))
-        val apsMode = ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+        val apsMode = ApsMode.fromString(preferences.get(StringKey.LoopApsMode))
         val pump = activePlugin.activePump
 
         binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
@@ -282,21 +285,21 @@ class LoopDialog : DaggerDialogFragment() {
         when (v.id) {
             R.id.overview_closeloop                       -> {
                 uel.log(Action.CLOSED_LOOP_MODE, Sources.LoopDialog)
-                sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
+                preferences.put(StringKey.LoopApsMode, ApsMode.CLOSED.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop                         -> {
                 uel.log(Action.LGS_LOOP_MODE, Sources.LoopDialog)
-                sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
+                preferences.put(StringKey.LoopApsMode, ApsMode.LGS.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop                        -> {
                 uel.log(Action.OPEN_LOOP_MODE, Sources.LoopDialog)
-                sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)
+                preferences.put(StringKey.LoopApsMode, ApsMode.OPEN.name)
                 rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                 return true
             }

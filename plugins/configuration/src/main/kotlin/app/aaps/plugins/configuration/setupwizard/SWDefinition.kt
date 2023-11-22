@@ -360,10 +360,10 @@ class SWDefinition @Inject constructor(
             .add(
                 SWRadioButton(injector)
                     .option(app.aaps.core.ui.R.array.aps_modeArray, app.aaps.core.ui.R.array.aps_modeValues)
-                    .preferenceId(app.aaps.core.utils.R.string.key_aps_mode).label(R.string.apsmode_title)
+                    .preferenceId(StringKey.LoopApsMode.key).label(R.string.apsmode_title)
                     .comment(R.string.setupwizard_preferred_aps_mode)
             )
-            .validator { sp.contains(app.aaps.core.utils.R.string.key_aps_mode) }
+            .validator { preferences.getIfExists(StringKey.LoopApsMode) != null }
 
     private val screenLoop
         get() = SWScreen(injector, R.string.configbuilder_loop)

@@ -42,6 +42,7 @@ import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.extensions.combine
@@ -119,14 +120,14 @@ class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period)) ||
+                           if (event.isChanged(rh.gs(IntKey.AutosensPeriod.key)) ||
                                event.isChanged(rh.gs(StringKey.SafetyAge.key)) ||
-                               event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime)) ||
+                               event.isChanged(rh.gs(DoubleKey.AbsorptionMaxTime.key)) ||
                                event.isChanged(rh.gs(DoubleKey.ApsAmaMin5MinCarbsImpact.key)) ||
                                event.isChanged(rh.gs(DoubleKey.ApsSmbMin5MinCarbsImpact.key)) ||
-                               event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_absorption_cutoff)) ||
-                               event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max)) ||
-                               event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min)) ||
+                               event.isChanged(rh.gs(DoubleKey.AbsorptionCutOff.key)) ||
+                               event.isChanged(rh.gs(DoubleKey.AutosensMax.key)) ||
+                               event.isChanged(rh.gs(DoubleKey.AutosensMin.key)) ||
                                event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_insulin_oref_peak))
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)

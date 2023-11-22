@@ -1,6 +1,5 @@
 package app.aaps.plugins.aps.autotune
 
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
@@ -15,7 +14,6 @@ import kotlin.math.max
 
 @Singleton
 class AutotuneCore @Inject constructor(
-    private val sp: SP,
     private val preferences: Preferences,
     private val autotuneFS: AutotuneFS
 ) {
@@ -44,8 +42,8 @@ class AutotuneCore @Inject constructor(
         val pumpCarbRatio = pumpProfile.ic
         val pumpCSF = pumpISF / pumpCarbRatio
         // Autosens constraints
-        val autotuneMax = sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_max, 1.2)
-        val autotuneMin = sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_autosens_min, 0.7)
+        val autotuneMax = preferences.get(DoubleKey.AutosensMax)
+        val autotuneMin = preferences.get(DoubleKey.AutosensMin)
         val min5minCarbImpact = preferences.get(DoubleKey.ApsSmbMin5MinCarbsImpact)
 
         // tune DIA

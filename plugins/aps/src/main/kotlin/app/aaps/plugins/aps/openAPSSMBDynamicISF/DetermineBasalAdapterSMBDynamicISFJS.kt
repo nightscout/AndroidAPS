@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.Round
-import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -276,8 +275,8 @@ class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReade
         this.profile.put("carbsReqThreshold", preferences.get(IntKey.ApsCarbsRequestThreshold))
         this.profile.put("current_basal", basalRate)
         this.profile.put("temptargetSet", tempTargetSet)
-        this.profile.put("autosens_max", SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_max, "1.2")))
-        this.profile.put("autosens_min", SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_min, "0.7")))
+        this.profile.put("autosens_max", preferences.get(DoubleKey.AutosensMax))
+        this.profile.put("autosens_min", preferences.get(DoubleKey.AutosensMin))
         //set the min SMB amount to be the amount set by the pump.
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")
@@ -318,7 +317,7 @@ class DetermineBasalAdapterSMBDynamicISFJS(private val scriptReader: ScriptReade
 
         val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
         var tdd = (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
-        val dynISFadjust = profileUtil.convertToMgdlDetect(preferences.get(UnitDoubleKey.ApsLgsThreshold)) / 100.0
+        val dynISFadjust = preferences.get(IntKey.ApsDynIsfAdjustmentFactor) / 100.0
         tdd *= dynISFadjust
 
         val variableSensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)

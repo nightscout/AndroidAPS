@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
@@ -41,7 +40,6 @@ class IobCobOrefWorker @Inject internal constructor(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
@@ -188,7 +186,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
-                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, sp, preferences))
+                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
                     autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 

@@ -85,12 +85,12 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun get(key: IntKey): Int =
-        if (simpleMode && key.defaultedBySM) key.defaultValue
-        else if (key.engineeringModeOnly && !config.isEngineeringMode()) key.defaultValue
-        else sp.getInt(key.key, key.defaultValue)
+        if (simpleMode && key.defaultedBySM) calculatedDefaultValue(key)
+        else if (key.engineeringModeOnly && !config.isEngineeringMode()) calculatedDefaultValue(key)
+        else sp.getInt(key.key, calculatedDefaultValue(key))
 
     override fun getIfExists(key: IntKey): Int? =
-        if (sp.contains(key.key)) sp.getInt(key.key, key.defaultValue) else null
+        if (sp.contains(key.key)) sp.getInt(key.key, calculatedDefaultValue(key)) else null
 
     override fun put(key: IntKey, value: Int) {
         sp.putInt(key.key, value)
@@ -110,6 +110,20 @@ class PreferencesImpl @Inject constructor(
             ?: DoubleKey.entries.find { rh.gs(it.key) == key }
             ?: UnitDoubleKey.entries.find { rh.gs(it.key) == key }
             ?: error("Key $key not found")
+
+    private fun calculatedDefaultValue(key: IntKey): Int =
+        if (key.calculatedDefaultValue)
+            when (key) {
+                IntKey.AutosensPeriod ->
+                    when (get(StringKey.SafetyAge)) {
+                        rh.gs(app.aaps.core.utils.R.string.key_teenage) -> 4
+                        rh.gs(app.aaps.core.utils.R.string.key_child)   -> 4
+                        else                                            -> 24
+                    }
+
+                else                  -> error("Unsupported default value calculation")
+            }
+        else key.defaultValue
 
     private fun calculatePreference(key: DoubleKey): Double =
         limit(key, when (key) {

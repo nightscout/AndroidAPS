@@ -5,7 +5,6 @@ import android.os.SystemClock
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import app.aaps.core.data.aps.AutosensData
-import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
@@ -21,13 +20,11 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.Event
 import app.aaps.core.interfaces.rx.events.EventAutosensCalculationFinished
 import app.aaps.core.interfaces.rx.events.EventIobCalculationProgress
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.Preferences
-import app.aaps.core.objects.extensions.target
 import app.aaps.core.objects.workflow.LoggingWorker
 import app.aaps.core.utils.receivers.DataWorkerStorage
 import dagger.android.HasAndroidInjector
@@ -45,7 +42,6 @@ class IobCobOref1Worker(
     params: WorkerParameters
 ) : LoggingWorker(context, params, Dispatchers.Default) {
 
-    @Inject lateinit var sp: SP
     @Inject lateinit var preferences: Preferences
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
@@ -195,7 +191,7 @@ class IobCobOref1Worker(
                 for (recentCarbTreatment in recentCarbTreatments) {
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
-                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, sp, preferences))
+                    autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, preferences))
                     autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 
@@ -294,13 +290,13 @@ class IobCobOref1Worker(
 
                 // add an extra negative deviation if a high temp target is running and exercise mode is set
                 // TODO AS-FIX
-                @Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
-                if (false && sp.getBoolean(app.aaps.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
-                    val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
-                    if (tempTarget != null && tempTarget.target() >= 100) {
-                        autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20)
-                    }
-                }
+                // @Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
+                // if (false && sp.getBoolean(app.aaps.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                //     val tempTarget = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now())
+                //     if (tempTarget != null && tempTarget.target() >= 100) {
+                //         autosensData.extraDeviation.add(-(tempTarget.target() - 100) / 20)
+                //     }
+                // }
 
                 // add one neutral deviation every 2 hours to help decay over long exclusion periods
                 val calendar = GregorianCalendar()

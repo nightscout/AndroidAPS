@@ -6,6 +6,7 @@ enum class IntKey(
     val min: Int,
     val max: Int,
     override val defaultedBySM: Boolean = false,
+    val calculatedDefaultValue: Boolean = false,
     val showInApsMode: Boolean = true,
     val showInNsClientMode: Boolean = true,
     val showInPumpControlMode: Boolean = true,
@@ -43,4 +44,5 @@ enum class IntKey(
     ApsUamMaxMinutesOfBasalToLimitSmb(R.string.key_openaps_uam_smb_max_minutes, 30, 15, 120, defaultedBySM = true),
     ApsCarbsRequestThreshold(R.string.key_openaps_carbs_required_threshold, 1, 1, 10, defaultedBySM = true),
     ApsDynIsfAdjustmentFactor(R.string.key_dynamic_isf_adjustment_factor, 100, 1, 300),
+    AutosensPeriod(R.string.key_openapsama_autosens_period, 24, 4, 24, calculatedDefaultValue = true),
 }

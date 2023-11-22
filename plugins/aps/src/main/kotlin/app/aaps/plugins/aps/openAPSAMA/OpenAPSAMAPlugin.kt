@@ -247,7 +247,7 @@ class OpenAPSAMAPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
-            val maxIobPref: Double = preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact)
+            val maxIobPref: Double = preferences.get(DoubleKey.ApsAmaMaxIob)
             maxIob.setIfSmaller(maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
             maxIob.setIfSmaller(hardLimits.maxIobAMA(), rh.gs(R.string.limiting_iob, hardLimits.maxIobAMA(), rh.gs(R.string.hardlimit)), this)
         }

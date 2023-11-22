@@ -73,6 +73,7 @@
 
     <!--    Loop-->
     <string name="key_loop_open_mode_min_change" translatable="false">loop_openmode_min_change</string>
+    <string name="key_aps_mode" translatable="false">aps_mode</string>
 
     <!--    APS-->
     <string name="key_openaps_max_basal" translatable="false">openapsma_max_basal</string>
@@ -102,5 +103,12 @@
     <string name="key_openaps_ama_autosens_adjust_targets" translatable="false">autosens_adjust_targets</string>
     <string name="key_openaps_ama_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
     <string name="key_openaps_smb_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
+
+    <!--    Sensitivity-->
+    <string name="key_absorption_cutoff" translatable="false">absorption_cutoff</string>
+    <string name="key_openaps_autosens_max" translatable="false">autosens_max</string>
+    <string name="key_openaps_autosens_min" translatable="false">autosens_min</string>
+    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
 
 </resources>

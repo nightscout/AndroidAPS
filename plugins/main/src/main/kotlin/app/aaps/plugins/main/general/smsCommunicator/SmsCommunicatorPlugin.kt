@@ -55,6 +55,7 @@ import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.generateCOBString
@@ -495,7 +496,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.LGS_LOOP_MODE, Sources.SMS)
-                        sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
+                        preferences.put(StringKey.LoopApsMode, ApsMode.LGS.name)
                         rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -510,7 +511,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.CLOSED_LOOP_MODE, Sources.SMS)
-                        sp.putString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
+                        preferences.put(StringKey.LoopApsMode, ApsMode.CLOSED.name)
                         rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.ui.R.string.closedloop)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -1262,7 +1263,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun getApsModeText(): String =
-        when (ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))) {
+        when (ApsMode.fromString(preferences.get(StringKey.LoopApsMode))) {
             ApsMode.OPEN   -> rh.gs(app.aaps.core.ui.R.string.openloop)
             ApsMode.CLOSED -> rh.gs(app.aaps.core.ui.R.string.closedloop)
             ApsMode.LGS    -> rh.gs(app.aaps.core.ui.R.string.lowglucosesuspend)

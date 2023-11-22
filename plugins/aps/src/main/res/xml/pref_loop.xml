@@ -7,8 +7,7 @@
         android:title="@string/loop"
         app:initialExpandedChildrenCount="0">
 
-        <ListPreference
-            android:defaultValue="open"
+        <app.aaps.core.keys.AdaptiveListPreference
             android:entries="@array/aps_modeArray"
             android:entryValues="@array/aps_modeValues"
             android:key="@string/key_aps_mode"

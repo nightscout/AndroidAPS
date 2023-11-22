@@ -65,6 +65,8 @@ import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.nssdk.interfaces.RunningConfiguration
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.asAnnouncement
@@ -88,6 +90,7 @@ class LoopPlugin @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config,
     private val constraintChecker: ConstraintsChecker,
     rh: ResourceHelper,
@@ -182,7 +185,7 @@ class LoopPlugin @Inject constructor(
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
             val maxIobAllowed = constraintChecker.getMaxIOBAllowed().value()
-            val apsMode = ApsMode.fromString(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+            val apsMode = ApsMode.fromString(preferences.get(StringKey.LoopApsMode))
             val pump = activePlugin.activePump
             var isLGS = false
             if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == HardLimits.MAX_IOB_LGS || apsMode == ApsMode.LGS) isLGS = true

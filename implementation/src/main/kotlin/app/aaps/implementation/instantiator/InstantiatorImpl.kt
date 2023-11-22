@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.aps.APSResultObject
 import app.aaps.implementation.iob.AutosensDataObject
 import app.aaps.implementation.profile.ProfileStoreObject
@@ -29,6 +30,7 @@ class InstantiatorImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
+    private val preferences: Preferences,
     private val activePlugin: ActivePlugin,
     private val config: Config,
     private val rxBus: RxBus,
@@ -37,6 +39,6 @@ class InstantiatorImpl @Inject constructor(
 
     override fun provideProfileStore(jsonObject: JSONObject): ProfileStore = ProfileStoreObject(jsonObject, aapsLogger, activePlugin, config, rh, rxBus, hardLimits, dateUtil)
     override fun provideAPSResultObject(): APSResult = APSResultObject(injector)
-    override fun provideAutosensDataObject(): AutosensData = AutosensDataObject(aapsLogger, sp, dateUtil)
+    override fun provideAutosensDataObject(): AutosensData = AutosensDataObject(aapsLogger, preferences, dateUtil)
     override fun providePumpEnactResult(): PumpEnactResult = PumpEnactResultObject(rh)
 }

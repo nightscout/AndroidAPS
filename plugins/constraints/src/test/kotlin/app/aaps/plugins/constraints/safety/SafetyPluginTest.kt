@@ -95,7 +95,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun disabledEngineeringModeShouldLimitClosedLoop() {
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         `when`(config.isEngineeringModeOrRelease()).thenReturn(false)
         val c = safetyPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).contains("Running dev version. Closed loop is disabled.")
@@ -104,7 +104,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun setOpenLoopInPreferencesShouldLimitClosedLoop() {
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.OPEN.name)
         val c = safetyPlugin.isClosedLoopAllowed(ConstraintObject(true, aapsLogger))
         assertThat(c.getReasons()).contains("Closed loop mode disabled in preferences")
         assertThat(c.value()).isFalse()
@@ -272,8 +272,8 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         //`when`(openAPSSMBPlugin.isEnabled()).thenReturn(true)
         //`when`(openAPSAMAPlugin.isEnabled()).thenReturn(false)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
-        `when`(sp.getDouble(app.aaps.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.LGS.name)
+        `when`(preferences.get(DoubleKey.ApsAmaMaxIob)).thenReturn(1.5)
         `when`(preferences.get(DoubleKey.ApsSmbMaxIob)).thenReturn(3.0)
         `when`(preferences.get(StringKey.SafetyAge)).thenReturn("teenage")
 

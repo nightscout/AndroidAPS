@@ -38,7 +38,6 @@ object Constants {
 
     //Autosens
     const val DEVIATION_TO_BE_EQUAL = 2.0
-    const val DEFAULT_MAX_ABSORPTION_TIME = 6.0
 
     // Pump
     const val PUMP_MAX_CONNECTION_TIME_IN_SECONDS = 120 - 1

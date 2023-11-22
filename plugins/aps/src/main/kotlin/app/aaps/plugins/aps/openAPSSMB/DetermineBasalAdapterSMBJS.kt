@@ -17,7 +17,6 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.utils.SafeParse
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -252,7 +251,7 @@ class DetermineBasalAdapterSMBJS(private val scriptReader: ScriptReader, private
         this.profile.put("carbsReqThreshold", preferences.get(IntKey.ApsCarbsRequestThreshold))
         this.profile.put("current_basal", basalRate)
         this.profile.put("temptargetSet", tempTargetSet)
-        this.profile.put("autosens_max", SafeParse.stringToDouble(sp.getString(app.aaps.core.utils.R.string.key_openapsama_autosens_max, "1.2")))
+        this.profile.put("autosens_max", preferences.get(DoubleKey.AutosensMax))
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")
         }
