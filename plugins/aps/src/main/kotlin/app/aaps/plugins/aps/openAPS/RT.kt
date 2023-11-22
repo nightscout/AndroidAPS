@@ -6,6 +6,7 @@ data class RT(
     var tick: String? = null,
     var eventualBG: Int? = null,
     var targetBG: Int? = null,
+    var snoozeBG: Int? = null, // AMA only
     var insulinReq: Double? = null,
     var carbsReq: Int? = null,
     var carbsReqWithin: Int? = null,
@@ -27,6 +28,7 @@ data class RT(
         var IOB: List<Int>? = null,
         var ZT: List<Int>? = null,
         var COB: List<Int>? = null,
+        var aCOB: List<Int>? = null, // AMA only
         var UAM: List<Int>? = null
     )
 }

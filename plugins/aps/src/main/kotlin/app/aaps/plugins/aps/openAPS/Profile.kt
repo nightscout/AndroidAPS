@@ -1,6 +1,8 @@
 package app.aaps.plugins.aps.openAPS
 
 data class Profile(
+    var dia: Int, // AMA only
+    var min_5m_carbimpact: Int, // AMA only
     var max_iob: Double,
     var type: String,
     var max_daily_basal: Double,
@@ -10,6 +12,7 @@ data class Profile(
     var target_bg: Int,
     var carb_ratio: Double,
     var sens: Double,
+    var autosens_adjust_targets: Boolean, // AMA only
     var max_daily_safety_multiplier: Double,
     var current_basal_safety_multiplier: Double,
     var lgsThreshold: Int?,
@@ -40,7 +43,7 @@ data class Profile(
     var autosens_max: Double,
     var autosens_min: Double?,
     var out_units: String,
-    var variable_sens: Double?,
-    var insulinDivisor: Int?,
-    var TDD: Double?
+    var variable_sens: Double?, //DynISF only
+    var insulinDivisor: Int?, //DynISF only
+    var TDD: Double? //DynISF only
 )

@@ -1,9 +1,7 @@
 package app.aaps.plugins.aps.openAPSSMB
 
 import app.aaps.core.interfaces.logging.AAPSLogger
-import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.plugins.aps.openAPS.AutosensData
 import app.aaps.plugins.aps.openAPS.CurrentTemp
 import app.aaps.plugins.aps.openAPS.GlucoseStatus
@@ -37,7 +35,7 @@ class DetermineBasalSMB @Inject constructor(
 
     // Rounds value to 'digits' decimal places
     fun round(value: Double, digits: Int): Double = BigDecimal(value).setScale(digits, RoundingMode.HALF_EVEN).toDouble()
-    fun Double.withoutZeros() : String = DecimalFormat("0.##").format(this)
+    fun Double.withoutZeros(): String = DecimalFormat("0.##").format(this)
     fun round(value: Double): Int = value.roundToInt()
 
     // we expect BG to rise or fall at the rate of BGI,
@@ -52,6 +50,7 @@ class DetermineBasalSMB @Inject constructor(
 
     fun convert_bg(value: Int): String =
         profileUtil.fromMgdlToStringInUnits(value.toDouble()).replace("-0.0", "0.0")
+
     fun convert_bg(value: Double): String =
         profileUtil.fromMgdlToStringInUnits(value).replace("-0.0", "0.0")
     //DecimalFormat("0.#").format(profileUtil.fromMgdlToUnits(value))
@@ -267,13 +266,12 @@ class DetermineBasalSMB @Inject constructor(
         } else {
             round(glucose_status.delta).toString()
         }
-        val minDelta = Math.min(glucose_status.delta, glucose_status.short_avgdelta)
-        val minAvgDelta = Math.min(glucose_status.short_avgdelta, glucose_status.long_avgdelta)
+        val minDelta = min(glucose_status.delta, glucose_status.short_avgdelta)
+        val minAvgDelta = min(glucose_status.short_avgdelta, glucose_status.long_avgdelta)
         val maxDelta = max(glucose_status.delta, max(glucose_status.short_avgdelta, glucose_status.long_avgdelta))
 
         val profile_sens = round(profile.sens, 1)
-        var sens = profile.sens / sensitivityRatio
-        sens = round(sens, 1)
+        var sens = round(profile.sens / sensitivityRatio, 1)
         if (sens != profile_sens) {
             consoleLog.add("ISF from $profile_sens to $sens")
         } else {
@@ -296,13 +294,13 @@ class DetermineBasalSMB @Inject constructor(
         }
 
         // calculate the naive (bolus calculator math) eventual BG based on net IOB and sensitivity
-        val naive_eventualBG : Int =
+        val naive_eventualBG: Int =
             if (iob_data.iob > 0) round(bg - (iob_data.iob * sens))
             else  // if IOB is negative, be more conservative and use the lower of sens, profile.sens
                 round(bg - (iob_data.iob * min(sens, profile.sens)))
 
         // and adjust it for the deviation above
-        var eventualBG : Int = naive_eventualBG + deviation
+        var eventualBG: Int = naive_eventualBG + deviation
 
         // raise target for noisy / raw CGM data
         if (bg > max_bg && profile.adv_target_adjustments && !profile.temptargetSet) {
@@ -512,22 +510,22 @@ class DetermineBasalSMB @Inject constructor(
             remainingCIs.add(round(remainingCI))
             predCIs.add(round(predCI))
             //console.log(round(predCI,1)+"+"+round(remainingCI,1)+" ");
-            COBpredBG = COBpredBGs[COBpredBGs.size - 1] + predBGI + Math.min(0.0, predDev) + predCI + remainingCI
-            aCOBpredBG = aCOBpredBGs[aCOBpredBGs.size - 1] + predBGI + Math.min(0.0, predDev) + predACI
+            COBpredBG = COBpredBGs[COBpredBGs.size - 1] + predBGI + min(0.0, predDev) + predCI + remainingCI
+            aCOBpredBG = aCOBpredBGs[aCOBpredBGs.size - 1] + predBGI + min(0.0, predDev) + predACI
             // for UAMpredBGs, predicted carb impact drops at slopeFromDeviations
             // calculate predicted CI from UAM based on slopeFromDeviations
-            val predUCIslope = Math.max(0.0, uci + (UAMpredBGs.size * slopeFromDeviations))
+            val predUCIslope = max(0.0, uci + (UAMpredBGs.size * slopeFromDeviations))
             // if slopeFromDeviations is too flat, predicted deviation impact drops linearly from
             // current deviation down to zero over 3h (data points every 5m)
-            val predUCImax = Math.max(0.0, uci * (1 - UAMpredBGs.size / Math.max(3 * 60 / 5, 1)))
+            val predUCImax = max(0.0, uci * (1 - UAMpredBGs.size / max(3 * 60 / 5, 1)))
             //console.error(predUCIslope, predUCImax);
             // predicted CI from UAM is the lesser of CI based on deviationSlope or DIA
-            val predUCI = Math.min(predUCIslope, predUCImax)
+            val predUCI = min(predUCIslope, predUCImax)
             if (predUCI > 0) {
                 //console.error(UAMpredBGs.length,slopeFromDeviations, predUCI);
                 UAMduration = round((UAMpredBGs.size + 1) * 5 / 60.0, 1)
             }
-            UAMpredBG = UAMpredBGs[UAMpredBGs.size - 1] + predBGI + Math.min(0.0, predDev) + predUCI
+            UAMpredBG = UAMpredBGs[UAMpredBGs.size - 1] + predBGI + min(0.0, predDev) + predUCI
             //console.error(predBGI, predCI, predUCI);
             // truncate all BG predictions at 4 hours
             if (IOBpredBGs.size < 48) IOBpredBGs.add(IOBpredBG)
@@ -568,38 +566,30 @@ class DetermineBasalSMB @Inject constructor(
         rT.predBGs = RT.Predictions()
         IOBpredBGs = IOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
         for (i in IOBpredBGs.size - 1 downTo 13) {
-            if (IOBpredBGs[i - 1] != IOBpredBGs[i]) {
-                break
-            } else {
-                IOBpredBGs.removeAt(IOBpredBGs.size - 1)
-            }
+            if (IOBpredBGs[i - 1] != IOBpredBGs[i]) break
+            else IOBpredBGs.removeLast()
         }
         rT.predBGs?.IOB = IOBpredBGs.map { it.toInt() }
         lastIOBpredBG = round(IOBpredBGs[IOBpredBGs.size - 1]).toDouble()
         ZTpredBGs = ZTpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
         for (i in ZTpredBGs.size - 1 downTo 7) {
             // stop displaying ZTpredBGs once they're rising and above target
-            if (ZTpredBGs[i - 1] >= ZTpredBGs[i] || ZTpredBGs[i] <= target_bg) {
-                break
-            } else {
-                ZTpredBGs.removeAt(ZTpredBGs.size - 1)
-            }
+            if (ZTpredBGs[i - 1] >= ZTpredBGs[i] || ZTpredBGs[i] <= target_bg) break
+            else ZTpredBGs.removeLast()
         }
         rT.predBGs?.ZT = ZTpredBGs.map { it.toInt() }
         if (meal_data.mealCOB > 0) {
             aCOBpredBGs = aCOBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
             for (i in aCOBpredBGs.size - 1 downTo 13) {
-                if (aCOBpredBGs[i - 1] != aCOBpredBGs[i]) {
-                    break; } else {
-                    aCOBpredBGs.removeLast() }
+                if (aCOBpredBGs[i - 1] != aCOBpredBGs[i]) break
+                else aCOBpredBGs.removeLast()
             }
         }
         if (meal_data.mealCOB > 0 && (ci > 0 || remainingCIpeak > 0)) {
             COBpredBGs = COBpredBGs.map { min(401.0, max(39.0, it)) }.toMutableList()
             for (i in COBpredBGs.size - 1 downTo 13) {
-                if (COBpredBGs[i - 1] != COBpredBGs[i]) {
-                    break; } else {
-                    COBpredBGs.removeLast() }
+                if (COBpredBGs[i - 1] != COBpredBGs[i]) break
+                else COBpredBGs.removeLast()
             }
             rT.predBGs?.COB = COBpredBGs.map { it.toInt() }
             lastCOBpredBG = COBpredBGs[COBpredBGs.size - 1]
@@ -665,7 +655,7 @@ class DetermineBasalSMB @Inject constructor(
         //minGuardBG = round(minGuardBG)
         //console.error(minCOBGuardBG, minUAMGuardBG, minIOBGuardBG, minGuardBG);
 
-        var minZTUAMPredBG : Int = minUAMPredBG
+        var minZTUAMPredBG: Int = minUAMPredBG
         // if minZTGuardBG is below threshold, bring down any super-high minUAMPredBG by averaging
         // this helps prevent UAM from giving too much insulin in case absorption falls off suddenly
         if (minZTGuardBG < threshold) {
@@ -725,8 +715,10 @@ class DetermineBasalSMB @Inject constructor(
         rT.COB = meal_data.mealCOB
         rT.IOB = iob_data.iob
         rT.reason.append(
-            "COB: ${round(meal_data.mealCOB, 1).withoutZeros()}, Dev: ${convert_bg(deviation.toDouble())}, BGI: ${convert_bg(bgi)}, ISF: ${convert_bg(sens)}, CR: ${round(profile.carb_ratio, 2)
-                .withoutZeros()}, Target: ${convert_bg(target_bg.toDouble())}, minPredBG ${convert_bg(minPredBG)}, minGuardBG ${convert_bg(minGuardBG)}, IOBpredBG ${convert_bg(lastIOBpredBG)}"
+            "COB: ${round(meal_data.mealCOB, 1).withoutZeros()}, Dev: ${convert_bg(deviation.toDouble())}, BGI: ${convert_bg(bgi)}, ISF: ${convert_bg(sens)}, CR: ${
+                round(profile.carb_ratio, 2)
+                    .withoutZeros()
+            }, Target: ${convert_bg(target_bg.toDouble())}, minPredBG ${convert_bg(minPredBG)}, minGuardBG ${convert_bg(minGuardBG)}, IOBpredBG ${convert_bg(lastIOBpredBG)}"
         )
         if (lastCOBpredBG != null) {
             rT.reason.append(", COBpredBG " + convert_bg(lastCOBpredBG.toDouble()))
