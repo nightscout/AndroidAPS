@@ -30,6 +30,9 @@ class AdaptiveSwitchPreference(context: Context, attrs: AttributeSet?) : SwitchP
         super.onAttached()
         // PreferenceScreen is final so we cannot extend and modify behavior
         val preferenceKey = preferences.get(key) as BooleanKey
-        if (preferenceKey.hideParentScreenIfHidden) parent?.isVisible = isVisible
+        if (preferenceKey.hideParentScreenIfHidden) {
+            parent?.isVisible = isVisible
+            parent?.isEnabled = isEnabled
+        }
     }
 }

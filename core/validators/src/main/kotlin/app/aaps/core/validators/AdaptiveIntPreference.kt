@@ -54,7 +54,10 @@ class AdaptiveIntPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefer
 
     override fun onAttached() {
         super.onAttached()
-        if (preferenceKey.hideParentScreenIfHidden) parent?.isVisible = isVisible
+        if (preferenceKey.hideParentScreenIfHidden) {
+            parent?.isVisible = isVisible
+            parent?.isEnabled = isEnabled
+        }
     }
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {

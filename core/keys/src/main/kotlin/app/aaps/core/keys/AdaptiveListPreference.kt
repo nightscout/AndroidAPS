@@ -30,6 +30,9 @@ open class AdaptiveListPreference(context: Context, attrs: AttributeSet?) : List
         super.onAttached()
         // PreferenceScreen is final so we cannot extend and modify behavior
         val preferenceKey = preferences.get(key) as StringKey
-        if (preferenceKey.hideParentScreenIfHidden) parent?.isVisible = isVisible
+        if (preferenceKey.hideParentScreenIfHidden) {
+            parent?.isVisible = isVisible
+            parent?.isEnabled = isEnabled
+        }
     }
 }
