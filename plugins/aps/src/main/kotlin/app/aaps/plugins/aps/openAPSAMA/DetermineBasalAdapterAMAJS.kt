@@ -1,7 +1,6 @@
 package app.aaps.plugins.aps.openAPSAMA
 
 import androidx.annotation.VisibleForTesting
-import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.iob.GlucoseStatus
 import app.aaps.core.data.iob.IobTotal
 import app.aaps.core.data.iob.MealData
@@ -16,11 +15,13 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.convertToJSONArray
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.getPassedDurationToTimeInMinutes
 import app.aaps.core.objects.extensions.plannedRemainingMinutes
-import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.logger.LoggerCallback
 import app.aaps.plugins.aps.utils.ScriptReader
 import dagger.android.HasAndroidInjector
@@ -46,6 +47,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var constraintChecker: ConstraintsChecker
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var processedTbrEbData: ProcessedTbrEbData
     @Inject lateinit var dateUtil: DateUtil
@@ -192,17 +194,17 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
         this.profile.put("target_bg", targetBg)
         this.profile.put("carb_ratio", profile.getIc())
         this.profile.put("sens", profile.getIsfMgdl())
-        this.profile.put("max_daily_safety_multiplier", sp.getInt(R.string.key_openapsama_max_daily_safety_multiplier, 3))
-        this.profile.put("current_basal_safety_multiplier", sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0))
+        this.profile.put("max_daily_safety_multiplier", preferences.get(DoubleKey.ApsMaxDailyMultiplier))
+        this.profile.put("current_basal_safety_multiplier", preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier))
         this.profile.put("skip_neutral_temps", true)
         this.profile.put("current_basal", basalRate)
         this.profile.put("temptargetSet", tempTargetSet)
-        this.profile.put("autosens_adjust_targets", sp.getBoolean(R.string.key_openapsama_autosens_adjusttargets, true))
+        this.profile.put("autosens_adjust_targets", preferences.get(BooleanKey.ApsAmaAutosensAdjustTargets))
         //align with max-absorption model in AMA sensitivity
         if (mealData.usedMinCarbsImpact > 0) {
             this.profile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact)
         } else {
-            this.profile.put("min_5m_carbimpact", sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
+            this.profile.put("min_5m_carbimpact", preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact))
         }
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")
@@ -219,7 +221,7 @@ class DetermineBasalAdapterAMAJS(private val scriptReader: ScriptReader, private
         iobData = iobArray.convertToJSONArray(dateUtil)
         this.glucoseStatus = JSONObject()
         this.glucoseStatus.put("glucose", glucoseStatus.glucose)
-        if (sp.getBoolean(R.string.key_always_use_shortavg, false)) {
+        if (preferences.get(BooleanKey.ApsAlwaysUseShortDeltas)) {
             this.glucoseStatus.put("delta", glucoseStatus.shortAvgDelta)
         } else {
             this.glucoseStatus.put("delta", glucoseStatus.delta)

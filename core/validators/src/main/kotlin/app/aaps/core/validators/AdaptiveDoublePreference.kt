@@ -24,7 +24,9 @@ class AdaptiveDoublePreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         preferenceKey = preferences.get(key) as DoubleKey
-        if (preferences.simpleMode && preferenceKey.defaultedBySM) isVisible = false
+        if (preferences.simpleMode && (preferenceKey.defaultedBySM || preferenceKey.calculatedBySM)) {
+            isVisible = false; isEnabled = false
+        }
         if (preferences.apsMode && !preferenceKey.showInApsMode) {
             isVisible = false; isEnabled = false
         }
@@ -82,7 +84,11 @@ class AdaptiveDoublePreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
     }
 
     override fun onSetInitialValue(defaultValue: Any?) {
-        text = getPersistedString(defaultValue as String?)
+        try {
+            text = getPersistedString(defaultValue as String?)
+        } catch (e: Exception) {
+            text = getPersistedFloat(preferenceKey.defaultValue.toFloat()).toString()
+        }
     }
 
     override fun persistString(value: String?): Boolean =

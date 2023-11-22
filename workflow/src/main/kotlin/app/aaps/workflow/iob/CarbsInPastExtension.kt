@@ -1,7 +1,6 @@
 package app.aaps.workflow.iob
 
 import app.aaps.core.data.aps.AutosensData
-import app.aaps.core.data.aps.SMBDefaults
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.CA
 import app.aaps.core.interfaces.logging.AAPSLogger
@@ -9,8 +8,10 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
 
-fun fromCarbs(t: CA, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunction, aapsLogger: AAPSLogger, dateUtil: DateUtil, sp: SP): AutosensData.CarbsInPast {
+fun fromCarbs(t: CA, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunction, aapsLogger: AAPSLogger, dateUtil: DateUtil, sp: SP, preferences: Preferences): AutosensData.CarbsInPast {
     val time = t.timestamp
     val carbs = t.amount
     val remaining = t.amount
@@ -26,7 +27,7 @@ fun fromCarbs(t: CA, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunction
             """Min 5m carbs impact for ${carbs}g @${dateUtil.dateAndTimeString(t.timestamp)} for ${maxAbsorptionHours}h calculated to $min5minCarbImpact ISF: $sens IC: $ic"""
         )
     } else {
-        min5minCarbImpact = sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+        min5minCarbImpact = preferences.get(DoubleKey.ApsAmaMin5MinCarbsImpact)
     }
     return AutosensData.CarbsInPast(time, carbs, min5minCarbImpact, remaining)
 }

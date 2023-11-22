@@ -13,5 +13,5 @@ enum class StringKey(
     GeneralLanguage(R.string.key_language, "default", defaultedBySM = true),
     GeneralSkin(R.string.key_skin, ""),
     GeneralDarkMode(R.string.key_use_dark_mode, "dark", defaultedBySM = true),
-    SafetyAge(R.string.key_age, "adult"),
+    SafetyAge(R.string.key_safety_age, "adult"),
 }

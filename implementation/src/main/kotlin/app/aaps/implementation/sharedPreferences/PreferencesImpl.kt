@@ -1,9 +1,14 @@
 package app.aaps.implementation.sharedPreferences
 
+import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.configuration.Config
+import app.aaps.core.interfaces.db.PersistenceLayer
+import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.keys.BooleanKey
 import app.aaps.core.keys.DoubleKey
 import app.aaps.core.keys.IntKey
@@ -11,15 +16,22 @@ import app.aaps.core.keys.PreferenceKey
 import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
+import dagger.Lazy
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.max
+import kotlin.math.min
 
 @Singleton
 class PreferencesImpl @Inject constructor(
     private val sp: SP,
     private val rh: ResourceHelper,
     private val profileUtil: ProfileUtil,
-    private val config: Config
+    private val profileFunction: Lazy<ProfileFunction>,
+    private val hardLimits: Lazy<HardLimits>,
+    private val persistenceLayer: PersistenceLayer,
+    private val config: Config,
+    private val dateUtil: DateUtil
 ) : Preferences {
 
     override val simpleMode: Boolean get() = sp.getBoolean(BooleanKey.GeneralSimpleMode.key, BooleanKey.GeneralSimpleMode.defaultValue)
@@ -50,7 +62,8 @@ class PreferencesImpl @Inject constructor(
     }
 
     override fun get(key: DoubleKey): Double =
-        if (simpleMode && key.defaultedBySM) key.defaultValue
+        if (simpleMode && key.calculatedBySM) calculatePreference(key)
+        else if (simpleMode && key.defaultedBySM) key.defaultValue
         else sp.getDouble(key.key, key.defaultValue)
 
     override fun getIfExists(key: DoubleKey): Double? =
@@ -98,4 +111,19 @@ class PreferencesImpl @Inject constructor(
             ?: UnitDoubleKey.entries.find { rh.gs(it.key) == key }
             ?: error("Key $key not found")
 
+    private fun calculatePreference(key: DoubleKey): Double =
+        limit(key, when (key) {
+            DoubleKey.ApsMaxBasal -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+            DoubleKey.ApsSmbMaxIob -> recentMaxBolus() + (profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue)
+            DoubleKey.ApsAmaMaxIob -> profileFunction.get().getProfile()?.getMaxDailyBasal()?.let { it * 3 } ?: key.defaultValue
+            else -> error("Unsupported key calculation")
+        })
+
+    private fun limit(key: DoubleKey, calculated: Double) = min(key.max, max(key.min, calculated))
+    private fun recentMaxBolus(): Double =
+        persistenceLayer
+            .getBolusesFromTime(dateUtil.now() - T.days(7).msecs(), true)
+            .blockingGet()
+            .maxOfOrNull { it.amount }
+            ?: hardLimits.get().maxBolus()
 }

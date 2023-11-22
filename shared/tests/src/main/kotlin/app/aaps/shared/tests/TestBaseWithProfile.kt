@@ -71,7 +71,7 @@ open class TestBaseWithProfile : TestBase() {
             if (it is APSResultObject) {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintsChecker
-                it.sp = sp
+                it.preferences = preferences
                 it.activePlugin = activePlugin
                 it.processedTbrEbData = processedTbrEbData
                 it.profileFunction = profileFunction

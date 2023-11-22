@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.aps.R
 import app.aaps.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import app.aaps.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
@@ -47,6 +48,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     hardLimits: HardLimits,
     profiler: Profiler,
     sp: SP,
+    preferences: Preferences,
     dateUtil: DateUtil,
     persistenceLayer: PersistenceLayer,
     glucoseStatusProvider: GlucoseStatusProvider,
@@ -69,6 +71,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     hardLimits,
     profiler,
     sp,
+    preferences,
     dateUtil,
     persistenceLayer,
     glucoseStatusProvider,

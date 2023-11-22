@@ -10,7 +10,7 @@
         <app.aaps.core.keys.AdaptiveListPreference
             android:entries="@array/ageArray"
             android:entryValues="@array/ageValues"
-            android:key="@string/key_age"
+            android:key="@string/key_safety_age"
             android:summary="@string/patient_age_summary"
             android:title="@string/patient_type" />
 

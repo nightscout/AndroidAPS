@@ -6,6 +6,7 @@ enum class DoubleKey(
     val min: Double,
     val max: Double,
     override val defaultedBySM: Boolean = false,
+    val calculatedBySM: Boolean = false,
     val showInApsMode: Boolean = true,
     val showInNsClientMode: Boolean = true,
     val showInPumpControlMode: Boolean = true,
@@ -19,4 +20,12 @@ enum class DoubleKey(
     ActionsFillButton2(R.string.key_fill_button_2, 0.0, 0.05, 20.0, defaultedBySM = true),
     ActionsFillButton3(R.string.key_fill_button_3, 0.0, 0.05, 20.0, defaultedBySM = true),
     SafetyMaxBolus(R.string.key_safety_max_bolus, 3.0, 0.1, 25.0),
+    ApsMaxBasal(R.string.key_openaps_max_basal, 1.0, 0.1, 25.0, defaultedBySM = true, calculatedBySM = true),
+    ApsSmbMaxIob(R.string.key_openaps_smb_max_iob, 3.0, 0.0, 70.0, defaultedBySM = true, calculatedBySM = true),
+    ApsAmaMaxIob(R.string.key_openaps_ama_max_iob, 1.5, 0.0, 25.0, defaultedBySM = true, calculatedBySM = true),
+    ApsMaxDailyMultiplier(R.string.key_openaps_max_daily_safety_multiplier, 3.0, 1.0, 10.0, defaultedBySM = true),
+    ApsMaxCurrentBasalMultiplier(R.string.key_openaps_current_basal_safety_multiplier, 4.0, 1.0, 10.0, defaultedBySM = true),
+    ApsAmaBolusSnoozeDivisor(R.string.key_openaps_ama_bolus_snooze_dia_divisor, 2.0, 1.0, 10.0, defaultedBySM = true),
+    ApsAmaMin5MinCarbsImpact(R.string.key_openaps_ama_min_5m_carbs_impact, 3.0, 1.0, 12.0, defaultedBySM = true),
+    ApsSmbMin5MinCarbsImpact(R.string.key_openaps_smb_min_5m_carbs_impact, 8.0, 1.0, 12.0, defaultedBySM = true)
 }

@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.main.general.overview.OverviewDataImpl
 import app.aaps.plugins.main.iob.iobCobCalculator.IobCobCalculatorPlugin
 import javax.inject.Inject
@@ -26,6 +27,7 @@ class HistoryBrowserData @Inject constructor(
     rh: ResourceHelper,
     dateUtil: DateUtil,
     sp: SP,
+    preferences: Preferences,
     activePlugin: ActivePlugin,
     profileFunction: ProfileFunction,
     persistenceLayer: PersistenceLayer,
@@ -52,7 +54,7 @@ class HistoryBrowserData @Inject constructor(
             aapsLogger,
             aapsSchedulers,
             rxBus,
-            sp,
+            preferences,
             rh,
             profileFunction,
             activePlugin,

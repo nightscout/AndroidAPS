@@ -260,7 +260,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             activity?.recreate()
             return
         }
-        if (key == rh.gs(app.aaps.core.utils.R.string.key_use_autosens) && sp.getBoolean(app.aaps.core.utils.R.string.key_use_autosens, false)) {
+        if (key == rh.gs(BooleanKey.ApsUseAutosens.key) && preferences.get(BooleanKey.ApsUseAutosens)) {
             activity?.let {
                 OKDialog.show(it, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }

@@ -63,12 +63,44 @@
     <string name="key_language" translatable="false">language</string>
 
     <!--    Safety-->
-    <string name="key_age" translatable="false">age</string>
+    <string name="key_safety_age" translatable="false">age</string>
     <string name="key_safety_max_bolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="key_safety_max_carbs" translatable="false">treatmentssafety_maxcarbs</string>
 
     <!--    BG source-->
     <string name="key_do_bg_ns_upload" translatable="false">dexcomg5_nsupload</string>
     <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
+
+    <!--    Loop-->
+    <string name="key_loop_open_mode_min_change" translatable="false">loop_openmode_min_change</string>
+
+    <!--    APS-->
+    <string name="key_openaps_max_basal" translatable="false">openapsma_max_basal</string>
+    <string name="key_openaps_smb_max_iob" translatable="false">openapsmb_max_iob</string>
+    <string name="key_openaps_ama_max_iob" translatable="false">openapsma_max_iob</string>
+    <string name="key_openaps_use_autosens" translatable="false">openapsama_useautosens</string>
+    <string name="key_openaps_use_smb" translatable="false">use_smb</string>
+    <string name="key_openaps_allow_smb_with_high_temp_target" translatable="false">enableSMB_with_high_temptarget</string>
+    <string name="key_openaps_enable_smb_always" translatable="false">enableSMB_always</string>
+    <string name="key_openaps_allow_smb_with_COB" translatable="false">enableSMB_with_COB</string>
+    <string name="key_openaps_allow_smb_with_low_temp_target" translatable="false">enableSMB_with_temptarget</string>
+    <string name="key_openaps_enable_smb_after_carbs" translatable="false">enableSMB_after_carbs</string>
+    <string name="key_openaps_smb_interval" translatable="false">smbinterval</string>
+    <string name="key_openaps_smb_max_minutes" translatable="false">smbmaxminutes</string>
+    <string name="key_openaps_uam_smb_max_minutes" translatable="false">uamsmbmaxminutes</string>
+    <string name="key_openaps_use_uam" translatable="false">use_uam</string>
+    <string name="key_openaps_sensitivity_raises_target" translatable="false">sensitivity_raises_target</string>
+    <string name="key_openaps_resistance_lowers_target" translatable="false">resistance_lowers_target</string>
+    <string name="key_openaps_carbs_required_threshold" translatable="false">carbsReqThreshold</string>
+    <string name="key_openaps_always_use_short_deltas" translatable="false">always_use_shortavg</string>
+    <string name="key_openaps_max_daily_safety_multiplier" translatable="false">openapsama_max_daily_safety_multiplier</string>
+    <string name="key_openaps_current_basal_safety_multiplier" translatable="false">openapsama_current_basal_safety_multiplier</string>
+    <string name="key_dynamic_isf_adjustment_factor" translatable="false">DynISFAdjust</string>
+    <string name="key_dynamic_isf_lgs_threshold" translatable="false">lgsThreshold</string>
+    <string name="key_dynamic_isf_adjust_sensitivity" translatable="false">dynisf_adjust_sensitivity</string>
+    <string name="key_openaps_ama_bolus_snooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
+    <string name="key_openaps_ama_autosens_adjust_targets" translatable="false">autosens_adjust_targets</string>
+    <string name="key_openaps_ama_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
+    <string name="key_openaps_smb_min_5m_carbs_impact" translatable="false">openapsama_min_5m_carbimpact</string>
 
 </resources>

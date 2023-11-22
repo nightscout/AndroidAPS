@@ -36,12 +36,13 @@ import app.aaps.core.interfaces.rx.events.EventNewHistoryData
 import app.aaps.core.interfaces.rx.events.EventOfflineChange
 import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventTherapyEventChange
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.MidnightTime
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.keys.StringKey
 import app.aaps.core.objects.extensions.combine
 import app.aaps.core.objects.extensions.convertedToAbsolute
@@ -66,7 +67,7 @@ class IobCobCalculatorPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
-    private val sp: SP,
+    private val preferences: Preferences,
     rh: ResourceHelper,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
@@ -121,7 +122,8 @@ class IobCobCalculatorPlugin @Inject constructor(
                            if (event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_period)) ||
                                event.isChanged(rh.gs(StringKey.SafetyAge.key)) ||
                                event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_absorption_maxtime)) ||
-                               event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_min_5m_carbimpact)) ||
+                               event.isChanged(rh.gs(DoubleKey.ApsAmaMin5MinCarbsImpact.key)) ||
+                               event.isChanged(rh.gs(DoubleKey.ApsSmbMin5MinCarbsImpact.key)) ||
                                event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_absorption_cutoff)) ||
                                event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_max)) ||
                                event.isChanged(rh.gs(app.aaps.core.utils.R.string.key_openapsama_autosens_min)) ||
@@ -512,7 +514,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         val total = IobTotal(toTime)
         val profile = profileFunction.getProfile() ?: return total
         val dia = profile.dia
-        val divisor = sp.getDouble(app.aaps.core.utils.R.string.key_openapsama_bolus_snooze_dia_divisor, 2.0)
+        val divisor = preferences.get(DoubleKey.ApsAmaBolusSnoozeDivisor)
         assert(divisor > 0)
 
         val boluses = persistenceLayer.getBolusesFromTime(toTime - range(), true).blockingGet()
