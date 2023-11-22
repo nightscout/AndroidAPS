@@ -92,7 +92,11 @@ class AdaptiveIntPreference(ctx: Context, attrs: AttributeSet?) : EditTextPrefer
     }
 
     override fun onSetInitialValue(defaultValue: Any?) {
-        text = getPersistedString(defaultValue as String?)
+        text = try {
+            getPersistedString(defaultValue as String?)
+        } catch (ignored: Exception) {
+            getPersistedInt(preferenceKey.defaultValue).toString()
+        }
     }
 
     override fun persistString(value: String?): Boolean =

@@ -87,10 +87,10 @@ class AdaptiveDoublePreference(ctx: Context, attrs: AttributeSet?) : EditTextPre
     }
 
     override fun onSetInitialValue(defaultValue: Any?) {
-        try {
-            text = getPersistedString(defaultValue as String?)
-        } catch (e: Exception) {
-            text = getPersistedFloat(preferenceKey.defaultValue.toFloat()).toString()
+        text = try {
+            getPersistedString(defaultValue as String?)
+        } catch (ignored: Exception) {
+            getPersistedFloat(preferenceKey.defaultValue.toFloat()).toString()
         }
     }
 

@@ -64,7 +64,7 @@
         </androidx.preference.PreferenceScreen>
 
         <androidx.preference.PreferenceScreen
-            android:key="nsclient_advanced"
+            android:key="tidepool_advanced"
             android:title="@string/advanced_settings_title">
 
             <CheckBoxPreference
