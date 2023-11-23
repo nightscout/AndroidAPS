@@ -25,7 +25,7 @@
             android:title="@string/title_tidepool_test_login" />
 
         <androidx.preference.PreferenceScreen
-            android:key="@string/connection_settings_title"
+            android:key="tidepool_connection_settings"
             android:title="@string/connection_settings_title">
 
             <SwitchPreference

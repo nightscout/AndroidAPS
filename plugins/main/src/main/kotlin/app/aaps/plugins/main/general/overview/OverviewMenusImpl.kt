@@ -158,10 +158,11 @@ class OverviewMenusImpl @Inject constructor(
 
     override fun enabledTypes(graph: Int): String {
         val r = StringBuilder()
-        for (type in CharTypeData.entries) if (setting[graph][type.ordinal]) {
-            r.append(rh.gs(type.shortnameId))
-            r.append(" ")
-        }
+        for (type in CharTypeData.entries)
+            if (setting[graph][type.ordinal]) {
+                r.append(rh.gs(type.shortnameId))
+                r.append(" ")
+            }
         return r.toString()
     }
 

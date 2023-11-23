@@ -1050,7 +1050,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val secondaryGraphsData: ArrayList<GraphData> = ArrayList()
 
         val now = System.currentTimeMillis()
-        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
+        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size - 1)) {
             val secondGraphData = GraphData(injector, secondaryGraphs[g], overviewData)
             var useABSForScale = false
             var useIobForScale = false
@@ -1093,7 +1093,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             secondGraphData.addNowLine(now)
             secondaryGraphsData.add(secondGraphData)
         }
-        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size + 1)) {
+        for (g in 0 until min(secondaryGraphs.size, menuChartSettings.size - 1)) {
             secondaryGraphsLabel[g].text = overviewMenus.enabledTypes(g + 1)
             secondaryGraphs[g].visibility = (
                 menuChartSettings[g + 1][OverviewMenus.CharType.ABS.ordinal] ||
