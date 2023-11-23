@@ -13,7 +13,9 @@ import app.aaps.core.interfaces.maintenance.PrefFileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.plugins.configuration.R
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
@@ -31,7 +33,7 @@ import javax.inject.Singleton
 class MaintenancePlugin @Inject constructor(
     private val context: Context,
     rh: ResourceHelper,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val nsSettingsStatus: NSSettingsStatus,
     aapsLogger: AAPSLogger,
     private val config: Config,
@@ -47,13 +49,14 @@ class MaintenancePlugin @Inject constructor(
         .pluginName(R.string.maintenance)
         .shortName(R.string.maintenance_shortname)
         .preferencesId(R.xml.pref_maintenance)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_maintenance),
     aapsLogger, rh
 ) {
 
     fun sendLogs() {
-        val recipient = sp.getString(R.string.key_maintenance_logs_email, "logs@aaps.app")
-        val amount = sp.getInt(R.string.key_maintenance_logs_amount, 2)
+        val recipient = preferences.get(StringKey.MaintenanceEmail)
+        val amount = preferences.get(IntKey.MaintenanceLogsAmount)
         val logs = getLogFiles(amount)
         val zipDir = fileListProvider.ensureTempDirExists()
         val zipFile = File(zipDir, constructName())
@@ -74,8 +77,7 @@ class MaintenancePlugin @Inject constructor(
         val autotuneFiles = logDir.listFiles { _: File?, name: String ->
             (name.startsWith("autotune") && name.endsWith(".zip"))
         }
-        val amount = sp.getInt(R.string.key_logshipper_amount, keep)
-        val keepIndex = amount - 1
+        val keepIndex = keep - 1
         if (autotuneFiles != null && autotuneFiles.isNotEmpty()) {
             Arrays.sort(autotuneFiles) { f1: File, f2: File -> f2.name.compareTo(f1.name) }
             var delAutotuneFiles = listOf(*autotuneFiles)

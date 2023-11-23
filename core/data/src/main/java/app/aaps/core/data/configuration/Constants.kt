@@ -61,9 +61,6 @@ object Constants {
     // Local profile
     const val LOCAL_PROFILE = "LocalProfile"
 
-    // Local Alerts
-    const val DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES = 30
-    const val DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES = 30
     // One Time Password
     /**
      * Size of generated key for TOTP Authenticator token, in bits

@@ -33,6 +33,7 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.versionChecker.VersionCheckerUtils
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.locale.LocaleHelper
@@ -129,7 +130,7 @@ class MainApp : DaggerApplication() {
             handler.postDelayed(
                 {
                     // check if identification is set
-                    if (config.isDev() && sp.getStringOrNull(app.aaps.core.utils.R.string.key_email_for_crash_report, null).isNullOrBlank())
+                    if (config.isDev() && preferences.get(StringKey.MaintenanceIdentification).isBlank())
                         notificationStore.add(Notification(Notification.IDENTIFICATION_NOT_SET, rh.get().gs(R.string.identification_not_set), Notification.INFO))
                     // log version
                     disposable += persistenceLayer.insertVersionChangeIfChanged(config.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash).subscribe()
@@ -225,8 +226,8 @@ class MainApp : DaggerApplication() {
         }
         if (!sp.contains(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event))
             sp.putBoolean(app.aaps.plugins.sync.R.string.key_ns_log_app_started_event, config.APS)
-        if (sp.getString(app.aaps.plugins.configuration.R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
-            sp.putString(app.aaps.plugins.configuration.R.string.key_maintenance_logs_email, "logs@aaps.app")
+        if (preferences.getIfExists(StringKey.MaintenanceEmail) == "logs@androidaps.org")
+            preferences.put(StringKey.MaintenanceEmail, "logs@aaps.app")
         // fix values for theme switching
         sp.putString(app.aaps.plugins.main.R.string.value_dark_theme, "dark")
         sp.putString(app.aaps.plugins.main.R.string.value_light_theme, "light")

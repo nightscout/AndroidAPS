@@ -165,10 +165,12 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
+        if (preferences.simpleMode && p?.pluginDescription?.preferencesVisibleInSimpleMode != true) return
         if (enabled) addPreferencesFromResourceIfEnabled(p, rootKey)
     }
 
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?) {
+        if (preferences.simpleMode && p?.pluginDescription?.preferencesVisibleInSimpleMode != true) return
         if (p!!.isEnabled() && p.preferencesId != -1)
             addPreferencesFromResource(p.preferencesId, rootKey)
     }

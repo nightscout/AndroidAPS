@@ -8,7 +8,6 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.notifications.Notification
 import app.aaps.core.interfaces.protection.ProtectionCheck
@@ -27,6 +26,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.UIRunnable
 import app.aaps.core.ui.dialogs.OKDialog
 import dagger.android.support.DaggerFragment
@@ -65,6 +66,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var omnipodDashPumpPlugin: OmnipodDashPumpPlugin
     @Inject lateinit var podStateManager: OmnipodDashPodStateManager
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -765,14 +767,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     // FIXME ideally we should just have access to LocalAlertUtils here
-    private fun getPumpUnreachableTimeout(): Duration {
-        return Duration.ofMinutes(
-            sp.getInt(
-                app.aaps.core.utils.R.string.key_pump_unreachable_threshold_minutes,
-                Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES
-            ).toLong()
-        )
-    }
+    private fun getPumpUnreachableTimeout(): Duration =
+        Duration.ofMinutes(preferences.get(IntKey.AlertsPumpUnreachableThreshold).toLong())
 
     inner class DisplayResultDialogCallback(
         private val errorMessagePrefix: String,

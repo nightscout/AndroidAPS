@@ -1,6 +1,5 @@
 package app.aaps.implementation.alerts
 
-import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.TE
 import app.aaps.core.data.time.T
 import app.aaps.core.data.ue.Action
@@ -21,6 +20,8 @@ import app.aaps.core.interfaces.rx.events.EventNewNotification
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.smsCommunicator.SmsCommunicator
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.asAnnouncement
 import app.aaps.core.ui.R
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -36,6 +37,7 @@ import kotlin.math.min
 class LocalAlertUtilsImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
@@ -49,11 +51,11 @@ class LocalAlertUtilsImpl @Inject constructor(
     private val disposable = CompositeDisposable()
 
     private fun missedReadingsThreshold(): Long {
-        return T.mins(sp.getInt(app.aaps.core.utils.R.string.key_missed_bg_readings_threshold_minutes, Constants.DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES).toLong()).msecs()
+        return T.mins(preferences.get(IntKey.AlertsStaleDataThreshold).toLong()).msecs()
     }
 
     private fun pumpUnreachableThreshold(): Long {
-        return T.mins(sp.getInt(app.aaps.core.utils.R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong()).msecs()
+        return T.mins(preferences.get(IntKey.AlertsPumpUnreachableThreshold).toLong()).msecs()
     }
 
     override fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {

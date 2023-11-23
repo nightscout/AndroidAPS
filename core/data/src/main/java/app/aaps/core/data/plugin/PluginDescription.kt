@@ -17,6 +17,7 @@ open class PluginDescription {
     var defaultPlugin = false
     var pluginIcon = -1
     var pluginIcon2 = -1
+    var preferencesVisibleInSimpleMode = true
 
     fun mainType(mainType: PluginType): PluginDescription = this.also { it.mainType = mainType }
     fun fragmentClass(fragmentClass: String?): PluginDescription = this.also { it.fragmentClass = fragmentClass }
@@ -33,4 +34,5 @@ open class PluginDescription {
     fun visibleByDefault(visibleByDefault: Boolean): PluginDescription = this.also { it.visibleByDefault = visibleByDefault }
     fun description(description: Int): PluginDescription = this.also { it.description = description }
     fun setDefault(value: Boolean = true): PluginDescription = this.also { it.defaultPlugin = value }
+    fun preferencesVisibleInSimpleMode(value: Boolean = true): PluginDescription = this.also { it.preferencesVisibleInSimpleMode = value }
 }

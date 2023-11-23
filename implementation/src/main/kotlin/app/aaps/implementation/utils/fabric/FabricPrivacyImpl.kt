@@ -6,7 +6,6 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.weardata.EventData
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
-import app.aaps.core.utils.R
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.crashlytics.FirebaseCrashlytics
@@ -99,7 +98,7 @@ class FabricPrivacyImpl @Inject constructor(
     }
 
     override fun fabricEnabled(): Boolean {
-        return sp.getBoolean(R.string.key_enable_fabric, true)
+        return sp.getBoolean(app.aaps.core.keys.R.string.key_enable_fabric, true)
     }
 
     override fun logWearException(wearException: EventData.WearException) {
