@@ -2,6 +2,8 @@ package app.aaps.core.data.plugin
 
 open class PluginDescription {
 
+    enum class Position { MENU, TAB }
+
     var mainType = PluginType.GENERAL
     var fragmentClass: String? = null
     var alwaysVisible = false
@@ -18,6 +20,7 @@ open class PluginDescription {
     var pluginIcon = -1
     var pluginIcon2 = -1
     var preferencesVisibleInSimpleMode = true
+    var simpleModePosition: Position = Position.MENU
 
     fun mainType(mainType: PluginType): PluginDescription = this.also { it.mainType = mainType }
     fun fragmentClass(fragmentClass: String?): PluginDescription = this.also { it.fragmentClass = fragmentClass }
@@ -34,5 +37,6 @@ open class PluginDescription {
     fun visibleByDefault(visibleByDefault: Boolean): PluginDescription = this.also { it.visibleByDefault = visibleByDefault }
     fun description(description: Int): PluginDescription = this.also { it.description = description }
     fun setDefault(value: Boolean = true): PluginDescription = this.also { it.defaultPlugin = value }
-    fun preferencesVisibleInSimpleMode(value: Boolean = true): PluginDescription = this.also { it.preferencesVisibleInSimpleMode = value }
+    fun preferencesVisibleInSimpleMode(value: Boolean): PluginDescription = this.also { it.preferencesVisibleInSimpleMode = value }
+    fun simpleModePosition(value: Position = Position.MENU): PluginDescription = this.also { it.simpleModePosition = value }
 }

@@ -41,6 +41,7 @@ import app.aaps.core.interfaces.smoothing.Smoothing
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.sync.NsClient
 import app.aaps.core.interfaces.ui.UiInteraction
+import app.aaps.core.keys.Preferences
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.plugins.configuration.R
@@ -54,6 +55,7 @@ class ConfigBuilderPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val activePlugin: ActivePlugin,
     private val uel: UserEntryLogger,
@@ -64,9 +66,7 @@ class ConfigBuilderPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(ConfigBuilderFragment::class.java.name)
-        .showInList(true)
         .alwaysEnabled(true)
-        .alwaysVisible(false)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_cogs)
         .pluginName(R.string.config_builder)
         .shortName(R.string.config_builder_shortname)
@@ -256,11 +256,12 @@ class ConfigBuilderPlugin @Inject constructor(
 
         @Suppress("InflateParams")
         val holder = layoutInflater.inflate(R.layout.configbuilder_single_category, null) as LinearLayout
-        (holder.findViewById<View>(R.id.category_title) as TextView).let {
+        holder.findViewById<TextView>(R.id.category_title).let {
             if (title != null) it.text = rh.gs(title)
             else it.visibility = View.GONE
         }
-        (holder.findViewById<View>(R.id.category_description) as TextView).text = rh.gs(description)
+        if (preferences.simpleMode) holder.findViewById<View>(R.id.category_visibility).visibility = false.toVisibility()
+        holder.findViewById<TextView>(R.id.category_description).text = rh.gs(description)
         val pluginContainer = holder.findViewById<LinearLayout>(R.id.category_plugins)
         val appActivity = fragment?.activity ?: activity ?: throw InvalidParameterException()
         for (plugin in plugins) {
@@ -341,10 +342,16 @@ class ConfigBuilderPlugin @Inject constructor(
                 pluginDescription.visibility = View.VISIBLE
                 pluginDescription.text = plugin.description
             }
-            pluginPreferences.visibility = if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
-            pluginVisibility.visibility = plugin.hasFragment().toVisibility()
-            pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
-            pluginVisibility.isChecked = plugin.isFragmentVisible()
+            if (preferences.simpleMode) {
+                pluginPreferences.visibility =
+                    if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType) || !plugin.pluginDescription.preferencesVisibleInSimpleMode) View.INVISIBLE else View.VISIBLE
+                pluginVisibility.visibility = false.toVisibility()
+            } else {
+                pluginPreferences.visibility = if (plugin.preferencesId == -1 || !plugin.isEnabled(pluginType)) View.INVISIBLE else View.VISIBLE
+                pluginVisibility.visibility = plugin.hasFragment().toVisibility()
+                pluginVisibility.isEnabled = !(plugin.pluginDescription.neverVisible || plugin.pluginDescription.alwaysVisible) && plugin.isEnabled(pluginType)
+                pluginVisibility.isChecked = plugin.isFragmentVisible()
+            }
         }
 
         private fun areMultipleSelectionsAllowed(type: PluginType): Boolean {

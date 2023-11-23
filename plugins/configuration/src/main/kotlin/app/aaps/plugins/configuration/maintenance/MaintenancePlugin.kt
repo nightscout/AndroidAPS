@@ -43,7 +43,6 @@ class MaintenancePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(MaintenanceFragment::class.java.name)
-        .alwaysVisible(false)
         .alwaysEnabled(true)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_maintenance)
         .pluginName(R.string.maintenance)

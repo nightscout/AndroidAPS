@@ -31,6 +31,7 @@ import androidx.core.view.MenuProvider
 import androidx.viewpager2.widget.ViewPager2
 import app.aaps.activities.HistoryBrowseActivity
 import app.aaps.activities.PreferencesActivity
+import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.ue.Action
 import app.aaps.core.data.ue.Sources
 import app.aaps.core.interfaces.androidPermissions.AndroidPermission
@@ -355,19 +356,24 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         binding.mainNavigationView.setNavigationItemSelectedListener { true }
         val menu = binding.mainNavigationView.menu.also { it.clear() }
         for (p in activePlugin.getPluginsList()) {
-            pageAdapter.registerNewFragment(p)
-            if (p.isEnabled() && p.hasFragment() && !p.isFragmentVisible() && !p.pluginDescription.neverVisible) {
+            // Add to tabs if visible
+            if (
+                preferences.simpleMode && p.isEnabled() && p.hasFragment() && p.pluginDescription.simpleModePosition == PluginDescription.Position.TAB ||
+                !preferences.simpleMode && p.isEnabled() && p.hasFragment() && p.isFragmentVisible()
+            ) pageAdapter.registerNewFragment(p)
+            // Add to menu if not visible
+            if (
+                preferences.simpleMode && p.isEnabled() && p.hasFragment() && !p.pluginDescription.neverVisible && p.pluginDescription.simpleModePosition == PluginDescription.Position.MENU ||
+                !preferences.simpleMode && p.isEnabled() && p.hasFragment() && !p.pluginDescription.neverVisible && !p.isFragmentVisible()
+            ) {
                 val menuItem = menu.add(p.name)
                 menuItem.isCheckable = true
-                if (p.menuIcon != -1) {
-                    menuItem.setIcon(p.menuIcon)
-                } else {
-                    menuItem.setIcon(app.aaps.core.ui.R.drawable.ic_settings)
-                }
+                if (p.menuIcon != -1) menuItem.setIcon(p.menuIcon)
+                else menuItem.setIcon(app.aaps.core.ui.R.drawable.ic_settings)
                 menuItem.setOnMenuItemClickListener {
                     startActivity(
                         Intent(this, SingleFragmentActivity::class.java)
-                            .setAction("info.nightscout.androidaps.MainActivity")
+                            .setAction(this::class.simpleName)
                             .putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
                     )
                     binding.mainDrawerLayout.closeDrawers()

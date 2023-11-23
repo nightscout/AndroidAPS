@@ -65,6 +65,7 @@ class OverviewPlugin @Inject constructor(
         .fragmentClass(OverviewFragment::class.qualifiedName)
         .alwaysVisible(true)
         .alwaysEnabled(true)
+        .simpleModePosition(PluginDescription.Position.TAB)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_home)
         .pluginName(R.string.overview)
         .shortName(R.string.overview_shortname)
