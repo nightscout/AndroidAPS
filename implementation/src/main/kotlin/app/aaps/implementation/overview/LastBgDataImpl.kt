@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.keys.Preferences
@@ -24,7 +23,6 @@ class LastBgDataImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
-    private val profileUtil: ProfileUtil,
     private val preferences: Preferences,
     private val iobCobCalculator: IobCobCalculator
 ) : LastBgData {

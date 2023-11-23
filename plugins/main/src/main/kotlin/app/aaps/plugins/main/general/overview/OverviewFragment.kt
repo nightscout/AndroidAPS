@@ -222,6 +222,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         }
         prepareGraphsIfNeeded(overviewMenus.setting.size)
         context?.let { overviewMenus.setupChartMenu(it, binding.graphsLayout.chartMenuButton) }
+        binding.graphsLayout.chartMenuButton.visibility = preferences.simpleMode.not().toVisibility()
 
         binding.activeProfile.setOnClickListener(this)
         binding.activeProfile.setOnLongClickListener(this)

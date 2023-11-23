@@ -39,31 +39,10 @@ class HistoryBrowserData @Inject constructor(
 
     // We don't want to use injected singletons but own instance working on top of different data
     val overviewData =
-        OverviewDataImpl(
-            rh,
-            dateUtil,
-            sp,
-            activePlugin,
-            profileFunction,
-            persistenceLayer,
-            decimalFormatter,
-            processedTbrEbData
-        )
+        OverviewDataImpl(rh, dateUtil, sp, activePlugin, profileFunction, persistenceLayer, decimalFormatter, processedTbrEbData)
     val iobCobCalculator =
         IobCobCalculatorPlugin(
-            aapsLogger,
-            aapsSchedulers,
-            rxBus,
-            preferences,
-            rh,
-            profileFunction,
-            activePlugin,
-            fabricPrivacy,
-            dateUtil,
-            persistenceLayer,
-            overviewData,
-            calculationWorkflow,
-            decimalFormatter,
-            processedTbrEbData
+            aapsLogger, aapsSchedulers, rxBus, preferences, rh, profileFunction, activePlugin,
+            fabricPrivacy, dateUtil, persistenceLayer, overviewData, calculationWorkflow, decimalFormatter, processedTbrEbData
         )
 }

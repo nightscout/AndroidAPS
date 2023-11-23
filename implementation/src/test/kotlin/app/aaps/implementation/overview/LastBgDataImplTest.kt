@@ -30,7 +30,7 @@ class LastBgDataImplTest : TestBaseWithProfile() {
     @BeforeEach
     fun setup() {
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        sut = LastBgDataImpl(rh, dateUtil, persistenceLayer, profileFunction, profileUtil, preferences, iobCobCalculator)
+        sut = LastBgDataImpl(rh, dateUtil, persistenceLayer, profileFunction, preferences, iobCobCalculator)
         Mockito.`when`(preferences.get(UnitDoubleKey.OverviewLowMark)).thenReturn(80.0)
         Mockito.`when`(preferences.get(UnitDoubleKey.OverviewHighMark)).thenReturn(180.0)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)

@@ -20,6 +20,7 @@ import app.aaps.core.interfaces.rx.events.EventRefreshOverview
 import app.aaps.core.interfaces.rx.events.EventScale
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.plugins.main.R
 import com.google.gson.Gson
 import javax.inject.Inject
@@ -30,6 +31,7 @@ class OverviewMenusImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val rxBus: RxBus,
     private val config: Config,
     private val loop: Loop,
@@ -156,7 +158,7 @@ class OverviewMenusImpl @Inject constructor(
 
     override fun enabledTypes(graph: Int): String {
         val r = StringBuilder()
-        for (type in CharTypeData.values()) if (_setting[graph][type.ordinal]) {
+        for (type in CharTypeData.entries) if (setting[graph][type.ordinal]) {
             r.append(rh.gs(type.shortnameId))
             r.append(" ")
         }
@@ -166,7 +168,15 @@ class OverviewMenusImpl @Inject constructor(
     private var _setting: MutableList<Array<Boolean>> = ArrayList()
 
     override val setting: List<Array<Boolean>>
-        @Synchronized get() = _setting.toMutableList() // implicitly does a list copy
+        @Synchronized get() =
+            if (!preferences.simpleMode)
+                _setting.toMutableList() // implicitly does a list copy
+            else
+                listOf(
+                    arrayOf(true, true, true, false, false, false, false, false, false, false, false, false, false),
+                    arrayOf(false, false, false, false, true, false, false, false, false, false, false, false, false),
+                    arrayOf(false, false, false, false, false, true, false, false, false, false, false, false, false)
+                )
 
     @Synchronized
     private fun storeGraphConfig() {
@@ -177,19 +187,19 @@ class OverviewMenusImpl @Inject constructor(
 
     @Synchronized
     override fun loadGraphConfig() {
-        assert(CharTypeData.values().size == OverviewMenus.CharType.values().size)
+        assert(CharTypeData.entries.size == OverviewMenus.CharType.entries.size)
         val sts = sp.getString(R.string.key_graph_config, "")
         if (sts.isNotEmpty()) {
             _setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
             // reset when new CharType added
             for (s in _setting)
-                if (s.size != OverviewMenus.CharType.values().size) {
+                if (s.size != OverviewMenus.CharType.entries.size) {
                     _setting = ArrayList()
-                    _setting.add(Array(OverviewMenus.CharType.values().size) { CharTypeData.values()[it].enabledByDefault })
+                    _setting.add(Array(OverviewMenus.CharType.entries.size) { CharTypeData.entries[it].enabledByDefault })
                 }
         } else {
             _setting = ArrayList()
-            _setting.add(Array(OverviewMenus.CharType.values().size) { CharTypeData.values()[it].enabledByDefault })
+            _setting.add(Array(OverviewMenus.CharType.entries.size) { CharTypeData.entries[it].enabledByDefault })
         }
     }
 
@@ -220,7 +230,7 @@ class OverviewMenusImpl @Inject constructor(
                     dividerItem.isCheckable = true
                     dividerItem.isChecked = true
                 }
-                CharTypeData.values().forEach { m ->
+                CharTypeData.entries.forEach { m ->
                     if (g == 0 && !m.primary) return@forEach
                     if (g > 0 && !m.secondary) return@forEach
                     var insert = true
@@ -265,7 +275,7 @@ class OverviewMenusImpl @Inject constructor(
 
                             it.itemId == numOfGraphs                           -> {
                                 // add new empty
-                                _setting.add(Array(CharTypeData.values().size) { false })
+                                _setting.add(Array(CharTypeData.entries.size) { false })
                             }
 
                             it.itemId < 100                                    -> {
