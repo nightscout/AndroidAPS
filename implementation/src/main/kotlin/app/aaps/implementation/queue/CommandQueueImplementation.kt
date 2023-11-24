@@ -119,13 +119,13 @@ class CommandQueueImplementation @Inject constructor(
                                return@subscribe
                            }
                            aapsLogger.debug(LTag.PROFILE, "onEventProfileSwitchChanged")
-                           val effective = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
                            profileFunction.getRequestedProfile()?.let {
                                setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
                                    override fun run() {
                                        if (!result.success) {
                                            uiInteraction.runAlarm(result.comment, rh.gs(app.aaps.core.ui.R.string.failed_update_basal_profile), app.aaps.core.ui.R.raw.boluserror)
-                                       } else if (result.enacted || effective is ValueWrapper.Existing && effective.value.originalEnd < dateUtil.now() && effective.value.originalDuration != 0L) {
+                                       } else /* if (result.enacted || effective is ValueWrapper.Existing && effective.value.originalEnd < dateUtil.now() && effective.value.originalDuration != 0L) */ {
+                                           // Pump may return enacted == false if basal profile is the same, but IC/ISF can be different
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
                                            EffectiveProfileSwitch(
                                                timestamp = dateUtil.now(),
