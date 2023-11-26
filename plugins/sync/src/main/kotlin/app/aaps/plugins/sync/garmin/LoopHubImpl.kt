@@ -72,7 +72,6 @@ class LoopHubImpl @Inject constructor(
 
     /** Returns the remaining carbs on board. */
     override val carbsOnboard: Double?
-       // get() = overviewData.cobInfo(iobCobCalculator).displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
        get() = overviewData.cobInfo(iobCobCalculator).displayCob
 
     /** Returns true if the pump is connected. */
