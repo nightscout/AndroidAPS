@@ -13,6 +13,7 @@ import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.main.graph.OverviewData
 import app.aaps.database.ValueWrapper
 import app.aaps.database.entities.EffectiveProfileSwitch
 import app.aaps.database.entities.GlucoseValue
@@ -42,6 +43,7 @@ class LoopHubImpl @Inject constructor(
     private val repo: AppRepository,
     private val userEntryLogger: UserEntryLogger,
     private val sp: SP,
+    private val overviewData: OverviewData,
 ) : LoopHub {
 
     @VisibleForTesting
@@ -64,6 +66,15 @@ class LoopHubImpl @Inject constructor(
     override val insulinOnboard: Double
         get() = iobCobCalculator.calculateIobFromBolus().iob
 
+    /** Returns the remaining bolus and basal insulin on board. */
+    override val insulinTotalOnboard :Double
+        get() = iobCobCalculator.calculateIobFromBolus().iob + iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().basaliob
+
+    /** Returns the remaining carbs on board. */
+    override val carbsOnboard: Double?
+       // get() = overviewData.cobInfo(iobCobCalculator).displayText(rh, decimalFormatter) ?: rh.gs(app.aaps.core.ui.R.string.value_unavailable_short)
+       get() = overviewData.cobInfo(iobCobCalculator).displayCob
+
     /** Returns true if the pump is connected. */
     override val isConnected: Boolean get() = !loop.isDisconnected
 
@@ -81,6 +92,13 @@ class LoopHubImpl @Inject constructor(
         get() {
             val apsResult = loop.lastRun?.constraintsProcessed
             return if (apsResult == null) Double.NaN else apsResult.percent / 100.0
+        }
+
+    /** Returns the temporary basal rate in percent */
+    override val temporaryBasalPercent: String
+        get() {
+            val apsResult = loop.lastRun?.constraintsProcessed
+            return if (apsResult == null) "--" else apsResult.percent.toString()
         }
 
     /** Tells the loop algorithm that the pump is physicallly connected. */
