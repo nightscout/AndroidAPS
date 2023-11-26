@@ -327,6 +327,9 @@ class GarminPlugin @Inject constructor(
                     GlucoseUnit.MGDL -> jo.addProperty("units_hint", "mgdl")
                     GlucoseUnit.MMOL -> jo.addProperty("units_hint", "mmol")
                 }
+                jo.addProperty("iob", loopHub.insulinTotalOnboard)
+                jo.addProperty("tbr", loopHub.temporaryBasalPercent)
+                jo.addProperty("cob", loopHub.carbsOnboard)
             }
             joa.add(jo)
         }
