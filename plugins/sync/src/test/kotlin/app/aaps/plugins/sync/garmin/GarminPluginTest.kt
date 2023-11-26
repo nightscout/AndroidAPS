@@ -227,7 +227,7 @@ class GarminPluginTest: TestBase() {
             listOf(createGlucoseValue(
                 clock.instant().minusSeconds(100L), 99.3)))
         assertEquals(
-            """[{"_id":"-900000","device":"RANDOM","deviceString":"1969-12-31T23:58:30Z","sysTime":"1969-12-31T23:58:30Z","unfiltered":90.0,"date":-90000,"sgv":99,"direction":"Flat","noise":4.5,"units_hint":"mmol"}]""",
+            """[{"_id":"-900000","device":"RANDOM","deviceString":"1969-12-31T23:58:30Z","sysTime":"1969-12-31T23:58:30Z","unfiltered":90.0,"date":-90000,"sgv":99,"direction":"Flat","noise":4.5,"units_hint":"mmol","iob":4.8,"tbr":"120","cob":12.1}]""",
              gp.onSgv(mock(), createUri(mapOf()), null))
         verify(loopHub).getGlucoseValues(clock.instant().minusSeconds(25L * 300L), false)
         verify(loopHub).glucoseUnit
@@ -242,20 +242,20 @@ class GarminPluginTest: TestBase() {
                 .map(Instant::ofEpochMilli)
                 .mapIndexed { idx, ts -> createGlucoseValue(ts, 100.0+(10 * idx)) }.reversed()}
         assertEquals(
-            """[{"_id":"100000","device":"RANDOM","deviceString":"1970-01-01T00:00:10Z","sysTime":"1970-01-01T00:00:10Z","unfiltered":90.0,"date":10000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol"}]""",
+            """[{"_id":"100000","device":"RANDOM","deviceString":"1970-01-01T00:00:10Z","sysTime":"1970-01-01T00:00:10Z","unfiltered":90.0,"date":10000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol","iob":4.8,"tbr":"120","cob":12.1}]""",
             gp.onSgv(mock(), createUri(mapOf("count" to "1")), null))
         verify(loopHub).getGlucoseValues(
             clock.instant().minusSeconds(600L), false)
 
         assertEquals(
-            """[{"_id":"100000","device":"RANDOM","deviceString":"1970-01-01T00:00:10Z","sysTime":"1970-01-01T00:00:10Z","unfiltered":90.0,"date":10000,"sgv":130,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol"},""" +
+            """[{"_id":"100000","device":"RANDOM","deviceString":"1970-01-01T00:00:10Z","sysTime":"1970-01-01T00:00:10Z","unfiltered":90.0,"date":10000,"sgv":130,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol","iob":4.8,"tbr":"120","cob":12.1},""" +
              """{"_id":"-2900000","device":"RANDOM","deviceString":"1969-12-31T23:55:10Z","sysTime":"1969-12-31T23:55:10Z","unfiltered":90.0,"date":-290000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5}]""",
             gp.onSgv(mock(), createUri(mapOf("count" to "2")), null))
         verify(loopHub).getGlucoseValues(
             clock.instant().minusSeconds(900L), false)
 
         assertEquals(
-            """[{"date":10000,"sgv":130,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol"},""" +
+            """[{"date":10000,"sgv":130,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol","iob":4.8,"tbr":"120","cob":12.1},""" +
                 """{"date":-290000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5}]""",
             gp.onSgv(mock(), createUri(mapOf("count" to "2", "brief_mode" to "true")), null))
         verify(loopHub, times(2)).getGlucoseValues(
