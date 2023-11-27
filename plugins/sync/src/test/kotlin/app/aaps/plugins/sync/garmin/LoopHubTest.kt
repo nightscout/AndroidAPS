@@ -10,7 +10,6 @@ import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
-import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.sharedPreferences.SP
@@ -57,7 +56,6 @@ class LoopHubTest: TestBase() {
     @Mock lateinit var userEntryLogger: UserEntryLogger
     @Mock lateinit var sp: SP
     @Mock lateinit var overviewData: OverviewData
-    @Mock lateinit var profileUtil: ProfileUtil
 
     private lateinit var loopHub: LoopHubImpl
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
@@ -81,7 +79,6 @@ class LoopHubTest: TestBase() {
         verifyNoMoreInteractions(repo)
         verifyNoMoreInteractions(userEntryLogger)
         verifyNoMoreInteractions(overviewData)
-        verifyNoMoreInteractions(profileUtil)
     }
 
     @Test
