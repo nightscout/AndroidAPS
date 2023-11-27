@@ -40,11 +40,6 @@ class GlucoseStatusProviderImpl @Inject constructor(
         }
         val now = data[0]
         val nowDate = now.timestamp
-        val nowValue = now.value
-        val recalc = now.recalculated
-        val smooth = now.smoothed
-        val filled = now.filledGap
-        val cgm = now.sourceSensor
         var change: Double
         if (sizeRecords == 1) {
             aapsLogger.debug(LTag.GLUCOSE, "sizeRecords==1")
@@ -76,10 +71,6 @@ class GlucoseStatusProviderImpl @Inject constructor(
             if (data[i].value > 39 && !data[i].filledGap) {   // if (data[i].recalculated > 38) {
                 val then = data[i]
                 val thenDate = then.timestamp
-                val valueAgo = then.value
-                val bgAgo = then.recalculated
-                val smoothAgo = then.smoothed
-                val filledAgo = then.filledGap
 
                 val minutesAgo = ((nowDate - thenDate) / (1000.0 * 60)).roundToLong()
                 // multiply by 5 to get the same units as delta, i.e. mg/dL/5m

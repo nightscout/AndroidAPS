@@ -89,6 +89,13 @@ class GlucoseStatusTest : TestBaseWithProfile() {
         assertThat(glucoseStatus.shortAvgDelta).isWithin(0.001).of(0.0) // -2 -2.5 -3 deltas are relative to current value
         assertThat(glucoseStatus.longAvgDelta).isWithin(0.001).of(0.0) // -2 -2 -2 -2
         assertThat(glucoseStatus.date).isEqualTo(1514766900000L) // latest date
+
+        assertThat(glucoseStatus.duraISFminutes).isEqualTo(0.0) // size records in minutes
+        assertThat(glucoseStatus.duraISFaverage).isWithin(0.01).of(214.0) //
+        assertThat(glucoseStatus.parabolaMinutes).isWithin(0.001).of(0.0) //
+        assertThat(glucoseStatus.bgAcceleration).isWithin(0.001).of(0.0) //
+        assertThat(glucoseStatus.a0).isWithin(0.01).of(214.0) //
+        assertThat(glucoseStatus.corrSqu).isWithin(0.001).of(0.0) //
     }
 
     @Test fun insufficientDataShouldReturnNull() {

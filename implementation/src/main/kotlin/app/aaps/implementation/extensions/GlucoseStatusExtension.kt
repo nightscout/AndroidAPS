@@ -8,7 +8,7 @@ fun GlucoseStatus.log(decimalFormatter: DecimalFormatter): String = "Glucose: " 
     "Noise: " + decimalFormatter.to0Decimal(noise) + " " +
     "Delta: " + decimalFormatter.to0Decimal(delta) + " mg/dl" +
     "Short avg. delta: " + " " + decimalFormatter.to2Decimal(shortAvgDelta) + " mg/dl " +
-    "Long avg. delta: " + decimalFormatter.to2Decimal(longAvgDelta) + " mg/dl" +
+    "Long avg. delta: " + decimalFormatter.to2Decimal(longAvgDelta) + " mg/dl " +
     "Dura ISF minutes: " + decimalFormatter.to2Decimal(duraISFminutes) + " m " +
     "Dura ISF average: " + decimalFormatter.to2Decimal(duraISFaverage) + " mg/dl " +
     "Parabola minutes: " + decimalFormatter.to2Decimal(parabolaMinutes) + " m " +
