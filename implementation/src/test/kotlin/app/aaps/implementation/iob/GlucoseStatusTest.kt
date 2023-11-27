@@ -47,6 +47,17 @@ class GlucoseStatusTest : TestBaseWithProfile() {
         assertThat(glucoseStatus.shortAvgDelta).isWithin(0.001).of(-2.5) // -2 -2.5 -3 deltas are relative to current value
         assertThat(glucoseStatus.longAvgDelta).isWithin(0.001).of(-2.0) // -2 -2 -2 -2
         assertThat(glucoseStatus.date).isEqualTo(1514766900000L) // latest date
+
+        assertThat(glucoseStatus.duraISFminutes).isEqualTo(35.0) // size records in minutes
+        assertThat(glucoseStatus.duraISFaverage).isWithin(0.1).of(221.5) //
+        assertThat(glucoseStatus.parabolaMinutes).isWithin(0.1).of(15.0) //
+        assertThat(glucoseStatus.deltaPl).isWithin(0.1).of(-2.0) //
+        assertThat(glucoseStatus.deltaPn).isWithin(0.1).of(-1.0) //
+        assertThat(glucoseStatus.bgAcceleration).isWithin(0.01).of(1.0) //
+        assertThat(glucoseStatus.a0).isWithin(0.1).of(214.0) //
+        assertThat(glucoseStatus.a1).isWithin(0.0001).of(-1.5) //
+        assertThat(glucoseStatus.a2).isWithin(0.0001).of(0.5) //
+        assertThat(glucoseStatus.corrSqu).isWithin(0.001).of(1.0) //
     }
     /*
         Not testing anymore, not valid for bucketed data
