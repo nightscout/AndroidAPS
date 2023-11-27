@@ -56,7 +56,7 @@ class GlucoseStatusProviderImpl @Inject constructor(
                 deltaPl = 0.0,
                 deltaPn = 0.0,
                 bgAcceleration = 0.0,
-                a0 = 0.0,
+                a0 = now.value,
                 a1 = 0.0,
                 a2 = 0.0,
                 corrSqu = 0.0
