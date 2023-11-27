@@ -64,7 +64,7 @@ class LoopHubTest: TestBase() {
     fun setup() {
         loopHub = LoopHubImpl(
             aapsLogger, commandQueue, constraints, iobCobCalculator, loop,
-            profileFunction, repo, userEntryLogger, sp, overviewData, profileUtil
+            profileFunction, repo, userEntryLogger, sp, overviewData
         )
         loopHub.clock = clock
     }
