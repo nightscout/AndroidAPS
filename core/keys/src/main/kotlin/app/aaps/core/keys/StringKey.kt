@@ -10,6 +10,7 @@ enum class StringKey(
     val hideParentScreenIfHidden: Boolean = false // PreferenceScreen is final so we cannot extend and modify behavior
 ) : PreferenceKey {
 
+    GeneralUnits(R.string.key_units, "mg/dl"),
     GeneralLanguage(R.string.key_language, "default", defaultedBySM = true),
     GeneralSkin(R.string.key_skin, ""),
     GeneralDarkMode(R.string.key_use_dark_mode, "dark", defaultedBySM = true),

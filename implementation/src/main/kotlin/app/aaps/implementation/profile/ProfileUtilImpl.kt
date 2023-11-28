@@ -2,20 +2,21 @@ package app.aaps.implementation.profile
 
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.profile.ProfileUtil
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import dagger.Reusable
 import javax.inject.Inject
 
 @Reusable
 class ProfileUtilImpl @Inject constructor(
-    private val sp: SP,
+    private val preferences: Preferences,
     private val decimalFormatter: DecimalFormatter
 ) : ProfileUtil {
 
     override val units: GlucoseUnit
         get() =
-            if (sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
+            if (preferences.get(StringKey.GeneralUnits) == GlucoseUnit.MGDL.asText) GlucoseUnit.MGDL
             else GlucoseUnit.MMOL
 
     override fun fromMgdlToUnits(valueInMgdl: Double, targetUnits: GlucoseUnit): Double =

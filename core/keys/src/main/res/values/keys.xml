@@ -3,6 +3,7 @@
     <!--    Keys-->
     <string name="key_simple_mode" translatable="false">simple_mode</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
+    <string name="key_units" translatable="false">units</string>
 
     <!--    Overview-->
     <string name="key_keep_screen_on" translatable="false">keep_screen_on</string>

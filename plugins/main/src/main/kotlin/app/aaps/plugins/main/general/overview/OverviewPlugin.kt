@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.annotation.StringRes
 import app.aaps.core.data.plugin.PluginDescription
 import app.aaps.core.data.plugin.PluginType
-import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.overview.Overview
@@ -24,6 +23,7 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.keys.IntKey
 import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.extensions.put
 import app.aaps.core.objects.extensions.putString
@@ -54,7 +54,6 @@ class OverviewPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val aapsSchedulers: AapsSchedulers,
     rh: ResourceHelper,
-    private val config: Config,
     private val overviewData: OverviewData,
     private val overviewMenus: OverviewMenus,
     private val context: Context,
@@ -146,7 +145,7 @@ class OverviewPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .putString(app.aaps.core.utils.R.string.key_units, sp, rh)
+            .put(StringKey.GeneralUnits, preferences, rh)
             .putString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
             .put(IntKey.OverviewEatingSoonDuration, preferences, rh)
             .put(UnitDoubleKey.OverviewEatingSoonTarget, preferences, rh)
@@ -174,9 +173,9 @@ class OverviewPlugin @Inject constructor(
             .put(rh.gs(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone), constraintsChecker.isAutosensModeEnabled().value()) // can be disabled by activated DynISF
 
     override fun applyConfiguration(configuration: JSONObject) {
-        val previousUnits = sp.getString(app.aaps.core.utils.R.string.key_units, "random")
+        val previousUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "old"
         configuration
-            .storeString(app.aaps.core.utils.R.string.key_units, sp, rh)
+            .store(StringKey.GeneralUnits, preferences, rh)
             .storeString(app.aaps.core.utils.R.string.key_quickwizard, sp, rh)
             .store(IntKey.OverviewEatingSoonDuration, preferences, rh)
             .store(UnitDoubleKey.OverviewEatingSoonTarget, preferences, rh)
@@ -203,7 +202,7 @@ class OverviewPlugin @Inject constructor(
             .store(IntKey.OverviewBolusPercentage, preferences, rh)
             .storeBoolean(app.aaps.core.utils.R.string.key_used_autosens_on_main_phone, sp, rh)
 
-        val newUnits = sp.getString(app.aaps.core.utils.R.string.key_units, "new")
+        val newUnits = preferences.getIfExists(StringKey.GeneralUnits) ?: "new"
         if (previousUnits != newUnits) {
             overviewData.reset()
             rxBus.send(EventNewHistoryData(0L, reloadBgData = true))

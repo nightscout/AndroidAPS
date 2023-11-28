@@ -26,7 +26,7 @@ import kotlin.math.min
 class PreferencesImpl @Inject constructor(
     private val sp: SP,
     private val rh: ResourceHelper,
-    private val profileUtil: ProfileUtil,
+    private val profileUtil: Lazy<ProfileUtil>,
     private val profileFunction: Lazy<ProfileFunction>,
     private val hardLimits: Lazy<HardLimits>,
     private val persistenceLayer: PersistenceLayer,
@@ -75,7 +75,7 @@ class PreferencesImpl @Inject constructor(
 
     override fun get(key: UnitDoubleKey): Double =
         if (simpleMode && key.defaultedBySM) key.defaultValue
-        else profileUtil.valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue))
+        else profileUtil.get().valueInCurrentUnitsDetect(sp.getDouble(key.key, key.defaultValue))
 
     override fun getIfExists(key: UnitDoubleKey): Double? =
         if (sp.contains(key.key)) sp.getDouble(key.key, key.defaultValue) else null

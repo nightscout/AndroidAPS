@@ -7,8 +7,7 @@
         android:title="@string/configbuilder_general"
         app:initialExpandedChildrenCount="0">
 
-        <ListPreference
-            android:defaultValue="mg/dl"
+        <app.aaps.core.keys.AdaptiveListPreference
             android:entries="@array/unitsArray"
             android:entryValues="@array/unitsValues"
             android:key="@string/key_units"

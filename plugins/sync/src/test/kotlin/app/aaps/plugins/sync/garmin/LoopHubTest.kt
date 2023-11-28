@@ -24,7 +24,8 @@ import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.pump.DetailedBolusInfo
 import app.aaps.core.interfaces.queue.CommandQueue
-import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.shared.tests.TestBase
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.AfterEach
@@ -54,7 +55,7 @@ class LoopHubTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var persistenceLayer: PersistenceLayer
     @Mock lateinit var userEntryLogger: UserEntryLogger
-    @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     private lateinit var loopHub: LoopHubImpl
     private val clock = Clock.fixed(Instant.ofEpochMilli(10_000), ZoneId.of("UTC"))
@@ -63,7 +64,7 @@ class LoopHubTest : TestBase() {
     fun setup() {
         loopHub = LoopHubImpl(
             aapsLogger, commandQueue, constraints, iobCobCalculator, loop,
-            profileFunction, persistenceLayer, userEntryLogger, sp
+            profileFunction, persistenceLayer, userEntryLogger, preferences
         )
         loopHub.clock = clock
     }
@@ -96,9 +97,9 @@ class LoopHubTest : TestBase() {
 
     @Test
     fun testGlucoseUnit() {
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mg/dl")
+        `when`(preferences.get(StringKey.GeneralUnits)).thenReturn("mg/dl")
         assertEquals(GlucoseUnit.MGDL, loopHub.glucoseUnit)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn("mmol")
+        `when`(preferences.get(StringKey.GeneralUnits)).thenReturn("mmol")
         assertEquals(GlucoseUnit.MMOL, loopHub.glucoseUnit)
     }
 

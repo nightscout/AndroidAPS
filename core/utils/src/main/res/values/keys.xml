@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    Keys-->
-    <string name="key_units" translatable="false">units</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_ns_create_announcements_from_errors" translatable="false">ns_create_announcements_from_errors</string>
     <string name="key_btwatchdog" translatable="false">bt_watchdog</string>

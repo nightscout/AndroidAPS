@@ -82,9 +82,11 @@ class SWDefinition @Inject constructor(
 
     fun getScreens(): List<SWScreen> {
         if (screens.isEmpty()) {
-            if (config.APS) swDefinitionFull()
-            else if (config.PUMPCONTROL) swDefinitionPumpControl()
-            else if (config.NSCLIENT) swDefinitionNSClient()
+            when {
+                config.APS         -> swDefinitionFull()
+                config.PUMPCONTROL -> swDefinitionPumpControl()
+                config.NSCLIENT    -> swDefinitionNSClient()
+            }
         }
         return screens
     }
@@ -120,10 +122,10 @@ class SWDefinition @Inject constructor(
             .add(
                 SWRadioButton(injector)
                     .option(R.array.unitsArray, R.array.unitsValues)
-                    .preferenceId(app.aaps.core.utils.R.string.key_units).label(R.string.units)
+                    .preferenceId(StringKey.GeneralUnits.key).label(R.string.units)
                     .comment(R.string.setupwizard_units_prompt)
             )
-            .validator { sp.contains(app.aaps.core.utils.R.string.key_units) }
+            .validator { preferences.getIfExists(StringKey.GeneralUnits) != null }
 
     private val displaySettings
         get() = SWScreen(injector, R.string.display_settings)
