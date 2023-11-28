@@ -44,6 +44,7 @@ class GlunovoPlugin @Inject constructor(
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.glunovo)
         .shortName(R.string.glunovo)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_glunovo),
     aapsLogger, resourceHelper
 ), BgSource {

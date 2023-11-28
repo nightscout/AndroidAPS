@@ -38,6 +38,7 @@ class AidexPlugin @Inject constructor(
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.aidex)
         .shortName(R.string.aidex_short)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_aidex),
     aapsLogger, rh
 ), BgSource {

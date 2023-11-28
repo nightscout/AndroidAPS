@@ -38,6 +38,7 @@ class PoctechPlugin @Inject constructor(
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_poctech)
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.poctech)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_poctech),
     aapsLogger, rh
 ), BgSource {

@@ -52,6 +52,7 @@ class DexcomPlugin @Inject constructor(
         .preferencesId(R.xml.pref_dexcom)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_dexcom),
     aapsLogger, rh
 ), BgSource, DexcomBoyda {
