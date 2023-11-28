@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="alert_r1_title">Дать болюс</string>
-    <string name="alert_r2_title">Недоставленный болюс</string>
+    <string name="alert_r1_title">Ввести болюс</string>
+    <string name="alert_r2_title">Несостоявшийся болюс</string>
     <string name="alert_r3_title">Будильник</string>
     <string name="alert_r4_title">Замените инфузионный набор</string>
     <string name="alert_r7_title">TBR завершен</string>

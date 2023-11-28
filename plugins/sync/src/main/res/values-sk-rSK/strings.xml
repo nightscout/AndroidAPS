@@ -17,6 +17,7 @@
     <string name="description_ns_client_v3">Synchronizuje vaše dáta s Nightscoutom pomocou v3 API</string>
     <string name="blocked_by_charging">Zablokované možnosti nabíjania</string>
     <string name="blocked_by_connectivity">Zablokované možnosti pripojenia</string>
+    <string name="no_connectivity">Žiadne pripojenie</string>
     <string name="unsupported_ns_version">Nepodporovaná verzia Nighscoutu</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
