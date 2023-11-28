@@ -188,9 +188,9 @@ class DiaconnG8Fragment : DaggerFragment() {
         binding.tempbasal.text = diaconnG8Pump.temporaryBasalToString()
         binding.extendedbolus.text = diaconnG8Pump.extendedBolusToString()
         binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, pump.systemRemainInsulin, 307)
-        warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50.0, 20.0)
+        warnColors.setColorInverse(binding.reservoir, pump.systemRemainInsulin, 50, 20)
         binding.battery.text = "{fa-battery-" + pump.systemRemainBattery / 25 + "}" + " (" + pump.systemRemainBattery + " %)"
-        warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51.0, 26.0)
+        warnColors.setColorInverse(binding.battery, pump.systemRemainBattery.toDouble(), 51, 26)
         binding.firmware.text =
             rh.gs(R.string.diaconn_g8_pump) + "\nVersion: " + pump.majorVersion.toString() + "." + pump.minorVersion.toString() + "\nCountry: " + pump.country.toString() + "\nProductType: " + pump.productType.toString() + "\nManufacture: " + pump.makeYear + "." + pump.makeMonth + "." + pump.makeDay
         binding.basalstep.text = pump.basalStep.toString()

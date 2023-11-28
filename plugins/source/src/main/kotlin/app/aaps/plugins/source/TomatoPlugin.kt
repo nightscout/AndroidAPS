@@ -34,6 +34,7 @@ class TomatoPlugin @Inject constructor(
         .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.tomato)
         .shortName(R.string.tomato_short)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_tomato),
     aapsLogger, rh
 ), BgSource {

@@ -5,6 +5,8 @@ import app.aaps.core.interfaces.protection.PasswordCheck
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import dagger.Reusable
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -12,6 +14,7 @@ import javax.inject.Inject
 @Reusable
 class ProtectionCheckImpl @Inject constructor(
     private val sp: SP,
+    private val preferences: Preferences,
     private val passwordCheck: PasswordCheck,
     private val dateUtil: DateUtil
 ) : ProtectionCheck {
@@ -52,7 +55,7 @@ class ProtectionCheckImpl @Inject constructor(
         if (activeSession(protection)) {
             return false
         }
-        return when (ProtectionCheck.ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
+        return when (ProtectionCheck.ProtectionType.entries[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
             ProtectionCheck.ProtectionType.NONE            -> false
             ProtectionCheck.ProtectionType.BIOMETRIC       -> true
             ProtectionCheck.ProtectionType.MASTER_PASSWORD -> sp.getString(app.aaps.core.utils.R.string.key_master_password, "") != ""
@@ -66,7 +69,7 @@ class ProtectionCheckImpl @Inject constructor(
     }
 
     private fun activeSession(protection: ProtectionCheck.Protection): Boolean {
-        var timeout = TimeUnit.SECONDS.toMillis(sp.getInt(app.aaps.core.utils.R.string.key_protection_timeout, 0).toLong())
+        var timeout = TimeUnit.SECONDS.toMillis(preferences.get(IntKey.GeneralProtectionTimeout).toLong())
         // Default timeout to pass the resume check at start of an activity
         timeout = if (timeout < 1000) 1000 else timeout
         val last = lastAuthorization[protection.ordinal]
@@ -85,7 +88,7 @@ class ProtectionCheckImpl @Inject constructor(
             return
         }
 
-        when (ProtectionCheck.ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
+        when (ProtectionCheck.ProtectionType.entries[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
             ProtectionCheck.ProtectionType.NONE            ->
                 ok?.run()
 

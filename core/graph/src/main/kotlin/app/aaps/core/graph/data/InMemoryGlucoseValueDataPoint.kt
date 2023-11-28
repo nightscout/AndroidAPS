@@ -7,14 +7,17 @@ import androidx.core.graphics.ColorUtils
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GlucoseUnit
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 
 class InMemoryGlucoseValueDataPoint(
     val data: InMemoryGlucoseValue,
-    private val defaultValueHelper: DefaultValueHelper,
+    private val preferences: Preferences,
     private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 
@@ -33,8 +36,8 @@ class InMemoryGlucoseValueDataPoint(
     @ColorInt
     override fun color(context: Context?): Int {
         val units = profileFunction.getUnits()
-        val lowLine = defaultValueHelper.determineLowLine()
-        val highLine = defaultValueHelper.determineHighLine()
+        val lowLine = preferences.get(UnitDoubleKey.OverviewLowMark)
+        val highLine = preferences.get(UnitDoubleKey.OverviewHighMark)
         val color = when {
             valueToUnits(units) < lowLine  -> rh.gac(context, app.aaps.core.ui.R.attr.bgLow)
             valueToUnits(units) > highLine -> rh.gac(context, app.aaps.core.ui.R.attr.highColor)

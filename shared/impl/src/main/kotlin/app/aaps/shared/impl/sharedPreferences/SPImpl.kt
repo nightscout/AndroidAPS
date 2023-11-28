@@ -10,7 +10,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SPImplementation @Inject constructor(
+class SPImpl @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val context: Context
 ) : SP {

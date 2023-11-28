@@ -19,10 +19,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
+import app.aaps.core.objects.aps.APSResultObject
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.core.objects.profile.ProfileSealed
 import app.aaps.core.ui.R
-import app.aaps.core.objects.aps.APSResultObject
 import app.aaps.implementation.instantiator.InstantiatorImpl
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
@@ -51,6 +53,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var config: Config
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var constraintsChecker: ConstraintsChecker
 
     lateinit var dateUtil: DateUtil
@@ -69,7 +72,7 @@ open class TestBaseWithProfile : TestBase() {
             if (it is APSResultObject) {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraintsChecker
-                it.sp = sp
+                it.preferences = preferences
                 it.activePlugin = activePlugin
                 it.processedTbrEbData = processedTbrEbData
                 it.profileFunction = profileFunction
@@ -100,12 +103,12 @@ open class TestBaseWithProfile : TestBase() {
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
         dateUtil = Mockito.spy(DateUtilImpl(context))
         decimalFormatter = DecimalFormatterImpl(rh)
-        profileUtil = ProfileUtilImpl(sp, decimalFormatter)
+        profileUtil = ProfileUtilImpl(preferences, decimalFormatter)
         testPumpPlugin = TestPumpPlugin(rh)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-        Mockito.`when`(sp.getString(app.aaps.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MGDL.asText)
-        hardLimits = HardLimitsMock(sp, rh)
+        Mockito.`when`(preferences.get(StringKey.GeneralUnits)).thenReturn(GlucoseUnit.MGDL.asText)
+        hardLimits = HardLimitsMock(sp, preferences, rh)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
         effectiveProfileSwitch = EPS(
             timestamp = dateUtil.now(),
@@ -217,7 +220,7 @@ open class TestBaseWithProfile : TestBase() {
             val arg3 = invocation.getArgument<String?>(3)
             String.format(rh.gs(string), arg1, arg2, arg3)
         }.`when`(rh).gs(anyInt(), anyString(), anyInt(), anyString())
-        instantiator = InstantiatorImpl(injector, dateUtil, rh, aapsLogger, sp, activePlugin, config, rxBus, hardLimits)
+        instantiator = InstantiatorImpl(injector, dateUtil, rh, aapsLogger, sp, preferences, activePlugin, config, rxBus, hardLimits)
     }
 
     fun getValidProfileStore(): ProfileStore {

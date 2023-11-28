@@ -16,6 +16,7 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceScreen
 import androidx.preference.size
 import app.aaps.R
+import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.PluginBase
@@ -31,6 +32,9 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.rx.events.EventRebuildTabs
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.SafeParse
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.implementation.plugin.PluginStore
 import app.aaps.plugins.aps.autotune.AutotunePlugin
@@ -42,6 +46,7 @@ import app.aaps.plugins.automation.AutomationPlugin
 import app.aaps.plugins.configuration.maintenance.MaintenancePlugin
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.insulin.InsulinOrefFreePeakPlugin
+import app.aaps.plugins.main.general.overview.OverviewPlugin
 import app.aaps.plugins.main.general.smsCommunicator.SmsCommunicatorPlugin
 import app.aaps.plugins.sensitivity.SensitivityAAPSPlugin
 import app.aaps.plugins.sensitivity.SensitivityOref1Plugin
@@ -72,6 +77,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.medtrum.MedtrumPlugin
+import java.math.BigDecimal
+import java.math.RoundingMode
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {
@@ -82,10 +89,12 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var pluginStore: PluginStore
     @Inject lateinit var config: Config
 
+    @Inject lateinit var overviewPlugin: OverviewPlugin
     @Inject lateinit var automationPlugin: AutomationPlugin
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
@@ -156,10 +165,12 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     }
 
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?, enabled: Boolean) {
+        if (preferences.simpleMode && p?.pluginDescription?.preferencesVisibleInSimpleMode != true) return
         if (enabled) addPreferencesFromResourceIfEnabled(p, rootKey)
     }
 
     private fun addPreferencesFromResourceIfEnabled(p: PluginBase?, rootKey: String?) {
+        if (preferences.simpleMode && p?.pluginDescription?.preferencesVisibleInSimpleMode != true) return
         if (p!!.isEnabled() && p.preferencesId != -1)
             addPreferencesFromResource(p.preferencesId, rootKey)
     }
@@ -186,7 +197,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResource(pluginId, rootKey)
         } else {
             addPreferencesFromResource(R.xml.pref_general, rootKey)
-            addPreferencesFromResource(app.aaps.plugins.main.R.xml.pref_overview, rootKey)
+            addPreferencesFromResource(R.xml.pref_protection, rootKey)
+            addPreferencesFromResourceIfEnabled(overviewPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(safetyPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(eversensePlugin, rootKey)
             addPreferencesFromResourceIfEnabled(dexcomPlugin, rootKey)
@@ -238,19 +250,19 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         key ?: return
         rxBus.send(EventPreferenceChange(key))
-        if (key == rh.gs(app.aaps.core.ui.R.string.key_language)) {
+        if (key == rh.gs(StringKey.GeneralLanguage.key)) {
             rxBus.send(EventRebuildTabs(true))
             //recreate() does not update language so better close settings
             activity?.finish()
         }
-        if (key == rh.gs(app.aaps.plugins.main.R.string.key_short_tabtitles)) {
+        if (key == rh.gs(BooleanKey.OverviewShortTabTitles.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key)) {
             rxBus.send(EventRebuildTabs())
         }
-        if (key == rh.gs(app.aaps.core.utils.R.string.key_units)) {
+        if (key == rh.gs(StringKey.GeneralUnits.key) || key == rh.gs(BooleanKey.GeneralSimpleMode.key)) {
             activity?.recreate()
             return
         }
-        if (key == rh.gs(app.aaps.core.utils.R.string.key_use_autosens) && sp.getBoolean(app.aaps.core.utils.R.string.key_use_autosens, false)) {
+        if (key == rh.gs(BooleanKey.ApsUseAutosens.key) && preferences.get(BooleanKey.ApsUseAutosens)) {
             activity?.let {
                 OKDialog.show(it, rh.gs(app.aaps.plugins.configuration.R.string.configbuilder_sensitivity), rh.gs(R.string.sensitivity_warning))
             }
@@ -312,27 +324,11 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             if (key != null) {
                 root = xmlRoot.findPreference(key)
                 if (root == null) return
-                require(root is PreferenceScreen) {
-                    ("Preference object with key $key is not a PreferenceScreen")
-                }
+                require(root is PreferenceScreen) { ("Preference object with key $key is not a PreferenceScreen") }
                 preferenceScreen = root
             } else {
                 addPreferencesFromResource(preferencesResId)
             }
-        }
-    }
-
-    private fun adjustUnitDependentPrefs(pref: Preference) { // convert preferences values to current units
-        val unitDependent = arrayOf(
-            rh.gs(app.aaps.core.utils.R.string.key_hypo_target),
-            rh.gs(app.aaps.core.utils.R.string.key_activity_target),
-            rh.gs(app.aaps.core.utils.R.string.key_eatingsoon_target),
-            rh.gs(app.aaps.core.utils.R.string.key_high_mark),
-            rh.gs(app.aaps.core.utils.R.string.key_low_mark)
-        )
-        if (unitDependent.toList().contains(pref.key) && pref is EditTextPreference) {
-            val converted = profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(pref.text))
-            pref.summary = converted.toString()
         }
     }
 
@@ -420,6 +416,15 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             }
         }
         pref?.let { adjustUnitDependentPrefs(it) }
+    }
+
+    private fun adjustUnitDependentPrefs(pref: Preference) { // convert preferences values to current units
+        if (pref.key != null && preferences.isUnitDependent(pref.key) && pref is EditTextPreference) {
+            val value = profileUtil.valueInCurrentUnitsDetect(SafeParse.stringToDouble(pref.text)).toString()
+            val precision = if (profileUtil.units == GlucoseUnit.MGDL) 0 else 1
+            val converted = BigDecimal(value).setScale(precision, RoundingMode.HALF_UP)
+            pref.summary = converted.toPlainString()
+        }
     }
 
     private fun initSummary(p: Preference, isSinglePreference: Boolean) {

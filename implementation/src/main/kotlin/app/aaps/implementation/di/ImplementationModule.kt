@@ -8,7 +8,6 @@ import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.notifications.NotificationHolder
 import app.aaps.core.interfaces.overview.LastBgData
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.profiling.Profiler
@@ -33,6 +32,7 @@ import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Translator
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.Preferences
 import app.aaps.implementation.alerts.LocalAlertUtilsImpl
 import app.aaps.implementation.androidNotification.NotificationHolderImpl
 import app.aaps.implementation.db.ProcessedTbrEbDataImpl
@@ -42,7 +42,6 @@ import app.aaps.implementation.logging.LoggerUtilsImpl
 import app.aaps.implementation.logging.UserEntryLoggerImpl
 import app.aaps.implementation.overview.LastBgDataImpl
 import app.aaps.implementation.plugin.PluginStore
-import app.aaps.implementation.profile.DefaultValueHelperImpl
 import app.aaps.implementation.profile.ProfileFunctionImpl
 import app.aaps.implementation.profile.ProfileStoreObject
 import app.aaps.implementation.profile.ProfileUtilImpl
@@ -59,6 +58,7 @@ import app.aaps.implementation.receivers.NetworkChangeReceiver
 import app.aaps.implementation.receivers.ReceiverStatusStoreImpl
 import app.aaps.implementation.resources.IconsProviderImplementation
 import app.aaps.implementation.resources.ResourceHelperImpl
+import app.aaps.implementation.sharedPreferences.PreferencesImpl
 import app.aaps.implementation.stats.DexcomTirCalculatorImpl
 import app.aaps.implementation.stats.TddCalculatorImpl
 import app.aaps.implementation.stats.TirCalculatorImpl
@@ -90,6 +90,7 @@ abstract class ImplementationModule {
     @Module
     interface Bindings {
 
+        @Binds fun bindPreferences(preferencesImpl: PreferencesImpl): Preferences
         @Binds fun bindFabricPrivacy(fabricPrivacyImpl: FabricPrivacyImpl): FabricPrivacy
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindLastBgData(lastBgData: LastBgDataImpl): LastBgData
@@ -98,7 +99,6 @@ abstract class ImplementationModule {
         @Binds fun bindDetailedBolusInfoStorage(detailedBolusInfoStorageImpl: DetailedBolusInfoStorageImpl): DetailedBolusInfoStorage
         @Binds fun bindTemporaryBasalStorage(temporaryBasalStorageImpl: TemporaryBasalStorageImpl): TemporaryBasalStorage
         @Binds fun bindTranslator(translatorImpl: TranslatorImpl): Translator
-        @Binds fun bindDefaultValueHelper(defaultValueHelperImpl: DefaultValueHelperImpl): DefaultValueHelper
         @Binds fun bindProtectionCheck(protectionCheckImpl: ProtectionCheckImpl): ProtectionCheck
         @Binds fun bindPasswordCheck(passwordCheckImpl: PasswordCheckImpl): PasswordCheck
         @Binds fun bindLoggerUtils(loggerUtilsImpl: LoggerUtilsImpl): LoggerUtils

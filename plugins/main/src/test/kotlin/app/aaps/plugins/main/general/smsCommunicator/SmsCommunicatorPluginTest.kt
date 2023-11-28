@@ -24,6 +24,9 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.smsCommunicator.Sms
 import app.aaps.core.interfaces.sync.XDripBroadcast
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.StringKey
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.implementation.iob.GlucoseStatusProviderImpl
@@ -96,7 +99,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtilMocked, decimalFormatter)
 
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
+            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, preferences, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
             loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
             glucoseStatusProvider, persistenceLayer, decimalFormatter
@@ -322,7 +325,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP STATUS : enabled - APS mode - Closed
         `when`(loop.enabled).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -331,7 +334,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeClosed")
 
         //LOOP STATUS : enabled - APS mode - Open
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.OPEN.name)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
@@ -339,7 +342,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeOpen")
 
         //LOOP STATUS : enabled - APS mode - LGS
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.LGS.name)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
@@ -347,7 +350,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeLgs")
 
         //LOOP STATUS : enabled - APS mode - unknown
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn("some wrong value")
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn("some wrong value")
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         assertThat(sms.ignored).isFalse()
@@ -495,7 +498,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         var smsCommand = "LOOP CLOSED"
         val replyClosed = "In order to switch Loop mode to Closed loop reply with code "
         `when`(loop.enabled).thenReturn(true)
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.CLOSED.name)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
         smsCommunicatorPlugin.processSms(sms)
@@ -510,7 +513,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP LGS
         smsCommand = "LOOP LGS"
         val replyLgs = "In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code "
-        `when`(sp.getString(app.aaps.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
+        `when`(preferences.get(StringKey.LoopApsMode)).thenReturn(ApsMode.LGS.name)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
         smsCommunicatorPlugin.processSms(sms)
@@ -1014,6 +1017,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
+        `when`(preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)).thenReturn(5.0)
+        `when`(preferences.get(IntKey.OverviewEatingSoonDuration)).thenReturn(45)
         //BOLUS 1 MEAL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1 MEAL")

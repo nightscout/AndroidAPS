@@ -33,6 +33,9 @@ import app.aaps.core.interfaces.stats.TddCalculator
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.Round
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.target
 import app.aaps.core.utils.MidnightUtils
@@ -63,6 +66,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
     private val hardLimits: HardLimits,
     private val profiler: Profiler,
     private val sp: SP,
+    private val preferences: Preferences,
     protected val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val glucoseStatusProvider: GlucoseStatusProvider,
@@ -77,6 +81,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
         .pluginName(R.string.openapssmb)
         .shortName(app.aaps.core.ui.R.string.smb_shortname)
         .preferencesId(R.xml.pref_openapssmb)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_smb)
         .setDefault(),
     aapsLogger, rh
@@ -112,11 +117,11 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val smbAlwaysEnabled = sp.getBoolean(R.string.key_enableSMB_always, false)
+        val smbAlwaysEnabled = preferences.get(BooleanKey.ApsUseSmbAlways)
         val advancedFiltering = activePlugin.activeBgSource.advancedFilteringSupported()
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_enableSMB_with_COB))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_enableSMB_with_temptarget))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_enableSMB_after_carbs))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_COB))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_allow_smb_with_low_temp_target))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(app.aaps.core.keys.R.string.key_openaps_enable_smb_after_carbs))?.isVisible = !smbAlwaysEnabled || !advancedFiltering
     }
 
     override fun invoke(initiator: String, tempBasalFallback: Boolean) {
@@ -321,7 +326,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
-            val maxIobPref: Double = sp.getDouble(R.string.key_openapssmb_max_iob, 3.0)
+            val maxIobPref = preferences.get(DoubleKey.ApsSmbMaxIob)
             maxIob.setIfSmaller(maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
             maxIob.setIfSmaller(hardLimits.maxIobSMB(), rh.gs(R.string.limiting_iob, hardLimits.maxIobSMB(), rh.gs(R.string.hardlimit)), this)
         }
@@ -330,7 +335,7 @@ open class OpenAPSSMBPlugin @Inject constructor(
 
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
         if (isEnabled()) {
-            var maxBasal = sp.getDouble(app.aaps.core.utils.R.string.key_openapsma_max_basal, 1.0)
+            var maxBasal = preferences.get(DoubleKey.ApsMaxBasal)
             if (maxBasal < profile.getMaxDailyBasal()) {
                 maxBasal = profile.getMaxDailyBasal()
                 absoluteRate.addReason(rh.gs(R.string.increasing_max_basal), this)
@@ -338,14 +343,14 @@ open class OpenAPSSMBPlugin @Inject constructor(
             absoluteRate.setIfSmaller(maxBasal, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxBasal, rh.gs(R.string.maxvalueinpreferences)), this)
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
-            val maxBasalMultiplier = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)
+            val maxBasalMultiplier = preferences.get(DoubleKey.ApsMaxCurrentBasalMultiplier)
             val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
             absoluteRate.setIfSmaller(
                 maxFromBasalMultiplier,
                 rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.max_basal_multiplier)),
                 this
             )
-            val maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)
+            val maxBasalFromDaily = preferences.get(DoubleKey.ApsMaxDailyMultiplier)
             val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
             absoluteRate.setIfSmaller(maxFromDaily, rh.gs(app.aaps.core.ui.R.string.limitingbasalratio, maxFromDaily, rh.gs(R.string.max_daily_basal_multiplier)), this)
         }
@@ -353,19 +358,19 @@ open class OpenAPSSMBPlugin @Inject constructor(
     }
 
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(R.string.key_use_smb, false)
+        val enabled = preferences.get(BooleanKey.ApsUseSmb)
         if (!enabled) value.set(false, rh.gs(R.string.smb_disabled_in_preferences), this)
         return value
     }
 
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(R.string.key_use_uam, false)
+        val enabled = preferences.get(BooleanKey.ApsUseUam)
         if (!enabled) value.set(false, rh.gs(R.string.uam_disabled_in_preferences), this)
         return value
     }
 
     override fun isAutosensModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
-        val enabled = sp.getBoolean(app.aaps.core.utils.R.string.key_use_autosens, false)
+        val enabled = preferences.get(BooleanKey.ApsUseAutosens)
         if (!enabled) value.set(false, rh.gs(R.string.autosens_disabled_in_preferences), this)
         return value
     }

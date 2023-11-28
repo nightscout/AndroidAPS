@@ -1,6 +1,7 @@
 package app.aaps.di
 
 import app.aaps.MainApp
+import app.aaps.core.keys.di.KeysModule
 import app.aaps.core.objects.di.CoreModule
 import app.aaps.core.validators.di.ValidatorsModule
 import app.aaps.database.impl.di.DatabaseModule
@@ -65,6 +66,7 @@ import javax.inject.Singleton
         LoggerModule::class,
         UiModule::class,
         ValidatorsModule::class,
+        KeysModule::class,
         PluginsConstraintsModule::class,
         SourceModule::class,
         SyncModule::class,

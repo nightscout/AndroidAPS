@@ -169,6 +169,15 @@
 
     </TableLayout>
 
+    <ImageView
+        android:id="@+id/simple_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/child_face"
+        android:contentDescription="@string/simple_mode_enabled" />
+
     <LinearLayout
         android:id="@+id/aps_mode_layout"
         android:layout_width="wrap_content"

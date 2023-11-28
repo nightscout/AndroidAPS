@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.overview.OverviewMenus
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import app.aaps.core.interfaces.profile.DefaultValueHelper
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
@@ -27,6 +27,8 @@ import app.aaps.core.interfaces.rx.events.EventUpdateOverviewGraph
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.interfaces.workflow.CalculationWorkflow
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.core.ui.extensions.toVisibility
 import app.aaps.core.ui.extensions.toVisibilityKeepSpace
@@ -47,7 +49,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var historyBrowserData: HistoryBrowserData
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
+    @Inject lateinit var preferences: Preferences
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -58,6 +60,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var profileUtil: ProfileUtil
 
     private val disposable = CompositeDisposable()
 
@@ -297,7 +300,11 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         val pump = activePlugin.activePump
         val graphData = GraphData(injector, binding.bgGraph, historyBrowserData.overviewData)
         val menuChartSettings = overviewMenus.setting
-        graphData.addInRangeArea(historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
+        graphData.addInRangeArea(
+            historyBrowserData.overviewData.fromTime, historyBrowserData.overviewData.endTime,
+            preferences.get(UnitDoubleKey.OverviewLowMark),
+            preferences.get(UnitDoubleKey.OverviewHighMark)
+        )
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
         graphData.addBucketedData()
         graphData.addTreatments(context)

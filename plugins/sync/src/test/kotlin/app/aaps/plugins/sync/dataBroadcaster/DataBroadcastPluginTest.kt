@@ -11,7 +11,6 @@ import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.iob.GlucoseStatusProvider
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.receivers.ReceiverStatusStore
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import app.aaps.shared.tests.BundleMock
@@ -26,7 +25,6 @@ import org.mockito.Mockito
 
 internal class DataBroadcastPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
     @Mock lateinit var loop: Loop
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -38,8 +36,8 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun setUp() {
         sut = DataBroadcastPlugin(
-            aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, defaultValueHelper, processedDeviceStatusData,
-            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
+            aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, processedTbrEbData, profileFunction, profileUtil, preferences,
+            processedDeviceStatusData, loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN))

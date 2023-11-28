@@ -158,13 +158,10 @@ class OverviewDataImpl @Inject constructor(
             }
         } ?: R.drawable.ic_cp_basal_no_tbr
 
-    @AttrRes override fun temporaryBasalColor(context: Context?): Int = processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let {
-        rh.gac(
-            context, app.aaps.core.ui.R
-                .attr.basal
-        )
-    }
-        ?: rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
+    @AttrRes override fun temporaryBasalColor(context: Context?): Int =
+        processedTbrEbData.getTempBasalIncludingConvertedExtended(dateUtil.now())?.let {
+            rh.gac(context, app.aaps.core.ui.R.attr.basal)
+        } ?: rh.gac(context, app.aaps.core.ui.R.attr.defaultTextColor)
 
     /*
      * EXTENDED BOLUS

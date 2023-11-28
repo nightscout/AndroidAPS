@@ -8,7 +8,7 @@ import app.aaps.core.data.model.TrendArrow
  * It may correspond to GlucoseValue value in db
  * but because of 5 min recalculations and smoothing it may not
  */
-class InMemoryGlucoseValue(
+data class InMemoryGlucoseValue(
     var timestamp: Long = 0L,
     /**
      * Value in mg/dl
@@ -28,7 +28,7 @@ class InMemoryGlucoseValue(
     /**
      * Taken from GlucoseValue
      */
-    var sourceSensor: SourceSensor
+    var sourceSensor: SourceSensor = SourceSensor.UNKNOWN
 ) {
 
     /**

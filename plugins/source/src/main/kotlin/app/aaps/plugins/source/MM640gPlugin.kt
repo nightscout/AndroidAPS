@@ -36,6 +36,7 @@ class MM640gPlugin @Inject constructor(
         .preferencesId(R.xml.pref_bgsource)
         .pluginIcon(app.aaps.core.objects.R.drawable.ic_generic_cgm)
         .pluginName(R.string.mm640g)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_mm640g),
     aapsLogger, rh
 ), BgSource {

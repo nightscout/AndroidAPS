@@ -12,7 +12,7 @@ import org.json.JSONObject
 
 /**
  * This interface defines the communication from AAPS-core to pump drivers.
- * Pump drivers communicate data changes back to AAPS-core using [info.nightscout.interfaces.pump.PumpSync].
+ * Pump drivers communicate data changes back to AAPS-core using [app.aaps.core.interfaces.pump.PumpSync].
  *
  * Created by mike on 04.06.2016.
  */
@@ -201,7 +201,7 @@ interface Pump {
     /**
      * Pump model
      *
-     * If new model is covered by driver, model and it's capabilities must be added to [info.nightscout.interfaces.pump.defs.PumpType]
+     * If new model is covered by driver, model and it's capabilities must be added to [app.aaps.core.data.pump.defs.PumpType]
      *
      * @return PumpType
      */
@@ -257,7 +257,7 @@ interface Pump {
 
     /**
      * Executes a custom queued command
-     * See [info.nightscout.interfaces.queue.CustomCommand] for queuing a custom command.
+     * See [app.aaps.core.interfaces.queue.CustomCommand] for queuing a custom command.
      *
      * @param customCommand the custom command to be executed
      * @return PumpEnactResult that represents the command execution result
@@ -286,7 +286,7 @@ interface Pump {
     fun isBatteryChangeLoggingEnabled(): Boolean = false
 
     /**
-     * Pumps is connect via RileyLink
+     * Pump is connected via RileyLink
      */
     fun isUseRileyLinkBatteryLevel(): Boolean = false
 }

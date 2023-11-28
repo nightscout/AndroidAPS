@@ -2,6 +2,7 @@ package app.aaps.plugins.automation.triggers
 
 import android.widget.LinearLayout
 import app.aaps.core.interfaces.logging.LTag
+import app.aaps.core.keys.IntKey
 import app.aaps.core.utils.JsonHelper
 import app.aaps.core.utils.JsonHelper.safeGetDouble
 import app.aaps.plugins.automation.R
@@ -18,7 +19,7 @@ import java.util.Optional
 class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
 
     private val minValue = 0
-    private val maxValue = sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)
+    private val maxValue = preferences.get(IntKey.SafetyMaxCarbs)
     var cob: InputDouble = InputDouble(0.0, minValue.toDouble(), maxValue.toDouble(), 1.0, DecimalFormat("1"))
     var comparator: Comparator = Comparator(rh)
 

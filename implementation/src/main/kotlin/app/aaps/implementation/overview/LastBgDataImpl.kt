@@ -7,10 +7,11 @@ import app.aaps.core.data.time.T
 import app.aaps.core.interfaces.db.PersistenceLayer
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.overview.LastBgData
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.extensions.fromGv
 import app.aaps.core.objects.extensions.valueToUnits
 import dagger.Reusable
@@ -22,7 +23,7 @@ class LastBgDataImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val persistenceLayer: PersistenceLayer,
     private val profileFunction: ProfileFunction,
-    private val defaultValueHelper: DefaultValueHelper,
+    private val preferences: Preferences,
     private val iobCobCalculator: IobCobCalculator
 ) : LastBgData {
 
@@ -32,12 +33,12 @@ class LastBgDataImpl @Inject constructor(
 
     override fun isLow(): Boolean =
         lastBg()?.let { lastBg ->
-            lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()
+            lastBg.valueToUnits(profileFunction.getUnits()) < preferences.get(UnitDoubleKey.OverviewLowMark)
         } ?: false
 
     override fun isHigh(): Boolean =
         lastBg()?.let { lastBg ->
-            lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine()
+            lastBg.valueToUnits(profileFunction.getUnits()) > preferences.get(UnitDoubleKey.OverviewHighMark)
         } ?: false
 
     @ColorInt

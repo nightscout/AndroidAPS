@@ -2,17 +2,17 @@ package app.aaps.implementation.iob
 
 import app.aaps.core.data.aps.AutosensData
 import app.aaps.core.data.aps.AutosensResult
-import app.aaps.core.data.configuration.Constants
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
-import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.Preferences
 import java.util.Locale
 import kotlin.math.min
 
 class AutosensDataObject(
     private val aapsLogger: AAPSLogger,
-    private val sp: SP,
+    private val preferences: Preferences,
     private val dateUtil: DateUtil
 ) : AutosensData {
 
@@ -82,8 +82,8 @@ class AutosensDataObject(
     // remove carbs older than timeframe
     override fun removeOldCarbs(toTime: Long, isAAPSOrWeighted: Boolean) {
         val maxAbsorptionHours: Double =
-            if (isAAPSOrWeighted) sp.getDouble(app.aaps.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
-            else sp.getDouble(app.aaps.core.utils.R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+            if (isAAPSOrWeighted) preferences.get(DoubleKey.AbsorptionMaxTime)
+            else preferences.get(DoubleKey.AbsorptionCutOff)
         var i = 0
         while (i < activeCarbsList.size) {
             val c = activeCarbsList[i]

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
     <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
 

@@ -27,6 +27,7 @@ import app.aaps.core.interfaces.rx.events.EventPreferenceChange
 import app.aaps.core.interfaces.sync.DataSyncSelectorXdrip
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.StringKey
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.runOnUiThread
 import app.aaps.core.ui.extensions.toVisibility
@@ -105,7 +106,7 @@ class MaintenanceFragment : DaggerFragment() {
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error clearing databases", it) },
                                 onComplete = {
-                                    rxBus.send(EventPreferenceChange(rh.gs(app.aaps.core.utils.R.string.key_units)))
+                                    rxBus.send(EventPreferenceChange(rh.gs(StringKey.GeneralUnits.key)))
                                     runOnUiThread { activity.recreate() }
                                 }
                             )

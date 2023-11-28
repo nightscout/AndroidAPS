@@ -32,6 +32,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.rh = rh
                 it.profileFunction = profileFunction
                 it.sp = sp
+                it.preferences = preferences
                 it.locationDataContainer = locationDataContainer
                 it.persistenceLayer = persistenceLayer
                 it.activePlugin = activePlugin

@@ -12,6 +12,8 @@ import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.Command
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
@@ -26,6 +28,7 @@ class CommandSMBBolus(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var persistenceLayer: PersistenceLayer
+    @Inject lateinit var preferences: Preferences
 
     @Inject lateinit var instantiator: Instantiator
 
@@ -39,9 +42,9 @@ class CommandSMBBolus(
         val r: PumpEnactResult
         val lastBolusTime = persistenceLayer.getNewestBolus()?.timestamp ?: 0L
         aapsLogger.debug(LTag.PUMPQUEUE, "Last bolus: $lastBolusTime ${dateUtil.dateAndTimeAndSecondsString(lastBolusTime)}")
-        if (lastBolusTime != 0L && lastBolusTime + T.mins(3).msecs() > dateUtil.now()) {
-            aapsLogger.debug(LTag.PUMPQUEUE, "SMB requested but still in 3 min interval")
-            r = instantiator.providePumpEnactResult().enacted(false).success(false).comment("SMB requested but still in 3 min interval")
+        if (lastBolusTime != 0L && lastBolusTime + T.mins(preferences.get(IntKey.ApsMaxSmbFrequency).toLong()).msecs() > dateUtil.now()) {
+            aapsLogger.debug(LTag.APS, "SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
+            r = instantiator.providePumpEnactResult().enacted(false).success(false).comment("SMB requested but still in ${preferences.get(IntKey.ApsMaxSmbFrequency)} min interval")
         } else if (detailedBolusInfo.deliverAtTheLatest != 0L && detailedBolusInfo.deliverAtTheLatest + T.mins(1).msecs() > System.currentTimeMillis()) {
             r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         } else {

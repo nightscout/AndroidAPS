@@ -3,7 +3,7 @@ package app.aaps.implementation.pump
 import app.aaps.core.data.model.TE
 import app.aaps.core.interfaces.utils.DateUtil
 
-fun TE.isOlderThan(hours: Double, dateUtil: DateUtil): Boolean {
+fun TE.isOlderThan(hours: Int, dateUtil: DateUtil): Boolean {
     return getHoursFromStart(dateUtil) > hours
 }
 

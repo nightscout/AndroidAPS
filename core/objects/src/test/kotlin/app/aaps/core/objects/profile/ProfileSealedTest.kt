@@ -7,6 +7,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.HardLimits
+import app.aaps.core.keys.Preferences
 import app.aaps.core.objects.extensions.pureProfileFromJson
 import app.aaps.shared.impl.utils.DateUtilImpl
 import app.aaps.shared.tests.HardLimitsMock
@@ -32,6 +33,7 @@ class ProfileSealedTest : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var config: Config
     @Mock lateinit var sp: SP
+    @Mock lateinit var preferences: Preferences
 
     private lateinit var hardLimits: HardLimits
     private lateinit var dateUtil: DateUtil
@@ -56,7 +58,7 @@ class ProfileSealedTest : TestBase() {
     fun prepare() {
         testPumpPlugin = TestPumpPlugin(rh)
         dateUtil = DateUtilImpl(context)
-        hardLimits = HardLimitsMock(sp, rh)
+        hardLimits = HardLimitsMock(sp, preferences, rh)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(rh.gs(app.aaps.core.ui.R.string.profile_per_unit)).thenReturn("/U")
         `when`(rh.gs(app.aaps.core.ui.R.string.profile_carbs_per_unit)).thenReturn("g/U")

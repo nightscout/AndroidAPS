@@ -15,6 +15,7 @@ android {
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:interfaces"))
+    implementation(project(":core:keys"))
     implementation(project(":core:objects"))
     implementation(project(":core:nssdk"))
     implementation(project(":core:ui"))

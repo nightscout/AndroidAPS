@@ -32,7 +32,6 @@ import app.aaps.core.interfaces.maintenance.ImportExportPrefs
 import app.aaps.core.interfaces.nsclient.ProcessedDeviceStatusData
 import app.aaps.core.interfaces.plugin.ActivePlugin
 import app.aaps.core.interfaces.plugin.PluginBase
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileFunction
 import app.aaps.core.interfaces.profile.ProfileUtil
@@ -55,6 +54,10 @@ import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.HardLimits
 import app.aaps.core.interfaces.utils.TrendCalculator
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.keys.DoubleKey
+import app.aaps.core.keys.IntKey
+import app.aaps.core.keys.Preferences
+import app.aaps.core.keys.UnitDoubleKey
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.objects.extensions.convertedToAbsolute
 import app.aaps.core.objects.extensions.generateCOBString
@@ -89,6 +92,7 @@ class DataHandlerMobile @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
+    private val preferences: Preferences,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,
     private val processedTbrEbData: ProcessedTbrEbData,
@@ -99,7 +103,6 @@ class DataHandlerMobile @Inject constructor(
     private val processedDeviceStatusData: ProcessedDeviceStatusData,
     private val receiverStatusStore: ReceiverStatusStore,
     private val quickWizard: QuickWizard,
-    private val defaultValueHelper: DefaultValueHelper,
     private val trendCalculator: TrendCalculator,
     private val dateUtil: DateUtil,
     private val constraintChecker: ConstraintsChecker,
@@ -554,9 +557,9 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleFillPresetPreCheck(command: EventData.ActionFillPresetPreCheck) {
         val amount: Double = when (command.button) {
-            1    -> sp.getDouble("fill_button1", 0.3)
-            2    -> sp.getDouble("fill_button2", 0.0)
-            3    -> sp.getDouble("fill_button3", 0.0)
+            1    -> preferences.get(DoubleKey.ActionsFillButton1)
+            2    -> preferences.get(DoubleKey.ActionsFillButton2)
+            3    -> preferences.get(DoubleKey.ActionsFillButton3)
             else -> return
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(ConstraintObject(amount, aapsLogger)).value()
@@ -627,8 +630,8 @@ class DataHandlerMobile @Inject constructor(
         val presetIsMGDL = profileFunction.getUnits() == GlucoseUnit.MGDL
         when (action.command) {
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_ACTIVITY -> {
-                val activityTTDuration = defaultValueHelper.determineActivityTTDuration()
-                val activityTT = defaultValueHelper.determineActivityTT()
+                val activityTTDuration = preferences.get(IntKey.OverviewActivityDuration)
+                val activityTT = preferences.get(UnitDoubleKey.OverviewActivityTarget)
                 val reason = rh.gs(app.aaps.core.ui.R.string.activity)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, activityTT, activityTTDuration)
                 rxBus.send(
@@ -642,8 +645,8 @@ class DataHandlerMobile @Inject constructor(
             }
 
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_HYPO     -> {
-                val hypoTTDuration = defaultValueHelper.determineHypoTTDuration()
-                val hypoTT = defaultValueHelper.determineHypoTT()
+                val hypoTTDuration = preferences.get(IntKey.OverviewHypoDuration)
+                val hypoTT = preferences.get(UnitDoubleKey.OverviewHypoTarget)
                 val reason = rh.gs(app.aaps.core.ui.R.string.hypo)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, hypoTT, hypoTTDuration)
                 rxBus.send(
@@ -657,8 +660,8 @@ class DataHandlerMobile @Inject constructor(
             }
 
             EventData.ActionTempTargetPreCheck.TempTargetCommand.PRESET_EATING   -> {
-                val eatingSoonTTDuration = defaultValueHelper.determineEatingSoonTTDuration()
-                val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
+                val eatingSoonTTDuration = preferences.get(IntKey.OverviewEatingSoonDuration)
+                val eatingSoonTT = preferences.get(UnitDoubleKey.OverviewEatingSoonTarget)
                 val reason = rh.gs(app.aaps.core.ui.R.string.eatingsoon)
                 message += rh.gs(R.string.wear_action_tempt_preset_message, reason, eatingSoonTT, eatingSoonTTDuration)
                 rxBus.send(
@@ -748,13 +751,13 @@ class DataHandlerMobile @Inject constructor(
                     timeStamp = System.currentTimeMillis(),
                     wearControl = sp.getBoolean(app.aaps.core.utils.R.string.key_wear_control, false),
                     unitsMgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
-                    bolusPercentage = sp.getInt(app.aaps.core.utils.R.string.key_boluswizard_percentage, 100),
-                    maxCarbs = sp.getInt(app.aaps.core.utils.R.string.key_treatmentssafety_maxcarbs, 48),
-                    maxBolus = sp.getDouble(app.aaps.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0),
-                    insulinButtonIncrement1 = sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_1, Constants.INSULIN_PLUS1_DEFAULT),
-                    insulinButtonIncrement2 = sp.getDouble(app.aaps.core.interfaces.R.string.key_insulin_button_increment_2, Constants.INSULIN_PLUS2_DEFAULT),
-                    carbsButtonIncrement1 = sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_1, Constants.CARBS_FAV1_DEFAULT),
-                    carbsButtonIncrement2 = sp.getInt(app.aaps.core.utils.R.string.key_carbs_button_increment_2, Constants.CARBS_FAV2_DEFAULT)
+                    bolusPercentage = preferences.get(IntKey.OverviewBolusPercentage),
+                    maxCarbs = preferences.get(IntKey.SafetyMaxCarbs),
+                    maxBolus = preferences.get(DoubleKey.SafetyMaxBolus),
+                    insulinButtonIncrement1 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement1),
+                    insulinButtonIncrement2 = preferences.get(DoubleKey.OverviewInsulinButtonIncrement2),
+                    carbsButtonIncrement1 = preferences.get(IntKey.OverviewCarbsButtonIncrement1),
+                    carbsButtonIncrement2 = preferences.get(IntKey.OverviewCarbsButtonIncrement2)
                 )
             )
         )
@@ -969,8 +972,8 @@ class DataHandlerMobile @Inject constructor(
     private fun getSingleBG(glucoseValue: InMemoryGlucoseValue, autosensDataStore: AutosensDataStore?): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
-        val lowLine = profileUtil.convertToMgdl(defaultValueHelper.determineLowLine(), units)
-        val highLine = profileUtil.convertToMgdl(defaultValueHelper.determineHighLine(), units)
+        val lowLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewLowMark), units)
+        val highLine = profileUtil.convertToMgdl(preferences.get(UnitDoubleKey.OverviewHighMark), units)
 
         return EventData.SingleBg(
             timeStamp = glucoseValue.timestamp,

@@ -332,11 +332,11 @@ class MedtronicFragment : DaggerFragment() {
             binding.pumpStateBattery.text =
                 "{fa-battery-" + medtronicPumpStatus.batteryRemaining / 25 + "}  " + medtronicPumpStatus.batteryRemaining + "%" + String.format("  (%.2f V)", medtronicPumpStatus.batteryVoltage)
         }
-        warnColors.setColorInverse(binding.pumpStateBattery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
+        warnColors.setColorInverse(binding.pumpStateBattery, medtronicPumpStatus.batteryRemaining.toDouble(), 25, 10)
 
         // reservoir
         binding.reservoir.text = rh.gs(app.aaps.core.ui.R.string.reservoir_value, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
-        warnColors.setColorInverse(binding.reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0)
+        warnColors.setColorInverse(binding.reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50, 20)
 
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()
         binding.errors.text = medtronicPumpStatus.errorInfo

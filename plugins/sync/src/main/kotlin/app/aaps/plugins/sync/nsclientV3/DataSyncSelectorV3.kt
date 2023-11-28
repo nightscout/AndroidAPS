@@ -12,6 +12,8 @@ import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.NSClientSource
 import app.aaps.core.interfaces.sync.DataSyncSelector
 import app.aaps.core.interfaces.utils.DateUtil
+import app.aaps.core.keys.BooleanKey
+import app.aaps.core.keys.Preferences
 import app.aaps.core.utils.JsonHelper
 import app.aaps.plugins.sync.R
 import app.aaps.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
@@ -23,6 +25,7 @@ import javax.inject.Singleton
 @Singleton
 class DataSyncSelectorV3 @Inject constructor(
     private val sp: SP,
+    private val preferences: Preferences,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,
@@ -70,7 +73,7 @@ class DataSyncSelectorV3 @Inject constructor(
 
     override fun queueSize(): Long = queueCounter.size()
 
-    private val bgUploadEnabled get() = sp.getBoolean(app.aaps.core.utils.R.string.key_do_ns_upload, false) && activePlugin.activeBgSource !is NSClientSource
+    private val bgUploadEnabled get() = preferences.get(BooleanKey.BgSourceUploadToNs) && activePlugin.activeBgSource !is NSClientSource
 
     override suspend fun doUpload() {
         rxBus.send(EventNSClientUpdateGuiStatus())

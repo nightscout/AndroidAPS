@@ -6,9 +6,10 @@ import app.aaps.core.data.iob.InMemoryGlucoseValue
 import app.aaps.core.data.model.GlucoseUnit
 import app.aaps.core.data.model.SourceSensor
 import app.aaps.core.graph.data.InMemoryGlucoseValueDataPoint
-import app.aaps.core.interfaces.profile.DefaultValueHelper
 import app.aaps.core.interfaces.profile.ProfileFunction
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.keys.Preferences
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -24,9 +25,10 @@ import org.mockito.quality.Strictness
 @MockitoSettings(strictness = Strictness.LENIENT)
 internal class InMemoryGlucoseValueDataPointTest {
 
-    @Mock lateinit var defaultValueHelper: DefaultValueHelper
+    @Mock lateinit var preferences: Preferences
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rh: ResourceHelper
+    @Mock lateinit var profileUtil: ProfileUtil
     @Mock lateinit var context: Context
 
     @BeforeEach
@@ -38,7 +40,7 @@ internal class InMemoryGlucoseValueDataPointTest {
     @Test
     fun alphaShouldBeAddedForFilledGaps() {
         val gv = InMemoryGlucoseValue(1000, 100.0, sourceSensor = SourceSensor.UNKNOWN)
-        val sut = InMemoryGlucoseValueDataPoint(gv, defaultValueHelper, profileFunction, rh)
+        val sut = InMemoryGlucoseValueDataPoint(gv, preferences, profileFunction, profileUtil, rh)
 
         var alpha = sut.color(context).ushr(24)
         assertThat(alpha).isEqualTo(255)

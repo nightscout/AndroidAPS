@@ -48,6 +48,7 @@ class RandomBgPlugin @Inject constructor(
         .preferencesId(R.xml.pref_randombg)
         .pluginName(R.string.random_bg)
         .shortName(R.string.random_bg_short)
+        .preferencesVisibleInSimpleMode(false)
         .description(R.string.description_source_random_bg),
     aapsLogger, rh
 ), BgSource {
@@ -101,7 +102,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return isRunningTest() || virtualPump.isEnabled() && config.isEngineeringMode()
+        return isRunningTest() || virtualPump.isEnabled() && config.isEngineeringMode() || config.isUnfinishedMode()
     }
 
     @SuppressLint("CheckResult")
