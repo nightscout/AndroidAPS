@@ -319,5 +319,6 @@
     <string name="old_data">OLD DATA</string>
     <string name="overview_show_steps">steps</string>
     <string name="steps_shortname">STEPS</string>
+    <string name="simple_mode_enabled">Simple mode enabled</string>
 
 </resources>

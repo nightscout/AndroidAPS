@@ -841,6 +841,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             } else {
                 binding.infoLayout.bgQuality.visibility = View.GONE
             }
+            binding.infoLayout.simpleMode.visibility = preferences.simpleMode.toVisibility()
         }
     }
 
