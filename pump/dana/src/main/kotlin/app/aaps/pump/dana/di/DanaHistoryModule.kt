@@ -1,10 +1,10 @@
-package info.nightscout.pump.dana.di
+package app.aaps.pump.dana.di
 
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import info.nightscout.pump.dana.database.DanaHistoryDatabase
-import info.nightscout.pump.dana.database.DanaHistoryRecordDao
+import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import javax.inject.Singleton
 
 @Module

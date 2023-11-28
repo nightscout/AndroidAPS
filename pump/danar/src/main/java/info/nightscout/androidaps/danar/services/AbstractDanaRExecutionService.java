@@ -57,8 +57,8 @@ import info.nightscout.androidaps.danar.comm.MsgHistoryRefill;
 import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
-import info.nightscout.pump.dana.DanaPump;
-import info.nightscout.pump.dana.comm.RecordTypes;
+import app.aaps.pump.dana.DanaPump;
+import app.aaps.pump.dana.comm.RecordTypes;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -198,7 +198,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     protected void getBTSocketForSelectedPump() {
-        mDevName = sp.getString(info.nightscout.pump.dana.R.string.key_danar_bt_name, "");
+        mDevName = sp.getString(app.aaps.pump.dana.R.string.key_danar_bt_name, "");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
@@ -218,10 +218,10 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                         }
                     }
             } else {
-                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), info.nightscout.pump.dana.R.string.nobtadapter);
+                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), app.aaps.pump.dana.R.string.nobtadapter);
             }
             if (mBTDevice == null) {
-                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), info.nightscout.pump.dana.R.string.devicenotfound);
+                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), app.aaps.pump.dana.R.string.devicenotfound);
             }
         } else {
             ToastUtils.INSTANCE.errorToast(context, app.aaps.core.ui.R.string.need_connect_permission);
@@ -295,7 +295,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
             long timeToWholeMinute = (60000 - time % 60000);
             if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000)
                 break;
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.waitingfortimesynchronization, (int) (timeToWholeMinute / 1000))));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.waitingfortimesynchronization, (int) (timeToWholeMinute / 1000))));
             SystemClock.sleep(Math.min(timeToWholeMinute, 100));
         }
     }

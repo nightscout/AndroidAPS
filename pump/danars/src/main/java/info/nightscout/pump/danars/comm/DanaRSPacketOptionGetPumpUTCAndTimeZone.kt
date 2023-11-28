@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -28,7 +28,7 @@ class DanaRSPacketOptionGetPumpUTCAndTimeZone(
         val zoneOffset = getBytes(data, DATA_START + 6, 1)[0].toInt()
         val time = DateTime(2000 + year, month, day, hour, min, sec)
         danaPump.setPumpTime(time.millis, zoneOffset)
-        aapsLogger.debug(LTag.PUMPCOMM, "Pump time ${dateUtil.dateAndTimeAndSecondsString(danaPump.getPumpTime())} ZoneOffset: $zoneOffset")
+        aapsLogger.debug(LTag.PUMPCOMM, "Pump time ${dateUtil.dateAndTimeAndSecondsString(danaPump.pumpTime)} ZoneOffset: $zoneOffset")
     }
 
     override fun handleMessageNotReceived() {

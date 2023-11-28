@@ -36,10 +36,10 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.R
-import info.nightscout.pump.dana.comm.RecordTypes
-import info.nightscout.pump.dana.events.EventDanaRNewStatus
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.R
+import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.events.EventDanaRNewStatus
 import info.nightscout.pump.danars.DanaRSPlugin
 import info.nightscout.pump.danars.comm.DanaRSPacket
 import info.nightscout.pump.danars.comm.DanaRSPacketAPSBasalSetTemporaryBasal
@@ -182,8 +182,8 @@ class DanaRSService : DaggerService() {
             rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumptime)))
             if (danaPump.usingUTC) sendMessage(DanaRSPacketOptionGetPumpUTCAndTimeZone(injector))
             else sendMessage(DanaRSPacketOptionGetPumpTime(injector))
-            var timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L
-            if (danaPump.getPumpTime() == 0L) {
+            var timeDiff = (danaPump.pumpTime - System.currentTimeMillis()) / 1000L
+            if (danaPump.pumpTime == 0L) {
                 // initial handshake was not successful
                 // de-initialize pump
                 danaPump.reset()
@@ -226,7 +226,7 @@ class DanaRSService : DaggerService() {
                     }
                     if (danaPump.usingUTC) sendMessage(DanaRSPacketOptionGetPumpUTCAndTimeZone(injector))
                     else sendMessage(DanaRSPacketOptionGetPumpTime(injector))
-                    timeDiff = (danaPump.getPumpTime() - System.currentTimeMillis()) / 1000L
+                    timeDiff = (danaPump.pumpTime - System.currentTimeMillis()) / 1000L
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds")
                 }
             }

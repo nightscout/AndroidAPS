@@ -6,8 +6,8 @@ import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.R
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.R
 import java.util.GregorianCalendar
 
 class MsgHistoryEventsV2(

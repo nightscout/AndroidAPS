@@ -6,7 +6,7 @@
     android:id="@+id/relativeLayout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="info.nightscout.pump.dana.activities.DanaHistoryActivity">
+    tools:context=".activities.DanaHistoryActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/typeListLayout"

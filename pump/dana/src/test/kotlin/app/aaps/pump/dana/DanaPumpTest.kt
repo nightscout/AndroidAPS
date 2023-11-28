@@ -1,4 +1,4 @@
-package info.nightscout.pump.dana
+package app.aaps.pump.dana
 
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat

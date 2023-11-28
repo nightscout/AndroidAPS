@@ -1,4 +1,4 @@
-package info.nightscout.pump.dana.activities
+package app.aaps.pump.dana.activities
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -26,12 +26,12 @@ import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.DecimalFormatter
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.pump.dana.R
-import info.nightscout.pump.dana.comm.RecordTypes
-import info.nightscout.pump.dana.database.DanaHistoryRecord
-import info.nightscout.pump.dana.database.DanaHistoryRecordDao
-import info.nightscout.pump.dana.databinding.DanarHistoryActivityBinding
-import info.nightscout.pump.dana.databinding.DanarHistoryItemBinding
+import app.aaps.pump.dana.R
+import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.database.DanaHistoryRecord
+import app.aaps.pump.dana.database.DanaHistoryRecordDao
+import app.aaps.pump.dana.databinding.DanarHistoryActivityBinding
+import app.aaps.pump.dana.databinding.DanarHistoryItemBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

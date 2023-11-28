@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 
 class MsgSettingProfileRatiosAll(
     injector: HasAndroidInjector

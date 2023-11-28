@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import javax.inject.Inject
 
 open class DanaRSPacketBolusSetStepBolusStop(
@@ -36,10 +36,10 @@ open class DanaRSPacketBolusSetStepBolusStop(
         if (!danaPump.bolusStopForced) {
             // delivery ended without user intervention
             danaPump.bolusingTreatment?.insulin = danaPump.bolusAmountToBeDelivered
-            bolusingEvent.status = rh.gs(info.nightscout.pump.dana.R.string.overview_bolusprogress_delivered)
+            bolusingEvent.status = rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_delivered)
             bolusingEvent.percent = 100
         } else {
-            bolusingEvent.status = rh.gs(info.nightscout.pump.dana.R.string.overview_bolusprogress_stoped)
+            bolusingEvent.status = rh.gs(app.aaps.pump.dana.R.string.overview_bolusprogress_stoped)
         }
         rxBus.send(bolusingEvent)
     }

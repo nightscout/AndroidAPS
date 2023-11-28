@@ -6,7 +6,7 @@ import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import javax.inject.Inject
 
 class DanaRSPacketGeneralGetPumpCheck(
@@ -41,7 +41,7 @@ class DanaRSPacketGeneralGetPumpCheck(
         aapsLogger.debug(LTag.PUMPCOMM, "Protocol: " + String.format("%02X ", danaPump.protocol))
         aapsLogger.debug(LTag.PUMPCOMM, "Product Code: " + String.format("%02X ", danaPump.productCode))
         if (danaPump.productCode < 2) {
-            uiInteraction.addNotification(Notification.UNSUPPORTED_FIRMWARE, rh.gs(info.nightscout.pump.dana.R.string.unsupportedfirmware), Notification.URGENT)
+            uiInteraction.addNotification(Notification.UNSUPPORTED_FIRMWARE, rh.gs(app.aaps.pump.dana.R.string.unsupportedfirmware), Notification.URGENT)
         }
     }
 

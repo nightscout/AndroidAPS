@@ -6,10 +6,10 @@ import app.aaps.core.interfaces.pump.PumpSync
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDanaRSyncStatus
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.comm.RecordTypes
-import info.nightscout.pump.dana.database.DanaHistoryRecord
-import info.nightscout.pump.dana.database.DanaHistoryRecordDao
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.database.DanaHistoryRecord
+import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import org.joda.time.DateTime
 import java.util.Calendar
 import java.util.GregorianCalendar

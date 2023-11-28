@@ -33,8 +33,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 import info.nightscout.pump.common.di.PumpCommonModule
-import info.nightscout.pump.dana.di.DanaHistoryModule
-import info.nightscout.pump.dana.di.DanaModule
+import app.aaps.pump.dana.di.DanaHistoryModule
+import app.aaps.pump.dana.di.DanaModule
 import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.pump.medtrum.di.MedtrumModule

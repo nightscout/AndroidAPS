@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import org.joda.time.DateTime
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class DanaRSPacketOptionGetPumpTime(
         val min = byteArrayToInt(getBytes(data, DATA_START + 4, 1))
         val sec = byteArrayToInt(getBytes(data, DATA_START + 5, 1))
         val time = DateTime(2000 + year, month, day, hour, min, sec)
-        danaPump.setPumpTime(time.millis)
+        danaPump.pumpTime = time.millis
         aapsLogger.debug(LTag.PUMPCOMM, "Pump time " + dateUtil.dateAndTimeAndSecondsString(time.millis))
     }
 

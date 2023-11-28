@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import javax.inject.Inject
 
 class DanaRSPacketBolusGetBolusOption(
@@ -82,7 +82,7 @@ class DanaRSPacketBolusGetBolusOption(
         dataSize = 1
         val missedBolus04EndMin = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         if (!danaPump.isExtendedBolusEnabled) {
-            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(info.nightscout.pump.dana.R.string.danar_enableextendedbolus), Notification.URGENT)
+            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(app.aaps.pump.dana.R.string.danar_enableextendedbolus), Notification.URGENT)
             failed = true
         } else {
             rxBus.send(EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED))

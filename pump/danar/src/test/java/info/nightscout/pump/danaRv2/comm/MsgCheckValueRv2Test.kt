@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaRv2.comm
 
 import info.nightscout.androidaps.danaRv2.comm.MsgCheckValue_v2
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import info.nightscout.pump.danaR.comm.DanaRTestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

@@ -1,4 +1,4 @@
-package info.nightscout.pump.dana.events
+package app.aaps.pump.dana.events
 
 import app.aaps.core.interfaces.rx.events.Event
 

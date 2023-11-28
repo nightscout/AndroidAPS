@@ -35,8 +35,8 @@ import app.aaps.core.utils.notifyAll
 import app.aaps.core.utils.waitMillis
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.R
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.R
 import info.nightscout.pump.danars.activities.EnterPinActivity
 import info.nightscout.pump.danars.activities.PairingHelperActivity
 import info.nightscout.pump.danars.comm.DanaRSMessageHashTable

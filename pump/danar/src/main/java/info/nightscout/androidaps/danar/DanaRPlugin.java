@@ -38,8 +38,8 @@ import app.aaps.core.interfaces.utils.Round;
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy;
 import app.aaps.core.objects.constraints.ConstraintObject;
 import info.nightscout.androidaps.danar.services.DanaRExecutionService;
-import info.nightscout.pump.dana.DanaPump;
-import info.nightscout.pump.dana.database.DanaHistoryDatabase;
+import app.aaps.pump.dana.DanaPump;
+import app.aaps.pump.dana.database.DanaHistoryDatabase;
 
 @Singleton
 public class DanaRPlugin extends AbstractDanaRPlugin {
@@ -130,7 +130,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
     @NonNull
     @Override
     public String getName() {
-        return rh.gs(info.nightscout.pump.dana.R.string.danarpump);
+        return rh.gs(app.aaps.pump.dana.R.string.danarpump);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
                 .bolusDelivered(t.getInsulin());
         if (!result.getSuccess())
-            result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(), danaPump.getBolusStartErrorCode()));
+            result.comment(rh.gs(app.aaps.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(), danaPump.getBolusStartErrorCode()));
         else
             result.comment(app.aaps.core.ui.R.string.ok);
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.getBolusDelivered());

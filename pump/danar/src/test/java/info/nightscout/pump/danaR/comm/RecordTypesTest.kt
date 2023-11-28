@@ -1,6 +1,6 @@
 package info.nightscout.pump.danaR.comm
 
-import info.nightscout.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.comm.RecordTypes
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

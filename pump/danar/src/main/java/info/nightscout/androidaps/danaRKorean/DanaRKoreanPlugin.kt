@@ -35,8 +35,8 @@ import app.aaps.core.objects.constraints.ConstraintObject
 import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.database.DanaHistoryDatabase
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -81,7 +81,7 @@ class DanaRKoreanPlugin @Inject constructor(
 ) {
 
     init {
-        pluginDescription.description(info.nightscout.pump.dana.R.string.description_pump_dana_r_korean)
+        pluginDescription.description(app.aaps.pump.dana.R.string.description_pump_dana_r_korean)
         useExtendedBoluses = sp.getBoolean(app.aaps.core.utils.R.string.key_danar_useextended, false)
         pumpDescription.fillFor(PumpType.DANA_R_KOREAN)
     }
@@ -128,7 +128,7 @@ class DanaRKoreanPlugin @Inject constructor(
 
     // Plugin base interface
     override val name: String
-        get() = rh.gs(info.nightscout.pump.dana.R.string.danarkoreanpump)
+        get() = rh.gs(app.aaps.pump.dana.R.string.danarkoreanpump)
     override val preferencesId: Int
         get() = R.xml.pref_danarkorean
 
@@ -164,7 +164,7 @@ class DanaRKoreanPlugin @Inject constructor(
             .bolusDelivered(t.insulin)
         if (!result.success) result.comment(
             rh.gs(
-                info.nightscout.pump.dana.R.string.boluserrorcode,
+                app.aaps.pump.dana.R.string.boluserrorcode,
                 detailedBolusInfo.insulin,
                 t.insulin,
                 danaPump.bolusStartErrorCode

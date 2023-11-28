@@ -1,4 +1,4 @@
-package info.nightscout.pump.dana
+package app.aaps.pump.dana
 
 import app.aaps.core.data.configuration.Constants
 import app.aaps.core.data.model.GlucoseUnit
@@ -69,12 +69,8 @@ class DanaPump @Inject constructor(
     var password = -1 // R, RSv1
 
     // time
-    private var pumpTime: Long = 0
+    var pumpTime: Long = 0
     var zoneOffset: Int = 0 // i (hw 7+)
-
-    fun setPumpTime(value: Long) {
-        pumpTime = value
-    }
 
     fun setPumpTime(value: Long, zoneOffset: Int) {
         // Store time according to timezone in phone
@@ -90,8 +86,6 @@ class DanaPump @Inject constructor(
     fun resetPumpTime() {
         pumpTime = 0
     }
-
-    fun getPumpTime() = pumpTime
 
     var hwModel = 0
     val usingUTC
@@ -133,12 +127,10 @@ class DanaPump @Inject constructor(
     var isTempBasalInProgress: Boolean
         get() = tempBasalStart != 0L && dateUtil.now() in tempBasalStart..tempBasalStart + tempBasalDuration
         set(isRunning) {
-            if (isRunning) throw IllegalArgumentException("Use to cancel TBR only")
-            else {
-                tempBasalStart = 0L
-                tempBasalDuration = 0L
-                tempBasalPercent = 0
-            }
+            require(!isRunning) { "Use to cancel TBR only" }
+            tempBasalStart = 0L
+            tempBasalDuration = 0L
+            tempBasalPercent = 0
         }
     val tempBasalRemainingMin: Int
         get() = max(T.msecs(tempBasalStart + tempBasalDuration - dateUtil.now()).mins().toInt(), 0)
@@ -176,12 +168,10 @@ class DanaPump @Inject constructor(
     var isExtendedInProgress: Boolean
         get() = extendedBolusStart != 0L && dateUtil.now() in extendedBolusStart..extendedBolusStart + extendedBolusDuration
         set(isRunning) {
-            if (isRunning) throw IllegalArgumentException("Use to cancel EB only")
-            else {
-                extendedBolusStart = 0L
-                extendedBolusDuration = 0L
-                extendedBolusAmount = 0.0
-            }
+            require(!isRunning) { "Use to cancel EB only" }
+            extendedBolusStart = 0L
+            extendedBolusDuration = 0L
+            extendedBolusAmount = 0.0
         }
     private val extendedBolusPassedMinutes: Int
         get() = T.msecs(max(0, dateUtil.now() - extendedBolusStart)).mins().toInt()

@@ -32,7 +32,7 @@ class MsgInitConnStatusOption(
             failed = true
         }
         if (!danaPump.isPasswordOK) {
-            uiInteraction.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(info.nightscout.pump.dana.R.string.wrongpumppassword), Notification.URGENT)
+            uiInteraction.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(app.aaps.pump.dana.R.string.wrongpumppassword), Notification.URGENT)
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONG_PUMP_PASSWORD))
         }

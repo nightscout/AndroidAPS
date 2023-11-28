@@ -24,7 +24,7 @@ class MsgSettingPumpTime(
             intFromBuff(bytes, 0, 1)
         ).millis
         aapsLogger.debug(LTag.PUMPCOMM, "Pump time: " + dateUtil.dateAndTimeString(time) + " Phone time: " + Date())
-        danaPump.setPumpTime(time)
+        danaPump.pumpTime = time
     }
 
     override fun handleMessageNotReceived() {

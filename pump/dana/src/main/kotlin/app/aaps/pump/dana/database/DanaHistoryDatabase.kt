@@ -1,4 +1,4 @@
-package info.nightscout.pump.dana.database
+package app.aaps.pump.dana.database
 
 import android.content.Context
 import androidx.room.Database

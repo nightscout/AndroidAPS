@@ -71,8 +71,8 @@ import info.nightscout.androidaps.danar.comm.MsgStatusBasic;
 import info.nightscout.androidaps.danar.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.danar.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.pump.dana.DanaPump;
-import info.nightscout.pump.dana.events.EventDanaRNewStatus;
+import app.aaps.pump.dana.DanaPump;
+import app.aaps.pump.dana.events.EventDanaRNewStatus;
 
 public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     @Inject HasAndroidInjector injector;
@@ -139,7 +139,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public void getPumpStatus() {
         try {
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingpumpstatus)));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.gettingpumpstatus)));
             MsgStatus statusMsg = new MsgStatus(injector);
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic(injector);
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal(injector);
@@ -153,12 +153,12 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 }
             }
 
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingbolusstatus)));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.gettingbolusstatus)));
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingtempbasalstatus)));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.gettingtempbasalstatus)));
             mSerialIOThread.sendMessage(tempStatusMsg);
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingextendedbolusstatus)));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.gettingextendedbolusstatus)));
             mSerialIOThread.sendMessage(exStatusMsg);
 
             danaPump.setLastConnection(System.currentTimeMillis());
@@ -166,14 +166,14 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             Profile profile = profileFunction.getProfile();
             Pump pump = activePlugin.getActivePump();
             if (profile != null && Math.abs(danaPump.getCurrentBasal() - profile.getBasal()) >= pump.getPumpDescription().getBasalStep()) {
-                rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingpumpsettings)));
+                rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingBasal(injector));
                 if (!pump.isThisProfileSet(profile) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)) {
                     rxBus.send(new EventProfileSwitchChanged());
                 }
             }
 
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingpumptime)));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.gettingpumptime)));
             mSerialIOThread.sendMessage(new MsgSettingPumpTime(injector));
             if (danaPump.getPumpTime() == 0) {
                 // initial handshake was not successful
@@ -189,7 +189,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
                 if (Math.abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMP, "Pump time difference: " + timeDiff + " seconds - large difference");
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.largetimediff), rh.gs(info.nightscout.pump.dana.R.string.largetimedifftitle), app.aaps.core.ui.R.raw.error);
+                    uiInteraction.runAlarm(rh.gs(app.aaps.pump.dana.R.string.largetimediff), rh.gs(app.aaps.pump.dana.R.string.largetimedifftitle), app.aaps.core.ui.R.raw.error);
 
                     //deinitialize pump
                     danaPump.reset();
@@ -208,7 +208,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
             long now = System.currentTimeMillis();
             if (danaPump.getLastSettingsRead() + 60 * 60 * 1000L < now || !pump.isInitialized()) {
-                rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingpumpsettings)));
+                rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo(injector));
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile(injector));
                 mSerialIOThread.sendMessage(new MsgSettingMeal(injector));
@@ -230,8 +230,8 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             if (danaPump.getDailyTotalUnits() > danaPump.getMaxDailyTotalUnits() * Constants.dailyLimitWarning) {
                 aapsLogger.debug(LTag.PUMP, "Approaching daily limit: " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits());
                 if (System.currentTimeMillis() > lastApproachingDailyLimit + 30 * 60 * 1000) {
-                    uiInteraction.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(info.nightscout.pump.dana.R.string.approachingdailylimit), Notification.URGENT);
-                    pumpSync.insertAnnouncement(rh.gs(info.nightscout.pump.dana.R.string.approachingdailylimit) + ": " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits() + "U", null, PumpType.DANA_R_KOREAN, danaRKoreanPlugin.serialNumber());
+                    uiInteraction.addNotification(Notification.APPROACHING_DAILY_LIMIT, rh.gs(app.aaps.pump.dana.R.string.approachingdailylimit), Notification.URGENT);
+                    pumpSync.insertAnnouncement(rh.gs(app.aaps.pump.dana.R.string.approachingdailylimit) + ": " + danaPump.getDailyTotalUnits() + "/" + danaPump.getMaxDailyTotalUnits() + "U", null, PumpType.DANA_R_KOREAN, danaRKoreanPlugin.serialNumber());
                     lastApproachingDailyLimit = System.currentTimeMillis();
                 }
             }
@@ -243,11 +243,11 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     public boolean tempBasal(int percent, int durationInHours) {
         if (!isConnected()) return false;
         if (danaPump.isTempBasalInProgress()) {
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.stoppingtempbasal)));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.stoppingtempbasal)));
             mSerialIOThread.sendMessage(new MsgSetTempBasalStop(injector));
             SystemClock.sleep(500);
         }
-        rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.settingtempbasal)));
+        rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(injector, percent, durationInHours));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal(injector));
         loadEvents();
@@ -258,11 +258,11 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
     public boolean highTempBasal(int percent, int durationInMinutes) {
         if (!isConnected()) return false;
         if (danaPump.isTempBasalInProgress()) {
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.stoppingtempbasal)));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.stoppingtempbasal)));
             mSerialIOThread.sendMessage(new MsgSetTempBasalStop(injector));
             SystemClock.sleep(500);
         }
-        rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.settingtempbasal)));
+        rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(injector, percent, durationInMinutes == 15, durationInMinutes == 30));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal(injector));
         loadEvents();
@@ -278,11 +278,11 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
         if (!isConnected()) return false;
         if (danaPump.isTempBasalInProgress()) {
-            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.stoppingtempbasal)));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.stoppingtempbasal)));
             mSerialIOThread.sendMessage(new MsgSetTempBasalStop(injector));
             SystemClock.sleep(500);
         }
-        rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.settingtempbasal)));
+        rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(injector, percent, durationInMinutes == 15, durationInMinutes == 30));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal(injector));
         loadEvents();
@@ -292,7 +292,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public boolean tempBasalStop() {
         if (!isConnected()) return false;
-        rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.stoppingtempbasal)));
+        rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.stoppingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStop(injector));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal(injector));
         loadEvents();
@@ -302,7 +302,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public boolean extendedBolus(double insulin, int durationInHalfHours) {
         if (!isConnected()) return false;
-        rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.settingextendedbolus)));
+        rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(injector, insulin, (byte) (durationInHalfHours & 0xFF)));
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector));
         loadEvents();
@@ -312,7 +312,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public boolean extendedBolusStop() {
         if (!isConnected()) return false;
-        rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.stoppingextendedbolus)));
+        rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop(injector));
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended(injector));
         loadEvents();
@@ -324,10 +324,10 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected()) return false;
         if (BolusProgressData.INSTANCE.getStopPressed()) return false;
 
-        rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.startingbolus)));
+        rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.startingbolus)));
         danaPump.setBolusingTreatment(t);
         danaPump.setBolusDone(false);
-        final int preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0);
+        final int preferencesSpeed = sp.getInt(app.aaps.pump.dana.R.string.key_danars_bolusspeed, 0);
         MessageBase start;
         if (preferencesSpeed == 0)
             start = new MsgBolusStart(injector, amount);
@@ -344,7 +344,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
             danaPump.readHistoryFrom = Math.min(danaPump.readHistoryFrom, carbtime - T.Companion.mins(1).msecs());
             if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.getFailed())
-                uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.carbs_store_error), rh.gs(app.aaps.core.ui.R.string.error), app.aaps.core.ui.R.raw.boluserror);
+                uiInteraction.runAlarm(rh.gs(app.aaps.pump.dana.R.string.carbs_store_error), rh.gs(app.aaps.core.ui.R.string.error), app.aaps.core.ui.R.raw.boluserror);
         }
 
         final long bolusStart = System.currentTimeMillis();
@@ -389,7 +389,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         long expectedEnd = bolusStart + bolusDurationInMSec + 2000;
         while (System.currentTimeMillis() < expectedEnd) {
             long waitTime = expectedEnd - System.currentTimeMillis();
-            bolusingEvent.setStatus(String.format(rh.gs(info.nightscout.pump.dana.R.string.waitingforestimatedbolusend), waitTime / 1000));
+            bolusingEvent.setStatus(String.format(rh.gs(app.aaps.pump.dana.R.string.waitingforestimatedbolusend), waitTime / 1000));
             rxBus.send(bolusingEvent);
             SystemClock.sleep(1000);
         }
@@ -398,7 +398,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             @Override
             public void run() {
                 // load last bolus status
-                rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingbolusstatus)));
+                rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.gettingbolusstatus)));
                 mSerialIOThread.sendMessage(new MsgStatus(injector));
                 bolusingEvent.setPercent(100);
                 rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.core.interfaces.R.string.disconnecting)));
@@ -446,7 +446,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
 
     public boolean updateBasalsInPump(final Profile profile) {
         if (!isConnected()) return false;
-        rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.updatingbasalrates)));
+        rxBus.send(new EventPumpStatusChanged(rh.gs(app.aaps.pump.dana.R.string.updatingbasalrates)));
         Double[] basal = danaPump.buildDanaRProfileRecord(profile);
         MsgSetBasalProfile msgSet = new MsgSetBasalProfile(injector, (byte) 0, basal);
         mSerialIOThread.sendMessage(msgSet);

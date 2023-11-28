@@ -12,8 +12,8 @@ import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
 import app.aaps.core.interfaces.sharedPreferences.SP
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.R
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.R
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
 import javax.inject.Inject

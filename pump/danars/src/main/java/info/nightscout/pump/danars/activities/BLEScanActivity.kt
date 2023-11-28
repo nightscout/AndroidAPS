@@ -55,7 +55,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
-        title = rh.gs(info.nightscout.pump.dana.R.string.danars_pairing)
+        title = rh.gs(app.aaps.pump.dana.R.string.danars_pairing)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
@@ -157,8 +157,8 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
             }
 
             override fun onClick(v: View) {
-                sp.putString(info.nightscout.pump.dana.R.string.key_danars_address, item.device.address)
-                sp.putString(info.nightscout.pump.dana.R.string.key_danars_name, name.text.toString())
+                sp.putString(app.aaps.pump.dana.R.string.key_danars_address, item.device.address)
+                sp.putString(app.aaps.pump.dana.R.string.key_danars_name, name.text.toString())
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                     item.device.createBond()
                     rxBus.send(EventDanaRSDeviceChange())

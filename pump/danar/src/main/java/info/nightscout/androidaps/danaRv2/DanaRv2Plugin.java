@@ -42,8 +42,8 @@ import app.aaps.core.objects.constraints.ConstraintObject;
 import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
-import info.nightscout.pump.dana.DanaPump;
-import info.nightscout.pump.dana.database.DanaHistoryDatabase;
+import app.aaps.pump.dana.DanaPump;
+import app.aaps.pump.dana.database.DanaHistoryDatabase;
 
 @Singleton
 public class DanaRv2Plugin extends AbstractDanaRPlugin {
@@ -98,7 +98,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         this.detailedBolusInfoStorage = detailedBolusInfoStorage;
         this.temporaryBasalStorage = temporaryBasalStorage;
         this.fabricPrivacy = fabricPrivacy;
-        getPluginDescription().description(info.nightscout.pump.dana.R.string.description_pump_dana_r_v2);
+        getPluginDescription().description(app.aaps.pump.dana.R.string.description_pump_dana_r_v2);
 
         useExtendedBoluses = false;
         PumpDescriptionExtensionKt.fillFor(pumpDescription, PumpType.DANA_RV2);
@@ -129,7 +129,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     @NonNull
     @Override
     public String getName() {
-        return rh.gs(info.nightscout.pump.dana.R.string.danarv2pump);
+        return rh.gs(app.aaps.pump.dana.R.string.danarv2pump);
     }
 
     @Override
@@ -166,7 +166,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(new ConstraintObject<>(detailedBolusInfo.insulin, getAapsLogger())).value();
         // v2 stores end time for bolus, we need to adjust time
         // default delivery speed is 12 sec/U
-        int preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0);
+        int preferencesSpeed = sp.getInt(app.aaps.pump.dana.R.string.key_danars_bolusspeed, 0);
         int speed = 12;
         switch (preferencesSpeed) {
             case 0:
@@ -197,7 +197,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
                 .bolusDelivered(t.getInsulin());
         if (!result.getSuccess())
-            result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(),
+            result.comment(rh.gs(app.aaps.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(),
                     danaPump.getBolusStartErrorCode()));
         else
             result.comment(app.aaps.core.ui.R.string.ok);
@@ -327,7 +327,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             aapsLogger.debug(LTag.PUMP, "setHighTempBasalPercent: OK");
             return result;
         }
-        result.enacted(false).success(false).comment(info.nightscout.pump.dana.R.string.danar_valuenotsetproperly);
+        result.enacted(false).success(false).comment(app.aaps.pump.dana.R.string.danar_valuenotsetproperly);
         aapsLogger.error("setHighTempBasalPercent: Failed to set temp basal");
         return result;
     }
@@ -379,7 +379,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: OK");
             return result;
         }
-        result.enacted(false).success(false).comment(info.nightscout.pump.dana.R.string.danar_valuenotsetproperly);
+        result.enacted(false).success(false).comment(app.aaps.pump.dana.R.string.danar_valuenotsetproperly);
         getAapsLogger().error("setExtendedBolus: Failed to extended bolus");
         return result;
     }

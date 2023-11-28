@@ -8,7 +8,7 @@ import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.rx.events.EventOverviewBolusProgress
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.DanaRSPlugin
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.junit.jupiter.api.Assertions

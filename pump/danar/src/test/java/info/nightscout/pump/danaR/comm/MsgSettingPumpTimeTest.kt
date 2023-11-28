@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaR.comm
 
 import info.nightscout.androidaps.danar.comm.MsgSettingPumpTime
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -22,6 +22,6 @@ class MsgSettingPumpTimeTest : DanaRTestBase() {
             packet.intFromBuff(bytes, 0, 1)
         ).millis
         packet.handleMessage(bytes)
-        Assertions.assertEquals(time, danaPump.getPumpTime())
+        Assertions.assertEquals(time, danaPump.pumpTime)
     }
 }

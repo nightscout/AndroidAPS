@@ -11,8 +11,8 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.database.DanaHistoryRecordDao
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.database.DanaHistoryRecordDao
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock

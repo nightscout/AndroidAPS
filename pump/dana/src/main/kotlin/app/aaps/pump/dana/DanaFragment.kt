@@ -1,4 +1,4 @@
-package info.nightscout.pump.dana
+package app.aaps.pump.dana
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -36,10 +36,10 @@ import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.dialogs.OKDialog
 import app.aaps.core.ui.extensions.toVisibility
 import dagger.android.support.DaggerFragment
-import info.nightscout.pump.dana.activities.DanaHistoryActivity
-import info.nightscout.pump.dana.activities.DanaUserOptionsActivity
-import info.nightscout.pump.dana.databinding.DanarFragmentBinding
-import info.nightscout.pump.dana.events.EventDanaRNewStatus
+import app.aaps.pump.dana.activities.DanaHistoryActivity
+import app.aaps.pump.dana.activities.DanaUserOptionsActivity
+import app.aaps.pump.dana.databinding.DanarFragmentBinding
+import app.aaps.pump.dana.events.EventDanaRNewStatus
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject

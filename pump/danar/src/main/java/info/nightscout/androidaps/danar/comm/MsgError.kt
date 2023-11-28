@@ -17,11 +17,11 @@ class MsgError(
         val errorCode = intFromBuff(bytes, 0, 1)
         var errorString = ""
         when (errorCode) {
-            1, 2, 3 -> errorString = rh.gs(info.nightscout.pump.dana.R.string.pumperror) + " " + errorCode
-            4       -> errorString = rh.gs(info.nightscout.pump.dana.R.string.pumpshutdown)
-            5       -> errorString = rh.gs(info.nightscout.pump.dana.R.string.occlusion)
-            7       -> errorString = rh.gs(info.nightscout.pump.dana.R.string.lowbattery)
-            8       -> errorString = rh.gs(info.nightscout.pump.dana.R.string.batterydischarged)
+            1, 2, 3 -> errorString = rh.gs(app.aaps.pump.dana.R.string.pumperror) + " " + errorCode
+            4       -> errorString = rh.gs(app.aaps.pump.dana.R.string.pumpshutdown)
+            5       -> errorString = rh.gs(app.aaps.pump.dana.R.string.occlusion)
+            7       -> errorString = rh.gs(app.aaps.pump.dana.R.string.lowbattery)
+            8       -> errorString = rh.gs(app.aaps.pump.dana.R.string.batterydischarged)
         }
         if (errorCode < 8) { // bolus delivering stopped
             val bolusingEvent = EventOverviewBolusProgress

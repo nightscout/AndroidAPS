@@ -1,4 +1,4 @@
-package info.nightscout.pump.dana.comm
+package app.aaps.pump.dana.comm
 
 object RecordTypes {
     const val RECORD_TYPE_BOLUS = 0x01.toByte()

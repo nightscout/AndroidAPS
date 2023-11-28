@@ -2,7 +2,7 @@ package info.nightscout.androidaps.danar.comm
 
 import app.aaps.core.interfaces.logging.LTag
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.comm.RecordTypes
 import java.util.Calendar
 
 class MsgSetCarbsEntry(

@@ -7,7 +7,7 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventDismissNotification
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import java.util.Locale
 import javax.inject.Inject
 
@@ -46,7 +46,7 @@ class DanaRSPacketBasalGetBasalRate(
             aapsLogger.debug(LTag.PUMPCOMM, "Basal " + String.format(Locale.ENGLISH, "%02d", index) + "h: " + danaPump.pumpProfiles!![danaPump.activeProfile][index])
         if (danaPump.basalStep != 0.01) {
             failed = true
-            uiInteraction.addNotification(Notification.WRONG_BASAL_STEP, rh.gs(info.nightscout.pump.dana.R.string.danar_setbasalstep001), Notification.URGENT)
+            uiInteraction.addNotification(Notification.WRONG_BASAL_STEP, rh.gs(app.aaps.pump.dana.R.string.danar_setbasalstep001), Notification.URGENT)
         } else {
             rxBus.send(EventDismissNotification(Notification.WRONG_BASAL_STEP))
         }

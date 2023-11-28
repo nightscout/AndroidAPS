@@ -14,7 +14,7 @@ import app.aaps.core.interfaces.logging.LTag;
 import info.nightscout.androidaps.danar.comm.MessageBase;
 import info.nightscout.androidaps.danar.comm.MessageHashTableBase;
 import info.nightscout.androidaps.utils.CRC;
-import info.nightscout.pump.dana.DanaPump;
+import app.aaps.pump.dana.DanaPump;
 
 /**
  * Created by mike on 17.07.2016.

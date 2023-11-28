@@ -38,10 +38,10 @@ import app.aaps.core.interfaces.utils.DecimalFormatter;
 import app.aaps.core.interfaces.utils.Round;
 import app.aaps.core.objects.constraints.ConstraintObject;
 import info.nightscout.androidaps.danar.services.AbstractDanaRExecutionService;
-import info.nightscout.pump.dana.DanaFragment;
-import info.nightscout.pump.dana.DanaPump;
-import info.nightscout.pump.dana.comm.RecordTypes;
-import info.nightscout.pump.dana.database.DanaHistoryDatabase;
+import app.aaps.pump.dana.DanaFragment;
+import app.aaps.pump.dana.DanaPump;
+import app.aaps.pump.dana.comm.RecordTypes;
+import app.aaps.pump.dana.database.DanaHistoryDatabase;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 /**
@@ -90,10 +90,10 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                         .mainType(PluginType.PUMP)
                         .fragmentClass(DanaFragment.class.getName())
                         .pluginIcon(app.aaps.core.ui.R.drawable.ic_danars_128)
-                        .pluginName(info.nightscout.pump.dana.R.string.danarspump)
-                        .shortName(info.nightscout.pump.dana.R.string.danarpump_shortname)
+                        .pluginName(app.aaps.pump.dana.R.string.danarspump)
+                        .shortName(app.aaps.pump.dana.R.string.danarpump_shortname)
                         .preferencesId(R.xml.pref_danar)
-                        .description(info.nightscout.pump.dana.R.string.description_pump_dana_r),
+                        .description(app.aaps.pump.dana.R.string.description_pump_dana_r),
                 aapsLogger, rh, commandQueue
         );
         this.danaPump = danaPump;
@@ -121,14 +121,14 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                 .toObservable(EventPreferenceChange.class)
                 .observeOn(aapsSchedulers.getIo())
                 .subscribe(event -> {
-                    if (event.isChanged(getRh().gs(info.nightscout.pump.dana.R.string.key_danar_bt_name))) {
+                    if (event.isChanged(getRh().gs(app.aaps.pump.dana.R.string.key_danar_bt_name))) {
                         danaPump.reset();
                         pumpSync.connectNewPump(true);
                         getCommandQueue().readStatus(getRh().gs(app.aaps.core.ui.R.string.device_changed), null);
                     }
                 })
         );
-        danaPump.setSerialNumber(sp.getString(info.nightscout.pump.dana.R.string.key_danar_bt_name, "")); // fill at start to allow password reset
+        danaPump.setSerialNumber(sp.getString(app.aaps.pump.dana.R.string.key_danar_bt_name, "")); // fill at start to allow password reset
     }
 
     @Override protected void onStop() {
@@ -323,7 +323,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             getAapsLogger().debug(LTag.PUMP, "setExtendedBolus: OK");
             return result;
         }
-        result.enacted(false).success(false).comment(info.nightscout.pump.dana.R.string.danar_valuenotsetproperly);
+        result.enacted(false).success(false).comment(app.aaps.pump.dana.R.string.danar_valuenotsetproperly);
         getAapsLogger().error("setExtendedBolus: Failed to extended bolus");
         getAapsLogger().error("inProgress: " + danaPump.isExtendedInProgress() + " start: " + danaPump.getExtendedBolusStart() + " amount: " + danaPump.getExtendedBolusAmount() + " duration: " + danaPump.getExtendedBolusDuration());
         return result;

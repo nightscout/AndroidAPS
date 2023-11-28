@@ -1,4 +1,4 @@
-package info.nightscout.pump.dana.activities
+package app.aaps.pump.dana.activities
 
 import android.content.Context
 import android.os.Bundle
@@ -16,9 +16,9 @@ import app.aaps.core.interfaces.rx.events.EventInitializationChanged
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.R
-import info.nightscout.pump.dana.databinding.DanarUserOptionsActivityBinding
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.R
+import app.aaps.pump.dana.databinding.DanarUserOptionsActivityBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat

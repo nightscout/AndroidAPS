@@ -1,7 +1,7 @@
 package info.nightscout.pump.danaR.comm
 
 import info.nightscout.androidaps.danar.comm.MsgSettingProfileRatios
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

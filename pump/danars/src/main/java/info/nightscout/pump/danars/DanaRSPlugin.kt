@@ -49,10 +49,10 @@ import app.aaps.core.interfaces.utils.Round
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.objects.constraints.ConstraintObject
 import app.aaps.core.ui.toast.ToastUtils
-import info.nightscout.pump.dana.DanaFragment
-import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.dana.comm.RecordTypes
-import info.nightscout.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.dana.DanaFragment
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.comm.RecordTypes
+import app.aaps.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.events.EventDanaRSDeviceChange
 import info.nightscout.pump.danars.services.DanaRSService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -91,10 +91,10 @@ class DanaRSPlugin @Inject constructor(
         .fragmentClass(DanaFragment::class.java.name)
         .pluginIcon(app.aaps.core.ui.R.drawable.ic_danai_128)
         .pluginIcon2(app.aaps.core.ui.R.drawable.ic_danars_128)
-        .pluginName(info.nightscout.pump.dana.R.string.danarspump)
-        .shortName(info.nightscout.pump.dana.R.string.danarspump_shortname)
+        .pluginName(app.aaps.pump.dana.R.string.danarspump)
+        .shortName(app.aaps.pump.dana.R.string.danarspump_shortname)
         .preferencesId(R.xml.pref_danars)
-        .description(info.nightscout.pump.dana.R.string.description_pump_dana_rs),
+        .description(app.aaps.pump.dana.R.string.description_pump_dana_rs),
     aapsLogger, rh, commandQueue
 ), Pump, Dana, PluginConstraints, OwnDatabasePlugin {
 
@@ -108,8 +108,8 @@ class DanaRSPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
 
-        if (pref.key == rh.gs(info.nightscout.pump.dana.R.string.key_danars_name)) {
-            val value = sp.getStringOrNull(info.nightscout.pump.dana.R.string.key_danars_name, null)
+        if (pref.key == rh.gs(app.aaps.pump.dana.R.string.key_danars_name)) {
+            val value = sp.getStringOrNull(app.aaps.pump.dana.R.string.key_danars_name, null)
             pref.summary = value
                 ?: rh.gs(app.aaps.core.ui.R.string.not_set_short)
         }
@@ -157,9 +157,9 @@ class DanaRSPlugin @Inject constructor(
     }
 
     fun changePump() {
-        mDeviceAddress = sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")
-        mDeviceName = sp.getString(info.nightscout.pump.dana.R.string.key_danars_name, "")
-        danaPump.serialNumber = sp.getString(info.nightscout.pump.dana.R.string.key_danars_name, "")
+        mDeviceAddress = sp.getString(app.aaps.pump.dana.R.string.key_danars_address, "")
+        mDeviceName = sp.getString(app.aaps.pump.dana.R.string.key_danars_name, "")
+        danaPump.serialNumber = sp.getString(app.aaps.pump.dana.R.string.key_danars_name, "")
         danaPump.reset()
         commandQueue.readStatus(rh.gs(app.aaps.core.ui.R.string.device_changed), null)
     }
@@ -295,7 +295,7 @@ class DanaRSPlugin @Inject constructor(
         require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
 
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
-        val preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0)
+        val preferencesSpeed = sp.getInt(app.aaps.pump.dana.R.string.key_danars_bolusspeed, 0)
         var speed = 12
         when (preferencesSpeed) {
             0 -> speed = 12
@@ -322,12 +322,12 @@ class DanaRSPlugin @Inject constructor(
         if (!result.success) {
             var error = "" + danaPump.bolusStartErrorCode
             when (danaPump.bolusStartErrorCode) {
-                0x10 -> error = rh.gs(info.nightscout.pump.dana.R.string.maxbolusviolation)
-                0x20 -> error = rh.gs(info.nightscout.pump.dana.R.string.commanderror)
-                0x40 -> error = rh.gs(info.nightscout.pump.dana.R.string.speederror)
-                0x80 -> error = rh.gs(info.nightscout.pump.dana.R.string.insulinlimitviolation)
+                0x10 -> error = rh.gs(app.aaps.pump.dana.R.string.maxbolusviolation)
+                0x20 -> error = rh.gs(app.aaps.pump.dana.R.string.commanderror)
+                0x40 -> error = rh.gs(app.aaps.pump.dana.R.string.speederror)
+                0x80 -> error = rh.gs(app.aaps.pump.dana.R.string.insulinlimitviolation)
             }
-            result.comment = rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
+            result.comment = rh.gs(app.aaps.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
         } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
         aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
         return result
@@ -479,7 +479,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = rh.gs(info.nightscout.pump.dana.R.string.danar_valuenotsetproperly)
+        result.comment = rh.gs(app.aaps.pump.dana.R.string.danar_valuenotsetproperly)
         aapsLogger.error("setHighTempBasalPercent: Failed to set temp basal. connectionOK: $connectionOK isTempBasalInProgress: ${danaPump.isTempBasalInProgress} tempBasalPercent: ${danaPump.tempBasalPercent}")
         return result
     }
@@ -518,7 +518,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = rh.gs(info.nightscout.pump.dana.R.string.danar_valuenotsetproperly)
+        result.comment = rh.gs(app.aaps.pump.dana.R.string.danar_valuenotsetproperly)
         aapsLogger.error("setExtendedBolus: Failed to extended bolus")
         return result
     }
@@ -642,11 +642,11 @@ class DanaRSPlugin @Inject constructor(
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
         aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")
-        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_pairingkey) + mDeviceName)
-        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randompairingkey) + mDeviceName)
-        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_pairingkey) + mDeviceName)
-        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randomsynckey) + mDeviceName)
-        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_dana_ble5_pairingkey) + mDeviceName)
+        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_danars_pairingkey) + mDeviceName)
+        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_danars_v3_randompairingkey) + mDeviceName)
+        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_danars_v3_pairingkey) + mDeviceName)
+        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_danars_v3_randomsynckey) + mDeviceName)
+        sp.remove(rh.gs(app.aaps.pump.dana.R.string.key_dana_ble5_pairingkey) + mDeviceName)
     }
 
     override fun clearAllTables() = danaHistoryDatabase.clearAllTables()

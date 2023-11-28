@@ -2,7 +2,7 @@ package info.nightscout.pump.danars
 
 import app.aaps.core.interfaces.ui.UiInteraction
 import app.aaps.shared.tests.TestBaseWithProfile
-import info.nightscout.pump.dana.DanaPump
+import app.aaps.pump.dana.DanaPump
 import info.nightscout.pump.danars.comm.DanaRSPacket
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers

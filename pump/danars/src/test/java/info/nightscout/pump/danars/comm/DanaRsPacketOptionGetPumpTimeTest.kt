@@ -32,7 +32,7 @@ class DanaRsPacketOptionGetPumpTimeTest : DanaRSTestBase() {
         putByteToArray(array, 5, 35) // second 35
 
         packet.handleMessage(array)
-        Assertions.assertEquals(DateTime(2019, 2, 4, 20, 11, 35).millis, danaPump.getPumpTime())
+        Assertions.assertEquals(DateTime(2019, 2, 4, 20, 11, 35).millis, danaPump.pumpTime)
         Assertions.assertEquals("OPTION__GET_PUMP_TIME", packet.friendlyName)
     }
 }
