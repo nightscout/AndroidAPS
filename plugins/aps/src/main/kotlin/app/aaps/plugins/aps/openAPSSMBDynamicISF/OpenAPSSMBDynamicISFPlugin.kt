@@ -86,6 +86,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
             .description(R.string.description_smb_dynamic_isf)
             .shortName(R.string.dynisf_shortname)
             .preferencesId(R.xml.pref_openapssmbdynamicisf)
+            .preferencesVisibleInSimpleMode(true)
             .setDefault(false)
     }
 
