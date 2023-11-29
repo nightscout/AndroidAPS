@@ -11,7 +11,7 @@ class RealPumpTest {
 
         private val validProfile = "{\"dia\":\"6\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"10\"},{\"time\":\"2:00\",\"value\":\"11\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"5\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
 
-        @Inject lateinit var pump : info.nightscout.androidaps.danaRv2.DanaRv2Plugin
+        @Inject lateinit var pump : app.aaps.pump.danarv2.DanaRv2Plugin
         @Inject lateinit var randomBgPlugin :RandomBgPlugin
         @Inject lateinit var localProfilePlugin: LocalProfilePlugin
         @Inject lateinit var profileFunction: ProfileFunction

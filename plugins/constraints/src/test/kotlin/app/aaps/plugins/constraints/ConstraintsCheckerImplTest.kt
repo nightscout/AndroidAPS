@@ -29,6 +29,9 @@ import app.aaps.plugins.constraints.objectives.ObjectivesPlugin
 import app.aaps.plugins.constraints.objectives.objectives.Objective
 import app.aaps.plugins.constraints.safety.SafetyPlugin
 import app.aaps.plugins.source.GlimpPlugin
+import app.aaps.pump.dana.DanaPump
+import app.aaps.pump.dana.database.DanaHistoryDatabase
+import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.insight.database.InsightDatabase
 import app.aaps.pump.insight.database.InsightDatabaseDao
@@ -36,9 +39,6 @@ import app.aaps.pump.insight.database.InsightDbHelper
 import app.aaps.pump.virtual.VirtualPumpPlugin
 import app.aaps.shared.tests.TestBaseWithProfile
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.androidaps.danar.DanaRPlugin
-import app.aaps.pump.dana.DanaPump
-import app.aaps.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.DanaRSPlugin
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
