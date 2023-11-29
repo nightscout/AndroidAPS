@@ -81,11 +81,11 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
     protected fun getNavController(): NavController =
         (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
-    public fun getTotalDefinedNumberOfSteps(): Int {
+    fun getTotalDefinedNumberOfSteps(): Int {
         return 6
     }
 
-    public fun getActualNumberOfSteps(): Int {
+    fun getActualNumberOfSteps(): Int {
         return 6
     }
 }

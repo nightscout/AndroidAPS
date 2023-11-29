@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.ui.dlg;
+package app.aaps.pump.equil.ui.dlg
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.pump.equil.databinding.EquilDialogAlertDressingBinding
-import dagger.android.support.DaggerDialogFragment;
+import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -34,10 +34,6 @@ class EquilUnPairDlg : DaggerDialogFragment() {
         )
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +49,7 @@ class EquilUnPairDlg : DaggerDialogFragment() {
         binding.btnCancel.setOnClickListener { dismiss() }
         binding.btnOk.setOnClickListener {
             dismiss()
-            binding.btnOk?.let { onDialogResultListener?.invoke() }
+            binding.btnOk.let { onDialogResultListener?.invoke() }
 
         }
     }
@@ -66,13 +62,6 @@ class EquilUnPairDlg : DaggerDialogFragment() {
     }
 
     var task: Runnable? = null
-
-    @Synchronized
-    fun updateGUI(from: String) {
-        if (_binding == null) return
-        aapsLogger.debug("UpdateGUI from $from")
-
-    }
 
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""

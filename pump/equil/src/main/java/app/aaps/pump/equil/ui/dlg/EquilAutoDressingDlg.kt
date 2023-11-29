@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.ui.dlg;
+package app.aaps.pump.equil.ui.dlg
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.pump.equil.databinding.EquilAutoDressingDialogBinding
-import dagger.android.support.DaggerDialogFragment;
+import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -34,10 +34,6 @@ class EquilAutoDressingDlg : DaggerDialogFragment() {
         )
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,7 +47,7 @@ class EquilAutoDressingDlg : DaggerDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.btnCancel.setOnClickListener {
-            binding.btnCancel?.let { onDialogResultListener?.invoke() }
+            binding.btnCancel.let { onDialogResultListener?.invoke() }
 
             dismiss()
         }
@@ -65,13 +61,6 @@ class EquilAutoDressingDlg : DaggerDialogFragment() {
     }
 
     var task: Runnable? = null
-
-    @Synchronized
-    fun updateGUI(from: String) {
-        if (_binding == null) return
-        aapsLogger.debug("UpdateGUI from $from")
-
-    }
 
     fun onClick(v: View): Boolean {
         return false

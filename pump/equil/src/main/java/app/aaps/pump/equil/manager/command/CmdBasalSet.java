@@ -1,18 +1,13 @@
 package app.aaps.pump.equil.manager.command;
 
 
-import app.aaps.pump.equil.EquilConst;
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
-import app.aaps.pump.equil.driver.definition.BasalSchedule;
-import app.aaps.pump.equil.driver.definition.BasalScheduleEntry;
-import app.aaps.pump.equil.manager.Utils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.profile.Profile;
 import app.aaps.pump.equil.EquilConst;
+import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.driver.definition.BasalSchedule;
 import app.aaps.pump.equil.driver.definition.BasalScheduleEntry;
 import app.aaps.pump.equil.manager.Utils;
@@ -48,7 +43,7 @@ public class CmdBasalSet extends BaseSetting {
             double rate = basalScheduleEntry.getRate();
             double value = rate / 2f;
             byte[] bs = Utils.basalToByteArray(value);
-            aapsLogger.debug(LTag.EQUILBLE,
+            aapsLogger.debug(LTag.PUMPCOMM,
                     i + "==CmdBasalSet==" + value + "====" + rate + "===" + Utils.decodeSpeedToUH(value) + "==="
                             + Utils.decodeSpeedToUHT(value));
             list.add(bs[1]);

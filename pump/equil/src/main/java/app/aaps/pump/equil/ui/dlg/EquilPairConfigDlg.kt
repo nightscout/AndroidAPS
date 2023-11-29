@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.ui.dlg;
+package app.aaps.pump.equil.ui.dlg
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.pump.equil.databinding.EquilPairConfigDialogBinding
-import dagger.android.support.DaggerDialogFragment;
+import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -34,10 +34,6 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
         )
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -51,12 +47,13 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.btnSkip.setOnClickListener {
-            binding.btnNeed?.let { onDialogResultListener?.invoke(0) }
+            binding.btnNeed.let { onDialogResultListener?.invoke(0) }
 
-            dismiss() }
+            dismiss()
+        }
         binding.btnNeed.setOnClickListener {
             dismiss()
-            binding.btnNeed?.let { onDialogResultListener?.invoke(1) }
+            binding.btnNeed.let { onDialogResultListener?.invoke(1) }
         }
     }
 
@@ -68,13 +65,6 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
     }
 
     var task: Runnable? = null
-
-    @Synchronized
-    fun updateGUI(from: String) {
-        if (_binding == null) return
-        aapsLogger.debug("UpdateGUI from $from")
-
-    }
 
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
@@ -100,7 +90,7 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
         onDialogResultListener = listener
 
     }
-    private var onDialogResultListener: ((Int) -> Unit)? = null
 
+    private var onDialogResultListener: ((Int) -> Unit)? = null
 
 }

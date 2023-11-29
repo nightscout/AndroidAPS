@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.ui.dlg;
+package app.aaps.pump.equil.ui.dlg
 
 import android.content.Context
 import android.os.Bundle
@@ -16,9 +16,8 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.data.AlarmMode
 import app.aaps.pump.equil.databinding.EquilSingleChooiceDialogBinding
-import dagger.android.support.DaggerDialogFragment;
+import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import java.util.*
 import javax.inject.Inject
 
 class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
@@ -41,10 +40,6 @@ class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-    }
-
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -70,7 +65,7 @@ class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
         itemList.add(Item(AlarmMode.SHAKE, rh.gs(R.string.equil_tone_mode_shake)))
         itemList.add(Item(AlarmMode.TONE_AND_SHAKE, rh.gs(R.string.equil_tone_mode_tone_and_shake)))
         itemList.add(Item(AlarmMode.MUTE, rh.gs(R.string.equil_tone_mode_mute)))
-        adapter = RecyclerViewAdapter(itemList, alarmMode);
+        adapter = RecyclerViewAdapter(itemList, alarmMode)
         binding.recyclerview.layoutManager = LinearLayoutManager(ctx)
         binding.recyclerview.swapAdapter(adapter, false)
 
@@ -84,13 +79,6 @@ class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
     }
 
     var task: Runnable? = null
-
-    @Synchronized
-    fun updateGUI(from: String) {
-        if (_binding == null) return
-        aapsLogger.debug("UpdateGUI from $from")
-
-    }
 
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
@@ -119,10 +107,6 @@ class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
 
     private var onDialogResultListener: ((Item) -> Unit)? = null
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     interface OnDialogResultListener {
 
         fun onDialogResult(result: View?)
@@ -148,8 +132,8 @@ class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
             return HistoryViewHolder(v)
         }
 
-        var selectView: View? = null;
-        var selectItem: Item? = null;
+        var selectView: View? = null
+        var selectItem: Item? = null
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record = itemList[position]

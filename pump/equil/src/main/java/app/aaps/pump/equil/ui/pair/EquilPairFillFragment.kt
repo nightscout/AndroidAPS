@@ -28,7 +28,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         return R.layout.equil_pair_fill_fragment
     }
 
-    override fun getNextPageActionId(): Int? {
+    override fun getNextPageActionId(): Int {
         return R.id.action_startEquilActivationFragment_to_startEquilPairAttachFragment
     }
 
@@ -43,9 +43,9 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonNext = view.findViewById<Button>(R.id.button_next);
-        buttonFill = view.findViewById<Button>(R.id.button_fill);
-        lytAction = view.findViewById<View>(R.id.lyt_action);
+        buttonNext = view.findViewById<Button>(R.id.button_next)
+        buttonFill = view.findViewById<Button>(R.id.button_fill)
+        lytAction = view.findViewById<View>(R.id.lyt_action)
         buttonNext.alpha = 0.3f
         buttonNext.isClickable = false
         buttonFill.setOnClickListener {
@@ -57,7 +57,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         }
         view.findViewById<Button>(R.id.button_finish).setOnClickListener {
             context?.let {
-                var time = System.currentTimeMillis();
+                var time = System.currentTimeMillis()
                 val equilHistoryRecord = EquilHistoryRecord(
                     time,
                     null,
@@ -105,18 +105,18 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
             override fun run() {
                 if (activity == null) return
 
-                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
+                aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                 if (result.success) {
                     if (auto) {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                         readStatus()
                     } else {
                         SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
-                        readStatus();
+                        readStatus()
                     }
                 } else {
                     if (auto) {
-                        dismissAutoDlg();
+                        dismissAutoDlg()
                     } else {
                         dismissLoading()
                     }
@@ -131,7 +131,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
             object : Callback() {
                 override fun run() {
                     if (activity == null) return
-                    aapsLogger.debug(LTag.EQUILBLE, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
+                    aapsLogger.debug(LTag.PUMPCOMM, "readStatus result====" + result.success + "===" + result.enacted + "====" + auto)
                     // result.enacted=true
                     if (result.success) {
                         if (!result.enacted) {
@@ -147,14 +147,14 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                                     buttonFill.visibility = View.GONE
                                     lytAction.visibility = View.VISIBLE
                                 }
-                                dismissAutoDlg();
+                                dismissAutoDlg()
                             } else {
                                 dismissLoading()
                             }
                         }
                     } else {
                         if (auto) {
-                            dismissAutoDlg();
+                            dismissAutoDlg()
                         } else {
                             dismissLoading()
                         }

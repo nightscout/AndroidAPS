@@ -16,11 +16,16 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.logging.UserEntryLogger
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.protection.ProtectionCheck
+import app.aaps.core.interfaces.pump.WarnColors
 import app.aaps.core.interfaces.queue.Callback
 import app.aaps.core.interfaces.queue.CommandQueue
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.rx.events.EventPumpStatusChanged
+import app.aaps.core.interfaces.sharedPreferences.SP
+import app.aaps.core.interfaces.utils.DateUtil
 import app.aaps.core.interfaces.utils.T
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.core.ui.UIRunnable
@@ -28,6 +33,8 @@ import app.aaps.core.ui.toast.ToastUtils
 import app.aaps.pump.equil.data.AlarmMode
 import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.databinding.EquilFraBinding
+import app.aaps.pump.equil.events.EventEquilDataChanged
+import app.aaps.pump.equil.events.EventEquilModeChanged
 import app.aaps.pump.equil.manager.command.*
 import app.aaps.pump.equil.ui.*
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
@@ -38,13 +45,6 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.time.Duration
 import javax.inject.Inject
-import app.aaps.core.interfaces.sharedPreferences.SP
-import app.aaps.core.interfaces.pump.WarnColors
-import app.aaps.core.interfaces.utils.DateUtil
-import app.aaps.core.interfaces.protection.ProtectionCheck
-import app.aaps.core.interfaces.rx.AapsSchedulers
-import app.aaps.pump.equil.events.EventEquilDataChanged
-import app.aaps.pump.equil.events.EventEquilModeChanged
 
 class EquilFragment : DaggerFragment() {
 
@@ -83,11 +83,6 @@ class EquilFragment : DaggerFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = EquilFraBinding.inflate(inflater, container, false)
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
     @Synchronized
@@ -132,7 +127,7 @@ class EquilFragment : DaggerFragment() {
     @Synchronized
     fun updateGUI() {
         if (_binding == null) return
-        var devName = equilPumpPlugin.equilManager.serialNumber
+        val devName = equilPumpPlugin.equilManager.serialNumber
         if (!TextUtils.isEmpty(devName)) {
             binding.battery.text = equilPumpPlugin.equilManager.battery.toString() + "%"
             binding.insulinReservoir.text = equilPumpPlugin.equilManager.currentInsulin.toString()
@@ -142,7 +137,7 @@ class EquilFragment : DaggerFragment() {
                 if (it == -1) {
                     binding.totalDelivered.text = "-"
                 } else {
-                    var totalDelivered = it - equilPumpPlugin.equilManager.currentInsulin;
+                    val totalDelivered = it - equilPumpPlugin.equilManager.currentInsulin
                     binding.totalDelivered.text = String.format(
                         rh.gs(R.string.equil_unit_u),
                         totalDelivered.toString()
@@ -158,7 +153,7 @@ class EquilFragment : DaggerFragment() {
                 "yyyy-MM-dd HH:mm:ss",
                 equilPumpPlugin.equilManager.lastDataTime
             ).toString()
-            var runMode = equilPumpPlugin.equilManager.runMode;
+            val runMode = equilPumpPlugin.equilManager.runMode
             binding.mode.setTextColor(Color.WHITE)
             if (equilPumpPlugin.equilManager.isActivationCompleted) {
                 if (runMode == RunMode.RUN) {
@@ -194,7 +189,7 @@ class EquilFragment : DaggerFragment() {
                     } else {
                         val text = rh.gs(
                             R.string.equil_common_overview_last_bolus_value,
-                            it?.amout,
+                            it.amout,
                             rh.gs(app.aaps.core.ui.R.string.insulin_unit_shortname),
                             readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
                         )
@@ -220,7 +215,7 @@ class EquilFragment : DaggerFragment() {
             binding.timeLastGetdata.text = '-'.toString()
             binding.timeDevice.text = '-'.toString()
             binding.mode.text = '-'.toString()
-            binding.serialNumber.text = "-".toString()
+            binding.serialNumber.text = "-"
             binding.firmwareVersion.text = "-"
             binding.insulinReservoir.text = "-"
             binding.tvTone.text = "-"
@@ -272,7 +267,7 @@ class EquilFragment : DaggerFragment() {
             if (TextUtils.isEmpty(devName)) {
                 ToastUtils.errorToast(context, rh.gs(R.string.equil_error_no_devices))
             } else
-                changeInsulin();
+                changeInsulin()
 
         }
     }
@@ -283,15 +278,13 @@ class EquilFragment : DaggerFragment() {
             showLoading()
             commandQueue.customCommand(CmdAlarmSet(data.data.command), object : Callback() {
                 override fun run() {
-                    dismissLoading();
-                    aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
+                    dismissLoading()
+                    aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                     if (result.success) {
-                        equilPumpPlugin.equilManager.alarmMode = data.data;
+                        equilPumpPlugin.equilManager.alarmMode = data.data
                         runOnUiThread {
                             updateGUI()
                         }
-                    } else {
-
                     }
                 }
             })
@@ -301,7 +294,7 @@ class EquilFragment : DaggerFragment() {
     }
 
     private fun showSetModeDialog() {
-        var runMode = equilPumpPlugin.equilManager.runMode;
+        val runMode = equilPumpPlugin.equilManager.runMode
         var tempMode = RunMode.RUN
         // var msg = "是否开始输注?"
         if (runMode == RunMode.RUN) {
@@ -311,14 +304,13 @@ class EquilFragment : DaggerFragment() {
         showLoading()
         commandQueue.customCommand(CmdModelSet(tempMode.command), object : Callback() {
             override fun run() {
-                dismissLoading();
-                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
+                dismissLoading()
+                aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                 if (result.success) {
                     equilPumpPlugin.equilManager.runMode = tempMode
                     runOnUiThread {
                         updateGUI()
                     }
-                } else {
                 }
             }
         })
@@ -345,7 +337,7 @@ class EquilFragment : DaggerFragment() {
     }
 
     fun updateAlarm() {
-        var alarmMode = equilPumpPlugin.equilManager.alarmMode;
+        val alarmMode = equilPumpPlugin.equilManager.alarmMode
         if (alarmMode == AlarmMode.MUTE) {
             binding.tvTone.text = rh.gs(R.string.equil_tone_mode_mute)
         } else if (alarmMode == AlarmMode.TONE) {
@@ -364,8 +356,7 @@ class EquilFragment : DaggerFragment() {
     }
 
     private fun showLoading() {
-        LoadingDlg().also { dialog ->
-        }.show(childFragmentManager, "loading")
+        LoadingDlg().show(childFragmentManager, "loading")
     }
 
     private fun dismissLoading() {

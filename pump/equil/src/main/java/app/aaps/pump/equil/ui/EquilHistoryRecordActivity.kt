@@ -2,8 +2,6 @@ package app.aaps.pump.equil.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -18,8 +16,6 @@ import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
-import info.nightscout.pump.common.utils.ProfileUtil
-
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -29,7 +25,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.pump.equil.EquilPumpPlugin
-import com.google.android.material.tabs.TabLayout
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.data.database.EquilBasalValuesRecord
 import app.aaps.pump.equil.data.database.EquilHistoryPump
@@ -41,13 +36,15 @@ import app.aaps.pump.equil.driver.definition.EquilHistoryEntryGroup
 import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.manager.Utils
 import app.aaps.pump.equil.manager.command.PumpEvent
+import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.pump.common.utils.ProfileUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
-import kotlin.collections.ArrayList
 
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
 class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
@@ -71,10 +68,8 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
     private val disposable = CompositeDisposable()
     var filteredHistoryList: MutableList<EquilHistoryRecord> = java.util.ArrayList<EquilHistoryRecord>()
     private val fullHistoryList: MutableList<EquilHistoryRecord> = java.util.ArrayList<EquilHistoryRecord>()
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     @Inject lateinit var rxBus: RxBus
-    val calendar: Calendar = Calendar.getInstance();
-    val dateformat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+    val calendar: Calendar = Calendar.getInstance()
     val dateformat2 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
     private var typeListFull: List<TypeList>? = null
     private var manualChange = false
@@ -90,12 +85,12 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
         recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList, rh)
         llm = LinearLayoutManager(this)
-        binding.recyclerview?.run {
+        binding.recyclerview.run {
             setHasFixedSize(true)
             layoutManager = llm
             adapter = recyclerViewAdapter
         }
-        binding.recyclerviewEquil?.run {
+        binding.recyclerviewEquil.run {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(this@EquilHistoryRecordActivity)
         }
@@ -106,10 +101,10 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                            loadData()
                            loadDataEquil()
                        }, fabricPrivacy::logException)
-        typeListFull = getTypeList(EquilHistoryEntryGroup.Companion.getTranslatedList(rh))
+        typeListFull = getTypeList(EquilHistoryEntryGroup.getTranslatedList(rh))
 
         val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, app.aaps.core.ui.R.layout.spinner_centered, typeListFull!!)
-        binding.equilHistorytype?.run {
+        binding.equilHistorytype.run {
             adapter = spinnerAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -145,19 +140,19 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
     private fun filterHistory(group: EquilHistoryEntryGroup) {
         filteredHistoryList.clear()
-        aapsLogger.debug(LTag.EQUILBLE, "Items on full list: {}", fullHistoryList.size)
+        aapsLogger.debug(LTag.PUMPCOMM, "Items on full list: {}", fullHistoryList.size)
         if (group === EquilHistoryEntryGroup.All) {
-            aapsLogger.debug(LTag.EQUILBLE, "alll===")
+            aapsLogger.debug(LTag.PUMPCOMM, "alll===")
             filteredHistoryList.addAll(fullHistoryList)
         } else {
             filteredHistoryList.addAll(fullHistoryList.filter { it.type?.let { it1 -> groupForCommandType(it1) } == group })
         }
 
-        recyclerViewAdapter?.let {
+        recyclerViewAdapter.let {
             it.historyList = filteredHistoryList
             it.notifyDataSetChanged()
         }
-        aapsLogger.debug(LTag.EQUILBLE, "Items on filtered list: {}", filteredHistoryList.size)
+        aapsLogger.debug(LTag.PUMPCOMM, "Items on filtered list: {}", filteredHistoryList.size)
     }
 
     private fun groupForCommandType(type: EquilHistoryRecord.EventType): EquilHistoryEntryGroup {
@@ -250,20 +245,20 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         calendar.add(Calendar.DAY_OF_MONTH, -5)
-        var startTime = calendar.timeInMillis
+        val startTime = calendar.timeInMillis
 
-        aapsLogger.debug(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====")
+        aapsLogger.debug(LTag.PUMPCOMM, "loadData===" + dateformat2.format(startTime) + "====")
         disposable += equilHistoryRecordDao
             .allSince(startTime, System.currentTimeMillis())
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ historyList ->
-                           aapsLogger.debug(LTag.EQUILBLE, "historyList===" + historyList.size)
+                           aapsLogger.debug(LTag.PUMPCOMM, "historyList===" + historyList.size)
                            fullHistoryList.clear()
                            fullHistoryList.addAll(historyList)
                            // }
                        }) {
-                aapsLogger.debug(LTag.EQUILBLE, "historyListerror===" + it)
+                aapsLogger.debug(LTag.PUMPCOMM, "historyListerror===" + it)
             }
     }
 
@@ -273,26 +268,18 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         calendar.add(Calendar.DAY_OF_MONTH, -5)
-        var startTime = calendar.timeInMillis
-        var endTime = System.currentTimeMillis()
-        aapsLogger.debug(LTag.EQUILBLE, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
+        val startTime = calendar.timeInMillis
+        val endTime = System.currentTimeMillis()
+        aapsLogger.debug(LTag.PUMPCOMM, "loadData===" + dateformat2.format(startTime) + "====" + dateformat2.format(endTime))
         disposable += equilHistoryRecordDao
             .allFromByType(startTime, endTime, equilPumpPlugin.serialNumber())
             .subscribeOn(aapsSchedulers.io)
             .observeOn(aapsSchedulers.main)
             .subscribe({ historyList ->
-                           aapsLogger.debug(LTag.EQUILBLE, "loadDataEquil===" + historyList.size)
+                           aapsLogger.debug(LTag.PUMPCOMM, "loadDataEquil===" + historyList.size)
                            binding.recyclerviewEquil.swapAdapter(RecyclerViewAdapterEquil(toModels(historyList), rh), false)
                        }) {
             }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -350,7 +337,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                 EquilHistoryRecord.EventType.SET_EXTENDED_BOLUS  -> {
                     val tbr = item.tempBasalRecord
                     val duration = (tbr?.duration?.div(60 * 1000) ?: 0)
-                    var rate = (tbr!!.rate * (60 / duration));
+                    val rate = (tbr!!.rate * (60 / duration))
                     tbr.let {
                         rh.gs(R.string.equil_common_history_tbr_value, rate, duration)
                     }
@@ -428,15 +415,14 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
     companion object {
 
         private var selectedGroup: EquilHistoryEntryGroup = EquilHistoryEntryGroup.All
-        const val DAYS_TO_DISPLAY = 5
     }
 
     fun toModels(list: List<EquilHistoryPump>): List<ItemModel> {
         val arrayList = ArrayList<ItemModel>()
         var record: EquilHistoryPump? = null
         var record2: EquilHistoryPump? = null
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
-        var list2 = list.sortedWith(compareBy(EquilHistoryPump::eventTimestamp, EquilHistoryPump::eventIndex))
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US)
+        val list2 = list.sortedWith(compareBy(EquilHistoryPump::eventTimestamp, EquilHistoryPump::eventIndex))
         val iterator = list2.listIterator()
         var pre: EquilHistoryPump? = null
 
@@ -445,7 +431,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
             // Process basal speed
             if (record2 == null || record2.rate != next.rate) {
-                val format = format.format(next.eventTimestamp)
+                val format = dateFormat.format(next.eventTimestamp)
                 val valueOf = Utils.decodeSpeedToUH(next.rate).toString()
                 if (pre?.type == 10) {
                     // arrayList.add(ItemModel(format, valueOf, ItemModel.TYPE_BASAL, next.eventTimestamp))
@@ -461,17 +447,17 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                 val time = next.eventTimestamp
                 val time2 = record.eventTimestamp
 
-                val format2 = format.format(time2)
+                val format2 = dateFormat.format(time2)
                 val format3 = "%.3f".format(
                     (Math.abs(time - time2) / 1000.0)
-                        // * _root_ide_package_.app.aaps.pump.equil.manager.Utils.decodeSpeedToUS(record.largeRate)
+                    // * _root_ide_package_.app.aaps.pump.equil.manager.Utils.decodeSpeedToUS(record.largeRate)
                 )
-                val t = (Math.abs(time - time2) / 1000.0);
-                aapsLogger.debug(LTag.EQUILBLE, "time===" + t + "===" + format3)
+                val t = (Math.abs(time - time2) / 1000.0)
+                aapsLogger.debug(LTag.PUMPCOMM, "time===" + t + "===" + format3)
                 arrayList.add(ItemModel(format2, format3, ItemModel.TYPE_BOLUS, time2))
                 record = null
             }
-            pre = next;
+            pre = next
             if (next.largeRate > 0) {
                 record = next
             }
@@ -479,7 +465,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
             val string = PumpEvent.getTips(next.port, next.type, next.level)
 
             if (!"--".equals(string)) {
-                val format4 = format.format(next.eventTimestamp)
+                val format4 = dateFormat.format(next.eventTimestamp)
                 arrayList.add(ItemModel(format4, string, ItemModel.TYPE_TEXT, next.eventTimestamp))
             }
         }
@@ -512,7 +498,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         var rh: ResourceHelper
     ) : RecyclerView.Adapter<RecyclerViewAdapterEquil.EquilHistoryViewHolder>() {
 
-        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): RecyclerViewAdapterEquil.EquilHistoryViewHolder {
+        override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): EquilHistoryViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(
                 R.layout.equil_item_record,  //
                 viewGroup, false
@@ -522,7 +508,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
         override fun onBindViewHolder(holder: EquilHistoryViewHolder, position: Int) {
             val item = historyList[position]
-            Log.e(LTag.EQUILBLE.tag, "onBindViewHolder  ${position}")
+            Log.e(LTag.PUMPCOMM.tag, "onBindViewHolder  ${position}")
             holder.timeView.text = item.time
             holder.typeView.text = item.text
             val type = item.type
@@ -533,7 +519,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                 ItemModel.TYPE_BOLUS_ING  -> rh.gc(R.color.equil_bolus_ing)
                 else                      -> rh.gc(R.color.equil_noramll)
             }
-            var text = when (type) {
+            val text = when (type) {
                 ItemModel.TYPE_BOLUS      -> rh.gs(R.string.equil_record_bolus, item.text)
                 ItemModel.TYPE_BASAL      -> rh.gs(R.string.equil_record_basal, item.text)
                 ItemModel.TYPE_BASAL_TEMP -> rh.gs(R.string.equil_record_basal_temp, item.text)

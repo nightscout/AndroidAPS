@@ -78,7 +78,7 @@ public class CmdUnPair extends BaseCmd {
                 return list;
             } catch (Exception e) {
                 response = new EquilResponse(createTime);
-                aapsLogger.debug(LTag.EQUILBLE, "decodeEquilPacket error =====" + e.getMessage());
+                aapsLogger.debug(LTag.PUMPCOMM, "decodeEquilPacket error =====" + e.getMessage());
 
             }
 
@@ -98,7 +98,7 @@ public class CmdUnPair extends BaseCmd {
             return list;
         } catch (Exception e) {
             response = new EquilResponse(createTime);
-            aapsLogger.debug(LTag.EQUILBLE, "decodeEquilPacket error=====" + e.getMessage());
+            aapsLogger.debug(LTag.PUMPCOMM, "decodeEquilPacket error=====" + e.getMessage());
         }
         return null;
 
@@ -117,7 +117,7 @@ public class CmdUnPair extends BaseCmd {
                 (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00, (byte) 0x00};
         String content = AESUtil.decrypt(equilCmdModel, keyBytes);
         String pwd1 = content.substring(0, 64);
-        String pwd2 = content.substring(64, content.length());
+        String pwd2 = content.substring(64);
         runPwd = pwd2;
         byte[] data1 = Utils.hexStringToBytes(pwd1);
         byte[] data = Utils.concat(data1, data2);

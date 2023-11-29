@@ -52,7 +52,7 @@ public class CmdTempBasalGet extends BaseSetting {
         int index = data[4];
         step = Utils.bytes2Int(new byte[]{data[6], data[7], data[8], data[9]});
         time = Utils.bytes2Int(new byte[]{data[10], data[11], data[12], data[13]});
-        aapsLogger.debug(LTag.EQUILBLE, "CmdTempBasalGet===" + step + "====" + time);
+        aapsLogger.debug(LTag.PUMPCOMM, "CmdTempBasalGet===" + step + "====" + time);
 //        Utils.by
         synchronized (this) {
             setCmdStatus(true);

@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.ui.dlg;
+package app.aaps.pump.equil.ui.dlg
 
 import android.content.Context
 import android.os.Bundle
@@ -10,7 +10,7 @@ import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.pump.equil.databinding.LoadingDialogBinding
-import dagger.android.support.DaggerDialogFragment;
+import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -32,10 +32,6 @@ class LoadingDlg : DaggerDialogFragment() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-    }
-
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
     }
 
     override fun onCreateView(
@@ -61,13 +57,6 @@ class LoadingDlg : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    @Synchronized
-    fun updateGUI(from: String) {
-        if (_binding == null) return
-        aapsLogger.debug("UpdateGUI from $from")
-
-    }
-
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""
         return true
@@ -88,7 +77,4 @@ class LoadingDlg : DaggerDialogFragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
 }

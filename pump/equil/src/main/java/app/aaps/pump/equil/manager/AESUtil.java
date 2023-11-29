@@ -43,7 +43,7 @@ public class AESUtil {
         String plaintextDefault = "Equil"; //
         byte[] defaultKey = generateAESKeyFromPassword(plaintextDefault);
         byte[] aesKey = Utils.concat(defaultKey, generateAESKeyFromPassword(password));
-        Log.e(LTag.EQUILBLE.toString(), Utils.bytesToHex(aesKey) + "===" + aesKey.length);
+        Log.e(LTag.PUMPCOMM.toString(), Utils.bytesToHex(aesKey) + "===" + aesKey.length);
         return aesKey;
     }
 

@@ -1,10 +1,9 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
-
-import app.aaps.core.interfaces.logging.LTag;
 
 
 public class CmdInsulinChange extends BaseSetting {
@@ -40,7 +39,7 @@ public class CmdInsulinChange extends BaseSetting {
             notify();
         }
         equilManager.setInsulinChange(status);
-        aapsLogger.debug(LTag.EQUILBLE, "status====" + status + "====" + Utils.bytesToHex(data));
+        aapsLogger.debug(LTag.PUMPCOMM, "status====" + status + "====" + Utils.bytesToHex(data));
     }
 
     @Override public EquilHistoryRecord.EventType getEventType() {

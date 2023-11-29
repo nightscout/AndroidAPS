@@ -1,10 +1,8 @@
 package app.aaps.pump.equil.manager.command;
 
 
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
-import app.aaps.pump.equil.manager.Utils;
-
 import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
 
@@ -61,7 +59,7 @@ public class CmdSettingGet extends BaseSetting {
         infusionUnit = Utils.internalDecodeSpeedToUH(i4);
         basalAlarm = Utils.internalDecodeSpeedToUH(i5);
         largeAlarm = Utils.internalDecodeSpeedToUH(i6);
-        aapsLogger.debug(LTag.EQUILBLE,
+        aapsLogger.debug(LTag.PUMPCOMM,
                 "CmdSettingGet===" + Utils.bytesToHex(data) + "====" + lowAlarm + "=======" + i1);
         synchronized (this) {
             setCmdStatus(true);

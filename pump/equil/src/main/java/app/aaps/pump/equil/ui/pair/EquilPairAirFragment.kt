@@ -29,8 +29,8 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
         return R.layout.equil_pair_air_fragment
     }
 
-    override fun getNextPageActionId(): Int? {
-        return R.id.action_startEquilActivationFragment_to_startEquilPairConfirmFragment;
+    override fun getNextPageActionId(): Int {
+        return R.id.action_startEquilActivationFragment_to_startEquilPairConfirmFragment
     }
 
     override fun getIndex(): Int {
@@ -45,8 +45,8 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonNext = view.findViewById<Button>(R.id.button_next);
-        lytAction = view.findViewById<View>(R.id.lyt_action);
+        buttonNext = view.findViewById<Button>(R.id.button_next)
+        lytAction = view.findViewById<View>(R.id.lyt_action)
         buttonNext.alpha = 0.3f
         buttonNext.isClickable = false
         view.findViewById<Button>(R.id.button_air).setOnClickListener {
@@ -75,7 +75,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdStepSet(), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.debug(LTag.EQUILBLE, "result====" + result.success)
+                aapsLogger.debug(LTag.PUMPCOMM, "result====" + result.success)
                 if (result.success) {
                     dismissLoading()
                 } else {
@@ -96,7 +96,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                     dismissLoading()
                     readFM()
                 } else {
-                    dismissLoading();
+                    dismissLoading()
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                 }
             }
@@ -113,7 +113,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                     dismissLoading()
                     setProfile()
                 } else {
-                    dismissLoading();
+                    dismissLoading()
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                 }
             }
@@ -124,11 +124,11 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdDevicesGet(), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.debug(LTag.EQUILBLE, "CmdGetDevices result====" + result.success)
+                aapsLogger.debug(LTag.PUMPCOMM, "CmdGetDevices result====" + result.success)
                 if (result.success) {
                     equilPumpPlugin.equilManager.closeBle()
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
-                    dismissLoading();
+                    dismissLoading()
                     runOnUiThread {
                         // binding.navButtonsLayout.buttonNext.performClick()
                         val nextPage = getNextPageActionId()
@@ -137,7 +137,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                         }
                     }
                 } else {
-                    dismissLoading();
+                    dismissLoading()
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                 }
             }
@@ -145,7 +145,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     }
 
     private fun setProfile() {
-        var profile = profileFunction.getProfile();
+        var profile = profileFunction.getProfile()
         if (profile == null) {
             setTime()
             return
@@ -159,14 +159,14 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdBasalSet(basalSchedule, profile), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.debug(LTag.EQUILBLE, "CmdTimeSet result====" + result.success)
+                aapsLogger.debug(LTag.PUMPCOMM, "CmdTimeSet result====" + result.success)
                 if (result.success) {
-                    equilPumpPlugin.equilManager.basalSchedule=basalSchedule
+                    equilPumpPlugin.equilManager.basalSchedule = basalSchedule
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
                     dismissLoading()
                     setTime()
                 } else {
-                    dismissLoading();
+                    dismissLoading()
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                 }
 

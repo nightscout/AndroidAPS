@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.ui.dlg;
+package app.aaps.pump.equil.ui.dlg
 
 import android.content.Context
 import android.os.Bundle
@@ -13,10 +13,9 @@ import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.resources.ResourceHelper
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.pump.equil.databinding.EquilNumberChooiceDialogBinding
-import dagger.android.support.DaggerDialogFragment;
+import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat
-import java.util.*
 import javax.inject.Inject
 
 class NumberChooseDlg : DaggerDialogFragment() {
@@ -40,10 +39,6 @@ class NumberChooseDlg : DaggerDialogFragment() {
         )
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +54,7 @@ class NumberChooseDlg : DaggerDialogFragment() {
         binding.lytAction.cancel.setOnClickListener { dismiss() }
         binding.lytAction.ok.setOnClickListener {
 
-            binding.pickerAmount?.let { onDialogResultListener?.invoke(binding.pickerAmount.value.toFloat()) }
+            binding.pickerAmount.let { onDialogResultListener?.invoke(binding.pickerAmount.value.toFloat()) }
             dismiss()
         }
         binding.pickerAmount.setParams(10.0, 10.0, 100.0, 0.5, DecimalFormat("0.0"), false, null, object : TextWatcher {
@@ -78,14 +73,6 @@ class NumberChooseDlg : DaggerDialogFragment() {
     }
 
     var task: Runnable? = null
-
-    @Synchronized
-    fun updateGUI(from: String) {
-        if (_binding == null) return
-        aapsLogger.debug("UpdateGUI from $from")
-
-    }
-
 
     fun onClick(v: View): Boolean {
         return false
@@ -110,6 +97,7 @@ class NumberChooseDlg : DaggerDialogFragment() {
     private var onDialogResultListener: ((Float) -> Unit)? = null
 
     interface OnDialogResultListener {
+
         fun onDialogResult(result: Float?)
     }
 

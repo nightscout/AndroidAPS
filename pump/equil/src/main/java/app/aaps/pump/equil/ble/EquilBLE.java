@@ -1,7 +1,6 @@
 package app.aaps.pump.equil.ble;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
@@ -16,13 +15,14 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.bluetooth.le.ScanSettings;
 import android.content.Context;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
 import android.text.TextUtils;
+
+import androidx.annotation.NonNull;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -140,21 +140,20 @@ public class EquilBLE {
             @Override public synchronized void onConnectionStateChange(BluetoothGatt gatt, int status, int i2) {
                 super.onConnectionStateChange(gatt, status, i2);
                 String str = i2 == 2 ? "CONNECTED" : "DISCONNECTED";
-                StringBuilder sb = new StringBuilder();
-                sb.append("onConnectionStateChange called with status:");
-                sb.append(status);
-                sb.append(", state:");
-                sb.append(str);
-                sb.append("， i2: ");
-                sb.append(i2);
-                sb.append("， error133: ");
-                aapsLogger.debug(LTag.EQUILBLE, "onConnectionStateChange " + sb.toString());
+                String sb = "onConnectionStateChange called with status:" +
+                        status +
+                        ", state:" +
+                        str +
+                        "， i2: " +
+                        i2 +
+                        "， error133: ";
+                aapsLogger.debug(LTag.PUMPCOMM, "onConnectionStateChange " + sb);
                 mStatus = status;
                 connecting = false;
                 if (status == 133) {
                     unBond(macAddrss);
                     SystemClock.sleep(50);
-                    aapsLogger.debug(LTag.EQUILBLE, "error133 ");
+                    aapsLogger.debug(LTag.PUMPCOMM, "error133 ");
                     if (baseCmd != null) {
                         baseCmd.setResolvedResult(ResolvedResult.CONNECT_ERROR);
                     }
@@ -184,7 +183,7 @@ public class EquilBLE {
 
             @Override public synchronized void onServicesDiscovered(BluetoothGatt gatt, int status) {
                 if (status != BluetoothGatt.GATT_SUCCESS) {
-                    aapsLogger.debug(LTag.EQUILBLE, "onServicesDiscovered received: " + status);
+                    aapsLogger.debug(LTag.PUMPCOMM, "onServicesDiscovered received: " + status);
                     return;
                 }
                 final BluetoothGattService service = gatt.getService(UUID.fromString(GattAttributes.SERVICE_RADIO));
@@ -216,36 +215,35 @@ public class EquilBLE {
             }
 
             @Override public synchronized void onDescriptorWrite(BluetoothGatt gatt, final BluetoothGattDescriptor descriptor, int status) {
-                aapsLogger.debug(LTag.EQUILBLE, "onDescriptorWrite received: " + status);
+                aapsLogger.debug(LTag.PUMPCOMM, "onDescriptorWrite received: " + status);
                 if (status == BluetoothGatt.GATT_SUCCESS) {
-                    aapsLogger.debug(LTag.EQUILBLE, "onDescriptorWrite: Wrote GATT Descriptor successfully.");
+                    aapsLogger.debug(LTag.PUMPCOMM, "onDescriptorWrite: Wrote GATT Descriptor successfully.");
                     ready();
-                } else {
                 }
             }
         };
     }
 
     public void openNotification() {
-        aapsLogger.debug(LTag.EQUILBLE, "openNotification: " + isConnected());
+        aapsLogger.debug(LTag.PUMPCOMM, "openNotification: " + isConnected());
         boolean r0 = mBluetoothGatt.setCharacteristicNotification(notifyChara, true);
         if (r0) {
             BluetoothGattDescriptor descriptor = notifyChara.getDescriptor(GattAttributes.mCharacteristicConfigDescriptor);
             byte[] v = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE;
             descriptor.setValue(v);
             boolean flag = mBluetoothGatt.writeDescriptor(descriptor);
-            aapsLogger.debug(LTag.EQUILBLE, "openNotification: " + flag);
+            aapsLogger.debug(LTag.PUMPCOMM, "openNotification: " + flag);
         }
     }
 
     @SuppressLint("MissingPermission") public void requestHighPriority() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && mBluetoothGatt != null) {
+        if (mBluetoothGatt != null) {
             mBluetoothGatt.requestConnectionPriority(BluetoothGatt.CONNECTION_PRIORITY_HIGH);
         }
     }
 
     public void ready() {
-        aapsLogger.debug(LTag.EQUILBLE, "ready: " + "===" + baseCmd);
+        aapsLogger.debug(LTag.PUMPCOMM, "ready: " + "===" + baseCmd);
         runNext = false;
         dataList = new ArrayList<>();
         flag = true;
@@ -262,15 +260,15 @@ public class EquilBLE {
         dataList = new ArrayList<>();
         flag = true;
         writeConf = false;
-        aapsLogger.debug(LTag.EQUILBLE,
+        aapsLogger.debug(LTag.PUMPCOMM,
                 "nextCmd===== " + baseCmd.isEnd + "====" + (baseCmd != null));
         if (baseCmd != null) {
             runNext = false;
             equilResponse = baseCmd.getNextEquilResponse();
-            aapsLogger.debug(LTag.EQUILBLE,
+            aapsLogger.debug(LTag.PUMPCOMM,
                     "nextCmd===== " + baseCmd + "===" + equilResponse.getSend());
             if (equilResponse == null || equilResponse.getSend() == null || equilResponse.getSend().size() == 0) {
-                aapsLogger.debug(LTag.EQUILBLE,
+                aapsLogger.debug(LTag.PUMPCOMM,
                         "equilResponse is null");
                 return;
             }
@@ -284,7 +282,7 @@ public class EquilBLE {
         startTrue = false;
         autoScan = false;
         equilManager.setBluetoothConnectionState(BluetoothConnectionState.DISCONNECTED);
-        aapsLogger.debug(LTag.EQUILBLE, "Closing GATT connection");
+        aapsLogger.debug(LTag.PUMPCOMM, "Closing GATT connection");
         if (mBluetoothGatt != null) {
             mBluetoothGatt.disconnect();
             mBluetoothGatt.close();
@@ -322,18 +320,12 @@ public class EquilBLE {
     public void connectEquil(BluetoothDevice device) {
 //        disconnect();
 
-        handler.postDelayed(new Runnable() {
-            @Override public void run() {
-                if (device != null) {
-                    aapsLogger.debug(LTag.EQUILBLE, "connectEquil======");
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        mBluetoothGatt = device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE);
-                    } else {
-                        mBluetoothGatt = device.connectGatt(context, false, mGattCallback);
-                    }
+        handler.postDelayed(() -> {
+            if (device != null) {
+                aapsLogger.debug(LTag.PUMPCOMM, "connectEquil======");
+                mBluetoothGatt = device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE);
 //                    rxBus.send(new EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING));
-                    connecting = true;
-                }
+                connecting = true;
             }
         }, 500);
 
@@ -344,7 +336,7 @@ public class EquilBLE {
     BaseCmd preCmd;
 
     public void writeCmd(BaseCmd baseCmd) {
-        aapsLogger.debug(LTag.EQUILBLE, "writeCmd {}", baseCmd);
+        aapsLogger.debug(LTag.PUMPCOMM, "writeCmd {}", baseCmd);
         this.baseCmd = baseCmd;
         String macAddrss;
         if (baseCmd instanceof CmdPair) {
@@ -354,11 +346,7 @@ public class EquilBLE {
         } else {
             macAddrss = equilManager.getAddress();
         }
-        if (baseCmd instanceof CmdModelGet || baseCmd instanceof CmdInsulinGet) {
-            autoScan = true;
-        } else {
-            autoScan = false;
-        }
+        autoScan = baseCmd instanceof CmdModelGet || baseCmd instanceof CmdInsulinGet;
         if (connected && baseCmd.isPairStep()) {
             ready();
         } else if (connected && preCmd != null) {
@@ -381,7 +369,7 @@ public class EquilBLE {
             nextCmd2();
             preCmd = baseCmd;
         } else {
-            aapsLogger.debug(LTag.EQUILBLE, "readHistory error");
+            aapsLogger.debug(LTag.PUMPCOMM, "readHistory error");
         }
     }
 
@@ -397,29 +385,29 @@ public class EquilBLE {
                     write(data);
                     indexData++;
                 } else {
-                    aapsLogger.debug(LTag.EQUILBLE, "indexData error ");
+                    aapsLogger.debug(LTag.PUMPCOMM, "indexData error ");
                 }
             } else {
-                aapsLogger.debug(LTag.EQUILBLE, "equil cmd time out ");
+                aapsLogger.debug(LTag.PUMPCOMM, "equil cmd time out ");
             }
         } else {
-            aapsLogger.debug(LTag.EQUILBLE, "equilResponse is null ");
+            aapsLogger.debug(LTag.PUMPCOMM, "equilResponse is null ");
         }
 
     }
 
     public void write(byte[] bytes) {
         if (wirteChara == null || mBluetoothGatt == null) {
-            aapsLogger.debug(LTag.EQUILBLE, "write disconnect ");
+            aapsLogger.debug(LTag.PUMPCOMM, "write disconnect ");
             disconnect();
             return;
         }
         if (bytes == null) {
-            aapsLogger.debug(LTag.EQUILBLE, "bytes is null ");
+            aapsLogger.debug(LTag.PUMPCOMM, "bytes is null ");
             return;
         }
         wirteChara.setValue(bytes);
-        aapsLogger.debug(LTag.EQUILBLE, "write: " + Utils.bytesToHex(bytes));
+        aapsLogger.debug(LTag.PUMPCOMM, "write: " + Utils.bytesToHex(bytes));
         mBluetoothGatt.writeCharacteristic(wirteChara);
     }
 
@@ -429,7 +417,7 @@ public class EquilBLE {
 
     public synchronized void decode(byte[] buffer, int len) {
         String str = Utils.bytesToHex(buffer);
-        aapsLogger.debug(LTag.EQUILBLE, "decode=====" + str);
+        aapsLogger.debug(LTag.PUMPCOMM, "decode=====" + str);
         if (flag) {
             EquilResponse equilResponse = baseCmd.decodeEquilPacket(buffer);
             if (equilResponse != null) {
@@ -457,11 +445,10 @@ public class EquilBLE {
         }
     }
 
-    public static final int TIME_OUT = 90000;
     public static final int TIME_OUT_WHAT = 0x12;
     public static final int TIME_OUT_CONNECT_WHAT = 0x13;
     public Handler handler = new Handler(Looper.getMainLooper()) {
-        @Override public void handleMessage(Message msg) {
+        @Override public void handleMessage(@NonNull Message msg) {
             super.handleMessage(msg);
             switch (msg.what) {
                 case TIME_OUT_WHAT:
@@ -469,7 +456,7 @@ public class EquilBLE {
                     break;
                 case TIME_OUT_CONNECT_WHAT:
                     stopScan();
-                    aapsLogger.debug(LTag.EQUILBLE, "TIME_OUT_CONNECT_WHAT====");
+                    aapsLogger.debug(LTag.PUMPCOMM, "TIME_OUT_CONNECT_WHAT====");
                     if (baseCmd != null) {
                         baseCmd.setResolvedResult(ResolvedResult.CONNECT_ERROR);
                     }
@@ -486,7 +473,7 @@ public class EquilBLE {
         if (TextUtils.isEmpty(macAddrss) || macAddrss == null) {
             return;
         }
-        aapsLogger.debug(LTag.EQUILBLE, "startScan====" + startTrue + "====" + macAddrss + "===");
+        aapsLogger.debug(LTag.PUMPCOMM, "startScan====" + startTrue + "====" + macAddrss + "===");
         if (startTrue) {
             return;
         }
@@ -504,7 +491,7 @@ public class EquilBLE {
     }
 
     public void getEquilStatus() {
-        aapsLogger.debug(LTag.EQUILBLE, "getEquilStatus====" + startTrue + "====" + connected);
+        aapsLogger.debug(LTag.PUMPCOMM, "getEquilStatus====" + startTrue + "====" + connected);
         if (startTrue || connected) {
             return;
         }
@@ -514,7 +501,7 @@ public class EquilBLE {
     }
 
     private List<ScanFilter> buildScanFilters() {
-        ArrayList scanFilterList = new ArrayList<>();
+        ArrayList<ScanFilter> scanFilterList = new ArrayList<>();
         if (TextUtils.isEmpty(macAddrss)) {
             return scanFilterList;
         }
@@ -524,7 +511,7 @@ public class EquilBLE {
         return scanFilterList;
     }
 
-    @TargetApi(Build.VERSION_CODES.M) private ScanSettings buildScanSettings() {
+    private ScanSettings buildScanSettings() {
         ScanSettings.Builder builder = new ScanSettings.Builder();
         builder.setReportDelay(0);
         return builder.build();
@@ -536,11 +523,7 @@ public class EquilBLE {
             String name = result.getDevice().getName();
             if (!TextUtils.isEmpty(name)) {
                 try {
-                    bleHandler.post(new Runnable() {
-                        @Override public void run() {
-                            equilManager.decodeData(result.getScanRecord().getBytes());
-                        }
-                    });
+                    bleHandler.post(() -> equilManager.decodeData(result.getScanRecord().getBytes()));
 
                     stopScan();
                     if (autoScan) {

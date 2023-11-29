@@ -27,7 +27,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.findViewById<Button>(R.id.button_next).setOnClickListener {
-            getCurrentInsulin();
+            getCurrentInsulin()
         }
     }
 
@@ -49,7 +49,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
                 )
 
             }
-            var time = System.currentTimeMillis();
+            var time = System.currentTimeMillis()
             val equilHistoryRecord = EquilHistoryRecord(
                 time,
                 null,
@@ -68,18 +68,18 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
                 System.currentTimeMillis(),
                 DetailedBolusInfo.EventType.CANNULA_CHANGE, null, null, PumpType.EQUIL,
                 equilPumpPlugin.serialNumber()
-            );
+            )
             equilPumpPlugin.equilManager.activationProgress = ActivationProgress.COMPLETED
             activity?.finish()
         }
     }
 
     override fun getNextPageActionId(): Int? {
-        return null;
+        return null
     }
 
     override fun getIndex(): Int {
-        return 6;
+        return 6
     }
 
     private fun setModel() {
@@ -87,13 +87,13 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
         commandQueue.customCommand(CmdModelSet(RunMode.RUN.command), object : Callback() {
             override fun run() {
                 if (activity == null) return
-                aapsLogger.debug(LTag.EQUILBLE, "setModel result====" + result.success + "====")
+                aapsLogger.debug(LTag.PUMPCOMM, "setModel result====" + result.success + "====")
                 if (result.success) {
-                    dismissLoading();
-                    equilPumpPlugin.equilManager.runMode = RunMode.RUN;
+                    dismissLoading()
+                    equilPumpPlugin.equilManager.runMode = RunMode.RUN
                     toSave()
                 } else {
-                    dismissLoading();
+                    dismissLoading()
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                 }
             }
@@ -109,10 +109,10 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
                     if (activity == null)
                         return
                     SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD)
-                    dismissLoading();
+                    dismissLoading()
                     setModel()
                 } else {
-                    dismissLoading();
+                    dismissLoading()
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                 }
             }

@@ -68,7 +68,7 @@ public abstract class BaseSetting extends BaseCmd {
                 return response1;
             } catch (Exception e) {
                 response = new EquilResponse(createTime);
-                aapsLogger.debug(LTag.EQUILBLE, "decodeEquilPacket error =====" + e.getMessage());
+                aapsLogger.debug(LTag.PUMPCOMM, "decodeEquilPacket error =====" + e.getMessage());
             }
             return null;
         }
@@ -86,7 +86,7 @@ public abstract class BaseSetting extends BaseCmd {
             return list;
         } catch (Exception e) {
             response = new EquilResponse(createTime);
-            aapsLogger.debug(LTag.EQUILBLE, "decodeEquilPacket error=====" + e.getMessage());
+            aapsLogger.debug(LTag.PUMPCOMM, "decodeEquilPacket error=====" + e.getMessage());
         }
         return null;
 
@@ -97,7 +97,7 @@ public abstract class BaseSetting extends BaseCmd {
         EquilCmdModel reqModel = decodeModel();
         byte[] pwd = Utils.hexStringToBytes(getEquilPassWord());
         String content = AESUtil.decrypt(reqModel, pwd);
-        String pwd2 = content.substring(8, content.length());
+        String pwd2 = content.substring(8);
         runPwd = pwd2;
         byte[] data = getFirstData();
         EquilCmdModel equilCmdModel = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
@@ -106,18 +106,18 @@ public abstract class BaseSetting extends BaseCmd {
     }
 
     public EquilResponse getNextEquilResponse() {
-        aapsLogger.debug(LTag.EQUILBLE, "getNextEquilResponse=== start11 ");
+        aapsLogger.debug(LTag.PUMPCOMM, "getNextEquilResponse=== start11 ");
         config = true;
         isEnd = false;
         response = new EquilResponse(createTime);
         byte[] data = getFirstData();
         EquilCmdModel equilCmdModel = null;
         try {
-            aapsLogger.debug(LTag.EQUILBLE, "getNextEquilResponse=== start ");
+            aapsLogger.debug(LTag.PUMPCOMM, "getNextEquilResponse=== start ");
             equilCmdModel = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
             return responseCmd(equilCmdModel, port + runCode);
         } catch (Exception e) {
-            aapsLogger.debug(LTag.EQUILBLE, "getNextEquilResponse===" + e.getMessage());
+            aapsLogger.debug(LTag.PUMPCOMM, "getNextEquilResponse===" + e.getMessage());
             synchronized (this) {
                 setCmdStatus(false);
             }

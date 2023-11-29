@@ -1,9 +1,7 @@
 package app.aaps.pump.equil.manager.command;
 
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
-import app.aaps.pump.equil.manager.Utils;
-
 import app.aaps.core.interfaces.logging.LTag;
+import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
 
@@ -43,14 +41,14 @@ public class CmdHistoryGet extends BaseSetting {
         byte[] data3 = Utils.intToBytes(currentIndex);
         byte[] data = Utils.concat(indexByte, data2, data3);
         pumpReqIndex++;
-        aapsLogger.debug(LTag.EQUILBLE, "getReqData2===" + Utils.bytesToHex(data));
+        aapsLogger.debug(LTag.PUMPCOMM, "getReqData2===" + Utils.bytesToHex(data));
         return data;
     }
 
     public byte[] getNextData() {
         byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x00, 0x01, 0x01};
-        aapsLogger.debug(LTag.EQUILBLE, "currentIndex===" + currentIndex);
+        aapsLogger.debug(LTag.PUMPCOMM, "currentIndex===" + currentIndex);
         byte[] data = Utils.concat(indexByte, data2);
         pumpReqIndex++;
         return data;
@@ -80,7 +78,7 @@ public class CmdHistoryGet extends BaseSetting {
             equilManager.decodeHistory(data);
         }
         currentIndex = index;
-        aapsLogger.debug(LTag.EQUILBLE, "history index==" + index + "===" + Utils.bytesToHex(data) +
+        aapsLogger.debug(LTag.PUMPCOMM, "history index==" + index + "===" + Utils.bytesToHex(data) +
                 "===" + rate + "====" + largeRate + "===" + Utils.bytesToHex(new byte[]{data[16],
                 data[17]}));
         synchronized (this) {

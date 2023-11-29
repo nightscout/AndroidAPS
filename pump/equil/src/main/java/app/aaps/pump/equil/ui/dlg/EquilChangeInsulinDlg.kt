@@ -1,4 +1,4 @@
-package app.aaps.pump.equil.ui.dlg;
+package app.aaps.pump.equil.ui.dlg
 
 import android.content.Context
 import android.os.Bundle
@@ -9,10 +9,10 @@ import androidx.fragment.app.FragmentManager
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.protection.ProtectionCheck
 import app.aaps.core.interfaces.rx.bus.RxBus
-import com.bumptech.glide.Glide
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.databinding.EquilDialogAlertDressingBinding
-import dagger.android.support.DaggerDialogFragment;
+import com.bumptech.glide.Glide
+import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
@@ -36,10 +36,6 @@ class EquilChangeInsulinDlg : DaggerDialogFragment() {
         )
     }
 
-    override fun onSaveInstanceState(savedInstanceState: Bundle) {
-        super.onSaveInstanceState(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,7 +55,7 @@ class EquilChangeInsulinDlg : DaggerDialogFragment() {
             .into(binding.imv)
         binding.btnOk.setOnClickListener {
 
-            binding.btnOk?.let { onDialogResultListener?.invoke() }
+            binding.btnOk.let { onDialogResultListener?.invoke() }
 
             dismiss()
         }
@@ -73,13 +69,6 @@ class EquilChangeInsulinDlg : DaggerDialogFragment() {
     }
 
     var task: Runnable? = null
-
-    @Synchronized
-    fun updateGUI(from: String) {
-        if (_binding == null) return
-        aapsLogger.debug("UpdateGUI from $from")
-
-    }
 
     private fun onClickOkCancelEnabled(v: View): Boolean {
         var description = ""

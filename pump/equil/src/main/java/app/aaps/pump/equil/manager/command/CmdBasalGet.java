@@ -1,13 +1,11 @@
 package app.aaps.pump.equil.manager.command;
 
 
-import app.aaps.pump.equil.data.database.EquilHistoryRecord;
-import app.aaps.pump.equil.manager.Utils;
-
 import java.util.Arrays;
 
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.profile.Profile;
+import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
 
 
@@ -38,7 +36,7 @@ public class CmdBasalGet extends BaseSetting {
     }
 
     public void decodeConfirmData(byte[] data) {
-        aapsLogger.debug(LTag.EQUILBLE, "CmdBasalGet==" + Utils.bytesToHex(data));
+        aapsLogger.debug(LTag.PUMPCOMM, "CmdBasalGet==" + Utils.bytesToHex(data));
         int start = 6;
         StringBuffer currentBasal = new StringBuffer();
         if (profile != null) {
@@ -52,15 +50,11 @@ public class CmdBasalGet extends BaseSetting {
         }
         byte[] rspByte = Arrays.copyOfRange(data, 6, data.length);
         String rspBasal = Utils.bytesToHex(rspByte);
-        aapsLogger.debug(LTag.EQUILBLE,
-                "CmdBasalGet==" + currentBasal.toString() + "====\n==" + rspBasal);
+        aapsLogger.debug(LTag.PUMPCOMM,
+                "CmdBasalGet==" + currentBasal + "====\n==" + rspBasal);
         synchronized (this) {
             setCmdStatus(true);
-            if (currentBasal.toString().equals(rspBasal)) {
-                setEnacted(true);
-            } else {
-                setEnacted(false);
-            }
+            setEnacted(currentBasal.toString().equals(rspBasal));
             notify();
         }
     }

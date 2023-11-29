@@ -171,6 +171,7 @@ public class EquilManager {
         }
         return result;
     }
+
     public PumpEnactResult getTempBasalPump() {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
@@ -181,11 +182,7 @@ public class EquilManager {
                 command.wait(command.getTimeOut());
             }
             result.setSuccess(command.isCmdStatus());
-            if (command.getTime() != 0) {
-                result.enacted(true);
-            } else {
-                result.enacted(false);
-            }
+            result.enacted(command.getTime() != 0);
             SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -193,6 +190,7 @@ public class EquilManager {
         }
         return result;
     }
+
     public PumpEnactResult setTempBasal(double insulin, int time, boolean cancel) {
         PumpEnactResult result = new PumpEnactResult(injector);
         try {
@@ -222,7 +220,7 @@ public class EquilManager {
                     pumpSync.syncTemporaryBasalWithPumpId(
                             currentTime,
                             insulin,
-                            time * 60 * 1000,
+                            (long) time * 60 * 1000,
                             true,
                             PumpSync.TemporaryBasalType.NORMAL,
                             currentTime,
@@ -268,7 +266,7 @@ public class EquilManager {
                     pumpSync.syncExtendedBolusWithPumpId(
                             currentTimeMillis,
                             insulin,
-                            time * 60 * 1000,
+                            (long) time * 60 * 1000,
                             true,
                             currentTimeMillis,
                             PumpType.EQUIL,
@@ -306,7 +304,7 @@ public class EquilManager {
             int sleep = command.getStepTime() / 20 * 200;
             sleep = 2000;
             float percent1 = (float) (5f / detailedBolusInfo.insulin);
-            aapsLogger.debug(LTag.EQUILBLE, "sleep===" + detailedBolusInfo.insulin + "===" + percent1);
+            aapsLogger.debug(LTag.PUMPCOMM, "sleep===" + detailedBolusInfo.insulin + "===" + percent1);
             float percent = 0;
             if (command.isCmdStatus()) {
                 result.setSuccess(true);
@@ -319,7 +317,7 @@ public class EquilManager {
                     rxBus.send(progressUpdateEvent);
                     SystemClock.sleep(sleep);
                     percent = percent + percent1;
-                    aapsLogger.debug(LTag.EQUILBLE, "isCmdStatus===" + percent + "====" + bolusProfile.getStop());
+                    aapsLogger.debug(LTag.PUMPCOMM, "isCmdStatus===" + percent + "====" + bolusProfile.getStop());
                 }
                 result.setComment(rh.gs(app.aaps.core.ui.R.string.virtualpump_resultok));
             } else {
@@ -361,7 +359,7 @@ public class EquilManager {
                 command.wait(command.getTimeOut());
             }
             bolusProfile.setStop(command.isCmdStatus());
-            aapsLogger.debug(LTag.EQUILBLE, "stopBolus===");
+            aapsLogger.debug(LTag.PUMPCOMM, "stopBolus===");
             result.setSuccess(command.isCmdStatus());
             if (command.isCmdStatus()) {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
@@ -376,14 +374,14 @@ public class EquilManager {
 
     public int loadEquilHistory(int index) {
         try {
-            aapsLogger.debug(LTag.EQUILBLE, "loadHistory start: ");
+            aapsLogger.debug(LTag.PUMPCOMM, "loadHistory start: ");
             CmdHistoryGet historyGet = new CmdHistoryGet(index);
             historyGet.setEquilManager(this);
             equilBLE.readHistory(historyGet);
             synchronized (historyGet) {
                 historyGet.wait(historyGet.getTimeOut());
             }
-            aapsLogger.debug(LTag.EQUILBLE, "loadHistory end: ");
+            aapsLogger.debug(LTag.PUMPCOMM, "loadHistory end: ");
             return historyGet.getCurrentIndex();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -399,7 +397,7 @@ public class EquilManager {
             synchronized (historyGet) {
                 historyGet.wait(historyGet.getTimeOut());
             }
-            aapsLogger.debug(LTag.EQUILBLE, "loadHistory end: ");
+            aapsLogger.debug(LTag.PUMPCOMM, "loadHistory end: ");
             return historyGet.getCurrentIndex();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -468,19 +466,19 @@ public class EquilManager {
         if (equilHistoryRecord.getType() != null) {
             long id = equilHistoryRecordDao.insert(equilHistoryRecord);
             equilHistoryRecord.setId(id);
-            aapsLogger.debug(LTag.EQUILBLE, "equilHistoryRecord is {}", id);
+            aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord is {}", id);
         }
         return equilHistoryRecord;
     }
 
     public void updateHistory(EquilHistoryRecord equilHistoryRecord, ResolvedResult result) {
         if (result != null && equilHistoryRecord != null) {
-            aapsLogger.debug(LTag.EQUILBLE, "equilHistoryRecord2 is {} {}",
+            aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord2 is {} {}",
                     equilHistoryRecord.getId(), result);
             equilHistoryRecord.setResolvedAt(System.currentTimeMillis());
             equilHistoryRecord.setResolvedStatus(result);
             int status = equilHistoryRecordDao.update(equilHistoryRecord);
-            aapsLogger.debug(LTag.EQUILBLE, "equilHistoryRecord3== is {} {} status {}",
+            aapsLogger.debug(LTag.PUMPCOMM, "equilHistoryRecord3== is {} {} status {}",
                     equilHistoryRecord.getId(), equilHistoryRecord.getResolvedStatus(), status);
         }
     }
@@ -515,7 +513,7 @@ public class EquilManager {
         int startIndex;
         startIndex = getStartHistoryIndex();
         int index = getHistoryIndex();
-        aapsLogger.debug(LTag.EQUILBLE, "return ===" + index + "====" + startIndex);
+        aapsLogger.debug(LTag.PUMPCOMM, "return ===" + index + "====" + startIndex);
         if (index == -1) {
             return pumpEnactResult.success(false);
         }
@@ -527,7 +525,7 @@ public class EquilManager {
             }
             SystemClock.sleep(EquilConst.EQUIL_BLE_NEXT_CMD);
             int currentIndex = loadEquilHistory(startIndex);
-            aapsLogger.debug(LTag.EQUILBLE, "while index===" + startIndex + "===" + index + "===" + currentIndex);
+            aapsLogger.debug(LTag.PUMPCOMM, "while index===" + startIndex + "===" + index + "===" + currentIndex);
             if (currentIndex > 1) {
                 setStartHistoryIndex(currentIndex);
             }
@@ -549,7 +547,7 @@ public class EquilManager {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
             }
             updateHistory(equilHistoryRecord, command.getResolvedResult());
-            aapsLogger.debug(LTag.EQUILBLE, "executeCmd result {}", command.getResolvedResult());
+            aapsLogger.debug(LTag.PUMPCOMM, "executeCmd result {}", command.getResolvedResult());
             result.setSuccess(command.isCmdStatus());
             result.enacted(command.isEnacted());
         } catch (Exception ex) {
@@ -592,7 +590,7 @@ public class EquilManager {
         rxBus.send(event);
     }
 
-    private Gson gsonInstance;
+    private final Gson gsonInstance;
     private EquilState equilState;
 
     private static Gson createGson() {
@@ -758,7 +756,7 @@ public class EquilManager {
     }
 
     public void setStartInsulin(int startInsulin) {
-        aapsLogger.debug(LTag.EQUILBLE, "startInsulin {}", startInsulin);
+        aapsLogger.debug(LTag.PUMPCOMM, "startInsulin {}", startInsulin);
         setAndStore(() -> equilState.setStartInsulin(startInsulin));
 
     }
@@ -1106,7 +1104,7 @@ public class EquilManager {
         equilHistoryPump.setEventIndex(index);
         equilHistoryPump.setSerialNumber(getSerialNumber());
         long id = equilHistoryRecordDao.insert(equilHistoryPump);
-        aapsLogger.debug(LTag.EQUILBLE, "decodeHistory insert id {}", id);
+        aapsLogger.debug(LTag.PUMPCOMM, "decodeHistory insert id {}", id);
         rxBus.send(new EventEquilDataChanged());
     }
 
@@ -1144,7 +1142,7 @@ public class EquilManager {
             equilHistoryRecord.setNote(errorTips);
             equilHistoryRecordDao.insert(equilHistoryRecord);
         }
-        aapsLogger.debug(LTag.EQUILBLE, "decodeData historyIndex {} errorTips {} port:{} level:{} " +
+        aapsLogger.debug(LTag.PUMPCOMM, "decodeData historyIndex {} errorTips {} port:{} level:{} " +
                         "parm:{}",
                 historyIndex,
                 errorTips, port, level, parm);

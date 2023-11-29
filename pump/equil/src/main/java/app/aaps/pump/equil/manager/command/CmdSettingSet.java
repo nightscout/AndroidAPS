@@ -1,10 +1,9 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
-
-import app.aaps.core.interfaces.logging.LTag;
 
 
 public class CmdSettingSet extends BaseSetting {
@@ -31,7 +30,7 @@ public class CmdSettingSet extends BaseSetting {
                 lowAlarmByte, fastBolus,
                 occlusion, insulinUnit, basalThreshold, bolusThreshold);
         pumpReqIndex++;
-        aapsLogger.debug(LTag.EQUILBLE,
+        aapsLogger.debug(LTag.PUMPCOMM,
                 "CmdSettingSet data===" + Utils.bytesToHex(data) + "====" + lowAlarm + "===" + Utils.decodeSpeedToUH(lowAlarm));
         return data;
     }
@@ -58,7 +57,7 @@ public class CmdSettingSet extends BaseSetting {
 //        infusionUnit = Utils.internalDecodeSpeedToUH(i4);
 //        basalAlarm = Utils.internalDecodeSpeedToUH(i5);
 //        largeAlarm = Utils.internalDecodeSpeedToUH(i6);
-//        aapsLogger.debug(LTag.EQUILBLE,
+//        aapsLogger.debug(LTag.PUMPCOMM,
 //                "CmdSettingSet===" + Crc.bytesToHex(data) + "====" + lowAlarm);
         synchronized (this) {
             setCmdStatus(true);

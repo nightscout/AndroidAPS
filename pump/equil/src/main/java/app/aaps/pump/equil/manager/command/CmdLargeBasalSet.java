@@ -1,10 +1,9 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
-
-import app.aaps.core.interfaces.logging.LTag;
 
 
 public class CmdLargeBasalSet extends BaseSetting {
@@ -35,7 +34,7 @@ public class CmdLargeBasalSet extends BaseSetting {
 
     @Override
     public byte[] getFirstData() {
-        aapsLogger.debug(LTag.EQUILBLE, "step===" + step + "=====" + stepTime);
+        aapsLogger.debug(LTag.PUMPCOMM, "step===" + step + "=====" + stepTime);
         byte[] indexByte = Utils.intToBytes(pumpReqIndex);
         byte[] data2 = new byte[]{0x01, 0x03};
         byte[] data3 = Utils.intToBytes(step);

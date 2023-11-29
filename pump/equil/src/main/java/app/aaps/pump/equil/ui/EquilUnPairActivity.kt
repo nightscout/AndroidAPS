@@ -21,7 +21,7 @@ import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.databinding.EquilUnpairActivityBinding
 import app.aaps.pump.equil.events.EventEquilUnPairChanged
-import app.aaps.pump.equil.manager.command.*
+import app.aaps.pump.equil.manager.command.CmdUnPair
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
 import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
@@ -41,7 +41,7 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
 
     private lateinit var binding: EquilUnpairActivityBinding
     @Inject lateinit var profileFunction: ProfileFunction
-    var errorCount = 0;
+    var errorCount = 0
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,10 +50,10 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
         title = rh.gs(R.string.equil_change)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
-        var name = equilPumpPlugin.equilManager.serialNumber
+        val name = equilPumpPlugin.equilManager.serialNumber
         binding.tvHint2.text = String.format(rh.gs(R.string.equil_unpair), name)
         binding.btnNext.setOnClickListener {
-            showUnPairConfig();
+            showUnPairConfig()
         }
         binding.btnDelete.visibility = View.GONE
         binding.btnDelete.setOnClickListener {
@@ -65,12 +65,12 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
     }
 
     private fun showUnPairConfig() {
-        var name = equilPumpPlugin.equilManager.serialNumber
-        var content = String.format(rh.gs(R.string.equil_unpair_alert), name)
+        val name = equilPumpPlugin.equilManager.serialNumber
+        val content = String.format(rh.gs(R.string.equil_unpair_alert), name)
         val alertDialog = AlertDialog.Builder(this)
             .setTitle(rh.gs(R.string.equil_title_tips))
             .setMessage(content)
-            .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok)) { dialog: DialogInterface, _: Int ->
+            .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok)) { _: DialogInterface, _: Int ->
                 unpair(name)
             }
             .setNegativeButton(rh.gs(app.aaps.core.ui.R.string.cancel)) { dialog: DialogInterface, _: Int ->
@@ -81,11 +81,11 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
 
     }
 
-    fun unpair(name: String) {
-        showLoading();
+    private fun unpair(name: String) {
+        showLoading()
         commandQueue.customCommand(CmdUnPair(name, sp.getString(rh.gs(R.string.key_equil_pair_password), "")), object : Callback() {
             override fun run() {
-                dismissLoading();
+                dismissLoading()
                 if (result.success) {
                     equilPumpPlugin.equilManager.serialNumber = ""
                     equilPumpPlugin.equilManager.address = ""
@@ -95,7 +95,7 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
                     SystemClock.sleep(50)
                     finish()
                 } else {
-                    errorCount += 1;
+                    errorCount += 1
                     dismissLoading()
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_error))
                     if (errorCount > 5) {
@@ -109,8 +109,7 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
     }
 
     private fun showLoading() {
-        LoadingDlg().also { dialog ->
-        }.show(supportFragmentManager, "loading")
+        LoadingDlg().show(supportFragmentManager, "loading")
     }
 
     private fun dismissLoading() {
@@ -118,14 +117,6 @@ class EquilUnPairActivity : DaggerAppCompatActivity() {
         if (fragment is DialogFragment) {
             fragment.dismiss()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

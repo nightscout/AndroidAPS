@@ -20,7 +20,6 @@ import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
 import app.aaps.pump.equil.EquilPumpPlugin
-import com.bumptech.glide.Glide
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.data.RunMode
 import app.aaps.pump.equil.databinding.EquilUnpairDetachActivityBinding
@@ -28,6 +27,7 @@ import app.aaps.pump.equil.driver.definition.ActivationProgress
 import app.aaps.pump.equil.events.EventEquilUnPairChanged
 import app.aaps.pump.equil.manager.command.CmdInsulinChange
 import app.aaps.pump.equil.ui.dlg.LoadingDlg
+import com.bumptech.glide.Glide
 import dagger.android.support.DaggerAppCompatActivity
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -70,7 +70,7 @@ class EquilUnPairDetachActivity : DaggerAppCompatActivity() {
             .into(binding.imv)
         binding.btnNext.setOnClickListener {
             // startActivity(Intent(context, EquilPairInsertActivity::class.java))
-            showUnPairConfig();
+            showUnPairConfig()
         }
     }
 
@@ -79,7 +79,7 @@ class EquilUnPairDetachActivity : DaggerAppCompatActivity() {
         val alertDialog = AlertDialog.Builder(this)
             .setTitle(rh.gs(R.string.equil_title_tips))
             .setMessage(rh.gs(R.string.equil_hint_dressing))
-            .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok)) { dialog: DialogInterface, _: Int ->
+            .setPositiveButton(rh.gs(app.aaps.core.ui.R.string.ok)) { _: DialogInterface, _: Int ->
                 changeInsulin()
             }
             .setNegativeButton(rh.gs(app.aaps.core.ui.R.string.cancel)) { dialog: DialogInterface, _: Int ->
@@ -90,13 +90,13 @@ class EquilUnPairDetachActivity : DaggerAppCompatActivity() {
 
     }
 
-    fun changeInsulin() {
-        showLoading();
+    private fun changeInsulin() {
+        showLoading()
         commandQueue.customCommand(CmdInsulinChange(), object : Callback() {
             override fun run() {
                 if (result.success) {
                     equilPumpPlugin.equilManager.runMode = RunMode.STOP
-                    equilPumpPlugin.equilManager.closeBle();
+                    equilPumpPlugin.equilManager.closeBle()
                     equilPumpPlugin.resetData()
                     SystemClock.sleep(500)
                     equilPumpPlugin.equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
@@ -112,8 +112,7 @@ class EquilUnPairDetachActivity : DaggerAppCompatActivity() {
     }
 
     private fun showLoading() {
-        LoadingDlg().also { dialog ->
-        }.show(supportFragmentManager, "loading")
+        LoadingDlg().show(supportFragmentManager, "loading")
     }
 
     private fun dismissLoading() {
@@ -121,14 +120,6 @@ class EquilUnPairDetachActivity : DaggerAppCompatActivity() {
         if (fragment is DialogFragment) {
             fragment.dismiss()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

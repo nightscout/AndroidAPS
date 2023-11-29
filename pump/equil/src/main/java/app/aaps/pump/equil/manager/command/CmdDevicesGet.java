@@ -1,10 +1,9 @@
 package app.aaps.pump.equil.manager.command;
 
 
+import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
-
-import app.aaps.core.interfaces.logging.LTag;
 
 
 public class CmdDevicesGet extends BaseSetting {
@@ -35,7 +34,7 @@ public class CmdDevicesGet extends BaseSetting {
         int value = Utils.bytesToInt(data[7], data[6]);
 
         String firmwareVersion = data[18] + "." + data[19];
-        aapsLogger.debug(LTag.EQUILBLE, "CmdGetDevices====" +
+        aapsLogger.debug(LTag.PUMPCOMM, "CmdGetDevices====" +
                 Utils.bytesToHex(data) + "=====" + value + "===" + firmwareVersion);
         equilManager.setFirmwareVersion(firmwareVersion);
         synchronized (this) {

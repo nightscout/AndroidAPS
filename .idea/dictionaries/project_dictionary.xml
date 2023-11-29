@@ -56,6 +56,7 @@
       <w>eoflow</w>
       <w>eopatch</w>
       <w>epss</w>
+      <w>equil</w>
       <w>eveningoutpost</w>
       <w>eversense</w>
       <w>extendedbolus</w>
@@ -159,6 +160,10 @@
       <w>ypso</w>
       <w>ypsomed</w>
       <w>ypsopump</w>
-    </words>
+      <w>defs</w>
+      <w>iobs</w>
+      <w>milenage</w>
+      <w>scripter</w>
+	</words>
   </dictionary>
 </component>

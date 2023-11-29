@@ -3,6 +3,7 @@ package app.aaps.pump.equil.manager.command;
 import androidx.annotation.NonNull;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -118,14 +119,14 @@ public abstract class BaseCmd implements CustomCommand {
             int index = data[3] & 0xff;
             int preIndex = preData[3] & 0xff;
             if (index == preIndex) {
-                aapsLogger.debug(LTag.EQUILBLE, "checkData error ");
+                aapsLogger.debug(LTag.PUMPCOMM, "checkData error ");
                 return false;
             }
         }
         int crc = data[5] & 0xff;
         int crc1 = Crc.CRC8_MAXIM(Arrays.copyOfRange(data, 0, 5));
         if (crc != crc1) {
-            aapsLogger.debug(LTag.EQUILBLE, "checkData crc error");
+            aapsLogger.debug(LTag.PUMPCOMM, "checkData crc error");
             return false;
         }
         return true;
@@ -158,7 +159,7 @@ public abstract class BaseCmd implements CustomCommand {
 
     public static int up1(double value) {
         BigDecimal bg = new BigDecimal(value);
-        return bg.setScale(0, BigDecimal.ROUND_UP).intValue();
+        return bg.setScale(0, RoundingMode.UP).intValue();
     }
 
     public boolean isPairStep() {
@@ -176,7 +177,7 @@ public abstract class BaseCmd implements CustomCommand {
         allByte = Utils.hexStringToBytes(allData.toString());
         int byteIndex = 0;
         int lastLen = 0;
-        int index = 0;
+        int index;
         if ((allByte.length - 8) % 10 == 0) {
             index = 1;
         } else {
@@ -264,9 +265,9 @@ public abstract class BaseCmd implements CustomCommand {
             }
             index++;
         }
-        List list1 = list.subList(0, 16);
-        List list2 = list.subList(16, 12 + 16);
-        List list3 = list.subList(12 + 16, list.size());
+        List<Byte> list1 = list.subList(0, 16);
+        List<Byte> list2 = list.subList(16, 12 + 16);
+        List<Byte> list3 = list.subList(12 + 16, list.size());
         equilCmdModel.setIv(Utils.bytesToHex(list2).toLowerCase());
         equilCmdModel.setTag(Utils.bytesToHex(list1).toLowerCase());
         equilCmdModel.setCiphertext(Utils.bytesToHex(list3).toLowerCase());

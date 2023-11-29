@@ -89,11 +89,11 @@ public class CmdDevicesOldGet extends BaseSetting {
                 isEnd = true;
                 response = new EquilResponse(createTime);
                 rspIndex = intValue;
-                aapsLogger.debug(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
+                aapsLogger.debug(LTag.PUMPCOMM, "intValue=====" + intValue + "====" + rspIndex);
                 return list;
             } catch (Exception e) {
                 response = new EquilResponse(createTime);
-                aapsLogger.debug(LTag.EQUILBLE, "decodeConfirm error =====" + e.getMessage());
+                aapsLogger.debug(LTag.PUMPCOMM, "decodeConfirm error =====" + e.getMessage());
 
             }
 
@@ -110,23 +110,23 @@ public class CmdDevicesOldGet extends BaseSetting {
             response = new EquilResponse(createTime);
             config = true;
             rspIndex = intValue;
-            aapsLogger.debug(LTag.EQUILBLE, "intValue=====" + intValue + "====" + rspIndex);
+            aapsLogger.debug(LTag.PUMPCOMM, "intValue=====" + intValue + "====" + rspIndex);
             return list;
         } catch (Exception e) {
             e.printStackTrace();
             response = new EquilResponse(createTime);
-            aapsLogger.debug(LTag.EQUILBLE, "decode error=====" + e.getMessage());
+            aapsLogger.debug(LTag.PUMPCOMM, "decode error=====" + e.getMessage());
         }
         return null;
 
     }
 
-    public EquilResponse decode() throws Exception {
+    public EquilResponse decode() {
         EquilCmdModel reqModel = decodeModel();
         byte[] data = Utils.hexStringToBytes(reqModel.getCiphertext());
         String fv = data[12] + "." + data[13];
         firmwareVersion = Float.parseFloat(fv);
-        aapsLogger.debug(LTag.EQUILBLE, "CmdDevicesOldGet====" +
+        aapsLogger.debug(LTag.PUMPCOMM, "CmdDevicesOldGet====" +
                 Utils.bytesToHex(data) + "========" + firmwareVersion + "===" + (firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL));
         reqModel.setCiphertext(Utils.bytesToHex(getNextData()));
         synchronized (this) {
@@ -155,7 +155,7 @@ public class CmdDevicesOldGet extends BaseSetting {
             }
             index++;
         }
-        List list3 = list.subList(0, list.size());
+        List<Byte> list3 = list.subList(0, list.size());
         equilCmdModel.setCiphertext(Utils.bytesToHex(list3).toLowerCase());
         equilCmdModel.setTag("");
         equilCmdModel.setIv("");
@@ -167,7 +167,7 @@ public class CmdDevicesOldGet extends BaseSetting {
         int value = Utils.bytesToInt(data[7], data[6]);
         String fv = data[18] + "." + data[19];
         firmwareVersion = Float.parseFloat(fv);
-        aapsLogger.debug(LTag.EQUILBLE, "CmdDevicesOldGet====" +
+        aapsLogger.debug(LTag.PUMPCOMM, "CmdDevicesOldGet====" +
                 Utils.bytesToHex(data) + "=====" + value + "===" + firmwareVersion + "===="
                 + (firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL));
         synchronized (this) {
@@ -177,11 +177,7 @@ public class CmdDevicesOldGet extends BaseSetting {
     }
 
     public boolean isSupport() {
-        if (firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL) {
-            return false;
-        }
-        return true;
-
+        return !(firmwareVersion < EquilConst.EQUIL_SUPPORT_LEVEL);
     }
 
     @Override public EquilHistoryRecord.EventType getEventType() {
