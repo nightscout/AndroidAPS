@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "info.nightscout.pump.danars"
+    namespace = "app.aaps.pump.danars"
     ndkVersion = Versions.ndkVersion
 
     defaultConfig {

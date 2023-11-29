@@ -55,6 +55,7 @@ import app.aaps.plugins.sync.wear.WearPlugin
 import app.aaps.plugins.sync.xdrip.XdripPlugin
 import app.aaps.pump.danar.DanaRPlugin
 import app.aaps.pump.danarkorean.DanaRKoreanPlugin
+import app.aaps.pump.danars.DanaRSPlugin
 import app.aaps.pump.danarv2.DanaRv2Plugin
 import app.aaps.pump.insight.InsightPlugin
 import app.aaps.pump.virtual.VirtualPumpPlugin
@@ -163,7 +164,7 @@ abstract class PluginsListModule {
     @PumpDriver
     @IntoMap
     @IntKey(120)
-    abstract fun bindDanaRSPlugin(plugin: info.nightscout.pump.danars.DanaRSPlugin): PluginBase
+    abstract fun bindDanaRSPlugin(plugin: DanaRSPlugin): PluginBase
 
     @Binds
     @PumpDriver

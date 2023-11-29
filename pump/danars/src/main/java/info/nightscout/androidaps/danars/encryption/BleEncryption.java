@@ -5,7 +5,7 @@ import android.content.Context;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.pump.danars.encryption.EncryptionType;
+import app.aaps.pump.danars.encryption.EncryptionType;
 
 @Singleton
 public class BleEncryption {

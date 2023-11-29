@@ -19,6 +19,7 @@ import app.aaps.plugins.sync.di.SyncModule
 import app.aaps.pump.dana.di.DanaHistoryModule
 import app.aaps.pump.dana.di.DanaModule
 import app.aaps.pump.danar.di.DanaRModule
+import app.aaps.pump.danars.di.DanaRSModule
 import app.aaps.pump.insight.di.InsightDatabaseModule
 import app.aaps.pump.insight.di.InsightModule
 import app.aaps.pump.virtual.di.VirtualPumpModule
@@ -37,7 +38,6 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.di.OmnipodDashModule
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.di.OmnipodErosModule
 import info.nightscout.pump.combov2.di.ComboV2Module
 import info.nightscout.pump.common.di.PumpCommonModule
-import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.pump.medtrum.di.MedtrumModule
 import javax.inject.Singleton
