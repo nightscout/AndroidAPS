@@ -3,9 +3,8 @@ package app.aaps.core.interfaces.maintenance
 import app.aaps.core.interfaces.rx.weardata.CwfFile
 import java.io.File
 
-interface PrefFileListProvider {
+interface FileListProvider {
 
-    val logsPath: String
     val resultPath: File
     fun ensureTempDirExists(): File
     fun ensureExportDirExists(): File

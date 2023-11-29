@@ -9,7 +9,7 @@ import app.aaps.core.data.plugin.PluginType
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LoggerUtils
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.nsclient.NSSettingsStatus
 import app.aaps.core.interfaces.plugin.PluginBase
 import app.aaps.core.interfaces.resources.ResourceHelper
@@ -37,7 +37,7 @@ class MaintenancePlugin @Inject constructor(
     private val nsSettingsStatus: NSSettingsStatus,
     aapsLogger: AAPSLogger,
     private val config: Config,
-    private val fileListProvider: PrefFileListProvider,
+    private val fileListProvider: FileListProvider,
     private val loggerUtils: LoggerUtils
 ) : PluginBase(
     PluginDescription()

@@ -3,7 +3,7 @@ package app.aaps.plugins.configuration.maintenance
 import android.content.Context
 import android.os.Environment
 import app.aaps.core.interfaces.configuration.Config
-import app.aaps.core.interfaces.maintenance.PrefFileListProvider
+import app.aaps.core.interfaces.maintenance.FileListProvider
 import app.aaps.core.interfaces.maintenance.PrefMetadata
 import app.aaps.core.interfaces.maintenance.PrefsFile
 import app.aaps.core.interfaces.maintenance.PrefsMetadataKey
@@ -32,7 +32,7 @@ import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")
 @Reusable
-class PrefFileListProviderImpl @Inject constructor(
+class FileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val config: Lazy<Config>,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
@@ -41,7 +41,7 @@ class PrefFileListProviderImpl @Inject constructor(
     private val sp: SP,
     private val context: Context,
     private val rxBus: RxBus
-) : PrefFileListProvider {
+) : FileListProvider {
 
     private val path = File(Environment.getExternalStorageDirectory().toString())
     private val aapsPath = File(path, "AAPS" + File.separator + "preferences")
@@ -49,7 +49,6 @@ class PrefFileListProviderImpl @Inject constructor(
     private val tempPath = File(path, "AAPS" + File.separator + "temp")
     private val extraPath = File(path, "AAPS" + File.separator + "extra")
     override val resultPath = File(path, "AAPS" + File.separator + "results")
-    override val logsPath: String = File(path, "AAPS" + File.separator + "logs" + File.separator + context.packageName).absolutePath
 
     companion object {
 
