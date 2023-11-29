@@ -57,15 +57,6 @@ class LoadingDlg : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    private fun onClickOkCancelEnabled(v: View): Boolean {
-        var description = ""
-        return true
-    }
-
-    fun onClick(v: View): Boolean {
-        return false
-    }
-
     override fun show(manager: FragmentManager, tag: String?) {
         try {
             manager.beginTransaction().let {

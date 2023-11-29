@@ -40,13 +40,13 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
         return 5
     }
 
-    lateinit var buttonNext: Button
-    lateinit var lytAction: View
+    private lateinit var buttonNext: Button
+    private lateinit var lytAction: View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonNext = view.findViewById<Button>(R.id.button_next)
-        lytAction = view.findViewById<View>(R.id.lyt_action)
+        buttonNext = view.findViewById(R.id.button_next)
+        lytAction = view.findViewById(R.id.lyt_action)
         buttonNext.alpha = 0.3f
         buttonNext.isClickable = false
         view.findViewById<Button>(R.id.button_air).setOnClickListener {
@@ -132,9 +132,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
                     runOnUiThread {
                         // binding.navButtonsLayout.buttonNext.performClick()
                         val nextPage = getNextPageActionId()
-                        if (nextPage != null) {
-                            findNavController().navigate(nextPage)
-                        }
+                        findNavController().navigate(nextPage)
                     }
                 } else {
                     dismissLoading()
@@ -145,7 +143,7 @@ class EquilPairAirFragment : EquilPairFragmentBase() {
     }
 
     private fun setProfile() {
-        var profile = profileFunction.getProfile()
+        val profile = profileFunction.getProfile()
         if (profile == null) {
             setTime()
             return

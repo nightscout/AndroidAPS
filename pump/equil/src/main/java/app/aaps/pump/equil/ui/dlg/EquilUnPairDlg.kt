@@ -49,8 +49,6 @@ class EquilUnPairDlg : DaggerDialogFragment() {
         binding.btnCancel.setOnClickListener { dismiss() }
         binding.btnOk.setOnClickListener {
             dismiss()
-            binding.btnOk.let { onDialogResultListener?.invoke() }
-
         }
     }
 
@@ -63,15 +61,6 @@ class EquilUnPairDlg : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    private fun onClickOkCancelEnabled(v: View): Boolean {
-        var description = ""
-        return true
-    }
-
-    fun onClick(v: View): Boolean {
-        return false
-    }
-
     override fun show(manager: FragmentManager, tag: String?) {
         try {
             manager.beginTransaction().let {
@@ -81,17 +70,5 @@ class EquilUnPairDlg : DaggerDialogFragment() {
         } catch (e: IllegalStateException) {
             aapsLogger.debug(e.localizedMessage ?: e.toString())
         }
-    }
-
-    fun setDialogResultListener(listener: () -> Unit) {
-        onDialogResultListener = listener
-
-    }
-
-    private var onDialogResultListener: (() -> Unit)? = null
-
-    interface OnDialogResultListener {
-
-        fun onDialogResult()
     }
 }

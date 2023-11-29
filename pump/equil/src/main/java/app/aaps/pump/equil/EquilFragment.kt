@@ -156,22 +156,30 @@ class EquilFragment : DaggerFragment() {
             val runMode = equilPumpPlugin.equilManager.runMode
             binding.mode.setTextColor(Color.WHITE)
             if (equilPumpPlugin.equilManager.isActivationCompleted) {
-                if (runMode == RunMode.RUN) {
-                    binding.mode.text = rh.gs(R.string.equil_mode_deliver)
-                    binding.btnResumeDelivery.visibility = View.GONE
-                    binding.btnSuspendDelivery.visibility = View.VISIBLE
-                } else if (runMode == RunMode.STOP) {
-                    binding.mode.text = rh.gs(R.string.equil_mode_stop)
-                    binding.btnResumeDelivery.visibility = View.GONE
-                    binding.btnSuspendDelivery.visibility = View.GONE
-                } else if (runMode == RunMode.SUSPEND) {
-                    binding.mode.text = rh.gs(R.string.equil_mode_suspend)
-                    binding.btnResumeDelivery.visibility = View.VISIBLE
-                    binding.btnSuspendDelivery.visibility = View.GONE
-                } else {
-                    binding.btnResumeDelivery.visibility = View.VISIBLE
-                    binding.btnSuspendDelivery.visibility = View.GONE
-                    binding.mode.text = ""
+                when (runMode) {
+                    RunMode.RUN     -> {
+                        binding.mode.text = rh.gs(R.string.equil_mode_deliver)
+                        binding.btnResumeDelivery.visibility = View.GONE
+                        binding.btnSuspendDelivery.visibility = View.VISIBLE
+                    }
+
+                    RunMode.STOP    -> {
+                        binding.mode.text = rh.gs(R.string.equil_mode_stop)
+                        binding.btnResumeDelivery.visibility = View.GONE
+                        binding.btnSuspendDelivery.visibility = View.GONE
+                    }
+
+                    RunMode.SUSPEND -> {
+                        binding.mode.text = rh.gs(R.string.equil_mode_suspend)
+                        binding.btnResumeDelivery.visibility = View.VISIBLE
+                        binding.btnSuspendDelivery.visibility = View.GONE
+                    }
+
+                    else            -> {
+                        binding.btnResumeDelivery.visibility = View.VISIBLE
+                        binding.btnSuspendDelivery.visibility = View.GONE
+                        binding.mode.text = ""
+                    }
                 }
             } else {
                 binding.btnResumeDelivery.visibility = View.GONE
@@ -336,16 +344,12 @@ class EquilFragment : DaggerFragment() {
         }
     }
 
-    fun updateAlarm() {
-        val alarmMode = equilPumpPlugin.equilManager.alarmMode
-        if (alarmMode == AlarmMode.MUTE) {
-            binding.tvTone.text = rh.gs(R.string.equil_tone_mode_mute)
-        } else if (alarmMode == AlarmMode.TONE) {
-            binding.tvTone.text = rh.gs(R.string.equil_tone_mode_tone)
-        } else if (alarmMode == AlarmMode.SHAKE) {
-            binding.tvTone.text = rh.gs(R.string.equil_tone_mode_shake)
-        } else if (alarmMode == AlarmMode.TONE_AND_SHAKE) {
-            binding.tvTone.text = rh.gs(R.string.equil_tone_mode_tone_and_shake)
+    private fun updateAlarm() {
+        when (equilPumpPlugin.equilManager.alarmMode) {
+            AlarmMode.MUTE           -> binding.tvTone.text = rh.gs(R.string.equil_tone_mode_mute)
+            AlarmMode.TONE           -> binding.tvTone.text = rh.gs(R.string.equil_tone_mode_tone)
+            AlarmMode.SHAKE          -> binding.tvTone.text = rh.gs(R.string.equil_tone_mode_shake)
+            AlarmMode.TONE_AND_SHAKE -> binding.tvTone.text = rh.gs(R.string.equil_tone_mode_tone_and_shake)
         }
     }
 
@@ -387,10 +391,6 @@ class EquilFragment : DaggerFragment() {
                 )
             }
         }
-    }
-
-    fun getStatus() {
-        equilPumpPlugin.equilManager.readStatus()
     }
 
     private fun readableDuration(duration: Duration): String {

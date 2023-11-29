@@ -20,7 +20,7 @@ import dagger.android.support.DaggerDialogFragment
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
+class SingleChooseDlg(private val alarmMode: AlarmMode) : DaggerDialogFragment() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var ctx: Context
@@ -80,15 +80,6 @@ class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    private fun onClickOkCancelEnabled(v: View): Boolean {
-        var description = ""
-        return true
-    }
-
-    fun onClick(v: View): Boolean {
-        return false
-    }
-
     override fun show(manager: FragmentManager, tag: String?) {
         try {
             manager.beginTransaction().let {
@@ -107,22 +98,13 @@ class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
 
     private var onDialogResultListener: ((Item) -> Unit)? = null
 
-    interface OnDialogResultListener {
-
-        fun onDialogResult(result: View?)
-    }
-
     data class Item(val data: AlarmMode, val title: String)
 
     class RecyclerViewAdapter internal constructor(
-        var itemList: List<Item>,
-        val alarmMode: AlarmMode
+        private var itemList: List<Item>,
+        private val alarmMode: AlarmMode
 
     ) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
-
-        fun setHistoryListInternal(itemList: List<Item>) {
-            this.itemList = itemList
-        }
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(
@@ -132,7 +114,7 @@ class SingleChooseDlg(val alarmMode: AlarmMode) : DaggerDialogFragment() {
             return HistoryViewHolder(v)
         }
 
-        var selectView: View? = null
+        private var selectView: View? = null
         var selectItem: Item? = null
 
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {

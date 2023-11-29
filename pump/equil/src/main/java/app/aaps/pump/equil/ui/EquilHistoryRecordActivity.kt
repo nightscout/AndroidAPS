@@ -517,7 +517,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                 ItemModel.TYPE_BASAL      -> rh.gc(R.color.equil_basal)
                 ItemModel.TYPE_BASAL_TEMP -> rh.gc(R.color.equil_basal)
                 ItemModel.TYPE_BOLUS_ING  -> rh.gc(R.color.equil_bolus_ing)
-                else                      -> rh.gc(R.color.equil_noramll)
+                else                      -> rh.gc(R.color.equil_normal)
             }
             val text = when (type) {
                 ItemModel.TYPE_BOLUS      -> rh.gs(R.string.equil_record_bolus, item.text)

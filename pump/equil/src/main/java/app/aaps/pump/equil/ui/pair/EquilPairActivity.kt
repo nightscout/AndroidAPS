@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
+import app.aaps.core.utils.extensions.safeGetSerializableExtra
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
 import javax.inject.Inject
@@ -34,9 +35,9 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
         setContentView(R.layout.equil_pair_activity)
 
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.startEquilActivationFragment)
-            ?: if (intent.getSerializableExtra(KEY_TYPE) == null) {
+            ?: if (intent.safeGetSerializableExtra(KEY_TYPE, Type::class.java) == null) {
                 R.id.startEquilActivationFragment
-            } else if (intent.getSerializableExtra(KEY_TYPE) as Type == Type.PAIR) {
+            } else if (intent.safeGetSerializableExtra(KEY_TYPE, Type::class.java) == Type.PAIR) {
                 R.id.startEquilActivationFragment
             } else {
                 R.id.startEquilChangeInsulinFragment

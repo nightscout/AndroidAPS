@@ -102,9 +102,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
         buttonNext.setOnClickListener {
             context?.let {
                 val nextPage = getNextPageActionId()
-                if (nextPage != null) {
-                    findNavController().navigate(nextPage)
-                }
+                findNavController().navigate(nextPage)
 
             }
         }
@@ -270,7 +268,7 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
     private fun pair(scanResult: BluetoothDevice) {
         equilPumpPlugin.equilManager.activationProgress = ActivationProgress.PRIMING
         equilPumpPlugin.equilManager.bluetoothConnectionState = BluetoothConnectionState.CONNECTED
-        aapsLogger.debug(LTag.PUMPCOMM, "result====" + scanResult.name.toString() + "===" + scanResult.address.toString())
+        aapsLogger.debug(LTag.PUMPCOMM, "result====${scanResult.name}===${scanResult.address}")
         commandQueue.customCommand(CmdPair(scanResult.name.toString(), scanResult.address.toString(), password), object : Callback() {
             override fun run() {
                 if (activity == null) return
@@ -322,10 +320,8 @@ class EquilPairSerialNumberFragment : EquilPairFragmentBase() {
                     equilPumpPlugin.showToast(rh.gs(R.string.equil_success))
                     runOnUiThread {
                         val nextPage = getNextPageActionId()
-                        if (nextPage != null) {
-                            equilPumpPlugin.equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
-                            findNavController().navigate(nextPage)
-                        }
+                        equilPumpPlugin.equilManager.activationProgress = ActivationProgress.CANNULA_CHANGE
+                        findNavController().navigate(nextPage)
                     }
                 } else {
                     dismissLoading()

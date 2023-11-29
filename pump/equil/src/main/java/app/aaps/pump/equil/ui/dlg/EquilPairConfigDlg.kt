@@ -47,13 +47,10 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.btnSkip.setOnClickListener {
-            binding.btnNeed.let { onDialogResultListener?.invoke(0) }
-
             dismiss()
         }
         binding.btnNeed.setOnClickListener {
             dismiss()
-            binding.btnNeed.let { onDialogResultListener?.invoke(1) }
         }
     }
 
@@ -66,15 +63,6 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    private fun onClickOkCancelEnabled(v: View): Boolean {
-        var description = ""
-        return true
-    }
-
-    fun onClick(v: View): Boolean {
-        return false
-    }
-
     override fun show(manager: FragmentManager, tag: String?) {
         try {
             manager.beginTransaction().let {
@@ -85,12 +73,4 @@ class EquilPairConfigDlg : DaggerDialogFragment() {
             aapsLogger.debug(e.localizedMessage ?: e.toString())
         }
     }
-
-    fun setDialogResultListener(listener: (Int) -> Unit) {
-        onDialogResultListener = listener
-
-    }
-
-    private var onDialogResultListener: ((Int) -> Unit)? = null
-
 }

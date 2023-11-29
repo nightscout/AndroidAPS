@@ -62,10 +62,6 @@ class EquilAutoDressingDlg : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    fun onClick(v: View): Boolean {
-        return false
-    }
-
     override fun show(manager: FragmentManager, tag: String?) {
         try {
             manager.beginTransaction().let {

@@ -37,15 +37,15 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
     }
 
     var auto: Boolean = false
-    lateinit var buttonNext: Button
+    private lateinit var buttonNext: Button
     lateinit var buttonFill: Button
     lateinit var lytAction: View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonNext = view.findViewById<Button>(R.id.button_next)
-        buttonFill = view.findViewById<Button>(R.id.button_fill)
-        lytAction = view.findViewById<View>(R.id.lyt_action)
+        buttonNext = view.findViewById(R.id.button_next)
+        buttonFill = view.findViewById(R.id.button_fill)
+        lytAction = view.findViewById(R.id.lyt_action)
         buttonNext.alpha = 0.3f
         buttonNext.isClickable = false
         buttonFill.setOnClickListener {
@@ -57,7 +57,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
         }
         view.findViewById<Button>(R.id.button_finish).setOnClickListener {
             context?.let {
-                var time = System.currentTimeMillis()
+                val time = System.currentTimeMillis()
                 val equilHistoryRecord = EquilHistoryRecord(
                     time,
                     null,
@@ -72,9 +72,7 @@ class EquilPairFillFragment : EquilPairFragmentBase() {
                     equilPumpPlugin.equilHistoryRecordDao.insert(equilHistoryRecord)
                 }
                 val nextPage = getNextPageActionId()
-                if (nextPage != null) {
-                    findNavController().navigate(nextPage)
-                }
+                findNavController().navigate(nextPage)
             }
         }
     }

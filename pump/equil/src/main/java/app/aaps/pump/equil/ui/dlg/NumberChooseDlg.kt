@@ -53,8 +53,6 @@ class NumberChooseDlg : DaggerDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         binding.lytAction.cancel.setOnClickListener { dismiss() }
         binding.lytAction.ok.setOnClickListener {
-
-            binding.pickerAmount.let { onDialogResultListener?.invoke(binding.pickerAmount.value.toFloat()) }
             dismiss()
         }
         binding.pickerAmount.setParams(10.0, 10.0, 100.0, 0.5, DecimalFormat("0.0"), false, null, object : TextWatcher {
@@ -74,10 +72,6 @@ class NumberChooseDlg : DaggerDialogFragment() {
 
     var task: Runnable? = null
 
-    fun onClick(v: View): Boolean {
-        return false
-    }
-
     override fun show(manager: FragmentManager, tag: String?) {
         try {
             manager.beginTransaction().let {
@@ -88,17 +82,4 @@ class NumberChooseDlg : DaggerDialogFragment() {
             aapsLogger.debug(e.localizedMessage ?: e.toString())
         }
     }
-
-    fun setDialogResultListener(listener: (Float) -> Unit) {
-        onDialogResultListener = listener
-
-    }
-
-    private var onDialogResultListener: ((Float) -> Unit)? = null
-
-    interface OnDialogResultListener {
-
-        fun onDialogResult(result: Float?)
-    }
-
 }
