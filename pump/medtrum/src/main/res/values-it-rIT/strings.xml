@@ -3,16 +3,20 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Integrazione micro per Medtrum Nano e Medtrum 300U</string>
     <string name="medtrum_pump_setting">Impostazioni micro Medtrum</string>
     <string name="pump_error">Errore micro: %1$s!! </string>
+    <string name="pump_warning">Avviso micro: %1$s </string>
     <string name="pump_is_suspended">Il micro è sospeso</string>
     <string name="pump_is_suspended_hour_max">Il micro è sospeso a causa del superamento della massima insulina oraria</string>
     <string name="pump_is_suspended_day_max">Il micro è sospeso a causa del superamento della massima insulina giornaliera</string>
     <string name="patch_not_active">Patch non attivata</string>
     <string name="pump_setting_failed">Errore nella configurazione delle impostazioni utente sul micro!</string>
+    <string name="pump_sync_error">Errore durante la sincronizzazione della cronologia del micro, un record è stato saltato. Controllare la scheda trattamenti per verificare se il bolo è stato sincronizzato correttamente. Posporre l\'allarme e se l\'errore continua a riproporsi cambiare patch o pompa.</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Stato BLE</string>
     <string name="last_connection_label">Ultima connessione</string>
+    <string name="active_bolus_label">Bolo attivo</string>
     <string name="pump_state_label">Stato micro</string>
     <string name="active_alarms_label">Attiva allarmi</string>
     <string name="reservoir_level"> %.2f U</string>
@@ -50,6 +54,7 @@
     <string name="alarm_battery_out">Batteria scarica</string>
     <string name="alarm_no_calibration">No calibrazione</string>
     <string name="pump_time_update_failed">Impossibile aggiornare il fuso orario del microinfusore, posticipare il messaggio e aggiornare manualmente.</string>
+    <string name="bolus_error">Errore bolo</string>
     <!-- wizard-->
     <string name="retry">Riprova</string>
     <string name="next">Avanti</string>
@@ -68,6 +73,7 @@
     <string name="step_retry_activation">Attivazione in corso</string>
     <string name="unexpected_state">Stato inaspettato: %1$s</string>
     <string name="no_profile_selected">Nessun profilo selezionato. Seleziona un profilo e riprova.</string>
+    <string name="no_sn_in_settings">Nessun numero di serie noto. Inserisci il numero di serie del micro nelle impostazioni e riprova.</string>
     <string name="base_serial">Seriale base micro: %1$X</string>
     <string name="patch_begin_activation">Nessuna patch attiva. Premi <b>Avanti</b> per iniziare il processo di attivazione.</string>
     <string name="patch_not_active_note">La base del micro non deve essere collegata alla patch fino alla fase successiva!</string>
@@ -97,15 +103,23 @@
     <string name="press_retry_or_discard">Premi <b>Avanti</b> per riprendere l\'attivazione o <b>Scarta</b> per resettare lo stato di attivazione.</string>
     <string name="reading_activation_status">Attendere, lettura dello stato di attivazione dal micro.</string>
     <!-- settings-->
+    <string name="enable_pump_unreachable_alert_summary">Abilitazione avviso irraggiungibilità forzato perché Medtrum patch può fallire e non essere raggiungibile.</string>
+    <string name="pump_unreachable_threshold_minutes_summary">Consigliata l\'impostazione a 30 minuti, perché Medtrum patch può fallire e non essere raggiungibile.</string>
     <string name="sn_input_title">Numero seriale</string>
     <string name="sn_input_summary">Inserisci il numero di serie della base del micro.</string>
     <string name="sn_input_invalid">Numero di serie non valido!</string>
     <string name="pump_unsupported">Micro non testato: %1$d! Contattaci su discord o github per supporto</string>
     <string name="alarm_setting_title">Impostazioni allarmi</string>
     <string name="alarm_setting_summary">Seleziona le tue impostazioni di allarme del micro preferite.</string>
+    <string name="pump_warning_notification_title">Notifica di avviso del micro</string>
+    <string name="pump_warning_notification_summary">Mostra notifica sugli avvisi non critici del micro: batteria bassa, serbatoio basso (20 unità) e scadenza a breve. Si consiglia di lasciare abilitato quando gli avvisi del micro sono impostati in modalità silenziosa.</string>
+    <string name="pump_warning_expiry_hour_title">Avviso di scadenza micro [hours]</string>
+    <string name="pump_warning_expiry_hour_summary">Mostra notifica all\'ora specificata dopo l\'attivazione.</string>
     <string name="patch_expiration_title">Scadenza patch</string>
     <string name="patch_expiration_summary">Una volta abilitata, la patch scadrà dopo 3 giorni, con un periodo di grazia di 8 ore.</string>
+    <string name="hourly_max_insulin_title">Insulina massima oraria [Units]</string>
     <string name="hourly_max_insulin_summary">Specificare le unità massime di insulina consentite per ora. Se superate, il micro sarà sospeso.</string>
+    <string name="daily_max_insulin_title">Insulina massima giornaliera [Units]</string>
     <string name="daily_max_insulin_summary">Specificare le unità massime di insulina consentite per giorno. Se superate, il micro sarà sospeso.</string>
     <!-- treatment state-->
     <string name="getting_pump_status">Ricezione stato micro</string>

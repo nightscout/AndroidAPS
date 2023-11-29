@@ -147,45 +147,41 @@ class DanaRKoreanPlugin @Inject constructor(
     }
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
+
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
-        require(detailedBolusInfo.carbs > 0)
-        return if (detailedBolusInfo.insulin > 0) {
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
-            var connectionOK = false
-            if (detailedBolusInfo.insulin > 0)
-                connectionOK = sExecutionService.bolus(
-                    detailedBolusInfo.insulin, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.carbsTimestamp
-                        ?: detailedBolusInfo.timestamp, t
-                )
-            val result = PumpEnactResult(injector)
-            result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
-                .bolusDelivered(t.insulin)
-            if (!result.success) result.comment(
-                rh.gs(
-                    info.nightscout.pump.dana.R.string.boluserrorcode,
-                    detailedBolusInfo.insulin,
-                    t.insulin,
-                    danaPump.bolusStartErrorCode
-                )
-            ) else result.comment(app.aaps.core.ui.R.string.ok)
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-            detailedBolusInfo.insulin = t.insulin
-            detailedBolusInfo.timestamp = dateUtil.now()
-            if (detailedBolusInfo.insulin > 0) pumpSync.syncBolusWithPumpId(
-                detailedBolusInfo.timestamp,
-                detailedBolusInfo.insulin,
-                detailedBolusInfo.bolusType,
-                dateUtil.now(),
-                PumpType.DANA_R_KOREAN,
-                serialNumber()
+        val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+        var connectionOK = false
+        if (detailedBolusInfo.insulin > 0)
+            connectionOK = sExecutionService.bolus(
+                detailedBolusInfo.insulin, detailedBolusInfo.carbs.toInt(), detailedBolusInfo.carbsTimestamp
+                    ?: detailedBolusInfo.timestamp, t
             )
-            result
-        } else {
-            val result = PumpEnactResult(injector)
-            result.success(false).bolusDelivered(0.0).comment(app.aaps.core.ui.R.string.invalid_input)
-            aapsLogger.error("deliverTreatment: Invalid input")
-            result
-        }
+        val result = PumpEnactResult(injector)
+        result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
+            .bolusDelivered(t.insulin)
+        if (!result.success) result.comment(
+            rh.gs(
+                info.nightscout.pump.dana.R.string.boluserrorcode,
+                detailedBolusInfo.insulin,
+                t.insulin,
+                danaPump.bolusStartErrorCode
+            )
+        ) else result.comment(app.aaps.core.ui.R.string.ok)
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
+        detailedBolusInfo.insulin = t.insulin
+        detailedBolusInfo.timestamp = dateUtil.now()
+        if (detailedBolusInfo.insulin > 0) pumpSync.syncBolusWithPumpId(
+            detailedBolusInfo.timestamp,
+            detailedBolusInfo.insulin,
+            detailedBolusInfo.bolusType,
+            dateUtil.now(),
+            PumpType.DANA_R_KOREAN,
+            serialNumber()
+        )
+        return result
     }
 
     // This is called from APS

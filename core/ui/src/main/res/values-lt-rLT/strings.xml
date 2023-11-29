@@ -33,14 +33,14 @@
     <string name="result">Rezultatas</string>
     <string name="settings">Parametrai</string>
     <string name="statuslights">Būklės indikatoriai</string>
-    <string name="do_ns_upload_title">Perduoti KG duomenis į NS</string>
+    <string name="do_ns_upload_title">Siųsti glikemijos duomenis į NS</string>
     <string name="configbuilder_insulin">Insulinas</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="master_password">Pagrindinis slaptažodis</string>
     <string name="ue_export_to_csv">Eksportuoti naudotojo įrašus į Excel (csv)</string>
     <string name="confirm">Patvirtinti</string>
     <string name="pump">Pompa</string>
-    <string name="missed_bg_readings">Negauti KG duomenys</string>
+    <string name="missed_bg_readings">Negauti glikemijos duomenys</string>
     <string name="treatments_iob_label_string">AIO:</string>
     <string name="mute5min">Nutildyti 5 minutėms</string>
     <string name="mute">Nutildyti</string>
@@ -109,10 +109,10 @@
     <string name="add_new">Pridėti naują</string>
     <string name="addnew_above">Pridėti naują aukščiau</string>
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
-    <string name="bg_label">KG</string>
+    <string name="bg_label">Glikemija</string>
     <string name="calibration">Kalibravimas</string>
     <string name="alarminxmin">Pranešti po %1$d min</string>
-    <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Rankiniu būdu patikrinkite faktiškai suleistą kiekį</string>
+    <string name="treatmentdeliveryerror">Boluso suleidimo klaida. Patikrinkite faktiškai suleistą kiekį</string>
     <string name="bolus_reminder">Priminimas apie bolusą</string>
     <string name="duration_label">Trukmė</string>
     <string name="shortgramm">g</string>
@@ -135,7 +135,7 @@
     <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
     <string name="average">Vidurkis</string>
-    <string name="tir">LNR</string>
+    <string name="tir">LTR</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">PAŠALINTI</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
@@ -146,7 +146,7 @@
     <string name="confirm_remove_multiple_items">Ar tikrai norite pašalinti %1$d elementus</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
-    <string name="wear_wizard_settings">Vedlio nustatymai</string>
+    <string name="wear_wizard_settings">Skaičiuotuvo nustatymai</string>
     <string name="bg_trend_label">15 min tendencija</string>
     <string name="treatments_wizard_cob_label">AAO</string>
     <string name="bolus_iob_label">Bolusų AIO</string>
@@ -194,8 +194,8 @@
     <string name="mins">%1$d min.</string>
     <!--    Translator-->
     <string name="careportal">Priežiūra</string>
-    <string name="careportal_bgcheck">KG testas</string>
-    <string name="careportal_mbg">KG iš kraujo arba kalibracija</string>
+    <string name="careportal_bgcheck">Gliukomatis</string>
+    <string name="careportal_mbg">Gliukomačio rodmenys</string>
     <string name="careportal_announcement">Pranešimas</string>
     <string name="careportal_note">Pastaba</string>
     <string name="careportal_question">Klausimas</string>
@@ -305,7 +305,7 @@
     <string name="uel_treatments_ns_refresh">ATNAUJINTI TERAPIJĄ NS</string>
     <string name="uel_tt_ns_refresh">ATNAUJINTI LAIKINĄ TIKSLĄ NS</string>
     <string name="uel_automation_removed">AUTOMATIZAVIMAS PAŠALINTAS</string>
-    <string name="uel_bg_removed">KG PAŠALINTA</string>
+    <string name="uel_bg_removed">PAŠALINTA</string>
     <string name="uel_careportal_removed">TERAPIJOS PORTALAS PAŠALINTAS</string>
     <string name="uel_bolus_removed">BOLUSAS PAŠALINTAS</string>
     <string name="uel_carbs_removed">AV PAŠALINTI</string>
@@ -462,6 +462,7 @@
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
+    <string name="wizard_no_insulin_required">Insulino nereikia!</string>
     <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <string name="wizard_no_cob">Nežinomi AAO! Nėra glikemijos duomenų arba programa paleista iš naujo?</string>
@@ -469,7 +470,7 @@
     <string name="wizard_explain_calc">Kalk (IA: %1$.1f, JIF: %2$.1f)</string>
     <string name="wizard_explain_carbs">AV: %1$.2fv</string>
     <string name="wizard_explain_cob">AAO: %1$.0fg %2$.2fv</string>
-    <string name="wizard_explain_bg">KG: %1$.2fv</string>
+    <string name="wizard_explain_bg">Glikemija: %1$.2fv</string>
     <string name="wizard_explain_iob">AIO: %1$.2fv</string>
     <string name="wizard_explain_superbolus">Superbolus: %1$.2fv</string>
     <string name="wizard_explain_trend">15\' tendencija: %1$.2fv</string>
@@ -557,7 +558,7 @@
     <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
     <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių susiejimo.</string>
     <!--    Preferences -->
-    <string name="nav_plugin_preferences">Įskiepių nustatymai</string>
+    <string name="nav_plugin_preferences">Pradžios ekrano nustatymai</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
     <!-- About -->

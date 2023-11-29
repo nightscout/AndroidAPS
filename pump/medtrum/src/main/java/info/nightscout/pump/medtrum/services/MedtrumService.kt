@@ -559,10 +559,30 @@ class MedtrumService : DaggerService(), BLECommCallback {
     private fun syncRecords(): Boolean {
         aapsLogger.debug(LTag.PUMP, "syncRecords: called!, syncedSequenceNumber: ${medtrumPump.syncedSequenceNumber}, currentSequenceNumber: ${medtrumPump.currentSequenceNumber}")
         var result = true
+        var failureCount = 0
         if (medtrumPump.syncedSequenceNumber < medtrumPump.currentSequenceNumber) {
             for (sequence in (medtrumPump.syncedSequenceNumber + 1)..medtrumPump.currentSequenceNumber) {
-                result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence), COMMAND_SYNC_TIMEOUT_SEC)
-                if (!result) break
+                val packet = GetRecordPacket(injector, sequence)
+                result = sendPacketAndGetResponse(packet, COMMAND_SYNC_TIMEOUT_SEC)
+                if (!result && packet.failed) {
+                    // Record may be broken for unkown reasons, try the next packet if that fails abort
+                    failureCount++
+                    aapsLogger.error(LTag.PUMPCOMM, "Failed to sync record $sequence, failureCount: $failureCount")
+                    if (failureCount == 1) {
+                        // Show notification to alert user of failure
+                        uiInteraction.addNotificationWithSound(
+                            Notification.PUMP_SYNC_ERROR,
+                            rh.gs(R.string.pump_sync_error),
+                            Notification.URGENT,
+                            app.aaps.core.ui.R.raw.alarm
+                        )
+                    } else if (failureCount >= 2) {
+                        break
+                    }
+                } else if (!result) {
+                    // Communication timeout, try again
+                    break
+                }
             }
         }
         return result

@@ -51,6 +51,7 @@
     <string name="extended_bolus">Predĺžený bolus</string>
     <string name="paused">Pozastavené</string>
     <string name="tdd_total">CDD celkom</string>
+    <string name="tdd_old_data">Staré dáta</string>
     <string name="goingtodeliver">Podávanie %1$.2f J inzulínu</string>
     <string name="waitingforpump">Čakám na pumpu</string>
     <string name="androidaps_start">AAPS spustený</string>
@@ -167,6 +168,8 @@
     <string name="virtualpump_uploadstatus_title">Nahrávať stav pumpy do NS, alebo Tidepoolu</string>
     <string name="suspendloop_label">Deaktivovaný/pozastavený uzavretý okruh</string>
     <string name="iob_label">Aktívny inzulín (IOB)</string>
+    <string name="loopstatus_targets">CIELE:</string>
+    <string name="loopstatus_OAPS_result">VÝSLEDOK OAPS:</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
     <string name="wrongpin">Nesprávny PIN</string>
@@ -462,6 +465,8 @@
     <string name="bolus_recorded_only">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
     <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
     <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
+    <string name="carb_equal_zero_no_action">Sacharidy = 0. Žiadna akcia!</string>
+    <string name="wizard_no_insulin_required">Nie je požadovaný žiadny inzulín!</string>
     <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
     <string name="wizard_no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
     <string name="wizard_no_cob">Neznáme COB! Chýbajú glykémie, alebo bola práve reštartovaná aplikácia?</string>

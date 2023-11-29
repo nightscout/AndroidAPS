@@ -17,8 +17,8 @@
     <string name="nav_about">Apie</string>
     <string name="smscommunicator_missingphonestatepermission">Trūksta telefono būsenos leidimo</string>
     <string name="ns_alarm_options">Aliarmų nustatymai</string>
-    <string name="ns_alarms">Sukurti pranešimus iš NS aliarmų</string>
-    <string name="ns_announcements">Sukurkite pranešimus iš NS perspėjimų</string>
+    <string name="ns_alarms">Kurti pranešimus iš NS aliarmų</string>
+    <string name="ns_announcements">Kurti pranešimus iš NS perspėjimų</string>
     <string name="ns_alarm_stale_data_value_label">Seni duomenys, riba [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Kritiškai seni duomenys, riba [min]</string>
     <string name="sensitivity_warning">Įjungę Autosens funkciją nepamirškite įvedinėti visus valgomus angliavandenius. To nedarant, angliavandenių sukeliami glikemijos svyravimai bus klaidingai identifikuojami kaip jautrumo pasikeitimai!</string>
@@ -48,7 +48,7 @@
     <string name="clear_filter">Valyti filtrą</string>
     <string name="cannula">Kaniulė</string>
     <string name="email_address">El. pašto adresas</string>
-    <string name="remove_bg_readings">Pašalinti KG duomenis</string>
+    <string name="remove_bg_readings">Pašalinti glikemijos duomenis</string>
     <string name="identification_not_set">Kūrėjo režime tapatybė nenustatyta</string>
     <string name="a11y_dialog">dialogas</string>
     <!-- WEAR OS-->

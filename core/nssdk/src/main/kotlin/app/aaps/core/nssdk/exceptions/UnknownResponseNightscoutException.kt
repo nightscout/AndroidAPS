@@ -1,3 +1,3 @@
 package app.aaps.core.nssdk.exceptions
 
-class UnknownResponseNightscoutException : NightscoutException()
+class UnknownResponseNightscoutException(override val message: String) : NightscoutException(message)

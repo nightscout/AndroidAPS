@@ -2,6 +2,7 @@ package app.aaps.plugins.sync.wear.wearintegration
 
 import android.app.NotificationManager
 import android.content.Context
+import app.aaps.core.interfaces.aps.AutosensDataStore
 import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.configuration.Config
 import app.aaps.core.interfaces.configuration.Constants
@@ -175,7 +176,7 @@ class DataHandlerMobile @Inject constructor(
                                EventMobileToWear(
                                    EventData.ConfirmAction(
                                        rh.gs(R.string.loop_status).uppercase(),
-                                       "TARGETS:\n$targetsStatus\n\n$loopStatus\n\nOAPS RESULT:\n$oAPSResultStatus",
+                                       "$targetsStatus\n\n$loopStatus\n\n$oAPSResultStatus",
                                        returnCommand = null
                                    )
                                )
@@ -336,7 +337,7 @@ class DataHandlerMobile @Inject constructor(
         val dummies: MutableList<TotalDailyDose> = LinkedList()
         val historyList = getTDDList(dummies)
         if (isOldData(historyList)) {
-            message = "OLD DATA - "
+            message = rh.gs(app.aaps.core.ui.R.string.tdd_old_data) + ", "
             //if pump is not busy: try to fetch data
             if (activePump.isBusy()) {
                 message += rh.gs(app.aaps.core.ui.R.string.pump_busy)
@@ -434,7 +435,7 @@ class DataHandlerMobile @Inject constructor(
             return
         }
         if (bolusWizard.calculatedTotalInsulin <= 0 && bolusWizard.carbs <= 0) {
-            sendError("No insulin required")
+            sendError(rh.gs(app.aaps.core.ui.R.string.wizard_no_insulin_required))
             return
         }
         val message =
@@ -540,7 +541,7 @@ class DataHandlerMobile @Inject constructor(
             message += "\n" + rh.gs(app.aaps.core.ui.R.string.constraint_applied)
         }
         if (carbsAfterConstraints <= 0) {
-            sendError("Carbs = 0! No action taken!")
+            sendError(rh.gs(app.aaps.core.ui.R.string.carb_equal_zero_no_action))
             return
         }
         rxBus.send(
@@ -741,7 +742,7 @@ class DataHandlerMobile @Inject constructor(
     fun resendData(from: String) {
         aapsLogger.debug(LTag.WEAR, "Sending data to wear from $from")
         // SingleBg
-        iobCobCalculator.ads.lastBg()?.let { rxBus.send(EventMobileToWear(getSingleBG(it))) }
+        iobCobCalculator.ads.lastBg()?.let { rxBus.send(EventMobileToWear(getSingleBG(it, iobCobCalculator.ads))) }
         // Preferences
         rxBus.send(
             EventMobileToWear(
@@ -769,7 +770,7 @@ class DataHandlerMobile @Inject constructor(
         )
         // GraphData
         iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
-            rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it) }))))
+            rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it, null) }))))
         }
         // Treatments
         sendTreatments()
@@ -969,7 +970,7 @@ class DataHandlerMobile @Inject constructor(
         return deltaStringDetailed
     }
 
-    private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
+    private fun getSingleBG(glucoseValue: InMemoryGlucoseValue, autosensDataStore: AutosensDataStore?): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
         val lowLine = profileUtil.convertToMgdl(defaultValueHelper.determineLowLine(), units)
@@ -977,9 +978,9 @@ class DataHandlerMobile @Inject constructor(
 
         return EventData.SingleBg(
             timeStamp = glucoseValue.timestamp,
-            sgvString = profileUtil.stringInCurrentUnitsDetect(glucoseValue.value),
+            sgvString = profileUtil.stringInCurrentUnitsDetect(glucoseValue.recalculated),
             glucoseUnits = units.asText,
-            slopeArrow = trendCalculator.getTrendArrow(glucoseValue).symbol,
+            slopeArrow = (autosensDataStore?.let { ads -> trendCalculator.getTrendArrow(ads) } ?: GlucoseValue.TrendArrow.NONE).symbol,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             deltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
@@ -998,7 +999,7 @@ class DataHandlerMobile @Inject constructor(
     private
     val targetsStatus: String
         get() {
-            var ret = ""
+            var ret = rh.gs(app.aaps.core.ui.R.string.loopstatus_targets) + "\n"
             if (!config.APS) {
                 return rh.gs(R.string.target_only_aps_mode)
             }
@@ -1020,7 +1021,7 @@ class DataHandlerMobile @Inject constructor(
     private
     val oAPSResultStatus: String
         get() {
-            var ret = ""
+            var ret = rh.gs(app.aaps.core.ui.R.string.loopstatus_OAPS_result) + "\n"
             if (!config.APS)
                 return rh.gs(R.string.aps_only)
             val usedAPS = activePlugin.activeAPS

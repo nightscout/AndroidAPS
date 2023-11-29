@@ -288,52 +288,47 @@ class DanaRSPlugin @Inject constructor(
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
+        // Insulin value must be greater than 0
+        require(detailedBolusInfo.carbs == 0.0) { detailedBolusInfo.toString() }
+        require(detailedBolusInfo.insulin > 0) { detailedBolusInfo.toString() }
+
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(ConstraintObject(detailedBolusInfo.insulin, aapsLogger)).value()
-        return if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            val preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0)
-            var speed = 12
-            when (preferencesSpeed) {
-                0 -> speed = 12
-                1 -> speed = 30
-                2 -> speed = 60
-            }
-            // RS stores end time for bolus, we need to adjust time
-            // default delivery speed is 12 sec/U
-            detailedBolusInfo.timestamp = dateUtil.now() + (speed * detailedBolusInfo.insulin * 1000).toLong()
-            // clean carbs to prevent counting them as twice because they will picked up as another record
-            // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
-            val carbs = detailedBolusInfo.carbs
-            detailedBolusInfo.carbs = 0.0
-            var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
-            if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
-            detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
-            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
-            var connectionOK = false
-            if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
-                ?: false
-            val result = PumpEnactResult(injector)
-            result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
-            result.bolusDelivered = t.insulin
-            if (!result.success) {
-                var error = "" + danaPump.bolusStartErrorCode
-                when (danaPump.bolusStartErrorCode) {
-                    0x10 -> error = rh.gs(info.nightscout.pump.dana.R.string.maxbolusviolation)
-                    0x20 -> error = rh.gs(info.nightscout.pump.dana.R.string.commanderror)
-                    0x40 -> error = rh.gs(info.nightscout.pump.dana.R.string.speederror)
-                    0x80 -> error = rh.gs(info.nightscout.pump.dana.R.string.insulinlimitviolation)
-                }
-                result.comment = rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
-            } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
-            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
-            result
-        } else {
-            val result = PumpEnactResult(injector)
-            result.success = false
-            result.bolusDelivered = 0.0
-            result.comment = rh.gs(app.aaps.core.ui.R.string.invalid_input)
-            aapsLogger.error("deliverTreatment: Invalid input")
-            result
+        val preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0)
+        var speed = 12
+        when (preferencesSpeed) {
+            0 -> speed = 12
+            1 -> speed = 30
+            2 -> speed = 60
         }
+        // RS stores end time for bolus, we need to adjust time
+        // default delivery speed is 12 sec/U
+        detailedBolusInfo.timestamp = dateUtil.now() + (speed * detailedBolusInfo.insulin * 1000).toLong()
+        // clean carbs to prevent counting them as twice because they will picked up as another record
+        // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
+        val carbs = detailedBolusInfo.carbs
+        detailedBolusInfo.carbs = 0.0
+        var carbTimeStamp = detailedBolusInfo.carbsTimestamp ?: detailedBolusInfo.timestamp
+        if (carbTimeStamp == detailedBolusInfo.timestamp) carbTimeStamp -= T.mins(1).msecs() // better set 1 min back to prevents clash with insulin
+        detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
+        val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+        var connectionOK = false
+        if (detailedBolusInfo.insulin > 0 || carbs > 0) connectionOK = danaRSService?.bolus(detailedBolusInfo.insulin, carbs.toInt(), carbTimeStamp, t)
+            ?: false
+        val result = PumpEnactResult(injector)
+        result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
+        result.bolusDelivered = t.insulin
+        if (!result.success) {
+            var error = "" + danaPump.bolusStartErrorCode
+            when (danaPump.bolusStartErrorCode) {
+                0x10 -> error = rh.gs(info.nightscout.pump.dana.R.string.maxbolusviolation)
+                0x20 -> error = rh.gs(info.nightscout.pump.dana.R.string.commanderror)
+                0x40 -> error = rh.gs(info.nightscout.pump.dana.R.string.speederror)
+                0x80 -> error = rh.gs(info.nightscout.pump.dana.R.string.insulinlimitviolation)
+            }
+            result.comment = rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
+        } else result.comment = rh.gs(app.aaps.core.ui.R.string.ok)
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
+        return result
     }
 
     override fun stopBolusDelivering() {

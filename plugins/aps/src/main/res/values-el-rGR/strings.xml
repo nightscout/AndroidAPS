@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Ρύθμιση ευαισθησίας και γλυκόζης αίματος</string>
     <string name="DynISFAdjust_title" formatted="false">DynamicISF Συντελεστής Προσαρμογής %</string>
     <string name="DynISFAdjust_summary" formatted="false">Συντελεστής Προσαρμογής για το DynamicISF. Ρυθμίστε περισσότερο από 100% για πιο επιθετικές διορθωτικές δόσεις και λιγότερο από 100% για λιγότερο επιθετικές διορθώσεις.</string>
     <string name="high_temptarget_raises_sensitivity_title">Ο υψηλός προσωρινός στόχος ανεβάζει την ευαισθησία</string>

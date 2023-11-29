@@ -51,6 +51,7 @@
     <string name="extended_bolus">Extended bolus</string>
     <string name="paused">Paused</string>
     <string name="tdd_total">TDD Total</string>
+    <string name="tdd_old_data">Old data</string>
     <string name="goingtodeliver">Going to deliver %1$.2f U</string>
     <string name="waitingforpump">Waiting for pump</string>
     <string name="androidaps_start">AAPS started</string>
@@ -168,6 +169,8 @@
     <string name="virtualpump_uploadstatus_title">Upload pump status to NS or Tidepool</string>
     <string name="suspendloop_label">Disabled/Suspended loop</string>
     <string name="iob_label">Insulin on Board (IOB)</string>
+    <string name="loopstatus_targets">TARGETS:</string>
+    <string name="loopstatus_OAPS_result">OAPS RESULT:</string>
 
     <!--    Protection-->
     <string name="wrongpassword">Wrong password</string>
@@ -492,6 +495,8 @@
     <string name="bolus_recorded_only">Bolus will be recorded only (not delivered by pump)</string>
     <string name="advisoralarm">Run alarm when is time to eat</string>
     <string name="no_action_selected">No action selected, nothing will happen</string>
+    <string name="carb_equal_zero_no_action">Carbs = 0. No action taken!</string>
+    <string name="wizard_no_insulin_required">No insulin required!</string>
     <string name="wizard_no_actual_bg">No recent BG to base calculation on!</string>
     <string name="wizard_no_active_profile">No active profile set!</string>
     <string name="wizard_no_cob">Unknown COB! BG reading missing or recent app restart?</string>

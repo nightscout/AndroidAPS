@@ -206,15 +206,15 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         } ?: aapsLogger.debug(LTag.WEAR, "sendMessage: Ignoring message. No node selected.")
     }
 
-    @Suppress("unused")
+
     private fun sendMessage(path: String, data: ByteArray) {
-        aapsLogger.debug(LTag.WEAR, "sendMessage: $path")
+        aapsLogger.debug(LTag.WEAR, "sendMessage: $path ${data.size}")
         transcriptionNodeId?.also { nodeId ->
             messageClient
                 .sendMessage(nodeId, path, data).apply {
                     addOnSuccessListener { }
                     addOnFailureListener {
-                        aapsLogger.debug(LTag.WEAR, "sendMessage:  $path failure")
+                        aapsLogger.debug(LTag.WEAR, "sendMessage:  $path failure ${data.size}")
                     }
                 }
         }

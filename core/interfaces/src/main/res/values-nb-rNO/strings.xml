@@ -59,8 +59,8 @@
     <string name="pref_show_ago">Vis tid siden</string>
     <string name="pref_show_week_number">Vis ukenummer</string>
     <string name="pref_show_date">Vis dato</string>
-    <string name="default_custom_watchface_comment">Standard klokkebakgrunn, du kan klikke på EKSPORTER KLOKKEBAKGRUNN for å lage en mal</string>
-    <string name="wear_default_watchface">Standard klokkebakgrunn</string>
+    <string name="default_custom_watchface_comment">Standard urskive, du kan klikke på EKSPORTER MAL for å lage en mal</string>
+    <string name="wear_default_watchface">Standard urskive</string>
     <string name="cwf_comment_background">Bakgrunnsbilde</string>
     <string name="cwf_comment_chart">Grafer (BS, basal, prediksjonslinjer...)</string>
     <string name="cwf_comment_cover_chart">Bilde foran grafer og bak tekstfelter</string>

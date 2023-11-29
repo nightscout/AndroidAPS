@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Dostosuj wrażliwość i glikemię</string>
+    <string name="dynisf_adjust_sensitivity">Włącz współczynnik czułości oparty na DDI dla modyfikacji docelowej dawki bazowej i docelowej glikemii</string>
+    <string name="dynisf_adjust_sensitivity_summary">Używa 24-godzinną DDI / 7-dniową DDI do obliczenia współczynnika czułości używanego do zwiększania lub zmniejszania dawki bazowej, a także do dostosowania docelowej glikemii, jeśli te opcje są włączone, w ten sam sposób, w jaki robi to Autosens. Zalecane jest rozpoczęcie przy wyłączonej tej opcji</string>
     <string name="DynISFAdjust_title" formatted="false">Współczynnik korygujący dynamicznego ISF %</string>
     <string name="DynISFAdjust_summary" formatted="false">Współczynnik korygujący dla DynamicISF. Ustaw więcej niż 100% dla bardziej agresywnych dawek korekcyjnych i mniej niż 100% dla mniej agresywnych korekt.</string>
     <string name="high_temptarget_raises_sensitivity_title">Wysoki tymczasowy cel zwiększy wrażliwość</string>

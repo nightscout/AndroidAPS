@@ -38,8 +38,8 @@
     <string name="accomplished">Įvykdyta: %1$s</string>
     <string name="objectives_usage_objective">Išmokite valdyti AAPS</string>
     <string name="objectives_usage_gate">Atlikite įvairius veiksmus su AAPS</string>
-    <string name="objectives_usage_learned">Sužinojote AAPS valdymo pagrindus. Pagrindiniai valdikliai yra Pradžios lange, pasiekiami spustelėjus arba ilgai spustelėjus, daugiau valdiklių yra Veiksmų lange. Turite mokėti, kaip įdėti įskiepio langą į viršutinį slenkantį meniu arba leisti jį rodyti viršutiniame kairiajame įgalintų įskiepių sąraše.</string>
-    <string name="objectives_useprofileswitch">Nustatykite profilį 90% 10 min (ilgai paspauskite profilio pavadinimą Pradžios ekrane)</string>
+    <string name="objectives_usage_learned">Sužinojote AAPS valdymo pagrindus. Pagrindiniai valdikliai yra Pradžios lange, pasiekiami spustelėjus arba ilgai spustelėjus. Daugiau valdiklių yra Veiksmų lange. Sužinojote, kaip iškelti įskiepio langą į viršutinį slenkantį meniu arba leisti jį rodyti viršutiniame kairiajame įgalintų įskiepių sąraše.</string>
+    <string name="objectives_useprofileswitch">Nustatykite profilį 90% 10 min (ilgai paspauskite profilio mygtuką pradžios ekrane)</string>
     <string name="objectives_usedisconnectpump">Imituokite maudynes duše. Atjunkite pompą 1 valandai (ilgai paspauskite Atviras Ciklas)</string>
     <string name="objectives_usereconnectpump">... ir iš naujo prisijunkite tuo pačiu būdu</string>
     <string name="objectives_usetemptarget">Nustatykite 10 min trukmės laikiną tikslą (ilgai spausti ant dabartinio tikslo)</string>

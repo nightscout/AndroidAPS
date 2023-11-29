@@ -7,4 +7,7 @@ class EventNetworkChange(
     var ssid: String = "",
     var roaming: Boolean = false,
     var metered: Boolean = false
-) : Event()
+) : Event() {
+    val isAnyConnection : Boolean
+        get() = mobileConnected || wifiConnected
+}

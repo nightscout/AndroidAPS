@@ -190,7 +190,7 @@ class UiInteractionImpl @Inject constructor(
         rxBus.send(EventNewNotification(Notification(id, System.currentTimeMillis(), text, level, validTo)))
     }
 
-    override fun addNotificationWithAction(injector: HasAndroidInjector, nsAlarm: NSAlarm) {
+    override fun addNotificationWithAction(nsAlarm: NSAlarm) {
         rxBus.send(EventNewNotification(NotificationWithAction(injector, nsAlarm)))
     }
 

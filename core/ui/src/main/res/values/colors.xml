@@ -360,4 +360,17 @@
     <color name="widget_ribbonCritical">#ff0400</color>
     <color name="widget_basal">#00ffff</color>
 
+    <!-- Maintenance -->
+    <color name="metadataOk">#66BB6A</color>
+    <color name="metadataTextWarning">#FF8C00</color>
+    <color name="metadataTextError">#FF5555</color>
+
+    <!--    Toasts-->
+    <color name="toastBorder">#666666</color>
+    <color name="toastBase">#000000</color>
+    <color name="toastOk">#77dd77</color>
+    <color name="toastError">#ff0400</color>
+    <color name="toastWarn">#FF8C00</color>
+    <color name="toastInfo">#03A9F4</color>
+
 </resources>

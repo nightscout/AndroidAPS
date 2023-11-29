@@ -9,7 +9,7 @@ class PumpDescription() {
     var pumpType = PumpType.GENERIC_AAPS
     var isBolusCapable = false
     var bolusStep = 0.0
-    var isExtendedBolusCapable = false
+    var isExtendedBolusCapable = true
     var extendedBolusStep = 0.0
     var extendedBolusDurationStep = 0.0
     var extendedBolusMaxDuration = 0.0

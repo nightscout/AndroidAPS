@@ -3,7 +3,7 @@
     <string name="combov2_plugin_name">Accu-Check Combo</string>
     <string name="combov2_plugin_description">Integrazione nativa del microinfusore Accu-Chek Combo</string>
     <string name="combov2_could_not_connect">Impossibile connettersi al micro</string>
-    <string name="combov2_not_paired">Non associato a un micro</string>
+    <string name="combov2_not_paired">Non associato ad un micro</string>
     <string name="combov2_pump_terminated_connection">Il micro ha terminato la connessione</string>
     <string name="combov2_warning">Avviso Combo</string>
     <string name="combov2_error">Errore Combo</string>
@@ -21,7 +21,7 @@
     <string name="combov2_error_11">Set di infusione non caricato</string>
     <string name="combov2_extended_bolus_not_supported">Il bolo esteso non è supportato</string>
     <string name="combov2_title">Accu-Check Combo v2</string>
-    <string name="combov2_pair_with_pump_title">Associa con micro</string>
+    <string name="combov2_pair_with_pump_title">Associa micro</string>
     <string name="combov2_unpair_pump_title">Disassocia micro</string>
     <string name="combov2_driver_state_label">Stato driver</string>
     <string name="combov2_current_activity_label">Attività corrente</string>
@@ -29,11 +29,11 @@
     <string name="combov2_start_pairing">Avvia associazione</string>
     <string name="combov2_pairing_in_progress">Associazione Combo in corso</string>
     <string name="combov2_pairing_start_steps">Passi per eseguire l\'associazione con il tuo Combo:\n\n
-1. Sul tuo microinfusore, vai alle Impostazioni Bluetooth\n
+1. Sul tuo microinfusore vai alle Impostazioni Bluetooth\n
 2. Controlla se un dispositivo è già mostrato come associato; in tal caso, vai alla schermata del microinfusore \"Elimina dispositivo\" per eliminare/disassociare quel dispositivo\n
 3. Vai alla schermata del microinfusore \"Aggiungi dispositivo\" e avvia l\'associazione sul microinfusore\n
 4. Clicca sul tasto \"Avvia associazione\" qui sotto per avviare l\'associazione in AndroidAPS\n</string>
-    <string name="combov2_steps_if_no_connection_during_pairing">Dopo un po \', il nome del telefono viene mostrato sullo schermo del micro; premi il tasto di CONFERMA per confermare.\n\n
+    <string name="combov2_steps_if_no_connection_during_pairing">Dopo un po\', il nome del telefono viene mostrato sullo schermo del micro; premi il tasto di CONFERMA per confermare.\n\n
 Quando l\'associazione è stata completata con successo, conferma la fine dell\'associazione sul microinfusore e torna alla schermata principale del microinfusore premendo il tasto di CONFERMA due volte.\n\n
 Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
 1. Premi Indietro o il tasto \"Annulla associazione\"\n

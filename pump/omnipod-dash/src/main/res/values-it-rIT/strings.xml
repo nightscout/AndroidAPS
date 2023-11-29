@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Omnipod Dash - Description -->
-    <string name="omnipod_dash_pump_description">Integrazione del microinfusore Omnipod Dash (il nuovo modello, abilitato al Bluetooth e con la protezione ago di colore blu).</string>
+    <string name="omnipod_dash_pump_description">Integrazione del microinfusore Omnipod Dash (il nuovo modello, con il Bluetooth e con la protezione ago di colore blu).</string>
     <!-- Omnipod Dash - Keys -->
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Storico pod</string>
@@ -25,9 +25,9 @@
     <!-- Exceptions -->
     <string name="omnipod_dash_failed_to_connect">Impossibile connettersi al pod</string>
     <string name="omnipod_dash_found_too_many_pods">Trovati troppi pod per l\'attivazione</string>
-    <string name="omnipod_dash_scan_failed">Nessun pod disponibile per l\'attivazione</string>
+    <string name="omnipod_dash_scan_failed">Nessun pod disponibile per l\'attivazione trovato</string>
     <string name="omnipod_dash_generic_error">Errore generico: %1$s</string>
-    <string name="omnipod_dash_failed_to_send">Impossibile inviare il comando</string>
+    <string name="omnipod_dash_failed_to_send">L\'invio del comando è fallito</string>
     <string name="omnipod_dash_command_not_sent">Comando non inviato</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Comando non ricevuto dal pod</string>
     <string name="omnipod_dash_unknown">Stato sconosciuto per il comando</string>
@@ -35,9 +35,9 @@
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">L\'erogazione di insulina è sospesa</string>
     <string name="omnipod_common_history_total_delivered">Totale erogato: %1$.2f U</string>
-    <string name="omnipod_dash_connection_lost">Persa connessione al pod</string>
+    <string name="omnipod_dash_connection_lost">Connessione col pod persa</string>
     <string name="omnipod_dash_bolus_already_in_progress">Altro bolo in erogazione</string>
-    <string name="omnipod_dash_not_enough_insulin">Non è rimasta abbastanza insulina nel serbatoio</string>
+    <string name="omnipod_dash_not_enough_insulin">Insulina nel serbatoio insufficiente</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando non confermato</string>
     <string name="requested_by_user" comment="26 characters max for translation">Richiesto da utente</string>
     <string name="profile_set_ok">Impostazione profilo OK</string>

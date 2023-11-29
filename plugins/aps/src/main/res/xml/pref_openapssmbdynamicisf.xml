@@ -52,7 +52,22 @@
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_adjust_sensitivity"
+            android:summary="@string/dynisf_adjust_sensitivity_summary"
             android:title="@string/dynisf_adjust_sensitivity" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="@string/key_adjust_sensitivity"
+            android:key="@string/key_sensitivity_raises_target"
+            android:summary="@string/sensitivity_raises_target_summary"
+            android:title="@string/sensitivity_raises_target_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/key_adjust_sensitivity"
+            android:key="@string/key_resistance_lowers_target"
+            android:summary="@string/resistance_lowers_target_summary"
+            android:title="@string/resistance_lowers_target_title" />
 
         <SwitchPreference
             android:defaultValue="false"
@@ -140,16 +155,6 @@
             android:summary="@string/enable_uam_summary"
             android:title="@string/enable_uam" />
 
-        <SwitchPreference
-            android:defaultValue="true"
-            android:key="@string/key_sensitivity_raises_target"
-            android:summary="@string/sensitivity_raises_target_summary"
-            android:title="@string/sensitivity_raises_target_title" />
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_resistance_lowers_target"
-            android:summary="@string/resistance_lowers_target_summary"
-            android:title="@string/resistance_lowers_target_title" />
         <!-- TODO AS-FIX -->
         <!--<SwitchPreference
             android:defaultValue="false"
