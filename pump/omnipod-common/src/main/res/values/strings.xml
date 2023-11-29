@@ -158,6 +158,7 @@
     <string name="omnipod_common_pod_status_activation_time_exceeded">Activation time exceeded</string>
     <string name="omnipod_common_pod_status_inactive">Inactive</string>
     <string name="omnipod_common_pod_status_pod_fault_description">Pod Fault: %1$03d %2$s</string>
+    <string name="omnipod_common_pod_status_normal">Normal</string>
 
     <!-- Omnipod - Commands -->
     <string name="omnipod_common_cmd_deactivate_pod">Deactivate Pod</string>
