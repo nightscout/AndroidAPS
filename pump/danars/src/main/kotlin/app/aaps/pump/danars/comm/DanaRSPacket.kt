@@ -143,7 +143,6 @@ open class DanaRSPacket(protected var injector: HasAndroidInjector) {
             return sb.toString()
         }
 
-        @Suppress("SpellCheckingInspection")
         private val hexArray = "0123456789ABCDEF".toCharArray()
         fun bytesToHex(bytes: ByteArray): String {
             val hexChars = CharArray(bytes.size * 2)

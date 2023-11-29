@@ -258,7 +258,7 @@ class BLEComm @Inject internal constructor(
             Thread {
                 synchronized(mSendQueue) {
                     // after message sent, check if there is the rest of the message waiting and send it
-                    if (mSendQueue.size > 0) {
+                    if (mSendQueue.isNotEmpty()) {
                         val bytes = mSendQueue[0]
                         mSendQueue.removeAt(0)
                         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
@@ -466,29 +466,29 @@ class BLEComm @Inject internal constructor(
                     if (decryptedBuffer[0] == BleEncryption.DANAR_PACKET__TYPE_ENCRYPTION_RESPONSE.toByte()) {
                         when (decryptedBuffer[1]) {
                             // 1st packet exchange
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte()         ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK.toByte()          ->
                                 processConnectResponse(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION.toByte()   ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION.toByte()    ->
                                 processEncryptionResponse(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY.toByte()      ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__CHECK_PASSKEY.toByte()       ->
                                 processPasskeyCheck(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST.toByte()    ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_REQUEST.toByte()     ->
                                 processPairingRequest(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte()     ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PASSKEY_RETURN.toByte()      ->
                                 processPairingRequest2(decryptedBuffer)
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK.toByte()     -> {
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_PUMP_CHECK.toByte()      -> {
                                 // not easy mode, request time info
                                 if (decryptedBuffer[2] == 0x05.toByte()) sendTimeInfo()
                                 // easy mode
                                 else sendEasyMenuCheck()
                             }
 
-                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASYMENU_CHECK.toByte() ->
+                            BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASY_MENU_CHECK.toByte() ->
                                 processEasyMenuCheck(decryptedBuffer)
                         }
 
@@ -497,8 +497,7 @@ class BLEComm @Inject internal constructor(
                         processMessage(decryptedBuffer)
                     }
                 }
-                if (decrypted == null)
-                    throw IllegalStateException("Null decryptedInputBuffer")
+                checkNotNull(decrypted) { "Null decryptedInputBuffer" }
                 packetIsValid = false
                 if (bufferLength < 6) {
                     // stop the loop
@@ -754,7 +753,7 @@ class BLEComm @Inject internal constructor(
 
     // 3rd packet Easy menu pump
     private fun sendEasyMenuCheck() {
-        val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASYMENU_CHECK, null, null)
+        val bytes: ByteArray = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__GET_EASY_MENU_CHECK, null, null)
         writeCharacteristicNoResponse(uartWriteBTGattChar, bytes)
     }
 
@@ -784,7 +783,7 @@ class BLEComm @Inject internal constructor(
         if (encryption != EncryptionType.ENCRYPTION_DEFAULT)
             bytes = bleEncryption.encryptSecondLevelPacket(bytes)
         // If there is another message not completely sent, add to queue only
-        if (mSendQueue.size > 0) {
+        if (mSendQueue.isNotEmpty()) {
             // Split to parts per 20 bytes max
             while (true) {
                 if (bytes.size > 20) {
@@ -843,8 +842,8 @@ class BLEComm @Inject internal constructor(
             disconnect("Reply not received")
         }
         // verify encryption for v3 & BLE
-        if (message is DanaRSPacketEtcKeepConnection)
-            if (!message.isReceived) disconnect("KeepAlive not received")
+        if (message is DanaRSPacketEtcKeepConnection && !message.isReceived)
+            disconnect("KeepAlive not received")
     }
 
     // process common packet response
