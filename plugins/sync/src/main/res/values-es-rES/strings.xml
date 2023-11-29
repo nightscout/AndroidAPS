@@ -128,7 +128,7 @@
     <string name="description_wear">Supervisar y controlar AAPS usando un reloj WearOS</string>
     <string name="no_watch_connected">(Ningún reloj conectado)</string>
     <string name="pump_status">Estado de la bomba de insulina</string>
-    <string name="loop_status">Estado del lazo</string>
+    <string name="loop_status">Estado del bucle</string>
     <string name="wizard_result">Calc. Asistente:\nInsulina: %1$.2fU\nCarbohidratos: %2$dg</string>
     <string name="quick_wizard_not_available">El asistente rápido seleccionado ya no está disponible, por favor actualice su tarjeta</string>
     <string name="quick_wizard_message">Asistente Rápido: %1$s\nInsulina: %2$.2fU\nCarbohidratos: %3$dg</string>

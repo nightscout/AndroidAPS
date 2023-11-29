@@ -42,7 +42,7 @@
     <string name="record_pump_site_change">Внести запись о смене места катетера помпы</string>
     <string name="record_insulin_cartridge_change">Внести запись о замене картриджа инсулина</string>
     <!-- InsulinDialog -->
-    <string name="do_not_bolus_record_only">Не подавать болюс, только внести запись</string>
+    <string name="do_not_bolus_record_only">Не вводить болюс, только внести запись</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Повторно использовать %1$d%%%2$dч</string>
     <string name="timeshift_label">Сдвиг по времени</string>

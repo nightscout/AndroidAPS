@@ -21,6 +21,10 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
+import org.mockito.kotlin.atLeastOnce
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.whenever
 import java.net.SocketAddress
 import java.net.URI
 import java.time.Clock
@@ -28,6 +32,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.locks.Condition
+import kotlin.ranges.LongProgression.Companion.fromClosedRange
 
 class GarminPluginTest: TestBase() {
     private lateinit var gp: GarminPlugin
@@ -71,8 +76,9 @@ class GarminPluginTest: TestBase() {
         "device" to "Test_Device")
 
     private fun createGlucoseValue(timestamp: Instant, value: Double = 93.0) = GlucoseValue(
+        id = 10 * timestamp.toEpochMilli(),
         timestamp = timestamp.toEpochMilli(), raw = 90.0, value = value,
-        trendArrow = GlucoseValue.TrendArrow.FLAT, noise = null,
+        trendArrow = GlucoseValue.TrendArrow.FLAT, noise = 4.5,
         sourceSensor = GlucoseValue.SourceSensor.RANDOM
     )
 
@@ -204,5 +210,57 @@ class GarminPluginTest: TestBase() {
         assertEquals("{\"connected\":true}", gp.onConnectPump(mock(SocketAddress::class.java), uri, null))
         verify(loopHub).connectPump()
         verify(loopHub).isConnected
+    }
+
+    @Test
+    fun onSgv_NoGlucose() {
+        whenever(loopHub.glucoseUnit).thenReturn(GlucoseUnit.MMOL)
+        whenever(loopHub.getGlucoseValues(any(), eq(false))).thenReturn(emptyList())
+        assertEquals("[]", gp.onSgv(mock(), createUri(mapOf()), null))
+        verify(loopHub).getGlucoseValues(clock.instant().minusSeconds(25L * 300L), false)
+    }
+
+    @Test
+    fun onSgv_NoDelta() {
+        whenever(loopHub.glucoseUnit).thenReturn(GlucoseUnit.MMOL)
+        whenever(loopHub.getGlucoseValues(any(), eq(false))).thenReturn(
+            listOf(createGlucoseValue(
+                clock.instant().minusSeconds(100L), 99.3)))
+        assertEquals(
+            """[{"_id":"-900000","device":"RANDOM","deviceString":"1969-12-31T23:58:30Z","sysTime":"1969-12-31T23:58:30Z","unfiltered":90.0,"date":-90000,"sgv":99,"direction":"Flat","noise":4.5,"units_hint":"mmol"}]""",
+             gp.onSgv(mock(), createUri(mapOf()), null))
+        verify(loopHub).getGlucoseValues(clock.instant().minusSeconds(25L * 300L), false)
+        verify(loopHub).glucoseUnit
+    }
+
+    @Test
+    fun onSgv() {
+        whenever(loopHub.glucoseUnit).thenReturn(GlucoseUnit.MMOL)
+        whenever(loopHub.getGlucoseValues(any(), eq(false))).thenAnswer { i ->
+            val from = i.getArgument<Instant>(0)
+            fromClosedRange(from.toEpochMilli(), clock.instant().toEpochMilli(), 300_000L)
+                .map(Instant::ofEpochMilli)
+                .mapIndexed { idx, ts -> createGlucoseValue(ts, 100.0+(10 * idx)) }.reversed()}
+        assertEquals(
+            """[{"_id":"100000","device":"RANDOM","deviceString":"1970-01-01T00:00:10Z","sysTime":"1970-01-01T00:00:10Z","unfiltered":90.0,"date":10000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol"}]""",
+            gp.onSgv(mock(), createUri(mapOf("count" to "1")), null))
+        verify(loopHub).getGlucoseValues(
+            clock.instant().minusSeconds(600L), false)
+
+        assertEquals(
+            """[{"_id":"100000","device":"RANDOM","deviceString":"1970-01-01T00:00:10Z","sysTime":"1970-01-01T00:00:10Z","unfiltered":90.0,"date":10000,"sgv":130,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol"},""" +
+             """{"_id":"-2900000","device":"RANDOM","deviceString":"1969-12-31T23:55:10Z","sysTime":"1969-12-31T23:55:10Z","unfiltered":90.0,"date":-290000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5}]""",
+            gp.onSgv(mock(), createUri(mapOf("count" to "2")), null))
+        verify(loopHub).getGlucoseValues(
+            clock.instant().minusSeconds(900L), false)
+
+        assertEquals(
+            """[{"date":10000,"sgv":130,"delta":10,"direction":"Flat","noise":4.5,"units_hint":"mmol"},""" +
+                """{"date":-290000,"sgv":120,"delta":10,"direction":"Flat","noise":4.5}]""",
+            gp.onSgv(mock(), createUri(mapOf("count" to "2", "brief_mode" to "true")), null))
+        verify(loopHub, times(2)).getGlucoseValues(
+            clock.instant().minusSeconds(900L), false)
+
+        verify(loopHub, atLeastOnce()).glucoseUnit
     }
 }
