@@ -81,7 +81,7 @@ class LoopHubTest: TestBase() {
         verifyNoMoreInteractions(overviewData)
     }
 
-    @Test
+@Test
     fun testCurrentProfile() {
         val profile = mock(Profile::class.java)
         `when`(profileFunction.getProfile()).thenReturn(profile)
@@ -110,6 +110,22 @@ class LoopHubTest: TestBase() {
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(iobTotal)
         assertEquals(23.9, loopHub.insulinOnboard, 1e-10)
         verify(iobCobCalculator, times(1)).calculateIobFromBolus()
+    }
+
+    @Test
+    fun testBasalOnBoard() {
+        val iobBasal = IobTotal(time = 0).apply { basaliob = 23.9 }
+        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(iobBasal)
+        assertEquals(23.9, loopHub.insulinBasalOnboard, 1e-10)
+        verify(iobCobCalculator, times(1)).calculateIobFromTempBasalsIncludingConvertedExtended()
+    }
+
+    @Test
+    fun testCarbsOnBoard() {
+        val cobInfo = CobInfo(0, 12.0, 0.0)
+        `when`(overviewData.cobInfo(iobCobCalculator)).thenReturn(cobInfo)
+        assertEquals(12.0, loopHub.carbsOnboard)
+        verify(overviewData, times(1)).cobInfo(iobCobCalculator)
     }
 
     @Test
