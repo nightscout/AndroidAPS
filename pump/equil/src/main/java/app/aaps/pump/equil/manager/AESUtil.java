@@ -77,26 +77,19 @@ public class AESUtil {
 
 
     public static String decrypt(EquilCmdModel equilCmdModel, byte[] keyBytes) throws Exception {
-        try {
-            String iv = equilCmdModel.getIv();
-            String ciphertext = equilCmdModel.getCiphertext();
-            String authenticationTag = equilCmdModel.getTag();
-            byte[] ivBytes = Utils.hexStringToBytes(iv);
-            SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
-            byte[] decodedCiphertext = Utils.hexStringToBytes(ciphertext);
-            byte[] decodedAuthenticationTag = Utils.hexStringToBytes(authenticationTag);
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-            GCMParameterSpec parameterSpec = new GCMParameterSpec(128, ivBytes);
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, parameterSpec);
-            cipher.update(decodedCiphertext);
-            byte[] decrypted = cipher.doFinal(decodedAuthenticationTag);
-            String content = Utils.bytesToHex(decrypted);
-            return content;
-        } catch (Exception e) {
-            throw e;
-        }
-
+        String iv = equilCmdModel.getIv();
+        String ciphertext = equilCmdModel.getCiphertext();
+        String authenticationTag = equilCmdModel.getTag();
+        byte[] ivBytes = Utils.hexStringToBytes(iv);
+        SecretKeySpec keySpec = new SecretKeySpec(keyBytes, "AES");
+        byte[] decodedCiphertext = Utils.hexStringToBytes(ciphertext);
+        byte[] decodedAuthenticationTag = Utils.hexStringToBytes(authenticationTag);
+        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        GCMParameterSpec parameterSpec = new GCMParameterSpec(128, ivBytes);
+        cipher.init(Cipher.DECRYPT_MODE, keySpec, parameterSpec);
+        cipher.update(decodedCiphertext);
+        byte[] decrypted = cipher.doFinal(decodedAuthenticationTag);
+        String content = Utils.bytesToHex(decrypted);
+        return content;
     }
-
-
 }

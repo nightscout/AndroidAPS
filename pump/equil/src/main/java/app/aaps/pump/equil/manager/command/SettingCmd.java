@@ -3,11 +3,8 @@ package app.aaps.pump.equil.manager.command;
 
 import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
-import app.aaps.pump.equil.manager.Utils;
 
 public class SettingCmd extends BaseSetting {
-    public static final String TAG = "SettingCmd";
-
     public SettingCmd() {
         super(System.currentTimeMillis());
     }

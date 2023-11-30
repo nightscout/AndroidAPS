@@ -4,7 +4,6 @@ package app.aaps.pump.equil.manager.command;
 import app.aaps.pump.equil.data.AlarmMode;
 import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
-import app.aaps.pump.equil.manager.Utils;
 
 public class CmdAlarmSet extends BaseSetting {
 

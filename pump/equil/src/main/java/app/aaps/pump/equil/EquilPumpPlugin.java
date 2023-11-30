@@ -1,13 +1,9 @@
 package app.aaps.pump.equil;
 
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.IBinder;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,7 +42,6 @@ import app.aaps.core.interfaces.queue.CustomCommand;
 import app.aaps.core.interfaces.resources.ResourceHelper;
 import app.aaps.core.interfaces.rx.AapsSchedulers;
 import app.aaps.core.interfaces.rx.bus.RxBus;
-import app.aaps.core.interfaces.rx.events.EventAppExit;
 import app.aaps.core.interfaces.rx.events.EventAppInitialized;
 import app.aaps.core.interfaces.sharedPreferences.SP;
 import app.aaps.core.interfaces.utils.DateUtil;
@@ -67,7 +62,6 @@ import app.aaps.pump.equil.manager.command.CmdHistoryGet;
 import app.aaps.pump.equil.manager.command.CmdStatusGet;
 import app.aaps.pump.equil.manager.command.CmdTimeSet;
 import app.aaps.pump.equil.manager.command.PumpEvent;
-import app.aaps.pump.equil.service.EquilService;
 import dagger.android.HasAndroidInjector;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import kotlin.jvm.internal.Intrinsics;
@@ -107,8 +101,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     private HandlerThread handlerThread;
     public Handler loopHandler;
 
-    private final ServiceConnection serviceConnection;
-    private EquilService equilService;
     BolusProfile bolusProfile;
     EquilManager equilManager;
     public EquilHistoryRecordDao equilHistoryRecordDao;
@@ -154,19 +146,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         this.bolusProfile = new BolusProfile();
         this.decimalFormatter = decimalFormatter;
         this.equilHistoryRecordDao = equilHistoryRecordDao;
-        this.serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                EquilService.LocalBinder mLocalBinder = (EquilService.LocalBinder) service;
-                equilService = mLocalBinder.getServiceInstance();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin is disconnected");
-                equilService = null;
-            }
-        };
         pumpDescription = new PumpDescription(pumpType);
         statusChecker = new Runnable() {
             @Override public void run() {
@@ -196,16 +175,8 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
             handlerThread.start();
             loopHandler = new Handler(handlerThread.getLooper());
         }
-        Intent intent = new Intent(context, EquilService.class);
-        context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-        aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin is connected");
 
         loopHandler.postDelayed(statusChecker, STATUS_CHECK_INTERVAL_MILLIS);
-        disposable.add(rxBus
-                .toObservable(EventAppExit.class)
-                .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> context.unbindService(serviceConnection), fabricPrivacy::logException)
-        );
 
         disposable.add(rxBus
                 .toObservable(EventAppInitialized.class)
@@ -226,9 +197,8 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     @Override
     protected void onStop() {
         super.onStop();
-        aapsLogger.debug(LTag.PUMPCOMM, "OmnipodPumpPlugin.onStop()");
+        aapsLogger.debug(LTag.PUMPCOMM, "EquilPumpPlugin.onStop()");
 
-        context.unbindService(serviceConnection);
         disposable.clear();
     }
 
@@ -516,7 +486,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
         }
 
-        return null;
+        return new JSONObject();
     }
 
     @Override @NonNull public ManufacturerType manufacturer() {

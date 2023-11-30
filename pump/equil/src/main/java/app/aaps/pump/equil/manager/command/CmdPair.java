@@ -157,8 +157,8 @@ public class CmdPair extends BaseCmd {
 
 
     @Override
-    public EquilResponse decodeConfirm() throws Exception {
-        EquilCmdModel equilCmdModel = decodeModel();
+    public EquilResponse decodeConfirm() {
+        //EquilCmdModel equilCmdModel = decodeModel();
 
         //String content = AESUtil.decrypt(equilCmdModel, Utils.hexStringToBytes(runPwd));
         synchronized (this) {

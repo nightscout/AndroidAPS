@@ -62,7 +62,7 @@ class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var profileUtil: ProfileUtil
 
     private lateinit var binding: EquilHistoryRecordActivityBinding
-    lateinit var llm: LinearLayoutManager
+    private lateinit var llm: LinearLayoutManager
     lateinit var recyclerViewAdapter: RecyclerViewAdapter
 
     private val disposable = CompositeDisposable()

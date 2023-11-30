@@ -167,7 +167,7 @@ public abstract class BaseCmd implements CustomCommand {
     }
 
     public EquilResponse responseCmd(EquilCmdModel equilCmdModel, String port) {
-        StringBuffer allData = new StringBuffer();
+        StringBuilder allData = new StringBuilder();
         allData.append(port);
         allData.append(equilCmdModel.getTag());
         allData.append(equilCmdModel.getIv());

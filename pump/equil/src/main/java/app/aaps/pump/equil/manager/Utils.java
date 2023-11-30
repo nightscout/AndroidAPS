@@ -23,30 +23,30 @@ public class Utils {
         return value;
     }
 
-    public final static float internalDecodeSpeedToUH(int i) {
+    public static float internalDecodeSpeedToUH(int i) {
         return new BigDecimal(i).multiply(new BigDecimal("0.00625")).floatValue();
     }
 
-    public final static BigDecimal internalDecodeSpeedToUH2(int i) {
+    public static BigDecimal internalDecodeSpeedToUH2(int i) {
         return new BigDecimal(i).multiply(new BigDecimal("0.00625"));
     }
 
-    public final static float decodeSpeedToUH(int i) {
+    public static float decodeSpeedToUH(int i) {
         return new BigDecimal(i).multiply(new BigDecimal("0.00625")).floatValue();
     }
 
-    public final static double decodeSpeedToUS(int i) {
+    public static double decodeSpeedToUS(int i) {
         return internalDecodeSpeedToUH2(i).divide(new BigDecimal("3600"), 10, RoundingMode.DOWN).doubleValue();
     }
 
-    public final static int decodeSpeedToUH(double i) {
+    public static int decodeSpeedToUH(double i) {
         BigDecimal a = new BigDecimal(String.valueOf(i));
         BigDecimal b = new BigDecimal("0.00625");
         BigDecimal c = a.divide(b);
         return c.intValue();
     }
 
-    public final static double decodeSpeedToUHT(double i) {
+    public static double decodeSpeedToUHT(double i) {
         BigDecimal a = new BigDecimal(String.valueOf(i));
         BigDecimal b = new BigDecimal("0.00625");
         return a.divide(b).doubleValue();

@@ -1,5 +1,7 @@
 package app.aaps.pump.equil.manager.command;
 
+import androidx.annotation.NonNull;
+
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.pump.equil.data.database.EquilHistoryRecord;
 import app.aaps.pump.equil.manager.Utils;
@@ -87,7 +89,7 @@ public class CmdHistoryGet extends BaseSetting {
         }
     }
 
-    @Override
+    @NonNull @Override
     public String toString() {
         return "CmdHistoryGet{" +
                 "battery=" + battery +

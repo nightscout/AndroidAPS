@@ -49,7 +49,7 @@ class EquilPairConfirmFragment : EquilPairFragmentBase() {
                 )
 
             }
-            var time = System.currentTimeMillis()
+            val time = System.currentTimeMillis()
             val equilHistoryRecord = EquilHistoryRecord(
                 time,
                 null,

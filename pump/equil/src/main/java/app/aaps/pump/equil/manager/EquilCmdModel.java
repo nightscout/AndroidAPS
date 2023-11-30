@@ -1,5 +1,7 @@
 package app.aaps.pump.equil.manager;
 
+import androidx.annotation.NonNull;
+
 public class EquilCmdModel {
     private String code;
     private String iv;
@@ -38,7 +40,7 @@ public class EquilCmdModel {
         this.ciphertext = ciphertext;
     }
 
-    @Override public String toString() {
+    @NonNull @Override public String toString() {
         return "EquilCmdModel{" +
                 "code='" + code + '\'' +
                 ", iv='" + iv + '\'' +

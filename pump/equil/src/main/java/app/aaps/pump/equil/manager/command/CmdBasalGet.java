@@ -37,8 +37,7 @@ public class CmdBasalGet extends BaseSetting {
 
     public void decodeConfirmData(byte[] data) {
         aapsLogger.debug(LTag.PUMPCOMM, "CmdBasalGet==" + Utils.bytesToHex(data));
-        int start = 6;
-        StringBuffer currentBasal = new StringBuffer();
+        StringBuilder currentBasal = new StringBuilder();
         if (profile != null) {
             for (int i = 0; i < 24; i++) {
                 double value = profile.getBasalTimeFromMidnight(i * 60 * 60);

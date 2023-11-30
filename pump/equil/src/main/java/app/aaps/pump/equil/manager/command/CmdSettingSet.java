@@ -11,7 +11,6 @@ public class CmdSettingSet extends BaseSetting {
 
     public CmdSettingSet() {
         super(System.currentTimeMillis());
-        this.lowAlarm = lowAlarm;
     }
 
     @Override

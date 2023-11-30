@@ -31,7 +31,7 @@ public abstract class BaseSetting extends BaseCmd {
         response = new EquilResponse(createTime);
         byte[] pwd = Utils.hexStringToBytes(getEquilPassWord());
         byte[] data = getReqData();
-        EquilCmdModel equilCmdModel = null;
+        EquilCmdModel equilCmdModel;
         try {
             equilCmdModel = AESUtil.aesEncrypt(pwd, data);
             return responseCmd(equilCmdModel, defaultPort + "0000");
@@ -111,7 +111,7 @@ public abstract class BaseSetting extends BaseCmd {
         isEnd = false;
         response = new EquilResponse(createTime);
         byte[] data = getFirstData();
-        EquilCmdModel equilCmdModel = null;
+        EquilCmdModel equilCmdModel;
         try {
             aapsLogger.debug(LTag.PUMPCOMM, "getNextEquilResponse=== start ");
             equilCmdModel = AESUtil.aesEncrypt(Utils.hexStringToBytes(runPwd), data);
