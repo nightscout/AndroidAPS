@@ -48,9 +48,6 @@ interface LoopHub {
     /** Notifies the system that carbs were eaten and stores the value. */
     fun postCarbs(carbohydrates: Int)
 
-    /** Stores or cancels a temptarget. */
-    fun postTempTarget(target: Double, duration: Int)
-
     /** Stores hear rate readings that a taken and averaged of the given interval. */
     fun storeHeartRate(
         samplingStart: Instant, samplingEnd: Instant,
