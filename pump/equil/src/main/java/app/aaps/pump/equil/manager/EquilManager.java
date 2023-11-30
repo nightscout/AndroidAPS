@@ -3,6 +3,8 @@ package app.aaps.pump.equil.manager;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
@@ -773,7 +775,7 @@ public class EquilManager {
         setAndStore(() -> equilState.setRunMode(runMode));
     }
 
-    public AlarmMode getAlarmMode() {
+    @NonNull public AlarmMode getAlarmMode() {
         return getSafe(() -> equilState.getAlarmMode());
 
     }
@@ -881,7 +883,7 @@ public class EquilManager {
         private EquilTempBasalRecord tempBasal;
         private EquilBolusRecord bolusRecord;
         private RunMode runMode;
-        private AlarmMode alarmMode = AlarmMode.TONE_AND_SHAKE;
+        @NonNull private AlarmMode alarmMode = AlarmMode.TONE_AND_SHAKE;
         private float rate;
         private int historyIndex;
 
@@ -937,7 +939,7 @@ public class EquilManager {
             this.rate = rate;
         }
 
-        public AlarmMode getAlarmMode() {
+        @NonNull public AlarmMode getAlarmMode() {
             return alarmMode;
         }
 

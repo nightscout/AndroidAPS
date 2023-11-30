@@ -82,10 +82,6 @@ public class EquilBLE {
         bleHandler = new Handler(bleThread.getLooper());
     }
 
-    public boolean isConnecting() {
-        return connecting;
-    }
-
     public boolean isConnected() {
         return connected;
     }
@@ -109,9 +105,11 @@ public class EquilBLE {
                     if (device.getAddress() != null) {
                         if (device.getAddress().equals(transmitterMAC)) {
                             try {
+                                //noinspection JavaReflectionMemberAccess,rawtypes
                                 Method m = device.getClass().getMethod("removeBond", (Class[]) null);
                                 m.invoke(device, (Object[]) null);
                             } catch (Exception e) {
+                                aapsLogger.error(LTag.PUMPBTCOMM, "Error", e);
                             }
                         }
 
@@ -119,6 +117,7 @@ public class EquilBLE {
                 }
             }
         } catch (Exception e) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "Error", e);
         }
     }
 
@@ -202,16 +201,17 @@ public class EquilBLE {
                     SystemClock.sleep(EquilConst.EQUIL_BLE_WRITE_TIME_OUT);
                     writeData();
                 } catch (Exception e) {
+                    aapsLogger.error(LTag.PUMPBTCOMM, "Error", e);
                 }
             }
 
-            @Override public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                onCharacteristicChanged(gatt, characteristic);
+            @Override public void onCharacteristicRead(@NonNull BluetoothGatt gatt, @NonNull BluetoothGattCharacteristic characteristic, @NonNull byte[] value, int status) {
+                onCharacteristicChanged(gatt, characteristic, value);
             }
 
-            @Override public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
+            @Override public void onCharacteristicChanged(@NonNull BluetoothGatt gatt, @NonNull final BluetoothGattCharacteristic characteristic, @NonNull byte[] value) {
                 requestHighPriority();
-                decode(characteristic.getValue(), 1);
+                decode(value);
             }
 
             @Override public synchronized void onDescriptorWrite(BluetoothGatt gatt, final BluetoothGattDescriptor descriptor, int status) {
@@ -224,6 +224,7 @@ public class EquilBLE {
         };
     }
 
+    @SuppressWarnings({"deprecation"})
     public void openNotification() {
         aapsLogger.debug(LTag.PUMPCOMM, "openNotification: " + isConnected());
         boolean r0 = mBluetoothGatt.setCharacteristicNotification(notifyChara, true);
@@ -261,7 +262,7 @@ public class EquilBLE {
         flag = true;
         writeConf = false;
         aapsLogger.debug(LTag.PUMPCOMM,
-                "nextCmd===== " + baseCmd.isEnd + "====" + (baseCmd != null));
+                "nextCmd===== " + baseCmd.isEnd + "====");
         if (baseCmd != null) {
             runNext = false;
             equilResponse = baseCmd.getNextEquilResponse();
@@ -396,6 +397,7 @@ public class EquilBLE {
 
     }
 
+    @SuppressWarnings({"deprecation"})
     public void write(byte[] bytes) {
         if (wirteChara == null || mBluetoothGatt == null) {
             aapsLogger.debug(LTag.PUMPCOMM, "write disconnect ");
@@ -415,13 +417,13 @@ public class EquilBLE {
     boolean flag = true;
     boolean runNext = false;
 
-    public synchronized void decode(byte[] buffer, int len) {
+    public synchronized void decode(byte[] buffer) {
         String str = Utils.bytesToHex(buffer);
         aapsLogger.debug(LTag.PUMPCOMM, "decode=====" + str);
         if (flag) {
             EquilResponse equilResponse = baseCmd.decodeEquilPacket(buffer);
             if (equilResponse != null) {
-                if (!writeConf && equilResponse != null) {
+                if (!writeConf) {
                     writeConf(equilResponse);
                 }
                 dataList = new ArrayList<>();
