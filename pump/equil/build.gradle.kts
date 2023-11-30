@@ -22,7 +22,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":pump:pump-common"))
     implementation(project(":core:interfaces"))
     implementation(project(":core:libraries"))
     implementation(project(":core:main"))

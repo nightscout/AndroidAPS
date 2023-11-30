@@ -4,7 +4,6 @@ import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -16,6 +15,7 @@ import app.aaps.core.interfaces.extensions.toVisibility
 import app.aaps.core.interfaces.logging.AAPSLogger
 import app.aaps.core.interfaces.logging.LTag
 import app.aaps.core.interfaces.plugin.ActivePlugin
+import app.aaps.core.interfaces.profile.ProfileUtil
 import app.aaps.core.interfaces.pump.BlePreCheck
 import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.queue.CommandQueue
@@ -24,6 +24,7 @@ import app.aaps.core.interfaces.rx.AapsSchedulers
 import app.aaps.core.interfaces.rx.bus.RxBus
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.fabric.FabricPrivacy
+import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
 import app.aaps.pump.equil.EquilPumpPlugin
 import app.aaps.pump.equil.R
 import app.aaps.pump.equil.data.database.EquilBasalValuesRecord
@@ -37,8 +38,6 @@ import app.aaps.pump.equil.events.EventEquilDataChanged
 import app.aaps.pump.equil.manager.Utils
 import app.aaps.pump.equil.manager.command.PumpEvent
 import com.google.android.material.tabs.TabLayout
-import dagger.android.support.DaggerAppCompatActivity
-import info.nightscout.pump.common.utils.ProfileUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.SimpleDateFormat
@@ -47,7 +46,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 // IMPORTANT: This activity needs to be called from RileyLinkSelectPreference (see pref_medtronic.xml as example)
-class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
+class EquilHistoryRecordActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var blePreCheck: BlePreCheck
@@ -60,6 +59,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var equilPumpPlugin: EquilPumpPlugin
+    @Inject lateinit var profileUtil: ProfileUtil
 
     private lateinit var binding: EquilHistoryRecordActivityBinding
     lateinit var llm: LinearLayoutManager
@@ -70,8 +70,9 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
     private val fullHistoryList: MutableList<EquilHistoryRecord> = java.util.ArrayList<EquilHistoryRecord>()
     @Inject lateinit var rxBus: RxBus
     val calendar: Calendar = Calendar.getInstance()
-    val dateformat2 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-    private var typeListFull: List<TypeList>? = null
+    val dateformat2 = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+
+    //private var typeListFull: List<TypeList>? = null
     private var manualChange = false
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -83,7 +84,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         loadData()
 
-        recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList, rh)
+        recyclerViewAdapter = RecyclerViewAdapter(filteredHistoryList, rh, profileUtil)
         llm = LinearLayoutManager(this)
         binding.recyclerview.run {
             setHasFixedSize(true)
@@ -101,18 +102,16 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
                            loadData()
                            loadDataEquil()
                        }, fabricPrivacy::logException)
-        typeListFull = getTypeList(EquilHistoryEntryGroup.getTranslatedList(rh))
+        //typeListFull = getTypeList(EquilHistoryEntry.getTranslatedList(rh))
 
-        val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, app.aaps.core.ui.R.layout.spinner_centered, typeListFull!!)
+        val spinnerAdapter = ArrayAdapter(this, app.aaps.core.ui.R.layout.spinner_centered, EquilHistoryEntryGroup.getTranslatedList(rh))
         binding.equilHistorytype.run {
             adapter = spinnerAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                     if (manualChange) return
-                    val selected = selectedItem as TypeList
-                    selectedGroup = selected.entryGroup
-
-                    filterHistory(selectedGroup)
+                    val selected = selectedItem as EquilHistoryEntryGroup
+                    filterHistory(selected)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -222,23 +221,23 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun getTypeList(list: List<EquilHistoryEntryGroup>): List<TypeList> {
-        val typeList = java.util.ArrayList<TypeList>()
-        for (pumpHistoryEntryGroup in list) {
-            typeList.add(TypeList(pumpHistoryEntryGroup))
-        }
-        return typeList
-    }
+    // private fun getTypeList(list: List<EquilHistoryEntry>): List<TypeList> {
+    //     val typeList = java.util.ArrayList<TypeList>()
+    //     for (pumpHistoryEntryGroup in list) {
+    //         typeList.add(TypeList(pumpHistoryEntryGroup))
+    //     }
+    //     return typeList
+    // }
 
-    internal class TypeList(val entryGroup: EquilHistoryEntryGroup) {
-
-        val name: String = entryGroup.translated ?: "XXX TODO"
-
-        override fun toString(): String {
-            return name
-        }
-    }
-
+    // internal class TypeList(val entryGroup: EquilHistoryEntry) {
+    //
+    //     val name: String = entryGroup.translated ?: "XXX TODO"
+    //
+    //     override fun toString(): String {
+    //         return name
+    //     }
+    // }
+    //
     fun loadData() {
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
@@ -282,24 +281,11 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
             }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressed()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     class RecyclerViewAdapter internal constructor(
         var historyList: List<EquilHistoryRecord>,
-        var rh: ResourceHelper
+        private val rh: ResourceHelper,
+        private val profileUtil: ProfileUtil
     ) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {
-
-        fun setHistoryListInternal(historyList: List<EquilHistoryRecord>) {
-            this.historyList = historyList
-        }
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): HistoryViewHolder {
             val v = LayoutInflater.from(viewGroup.context).inflate(
@@ -360,7 +346,7 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
 
                 EquilHistoryRecord.EventType.SET_BASAL_PROFILE   -> {
                     val basal = item.basalValuesRecord as EquilBasalValuesRecord
-                    ProfileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.EQUIL)
+                    profileUtil.getBasalProfilesDisplayable(basal.segments.toTypedArray(), PumpType.EQUIL)
                 }
 
                 else                                             ->
@@ -410,11 +396,6 @@ class EquilHistoryRecordActivity : DaggerAppCompatActivity() {
             }
         }
 
-    }
-
-    companion object {
-
-        private var selectedGroup: EquilHistoryEntryGroup = EquilHistoryEntryGroup.All
     }
 
     fun toModels(list: List<EquilHistoryPump>): List<ItemModel> {

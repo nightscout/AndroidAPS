@@ -1,6 +1,5 @@
 package app.aaps.pump.equil.manager;
 
-import android.content.Context;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
@@ -34,7 +33,6 @@ import app.aaps.core.interfaces.pump.PumpEnactResult;
 import app.aaps.core.interfaces.pump.PumpSync;
 import app.aaps.core.interfaces.pump.defs.PumpType;
 import app.aaps.core.interfaces.resources.ResourceHelper;
-import app.aaps.core.interfaces.rx.AapsSchedulers;
 import app.aaps.core.interfaces.rx.bus.RxBus;
 import app.aaps.core.interfaces.rx.events.Event;
 import app.aaps.core.interfaces.rx.events.EventDismissNotification;
@@ -82,9 +80,7 @@ public class EquilManager {
     private final ResourceHelper rh;
     private final HasAndroidInjector injector;
     private final SP sp;
-    private final Context context;
     private final PumpSync pumpSync;
-    private final AapsSchedulers aapsSchedulers;
     EquilBLE equilBLE;
     EquilHistoryRecordDao equilHistoryRecordDao;
 
@@ -101,21 +97,19 @@ public class EquilManager {
     @Inject
     public EquilManager(
             AAPSLogger aapsLogger,
-            AapsSchedulers aapsSchedulers,
             RxBus rxBus,
             SP sp,
             ResourceHelper rh,
             HasAndroidInjector injector,
-            Context context,
-            PumpSync pumpSync, EquilBLE equilBLE,
-            EquilHistoryRecordDao equilHistoryRecordDao) {
-        this.aapsSchedulers = aapsSchedulers;
+            PumpSync pumpSync,
+            EquilBLE equilBLE,
+            EquilHistoryRecordDao equilHistoryRecordDao
+    ) {
         this.aapsLogger = aapsLogger;
         this.rxBus = rxBus;
         this.sp = sp;
         this.rh = rh;
         this.injector = injector;
-        this.context = context;
         this.pumpSync = pumpSync;
         this.equilBLE = equilBLE;
         this.equilHistoryRecordDao = equilHistoryRecordDao;
@@ -312,8 +306,8 @@ public class EquilManager {
                 while (!bolusProfile.getStop() && percent < 100) {
                     progressUpdateEvent.setPercent((int) percent);
                     progressUpdateEvent.setStatus(this.rh.gs(R.string.equil_bolus_delivered,
-                            Double.valueOf(percent / 100f * detailedBolusInfo.insulin),
-                            Double.valueOf(detailedBolusInfo.insulin)));
+                            percent / 100d * detailedBolusInfo.insulin,
+                            detailedBolusInfo.insulin));
                     rxBus.send(progressUpdateEvent);
                     SystemClock.sleep(sleep);
                     percent = percent + percent1;
@@ -325,7 +319,7 @@ public class EquilManager {
                 result.enacted(false);
                 result.setComment(rh.gs(R.string.equil_command_connect_error));
             }
-            result.setBolusDelivered(Double.valueOf(percent / 100f * detailedBolusInfo.insulin));
+            result.setBolusDelivered(percent / 100d * detailedBolusInfo.insulin);
             if (result.getSuccess()) {
                 command.setResolvedResult(ResolvedResult.SUCCESS);
                 long currentTime = System.currentTimeMillis();

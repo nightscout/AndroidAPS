@@ -40,14 +40,6 @@ public class CmdPair extends BaseCmd {
         this.address = address;
     }
 
-    public String convertString(String input) {
-        StringBuilder sb = new StringBuilder();
-        for (char ch : input.toCharArray()) {
-            sb.append("0").append(ch);
-        }
-        return sb.toString();
-    }
-
     byte[] randomPassword;
 
     @Override
@@ -168,7 +160,7 @@ public class CmdPair extends BaseCmd {
     public EquilResponse decodeConfirm() throws Exception {
         EquilCmdModel equilCmdModel = decodeModel();
 
-        String content = AESUtil.decrypt(equilCmdModel, Utils.hexStringToBytes(runPwd));
+        //String content = AESUtil.decrypt(equilCmdModel, Utils.hexStringToBytes(runPwd));
         synchronized (this) {
             setCmdStatus(true);
             notify();

@@ -1,8 +1,12 @@
 package app.aaps.pump.equil.ui.pair
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.annotation.IdRes
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import app.aaps.core.ui.activities.TranslatedDaggerAppCompatActivity
@@ -34,6 +38,23 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
 
         setContentView(R.layout.equil_pair_activity)
 
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        exitActivityAfterConfirmation()
+                        true
+                    }
+
+                    else              -> false
+                }
+        })
+
+
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.startEquilActivationFragment)
             ?: if (intent.safeGetSerializableExtra(KEY_TYPE, Type::class.java) == null) {
                 R.id.startEquilActivationFragment
@@ -60,11 +81,6 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
         outState.putInt(KEY_START_DESTINATION, startDestination)
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        exitActivityAfterConfirmation()
-    }
-
     fun exitActivityAfterConfirmation() {
         if (getNavController().previousBackStackEntry == null) {
             finish()
@@ -79,7 +95,7 @@ class EquilPairActivity : TranslatedDaggerAppCompatActivity() {
         }
     }
 
-    protected fun getNavController(): NavController =
+    private fun getNavController(): NavController =
         (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
     fun getTotalDefinedNumberOfSteps(): Int {

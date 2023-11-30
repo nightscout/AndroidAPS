@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 import com.google.android.gms.common.Scopes;
 
@@ -29,7 +28,6 @@ import javax.inject.Singleton;
 import app.aaps.core.interfaces.logging.AAPSLogger;
 import app.aaps.core.interfaces.logging.LTag;
 import app.aaps.core.interfaces.notifications.Notification;
-import app.aaps.core.interfaces.plugin.ActivePlugin;
 import app.aaps.core.interfaces.plugin.PluginDescription;
 import app.aaps.core.interfaces.plugin.PluginType;
 import app.aaps.core.interfaces.profile.Profile;
@@ -88,7 +86,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     private final AAPSLogger aapsLogger;
     private final AapsSchedulers aapsSchedulers;
     private final RxBus rxBus;
-    private final ActivePlugin activePlugin;
     private final Context context;
     private final FabricPrivacy fabricPrivacy;
     private final ResourceHelper rh;
@@ -103,7 +100,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     private final CompositeDisposable disposable = new CompositeDisposable();
 
     // variables for handling statuses and history
-    private final boolean firstRun = true;
     private boolean hasTimeDateOrTimeZoneChanged = false;
     private Instant lastTimeDateOrTimeZoneUpdate = Instant.ofEpochSecond(0L);
     private final boolean displayConnectionMessages = false;
@@ -126,7 +122,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
             RxBus rxBus,
             Context context,
             ResourceHelper rh,
-            ActivePlugin activePlugin,
             SP sp,
             CommandQueue commandQueue,
             FabricPrivacy fabricPrivacy,
@@ -148,7 +143,6 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         this.aapsLogger = aapsLogger;
         this.aapsSchedulers = aapsSchedulers;
         this.rxBus = rxBus;
-        this.activePlugin = activePlugin;
         this.context = context;
         this.fabricPrivacy = fabricPrivacy;
         this.rh = rh;
@@ -223,9 +217,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         disposable.add(rxBus
                 .toObservable(EventEquilDataChanged.class)
                 .observeOn(aapsSchedulers.getIo())
-                .subscribe(event -> {
-                    playAlarm();
-                }, fabricPrivacy::logException)
+                .subscribe(event -> playAlarm(), fabricPrivacy::logException)
         );
     }
 
@@ -246,7 +238,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @Override
     public boolean isInitialized() {
-        boolean flag = equilManager.isActivationInitialized();
+        //boolean flag = equilManager.isActivationInitialized();
 //        return flag;
         return true;
     }
@@ -299,7 +291,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         RunMode mode = equilManager.getRunMode();
         if (mode == RunMode.RUN || mode == RunMode.SUSPEND) {
             BasalSchedule basalSchedule = BasalSchedule.mapProfileToBasalSchedule(profile);
-            if (basalSchedule == null || basalSchedule.getEntries() == null || basalSchedule.getEntries().size() < 24) {
+            if (basalSchedule.getEntries() == null || basalSchedule.getEntries().size() < 24) {
                 return new PumpEnactResult(getInjector()).enacted(false).success(false).comment("No profile active");
             }
             PumpEnactResult pumpEnactResult =
@@ -389,11 +381,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
         PumpEnactResult pumpEnactResult = new PumpEnactResult(getInjector());
         EquilHistoryPump equilHistoryLast = equilHistoryRecordDao.last(serialNumber());
         int startIndex;
-        if (equilHistoryLast == null) {
-            startIndex = equilManager.getStartHistoryIndex();
-        } else {
-            startIndex = equilHistoryLast.getEventIndex();
-        }
+        startIndex = equilHistoryLast.getEventIndex();
         int index = equilManager.getHistoryIndex();
         aapsLogger.debug(LTag.PUMPCOMM, "return ===" + index + "====" + startIndex);
         if (index == -1) {
@@ -413,7 +401,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
     @Override
     public void stopBolusDelivering() {
-        PumpEnactResult result = equilManager.stopBolus(bolusProfile);
+        equilManager.stopBolus(bolusProfile);
         aapsLogger.debug(LTag.PUMPCOMM, "stopBolusDelivering=====");
     }
 
@@ -532,7 +520,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     }
 
     @Override @NonNull public ManufacturerType manufacturer() {
-        return pumpType.getManufacturer();
+        return Objects.requireNonNull(pumpType.getManufacturer());
     }
 
     @Override @NonNull
@@ -603,7 +591,7 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
 
 
     @Override
-    public void timezoneOrDSTChanged(TimeChangeType timeChangeType) {
+    public void timezoneOrDSTChanged(@NonNull TimeChangeType timeChangeType) {
 
         Instant now = Instant.now();
         aapsLogger.debug(LTag.PUMP, "DST and/or TimeZone changed event will be consumed by driver");
@@ -676,13 +664,12 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     @NonNull @Override public PumpEnactResult cancelExtendedBolus() {
         aapsLogger.debug(LTag.PUMPCOMM, "cancelExtendedBolus [OmnipodPumpPlugin] - Not implemented.");
 //        return getOperationNotSupportedWithCustomText(info.nightscout.androidaps.plugins.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
-        PumpEnactResult pumpEnactResult = equilManager.setExtendedBolus(0, 0, true);
-        return pumpEnactResult;
+        return equilManager.setExtendedBolus(0, 0, true);
     }
 
     @NonNull @Override public PumpEnactResult loadTDDs() {
         aapsLogger.debug(LTag.PUMPCOMM, "loadTDDs [OmnipodPumpPlugin] - Not implemented.");
-        return getOperationNotSupportedWithCustomText(info.nightscout.pump.common.R.string.pump_operation_not_supported_by_pump_driver);
+        return new PumpEnactResult(getInjector()).success(false).enacted(false);
     }
 
 
@@ -694,29 +681,12 @@ public class EquilPumpPlugin extends PumpPluginBase implements Pump {
     @NonNull private PumpEnactResult deliverBolus(final DetailedBolusInfo detailedBolusInfo) {
         aapsLogger.debug(LTag.PUMPCOMM, "deliverBolus");
         bolusProfile.setInsulin(detailedBolusInfo.insulin);
-        PumpEnactResult pumpEnactResult = equilManager.bolus(detailedBolusInfo, bolusProfile);
-        if (pumpEnactResult.getSuccess()) {
-        }
-        return pumpEnactResult;
+        return equilManager.bolus(detailedBolusInfo, bolusProfile);
     }
 
-
-    @Nullable private PumpSync.PumpState.TemporaryBasal readTBR() {
-        return pumpSync.expectedPumpState().getTemporaryBasal();
-    }
-
-
-    private PumpEnactResult getOperationNotSupportedWithCustomText(int resourceId) {
-        return new PumpEnactResult(getInjector()).success(false).enacted(false).comment(resourceId);
-    }
 
     public void showToast(String s) {
-        loopHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
-            }
-        });
+        loopHandler.post(() -> Toast.makeText(context, s, Toast.LENGTH_SHORT).show());
     }
 
     public void resetData() {

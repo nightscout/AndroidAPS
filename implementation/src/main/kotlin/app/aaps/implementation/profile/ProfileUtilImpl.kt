@@ -1,9 +1,12 @@
 package app.aaps.implementation.profile
 
 import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.profile.Profile
 import app.aaps.core.interfaces.profile.ProfileUtil
+import app.aaps.core.interfaces.pump.defs.PumpType
 import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.utils.DecimalFormatter
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -69,4 +72,17 @@ class ProfileUtilImpl @Inject constructor(
 
     private fun toUnitsString(valueInMgdl: Double, targetUnits: GlucoseUnit): String =
         if (targetUnits == GlucoseUnit.MGDL) decimalFormatter.to0Decimal(valueInMgdl) else decimalFormatter.to1Decimal(valueInMgdl * GlucoseUnit.MGDL_TO_MMOLL)
+
+    override fun getBasalProfilesDisplayable(profiles: Array<Profile.ProfileValue>, pumpType: PumpType): String {
+        val stringBuilder = StringBuilder()
+        for (basalValue in profiles) {
+            val basalValueValue = pumpType.determineCorrectBasalSize(basalValue.value)
+            val hour = basalValue.timeAsSeconds / (60 * 60)
+            stringBuilder.append((if (hour < 10) "0" else "") + hour + ":00")
+            stringBuilder.append(" ")
+            stringBuilder.append(String.format(Locale.ENGLISH, "%.3f", basalValueValue))
+            stringBuilder.append(",\n")
+        }
+        return if (stringBuilder.length > 3) stringBuilder.substring(0, stringBuilder.length - 2) else stringBuilder.toString()
+    }
 }
