@@ -85,8 +85,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/omnipod_wizard_vertical_spacing"
-        android:layout_marginBottom="@dimen/omnipod_wizard_vertical_spacing"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:indeterminate="true"
         android:visibility="invisible" />
 

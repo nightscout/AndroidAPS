@@ -65,11 +65,7 @@
                 android:layout_height="64dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
-                android:text="@string/equil_next"
-                app:layout_column="0"
-                app:layout_columnWeight="1"
-                app:layout_gravity="fill"
-                app:layout_row="3" />
+                android:text="@string/equil_next" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -56,11 +56,7 @@
                 android:layout_height="64dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
-                android:text="@string/equil_finish"
-                app:layout_column="0"
-                app:layout_columnWeight="1"
-                app:layout_gravity="fill"
-                app:layout_row="3" />
+                android:text="@string/equil_finish"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_delete"
@@ -69,11 +65,7 @@
                 android:layout_height="64dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="0dp"
-                android:text="@string/delete"
-                app:layout_column="0"
-                app:layout_columnWeight="1"
-                app:layout_gravity="fill"
-                app:layout_row="3" />
+                android:text="@string/delete"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
