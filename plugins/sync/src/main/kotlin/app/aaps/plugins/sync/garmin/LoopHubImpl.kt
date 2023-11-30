@@ -67,8 +67,8 @@ class LoopHubImpl @Inject constructor(
         get() = iobCobCalculator.calculateIobFromBolus().iob
 
     /** Returns the remaining bolus and basal insulin on board. */
-    override val insulinTotalOnboard :Double
-        get() = iobCobCalculator.calculateIobFromBolus().iob + iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().basaliob
+    override val insulinBasalOnboard :Double
+        get() = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().basaliob
 
     /** Returns the remaining carbs on board. */
     override val carbsOnboard: Double?
@@ -91,13 +91,6 @@ class LoopHubImpl @Inject constructor(
         get() {
             val apsResult = loop.lastRun?.constraintsProcessed
             return if (apsResult == null) Double.NaN else apsResult.percent / 100.0
-        }
-
-    /** Returns the temporary basal rate in percent */
-    override val temporaryBasalPercent: String
-        get() {
-            val apsResult = loop.lastRun?.constraintsProcessed
-            return if (apsResult == null) "--" else apsResult.percent.toString()
         }
 
     /** Tells the loop algorithm that the pump is physicallly connected. */
