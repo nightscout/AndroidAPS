@@ -5,6 +5,7 @@ import app.aaps.core.interfaces.aps.Loop
 import app.aaps.core.interfaces.constraints.Constraint
 import app.aaps.core.interfaces.constraints.ConstraintsChecker
 import app.aaps.core.interfaces.db.GlucoseUnit
+import app.aaps.core.interfaces.iob.CobInfo
 import app.aaps.core.interfaces.iob.IobCobCalculator
 import app.aaps.core.interfaces.iob.IobTotal
 import app.aaps.core.interfaces.logging.UserEntryLogger
