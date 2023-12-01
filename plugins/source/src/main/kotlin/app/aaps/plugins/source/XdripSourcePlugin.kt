@@ -11,6 +11,7 @@ import app.aaps.core.interfaces.plugin.PluginDescription
 import app.aaps.core.interfaces.plugin.PluginType
 import app.aaps.core.interfaces.receivers.Intents
 import app.aaps.core.interfaces.resources.ResourceHelper
+import app.aaps.core.interfaces.sharedPreferences.SP
 import app.aaps.core.interfaces.source.BgSource
 import app.aaps.core.interfaces.source.XDripSource
 import app.aaps.core.interfaces.utils.DateUtil
@@ -41,7 +42,7 @@ class XdripSourcePlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon((app.aaps.core.main.R.drawable.ic_blooddrop_48))
-        .preferencesId(R.xml.pref_bgsource)
+        .preferencesId(R.xml.pref_xdrip)
         .pluginName(R.string.source_xdrip)
         .description(R.string.description_source_xdrip),
     aapsLogger, rh, injector
@@ -70,6 +71,7 @@ class XdripSourcePlugin @Inject constructor(
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var xdripSourcePlugin: XdripSourcePlugin
+        @Inject lateinit var sp: SP
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
@@ -96,7 +98,11 @@ class XdripSourcePlugin @Inject constructor(
                 )
             )
             val now = dateUtil.now()
-            var sensorStartTime: Long? = bundle.getLong(Intents.EXTRA_SENSOR_STARTED_AT, 0)
+            var sensorStartTime: Long? = if (sp.getBoolean(R.string.key_xdrip_log_ns_sensor_change, false)) {
+                bundle.getLong(Intents.EXTRA_SENSOR_STARTED_AT, 0)
+            } else {
+                null
+            }
             // check start time validity
             sensorStartTime?.let {
                 if (abs(it - now) > T.months(1).msecs() || it > now) sensorStartTime = null

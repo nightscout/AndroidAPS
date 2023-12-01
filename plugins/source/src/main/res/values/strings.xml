@@ -2,6 +2,7 @@
 <resources>
     <!-- Source -->
     <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>
+    <string name="key_xdrip_log_ns_sensor_change" translatable="false">xdrip_lognssensorchange</string>
     <string name="key_last_processed_glunovo_timestamp" translatable="false">last_processed_glunovo_timestamp</string>
     <string name="key_last_processed_intelligo_timestamp" translatable="false">last_processed_intelligo_timestamp</string>
 
@@ -39,8 +40,8 @@
     <string name="do_xdrip_upload_title">Send BG data to xDrip+</string>
     <string name="do_xdrip_upload_summary">In xDrip+ select 640g/Eversense data source</string>
     <string name="bgsource_upload">BG upload settings</string>
-    <string name="dexcom_log_ns_sensor_change_title">Log sensor change to NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
+    <string name="log_ns_sensor_change_title">Log sensor change to NS</string>
+    <string name="log_ns_sensor_change_summary">Create event \"Sensor Change\" in NS automatically on sensor start</string>
     <string name="direction">direction</string>
 
 

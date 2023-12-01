@@ -50,6 +50,7 @@
     <string name="key_insight_local_settings" translatable="false">insight_local_settings</string>
     <string name="key_data_choices_settings" translatable="false">data_choices_settings</string>
     <string name="key_dexcom_settings" translatable="false">dexcom_settings</string>
+    <string name="key_xdrip_settings" translatable="false">xdrip_settings</string>
     <string name="key_active_pump_change_timestamp" translatable="false">active_pump_change_timestamp</string>
     <string name="key_active_pump_type" translatable="false">active_pump_type</string>
     <string name="key_active_pump_serial_number" translatable="false">active_pump_serial_number</string>
